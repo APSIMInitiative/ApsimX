@@ -267,23 +267,23 @@
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <BiomassYesterday>0</BiomassYesterday>
@@ -431,8 +431,16 @@
           </XYPairs>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
-        <InitialDM>5</InitialDM>
-        <SpecificRootLength>100000</SpecificRootLength>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>5</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>100</Value>
+          <Units>m/g</Units>
+        </Constant>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -491,17 +499,17 @@
       <CropType>Eucalyptus</CropType>
     </Plant>
     <Plant>
-      <Name>SCUM</Name>
+      <Name>SCRUM</Name>
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-# SCUM: the Simple Crop Uptake Model
+# SCRUM: the Simple Crop Resource Uptake Model
 
 _Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_
 
 This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple model the the parameters might need changing for crops in different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.   
 
-SCUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  
+SCRUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SCRUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  
    1. A Simple leaf class called <b>Stover</b> which represents the unharvested parts of the plant.  Generally, this represents the leaf and stem components of the crop but for crops where stem and leaf are part of the harvested product (e.g forages and leafy vegetables) than stover is the residual fraction of leaf and stem that is not harvested.  
    2. A Generic organ class called <b>Product</b> which represents the plant parts that are harvested and removed from the field.  This could represent grain, fruits, tubers, leaf or stem depending on what sort of crop is being represented.  
    3. A Root organ which extracts water and nitrogen from the soil for plant growth and returns biomass to the soil on harvest  
@@ -509,39 +517,39 @@ SCUM has a simple phenology model which divides the crop growth into three main 
 An Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.
 
 ##Inclusion in APSIM simulations
-A scum crop is included in a simulation the same as any other APSIM crop  
- * The SCUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
+A scrum crop is included in a simulation the same as any other APSIM crop  
+ * The SCRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
  * It is then planted with a sowing rule  
 <pre><code class='language-cs'>
-SCUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
+SCRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  
 </code></pre>
-  * Note that SCUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
+  * Note that SCRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
   * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.
 <pre><code class='language-cs'>
- zone.Set("[SCUM].Product.ExpectedYield.Value", ResetValue);  
+ zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);  
 </code></pre>
-* SCUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
+* SCRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
-  Remove = new RemovalFractions(SCUM.Organs);  
+  Remove = new RemovalFractions(SCRUM.Organs);  
 }  
 [EventSubscribe("DoManagement")]    
 private void OnDoManagement(object sender, EventArgs e)  
 {  
   if (Clock.Today.Date == HarvestDate2)  
   {  
-    Remove.SetFractionRemoved("Product", 1.0);  
-    Remove.SetFractionRemoved("Stover", 0.05);  
+    Remove.SetFractionToRemove("Product", 1.0);  
+    Remove.SetFractionToRemove("Stover", 0.05);  
     Remove.SetFractionToResidue("Stover",0.95)
-    SCUM.Harvest(Remove);  
-    SCUM.EndCrop();  
+    SCRUM.Harvest(Remove);  
+    SCRUM.EndCrop();  
   }  
 }  
  </code></pre>
 * A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.
- * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCUM crop.  
+ * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SCRUM crop.  
 ]]></MemoText>
       </Memo>
       <Phenology>
@@ -753,7 +761,7 @@ During this phase the plant has completed its growth and is drying ready for har
             <Name>Description</Name>
             <MemoText><![CDATA[
 
-This is the Product yield (g/m2 fresh weight) that SCUM will predict provided nitrogen and water supply are non-limiting
+This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting
 ]]></MemoText>
           </Memo>
           <Value>800</Value>
@@ -805,7 +813,7 @@ This variable is the product yield of the crop in g/m2 dry weight
             <Name>Description</Name>
             <MemoText><![CDATA[
 
-This is the Product yield (g/m2 fresh weight) that SCUM will predict provided nitrogen and water supply are non-limiting
+This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided nitrogen and water supply are non-limiting
 ]]></MemoText>
           </Memo>
           <Value>0.46</Value>
@@ -814,23 +822,23 @@ This is the Product yield (g/m2 fresh weight) that SCUM will predict provided ni
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1252,23 +1260,23 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <BiomassYesterday>0</BiomassYesterday>
@@ -1377,7 +1385,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Memo>
             <Name>Description</Name>
             <MemoText><![CDATA[
-This is important in SCUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  
+This is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  
 
 <pre><code class='language-cs'>
 for (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  
@@ -1393,7 +1401,7 @@ else:
 
 This gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  
 
-It is important to note that these modifiers are applied to the kl value specified in the SCUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ]]></MemoText>
+It is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ]]></MemoText>
           </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
         </LinearInterpolationFunction>
@@ -1493,27 +1501,35 @@ This is the proportion of total biomass that is paritioned into the roots and is
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>0.2</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>0.2</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Nodule>
@@ -1542,23 +1558,23 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <NFixationOption>None</NFixationOption>
@@ -2787,7 +2803,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
         <Command>[Stover].XoBiomass.Value = 900.0</Command>
         <Command>[Stover].bBiomass.Value = 180.0</Command>
       </Cultivar>
-      <CropType>SCUM</CropType>
+      <CropType>SCRUM</CropType>
     </Plant>
   </Replacements>
   <DataStore>

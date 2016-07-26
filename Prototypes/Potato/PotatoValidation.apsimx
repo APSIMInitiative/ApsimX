@@ -169,22 +169,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
         <PhaseLookupValue>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <DivideFunction>
-            <Name>NodeInitiationRateFunction</Name>
-            <VariableReference>
-              <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
-            </VariableReference>
-            <Constant>
-              <Name>PrimordiaPerMainstemNode</Name>
-              <Value>2</Value>
-            </Constant>
-          </DivideFunction>
-          <Start>Emergence</Start>
-          <End>FinalLeaf</End>
-        </PhaseLookupValue>
-        <PhaseLookupValue>
           <Name>MainStemNodeAppearanceRate</Name>
           <LinearInterpolationFunction>
             <Name>Phyllochron</Name>
@@ -198,7 +182,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </X>
               <Y>
-                <double>5</double>
+                <double>20</double>
                 <double>30</double>
                 <double>30</double>
                 <double>60</double>
@@ -256,7 +240,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LinearInterpolationFunction</Name>
@@ -284,8 +268,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>2.2</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <GenericAboveGroundOrgan>
         <Name>Tuber</Name>
@@ -418,23 +403,31 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -619,32 +612,50 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.05</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <InitialDM>5</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>5</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -851,7 +862,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
                 <double>0</double>
                 <double>0</double>
-                <double>0.03</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
@@ -1038,34 +1049,43 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.05</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
-        <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0.26</Albedo>
@@ -1073,8 +1093,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1138,28 +1161,38 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.05</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1297,6 +1330,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>CultivarFolder</Name>
       </CultivarFolder>
       <CropType>Potato</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -1394,7 +1428,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <string>[Potato].Stem.MaximumNConc.Value</string>
         <string>[Potato].Stem.MinimumNConc.Value</string>
         <string>[Potato].Structure.Height</string>
-        <string>[Potato].Structure.MainStemNodeNo</string>
+        <string>[Potato].Structure.LeafTipsAppeared</string>
         <string>[Potato].Structure.PlantTotalNodeNo</string>
         <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
         <string>[Potato].Structure.TotalStemPopn</string>
@@ -1471,142 +1505,142 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Leaf.LAI</Name>
             <n>146</n>
-            <Slope>0.97198323313827983</Slope>
-            <Intercept>-0.10762089237665284</Intercept>
-            <SEslope>0.03908631281346904</SEslope>
-            <SEintercept>0.12627117946662744</SEintercept>
-            <R2>0.81112229711883455</R2>
-            <RMSE>0.79513822557031832</RMSE>
-            <NSE>0.76651149896025039</NSE>
-            <ME>-0.18550942327189229</ME>
-            <MAE>0.65331196157574956</MAE>
-            <RSR>0.48154881863758958</RSR>
+            <Slope>0.90287703509689132</Slope>
+            <Intercept>-0.060804359283978204</Intercept>
+            <SEslope>0.041920146811909476</SEslope>
+            <SEintercept>0.13542608653354307</SEintercept>
+            <R2>0.76311362746796541</R2>
+            <RMSE>0.90564684992884681</RMSE>
+            <NSE>0.697100892101608</NSE>
+            <ME>-0.33081285419096434</ME>
+            <MAE>0.762819718139356</MAE>
+            <RSR>0.54847466347537921</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.Live.Wt</Name>
             <n>234</n>
-            <Slope>0.3261725967674805</Slope>
-            <Intercept>31.549632627432835</Intercept>
-            <SEslope>0.037874331375106908</SEslope>
-            <SEintercept>5.0135870469260846</SEintercept>
-            <R2>0.24224119477053918</R2>
-            <RMSE>79.295280434644269</RMSE>
-            <NSE>-0.080747688364106063</NSE>
-            <ME>-41.351494839998793</ME>
-            <MAE>49.30943781028494</MAE>
-            <RSR>1.0373664292328446</RSR>
+            <Slope>0.28525234452935322</Slope>
+            <Intercept>30.633189457317368</Intercept>
+            <SEslope>0.036777463918610365</SEslope>
+            <SEintercept>4.86839001578588</SEintercept>
+            <R2>0.20590969601003906</R2>
+            <RMSE>83.536126061353983</RMSE>
+            <NSE>-0.19943936767912707</NSE>
+            <ME>-46.695084353674</ME>
+            <MAE>54.378176029983095</MAE>
+            <RSR>1.0928465392796654</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.SpecificArea</Name>
             <n>146</n>
-            <Slope>0.028792211474148642</Slope>
-            <Intercept>30393.746663124057</Intercept>
-            <SEslope>0.058499491560258104</SEslope>
-            <SEintercept>1717.8425065817903</SEintercept>
-            <R2>0.0016793971268576069</R2>
-            <RMSE>6118.5643446535378</RMSE>
-            <NSE>-0.66047308979256436</NSE>
-            <ME>2249.4536694709432</ME>
-            <MAE>4288.4106836257133</MAE>
-            <RSR>1.2841728802765695</RSR>
+            <Slope>0.018126291386869137</Slope>
+            <Intercept>31133.482483371947</Intercept>
+            <SEslope>0.057538845928208793</SEslope>
+            <SEintercept>1689.6330665254338</SEintercept>
+            <R2>0.00068870609131943539</R2>
+            <RMSE>6298.2149035705152</RMSE>
+            <NSE>-0.75941272648618807</NSE>
+            <ME>2680.1054980851673</ME>
+            <MAE>4552.4412576802024</MAE>
+            <RSR>1.3218781919628477</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.N</Name>
             <n>144</n>
-            <Slope>0.1749812552165293</Slope>
-            <Intercept>1.9823694182288913</Intercept>
-            <SEslope>0.063634382366486636</SEslope>
-            <SEintercept>0.19744972002516406</SEintercept>
-            <R2>0.050556850326198388</R2>
-            <RMSE>2.0541871596101426</RMSE>
-            <NSE>-0.25776256523593521</NSE>
-            <ME>-0.0839587788865441</ME>
-            <MAE>1.4681837962887814</MAE>
-            <RSR>1.1175992586689347</RSR>
+            <Slope>0.1597013659169598</Slope>
+            <Intercept>2.1467862214942071</Intercept>
+            <SEslope>0.068125482228996351</SEslope>
+            <SEintercept>0.21138505462699112</SEintercept>
+            <R2>0.03725800975545257</R2>
+            <RMSE>2.1404885289294406</RMSE>
+            <NSE>-0.36566586349518437</NSE>
+            <ME>0.042188268317907736</ME>
+            <MAE>1.5504263882920177</MAE>
+            <RSR>1.1645523057280287</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>243</n>
-            <Slope>0.22843028663282741</Slope>
-            <Intercept>66.707330119190928</Intercept>
-            <SEslope>0.032905363135450609</SEslope>
-            <SEintercept>5.0207543011851588</SEintercept>
-            <R2>0.16664330803519811</R2>
-            <RMSE>88.263421389975832</RMSE>
-            <NSE>0.046955593504514392</NSE>
-            <ME>-28.126398487613784</ME>
-            <MAE>59.5714924765319</MAE>
-            <RSR>0.97422913785880838</RSR>
+            <Slope>0.26358210814913058</Slope>
+            <Intercept>69.0352373706827</Intercept>
+            <SEslope>0.0365517301250861</SEslope>
+            <SEintercept>5.5771229597394347</SEintercept>
+            <R2>0.17747864928067869</R2>
+            <RMSE>86.754069950796051</RMSE>
+            <NSE>0.07927202870821537</NSE>
+            <ME>-21.477976519228822</ME>
+            <MAE>59.011997430837617</MAE>
+            <RSR>0.95756930156239817</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>184</n>
-            <Slope>1.0181915326099318</Slope>
-            <Intercept>1.3240286040765668</Intercept>
-            <SEslope>0.054831889479816383</SEslope>
-            <SEintercept>1.0320229312616036</SEintercept>
-            <R2>0.65453100682893783</R2>
-            <RMSE>6.5635166952674995</RMSE>
-            <NSE>0.41655542914211352</NSE>
-            <ME>1.6286566923865777</ME>
-            <MAE>4.868402370058095</MAE>
-            <RSR>0.76175696678865379</RSR>
+            <Slope>1.0158641830169504</Slope>
+            <Intercept>0.47116412037250655</Intercept>
+            <SEslope>0.058695374842265127</SEslope>
+            <SEintercept>1.1047398397334218</SEintercept>
+            <R2>0.62205065130201143</R2>
+            <RMSE>6.84532491139849</RMSE>
+            <NSE>0.36537884134584708</NSE>
+            <ME>0.73681934847657027</ME>
+            <MAE>5.1439899451174504</MAE>
+            <RSR>0.79446342308377493</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>281</n>
-            <Slope>0.7553634482763385</Slope>
-            <Intercept>376.46336032893271</Intercept>
-            <SEslope>0.0361958250846041</SEslope>
-            <SEintercept>39.495089307822845</SEintercept>
-            <R2>0.60952087711341907</R2>
-            <RMSE>486.17902566552237</RMSE>
-            <NSE>0.51439433424321135</NSE>
-            <ME>171.22274812966356</ME>
-            <MAE>294.32524737155632</MAE>
-            <RSR>0.69561306177712734</RSR>
+            <Slope>0.75560218426839243</Slope>
+            <Intercept>331.37893780749266</Intercept>
+            <SEslope>0.036209730895564771</SEslope>
+            <SEintercept>39.510262639125706</SEintercept>
+            <R2>0.60948845822063169</R2>
+            <RMSE>472.32845389259506</RMSE>
+            <NSE>0.54166869091813741</NSE>
+            <ME>126.33861587890391</ME>
+            <MAE>286.56816375859825</MAE>
+            <RSR>0.67579600236132653</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>190</n>
-            <Slope>1.0942243233352451</Slope>
-            <Intercept>0.019823869867535038</Intercept>
-            <SEslope>0.02509373050141914</SEslope>
-            <SEintercept>0.34248368984753352</SEintercept>
-            <R2>0.91002367130542494</R2>
-            <RMSE>3.0760733344688225</RMSE>
-            <NSE>0.85577953973484</NSE>
-            <ME>1.0548483041495991</ME>
-            <MAE>2.3425270902391064</MAE>
-            <RSR>0.37876299345518555</RSR>
+            <Slope>1.0861625095789085</Slope>
+            <Intercept>-0.56944486680226269</Intercept>
+            <SEslope>0.025338562150831356</SEslope>
+            <SEintercept>0.34582519567415471</SEintercept>
+            <R2>0.90718308871410469</R2>
+            <RMSE>2.9237914826067155</RMSE>
+            <NSE>0.86970543492526575</NSE>
+            <ME>0.37702308941679114</ME>
+            <MAE>2.1937060379827251</MAE>
+            <RSR>0.36001222785611026</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>295</n>
-            <Slope>0.98427046704275722</Slope>
-            <Intercept>2.8978652783764574</Intercept>
-            <SEslope>0.015494734295181129</SEslope>
-            <SEintercept>14.835015005630293</SEintercept>
-            <R2>0.93230377941270337</R2>
-            <RMSE>156.67487875530475</RMSE>
-            <NSE>0.929174561231421</NSE>
-            <ME>-8.9784429738860272</ME>
-            <MAE>110.23661424356793</MAE>
-            <RSR>0.26567904045194307</RSR>
+            <Slope>0.97110761793081957</Slope>
+            <Intercept>-22.015228019560027</Intercept>
+            <SEslope>0.015504580203256933</SEslope>
+            <SEintercept>14.844441704485918</SEintercept>
+            <R2>0.93050230876348339</R2>
+            <RMSE>163.1625822417615</RMSE>
+            <NSE>0.92318753913540164</NSE>
+            <ME>-43.829914859178636</ME>
+            <MAE>114.96484102617399</MAE>
+            <RSR>0.27668046487117332</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>259</n>
-            <Slope>0.98548888149570379</Slope>
-            <Intercept>57.163856716456394</Intercept>
-            <SEslope>0.018713112428635378</SEslope>
-            <SEintercept>87.125269715384633</SEintercept>
-            <R2>0.91519251595304518</R2>
-            <RMSE>837.928489336841</RMSE>
-            <NSE>0.90979180422139072</NSE>
-            <ME>3.0751774843815998</ME>
-            <MAE>580.93678478689117</MAE>
-            <RSR>0.29976641170487045</RSR>
+            <Slope>0.96657227031973791</Slope>
+            <Intercept>-69.609971876851432</Intercept>
+            <SEslope>0.018945844637371315</SEslope>
+            <SEintercept>88.20883379564674</SEintercept>
+            <R2>0.91013356108517207</R2>
+            <RMSE>874.31208912738362</RMSE>
+            <NSE>0.90178788798914433</NSE>
+            <ME>-194.20834433152186</ME>
+            <MAE>583.86087519356965</MAE>
+            <RSR>0.31278253574517945</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1638,86 +1672,86 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>4</n>
-            <Slope>0.74393354886969232</Slope>
-            <Intercept>67.780897381378779</Intercept>
-            <SEslope>0.3484086061113687</SEslope>
-            <SEintercept>36.488554273204286</SEintercept>
-            <R2>0.69508569200747183</R2>
-            <RMSE>43.533489033067276</RMSE>
-            <NSE>-2.5826417271754374</NSE>
-            <ME>41.617947746976824</ME>
-            <MAE>41.617947746976824</MAE>
-            <RSR>1.6392014200157277</RSR>
+            <Slope>0.87199183939270142</Slope>
+            <Intercept>84.538445735043766</Intercept>
+            <SEslope>0.40838252524691132</SEslope>
+            <SEintercept>42.769574790402714</SEintercept>
+            <R2>0.69508569200746906</R2>
+            <RMSE>72.743227104109565</RMSE>
+            <NSE>-9.0032599856173636</NSE>
+            <ME>71.459531867264587</ME>
+            <MAE>71.459531867264587</MAE>
+            <RSR>2.7390591430659219</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>25</n>
-            <Slope>0.95311161992690785</Slope>
-            <Intercept>8.4110093120412426</Intercept>
-            <SEslope>0.13263138108162656</SEslope>
-            <SEintercept>2.2844979934118572</SEintercept>
-            <R2>0.69185850988760222</R2>
-            <RMSE>8.8191381592750275</RMSE>
-            <NSE>-0.66911422296715317</NSE>
-            <ME>7.66951647063855</ME>
-            <MAE>7.7102748151872378</MAE>
-            <RSR>1.2658395056437712</RSR>
+            <Slope>1.0300952339404625</Slope>
+            <Intercept>6.52658880966365</Intercept>
+            <SEslope>0.12311004963949893</SEslope>
+            <SEintercept>2.1204986261673655</SEintercept>
+            <R2>0.75271804702156864</R2>
+            <RMSE>8.0821391880273339</RMSE>
+            <NSE>-0.401801164111796</NSE>
+            <ME>7.002514838509299</ME>
+            <MAE>7.109480210860422</MAE>
+            <RSR>1.1600556527802122</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>35</n>
-            <Slope>0.359794131649709</Slope>
-            <Intercept>1165.85338148411</Intercept>
-            <SEslope>0.0945597178668034</SEslope>
-            <SEintercept>112.76774405130183</SEintercept>
-            <R2>0.30493501026681258</R2>
-            <RMSE>765.49036325371912</RMSE>
-            <NSE>-0.35098364338799692</NSE>
-            <ME>529.355584942716</ME>
-            <MAE>530.87590813706174</MAE>
-            <RSR>1.145593344393973</RSR>
+            <Slope>0.40416494450948048</Slope>
+            <Intercept>1069.0269628550946</Intercept>
+            <SEslope>0.10237453079520624</SEslope>
+            <SEintercept>122.08734487075726</SEintercept>
+            <R2>0.32079137735643848</R2>
+            <RMSE>728.82577661423056</RMSE>
+            <NSE>-0.2246671922152208</NSE>
+            <ME>476.64298346562663</ME>
+            <MAE>479.69188711817031</MAE>
+            <RSR>1.090723017548026</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>33</n>
-            <Slope>1.0371679775454687</Slope>
-            <Intercept>2.9871064396503257</Intercept>
-            <SEslope>0.064369953029905974</SEslope>
-            <SEintercept>1.1225968834855213</SEintercept>
-            <R2>0.893330109051913</R2>
-            <RMSE>4.3438076397058563</RMSE>
-            <NSE>0.59340663901399493</NSE>
-            <ME>3.583810159392856</ME>
-            <MAE>3.9462891963935305</MAE>
-            <RSR>0.6279111004330431</RSR>
+            <Slope>1.1084398777212616</Slope>
+            <Intercept>0.86037081860164477</Intercept>
+            <SEslope>0.059229696423102378</SEslope>
+            <SEintercept>1.0329520138608277</SEintercept>
+            <R2>0.91868287001295568</R2>
+            <RMSE>3.5155774046146311</RMSE>
+            <NSE>0.73367468924328427</NSE>
+            <ME>2.6012908976009768</ME>
+            <MAE>3.1876034105206932</MAE>
+            <RSR>0.50818780661719054</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>39</n>
-            <Slope>0.97056452422607187</Slope>
-            <Intercept>100.33878967646297</Intercept>
-            <SEslope>0.042555959173098026</SEslope>
-            <SEintercept>52.215178462556423</SEintercept>
-            <R2>0.93359051735762555</R2>
-            <RMSE>134.76146686105432</RMSE>
-            <NSE>0.9100761542784811</NSE>
-            <ME>66.731823824655066</ME>
-            <MAE>109.7104172285779</MAE>
-            <RSR>0.29600355755908381</RSR>
+            <Slope>1.0239210089393442</Slope>
+            <Intercept>-12.263154458513327</Intercept>
+            <SEslope>0.044482398236775328</SEslope>
+            <SEintercept>54.578874674830693</SEintercept>
+            <R2>0.93472750324661058</R2>
+            <RMSE>122.99372029982935</RMSE>
+            <NSE>0.92509526203417014</NSE>
+            <ME>15.047854092515165</ME>
+            <MAE>95.960957846016285</MAE>
+            <RSR>0.27015570262168015</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>39</n>
-            <Slope>0.98232819663257587</Slope>
-            <Intercept>440.67107951230628</Intercept>
-            <SEslope>0.038565155566363231</SEslope>
-            <SEintercept>227.84519395653692</SEintercept>
-            <R2>0.946049844877142</R2>
-            <RMSE>593.28252622288994</RMSE>
-            <NSE>0.916921407832749</NSE>
-            <ME>342.80630827802133</ME>
-            <MAE>453.6309616373494</MAE>
-            <RSR>0.28451427355278708</RSR>
+            <Slope>1.0316182287499849</Slope>
+            <Intercept>-91.416013722729986</Intercept>
+            <SEslope>0.0433078718197368</SEslope>
+            <SEintercept>255.86543888388349</SEintercept>
+            <R2>0.93878424808198924</R2>
+            <RMSE>552.49731327471193</RMSE>
+            <NSE>0.927951265908175</NSE>
+            <ME>83.682738742707684</ME>
+            <MAE>476.78591914297942</MAE>
+            <RSR>0.26495533709207109</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1739,16 +1773,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Leaf.AppearedCohortNo</Name>
             <n>120</n>
-            <Slope>0.98405071288040646</Slope>
-            <Intercept>-1.0556959581952867</Intercept>
-            <SEslope>0.013936625541421967</SEslope>
-            <SEintercept>0.324256964644442</SEintercept>
-            <R2>0.97687918362441917</R2>
-            <RMSE>1.8854486652280149</RMSE>
-            <NSE>0.94812067377551945</NSE>
-            <ME>-1.4024999141693058</ME>
-            <MAE>1.5658332665761272</MAE>
-            <RSR>0.22681930805366465</RSR>
+            <Slope>0.98284247777492728</Slope>
+            <Intercept>-1.0794238927929314</Intercept>
+            <SEslope>0.014132734866163102</SEslope>
+            <SEintercept>0.32881974881267784</SEintercept>
+            <R2>0.97618242301102143</R2>
+            <RMSE>1.9351787077846658</RMSE>
+            <NSE>0.9453478746016355</NSE>
+            <ME>-1.4524999141693058</ME>
+            <MAE>1.6124999205271353</MAE>
+            <RSR>0.23280182778501718</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2255,6 +2289,7 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Management</Name>
@@ -4722,7 +4757,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Structure.MainStemNodeNo</YFieldName>
+              <YFieldName>Potato.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -6281,6 +6316,7 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>DiagnoisticGraphs</Name>
@@ -9157,7 +9193,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>Potato.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9742,6 +9778,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -13493,6 +13530,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Folder</Name>
@@ -17417,6 +17455,7 @@ namespace Models
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -22124,6 +22163,7 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           <Name>Potato</Name>
           <ResourceName>Potato</ResourceName>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -26357,7 +26397,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Structure].MainStemNodeNo</XProperty>
+                <XProperty>[Structure].LeafTipsAppeared</XProperty>
               </LinearInterpolationFunction>
               <LinearInterpolationFunction>
                 <Name>LinearInterpolationFunction</Name>
@@ -26381,8 +26421,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <XProperty>[Leaf].CoverGreen</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
-            <InitialiseStage>Emergence</InitialiseStage>
-            <PrimaryBudNo>4</PrimaryBudNo>
+            <Initialised>false</Initialised>
+            <Germinated>false</Germinated>
+            <Emerged>false</Emerged>
           </Structure>
           <GenericAboveGroundOrgan>
             <Name>Tuber</Name>
@@ -26642,8 +26683,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </XYPairs>
               <XProperty>[Leaf].FractionDied</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+            <Constant>
+              <Name>InitialDM</Name>
+              <Value>5</Value>
+              <Units>g/plant</Units>
+            </Constant>
+            <Constant>
+              <Name>SpecificRootLength</Name>
+              <Value>40</Value>
+              <Units>m/g</Units>
+            </Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <Leaf>
@@ -27031,7 +27080,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <CurrentExpandingLeaf>10</CurrentExpandingLeaf>
             <StartFractionExpanded>0.88608885312500008</StartFractionExpanded>
             <FractionNextleafExpanded>0.89094664983812755</FractionNextleafExpanded>
-            <_ExpandedNodeNo>10.890946649838128</_ExpandedNodeNo>
             <DeadNodesYesterday>9</DeadNodesYesterday>
             <MaxCover>1</MaxCover>
             <Albedo>0.26</Albedo>
@@ -27039,6 +27087,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <R50>200</R50>
             <FRGR>1</FRGR>
             <PotentialEP>0</PotentialEP>
+            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
             <LightProfile>
               <CanopyEnergyBalanceInterceptionlayerType>
                 <thickness>0.079549208283424377</thickness>
@@ -27047,6 +27096,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </LightProfile>
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+            <TipsAtEmergence>0</TipsAtEmergence>
+            <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>
@@ -27239,6 +27290,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Command />
           </Cultivar>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -31716,7 +31768,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Structure].MainStemNodeNo</XProperty>
+                <XProperty>[Structure].LeafTipsAppeared</XProperty>
               </LinearInterpolationFunction>
               <LinearInterpolationFunction>
                 <Name>LinearInterpolationFunction</Name>
@@ -31740,8 +31792,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <XProperty>[Leaf].CoverGreen</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
-            <InitialiseStage>Emergence</InitialiseStage>
-            <PrimaryBudNo>2.2</PrimaryBudNo>
+            <Initialised>false</Initialised>
+            <Germinated>false</Germinated>
+            <Emerged>false</Emerged>
           </Structure>
           <GenericAboveGroundOrgan>
             <Name>Tuber</Name>
@@ -32001,8 +32054,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </XYPairs>
               <XProperty>[Leaf].FractionDied</XProperty>
             </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>40000</SpecificRootLength>
+            <Constant>
+              <Name>InitialDM</Name>
+              <Value>5</Value>
+              <Units>g/plant</Units>
+            </Constant>
+            <Constant>
+              <Name>SpecificRootLength</Name>
+              <Value>40</Value>
+              <Units>m/g</Units>
+            </Constant>
             <NuptakeSupply>0</NuptakeSupply>
           </Root>
           <Leaf>
@@ -32390,7 +32451,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
             <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
             <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
-            <_ExpandedNodeNo>34.926640930623194</_ExpandedNodeNo>
             <DeadNodesYesterday>0</DeadNodesYesterday>
             <MaxCover>1</MaxCover>
             <Albedo>0.26</Albedo>
@@ -32398,8 +32458,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <R50>200</R50>
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
+            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+            <TipsAtEmergence>0</TipsAtEmergence>
+            <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
           </Leaf>
           <GenericAboveGroundOrgan>
@@ -32592,6 +32655,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Command />
           </Cultivar>
           <CropType>Potato</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Folder>
           <Name>Manager folder</Name>
@@ -37009,5 +37073,5 @@ namespace Models
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>260</ExplorerWidth>
+  <ExplorerWidth>337</ExplorerWidth>
 </Simulations>

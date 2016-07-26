@@ -187,7 +187,7 @@
             <Name>PostEventValue</Name>
             <VariableReference>
               <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemNodeNo</VariableName>
+              <VariableName>[Structure].LeafTipsAppeared</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>PostEventValue1</Name>
@@ -204,19 +204,6 @@
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <PhaseLookupValue>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <Constant>
-            <Name>Function</Name>
-            <Value>20</Value>
-          </Constant>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Start>Emergence</Start>
-          <End>EndFlowering</End>
-        </PhaseLookupValue>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
           <Value>0</Value>
@@ -261,7 +248,7 @@
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>Cover_response</Name>
@@ -327,8 +314,9 @@
             <End>EndFlowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>0</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -444,23 +432,31 @@
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>1</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>1</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.8</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.8</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <RipeStage />
@@ -633,23 +629,31 @@
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.15</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <LinearInterpolationFunction>
@@ -667,8 +671,16 @@
           </XYPairs>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
-        <InitialDM>0.2</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>0.2</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Nodule>
@@ -829,23 +841,31 @@
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </Nodule>
@@ -964,7 +984,7 @@
               <Name>FloweringNodes</Name>
               <VariableReference>
                 <Name>TotalNodes</Name>
-                <VariableName>[Structure].MainStemNodeNo</VariableName>
+                <VariableName>[Structure].LeafTipsAppeared</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>VegetativeNodes</Name>
@@ -979,23 +999,31 @@
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1035,11 +1063,6 @@
         <LeafCohort>
           <Name>InitialLeaf2</Name>
           <Rank>2</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaf3</Name>
-          <Rank>3</Rank>
           <Area>0</Area>
         </LeafCohort>
         <VariableReference>
@@ -1294,7 +1317,7 @@
               <Y>
                 <double>0</double>
                 <double>0</double>
-                <double>0.2</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
@@ -1459,29 +1482,36 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.3</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0</Albedo>
@@ -1489,8 +1519,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1569,23 +1602,31 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionRemoved>0.5</FractionRemoved>
-            <FractionToResidue>0.1</FractionToResidue>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
-            <FractionRemoved>0.8</FractionRemoved>
-            <FractionToResidue>0</FractionToResidue>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
-            <FractionRemoved>0</FractionRemoved>
-            <FractionToResidue>0.6</FractionToResidue>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
-            <FractionRemoved>0.6</FractionRemoved>
-            <FractionToResidue>0.2</FractionToResidue>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
       </GenericAboveGroundOrgan>
@@ -1729,6 +1770,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
  **Wilson DR, Robertson MJ.** **1996.** Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.]]></MemoText>
       </Memo>
       <CropType>FieldPea</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -1759,16 +1801,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <RegrStats>
             <Name>FN</Name>
             <n>3299</n>
-            <Slope>0.31456770097366721</Slope>
-            <Intercept>3.1859805374436565</Intercept>
-            <SEslope>0.012077909026898877</SEslope>
-            <SEintercept>0.059141614170053813</SEintercept>
-            <R2>0.17063610409254271</R2>
-            <RMSE>1.1906280322276532</RMSE>
-            <NSE>0.046418366004226552</NSE>
-            <ME>-0.064648502253226173</ME>
-            <MAE>0.98697669844969282</MAE>
-            <RSR>0.97636703256143831</RSR>
+            <Slope>0.31458550294280124</Slope>
+            <Intercept>3.1858316214641991</Intercept>
+            <SEslope>0.012077735281774098</SEslope>
+            <SEintercept>0.059140763396371816</SEintercept>
+            <R2>0.17065619391779763</R2>
+            <RMSE>1.1906076619234411</RMSE>
+            <NSE>0.046450995139912687</NSE>
+            <ME>-0.0647129932676181</ME>
+            <MAE>0.9869771052654982</MAE>
+            <RSR>0.97635032802153365</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FNN</Name>
@@ -1787,16 +1829,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <RegrStats>
             <Name>NFF</Name>
             <n>3299</n>
-            <Slope>0.96113949316842506</Slope>
-            <Intercept>0.1858847541553672</Intercept>
-            <SEslope>0.0028116998591507024</SEslope>
-            <SEintercept>0.035256890150672633</SEintercept>
-            <R2>0.97255899734223594</R2>
-            <RMSE>0.612478717213579</RMSE>
-            <NSE>0.96483265437350441</NSE>
-            <ME>-0.28458152347553678</ME>
-            <MAE>0.46467336508771218</MAE>
-            <RSR>0.18750116166250816</RSR>
+            <Slope>0.9611387676554769</Slope>
+            <Intercept>0.18595802862120792</Intercept>
+            <SEslope>0.00281149158625615</SEslope>
+            <SEintercept>0.0352542785438396</SEintercept>
+            <R2>0.97256291068148382</R2>
+            <RMSE>0.61241561883577478</RMSE>
+            <NSE>0.964839899974359</NSE>
+            <ME>-0.28451703246114207</ME>
+            <MAE>0.46461352184777954</MAE>
+            <RSR>0.18748184504169374</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1814,86 +1856,86 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <RegrStats>
             <Name>FieldPea.AboveGround.Wt</Name>
             <n>138</n>
-            <Slope>0.736118500493635</Slope>
-            <Intercept>92.764651389760957</Intercept>
-            <SEslope>0.025977257114788325</SEslope>
-            <SEintercept>13.71498558079942</SEintercept>
-            <R2>0.85516316825054728</R2>
-            <RMSE>149.46848554221862</RMSE>
-            <NSE>0.838315752119674</NSE>
-            <ME>-6.1706555472679314</ME>
-            <MAE>85.673894574363217</MAE>
-            <RSR>0.400640266193609</RSR>
+            <Slope>0.73838883958026724</Slope>
+            <Intercept>88.4568056260843</Intercept>
+            <SEslope>0.025975539855908978</SEslope>
+            <SEintercept>13.714078934625626</SEintercept>
+            <R2>0.85594064243989543</R2>
+            <RMSE>149.09362667691681</RMSE>
+            <NSE>0.83912572583041745</NSE>
+            <ME>-9.6272984232571375</ME>
+            <MAE>83.850994030720983</MAE>
+            <RSR>0.39963548210795552</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Grain.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.66372846904843463</Slope>
-            <Intercept>23.785848726471286</Intercept>
-            <SEslope>0.020016400612840445</SEslope>
-            <SEintercept>3.6828693398399475</SEintercept>
-            <R2>0.88992619581812527</R2>
-            <RMSE>67.473045769793416</RMSE>
-            <NSE>0.83187261766904841</NSE>
-            <ME>-3.8926350581482225</ME>
-            <MAE>36.11724526229613</MAE>
-            <RSR>0.40854506234469967</RSR>
+            <Slope>0.67666526200903987</Slope>
+            <Intercept>23.7546539502953</Intercept>
+            <SEslope>0.020144177064483425</SEslope>
+            <SEintercept>3.70637925979067</SEintercept>
+            <R2>0.89243592433307006</R2>
+            <RMSE>65.829069085263569</RMSE>
+            <NSE>0.83996563583100614</NSE>
+            <ME>-2.85900340322008</ME>
+            <MAE>35.487682889336007</MAE>
+            <RSR>0.39859088657848341</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Leaf.Live.Wt</Name>
             <n>138</n>
-            <Slope>1.1562636799287507</Slope>
-            <Intercept>23.400170483231548</Intercept>
-            <SEslope>0.086798297526992016</SEslope>
-            <SEintercept>6.7705294747021805</SEintercept>
-            <R2>0.56612768008941816</R2>
-            <RMSE>56.760073036237507</RMSE>
-            <NSE>-0.60343792329153922</NSE>
-            <ME>33.375648333300845</ME>
-            <MAE>43.719557369875893</MAE>
-            <RSR>1.2616730194092958</RSR>
+            <Slope>1.1583160836377906</Slope>
+            <Intercept>20.019373389577652</Intercept>
+            <SEslope>0.083628270375901578</SEslope>
+            <SEintercept>6.5232577784412067</SEintercept>
+            <R2>0.585168400998177</R2>
+            <RMSE>53.563121255457936</RMSE>
+            <NSE>-0.42790072049279204</NSE>
+            <ME>30.125871498150076</ME>
+            <MAE>41.711220488202251</MAE>
+            <RSR>1.1906106054552657</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Pod.Wt</Name>
             <n>138</n>
-            <Slope>0.74466248227720588</Slope>
-            <Intercept>28.959871604665537</Intercept>
-            <SEslope>0.021244821533835664</SEslope>
-            <SEintercept>5.1970237975336149</SEintercept>
-            <R2>0.90033756248524321</R2>
-            <RMSE>75.250363966467617</RMSE>
-            <NSE>0.87328332702672573</NSE>
-            <ME>-2.4729693426404649</ME>
-            <MAE>37.646438420552613</MAE>
-            <RSR>0.35468075252626607</RSR>
+            <Slope>0.75345038391103258</Slope>
+            <Intercept>29.020492637662741</Intercept>
+            <SEslope>0.021636537400427775</SEslope>
+            <SEintercept>5.2928474634236036</SEintercept>
+            <R2>0.89915806826033351</R2>
+            <RMSE>74.587280773580687</RMSE>
+            <NSE>0.87550666512481534</NSE>
+            <ME>-1.3305303426630506</ME>
+            <MAE>37.763357386693912</MAE>
+            <RSR>0.3515554142096905</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Shell.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.69933858306055585</Slope>
-            <Intercept>13.684601286554631</Intercept>
-            <SEslope>0.039324008066508431</SEslope>
-            <SEintercept>2.9533842291069381</SEintercept>
-            <R2>0.69929536001914139</R2>
-            <RMSE>34.608794671307514</RMSE>
-            <NSE>0.69878851748574311</NSE>
-            <ME>1.4196657155077228</ME>
-            <MAE>17.544076954489061</MAE>
-            <RSR>0.54683524997203647</RSR>
+            <Slope>0.696356243864724</Slope>
+            <Intercept>13.915067733926449</Intercept>
+            <SEslope>0.040011739781863</SEslope>
+            <SEintercept>3.0050355256520311</SEintercept>
+            <R2>0.69012891366990237</R2>
+            <RMSE>35.139198839032545</RMSE>
+            <NSE>0.6894852132921343</NSE>
+            <ME>1.5284730605569694</ME>
+            <MAE>17.7362098575299</MAE>
+            <RSR>0.55521588554165913</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Stem.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.36241782713580861</Slope>
-            <Intercept>65.2913666587093</Intercept>
-            <SEslope>0.020217624834425379</SEslope>
-            <SEintercept>5.20686357002821</SEintercept>
-            <R2>0.70262537821849946</R2>
-            <RMSE>131.52013945655838</RMSE>
-            <NSE>0.44183073607270862</NSE>
-            <ME>-54.563031049739521</ME>
-            <MAE>75.903032246882972</MAE>
-            <RSR>0.74439543195550584</RSR>
+            <Slope>0.3629488756157041</Slope>
+            <Intercept>64.53252658078263</Intercept>
+            <SEslope>0.020190713399877918</SEslope>
+            <SEintercept>5.1999327772516137</SEintercept>
+            <R2>0.70379254330293861</R2>
+            <RMSE>131.69790004841167</RMSE>
+            <NSE>0.44032089048452561</NSE>
+            <ME>-55.222043217757765</ME>
+            <MAE>75.557587651159935</MAE>
+            <RSR>0.745401545339388</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2561,7 +2603,7 @@ namespace Models
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Pod.Wt</string>
             <string>[FieldPea].Pod.N</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
             <string>[FieldPea].Leaf.CohortArea[2]</string>
@@ -2775,6 +2817,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -4256,7 +4299,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6030,6 +6073,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -6097,9 +6141,9 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[FieldPea].Structure.MainStemNodeNo </string>
+            <string>[FieldPea].Structure.LeafTipsAppeared </string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Structure.MainStemNodeNo as FNN</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared as FNN</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Phenology.NFF.Value as NFF</string>
@@ -7710,7 +7754,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8109,7 +8153,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8131,7 +8175,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Input</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8685,6 +8729,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -8957,7 +9002,7 @@ namespace Models
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Pod.Wt</string>
             <string>[FieldPea].Pod.N</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
             <string>[FieldPea].Leaf.CohortArea[1]</string>
             <string>[FieldPea].Leaf.CohortArea[2]</string>
@@ -10591,7 +10636,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+          <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12361,7 +12406,7 @@ namespace Models
             <string>[FieldPea].Shell.MaximumNConc.Value</string>
             <string>[FieldPea].Shell.MinimumNConc.Value</string>
             <string>[FieldPea].Structure.Height.Value</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.PlantTotalNodeNo</string>
             <string>[FieldPea].Structure.PrimaryBudTotalNodeNo</string>
             <string>[FieldPea].Structure.TotalStemPopn</string>
@@ -15032,7 +15077,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Structure.MainStemNodeNo</YFieldName>
+              <YFieldName>FieldPea.Structure.LeafTipsAppeared</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15336,6 +15381,7 @@ namespace Models
           <Name>FieldPea</Name>
           <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -16118,5 +16164,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>287</ExplorerWidth>
+  <ExplorerWidth>350</ExplorerWidth>
 </Simulations>

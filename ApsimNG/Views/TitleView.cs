@@ -17,7 +17,7 @@ namespace UserInterface.Views
     }
 
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// A Gtk# implementation of an TitleView
     /// </summary>
     public class TitleView : ViewBase, ITitleView
     {
@@ -26,9 +26,9 @@ namespace UserInterface.Views
         public event TitleChangedDelegate OnTitleChanged;
 
         [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
         [Widget]
-        private Entry entry1;
+        private Entry entry1 = null;
         /// <summary>
         /// Construtor
         /// </summary>
@@ -38,6 +38,12 @@ namespace UserInterface.Views
             gxml.Autoconnect(this);
             _mainWidget = hbox1;
             entry1.Changed += OnPositionComboChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            entry1.Changed -= OnPositionComboChanged;
         }
 
         /// <summary>

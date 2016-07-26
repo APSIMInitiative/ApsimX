@@ -28,6 +28,12 @@ namespace UserInterface.Views
             checkbutton1 = new CheckButton();
             _mainWidget = checkbutton1;
             checkbutton1.Toggled += OnCheckChanged;
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            checkbutton1.Toggled -= OnCheckChanged;
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>

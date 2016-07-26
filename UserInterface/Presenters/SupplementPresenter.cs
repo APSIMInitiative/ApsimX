@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     using Views;
     using Models;
     using Models.Core;
-    using Models.Grazplan;
+    using Models.GrazPlan;
     using System.Reflection;
     using Interfaces;
 
@@ -233,6 +233,7 @@ namespace UserInterface.Presenters
         private void OnSuppNameChanged(object sender, TStringArgs e)
         {
             supplement[suppIdx].sName = e.name;
+            this.supplementView.SelectedSupplementName = e.name;
         }
 
         /// <summary>

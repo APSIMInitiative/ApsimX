@@ -50,7 +50,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return 1.0 - Math.Exp(-K * LAI);
+                return Math.Min(1.0 - Math.Exp(-K * LAI), 0.999999999);
             }
         }
         

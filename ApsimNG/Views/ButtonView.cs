@@ -37,6 +37,12 @@ namespace UserInterface.Views
             _mainWidget = button;
             button.Clicked += OnButtonClick;
             button.SetSizeRequest(80, 36);
+            _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            button.Clicked -= OnButtonClick;
         }
 
         /// <summary>Get or sets the text of the button.</summary>

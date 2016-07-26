@@ -14,13 +14,13 @@ namespace UserInterface.Views
     public class SeriesView : ViewBase, ISeriesView
     {
         [Widget]
-        private Table table1;
+        private Table table1 = null;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private Label label4;
+        private Label label4 = null;
         [Widget]
-        private Label label5;
+        private Label label5 = null;
 
         private DropDownView dropDownView1;
         private DropDownView dropDownView2;
@@ -30,17 +30,17 @@ namespace UserInterface.Views
         private DropDownView dropDownView6;
         private DropDownView dropDownView7;
         private DropDownView dropDownView8;
+        private ColourDropDownView dropDownView9;
+        private DropDownView dropDownView10;
+        private DropDownView dropDownView11;
         private CheckBoxView checkBoxView1;
         private CheckBoxView checkBoxView2;
         private CheckBoxView checkBoxView3;
         private CheckBoxView checkBoxView4;
         private CheckBoxView checkBoxView5;
-        private GraphView graphView1;
-        private ColourDropDownView dropDownView9;
-        private EditView editView1;
-        private DropDownView dropDownView10;
-        private DropDownView dropDownView11;
         private CheckBoxView checkBoxView6;
+        private GraphView graphView1;
+        private EditView editView1;
 
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
@@ -88,7 +88,16 @@ namespace UserInterface.Views
             table1.Attach(dropDownView7.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(dropDownView8.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(dropDownView9.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+            Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
+            EventBox ebHelp = new EventBox();
+            ebHelp.Add(helpImage);
+            ebHelp.ButtonPressEvent += Help_ButtonPressEvent;
+            HBox filterBox = new HBox();
+            filterBox.PackStart(editView1.MainWidget, true, true, 0);
+            filterBox.PackEnd(ebHelp, false, true, 0);
+
+            //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(filterBox, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
 
             table1.Attach(checkBoxView1.MainWidget, 2, 3, 1, 2, AttachOptions.Fill, 0, 0, 0);
             table1.Attach(checkBoxView2.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
@@ -167,6 +176,15 @@ namespace UserInterface.Views
             label5.Visible = show;
             X2.IsVisible = show;
             Y2.IsVisible = show;
+        }
+
+        /// <summary>Show the filter help.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Help_ButtonPressEvent(object o, ButtonPressEventArgs args)
+        {
+            if (args.Event.Button == 1)
+              System.Diagnostics.Process.Start("http://www.apsim.info/Filter.aspx");
         }
 
 

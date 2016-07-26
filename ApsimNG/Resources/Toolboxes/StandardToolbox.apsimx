@@ -590,9 +590,9 @@
       <CropType>Slurp</CropType>
     </Plant>
     <Plant>
-      <Name>SCUM</Name>
-      <ResourceName>SCUM</ResourceName>
-      <CropType>SCUM</CropType>
+      <Name>SCRUM</Name>
+      <ResourceName>SCRUM</ResourceName>
+      <CropType>SCRUM</CropType>
     </Plant>
     <CultivarFolder >
     </CultivarFolder>
@@ -812,6 +812,29 @@
       </Cultivar>
     </Folder>
   </Folder>
+  <Folder>
+    <Name>Animals</Name>
+    <Stock>
+      <Name>Stock</Name>
+      <RandSeed>0</RandSeed>
+      <GenoTypes />
+      <Sheep />
+      <Cattle />
+      <PaddockList>
+        <TPaddInit>
+          <forages />
+          <name />
+          <area>1</area>
+          <slope>0</slope>
+        </TPaddInit>
+      </PaddockList>
+      <EnterpriseList />
+      <GrazingPeriods />
+    </Stock>
+    <Supplement>
+      <Name>Supplement</Name>
+    </Supplement>
+  </Folder>  
   <Folder>
     <Name>Graphs</Name>
     <Graph>

@@ -7,7 +7,7 @@
 namespace UserInterface.Interfaces
 {
     using System;
-    using Models.Grazplan;
+    using Models.GrazPlan;
 
     public class TSuppAttrArgs : EventArgs
     {
@@ -64,6 +64,8 @@ namespace UserInterface.Interfaces
         string[] DefaultSuppNames { set; }
 
         TSupplementItem SelectedSupplementValues { set; }
+
+        string SelectedSupplementName { get; set; }
 
         int SelectedSupplementIndex { set; get;  }
      }

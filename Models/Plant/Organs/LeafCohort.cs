@@ -106,6 +106,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
         public double MaxLiveArea = 0;
+        /// <summary>The maximum live area</summary>
+        [XmlIgnore]
+        public double MaxCohortPopulation = 0;
         /// <summary>The growth duration</summary>
         [XmlIgnore]
         public double GrowthDuration = 0;
@@ -233,9 +236,23 @@ namespace Models.PMF.Organs
         /// <summary>The delta wt</summary>
         [XmlIgnore]
         public double DeltaWt = 0;
-        //public double StructuralNDemand = 0;
-        //public double MetabolicNDemand = 0;
-        //public double NonStructuralNDemand = 0;
+
+        /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedWt { get; set; }
+        
+        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedN { get; set; }
+        
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
         /// <summary>The potential area growth</summary>
         [XmlIgnore]
         public double PotentialAreaGrowth = 0;
@@ -380,9 +397,7 @@ namespace Models.PMF.Organs
                 if (MaxLiveArea == 0)
                     return 0;
                 else
-                    //Fixme.  This function is not returning the correct values.  Use commented out line
-                    //return MaxArea / Population;
-                    return MaxLiveArea / CohortPopulation;
+                    return MaxLiveArea / MaxCohortPopulation;
             }
         }
         /// <summary>Gets the live population.</summary>
@@ -457,7 +472,10 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
+                    if(TotalDMDemand < 0)
+                        throw new Exception("Negative DMDemand in" + this);
                     return TotalDMDemand * StructuralFraction;
+
                 }
                 else return 0;
             }
@@ -825,9 +843,8 @@ namespace Models.PMF.Organs
                 NonStructuralFraction = LeafCohortParameters.NonStructuralFraction.Value;
             if (LeafCohortParameters.InitialNConc != null) //FIXME HEB I think this can be removed
                 InitialNConc = LeafCohortParameters.InitialNConc.Value;
-            //if (Area > MaxArea)  FIXMEE HEB  This error trap should be activated but throws errors in chickpea so that needs to be fixed first.
-            //    throw new Exception("Initial Leaf area is greater that the Maximum Leaf Area.  Check set up of initial leaf area values to make sure they are not to large and check MaxArea function and CellDivisionStressFactor Function to make sure the values they are returning will not be too small.");
-            Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
+            if(Area>0)  //Only set age for cohorts that have an area specified in the xml.
+                Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
@@ -1053,50 +1070,52 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Removes leaf area and biomass on thinning event</summary>
-        /// <param name="value">The fraction.</param>
-        virtual public void DoBiomassRemoval(OrganBiomassRemovalType value)
+        /// <param name="value">The fractions of biomass to remove.</param>
+        virtual public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
         {
             if (IsInitialised)
             {
-                LiveArea *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
+                                                   + value.FractionLiveToResidue + value.FractionDeadToResidue;
+                if (totalFractionBeingRemoved > 1.0)
+                {
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
+                                        + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
+                                        + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                }
+                else if (totalFractionBeingRemoved > 0.0)
+                {
+                    double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
+                    double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
 
-                double WtToResidue = 0;
+                    LiveArea *= RemainingLiveFraction;
 
-                WtToResidue += Dead.StructuralWt * value.FractionToResidue;
-                Dead.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.StructuralWt * value.FractionToResidue;
-                Live.StructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                    RemovedWt += (Live.Wt * value.FractionLiveToRemove) + (Dead.Wt * value.FractionDeadToRemove);
+                    RemovedN += (Live.N * value.FractionLiveToRemove) + (Dead.N * value.FractionDeadToRemove);
+                    DetachedWt += (Live.Wt * value.FractionLiveToResidue) + (Dead.Wt * value.FractionDeadToResidue);
+                    DetachedN += (Live.N * value.FractionLiveToResidue) + (Dead.N * value.FractionDeadToResidue);
 
-                WtToResidue += Dead.NonStructuralWt * value.FractionToResidue;
-                Dead.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.NonStructuralWt * value.FractionToResidue;
-                Live.NonStructuralWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
+                    Live.StructuralWt *= RemainingLiveFraction;
+                    Live.NonStructuralWt *= RemainingLiveFraction;
+                    Live.MetabolicWt *= RemainingLiveFraction;
+                    Dead.StructuralWt *= RemainingDeadFraction;
+                    Dead.NonStructuralWt *= RemainingDeadFraction;
+                    Dead.MetabolicWt *= RemainingDeadFraction;
 
-                WtToResidue += Dead.MetabolicWt * value.FractionToResidue;
-                Dead.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                WtToResidue += Live.MetabolicWt * value.FractionToResidue;
-                Live.MetabolicWt *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
+                    Live.StructuralN *= RemainingLiveFraction;
+                    Live.NonStructuralN *= RemainingLiveFraction;
+                    Live.MetabolicN *= RemainingLiveFraction;
+                    Dead.StructuralN *= RemainingDeadFraction;
+                    Dead.NonStructuralN *= RemainingDeadFraction;
+                    Dead.MetabolicN *= RemainingDeadFraction;
 
-                double NToResidue = 0;
-
-                NToResidue += Dead.StructuralN * value.FractionToResidue;
-                Dead.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.StructuralN * value.FractionToResidue;
-                Live.StructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-
-                NToResidue += Dead.NonStructuralN * value.FractionToResidue;
-                Dead.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.NonStructuralN * value.FractionToResidue;
-                Live.NonStructuralN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-
-                NToResidue += Dead.MetabolicN * value.FractionToResidue;
-                Dead.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved));
-                NToResidue += Live.MetabolicN * value.FractionToResidue;
-                Live.MetabolicN *= (1 - (value.FractionToResidue + value.FractionRemoved)); ;
-
-                SurfaceOrganicMatter.Add(WtToResidue * 10, NToResidue * 10, 0, Plant.CropType, Name);
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                    //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+                }
             }
         }
+
         /// <summary>Removes leaves for cohort due to thin event.  </summary>
         /// <param name="ProportionRemoved">The fraction.</param>
         virtual public void DoThin(double ProportionRemoved)
@@ -1138,6 +1157,16 @@ namespace Models.PMF.Organs
             if (IsAppeared)
                 DoKill(fraction);
         }
+
+        /// <summary>Does the zeroing of some varibles.</summary>
+        virtual protected void DoDailyCleanup()
+        {
+            DetachedWt = 0.0;
+            DetachedN = 0.0;
+            RemovedWt = 0.0;
+            RemovedN = 0.0;
+        }
+
         /// <summary>Potential delta LAI</summary>
         /// <param name="TT">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
@@ -1146,13 +1175,17 @@ namespace Models.PMF.Organs
             double BranchNo = Structure.TotalStemPopn - Structure.MainStemPopn;  //Fixme, this line appears redundant
             double leafSizeDelta = SizeFunction(Age + TT) - SizeFunction(Age); //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
-            return growth;                              // FIXME-EIT Unit conversion to m2/m2 could happen here and population could be considered at higher level only (?)
+            if (growth < 0)
+                throw new Exception("Netagive potential leaf area expansion in" + this);
+            return growth;                              
         }
         /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
         /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
         /// <returns>Average leaf size (mm2/leaf)</returns>
         protected double SizeFunction(double TT)
         {
+            if (GrowthDuration <= 0)
+                throw new Exception("Trying to calculate leaf size with a growth duration parameter value of zero won't work");
             double OneLessShape = 1 - LeafSizeShape;
             double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
             double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
@@ -1195,6 +1228,8 @@ namespace Models.PMF.Organs
 
                 if (MaxLiveArea < LiveArea)
                     MaxLiveArea = LiveArea;
+                if (MaxCohortPopulation < CohortPopulation)
+                    MaxCohortPopulation = CohortPopulation;
 
                 double FracSenShade = 0;
                 if (LiveArea > 0)
@@ -1235,6 +1270,7 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1242,6 +1278,16 @@ namespace Models.PMF.Organs
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Subscribe(Structure.InitialiseStage, DoInitialisation);
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
         }
         #endregion
 

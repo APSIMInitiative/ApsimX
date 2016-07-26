@@ -23,6 +23,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Factorial.Experiment))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class Graph : Model, AutoDocumentation.ITag
     {
         /// <summary>The data tables on the graph.</summary>

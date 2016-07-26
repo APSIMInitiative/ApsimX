@@ -181,6 +181,9 @@ namespace Models.PMF.Phen
         /// <summary>The emerged</summary>
         [XmlIgnore]
         public bool Emerged = false;
+        /// <summary>Germinated test</summary>
+        [XmlIgnore]
+        public bool Germinated = false;
         /// <summary>
         /// This is the difference in phase index between the current phase and the phas it runs parallel with.
         /// It is 0 for phases that are not run parallel
@@ -199,6 +202,7 @@ namespace Models.PMF.Phen
             AccumulatedEmergedTT = 0;
             JustInitialised = true;
             Emerged = false;
+            Germinated = false;
             SowDate = Clock.Today;
             CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
@@ -389,6 +393,8 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
+                if(ThermalTime.Value <0)
+                    throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
                 if (Phases == null || Phases.Count == 0)
                     OnSimulationCommencing(null, null);
@@ -408,6 +414,9 @@ namespace Models.PMF.Phen
                     {
                         if (CurrentPhaseIndex + 1 >= Phases.Count)
                             throw new Exception("Cannot transition to the next phase. No more phases exist");
+
+                        if (Stage >= 1)
+                            Germinated = true;
 
                         if (CurrentPhase is EmergingPhase)
                             Emerged = true;
@@ -461,7 +470,8 @@ namespace Models.PMF.Phen
                     
             private set
             {
-                string OldPhaseName = CurrentPhase.Name;
+                string oldPhaseName = CurrentPhase.Name;
+                string stageOnEvent = CurrentPhase.End;
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
@@ -509,9 +519,9 @@ namespace Models.PMF.Phen
                 {
                     //_AccumulatedTT += CurrentPhase.TTinPhase;
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                    PhaseChangedData.OldPhaseName = OldPhaseName;
+                    PhaseChangedData.OldPhaseName = oldPhaseName;
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
-                    PhaseChangedData.EventStageName = CurrentPhase.Start;
+                    PhaseChangedData.EventStageName = stageOnEvent;
                     PhaseChanged.Invoke(PhaseChangedData);
                 }
             }

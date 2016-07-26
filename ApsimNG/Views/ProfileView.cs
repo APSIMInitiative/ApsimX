@@ -46,11 +46,11 @@ namespace UserInterface.Views
 		private GridView PropertyGrid;
 		private GraphView Graph;
         [Widget]
-        private VPaned vpaned1;
+        private VPaned vpaned1 = null;
         [Widget]
-        private VPaned vpaned2;
+        private VPaned vpaned2 = null;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
 
 		public ProfileView(ViewBase owner) : base(owner)
         {

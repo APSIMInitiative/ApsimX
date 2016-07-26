@@ -36,7 +36,7 @@ packages/
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
 *.sum
 Documents/
-Prototypes/SCUM/Obs/
-Prototypes/SCUM/.ipynb_checkpoints/ParameterListBuilder-checkpoint.ipynb
-Prototypes/SCUM/Crop.xml
-Prototypes/SCUM/SCUM.apsimx.orig
+Prototypes/SCRUM/Obs/
+Prototypes/SCRUM/.ipynb_checkpoints/ParameterListBuilder-checkpoint.ipynb
+Prototypes/SCRUM/Crop.xml
+Prototypes/SCRUM/SCRUM.apsimx.orig

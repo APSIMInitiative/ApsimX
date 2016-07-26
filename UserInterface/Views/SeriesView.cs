@@ -6,6 +6,7 @@
 namespace UserInterface.Views
 {
     using Interfaces;
+    using System.Diagnostics;
     using System.Windows.Forms;
 
     /// <summary>This view allows a single series to be edited.</summary>
@@ -84,6 +85,12 @@ namespace UserInterface.Views
             Y2.IsVisible = show;
         }
 
-
+        /// <summary>Show the filter help.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            Process.Start("http://www.apsim.info/Filter.aspx");
+        }
     }
 }

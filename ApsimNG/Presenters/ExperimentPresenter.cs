@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                ExplorerPresenter.ShowMessage(err.Message, Models.DataStore.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Models.DataStore.ErrorLevel.Error);
             }
         }
 

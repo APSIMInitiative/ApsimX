@@ -10,10 +10,12 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
+    using APSIM.Shared.Utilities;
 
     ///<summary>
     /// The generic plant model
@@ -77,6 +79,11 @@ namespace Models.PMF
         public Root Root = null;
         [Link(IsOptional = true)]
         Biomass AboveGround = null;
+        /// <summary>
+        /// Clock
+        /// </summary>
+        [Link]
+        public Clock Clock = null;
 
         #endregion
 
@@ -146,11 +153,32 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the population.</summary>
+
+        /// <summary>Holds the number of plants.</summary>
+        private double plantPopulation = 0.0;
+        /// <summary>
+        /// Holds the date of sowing
+        /// </summary>
+        public DateTime SowingDate { get; set; }
+
+        /// <summary>Gets or sets the plant population.</summary>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
-        public double Population { get; set; }
+        public double Population
+        {
+            get { return plantPopulation; }
+            set
+            {
+                if (IsAlive && value <= 0.1)
+                {
+                    // the plant is dying due to population decline
+                    EndCrop();
+                }
+                else
+                    plantPopulation = value;
+            }
+        }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
@@ -169,11 +197,35 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Return true if plant has germinated</summary>
+        public bool IsGerminated
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Germinated;
+                //If the crop model has phenology and the crop is emerged return true
+                else
+                    return IsAlive;
+                //Else if the crop is in the grown returen true
+            }
+        }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
+
+        /// <summary>The plant mortality rate</summary>
+        [Link(IsOptional = true)]
+        [Units("")]
+        IFunction MortalityRate = null;
+
+        /// <summary>Gets or sets a modifier for the plant mortality rate.</summary>
+        [XmlIgnore]
+        [Description("Modifier for the plant mortality rate")]
+        [Units("")]
+        public double MortalityRateModifier { get; set; }
 
         #endregion
 
@@ -226,6 +278,20 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            //Reduce plant population in case of mortality
+            if (Population > 0.0 && MortalityRate != null)
+            {
+                double DeltaPopulation = Population * MortalityRate.Value * MortalityRateModifier;
+                Population -= DeltaPopulation;
+            }
+        }
+
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
@@ -235,6 +301,8 @@ namespace Models.PMF
         /// <param name="budNumber">The bud number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
+            SowingDate = Clock.Today;
+
             SowingData = new SowPlant2Type();
             SowingData.Plant = this;
             SowingData.Population = population;
@@ -275,23 +343,28 @@ namespace Models.PMF
             allData.biomassRemoveType = biomassRemoveType;
             foreach (IOrgan organ in Organs)
             {
-                OrganBiomassRemovalType biomassRemoved = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
-                if (biomassRemoved == null)
-                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults.Harvest");
+                // Get the default removal fractions
+                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+                if (biomassRemoval == null)
+                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
 
-                // Override the defaults if values were supplied as arguments.
+                // Override the defaults if values were supplied as arguments
                 if (removalData != null)
                 {
                     OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
                     if (userFractions != null)
                     {
-                        if (userFractions.FractionRemoved >= 0)
-                            biomassRemoved.FractionRemoved = userFractions.FractionRemoved;
-                        if (userFractions.FractionToResidue >= 0)
-                            biomassRemoved.FractionToResidue = userFractions.FractionToResidue;
+                        if(!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
+                            biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
+                            biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
+                            biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
+                            biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
                     }
                 }
-                allData.removalData.Add(organ.Name, biomassRemoved);
+                allData.removalData.Add(organ.Name, biomassRemoval);
             }
 
             Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
@@ -339,7 +412,8 @@ namespace Models.PMF
         private void Clear()
         {
             SowingData = null;
-            Population = 0;
+            plantPopulation = 0.0;
+            MortalityRateModifier = 1.0;
         }
         #endregion
         

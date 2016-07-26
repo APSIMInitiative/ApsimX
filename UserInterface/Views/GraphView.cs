@@ -116,6 +116,9 @@ namespace UserInterface.Views
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
 
+            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            this.FormatTitle("");
+
         }
 
         /// <summary>
@@ -624,11 +627,16 @@ namespace UserInterface.Views
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
+                    if (d != DateTime.MinValue)
+                    {
+                        dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                        if (d < smallestDate)
+                            smallestDate = d;
+                        if (d > largestDate)
+                            largestDate = d;
+                    }
+                    else
+                        dataPointValues.Add(double.NaN);
                 }
                 while (enumerator.MoveNext());
             }
