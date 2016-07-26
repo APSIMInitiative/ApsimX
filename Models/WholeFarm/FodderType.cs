@@ -16,8 +16,13 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Fodder))]
-    public class FodderType : Model
+    public class FodderType : Model, IResource
     {
+        [Link]
+        ISummary Summary = null;
+
+        event EventHandler FodderChanged;
+
 
         /// <summary>
         /// Is this Fodder a Forage?
@@ -41,9 +46,9 @@ namespace Models.WholeFarm
 
 
         /// <summary>
-        /// Dry Matter (%)
+        /// Dry Matter Digestibility (%)
         /// </summary>
-        [Description("DMD (%)")]
+        [Description("Dry Matter Digestibility (%)")]
         public double DMD { get; set; }
 
 
@@ -72,80 +77,91 @@ namespace Models.WholeFarm
 
 
 
-
-
-
-        /// <summary>
-        ///  Creates a Fodder Item   
-        /// </summary>
-        /// <returns></returns>
-        public FodderItem CreateListItem()
-        {
-            FodderItem fodder = new FodderItem();
-
-            fodder.IsForage = this.IsForage;
-            fodder.IsSupplement = this.IsSupplement;
-            fodder.DryMatter  = this.DryMatter;
-            fodder.DMD = this.DMD;
-            fodder.Nitrogen = this.Nitrogen;
-            fodder.Age = this.StartingAge;
-            fodder.Amount = this.StartingAmount;
-
-            return fodder;
-        }
-
-    }
-
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class FodderItem
-    {
-
-        /// <summary>
-        /// Is this Fodder a Forage?
-        /// </summary>
-        public bool IsForage;
-
-
-        /// <summary>
-        /// Is this Fodder a Supplement?
-        /// </summary>
-        public bool IsSupplement;
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DryMatter;
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DMD;
-
-
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        public double Nitrogen;
-
-
-        /// <summary>
+        /// <summary>   
         /// Age of this Fodder (Months)
         /// </summary>
+        [XmlIgnore]
         public double Age { get; set; }
 
 
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        public double Amount { get; set; }
+        [XmlIgnore]
+        public double Amount { get {return _Amount;} }
+   
+        private double _Amount;
 
+
+
+        /// <summary>
+        /// Add Fodder
+        /// </summary>
+        /// <param name="AddAmount"></param>
+        public void Add(double AddAmount)
+        {
+            this._Amount = this._Amount + AddAmount;
+
+            if (FodderChanged != null)
+                FodderChanged.Invoke(this, new EventArgs()); 
+        }
+
+        /// <summary>
+        /// Remove Fodder
+        /// </summary>
+        /// <param name="RemoveAmount"></param>
+        public void Remove(double RemoveAmount)
+        {
+            if (this._Amount - RemoveAmount < 0)
+            {
+                string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+                    + "Current Amount: " + this._Amount + Environment.NewLine
+                    + "Tried to Remove: " + RemoveAmount;
+                Summary.WriteWarning(this, message);
+                this._Amount = 0;
+            }
+            else
+            {
+                this._Amount = this._Amount - RemoveAmount;
+            }
+
+            if (FodderChanged != null)
+                FodderChanged.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Set Amount of Fodder
+        /// </summary>
+        /// <param name="NewValue"></param>
+        public void Set(double NewValue)
+        {
+            this._Amount = NewValue;
+
+            if (FodderChanged != null)
+                FodderChanged.Invoke(this, new EventArgs());
+        }
+
+
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
+        {
+            this.Age = this.StartingAge;
+            this._Amount = this.StartingAmount;
+        }
+
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
+        }
 
     }
+
+ 
 }

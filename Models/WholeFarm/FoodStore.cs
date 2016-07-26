@@ -29,7 +29,7 @@ namespace Models.WholeFarm
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<FoodStoreItem> HomeStore;
+        public List<FoodStoreType> Items;
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -38,16 +38,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            HomeStore = new List<FoodStoreItem>();
+            Items = new List<FoodStoreType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                FoodStoreType foodInit = childModel as FoodStoreType;
-                FoodStoreItem food = foodInit.CreateListItem();
-                HomeStore.Add(food);
+                FoodStoreType fodder = childModel as FoodStoreType;
+                Items.Add(fodder);
             }
         }
 
