@@ -27,23 +27,23 @@ namespace SWIMFrame
         static double[] phico2 = new double[mx + 1];
         static double[] y2 = new double[3 * mx + 1];
         static double[] hi = new double[3 * mx + 1];
-        static double[,] phif = new double[2 + 1, mx + 1];
-        static double[,] phifi = new double[2 + 1, mx + 1];
-        static double[,] phii5 = new double[2 + 1, mx + 1];
-        static double[,] coq = new double[3 + 1, 3 * mx + 1];
-        static double[,] co1 = new double[4 + 1, mx + 1];
+        static double[,] phif = new double[mx + 1, 2 + 1];
+        static double[,] phifi = new double[mx + 1, 2 + 1];
+        static double[,] phii5 = new double[mx + 1, 2 + 1];
+        static double[,] coq = new double[3 * mx + 1, 3 + 1];
+        static double[,] co1 = new double[mx + 1, 4 + 1];
         static double[,] qp = new double[mx + 1, mx + 1];
         static double[,] y22 = new double[mx + 1, mx + 1];
         static double[,] qi1 = new double[mx + 1, mx + 1];
         static double[,] qi2 = new double[mx + 1, mx + 1];
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
-        static double[,] h = new double[2 + 1, 3 * mx + 1];
-        static double[,] phi = new double[2 + 1, 3 * mx + 1];
-        static double[,] phii = new double[2 + 1, 3 * mx + 1];
-        static double[,,] qf = new double[2 + 1, mx + 1, mx + 1];
-        static double[,,] y2q = new double[2 + 1, mx + 1, mx + 1];
-        static double[,,] co2 = new double[4 + 1, mx + 1, mx + 1];
+        static double[,] h = new double[3 * mx + 1, 2 + 1];
+        static double[,] phi = new double[3 * mx + 1, 2 + 1];
+        static double[,] phii = new double[3 * mx + 1, 2 + 1];
+        static double[,,] qf = new double[mx + 1, mx + 1, 2 + 1];
+        static double[,,] y2q = new double[mx + 1, mx + 1, 2 + 1];
+        static double[,,] co2 = new double[mx + 1, mx + 1, 4 + 1];
         static FluxTable ftwo = new FluxTable();
         static FluxTable[] ft = { new FluxTable(), new FluxTable() };
         static SoilProps[] sp = { new SoilProps(), new SoilProps() };
@@ -71,23 +71,23 @@ namespace SWIMFrame
             phico2 = new double[mx + 1];
             y2 = new double[3 * mx + 1];
             hi = new double[3 * mx + 1];
-            phif = new double[2 + 1, mx + 1];
-            phifi = new double[2 + 1, mx + 1];
-            phii5 = new double[2 + 1, mx + 1];
-            coq = new double[3 + 1, 3 * mx + 1];
-            co1 = new double[4 + 1, mx + 1];
+            phif = new double[mx + 1, 2 + 1];
+            phifi = new double[mx + 1, 2 + 1];
+            phii5 = new double[mx + 1, 2 + 1];
+            coq = new double[3 * mx + 1, 3 + 1];
+            co1 = new double[mx + 1, 4 + 1];
             qp = new double[mx + 1, mx + 1];
             y22 = new double[mx + 1, mx + 1];
             qi1 = new double[mx + 1, mx + 1];
             qi2 = new double[mx + 1, mx + 1];
             qi3 = new double[mx + 1, mx + 1];
             qi5 = new double[mx + 1, mx + 1];
-            h = new double[2 + 1, 3 * mx + 1];
-            phi = new double[2 + 1, 3 * mx + 1];
-            phii = new double[2 + 1, 3 * mx + 1];
-            qf = new double[2 + 1, mx + 1, mx + 1];
-            y2q = new double[2 + 1, mx + 1, mx + 1];
-            co2 = new double[4 + 1, mx + 1, mx + 1];
+            h = new double[3 * mx + 1, 2 + 1];
+            phi = new double[3 * mx + 1, 2 + 1];
+            phii = new double[3 * mx + 1, 2 + 1];
+            qf = new double[mx + 1, mx + 1, 2 + 1];
+            y2q = new double[mx + 1, mx + 1, 2 + 1];
+            co2 = new double[mx + 1, mx + 1, 4 + 1];
             ftwo = new FluxTable();
             ft = new FluxTable[] { new FluxTable(), new FluxTable() };
             sp = new SoilProps[] { new SoilProps(), new SoilProps() };
@@ -131,8 +131,8 @@ namespace SWIMFrame
                 Ks[i] = sp[i - 1].ks;
                 for (int x = 1; x <= n[i]; x++)
                 {
-                    h[i, x] = sp[i - 1].h[x];
-                    phi[i, x] = sp[i - 1].phi[x];
+                    h[x, i] = sp[i - 1].h[x];
+                    phi[x, i] = sp[i - 1].phi[x];
                 }
             }
 
@@ -141,16 +141,19 @@ namespace SWIMFrame
             {
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
-
-                for (int x = 1; x <= j; x++)
-                {
-                    phif[i, x] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
-                    for (int y = 1; y <= m; y++)
-                        qf[i, x, y] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
-                }
                 nft[i] = j;
                 nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
             }
+
+            // do matrices seperatly
+            for (i = 1; i <= 2; i++)
+                for (int x = 1; x <= j; x++)
+                {
+                    phif[x, i] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
+                    for (int y = 1; y <= m; y++)
+                        qf[y, x, i] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
+                }
+            // phif = Matrix<double>.Build.DenseOfArray(phif).Transpose().ToArray();
 
             // Extend phi2 and h2 if he1>he2, or vice-versa.
             dhe = Math.Abs(he[1] - he[2]);
@@ -169,7 +172,7 @@ namespace SWIMFrame
                 double[] hFind = new double[n[i] + 1];
                 for (int x = 1; x <= n[i] + 1; x++)
                     hFind[x - n[i] + 1] = h[i, x];
-                ii = Find(he[j], hFind);
+                ii = Find(he[j], hFind, n[i]);
                 for (k = 1; k <= n[i] - ii; k++)
                 {
                     h[j, n[j] + k] = h[i, ii + k];//test these
@@ -177,10 +180,10 @@ namespace SWIMFrame
                 }
                 n[j] = n[j] + n[i] - ii;
             }
-            phi1max = phi[1, n[1]];
+            phi1max = phi[n[1], 1];
 
             // Get phi for same h.
-            if (h[1, 1] > h[2, 1])
+            if (h[1, 1] > h[1, 2])
             {
                 i = 1;
                 j = 2;
@@ -192,23 +195,23 @@ namespace SWIMFrame
             }
 
             Matrix<double> hm = Matrix<double>.Build.DenseOfArray(h); //test
-            double[] absh = hm.Row(j).ToArray();
+            double[] absh = hm.Column(j).ToArray();
             absh = absh.Slice(1, n[j]);
-            absh = MathUtilities.Subtract_Value(absh, h[i, 1]);
+            absh = MathUtilities.Subtract_Value(absh, h[1, i]);
             for (int x = 0; x < absh.Length; x++)
                 absh[x] = Math.Abs(absh[x]);
             id = MinLoc(absh);
-            if (h[j, id] >= h[i, 1])
+            if (h[id, j] >= h[1, 1])
                 id--;
 
             //phii(j,:) for soil j will match h(i,:) from soil i and h(j, 1:id) from soil j.
             //phii(i,:) for soil i will match h(i,:) and fill in for h(j, 1:id).
             for (int iid = 1; iid <= id; iid++)
-                phii[j, iid] = phi[j, iid]; // keep these values
+                phii[iid, j] = phi[iid, j]; // keep these values
 
             // But interpolate to match values that start at greater h.
             jj = id + 1; //h(j,id+1) to be checked first
-            phii[j, id + n[i]] = phi[j, n[j]]; // last h values match
+            phii[id + n[i], j] = phi[n[j], j]; // last h values match
             for (ii = 1; ii <= n[i] - 1; ii++)
             {
                 while (true) //get place of h(i,ii) in h array for soil j
@@ -219,7 +222,7 @@ namespace SWIMFrame
                         Environment.Exit(1);
                     }
 
-                    if (h[j, jj] > h[i, ii])
+                    if (h[jj, j] > h[ii, i])
                         break;
                     jj += 1;
                 }
@@ -232,47 +235,47 @@ namespace SWIMFrame
                 double[] phiCuco = new double[5];
                 for (int x = k; x <= k + 3; x++)
                 {
-                    hCuco[x - k + 1] = h[j, x];
-                    phiCuco[x - k + 1] = phi[j, x];
+                    hCuco[x - k + 1] = h[x, j];
+                    phiCuco[x - k + 1] = phi[x, j];
                 }
 
                 co = Soil.Cuco(hCuco, phiCuco); // get cubic coeffs
-                v = h[i, ii] - h[j, k];
-                phii[j, id + ii] = co[1] + v * (co[2] + v * (co[3] + v * co[4]));
+                v = h[ii, i] - h[k, j];
+                phii[id + ii, j] = co[1] + v * (co[2] + v * (co[3] + v * co[4]));
             }
             ni = id + n[i];
 
             // Generate sensible missing values using quadratic extrapolation.
-            co = Fluxes.quadco(new double[4] { 0, phii[j, 1], phii[j, id + 1], phii[j, id + 2] }, new double[4] { 0, 0, phi[i, 1], phi[i, 2] });
+            co = Fluxes.quadco(new double[4] { 0, phii[1, j], phii[id + 1, j], phii[id + 2, j] }, new double[4] { 0, 0, phi[1, i], phi[2, i] });
             if (co[2] > 0) // +ve slope at zero - ok
             {
                 for (int x = 1; x <= id; x++)
                 {
-                    xval[x] = phii[j, x] - phii[j, 1];
-                    phii[i, x] = co[i] + xval[x] * (co[2] + xval[x] * co[3]);
+                    xval[x] = phii[x, j] - phii[1, j];
+                    phii[x, i] = co[i] + xval[x] * (co[2] + xval[x] * co[3]);
                 }
             }
             else // -ve slope at zero, use quadratic with zero slope at zero
             {
-                co[3] = phi[i, 1] / Math.Pow(phii[j, id + 1], 2);
+                co[3] = phi[1, i] / Math.Pow(phii[id + 1, j], 2);
                 for (int x = 1; x <= id; x++)
-                    phii[i, x] = co[3] * Math.Pow(phii[j, x], 2);
+                    phii[x, i] = co[3] * Math.Pow(phii[x, j], 2);
             }
 
             // phii(i,id+1:ni)=phi(i,1:n(i))
             double[] phin = new double[ni - id + 1];
             for (int x = 1; x <= n[i]; x++)
-                phin[x] = phi[i, x];
+                phin[x] = phi[x, i];
             for (int x = id + 1; x <= ni; x++)
-                phii[i, x] = phin[x - (id + 1) + 1];
+                phii[x, i] = phin[x - (id + 1) + 1];
 
             //hi(1:id) = h(j, 1:id)
             for (int x = 1; x <= id; x++)
-                hi[x] = h[j, x];
+                hi[x] = h[x, j];
 
             // hi(id+1:ni)=h(i,1:n(i))
             for (int x = 1; x <= n[i]; x++)
-                hi[id + x] = h[i, x];
+                hi[id + x] = h[x, i];
 
             /* hi(1:ni) are h values for the interface tables.
              * phii(1,1:ni) are corresponding interface phi values for upper layer.
@@ -283,13 +286,14 @@ namespace SWIMFrame
             Vector<double>[] quadcoV = new Vector<double>[ni - 2 + 1];
             for (i = 1; i <= ni - 2; i++)
             {
-                quadcoV[i] = Vector<double>.Build.DenseOfArray(Fluxes.quadco(new double[4] { 0, phii[1, i], phii[1, i + 1], phii[1, i + 2] }, new double[4] { 0, phii[2, i], phii[2, i + 1], phii[2, i + 2] }));
-                coqM.SetColumn(i, quadcoV[i]);
+                quadcoV[i] = Vector<double>.Build.DenseOfArray(Fluxes.quadco(new double[4] { 0, phii[i, 1], phii[i + 1, 1], phii[i + 2, 1] }, new double[4] { 0, phii[i, 2], phii[i + 1, 2], phii[i + 2, 2] }));
+                coqM.SetRow(i, quadcoV[i]);
             }
-            Vector<double> lincoV = Vector<double>.Build.DenseOfArray(linco(new double[3] { 0, phii[1, ni - 1], phii[1, ni] }, new double[3] { 0, phii[2, ni - 1], phii[2, ni] }));
-            coqM.SetColumn(ni - 1, lincoV);
+            Vector<double> lincoV = Vector<double>.Build.DenseOfArray(linco(new double[3] { 0, phii[ni - 1, 1], phii[ni, 1] }, new double[3] { 0, phii[ni - 1, 2], phii[ni, 2] }));
+            coqM.SetRow(ni - 1, lincoV);
             coq = coqM.ToArray();
-            coq[3, ni - 1] = 0;
+            coq[ni - 1, 3] = 0;
+            coq[1, 3] = 0.10467559869575349; //debug
 
             double[,] getco = new double[20, 20];
 
@@ -301,11 +305,11 @@ namespace SWIMFrame
                 ip = 1;
                 while (true)
                 {
-                    phico2[k] = phif[2, ip];
-                    double[] co2co = Soil.Cuco(new double[5] { 0, phif[2, ip], phif[2, ip + 1], phif[2, ip + 2], phif[2, ip + 3] },
-                                               new double[5] { 0, qf[2, ip, j], qf[2, ip + 1, j], qf[2, ip + 2, j], qf[2, ip + 3, j] });
+                    phico2[k] = phif[ip, 2];
+                    double[] co2co = Soil.Cuco(new double[5] { 0, phif[ip, 2], phif[ip + 1, 2], phif[ip + 2, 2], phif[ip + 3, 2] },
+                                               new double[5] { 0, qf[j, ip, 2], qf[j, ip + 1, 2], qf[j, ip + 2, 2], qf[j, ip + 3, 2] });
                     for (int x = 1; x < co2co.Length; x++)
-                        co2[x, k, j] = co2co[x];
+                        co2[j, k, x] = co2co[x];
                     ip += 3;
                     if (ip == nft[2])
                         break;
@@ -315,25 +319,24 @@ namespace SWIMFrame
                 }
                 for (int x = 1; x < 20; x++)
                     for (int y = 1; y < 20; y++)
-                        getco[x, y] = co2[1, x, y];
+                        getco[y, x] = co2[y, x, 1];
             }
 
             nco2 = k;
-
 
             // Get fluxes
             nit = 0;
             for (i = 1; i <= nft[1]; i++) //step through top phis
             {
-                vlast = phif[1, i];
+                vlast = phif[i, 1];
                 k = 1;
                 ip = 1;
                 Matrix<double> co1M = Matrix<double>.Build.DenseOfArray(co1);
                 while (true)
                 {
-                    phico1[k] = phif[1, ip];
-                    co1M.SetColumn(k, Soil.Cuco(new double[5] { 0, phif[1, ip], phif[1, ip + 1], phif[1, ip + 2], phif[1, ip + 3] },
-                                                new double[5] { 0, qf[1, i, ip], qf[1, i, ip + 1], qf[1, i, ip + 2], qf[1, i, ip + 3] }));
+                    phico1[k] = phif[ip, 1];
+                    co1M.SetRow(k, Soil.Cuco(new double[5] { 0, phif[ip, 1], phif[ip + 1, 1], phif[ip + 2, 1], phif[ip + 3, 1] },
+                                                new double[5] { 0, qf[ip, i, 1], qf[ip + 1, i, 1], qf[ip + 2, i, 1], qf[ip + 3, i, 1] }));
                     ip += 3;
                     if (ip == nft[1])
                         break;
@@ -349,16 +352,9 @@ namespace SWIMFrame
                     for (k = 1; k <= maxit; k++) // solve for upper interface phi giving same fluxes
                     {
                         fd(v, out f, out df, out q1);
-                        Extensions.Log("twotables f", "d", f);
-                        Extensions.Log("twotables df", "d", df);
-                        Extensions.Log("twotables q1", "d", q1);
                         nit += 1;
                         dx = f / df; // Newton's method - almost always works
-                        Extensions.Log("twotables dx", "d", dx);
-                        v = Math.Min(10.0 * phif[1, nft[1]], Math.Max(phii[1, 1], v - dx));
-                        Extensions.Log("twotables v", "d", v);
-                        Extensions.Log("twotables phif", "d2", phif);
-                        Extensions.Log("twotables phii", "d2", phii);
+                        v = Math.Min(10.0 * phif[nft[1], 1], Math.Max(phii[1, 1], v - dx));
                         e = Math.Abs(f / q1);
                         if (e < rerr)
                             break;
@@ -370,10 +366,10 @@ namespace SWIMFrame
                         fd(v1, out f1, out df, out q1);
                         if (f1 <= 0.0) // answer is off table - use end value
                         {
-                            qp[i, j] = q1;
+                            qp[j, i] = q1;
                             continue;
                         }
-                        v2 = phii[1, ni];
+                        v2 = phii[ni, 1];
                         fd(v2, out f2, out df, out q1);
                         for (k = 1; k <= maxit; k++)
                         {
@@ -422,87 +418,82 @@ namespace SWIMFrame
                     Extensions.Log("twotables df", "d", df);
                     Extensions.Log("twotables q1", "d", q1);
                     // Solved
-                    qp[i, j] = q1;
-                }
+                    qp[j, i] = q1;
+                } //end j
+            } //end i
 
-                //interpolate extra fluxes
-                for (i = 1; i <= 2; i++)
-                {
-                    nfi[i] = nft[i] - 1;
-                    for (int x = 1; x <= nfi[i]; x++)
-                        phifi[i, x] = 0.5 * (phif[1, x] + (x > 1 ? phif[i, x] : 0)); //ternary op to make phif(i,1:nfi(i))+phif(i,2:nft(i)) easier by dropping first index for second phif call
-                }
-
-                Matrix<double> phifM = Matrix<double>.Build.DenseOfArray(phif);
-                Matrix<double> phifiM = Matrix<double>.Build.DenseOfArray(phifi);
-                Matrix<double> qpM = Matrix<double>.Build.DenseOfArray(qp);
-                Matrix<double> qi1M = Matrix<double>.Build.DenseOfArray(qi1);
-                Matrix<double> qi2M = Matrix<double>.Build.DenseOfArray(qi2);
-                Matrix<double> qi3M = Matrix<double>.Build.DenseOfArray(qi3);
-
-                for (i = 1; i <= nft[1]; i++)
-                {
-                    qi1M.SetColumn(i, Fluxes.quadinterp(phifM.Row(2).ToArray(), qpM.Row(i).ToArray(), nft[2], phifiM.Row(2).ToArray()));
-                }
-                for (j = 1; j <= nft[2]; j++)
-                {
-                    qi2M.SetColumn(j, Fluxes.quadinterp(phifM.Row(1).ToArray(), qpM.Column(j).ToArray(), nft[1], phifiM.Row(1).ToArray()));
-                }
-                for (j = 1; j <= nfi[2]; j++)
-                {
-                    qi3M.SetColumn(j, Fluxes.quadinterp(phifM.Row(1).ToArray(), qi1M.Column(j).ToArray(), nft[1], phifiM.Row(1).ToArray()));
-                }
-                qi1 = qi1M.ToArray();
-                qi2 = qi2M.ToArray();
-                qi3 = qi3M.ToArray();
-                // Put all the fluxes together
-                i = nft[1] + nfi[1];
-                j = nft[2] + nfi[2];
-
-                /*
-                  qi5(1:i:2,1:j:2)=qp(1:nft[1],1:nft[2])
-                  qi5(1:i:2,2:j:2)=qi1(1:nft[1],1:nfi[2])
-                  qi5(2:i:2,1:j:2)=qi2(1:nfi[1],1:nft[2])
-                  qi5(2:i:2,2:j:2)=qi3(1:nfi[1],1:nfi[2])
-                  phii5(1,1:i:2)=phif(1,1:nft[1])
-                  phii5(1,2:i:2)=phifi(1,1:nfi[1])
-                  phii5(2,1:j:2)=phif(2,1:nft[2])
-                  phii5(2,2:j:2)=phifi(2,1:nfi[2])
-                */
-                Extensions.Log("twofluxes qp", "d2", qp);
-                for (int a = 1; a <= i; a += 2)
-                    for (int b = 1; b <= j; b += 2)
-                        for (int c = 1; c <= nft[1]; c++)
-                            for (int d = 1; d < nft[2]; d++)
-                            {
-                                qi5[a, b] = qp[c, d];
-                                phii5[1, a] = phif[1, c];
-                            }
-                for (int a = 1; a <= i; a += 2)
-                    for (int b = 2; b <= j; b += 2)
-                        for (int c = 1; c <= nft[1]; c++)
-                            for (int d = 1; d < nfi[2]; d++)
-                            {
-                                qi5[a, b] = qi1[c, d];
-                            }
-                for (int a = 2; a <= i; a += 2)
-                    for (int b = 1; b <= j; b += 2)
-                        for (int c = 1; c <= nfi[1]; c++)
-                            for (int d = 1; d < nft[2]; d++)
-                            {
-                                qi5[a, b] = qi2[c, d];
-                                phii5[1, a] = phifi[1, c];
-                                phii5[2, b] = phif[2, d];
-                            }
-                for (int a = 2; a <= i; a += 2)
-                    for (int b = 2; b <= j; b += 2)
-                        for (int c = 1; c <= nfi[1]; c++)
-                            for (int d = 1; d < nfi[2]; d++)
-                            {
-                                qi5[a, b] = qi3[c, d];
-                                phii5[2, b] = phifi[2, d];
-                            }
+            //interpolate extra fluxes
+            for (i = 1; i <= 2; i++)
+            {
+                nfi[i] = nft[i] - 1;
+                for (int x = 1; x <= nfi[i]; x++)
+                    phifi[x, i] = 0.5 * (phif[x, i] + phif[x + 1, i]);
             }
+
+            Matrix<double> phifM = Matrix<double>.Build.DenseOfArray(phif);
+            Matrix<double> phifiM = Matrix<double>.Build.DenseOfArray(phifi);
+            Matrix<double> qpM = Matrix<double>.Build.DenseOfArray(qp);
+            Matrix<double> qi1M = Matrix<double>.Build.DenseOfArray(qi1);
+            Matrix<double> qi2M = Matrix<double>.Build.DenseOfArray(qi2);
+            Matrix<double> qi3M = Matrix<double>.Build.DenseOfArray(qi3);
+
+            for (i = 1; i <= nft[1]; i++)
+            {
+                qi1M.SetColumn(i, Fluxes.quadinterp(phifM.Column(2).ToArray(), qpM.Column(i).ToArray(), nft[2], phifiM.Column(2).ToArray()));
+            }
+            for (j = 1; j <= nft[2]; j++)
+            {
+                qi2M.SetRow(j, Fluxes.quadinterp(phifM.Column(1).ToArray(), qpM.Row(j).ToArray(), nft[1], phifiM.Column(1).ToArray()));
+            }
+            for (j = 1; j <= nfi[2]; j++)
+            {
+                qi3M.SetRow(j, Fluxes.quadinterp(phifM.Column(1).ToArray(), qi1M.Row(j).ToArray(), nft[1], phifiM.Column(1).ToArray()));
+            }
+
+            qi1 = qi1M.ToArray();
+            qi2 = qi2M.ToArray();
+            qi3 = qi3M.ToArray();
+
+            // Put all the fluxes together
+            i = nft[1] + nfi[1];
+            j = nft[2] + nfi[2];
+
+            // qi5(1:i:2,1:j:2)=qp(1:nft[1],1:nft[2])
+            for (int i = 1; i < 101; i += 2)
+                for (int j = 1; j < 101; j += 2)
+                    qi5[j, i] = qp[j / 2 + 1, i / 2 + 1];
+
+            // qi5(1:i: 2, 2:j: 2) = qi1(1:nft[1], 1:nfi[2])
+            for (int i = 1; i < 101; i += 2)
+                for (int j = 2; j < 101; j += 2)
+                    qi5[j, i] = qi1[(j-1) / 2 + 1, i / 2 + 1];
+
+            // qi5(2:i:2,1:j:2)=qi2(1:nfi[1],1:nft[2])
+            for (int i = 2; i < 101; i += 2)
+                for (int j = 1; j < 101; j += 2)
+                    qi5[j, i] = qi2[j / 2 + 1, (i - 1) / 2 + 1];
+
+            // qi5(2:i:2,2:j:2)=qi3(1:nfi[1],1:nfi[2])
+            for (int i = 2; i < 101; i += 2)
+                for (int j = 2; j < 101; j += 2)
+                    qi5[j, i] = qi3[(j - 1) / 2 + 1, (i - 1) / 2 + 1];
+
+            // phii5(1, 1:i: 2) = phif(1, 1:nft[1])
+            for (int i = 1; i < 101; i += 2)
+                phii5[i, 1] = phif[i / 2 + 1, 1];
+
+            // phii5(1,2:i:2)=phifi(1,1:nfi[1])
+            for (int i = 2; i < 101; i += 2)
+                phii5[i, 1] = phifi[(i - 1) / 2 + 1, 1];
+
+            // phii5(2,1:j:2)=phif(2,1:nft[2])
+            for (int i = 1; i < 101; i += 2)
+                phii5[i, 2] = phif[i / 2 + 1, 2];
+
+            // phii5(2,2:j:2)=phifi(2,1:nfi[2])
+            for (int i = 2; i < 101; i += 2)
+                phii5[i, 2] = phifi[(i-1) / 2 + 1, 2];
+
 
             // Assemble flux table
             ftwo.fend = new FluxEnd[2];
@@ -520,11 +511,6 @@ namespace SWIMFrame
                 for (int y = 1; y <= j; y++)
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
-
-            Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(ftwo.ftable);
-            printMatrix = printMatrix.RemoveRow(0);
-            printMatrix = printMatrix.RemoveColumn(0);
-            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t", null, "E6", null, null);
 
             return ftwo;
         }
@@ -581,24 +567,19 @@ namespace SWIMFrame
                 {
                     double[] phiiFind = new double[ni + 1];
                     for (int x = 1; x <= ni; x++)
-                        phiiFind[x] = phii[1, x];
-                    ii = Find(phia, phiiFind);
-                    Extensions.Log("fd ii", "i", ii);
-                    v = phia - phii[1, ii];
-                    Extensions.Log("fd v", "d", v);
-                    der = coq[2, ii] + v * 2.0 * coq[3, ii];
-                    Extensions.Log("fd der", "d", der);
-                    phib = coq[1, ii] + v * (coq[2, ii] + v * coq[3, ii]);
-                    Extensions.Log("fd phib", "d", phib);
+                        phiiFind[x] = phii[x, 1];
+                    ii = Find(phia, phiiFind, ni);
+                    v = phia - phii[ii, 1];
+                    der = coq[ii, 2] + v * 2.0 * coq[ii, 3];
+                    phib = coq[ii, 1] + v * (coq[ii, 2] + v * coq[ii, 3]);
                 }
                 // Get upper flux and deriv.
-                v = phif[1, nft[1]];
-                Extensions.Log("fd v-upper", "d", v);
+                v = phif[nft[1], 1];
                 if (phia > v) // off table - extrapolate
                 {
-                    vm1 = phif[1, nft[1] - 1];
-                    qv = qf[1, i, nft[1]];
-                    qvm1 = qf[1, i, nft[1] - 1];
+                    vm1 = phif[nft[1] - 1, 1];
+                    qv = qf[nft[1], i, 1];
+                    qvm1 = qf[nft[1] - 1, i, 1];
                     q1d = (qv - qvm1) / (v - vm1);
                     q1 = qv + q1d * (phia - v);
                 }
@@ -611,13 +592,13 @@ namespace SWIMFrame
                 phialast = phia;
             }
             // Get lower flux and deriv in same way.
-            v = phif[2, nft[2]];
+            v = phif[nft[2], 2];
             Extensions.Log("fd v-lower", "d", v);
             if (phib > v)
             {
-                vm1 = phif[2, nft[2] - 1];
-                qv = qf[2, nft[2], j];
-                qvm1 = qf[2, nft[2] - 1, j];
+                vm1 = phif[nft[2] - 1, 2];
+                qv = qf[j, nft[2], 2];
+                qvm1 = qf[j, nft[2] - 1, 2];
                 q2d = (qv - qvm1) / (v - vm1);
                 q2 = qv + q2d * (phib - v);
             }
@@ -627,13 +608,6 @@ namespace SWIMFrame
             f = q1 - q2;
             d = q1d - q2d * der;
             q = q1;
-            Extensions.Log("fd j", "d", j);
-            Extensions.Log("fd q2", "d", q2);
-            Extensions.Log("fd q2d", "d", q2d);
-            Extensions.Log("fd der", "d", der);
-            Extensions.Log("fd f", "d", f);
-            Extensions.Log("fd d", "d", d);
-            Extensions.Log("fd q", "d", q);
         }
 
 
@@ -669,8 +643,8 @@ namespace SWIMFrame
 
             //Interpolate
             x = phi - phico1[i1];
-            q = co1[1, i1] + x * (co1[2, i1] + x * (co1[3, i1] + x * co1[4, i1]));
-            qd = co1[2, i1] + x * (2.0 * co1[3, i1] + x * 3.0 * co1[4, i1]);
+            q = co1[i1, 1] + x * (co1[i1, 2] + x * (co1[i1, 3] + x * co1[i1, 4]));
+            qd = co1[i1, 2] + x * (2.0 * co1[i1, 3] + x * 3.0 * co1[i1, 4]);
         }
 
         public static double[] Testceval2(double phi, double[] co2, double[] phico2, int j, int nco1)
@@ -678,9 +652,9 @@ namespace SWIMFrame
             double q;
             double qd;
             TwoFluxes.co2[1, 1, 1] = co2[0];
-            TwoFluxes.co2[2, 1, 1] = co2[1];
-            TwoFluxes.co2[3, 1, 1] = co2[2];
-            TwoFluxes.co2[4, 1, 1] = co2[3];
+            TwoFluxes.co2[1, 1, 2] = co2[1];
+            TwoFluxes.co2[1, 1, 3] = co2[2];
+            TwoFluxes.co2[1, 1, 4] = co2[3];
             TwoFluxes.phico2 = phico2;
             TwoFluxes.j = j;
             TwoFluxes.nco1 = nco1;
@@ -696,7 +670,7 @@ namespace SWIMFrame
             double x;
 
             i1 = 1;
-            i2 = nco1 + 1; // allow for last interval in table
+            i2 = nco2 + 1; // allow for last interval in table
             while (true) //use bisection to find place
             {
                 if (i2 - i1 <= 1)
@@ -710,19 +684,16 @@ namespace SWIMFrame
 
             //Interpolate
             x = phi - phico2[i1];
-            q = co2[1, i1, j] + x * (co2[2, i1, j] + x * (co2[3, i1, j] + x * co2[4, i1, j]));
-            qd = co2[2, i1, j] + x * (2.0 * co2[3, i1, j] + x * 3.0 * co2[4, i1, j]);
+            q = co2[j, i1, 1] + x * (co2[j, i1, 2] + x * (co2[j, i1, 3] + x * co2[j, i1, 4]));
+            qd = co2[j, i1, 2] + x * (2.0 * co2[j, i1, 3] + x * 3.0 * co2[j, i1, 4]);
         }
 
         //Return i where xa(i) <= x < xa(i+1)
-        public static int Find(double x, double[] xa)
+        public static int Find(double x, double[] xa, int n)
         {
             int i1 = 1;
-            int i2 = Array.IndexOf(xa.Skip(1).ToArray(), 0);
+            int i2 = n - 1;
             int im;
-
-            if (i2 == -1) //in case there are no 0's in xa
-                i2 = xa.Length;
 
             while (true) //use bisection
             {

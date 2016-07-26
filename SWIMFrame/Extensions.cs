@@ -41,7 +41,6 @@ namespace SWIMFrame
         /// <returns type="object">returns an object if it has anything to return</returns>
         public static object TestMethod(string typeName, string methodName, params object[] parameters)
         {
-
             //get the type of the class
             Type theType = Type.GetType("SWIMFrame." + typeName + ", SWIMFrame");
 

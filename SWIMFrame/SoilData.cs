@@ -453,7 +453,7 @@ namespace SWIMFrame
             }
             else if (h >= sp[i].h[1]) // use linear interp in (ln(-h),S)
             {
-                j = TwoFluxes.Find(h, sp[i].h);
+                j = Find(h, sp[i].h);
                 d = (sp[i].S[j + 1] - sp[i].S[j]) / Math.Log(sp[i].h[j + 1] / sp[i].h[j]);
                 S = sp[i].S[j] + d * Math.Log(h / sp[i].h[j]);
                 Sh = d / h;
@@ -463,7 +463,7 @@ namespace SWIMFrame
                 lnh = Math.Log(-h);
                 if (-lnh >= -sp[i].lnh[1]) // use linear interp in (ln(-h),S)
                 {
-                    j = TwoFluxes.Find(-lnh, sp[i].lnh);
+                    j = Find(-lnh, sp[i].lnh);
                     d = (sp[i].Sd[j + 1] - sp[i].Sd[j]) / (sp[i].lnh[j + 1] - sp[i].lnh[j]);
                     S = sp[i].Sd[j] + d * (lnh - sp[i].lnh[j]);
                     Sh = d / h;
@@ -474,6 +474,32 @@ namespace SWIMFrame
                     Sh = 0.0;
                 }
             }    
+        }
+
+        //Return i where xa(i) <= x < xa(i+1)
+        public static int Find(double x, double[] xa)
+        {
+            int i1 = 1;
+            int i2 = Array.IndexOf(xa.Skip(1).ToArray(), 0);
+            int im;
+
+            if (i2 == -1) //in case there are no 0's in xa
+                i2 = xa.Length;
+
+            i2--; // FORTRAN is size(xa) - 1;
+
+            while (true) //use bisection
+            {
+                if (i2 - i1 <= 1)
+                    break;
+
+                im = (i1 + i2) / 2;
+                if (x >= xa[im])
+                    i1 = im;
+                else
+                    i2 = im;
+            }
+            return i1;
         }
 
         // Returns h and, if required, hS given S and soil layer no. il.
@@ -494,7 +520,7 @@ namespace SWIMFrame
 
             if (S >= sp[i].S[1]) // then !use linear interp in (S, ln(-h))
             {
-                j = TwoFluxes.Find(S, sp[i].S);
+                j = Find(S, sp[i].S);
                 d = Math.Log(sp[i].h[j + 1] / sp[i].h[j]) / (sp[i].S[j + 1] - sp[i].S[j]);
                 lnh = Math.Log(-sp[i].h[j]) + d * (S - sp[i].S[j]);
                 h = -Math.Exp(lnh);
@@ -502,7 +528,7 @@ namespace SWIMFrame
             }
             else if (S >= sp[i].Sd[1]) // then !use linear interp in (S, ln(-h))
             {
-                j = TwoFluxes.Find(S, sp[i].Sd);
+                j = Find(S, sp[i].Sd);
                 d = (sp[i].lnh[j + 1] - sp[i].lnh[j]) / (sp[i].Sd[j + 1] - sp[i].Sd[j]);
                 lnh = sp[i].lnh[j] + d * (S - sp[i].Sd[j]);
                 h = -Math.Exp(lnh);
@@ -526,7 +552,7 @@ namespace SWIMFrame
 
             if (S >= sp[i].Sc[1]) //then !use cubic interp
             {
-                j = TwoFluxes.Find(S, sp[i].Sc);
+                j = Find(S, sp[i].Sc);
                 x = S - sp[i].Sc[j];
                 phi = sp[i].phic[j] + x * (sp[i].phico[1, j] + x * (sp[i].phico[2, j] + x * sp[i].phico[3, j]));
                 phiS = sp[i].phico[1, j] + x * (2.0 * sp[i].phico[2, j] + x * 3.0 * sp[i].phico[3, j]);
