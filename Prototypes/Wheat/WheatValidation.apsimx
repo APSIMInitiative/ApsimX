@@ -574,8 +574,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>12</double>
               </X>
               <Y>
-                <double>0.6</double>
-                <double>0.6</double>
+                <double>0.75</double>
+                <double>0.75</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1.4</double>
@@ -603,7 +603,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>14</double>
               </X>
               <Y>
-                <double>1</double>
+                <double>1.6</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -908,7 +908,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
         </DivideFunction>
         <AddFunction>
-          <Name>HaunStageOld</Name>
+          <Name>HaunStage</Name>
           <VariableReference>
             <Name>AppearedLeaves</Name>
             <VariableName>[Leaf].ExpandedCohortNo</VariableName>
@@ -917,17 +917,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>ProportionOfExpandingLeaf</Name>
             <VariableName>[Leaf].NextExpandingLeafProportion</VariableName>
           </VariableReference>
-        </AddFunction>
-        <AddFunction>
-          <Name>HaunStage</Name>
-          <VariableReference>
-            <Name>AppearedLeaves</Name>
-            <VariableName>[Structure].LeafTipsAppeared</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>Constant</Name>
-            <Value>-1</Value>
-          </Constant>
         </AddFunction>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
@@ -2894,7 +2883,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].SowingData.Cultivar</string>
         <string>[Wheat].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
         <string>[Wheat].Structure.HaunStage.Value</string>
-        <string>[Wheat].Structure.HaunStageOld.Value</string>
         <string>[Wheat].Structure.Height</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>
         <string>[Wheat].Structure.MainStemFinalNodeNumber.Value</string>
@@ -2906,7 +2894,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[SurfaceOrganicMatter].Wt</string>
         <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
         <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
-        <string>[Wheat].Phenology.Photoperiod.Value</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -12202,7 +12189,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
+          <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12230,7 +12217,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Photoperiod</Name>
+          <Name>PredictedDLNo1</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -12244,28 +12231,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Phenology.Photoperiod.Value</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>PredictedHaunStage1</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>DailyReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Structure.HaunStageOld.Value</YFieldName>
+          <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -30108,7 +30074,7 @@ namespace Models
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Circle</Marker>
+              <Marker>FilledCircle</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
@@ -30131,7 +30097,7 @@ namespace Models
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
-              <Line>Dot</Line>
+              <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
