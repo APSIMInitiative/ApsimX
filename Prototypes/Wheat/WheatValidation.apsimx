@@ -151,7 +151,7 @@ The model consists of:
           <Name>DailyVernalisation</Name>
           <VariableReference>
             <Name>DeltaHaunStage</Name>
-            <VariableName>[Structure].DeltaHaunStage</VariableName>
+            <VariableName>[Phenology].DeltaHaunStage</VariableName>
           </VariableReference>
           <AirTemperatureFunction>
             <Name>TempResponseProfile</Name>
@@ -314,11 +314,11 @@ The model consists of:
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MeanPhyllochron.Value</VariableName>
+              <VariableName>[Phenology].MeanPhyllochron.Value</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>HSTS</Name>
-              <VariableName>[Structure].HaunStageTerminalSpikelet.Value</VariableName>
+              <VariableName>[Phenology].HaunStageTerminalSpikelet.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>Emergence</Start>
@@ -343,7 +343,7 @@ The model consists of:
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+              <VariableName>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -709,7 +709,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <X>
                   <double>0</double>
                   <double>0.9</double>
-                  <double>1</double>
+                  <double>0.95</double>
                 </X>
                 <Y>
                   <double>1</double>
@@ -734,7 +734,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MeanTillerGrowthRate.Value</XProperty>
+              <XProperty>[Phenology].MeanTillerGrowthRate.Value</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
@@ -759,7 +759,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Structure].MeanTillerGrowthRate.Value</XProperty>
+                <XProperty>[Phenology].MeanTillerGrowthRate.Value</XProperty>
               </LinearInterpolationFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
@@ -823,7 +823,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <VariableReference>
               <Name>StemPopulation</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
+              <VariableName>[Phenology].TotalStemPopn</VariableName>
             </VariableReference>
           </DivideFunction>
           <NumberOfDays>5</NumberOfDays>
@@ -833,7 +833,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MeanPhyllochron</Name>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            <VariableName>[Phenology].MainStemNodeAppearanceRate.Value</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
@@ -895,7 +895,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>FLNlessIntercept</Name>
             <VariableReference>
               <Name>FinalLeafNumber</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+              <VariableName>[Phenology].MainStemFinalNodeNumber.Value</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1560,7 +1560,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <VariableReference>
             <Name>GrowthDuration</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            <VariableName>[Phenology].MainStemNodeAppearanceRate.Value</VariableName>
           </VariableReference>
           <PhaseLookup>
             <Name>LagDuration</Name>
@@ -1570,11 +1570,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>LagDuration</Name>
                 <Constant>
                   <Name>Multiplier</Name>
-                  <Value>4</Value>
+                  <Value>3</Value>
                 </Constant>
                 <VariableReference>
                   <Name>Phyllochron</Name>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                  <VariableName>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
                 </VariableReference>
               </MultiplyFunction>
               <Start>Emergence</Start>
@@ -1598,7 +1598,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Phenology].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
@@ -2043,7 +2043,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
-            <VariableName>[Structure].TotalStemPopn</VariableName>
+            <VariableName>[Phenology].TotalStemPopn</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <Folder>
@@ -2365,7 +2365,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 6</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
@@ -2379,7 +2379,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 8</Command>
             <Command>[Phenology].PpSensitivity.Value = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
@@ -2387,7 +2387,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
@@ -2401,7 +2401,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 8</Command>
             <Command>[Phenology].PpSensitivity.Value = 8</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2439,7 +2439,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -2471,7 +2471,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
@@ -2521,7 +2521,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 10</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
             <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 1.0,1.0</Command>
@@ -2602,7 +2602,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
             <Command>[Phenology].VrnSensitivity.Value = 3</Command>
             <Command>[Phenology].PpSensitivity.Value = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
@@ -2612,7 +2612,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VernLag.Value = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 3.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
@@ -2655,7 +2655,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 90</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 90</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
@@ -2716,7 +2716,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].PpSensitivity.Value = 5</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.Value = 2.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.Value = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
+            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
@@ -3160,7 +3160,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>Plastochron</Name>
               <VariableReference>
                 <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                <VariableName>[Phenology].MainStemNodeAppearanceRate.Value</VariableName>
               </VariableReference>
               <Constant>
                 <Name>LeafTipsPerPrimordia</Name>
@@ -3190,7 +3190,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
                   <double>42</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].LeafTipsAppeared</XProperty>
+              <XProperty>[Phenology].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>
@@ -3218,7 +3218,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           </AddFunction>
           <VariableReference>
             <Name>PostEventValue</Name>
-            <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
+            <VariableName>[Phenology].MainStemPrimordiaNo</VariableName>
           </VariableReference>
           <SetEvent>FloralInitiation</SetEvent>
           <ReSetEvent />
@@ -3858,7 +3858,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>LargestLeafPosition</Name>
               <VariableReference>
                 <Name>FinalLeafNumber</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+                <VariableName>[Phenology].MainStemFinalNodeNumber.Value</VariableName>
               </VariableReference>
               <Constant>
                 <Name>RelativePositionOfLargestLeaf</Name>
@@ -3886,7 +3886,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <double>90000</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
+              <XProperty>[Phenology].MainStemFinalNodeNumber.Value</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Breadth</Name>
@@ -3907,7 +3907,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <double>-0.016</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
+              <XProperty>[Phenology].MainStemFinalNodeNumber.Value</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>Skewness</Name>
@@ -3975,7 +3975,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>100</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
+            <XProperty>[Phenology].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LagDuration</Name>
@@ -3992,7 +3992,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>650</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
+            <XProperty>[Phenology].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SenescenceDuration</Name>
@@ -4009,7 +4009,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>350</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
+            <XProperty>[Phenology].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
@@ -4032,7 +4032,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>0.03</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            <XProperty>[Phenology].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -4086,7 +4086,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>25000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            <XProperty>[Phenology].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -4101,7 +4101,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>8000</double>
               </Y>
             </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+            <XProperty>[Phenology].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>StructuralFraction</Name>
@@ -4455,7 +4455,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>CobNumber</Name>
           <VariableReference>
             <Name>StemNumber</Name>
-            <VariableName>[Structure].TotalStemPopn</VariableName>
+            <VariableName>[Phenology].TotalStemPopn</VariableName>
           </VariableReference>
           <Constant>
             <Name>CobsPerStem</Name>
@@ -4614,7 +4614,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>0.005</double>
             </Y>
           </XYPairs>
-          <XProperty>[Structure].LeafTipsAppeared</XProperty>
+          <XProperty>[Phenology].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -4644,11 +4644,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>PotentialDMAccumulation</Name>
             <VariableReference>
               <Name>NodesAppearing</Name>
-              <VariableName>[Structure].DeltaTipNumber</VariableName>
+              <VariableName>[Phenology].DeltaTipNumber</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>Branches</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
+              <VariableName>[Phenology].TotalStemPopn</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>PotentialInternodeWt</Name>
@@ -4667,7 +4667,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
                   <double>16</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].RelativeNodeApperance</XProperty>
+              <XProperty>[Phenology].RelativeNodeApperance</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -4682,11 +4682,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </Constant>
             <VariableReference>
               <Name>Branches</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
+              <VariableName>[Phenology].TotalStemPopn</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>DeltaHeight</Name>
-              <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
+              <VariableName>[Phenology].HeightModel.DeltaHeight</VariableName>
             </VariableReference>
           </MultiplyFunction>
         </MinimumFunction>
@@ -5324,11 +5324,11 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Phenology].Juvenile.Target.Value = 150</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 450</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
+        <Command>[Phenology].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
+        <Command>[Phenology].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 18</Command>
-        <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
-        <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
+        <Command>[Phenology].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
+        <Command>[Phenology].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_34K77</Name>
