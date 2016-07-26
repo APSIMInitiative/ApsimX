@@ -1496,23 +1496,68 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XProperty>[Wheat].Leaf.Fn</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
-          <LinearInterpolationFunction>
+          <MinimumFunction>
             <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1.3</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>WaterStress</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0.1</double>
+                  <double>0.7</double>
+                  <double>1.3</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>TemperatuerEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>12</double>
+                  <double>14</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].MeanTemp.Value</XProperty>
+            </LinearInterpolationFunction>
+          </MinimumFunction>
+          <MultiplyFunction>
+            <Name>MaxArea</Name>
+            <Constant>
+              <Name>AreaLargestLeaves</Name>
+              <Value>2600</Value>
+              <Units>mm^2</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>3</double>
+                  <double>3.45</double>
+                  <double>4</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>0.5</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
           <VariableReference>
             <Name>GrowthDuration</Name>
             <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
@@ -1692,31 +1737,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>LeafSizeShapeParameter</Name>
             <Value>0.3</Value>
           </Constant>
-          <MultiplyFunction>
-            <Name>MaxArea</Name>
-            <Constant>
-              <Name>AreaLargestLeaves</Name>
-              <Value>2600</Value>
-              <Units>mm^2</Units>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>AgeFactor</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>3</double>
-                  <double>3.7</double>
-                  <double>4</double>
-                </X>
-                <Y>
-                  <double>0.1</double>
-                  <double>0.5</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Phenology].Stage</XProperty>
-            </LinearInterpolationFunction>
-          </MultiplyFunction>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
             <Value>1</Value>
@@ -1748,22 +1768,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>ThermalTime</Name>
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>MaxArea1</Name>
-            <Constant>
-              <Name>AreaLargestLeaves</Name>
-              <Value>2600</Value>
-              <Units>mm^2</Units>
-            </Constant>
-            <VariableReference>
-              <Name>SubDominnatLeafCorrection</Name>
-              <VariableName>[Leaf].CohortParameters.SenessingLeafRelativeSize.Value</VariableName>
-            </VariableReference>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[This is multiplied by the relative size of senescing leaves because as the sub dominant leaves sceness the population of each leaf cohort reduces faster than the size (because the size reduction is multiplied by the SenessingleafFelativeSize parameter) and the size of modeled cohorts increases as tiller death occurs]]></MemoText>
-            </Memo>
           </MultiplyFunction>
         </LeafCohortParameters>
         <RUEModel>
@@ -2858,6 +2862,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Phenology.CurrentStageName</string>
         <string>[Wheat].Phenology.DailyVernalisation.Value</string>
         <string>[Wheat].Phenology.MeanTemp.Value</string>
+        <string>[Wheat].Phenology.Photoperiod.Value</string>
         <string>[Wheat].Phenology.Stage</string>
         <string>[Wheat].Phenology.ThermalTime.Value</string>
         <string>[Wheat].Phenology.Vrn1.Value</string>
@@ -5360,6 +5365,59 @@ VShort duration variety released in New Zealand by Pioneer
       <CropType>Maize</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Manager>
+      <Name>MaxLeafSize</Name>
+      <Script />
+      <Code><![CDATA[using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+
+
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Plant Wheat;
+		
+		public event EventHandler LeafReport;
+		
+		[XmlIgnore] public int LeafPosition { get; set; }
+		[XmlIgnore] public double MaxLeafSize { get; set; }
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if ((Wheat.Leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))
+			{
+				LeafPosition = (int)
+				Wheat.Leaf.ExpandedCohortNo;
+				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
+				LeafReport.Invoke(this, new EventArgs());
+			}
+		}
+	}
+}]]></Code>
+    </Manager>
+    <Report>
+      <Name>MaxLeafSizeReport</Name>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[MaxLeafSize].Script.MaxLeafSize</string>
+        <string>[MaxLeafSize].Script.LeafPosition</string>
+      </VariableNames>
+      <EventNames>
+        <string>[MaxLeafSize].Script.LeafReport</string>
+      </EventNames>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -12033,6 +12091,39 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <Manager>
+            <Name>MaxLeafSize</Name>
+            <Script />
+            <Code><![CDATA[using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Models.Core;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
+
+
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+	
+		
+	}
+}]]></Code>
+          </Manager>
+          <Report>
+            <Name>MaxLeafSizeReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string />
+            </VariableNames>
+            <EventNames>
+              <string />
+            </EventNames>
+          </Report>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -28766,8 +28857,6 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF;
-using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 
 
@@ -28777,24 +28866,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Link] Clock Clock;
-		[Link] Plant Wheat;
+	
 		
-		public event EventHandler LeafReport;
-		
-		[XmlIgnore] public int LeafPosition { get; set; }
-		[XmlIgnore] public double MaxLeafSize { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Wheat.Leaf.ExpandedCohortNo > LeafPosition)
-			{
-				LeafPosition = (int)Wheat.Leaf.ExpandedCohortNo;
-				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
-				LeafReport.Invoke(this, new EventArgs());
-			}
-		}
 	}
 }]]></Code>
           </Manager>
@@ -28803,11 +28876,10 @@ namespace Models
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
-              <string>[MaxLeafSize].Script.MaxLeafSize</string>
-              <string>[MaxLeafSize].Script.LeafPosition</string>
+              <string />
             </VariableNames>
             <EventNames>
-              <string>[MaxLeafSize].Script.LeafReport</string>
+              <string />
             </EventNames>
           </Report>
           <Area>1</Area>
@@ -34003,19 +34075,19 @@ namespace Models
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>2014-10-13</Date>
-                <Action>[Irrigation].Apply(40,0,1.0);</Action>
+                <Action>[Irrigation].Apply(50,0,1.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-10-27</Date>
-                <Action>[Irrigation].Apply(40,0,1.0);</Action>
+                <Action>[Irrigation].Apply(50,0,1.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-11-05</Date>
-                <Action>[Irrigation].Apply(40,0,1.0);</Action>
+                <Action>[Irrigation].Apply(50,0,1.0);</Action>
               </Operation>
               <Operation>
                 <Date>2014-11-18</Date>
-                <Action>[Irrigation].Apply(40,0,1.0);</Action>
+                <Action>[Irrigation].Apply(50,0,1.0);</Action>
               </Operation>
             </Operations>
             <Operations>
@@ -34676,8 +34748,6 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF;
-using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 
 
@@ -34687,24 +34757,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Link] Clock Clock;
-		[Link] Plant Wheat;
+	
 		
-		public event EventHandler LeafReport;
-		
-		[XmlIgnore] public int LeafPosition { get; set; }
-		[XmlIgnore] public double MaxLeafSize { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Wheat.Leaf.ExpandedCohortNo > LeafPosition)
-			{
-				LeafPosition = (int)Wheat.Leaf.ExpandedCohortNo;
-				MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];
-				LeafReport.Invoke(this, new EventArgs());
-			}
-		}
 	}
 }]]></Code>
           </Manager>
@@ -34713,11 +34767,10 @@ namespace Models
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
-              <string>[MaxLeafSize].Script.MaxLeafSize</string>
-              <string>[MaxLeafSize].Script.LeafPosition</string>
+              <string />
             </VariableNames>
             <EventNames>
-              <string>[MaxLeafSize].Script.LeafReport</string>
+              <string />
             </EventNames>
           </Report>
           <Area>1</Area>
@@ -35196,6 +35249,27 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>PhotoPeriod</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Dot</Line>
+              <LineThickness>Thin</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Phenology.Photoperiod.Value</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
