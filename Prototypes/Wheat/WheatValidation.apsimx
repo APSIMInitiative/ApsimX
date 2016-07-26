@@ -1749,12 +1749,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.99</double>
+                  <double>0.95</double>
                   <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>0</double>
+                  <double>0.01</double>
                 </Y>
               </XYPairs>
               <Memo>
