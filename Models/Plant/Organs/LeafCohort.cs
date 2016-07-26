@@ -106,6 +106,9 @@ namespace Models.PMF.Organs
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
         public double MaxLiveArea = 0;
+        /// <summary>The maximum live area</summary>
+        [XmlIgnore]
+        public double MaxCohortPopulation = 0;
         /// <summary>The growth duration</summary>
         [XmlIgnore]
         public double GrowthDuration = 0;
@@ -396,9 +399,7 @@ namespace Models.PMF.Organs
                 if (MaxLiveArea == 0)
                     return 0;
                 else
-                    //Fixme.  This function is not returning the correct values.  Use commented out line
-                    //return MaxArea / Population;
-                    return MaxLiveArea / CohortPopulation;
+                    return MaxLiveArea / MaxCohortPopulation;
             }
         }
         /// <summary>Gets the live population.</summary>
@@ -473,7 +474,10 @@ namespace Models.PMF.Organs
                 if (IsGrowing)
                 {
                     double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2), DeltaWaterConstrainedArea / SpecificLeafAreaMin);
+                    if(TotalDMDemand < 0)
+                        throw new Exception("Negative DMDemand in" + this);
                     return TotalDMDemand * StructuralFraction;
+
                 }
                 else return 0;
             }
@@ -841,9 +845,8 @@ namespace Models.PMF.Organs
                 NonStructuralFraction = LeafCohortParameters.NonStructuralFraction.Value;
             if (LeafCohortParameters.InitialNConc != null) //FIXME HEB I think this can be removed
                 InitialNConc = LeafCohortParameters.InitialNConc.Value;
-            //if (Area > MaxArea)  FIXMEE HEB  This error trap should be activated but throws errors in chickpea so that needs to be fixed first.
-            //    throw new Exception("Initial Leaf area is greater that the Maximum Leaf Area.  Check set up of initial leaf area values to make sure they are not to large and check MaxArea function and CellDivisionStressFactor Function to make sure the values they are returning will not be too small.");
-            Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
+            if(Area>0)  //Only set age for cohorts that have an area specified in the xml.
+                Age = Area / MaxArea * GrowthDuration; //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
             Live.StructuralN = Live.StructuralWt * InitialNConc;
@@ -1174,13 +1177,17 @@ namespace Models.PMF.Organs
             double BranchNo = Structure.TotalStemPopn - Structure.MainStemPopn;  //Fixme, this line appears redundant
             double leafSizeDelta = SizeFunction(Age + TT) - SizeFunction(Age); //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
-            return growth;                              // FIXME-EIT Unit conversion to m2/m2 could happen here and population could be considered at higher level only (?)
+            if (growth < 0)
+                throw new Exception("Netagive potential leaf area expansion in" + this);
+            return growth;                              
         }
         /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
         /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
         /// <returns>Average leaf size (mm2/leaf)</returns>
         protected double SizeFunction(double TT)
         {
+            if (GrowthDuration <= 0)
+                throw new Exception("Trying to calculate leaf size with a growth duration parameter value of zero won't work");
             double OneLessShape = 1 - LeafSizeShape;
             double alpha = -Math.Log((1 / OneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
             double LeafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * TT));
@@ -1223,6 +1230,8 @@ namespace Models.PMF.Organs
 
                 if (MaxLiveArea < LiveArea)
                     MaxLiveArea = LiveArea;
+                if (MaxCohortPopulation < CohortPopulation)
+                    MaxCohortPopulation = CohortPopulation;
 
                 double FracSenShade = 0;
                 if (LiveArea > 0)

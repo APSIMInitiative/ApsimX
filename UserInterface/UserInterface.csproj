@@ -744,7 +744,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Map.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MovingAverageFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganBiomassRemovalType.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SCUM.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SCRUM.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />

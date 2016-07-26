@@ -1100,7 +1100,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </X>
           <Y>
-            <double>0</double>
+            <double>1</double>
             <double>200</double>
             <double>250</double>
             <double>100</double>
@@ -1775,7 +1775,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>PotentialDMAccumulation</Name>
         <VariableReference>
           <Name>NodesAppearing</Name>
-          <VariableName>[Structure].DeltaNodeNumber</VariableName>
+          <VariableName>[Structure].DeltaTipNumber</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>Branches</Name>

@@ -98,6 +98,10 @@ namespace Models.PMF.Functions.SupplyFunctions
         {
             get
             {
+                if (Double.IsNaN(RadnInt.Value))
+                    throw new Exception("NaN Radiation interception value supplied to RUE model");
+                if (RadnInt.Value < 0)
+                    throw new Exception("Negative Radiation interception value supplied to RUE model");
                 return RadnInt.Value * RueAct;
             }
         }

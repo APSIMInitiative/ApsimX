@@ -37,14 +37,17 @@ namespace Models.Factorial
                 newSimulation.Parent = null;
                 Apsim.ParentAllChildren(newSimulation);
 
+                // Make substitutions.
+                Runner.MakeSubstitutions(Apsim.Parent(this, typeof(Simulations)) as Simulations, 
+                                         new List<Simulation> { newSimulation });
+
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
                     Apsim.CallEventHandler(child, "Loaded", null);
 
                 foreach (FactorValue value in combination)
-                {
                     value.ApplyToSimulation(newSimulation);
-                }
+                
                 PushFactorsToReportModels(newSimulation, combination);
 
                 simulations.Add(newSimulation);

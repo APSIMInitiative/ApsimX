@@ -23,13 +23,23 @@
     public class ApparingLeafParams : EventArgs
     {
         /// <summary>The numeric rank of the cohort appaeraing</summary>
-        public int AppearingNode { get; set; }
+        public int CohortToAppear { get; set; }
         /// <summary>The populations of leaves in the appearing cohort</summary>
         public double TotalStemPopn { get; set; }
         /// <summary>The Tt age of the the cohort appearing</summary>
         public double CohortAge { get; set; }
         /// <summary>The proportion of the cohort appearing if final cohort</summary>
         public double FinalFraction { get; set; }
+    }
+
+    /// <summary>
+    /// Data passed to leaf tip appearance occurs.
+    /// </summary>
+    [Serializable]
+    public class CohortInitParams : EventArgs
+    {
+        /// <summary>The numeric rank of the cohort appaeraing</summary>
+        public int Rank { get; set; }
     }
     /// <summary>
     /// 
