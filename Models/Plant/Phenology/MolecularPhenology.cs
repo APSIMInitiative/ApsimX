@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
@@ -10,22 +11,31 @@ namespace Models.PMF.Phen
     /// Molecular phenology model
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Phenology))]
     public class MolecularPhenology
     {
-        /// <summary>The phenology</summary>
-        [Link]
-        Phenology Phenology = null;
-
-        /// <summary>The structure</summary>
-        [Link]
-        Structure Structure = null;
-
         /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
 
-        //[Link] Function ThermalTime = null;
-        //[Link] Function PhotoperiodFunction = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction HaunStage = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction BaseVrn1Target = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction DeltaHaunStage = null;
+
         /// <summary>The vrn1rate</summary>
         [Link]
         IFunction Vrn1rate = null;
@@ -38,53 +48,59 @@ namespace Models.PMF.Phen
 
 
         /// <summary>The accumulated vernalisation</summary>
-        public double AccumulatedVernalisation = 0;
-
-
-        //Set up class variables
-        
-        //double AccumTt = 0;
-        
-        //double Vrn1Lag = 0;
+        [XmlIgnore]
+        [Units("Vernal Units")]
+        [Description("The relative progression to vernalisation saturation")]
+        public double AccumulatedVernalisation { get; set; }
 
         /// <summary>The VRN1</summary>
-        double Vrn1 = 0;
+        [XmlIgnore]
+        [Units("relative to saturation")]
+        [Description("The expression of Vrn1 relative to what is needed to cause reproductive comittment")]
+        public double Vrn1 { get; set; }
 
         /// <summary>The VRN2</summary>
-        double Vrn2 = 0;
+        [XmlIgnore]
+        [Units("relative to saturation")]
+        [Description("The expression of Vrn2")]
+        public double Vrn2 { get; set; }
 
         /// <summary>The VRN3</summary>
-        double Vrn3 = 0;
+        [XmlIgnore]
+        [Units("relative to saturation")]
+        [Description("The expression of Vrn3")]
+        public double Vrn3 { get; set; }
 
         /// <summary>The VRN4</summary>
-        double Vrn4 = 0;
+        [XmlIgnore]
+        [Units("relative to saturation")]
+        [Description("The expression of Vrn4")]
+        public double Vrn4 { get; set; }
 
         /// <summary>The VRN1 target</summary>
-        double Vrn1Target = 0;
-        
-        //double Pp = 0;
-
-        /// <summary>The tt</summary>
-        double Tt = 0;
-        
-        //double MeanT = 0;
-        
-        //double HaunStageYesterday = 0;
-
-        /// <summary>The delta haun stage</summary>
-        double DeltaHaunStage = 0;
+        [XmlIgnore]
+        [Units("relative to saturation")]
+        [Description("The amount of Vrn1 needed to saturate vernalisation")]
+        public double Vrn1Target { get; set; }
 
         /// <summary>The fihs</summary>
-        double FIHS = 0;
+        [XmlIgnore]
+        [Units("Liguals")]
+        [Description("The HaunStage at which Floral initiation occurs")]
+        public double FIHS { get; set; }
 
         /// <summary>The TSHS</summary>
-        double TSHS = 0;
+        [XmlIgnore]
+        [Units("Liguals")]
+        [Description("The HaunStage at which Terminal spikelet occurs")]
+        public double TSHS { get; set; }
 
         /// <summary>The FLN</summary>
-        double FLN = 0;
-        //
-        //bool IsGerminated = false;
-
+        [XmlIgnore]
+        [Units("Leaves")]
+        [Description("The Number of main-stem leaves produces")]
+        public double FLN { get; set; }
+        
         /// <summary>The is pre vernalised</summary>
         bool IsPreVernalised = false;
 
@@ -96,15 +112,6 @@ namespace Models.PMF.Phen
 
         /// <summary>The is reproductive</summary>
         bool IsReproductive = false;
-
-        /// <summary>The VRN rate at0</summary>
-        public double VrnRateAt0 = 1.6;
-        /// <summary>The VRN rate at30</summary>
-        public double VrnRateAt30 = 0.08;
-        /// <summary>The VRN rate curve</summary>
-        public double VrnRateCurve = -0.19;
-        /// <summary>The base VRN1 target</summary>
-        public double BaseVrn1Target = 0.74;
 
         //Event procedures
         /// <summary>Called when [commencing].</summary>
@@ -120,17 +127,12 @@ namespace Models.PMF.Phen
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.IsAlive)
+            if (Plant.IsGerminated)
             {
-                if (Phenology.CurrentPhaseName == "Emerging")
-                    DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this
-                else
-                    DeltaHaunStage = Structure.DeltaTipNumber;
-
                 //Pre-Vernalisation lag, determine the repression of Vrn4
                 if (IsPreVernalised == false)
                 {
-                    Vrn4 -= Vrn1rate.Value * DeltaHaunStage;
+                    Vrn4 -= Vrn1rate.Value * DeltaHaunStage.Value;
                     Vrn4 = Math.Max(Vrn4, 0.0);
                     if (Vrn4 == 0.0)
                         IsPreVernalised = true;
@@ -139,17 +141,17 @@ namespace Models.PMF.Phen
                 //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
                 if ((IsPreVernalised) && (IsVernalised == false))
                 {
-                    Vrn1 += Vrn1rate.Value * DeltaHaunStage;
+                    Vrn1 += Vrn1rate.Value * DeltaHaunStage.Value;
                     Vrn1 = Math.Min(1.0, Vrn1);
                 }
 
                 //Update Vernalisation target to reflect photoperiod conditions and determine Vernalisation status
                 if ((IsVernalised == false) && (Vrn1Target <= 1.0))
                 {
-                    if (Structure.LeafTipsAppeared >= 1.1)
+                    if (HaunStage.Value >= 1.1)
                     {
-                        Vrn2 += Vrn2rate.Value * DeltaHaunStage;
-                        Vrn1Target = Math.Min(1.0, BaseVrn1Target + Vrn2);
+                        Vrn2 += Vrn2rate.Value * DeltaHaunStage.Value;
+                        Vrn1Target = Math.Min(1.0, BaseVrn1Target.Value + Vrn2);
                     }
                     if (Vrn1 >= Vrn1Target)
                         IsVernalised = true;
@@ -157,7 +159,7 @@ namespace Models.PMF.Phen
                 //If Vernalisation is complete begin expressing Vrn3
                 if ((IsVernalised) && (IsReproductive == false))
                 {
-                    Vrn3 += Vrn3rate.Value * DeltaHaunStage;
+                    Vrn3 += Vrn3rate.Value * DeltaHaunStage.Value;
                     Vrn3 = Math.Min(1.0, Vrn3);
                 }
 
@@ -165,12 +167,12 @@ namespace Models.PMF.Phen
                 if ((Vrn3 >= 0.3) && (IsInduced == false))
                 {
                     IsInduced = true;
-                    FIHS = Structure.LeafTipsAppeared;
+                    FIHS = HaunStage.Value;
                 }
                 if ((Vrn3 >= 1.0) && (IsReproductive == false))
                 {
                     IsReproductive = true;
-                    TSHS = Structure.LeafTipsAppeared + 1.0;
+                    TSHS = HaunStage.Value + 1.0;
                     FLN = 2.86 + 1.1 * TSHS;
                 }
             }
