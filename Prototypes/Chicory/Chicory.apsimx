@@ -2483,7 +2483,8 @@ namespace Models
           <Name>C17a</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Observed data from ]]></MemoText>
+            <MemoText><![CDATA[Unpublished data from an establishment trial at Scott farm, Hamilton, New Zealand, from 2009 to 2010 by Julia Lee. Trial plots were sown with Choice chicory and measured yield and population.
+]]></MemoText>
           </Memo>
           <Weather>
             <Name>Weather</Name>
@@ -6856,7 +6857,8 @@ namespace Models
           <Name>ScottFarmEstablishment</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Observed data from ]]></MemoText>
+            <MemoText><![CDATA[Unpublished data from an establishment trial at Scott farm, Hamilton, New Zealand, in 2010 by Julia Lee. Trial plots were sown with Choice chicory and measured yield and population and sward height.
+]]></MemoText>
           </Memo>
           <Weather>
             <Name>Weather</Name>
@@ -11048,7 +11050,9 @@ namespace Models
           <Name>D9a</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Observed data from ]]></MemoText>
+            <MemoText><![CDATA[Unpublished data from an establishment trial at Scott farm, Hamilton, New Zealand, in 2011 by Julia Lee. Trial plots were sown with Choice chicory and measured yield and population.
+
+]]></MemoText>
           </Memo>
           <Weather>
             <Name>Weather</Name>
@@ -15281,7 +15285,11 @@ namespace Models
           <Name>FD902</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Observed data from Scott farm, Ruakura. Justine Lee unpublished.]]></MemoText>
+            <MemoText><![CDATA[Lee, Julia M.,  Hemmingson, Nivonne R., Minnee, Elena M. K., Clark, Cameron E. F. (2015) Management strategies for chicory (Cichorium intybus) and plantain (Plantago lanceolata): impact on dry matter yield, nutritive characteristics and plant density. Crop and Pasture Science 66, 168–183.
+
+Observed data from a defoliation trial at Scott farm, Hamilton, New Zealand, 2010 to 2012. Trial plots were sown with Choice chicory and investigated the effect of cut height (i.e. rotation length) and residual height on chicory. Results include yield, botanical composition, plant density, leaf area and light interception. 
+
+]]></MemoText>
           </Memo>
           <Factors>
             <Name>Factors</Name>
@@ -20220,7 +20228,14 @@ namespace Models
         <Name>Iversen</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[Observed data from Brown, H. E. (2004). Understanding yield and water use of dryland forage crops in New Zealand. Lincoln, NZ, Lincoln University. PhD: 288.]]></MemoText>
+          <MemoText><![CDATA[Observed data from Brown, H. E. (2004). Understanding yield and water use of dryland forage crops in New Zealand. Lincoln, NZ, Lincoln University. PhD: 288.
+
+This data is adapted from Lincoln University field trials at Iversen fields from 1996 to 2002 investigating herbage production, persistance, nutritive characteristics and utilisation of Puna chicory and other forage species under irrgation and dryland conditions.
+
+Met data for this location was obtained from NIWA, NZ using the Broadfields met station in Lincoln. 
+
+Soil data was constructed using information obtained from Brown, H.E. (2004) and the SMAP database from Landcare Research Limited.
+]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
@@ -24650,9 +24665,10 @@ namespace Models
         <Name>LURF</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[Observed data from Lincoln University Research Farm, Kirsty Martin
+          <MemoText><![CDATA[Observed data from an ongoing (unpublished) Lincoln University Research Farm experiment from Grant Edwards, Lincoln University.
 
-Add new data from Kirtsy
+TODO: Further data and information is to be added to this section as the experiment progresses.
+
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -33491,6 +33507,19 @@ namespace Models
       <Name>USA</Name>
       <Experiment>
         <Name>AFSRC_01</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[Data from Belesky, D. P., J. M. Fedders, et al. (1999). "Productivity, botanical composition, and nutritive value of swards including forage chicory." Agronomy Journal 91(3): 450-456
+
+This data is adapted from a defoliation trial in West Virginia, USA conducted from 1994-1996, investigating productivity and nutritive value of Puna chicory swards (among other species), as a function of clipping frequency (3- and 6-wk intervals). Each treatment was replicated three times on an upland site of Dekalb series soil (loamy-skeletal, mixed, subactive, mesic Typic Dystrochrept). Modest rates of N, P, and K were applied annually. Herbage mass, botanical composition, in vitro organic matter disappearance (IVOMD), and crude protein (CP) were determined. 
+
+Met data for this location was obtained from NOAA. The data set was largely complete except for solar radiation, which was added from an alternative interpolated set for this location, also from NOAA.
+
+Information to construct the soil data was obtained from USGS.
+
+
+]]></MemoText>
+        </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
@@ -38275,6 +38304,17 @@ namespace Models
       </Experiment>
       <Experiment>
         <Name>AFSRC_02</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[Data adapted from Belesky, D. P., K. E. Turner, et al. (2000). "Influence of nitrogen on productivity and nutritive value of forage chicory." Agronomy Journal 92(3): 472-478.
+
+This was a field experiment for 3 yr on a Ramsey soil (loamy, siliceous, subactive, mesic Lithic Dystrudept) in southern West Virginia to determine if fertilizer N influenced forage chicory nutritive value and NO3-N concentration. Each N rate (0, 80, 160, 240, or 480 kg N ha-1) was replicated three times in a randomized block design. Swards were clipped at 6-wk intervals during the growing season. 
+
+Met data for this location was obtained from NOAA. The data set was largely complete except for solar radiation, which was added from an alternative interpolated set for this location, also from NOAA.
+
+Information to construct the soil data was obtained from USGS.
+]]></MemoText>
+        </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
@@ -42536,6 +42576,13 @@ namespace Models
       </Experiment>
       <Experiment>
         <Name>AFSRC_03</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[Data from Clapham, W. M., J. M. Fedders, et al. (2001). "Developmental dynamics of forage chicory." Agronomy Journal 93(2): 443-450.
+
+Development of uncut Puna chicory was studied in southern West Virginia on previously established plots at the Scott Farm in 1997 and 1998 and on 1-yr-old plantings at the Plumley Farm in 1998 and 1999. 
+]]></MemoText>
+        </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
