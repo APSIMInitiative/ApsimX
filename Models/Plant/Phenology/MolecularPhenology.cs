@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class MolecularPhenology
+    public class MolecularPhenology : Model
     {
         /// <summary>The plant</summary>
         [Link]

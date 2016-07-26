@@ -132,6 +132,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.GotoPhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafAppearancePhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafDeathPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.MolecularPhenology))]
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]

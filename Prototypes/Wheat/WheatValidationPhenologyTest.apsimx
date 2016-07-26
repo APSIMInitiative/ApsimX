@@ -661,6 +661,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Phenology].MainStemNodeAppearanceRate.Value</VariableName>
           </VariableReference>
         </DivideFunction>
+        <MolecularPhenology>
+          <Name>MolecularPhenology</Name>
+        </MolecularPhenology>
       </Phenology>
       <CultivarFolder>
         <Name>Cultivars</Name>
