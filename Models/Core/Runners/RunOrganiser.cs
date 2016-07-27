@@ -56,7 +56,7 @@
             }
 
             // Wait until all our jobs are all finished.
-            while (Runner.AreSomeJobsRunning(jobs, jobManager))
+            while (AreSomeJobsRunning(jobs, jobManager))
                 Thread.Sleep(200);
 
             // Collect all error messages.
@@ -125,9 +125,9 @@
                 else
                     clonedSim = Apsim.Clone(model) as Simulation;
 
-                Runner.MakeSubstitutions(this.simulations, new List<Simulation> { clonedSim });
+                Simulations.MakeSubstitutions(this.simulations, new List<Simulation> { clonedSim });
 
-                Runner.CallOnLoaded(clonedSim);
+                Simulations.CallOnLoaded(clonedSim);
                 simulations.Add(clonedSim);
             }
             else
@@ -150,6 +150,20 @@
             }
 
             return simulations.ToArray();
+        }
+
+        /// <summary>Are some jobs still running?</summary>
+        /// <param name="jobs">The jobs to check.</param>
+        /// <param name="jobManager">The job manager</param>
+        /// <returns>True if all completed.</returns>
+        private static bool AreSomeJobsRunning(List<JobManager.IRunnable> jobs, JobManager jobManager)
+        {
+            foreach (JobManager.IRunnable job in jobs)
+            {
+                if (!jobManager.IsJobCompleted(job))
+                    return true;
+            }
+            return false;
         }
 
 

@@ -34,7 +34,7 @@
             Simulations simulations = Apsim.Parent(simulation, typeof(Simulations)) as Simulations;
             simulation.FileName = simulations.FileName;
 
-            Runner.MakeSubstitutions(simulations, new List<Simulation> { clonedSim });
+            Simulations.MakeSubstitutions(simulations, new List<Simulation> { clonedSim });
 
             Simulations.CallOnLoaded(clonedSim);
             jobManager.AddChildJob(this, clonedSim);

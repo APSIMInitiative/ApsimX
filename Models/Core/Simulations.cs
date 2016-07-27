@@ -30,17 +30,6 @@ namespace Models.Core
         [XmlAttribute("Version")]
         public int Version { get; set; }
 
-        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
-        [XmlIgnore]
-        public bool IsCompleted { get; set; }
-
-        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
-        [XmlIgnore]
-        public string ErrorMessage { get; set; }
-
-        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
-        public bool IsComputationallyTimeConsuming { get { return false; } }
-
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]

@@ -38,7 +38,7 @@ namespace Models.Factorial
                 Apsim.ParentAllChildren(newSimulation);
 
                 // Make substitutions.
-                Runner.MakeSubstitutions(Apsim.Parent(this, typeof(Simulations)) as Simulations, 
+                Simulations.MakeSubstitutions(Apsim.Parent(this, typeof(Simulations)) as Simulations, 
                                          new List<Simulation> { newSimulation });
 
                 // Call OnLoaded in all models.
