@@ -26,10 +26,12 @@ namespace Models
         /// <summary>The _ code</summary>
         private string _Code;
         /// <summary>The has deserialised</summary>
-        private bool HasDeserialised = false;
+        private bool HasLoaded = false;
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
 
+        [NonSerialized]
+        private string assemblyFileName = null;
 
         private string assemblyName = null;
 
@@ -43,7 +45,6 @@ namespace Models
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
-        /// <value>The elements.</value>
         [XmlAnyElement]
         public XmlElement[] elements 
         { 
@@ -62,7 +63,6 @@ namespace Models
         }
 
         /// <summary>Gets or sets the code c data.</summary>
-        /// <value>The code c data.</value>
         [XmlElement("Code")]
         public XmlNode CodeCData
         {
@@ -83,9 +83,7 @@ namespace Models
             }
         }
 
-        // ----------------- Outputs
         /// <summary>The script Model that has been compiled</summary>
-        /// <value>The script.</value>
         [XmlIgnore]
         public Model Script 
         { 
@@ -94,7 +92,6 @@ namespace Models
         }
 
         /// <summary>The code for the Manager script</summary>
-        /// <value>The code.</value>
         [Summary]
         [Description("Script code")]
         [XmlIgnore]
@@ -115,9 +112,25 @@ namespace Models
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
-            HasDeserialised = true;
+            HasLoaded = true;
             if (Script == null && Code != string.Empty)
                 RebuildScriptModel();
+        }
+
+        /// <summary>This code will cleanup temporary / old assemblies from previous runs.</summary>
+        public static void CleanupTempAssemblies()
+        {
+            foreach (string filename in Directory.GetFiles(Path.GetTempPath(), "ApsimX*.dll"))
+            {
+                try
+                {
+                    File.Delete(filename);
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         /// <summary>
@@ -130,7 +143,7 @@ namespace Models
         private void OnSerialising(bool xmlSerialisation)
         {
             if (Script != null)
-                Children.Remove(Script);
+                 Children.Remove(Script);
         }
 
         /// <summary>Serialisation has completed. Read our 'Script' model if necessary.</summary>
@@ -159,20 +172,13 @@ namespace Models
         /// </exception>
         public void RebuildScriptModel()
         {
-            if (HasDeserialised)
+            if (HasLoaded)
             {
                 // Capture the current values of all parameters.
                 EnsureParametersAreCurrent();
 
-                if (NeedToCompileCode())
+                if (_Code != CompiledCode)
                 {
-                    // If a script model already exists, then get rid of it.
-                    if (Script != null)
-                    {
-                        Children.Remove(Script);
-                        Script = null;
-                    }
-                    
                     // Compile the code.
                     Assembly compiledAssembly = null;
                     
@@ -197,7 +203,10 @@ namespace Models
                     {
                         try
                         {
-                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, null);
+                            assemblyFileName = Path.ChangeExtension(Path.GetTempFileName(), ".dll");
+                            assemblyFileName = Path.Combine(Path.GetDirectoryName(assemblyFileName),
+                                                            "ApsimX" + Path.GetFileName(assemblyFileName));
+                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, assemblyFileName);
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -227,19 +236,11 @@ namespace Models
                     SetParametersInObject(Script, parameters);
 
                     // Add the new script model to our models collection.
+                    Children.Clear();
                     Children.Add(Script);
                     Script.Parent = this;
                 }
             }
-        }
-
-
-
-        /// <summary>Return true if the code needs to be recompiled.</summary>
-        /// <returns></returns>
-        private bool NeedToCompileCode()
-        {
-            return (Script == null || _Code != CompiledCode);
         }
 
         /// <summary>Ensures the parameters are up to date and reflect the current 'Script' model.</summary>
@@ -301,7 +302,6 @@ namespace Models
             }
             return doc.DocumentElement;
         }
-
 
     }
 }
