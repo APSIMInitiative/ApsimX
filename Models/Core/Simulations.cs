@@ -146,6 +146,36 @@ namespace Models.Core
             return simulations;
         }
 
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="simulations">The simulations to make substitutions in.</param>
+        /// <param name="parentSimulations">Parent simulations object</param>
+        public static void MakeSubstitutions(Simulations parentSimulations, List<Simulation> simulations)
+        {
+            IModel replacements = Apsim.Child(parentSimulations, "Replacements");
+            if (replacements != null)
+            {
+                foreach (IModel replacement in replacements.Children)
+                {
+                    foreach (Simulation simulation in simulations)
+                    {
+                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        {
+                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                // Do replacement.
+                                IModel newModel = Apsim.Clone(replacement);
+                                int index = match.Parent.Children.IndexOf(match as Model);
+                                match.Parent.Children.Insert(index, newModel as Model);
+                                newModel.Parent = match.Parent;
+                                match.Parent.Children.Remove(match as Model);
+                                CallOnLoaded(newModel);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>Call Loaded event in specified model and all children</summary>
         /// <param name="model">The model.</param>
         public static void CallOnLoaded(IModel model)
@@ -197,7 +227,9 @@ namespace Models.Core
         }
 
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
-        private Simulations() { }
+        private Simulations()
+        {
+        }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
         /// <returns></returns>
@@ -224,6 +256,18 @@ namespace Models.Core
 
             return simulations.ToArray();
 
+        }
+
+        /// <summary>Find and return a list of duplicate simulation names.</summary>
+        public List<string> FindDuplicateSimulationNames()
+        {
+            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
+            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
+            var duplicates = allSimNames
+                .GroupBy(i => i)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+            return duplicates.ToList();
         }
 
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
@@ -264,7 +308,7 @@ namespace Models.Core
                 Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                 // Make any substitutions.
-                Runner.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
+                Simulations.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
 
                 // Now use the path to get the model we want to document.
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
