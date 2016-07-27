@@ -7,6 +7,7 @@ using System.Text;
 using Models.Core;
 using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
+using System.ComponentModel;
 
 namespace Models
 {
@@ -17,7 +18,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable
+    public class Tests : Model, ITestable, JobManager.IRunnable
     {
         /// <summary>
         /// data table
@@ -28,7 +29,7 @@ namespace Models
         /// <summary>
         /// A collection of validated stats.
         /// </summary>
-        [Description("An array of validated regression stats.")]
+        [APSIM.Shared.Soils.Description("An array of validated regression stats.")]
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>
@@ -230,6 +231,14 @@ namespace Models
                         }
                     }
             }
+        }
+
+        /// <summary>Run the test</summary>
+        /// <param name="jobManager">The job manager</param>
+        /// <param name="workerThread">Background worker</param>
+        public void Run(JobManager jobManager, BackgroundWorker workerThread)
+        {
+            Test(accept: false, GUIrun: false);
         }
 
         /// <summary>Document the stats.</summary>

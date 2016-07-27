@@ -28,6 +28,10 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+
+
+
             int exitCode = 0 ;
             try
             {
@@ -95,9 +99,10 @@ namespace Models
                     jobManager.AddJob(job);
                     jobManager.Start(waitUntilFinished: true);
 
-                    if (jobManager.SomeHadErrors)
+                    List<Exception> errors = jobManager.Errors(job);
+                    if (errors.Count > 0)
                     {
-                        Console.WriteLine(job.ErrorMessage);
+                        errors.ForEach(e => Console.WriteLine(e.ToString() + Environment.NewLine));
                         exitCode = 1;
                     }
                     else
