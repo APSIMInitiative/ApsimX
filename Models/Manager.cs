@@ -256,6 +256,7 @@ namespace Models
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
             string privateBinPath = Path.Combine(Path.GetTempPath(), "ApsimX");
+            Directory.CreateDirectory(privateBinPath);
             foreach (string fileName in Directory.GetFiles(privateBinPath, "*.dll"))
                 if (args.Name == Path.GetFileNameWithoutExtension(fileName))
                     return Assembly.LoadFrom(fileName);
