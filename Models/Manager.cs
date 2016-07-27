@@ -29,10 +29,7 @@ namespace Models
         private bool HasLoaded = false;
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
-
-        [NonSerialized]
-        private string assemblyFileName = null;
-
+        /// <summary>Name of compiled assembly</summary>
         private string assemblyName = null;
 
         /// <summary>The _ script</summary>
@@ -120,17 +117,8 @@ namespace Models
         /// <summary>This code will cleanup temporary / old assemblies from previous runs.</summary>
         public static void CleanupTempAssemblies()
         {
-            foreach (string filename in Directory.GetFiles(Path.GetTempPath(), "ApsimX*.dll"))
-            {
-                try
-                {
-                    File.Delete(filename);
-                }
-                catch
-                {
-
-                }
-            }
+            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+            Directory.Delete(tempFolder, true);
         }
 
         /// <summary>
@@ -203,10 +191,7 @@ namespace Models
                     {
                         try
                         {
-                            assemblyFileName = Path.ChangeExtension(Path.GetTempFileName(), ".dll");
-                            assemblyFileName = Path.Combine(Path.GetDirectoryName(assemblyFileName),
-                                                            "ApsimX" + Path.GetFileName(assemblyFileName));
-                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, assemblyFileName);
+                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -241,6 +226,40 @@ namespace Models
                     Script.Parent = this;
                 }
             }
+        }
+
+        /// <summary>Work out the assembly file name (with path).</summary>
+        public string GetAssemblyFileName()
+        {
+            string tempFileName = Path.GetTempFileName();
+            File.Delete(tempFileName);
+            string assemblyFileName = Path.ChangeExtension(tempFileName, ".dll");
+            assemblyFileName = Path.Combine(Path.GetDirectoryName(assemblyFileName),
+                                            "ApsimX", 
+                                            Path.GetFileName(assemblyFileName));
+
+            Directory.CreateDirectory(Path.GetDirectoryName(assemblyFileName));
+
+            return assemblyFileName;
+        }
+
+        /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <remarks>
+        /// Seems like it will only look for DLL's in the bin folder. We can't put the manager DLLs in there
+        /// because when ApsimX is installed, the bin folder will be under c:\program files and we won't have
+        /// permission to save the manager dlls there. Instead we put them in %TEMP%\ApsimX and use this 
+        /// event handler to resolve the assemblies to that location.
+        /// </remarks>
+        /// <returns></returns>
+        public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
+        {
+            string privateBinPath = Path.Combine(Path.GetTempPath(), "ApsimX");
+            foreach (string fileName in Directory.GetFiles(privateBinPath, "*.dll"))
+                if (args.Name == Path.GetFileNameWithoutExtension(fileName))
+                    return Assembly.LoadFrom(fileName);
+            return null;
         }
 
         /// <summary>Ensures the parameters are up to date and reflect the current 'Script' model.</summary>

@@ -51,7 +51,7 @@
                 foreach (Tests tests in Apsim.ChildrenRecursively(model, typeof(Tests)))
                     parentJob.Jobs.Add(tests);
             }
-            jobManager.AddJob(parentJob);
+            jobManager.AddChildJob(this, parentJob);
         }
 
         /// <summary>Find simulations/experiments to run.</summary>

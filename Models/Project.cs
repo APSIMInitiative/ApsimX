@@ -28,6 +28,10 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+
+
+
             int exitCode = 0 ;
             try
             {

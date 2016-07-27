@@ -218,7 +218,6 @@ namespace Models.Core
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
         private Simulations()
         {
-            Manager.CleanupTempAssemblies();
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
