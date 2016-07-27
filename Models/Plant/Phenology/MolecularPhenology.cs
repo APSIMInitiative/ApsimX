@@ -59,6 +59,12 @@ namespace Models.PMF.Phen
         [Description("The expression of Vrn1 relative to what is needed to cause reproductive comittment")]
         public double Vrn1 { get; set; }
 
+        /// <summary>The VRN1</summary>
+        [XmlIgnore]
+        [Units("Change in relative saturation")]
+        [Description("The expression increase in Vrn1 expression")]
+        public double DeltaVrn1 { get; set; }
+
         /// <summary>The VRN2</summary>
         [XmlIgnore]
         [Units("relative to saturation")]
@@ -70,6 +76,12 @@ namespace Models.PMF.Phen
         [Units("relative to saturation")]
         [Description("The expression of Vrn3")]
         public double Vrn3 { get; set; }
+        /// <summary>The VRN1</summary>
+
+        [XmlIgnore]
+        [Units("Change in relative saturation")]
+        [Description("The expression increase in Vrn1 expression")]
+        public double DeltaVrn3 { get; set; }
 
         /// <summary>The VRN4</summary>
         [XmlIgnore]
@@ -133,7 +145,8 @@ namespace Models.PMF.Phen
                 //Pre-Vernalisation lag, determine the repression of Vrn4
                 if (IsPreVernalised == false)
                 {
-                    Vrn4 -= Vrn1rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn1 = Vrn1rate.Value * DeltaHaunStage.Value;
+                    Vrn4 -= DeltaVrn1;
                     Vrn4 = Math.Max(Vrn4, 0.0);
                     if (Vrn4 == 0.0)
                         IsPreVernalised = true;
@@ -142,7 +155,8 @@ namespace Models.PMF.Phen
                 //Vernalisation, determine extent of Vrn1 expression when Vrn 4 is suppressed
                 if ((IsPreVernalised) && (IsVernalised == false))
                 {
-                    Vrn1 += Vrn1rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn1 = Vrn1rate.Value * DeltaHaunStage.Value;
+                    Vrn1 += DeltaVrn1;
                     Vrn1 = Math.Min(1.0, Vrn1);
                 }
 
@@ -160,7 +174,8 @@ namespace Models.PMF.Phen
                 //If Vernalisation is complete begin expressing Vrn3
                 if ((IsVernalised) && (IsReproductive == false))
                 {
-                    Vrn3 += Vrn3rate.Value * DeltaHaunStage.Value;
+                    DeltaVrn3 = Vrn3rate.Value * DeltaHaunStage.Value;
+                    Vrn3 += DeltaVrn3;
                     Vrn3 = Math.Min(1.0, Vrn3);
                 }
 

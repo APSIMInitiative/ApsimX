@@ -127,6 +127,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
         [XmlElement(typeof(Models.PMF.Phen.EndPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.ExpressionPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GenericPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GerminatingPhase))]
         [XmlElement(typeof(Models.PMF.Phen.GotoPhase))]
