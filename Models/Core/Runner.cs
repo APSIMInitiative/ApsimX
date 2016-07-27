@@ -4,6 +4,7 @@
     using Factorial;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -91,12 +92,15 @@
 
         /// <summary>Are some jobs still running?</summary>
         /// <param name="jobs">The jobs to check.</param>
+        /// <param name="jobManager">The job manager</param>
         /// <returns>True if all completed.</returns>
-        private static bool AreSomeJobsRunning(List<JobManager.IRunnable> jobs)
+        private static bool AreSomeJobsRunning(List<JobManager.IRunnable> jobs, JobManager jobManager)
         {
             foreach (JobManager.IRunnable job in jobs)
-                if (!job.IsCompleted)
+            {
+                if (!jobManager.IsJobCompleted(job))
                     return true;
+            }
             return false;
         }
 
@@ -120,25 +124,14 @@
                 this.runTests = runTests;
             }
 
-            /// <summary>Error message goes here. Set by JobMangager.</summary>
-            public string ErrorMessage { get; set; }
-
-            /// <summary>Is completed flag. Set by JobMangager.</summary>
-            public bool IsCompleted { get; set; }
-
-            /// <summary>Signal that this job isn't time consuming</summary>
-            public bool IsComputationallyTimeConsuming { get { return false; } }
-
             /// <summary>Number of sims running.</summary>
             public int numRunning { get; private set; }
 
-            /// <summary>Run the jobs.</summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
-            public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+            /// <summary>Run the organiser. Will throw on error.</summary>
+            /// <param name="jobManager">The job manager</param>
+            /// <param name="workerThread">The thread this job is running on</param>
+            public void Run(JobManager jobManager, BackgroundWorker workerThread)
             {
-                JobManager jobManager = e.Argument as JobManager;
-
                 List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
 
                 Simulation[] simulationsToRun = FindAllSimulationsToRun(this.model);
@@ -160,10 +153,11 @@
                 }
 
                 // Wait until all our jobs are all finished.
-                while (AreSomeJobsRunning(jobs))
+                while (AreSomeJobsRunning(jobs, jobManager))
                     Thread.Sleep(200);
 
                 // Collect all error messages.
+                string ErrorMessage = null;
                 foreach (Simulation job in simulationsToRun)
                 {
                     if (job.ErrorMessage != null)
@@ -305,10 +299,10 @@
                 this.runTests = runTests;
             }
 
-            /// <summary>Run this job.</summary>
-            /// <param name="sender">A system telling us to go </param>
-            /// <param name="e">Arguments to same </param>
-            public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+            /// <summary>Run the external process. Will throw on error.</summary>
+            /// <param name="jobManager">The job manager</param>
+            /// <param name="workerThread">The thread this job is running on</param>
+            public void Run(JobManager jobManager, BackgroundWorker workerThread)
             {
                 // Extract the path from the filespec. If non specified then assume
                 // current working directory.
@@ -328,9 +322,6 @@
                 files.RemoveAll(s => s.Contains("UserInterface"));
                 files.RemoveAll(s => s.Contains("ApsimNG"));
 
-                // Get a reference to the JobManager so that we can add jobs to it.
-                JobManager jobManager = e.Argument as JobManager;
-
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
                 string workingDirectory = Directory.GetCurrentDirectory();
                 string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -347,13 +338,16 @@
                 }
 
                 // Wait until all our jobs are all finished.
-                while (AreSomeJobsRunning(jobs))
+                while (AreSomeJobsRunning(jobs, jobManager))
                     Thread.Sleep(200);
 
                 // Collect all error messages.
-                foreach (JobManager.IRunnable job in jobs)
-                    if (job.ErrorMessage != null)
-                        ErrorMessage += job.ErrorMessage + Environment.NewLine;
+                foreach (JobManager.IRunnable runnableJob in jobs)
+                {
+                    List<Exception> errors = jobManager.Errors(runnableJob);
+                    if (errors.Count > 0)
+                        ErrorMessage += errors[0].ToString() + Environment.NewLine;
+                }
 
                 if (ErrorMessage != null)
                     throw new Exception(ErrorMessage);
@@ -366,17 +360,8 @@
         /// <summary>
         /// This runnable class runs an external process.
         /// </summary>
-        private class RunExternal : JobManager.IRunnable
+        class RunExternal : JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
         {
-            /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
-            public bool IsComputationallyTimeConsuming { get { return true; } }
-
-            /// <summary>Gets or sets the error message. Set by the JobManager.</summary>
-            public string ErrorMessage { get; set; }
-
-            /// <summary>Gets or sets a value indicating whether this job is completed. Set by the JobManager.</summary>
-            public bool IsCompleted { get; set; }
-
             /// <summary>Gets or sets the executable file.</summary>
             private string executable;
 
@@ -397,10 +382,10 @@
                 this.arguments = arguments;
             }
 
-            /// <summary>Called to start the job.</summary>
-            /// <param name="sender">The sender.</param>
-            /// <param name="e">The event data.</param>
-            public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+            /// <summary>Run the external process. Will throw on error.</summary>
+            /// <param name="jobManager">The job manager</param>
+            /// <param name="workerThread">The thread this job is running on</param>
+            public void Run(JobManager jobManager, BackgroundWorker workerThread)
             {
                 // Start the external process to run APSIM and wait for it to finish.
                 Process p = new Process();
@@ -417,9 +402,9 @@
                 p.WaitForExit();
                 if (p.ExitCode > 0)
                 {
-                    ErrorMessage = "Error in file: " + arguments + Environment.NewLine;
-                    ErrorMessage += stdout;
-                    throw new Exception(ErrorMessage);
+                    string errorMessage = "Error in file: " + arguments + Environment.NewLine;
+                    errorMessage += stdout;
+                    throw new Exception(errorMessage);
                 }
             }
         }

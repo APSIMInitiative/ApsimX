@@ -28,7 +28,7 @@ namespace Models.PMF.Phen
         /// 
         /// </summary>
         [Link(IsOptional = true)]
-        public IFunction BaseVrn1Target = null;
+        public IFunction ShortDayVrnSatTarget = null;
 
         /// <summary>
         /// 
@@ -115,7 +115,8 @@ namespace Models.PMF.Phen
 
         //Event procedures
         /// <summary>Called when [commencing].</summary>
-        public void OnCommencing()
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Vrn4 = 1.0;
             Vrn1Target = 0.74;
@@ -151,7 +152,7 @@ namespace Models.PMF.Phen
                     if (HaunStage.Value >= 1.1)
                     {
                         Vrn2 += Vrn2rate.Value * DeltaHaunStage.Value;
-                        Vrn1Target = Math.Min(1.0, BaseVrn1Target.Value + Vrn2);
+                        Vrn1Target = Math.Min(1.0, ShortDayVrnSatTarget.Value + Vrn2);
                     }
                     if (Vrn1 >= Vrn1Target)
                         IsVernalised = true;
