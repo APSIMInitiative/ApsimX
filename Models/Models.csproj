@@ -133,7 +133,9 @@
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
-    <Compile Include="Core\Runner.cs" />
+    <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
+    <Compile Include="Core\Runners\Runner.cs" />
+    <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
@@ -207,6 +209,7 @@
     </Compile>
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
