@@ -1038,9 +1038,9 @@ namespace Models.PMF.Organs
                 //Do Maintenance respiration
                 if (LeafCohortParameters.MaintenanceRespirationFunction != null)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * (1 - LeafCohortParameters.MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.MetabolicWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
                     Live.MetabolicWt *= (1 - LeafCohortParameters.MaintenanceRespirationFunction.Value);
-                    MaintenanceRespiration += Live.NonStructuralWt * (1 - LeafCohortParameters.MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.NonStructuralWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
                     Live.NonStructuralWt *= (1- LeafCohortParameters.MaintenanceRespirationFunction.Value);
                 }
 
