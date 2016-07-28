@@ -744,6 +744,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <TipsAtEmergence>0</TipsAtEmergence>
