@@ -282,6 +282,11 @@ namespace Models.PMF.Organs
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link(IsOptional = true)]
             public IFunction SenessingLeafRelativeSize = null;
+            /// <summary>
+            /// The proportion of mass that is respired each day
+            /// </summary>
+            [Link(IsOptional = true)]
+            public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
 
@@ -321,6 +326,9 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link(IsOptional = true)]
         IFunction DMDemandFunction = null;
+
+        [Link(IsOptional = true)]
+        IFunction DMConversionEfficiencyFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;
@@ -349,6 +357,10 @@ namespace Models.PMF.Organs
         public double FractionNextleafExpanded = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
+        /// <summary>
+        /// 
+        /// </summary>
+        public override double DMConversionEfficiency { get; set; }
         #endregion
 
         #region Outputs
@@ -812,6 +824,19 @@ namespace Models.PMF.Organs
         /// <value>The transpiration.</value>
         [Units("mm")]
         public double Transpiration { get { return WaterAllocation; } }
+        /// <summary>
+        /// The amount of mass lost to maintenance respiration
+        /// </summary>
+        public override double MaintenanceRespiration
+        {
+            get
+            {
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                    value = value + L.MaintenanceRespiration;
+                return value;
+            }
+        }
 
         /// <summary>Gets the fw.</summary>
         /// <value>The fw.</value>
@@ -1059,6 +1084,10 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (DMConversionEfficiencyFunction == null)
+                    DMConversionEfficiency = 1;
+                else
+                    DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
                 double StructuralDemand = 0.0;
                 double NonStructuralDemand = 0.0;
                 double MetabolicDemand = 0.0;
@@ -1072,9 +1101,9 @@ namespace Models.PMF.Organs
                 {
                     foreach (LeafCohort L in Leaves)
                     {
-                        StructuralDemand += L.StructuralDMDemand;
-                        MetabolicDemand += L.MetabolicDMDemand;
-                        NonStructuralDemand += L.NonStructuralDMDemand;
+                        StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
+                        MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
+                        NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
                     }
                 }
                 return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
@@ -1129,7 +1158,7 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMPotentialsupply = value.Structural;
+                    double DMPotentialsupply = value.Structural * DMConversionEfficiency;
                     double DMPotentialallocated = 0;
                     double TotalPotentialDemand = 0;
                     foreach (LeafCohort L in Leaves)
@@ -1159,7 +1188,7 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMPotentialsupply = value.Metabolic;
+                    double DMPotentialsupply = value.Metabolic * DMConversionEfficiency;
                     double DMPotentialallocated = 0;
                     double TotalPotentialDemand = 0;
                     foreach (LeafCohort L in Leaves)
@@ -1227,12 +1256,12 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMsupply = value.Structural;
+                    double DMsupply = value.Structural * DMConversionEfficiency;
                     double DMallocated = 0;
                     double TotalDemand = 0;
                     foreach (LeafCohort L in Leaves)
                         TotalDemand += L.StructuralDMDemand;
-                    double DemandFraction = (value.Structural) / TotalDemand;//
+                    double DemandFraction = (value.Structural * DMConversionEfficiency) / TotalDemand;//
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1244,7 +1273,7 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Structural) > 0.000000001)
+                    if ((DMallocated - value.Structural * DMConversionEfficiency) > 0.000000001)
                         throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1259,12 +1288,12 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMsupply = value.Metabolic;
+                    double DMsupply = value.Metabolic * DMConversionEfficiency;
                     double DMallocated = 0;
                     double TotalDemand = 0;
                     foreach (LeafCohort L in Leaves)
                         TotalDemand += L.MetabolicDMDemand;
-                    double DemandFraction = (value.Metabolic) / TotalDemand;//
+                    double DemandFraction = (value.Metabolic * DMConversionEfficiency) / TotalDemand;//
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1276,7 +1305,7 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("Metabolic DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Metabolic) > 0.000000001)
+                    if ((DMallocated - value.Metabolic * DMConversionEfficiency) > 0.000000001)
                         throw new Exception("the sum of Metabolic DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1285,18 +1314,18 @@ namespace Models.PMF.Organs
                 double TotalSinkCapacity = 0;
                 foreach (LeafCohort L in Leaves)
                     TotalSinkCapacity += L.NonStructuralDMDemand;
-                if (value.NonStructural > TotalSinkCapacity)
+                if ((value.NonStructural * DMConversionEfficiency) > TotalSinkCapacity)
                 //Fixme, this exception needs to be turned on again
                 { }
                     //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
                 if (TotalSinkCapacity > 0.0)
                 {
-                    double SinkFraction = value.NonStructural / TotalSinkCapacity;
+                    double SinkFraction = (value.NonStructural * DMConversionEfficiency )/ TotalSinkCapacity;
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural);
+                        double Allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural * DMConversionEfficiency);
                         NonStructuralDMAllocationCohort[i] = Allocation;
                     }
                 }
@@ -1358,7 +1387,7 @@ namespace Models.PMF.Organs
                 }
 
                 double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
-                double CheckValue = StartWt + value.Structural + value.Metabolic + value.NonStructural - value.Reallocation - value.Retranslocation - value.Respired;
+                double CheckValue = StartWt + value.Structural*DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.NonStructural * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
                 double ExtentOfCockUp = Math.Abs(EndWt - CheckValue);
                 double FloatingPointError = 0.00000001;
                 if (ExtentOfCockUp > FloatingPointError)
