@@ -52,9 +52,20 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
 
+        /// <summary>Dry matter conversion efficiency</summary>
+        [Link(IsOptional = true)]
+        public IFunction DMConversionEfficiencyFunction = null;
+
+  
+
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
+
+
+        /// <summary>Growth Respiration</summary>
+        public double GrowthRespiration { get; set; }
+
         #endregion
 
         #region Class Fields
@@ -162,6 +173,15 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
+
+
+            if (DMConversionEfficiencyFunction != null)
+                DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+            else
+                DMConversionEfficiency = 1.0;
+
+
+
         }
 
         /// <summary>
@@ -226,10 +246,11 @@ namespace Models.PMF.Organs
             MaintenanceRespiration = 0;
             //Do Maintenance respiration
             if (MaintenanceRespirationFunction != null)
+
             {
-                MaintenanceRespiration += Live.MetabolicWt * (1 - MaintenanceRespirationFunction.Value);
+                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
                 Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
-                MaintenanceRespiration += Live.NonStructuralWt * (1 - MaintenanceRespirationFunction.Value);
+                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
                 Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
             }
 
@@ -240,7 +261,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value };
+                return new BiomassPoolType { Structural = DMDemandFunction.Value/ DMConversionEfficiency};
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -261,7 +282,14 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
-        { set { Live.StructuralWt += value.Structural; } }
+        {
+            set
+        
+
+            {
+                GrowthRespiration = 0;
+                GrowthRespiration += value.Structural *(1- DMConversionEfficiency);
+                Live.StructuralWt += value.Structural * DMConversionEfficiency; } }
         /// <summary>Gets or sets the n demand.</summary>
         /// <value>The n demand.</value>
         public override BiomassPoolType NDemand

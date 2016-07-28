@@ -194,6 +194,8 @@ namespace Models.PMF.Organs
         public Phenology Phenology = null;
         #endregion
 
+    
+
         #region Structures
         /// <summary>
         /// 
@@ -372,6 +374,13 @@ namespace Models.PMF.Organs
 
         /// <summary>Return the</summary>
         /// <value>The cohort current rank cover above.</value>
+        /// 
+
+            public double GrowthRespiration { get; set;  }
+
+        /// <summary>Return the</summary>
+        /// <value>The cohort current rank cover above.</value>
+
         public double CohortCurrentRankCoverAbove
         {
             get
@@ -1244,6 +1253,12 @@ namespace Models.PMF.Organs
         {
             set
             {
+                GrowthRespiration = 0;
+
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
+
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
                 double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
                 double check = Live.StructuralWt;
