@@ -1168,6 +1168,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
       <Root>
@@ -1390,6 +1391,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -1398,11 +1400,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>200</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1950,6 +1954,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1963,6 +1968,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2071,6 +2077,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2238,6 +2245,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2511,7 +2519,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
-            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 1.0,1.0</Command>
+            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.8,0.8</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.Value = 3000</Command>
           </Cultivar>
@@ -2827,6 +2835,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Grain.N</string>
         <string>[Wheat].Grain.NConc</string>
         <string>[Wheat].Grain.Number</string>
+        <string>[Wheat].Grain.Size</string>
         <string>[Wheat].Grain.Wt</string>
         <string>[Wheat].Leaf.AppearedCohortNo</string>
         <string>[Wheat].Leaf.CoverDead</string>
@@ -3535,6 +3544,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -3769,6 +3779,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           </XYPairs>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -3777,31 +3788,37 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>380</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[3]</Name>
           <Rank>3</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[4]</Name>
           <Rank>4</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[5]</Name>
           <Rank>5</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[6]</Name>
           <Rank>6</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -4318,6 +4335,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -4331,6 +4349,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -4439,6 +4458,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
@@ -4577,6 +4597,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -4740,6 +4761,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -32355,7 +32377,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>HarvestReport</TableName>
+              <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Size</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -32378,7 +32400,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Leaf.CohortMaxSize(4)</YFieldName>
+              <YFieldName>Wheat.Grain.GrainSize</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
