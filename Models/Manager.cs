@@ -114,13 +114,6 @@ namespace Models
                 RebuildScriptModel();
         }
 
-        /// <summary>This code will cleanup temporary / old assemblies from previous runs.</summary>
-        public static void CleanupTempAssemblies()
-        {
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.Delete(tempFolder, true);
-        }
-
         /// <summary>
         /// We're about to be serialised. Remove our 'Script' model from the list
         /// of all models so that is isn't serialised. Seems .NET has a problem
@@ -231,16 +224,7 @@ namespace Models
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            string tempFileName = Path.GetTempFileName();
-            File.Delete(tempFileName);
-            string assemblyFileName = Path.ChangeExtension(tempFileName, ".dll");
-            assemblyFileName = Path.Combine(Path.GetDirectoryName(assemblyFileName),
-                                            "ApsimX", 
-                                            Path.GetFileName(assemblyFileName));
-
-            Directory.CreateDirectory(Path.GetDirectoryName(assemblyFileName));
-
-            return assemblyFileName;
+            return Path.ChangeExtension(Path.GetTempFileName(), ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
@@ -255,9 +239,7 @@ namespace Models
         /// <returns></returns>
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
-            string privateBinPath = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.CreateDirectory(privateBinPath);
-            foreach (string fileName in Directory.GetFiles(privateBinPath, "*.dll"))
+            foreach (string fileName in Directory.GetFiles(Path.GetTempPath(), "*.dll"))
                 if (args.Name == Path.GetFileNameWithoutExtension(fileName))
                     return Assembly.LoadFrom(fileName);
             return null;

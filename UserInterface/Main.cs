@@ -14,15 +14,18 @@
         [STAThread]
         static int Main(string[] args)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             MainView mainForm = new MainView();
             MainPresenter mainPresenter = new MainPresenter();
 
-            // Clean up temporary manager assemblies.
-            Models.Manager.CleanupTempAssemblies();
+            // Clean up temporary files.
+            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+            Directory.Delete(tempFolder, true);
+            Directory.CreateDirectory(tempFolder);
+            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
 
             try
             {
