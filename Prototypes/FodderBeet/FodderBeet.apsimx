@@ -57,7 +57,7 @@
               </SoilTemperatureFunction>
               <Memo>
                 <Name>Memo</Name>
-                <MemoText><![CDATA[Soil temperature may be extended beyond germination (e.g. based on leaf numbers) - need data to back up]]></MemoText>
+                <MemoText><![CDATA[Soil temperature may be extended beyond germination  (e.g. based on leaf numbers) - need data to back up]]></MemoText>
               </Memo>
               <Start>Sowing</Start>
               <End>Germination</End>
@@ -323,6 +323,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>50</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -734,6 +735,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -747,6 +749,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -924,6 +928,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </XYPairs>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -994,6 +999,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1071,6 +1078,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
