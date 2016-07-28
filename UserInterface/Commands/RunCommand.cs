@@ -33,8 +33,12 @@
         /// <summary>A flag indicated whether we should show number of sims running.</summary>
         private bool showNumberRunning = true;
 
+        /// <summary>The current running job.</summary>
+        private JobManager.IRunnable job;
+
         /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
+
 
 
         /// <summary>
@@ -64,7 +68,7 @@
             {
                 stopwatch.Start();
 
-                JobManager.IRunnable job = Runner.ForSimulations(simulations, modelClicked, false);
+                job = Runner.ForSimulations(simulations, modelClicked, false);
 
                 jobManager.AddJob(job);
                 jobManager.AllJobsCompleted += OnComplete;
@@ -141,10 +145,9 @@
         private string GetErrorsFromSimulations()
         {
             string errorMessage = null;
-            foreach (JobManager.IRunnable job in jobManager.CompletedJobs)
+            foreach (Exception error in jobManager.Errors(job))
             {
-                if (job.ErrorMessage != null)
-                    errorMessage += job.ErrorMessage + Environment.NewLine;
+                errorMessage += error.ToString() + Environment.NewLine;
             }
 
             return errorMessage;
@@ -157,22 +160,21 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulationsRun = jobManager.CompletedJobs.Count;
-            int numSimulationsToRun = jobManager.JobCount + numSimulationsRun;
+            int numSimulations = jobManager.CountJobTypeInQueue<Simulation>();
+            double percentComplete = jobManager.PercentComplete;
 
             // One job will be the simulations object we added above. We don't want
             // to count this in the list of simulations being run, hence the -1 below.
-            if (numSimulationsToRun > 1)
+            if (numSimulations > 0)
             {
                 if (showNumberRunning)
                 {
                     showNumberRunning = false;
-                    explorerPresenter.MainPresenter.ShowMessage(modelClicked.Name + " running (" + (numSimulationsToRun-1) + ")", Models.DataStore.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowMessage(modelClicked.Name + " running (" + (numSimulations) + ")", Models.DataStore.ErrorLevel.Information);
                 }
 
-                double percent = numSimulationsRun * 1.0 / numSimulationsToRun * 100.0;
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percent));
-                if (jobManager.JobCount == 0)
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
+                if (percentComplete == 100)
                     timer.Stop();
             }
         }
