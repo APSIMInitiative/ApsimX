@@ -1883,14 +1883,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Folder>
         <CanopyPhotosynthesis>
           <Name>Photosynthesis</Name>
-          <fPgmmax>0</fPgmmax>
-          <fMaxLUE>0</fMaxLUE>
-          <fCO2Cmp>0</fCO2Cmp>
-          <fCO2R>0</fCO2R>
-          <fKDIF>0</fKDIF>
+          <fPgmmax>40</fPgmmax>
+          <fMaxLUE>0.6</fMaxLUE>
+          <fCO2Cmp>50</fCO2Cmp>
+          <fCO2R>38</fCO2R>
+          <fKDIF>0.7</fKDIF>
           <fMaxTmp>0</fMaxTmp>
-          <fOptTmp>0</fOptTmp>
-          <fMinTmp>0</fMinTmp>
+          <fOptTmp>27</fOptTmp>
+          <fMinTmp>35</fMinTmp>
+          <pathway>C3</pathway>
           <GrossPhotosynthesis>0</GrossPhotosynthesis>
         </CanopyPhotosynthesis>
         <Constant>
