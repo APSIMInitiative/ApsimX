@@ -148,10 +148,6 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively(model);
-            modelsToNotify.Add(model);
-
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
             model.Parent = null;
@@ -160,37 +156,47 @@ namespace Models.Core
             Stream stream = new MemoryStream();
             using (stream)
             {
-                object[] args = new object[] { false };
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Serialising", args);
-                }
-
                 formatter.Serialize(stream, model);
-
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Serialised", args);
-                }
-
                 stream.Seek(0, SeekOrigin.Begin);
-
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Deserialising", args);
-                }
-
                 IModel returnObject = (IModel)formatter.Deserialize(stream);
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Deserialised", args);
-                }
 
                 // Reinstate parent
                 model.Parent = parent;
 
                 return returnObject;
             }
+        }
+
+        /// <summary>
+        /// Perform a deep serialise of the model.
+        /// </summary>
+        /// <param name="model">The model to clone</param>
+        /// <returns>The model serialised to a stream.</returns>
+        public static Stream SerialiseToStream(IModel model)
+        {
+            // Get rid of our parent temporarily as we don't want to serialise that.
+            IModel parent = model.Parent;
+            model.Parent = null;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+
+            formatter.Serialize(stream, model);
+            return stream;
+        }
+
+        /// <summary>
+        /// Deserialise a model from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to deserialise from.</param>
+        /// <returns>The newly created model</returns>
+        public static IModel DeserialiseFromStream(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+
+            IFormatter formatter = new BinaryFormatter();
+            IModel model = (IModel)formatter.Deserialize(stream);
+            return model;
         }
 
         /// <summary>Adds a new model (as specified by the xml node) to the specified parent.</summary>
