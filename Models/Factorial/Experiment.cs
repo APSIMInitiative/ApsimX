@@ -5,6 +5,8 @@ using System.Text;
 using Models.Core;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
+using System.ComponentModel;
+using System.IO;
 
 namespace Models.Factorial
 {
@@ -15,15 +17,18 @@ namespace Models.Factorial
     [ViewName("UserInterface.Views.MemoView")]
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Experiment : Model
+    public class Experiment : Model, JobManager.IRunnable
     {
-        /// <summary>
-        /// Create all simulations.
-        /// </summary>
-        public Simulation[] Create()
+        /// <summary>Called to start the job.</summary>
+        /// <param name="jobManager">The job manager running this job.</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
+        public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            Simulations parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+
+            Stream serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
 
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
@@ -32,14 +37,14 @@ namespace Models.Factorial
                 foreach (FactorValue value in combination)
                     newSimulationName += value.Name;
 
-                Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
+                Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
                 newSimulation.Name = newSimulationName;
                 newSimulation.Parent = null;
+                newSimulation.FileName = parentSimulations.FileName;
                 Apsim.ParentAllChildren(newSimulation);
 
                 // Make substitutions.
-                Simulations.MakeSubstitutions(Apsim.Parent(this, typeof(Simulations)) as Simulations, 
-                                         new List<Simulation> { newSimulation });
+                Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
 
                 // Call OnLoaded in all models.
                 foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
@@ -49,11 +54,8 @@ namespace Models.Factorial
                     value.ApplyToSimulation(newSimulation);
                 
                 PushFactorsToReportModels(newSimulation, combination);
-
-                simulations.Add(newSimulation);
+                jobManager.AddChildJob(this, newSimulation);
             }
-
-            return simulations.ToArray();
         }
 
         /// <summary>Find all report models and give them the factor values.</summary>
@@ -105,6 +107,7 @@ namespace Models.Factorial
         {
             List<List<FactorValue>> allCombinations = AllCombinations();
             Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            Simulations parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
             foreach (List<FactorValue> combination in allCombinations)
             {
@@ -117,7 +120,11 @@ namespace Models.Factorial
                     Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
                     newSimulation.Name = newSimulationName;
                     newSimulation.Parent = null;
+                    newSimulation.FileName = parentSimulations.FileName;
                     Apsim.ParentAllChildren(newSimulation);
+
+                    // Make substitutions.
+                    Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
 
                     // Connect events and links in our new  simulation.
                     foreach (Model child in Apsim.ChildrenRecursively(newSimulation))

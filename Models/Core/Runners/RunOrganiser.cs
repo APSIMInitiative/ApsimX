@@ -2,14 +2,12 @@
 {
     using APSIM.Shared.Utilities;
     using Factorial;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-
-    /// <summary>Organises the running of a collection of jobs.</summary>
+    /// <summary>
+    /// A runnable job that looks at the model passed in and determines what is to be run.
+    /// Will spawn other jobs to do the actual running.
+    /// </summary>
     class RunOrganiser : JobManager.IRunnable
     {
         private Simulations simulations;
@@ -27,18 +25,11 @@
             this.runTests = runTests;
         }
 
-        /// <summary>Number of sims running.</summary>
-        public int numRunning { get; private set; }
-
-        /// <summary>Run the organiser. Will throw on error.</summary>
-        /// <param name="jobManager">The job manager</param>
-        /// <param name="workerThread">The thread this job is running on</param>
+        /// <summary>Called to start the job.</summary>
+        /// <param name="jobManager">The job manager running this job.</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
         public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
-            List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-
-            Simulation[] simulationsToRun = FindAllSimulationsToRun(this.model);
-
             // IF we are going to run all simulations, we can delete all tables in the DataStore. This
             // will clean up order of columns in the tables and removed unused ones.
             // Otherwise just remove the unwanted simulations from the DataStore.
@@ -49,134 +40,44 @@
                 store.RemoveUnwantedSimulations(simulations);
             store.Disconnect();
 
-            foreach (Simulation simulation in simulationsToRun)
-            {
-                jobs.Add(simulation);
-                jobManager.AddJob(simulation);
-            }
+            JobSequence parentJob = new JobSequence();
+            JobParallel simulationJobs = new JobParallel();
+            FindAllSimulationsToRun(model, simulationJobs);
+            parentJob.Jobs.Add(simulationJobs);
+            parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
 
-            // Wait until all our jobs are all finished.
-            while (AreSomeJobsRunning(jobs, jobManager))
-                Thread.Sleep(200);
-
-            // Collect all error messages.
-            string ErrorMessage = null;
-            foreach (Simulation job in simulationsToRun)
-            {
-                if (job.ErrorMessage != null)
-                    ErrorMessage += job.ErrorMessage + Environment.NewLine;
-            }
-
-            // <summary>Call the all completed event in all models.</summary>
-            object[] args = new object[] { this, new EventArgs() };
-            foreach (Model childModel in Apsim.ChildrenRecursively(simulations))
-            {
-                try
-                {
-                    Apsim.CallEventHandler(childModel, "AllCompleted", args);
-                }
-                catch (Exception err)
-                {
-                    ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
-                    ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
-                }
-            }
-
-            // Optionally run the test nodes.
             if (runTests)
             {
-                foreach (Tests tests in Apsim.ChildrenRecursively(simulations, typeof(Tests)))
-                {
-                    try
-                    {
-                        tests.Test();
-                    }
-                    catch (Exception err)
-                    {
-                        ErrorMessage += "Error in file: " + simulations.FileName + Environment.NewLine;
-                        ErrorMessage += err.ToString() + Environment.NewLine + Environment.NewLine;
-                    }
-                }
+                foreach (Tests tests in Apsim.ChildrenRecursively(model, typeof(Tests)))
+                    parentJob.Jobs.Add(tests);
             }
-
-            if (ErrorMessage != null)
-                throw new Exception(ErrorMessage);
+            jobManager.AddChildJob(this, parentJob);
         }
 
-
-        /// <summary>Find all simulations under the specified parent model.</summary>
-        /// <param name="model">The parent.</param>
-        /// <returns></returns>
-        private Simulation[] FindAllSimulationsToRun(Model model)
-        {
-            List<Simulation> simulations = new List<Simulation>();
+        /// <summary>Find simulations/experiments to run.</summary>
+        /// <param name="model">The model and its children to search.</param>
+        /// <param name="parentJob">The parent job to add the child jobs to.</param>
+        private void FindAllSimulationsToRun(IModel model, JobParallel parentJob)
+        { 
+            // Get jobs to run and give them to job manager.
+            List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
 
             if (model is Experiment)
-                simulations.AddRange((model as Experiment).Create());
+                parentJob.Jobs.Add(model as Experiment);
             else if (model is Simulation)
             {
-                Simulation clonedSim;
                 if (model.Parent == null)
-                {
-                    // model is already a cloned simulation, probably from user running a single 
-                    // simulation from an experiment.
-                    clonedSim = model as Simulation;
-                }
+                    parentJob.Jobs.Add(model as Simulation);
                 else
-                    clonedSim = Apsim.Clone(model) as Simulation;
-
-                Simulations.MakeSubstitutions(this.simulations, new List<Simulation> { clonedSim });
-
-                Simulations.CallOnLoaded(clonedSim);
-                simulations.Add(clonedSim);
+                    parentJob.Jobs.Add(new RunClonedSimulation(model as Simulation));
             }
             else
             {
                 // Look for simulations.
-                foreach (Model child in Apsim.ChildrenRecursively(model))
-                {
-                    if (child is Experiment)
-                        simulations.AddRange((child as Experiment).Create());
-                    else if (child is Simulation && !(child.Parent is Experiment))
-                        simulations.AddRange(FindAllSimulationsToRun(child));
-                }
+                foreach (Model child in model.Children)
+                    if (child is Experiment || child is Simulation || child is Folder)
+                        FindAllSimulationsToRun(child, parentJob);
             }
-
-            // Make sure each simulation has it's filename set correctly.
-            foreach (Simulation simulation in simulations)
-            {
-                if (simulation.FileName == null)
-                    simulation.FileName = RootSimulations(model).FileName;
-            }
-
-            return simulations.ToArray();
-        }
-
-        /// <summary>Are some jobs still running?</summary>
-        /// <param name="jobs">The jobs to check.</param>
-        /// <param name="jobManager">The job manager</param>
-        /// <returns>True if all completed.</returns>
-        private static bool AreSomeJobsRunning(List<JobManager.IRunnable> jobs, JobManager jobManager)
-        {
-            foreach (JobManager.IRunnable job in jobs)
-            {
-                if (!jobManager.IsJobCompleted(job))
-                    return true;
-            }
-            return false;
-        }
-
-
-        /// <summary>Roots the simulations.</summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        private static Simulations RootSimulations(Model model)
-        {
-            Model m = model;
-            while (m != null && m.Parent != null && !(m is Simulations))
-                m = m.Parent as Model;
-
-            return m as Simulations;
         }
     }
 }
