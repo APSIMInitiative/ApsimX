@@ -22,6 +22,53 @@ namespace Models.PMF.Functions.SupplyFunctions
     public class CanopyPhotosynthesis : Model, IFunction
     {
         /// <summary>
+        /// 
+        /// </summary>
+        [Description("Gmax")]
+        public double fPgmmax { get; set;  }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("MaxLUE")]
+        public double fMaxLUE { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("CO2comp")]
+        public double fCO2Cmp { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("CO2R")]
+        public double fCO2R { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("KDIF")]
+        public double fKDIF { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("maximum temperature")]
+        public double fMaxTmp { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Optimal temperature")]
+        public double fOptTmp { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("minimum temperature")]
+        public double fMinTmp { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("C3/C4")]
+        public string pathway { get; set; }
+
+
+        /// <summary>
         /// The amount of DM that is fixed by photosynthesis
         /// </summary>
         public double GrossPhotosynthesis { get; set; }

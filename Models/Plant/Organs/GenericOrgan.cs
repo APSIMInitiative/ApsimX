@@ -99,6 +99,9 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         [Link(IsOptional = true)]
         public IFunction MinimumNConc = null;
+        /// <summary>The proportion of biomass repired each day</summary>
+        [Link(IsOptional = true)]
+        public IFunction MaintenanceRespirationFunction = null;
         #endregion
 
         #region States
@@ -471,6 +474,16 @@ namespace Models.PMF.Organs
                         DetachedN += detachingN;
                         SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
                     }
+                }
+
+                MaintenanceRespiration = 0;
+                //Do Maintenance respiration
+                if (MaintenanceRespirationFunction != null)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * (1 - MaintenanceRespirationFunction.Value);
+                    Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.NonStructuralWt * (1 - MaintenanceRespirationFunction.Value);
+                    Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
                 }
 
                 if (DryMatterContent != null) 

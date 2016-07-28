@@ -51,6 +51,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
+
+        /// <summary>The proportion of biomass repired each day</summary>
+        [Link(IsOptional = true)]
+        public IFunction MaintenanceRespirationFunction = null;
         #endregion
 
         #region Class Fields
@@ -217,6 +221,18 @@ namespace Models.PMF.Organs
         {
             if (Phenology.OnDayOf(RipeStage))
                 _ReadyForHarvest = true;
+
+
+            MaintenanceRespiration = 0;
+            //Do Maintenance respiration
+            if (MaintenanceRespirationFunction != null)
+            {
+                MaintenanceRespiration += Live.MetabolicWt * (1 - MaintenanceRespirationFunction.Value);
+                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
+                MaintenanceRespiration += Live.NonStructuralWt * (1 - MaintenanceRespirationFunction.Value);
+                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
+            }
+
         }
         /// <summary>Gets or sets the dm demand.</summary>
         /// <value>The dm demand.</value>

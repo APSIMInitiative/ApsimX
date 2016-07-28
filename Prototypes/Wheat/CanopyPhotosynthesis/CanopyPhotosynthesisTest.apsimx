@@ -1156,6 +1156,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
@@ -1862,6 +1883,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Folder>
         <CanopyPhotosynthesis>
           <Name>Photosynthesis</Name>
+          <fPgmmax>0</fPgmmax>
+          <fMaxLUE>0</fMaxLUE>
+          <fCO2Cmp>0</fCO2Cmp>
+          <fCO2R>0</fCO2R>
+          <fKDIF>0</fKDIF>
+          <fMaxTmp>0</fMaxTmp>
+          <fOptTmp>0</fOptTmp>
+          <fMinTmp>0</fMinTmp>
           <GrossPhotosynthesis>0</GrossPhotosynthesis>
         </CanopyPhotosynthesis>
         <Constant>
@@ -2084,6 +2113,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
@@ -2252,6 +2302,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
