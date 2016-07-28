@@ -19,6 +19,13 @@ namespace Models.WholeFarm
     public class LandType : Model
     {
 
+        [Link]
+        ISummary Summary = null;
+
+
+        event EventHandler LandChanged;
+
+
         /// <summary>
         /// Total Area (ha)
         /// </summary>
@@ -51,75 +58,112 @@ namespace Models.WholeFarm
         public double NDecline { get; set; }
 
 
-        /// <summary>
-        ///  Creates a Land Item   
-        /// </summary>
-        /// <returns></returns>
-        public LandItem CreateListItem()
-        {
-            LandItem land = new LandItem();
-
-            land.LandArea = this.LandArea;
-            land.UnusablePortion = this.UnusablePortion;
-            land.BundedPortion = this.BundedPortion;
-            land.SoilType = this.SoilType;
-            land.NDecline = this.NDecline;
-
-            land.AreaAvailable = this.LandArea;
-            land.AreaUsed = 0;
-
-            return land;
-        }
-
-    }
-
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class LandItem
-    {
-
-
-        /// <summary>
-        /// Total Area (ha)
-        /// </summary>
-        public double LandArea;
-
-
-        /// <summary>
-        /// Unusable Portion - Buildings, paths etc. (%)
-        /// </summary>
-        public double UnusablePortion;
-
-        /// <summary>
-        /// Portion Bunded (%)
-        /// </summary>
-        public double BundedPortion;
-
-        /// <summary>
-        /// Soil Type (1-5) 
-        /// </summary>
-        public int SoilType;
-
-        /// <summary>
-        /// Fertility - N Decline Yield
-        /// </summary>
-        public double NDecline;
-
-
-        //TODO: turn these two below into properties with getters and setters that change each other as well.
 
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
-        public double AreaAvailable;
+        [XmlIgnore]
+        public double AreaAvailable { get { return _AreaAvailable; } }
+
+        private double _AreaAvailable;
+
+
 
         /// <summary>
         /// Area already used (ha)
         /// </summary>
-        public double AreaUsed;
+        [XmlIgnore]
+        public double AreaUsed { get { return this.LandArea - _AreaAvailable; } }
+
+
+
+
+
+        /// <summary>
+        /// Add Available Land
+        /// </summary>
+        /// <param name="AddAmount"></param>
+        public void Add(double AddAmount)
+        {
+            if (this._AreaAvailable + AddAmount > this.LandArea)
+            {
+                string message = "Tried to add more available land to " + this.Name + " than exists." + Environment.NewLine
+                    + "Current Amount: " + this._AreaAvailable + Environment.NewLine
+                    + "Tried to Remove: " + AddAmount;
+                Summary.WriteWarning(this, message);
+                this._AreaAvailable = this.LandArea;
+            }
+            else
+            {
+                this._AreaAvailable = this._AreaAvailable + AddAmount;
+            }
+
+            if (LandChanged != null)
+                LandChanged.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Remove Available Land
+        /// </summary>
+        /// <param name="RemoveAmount"></param>
+        public void Remove(double RemoveAmount)
+        {
+            if (this._AreaAvailable - RemoveAmount < 0)
+            {
+                string message = "Tried to remove more available land to " + this.Name + " than exists." + Environment.NewLine
+                    + "Current Amount: " + this._AreaAvailable + Environment.NewLine
+                    + "Tried to Remove: " + RemoveAmount;
+                Summary.WriteWarning(this, message);
+                this._AreaAvailable = 0;
+            }
+            else
+            {
+                this._AreaAvailable = this._AreaAvailable - RemoveAmount;
+            }
+
+            if (LandChanged != null)
+                LandChanged.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Set Amount of Available Land
+        /// </summary>
+        /// <param name="NewValue"></param>
+        public void Set(double NewValue)
+        {
+            if ((NewValue < 0) || (NewValue > this.LandArea))
+            {
+                Summary.WriteMessage(this, "Tried to Set Available Land to Invalid New Amount." + Environment.NewLine
+                    + "New Value must be between 0 and the Land Area.");
+            }
+            else
+            {
+                this._AreaAvailable = NewValue;
+
+                if (LandChanged != null)
+                    LandChanged.Invoke(this, new EventArgs());
+            }
+        }
+
+
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
+        {
+            this._AreaAvailable = this.LandArea;
+        }
+
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
+        }
+
     }
+
 }

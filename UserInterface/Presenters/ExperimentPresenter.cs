@@ -41,8 +41,8 @@ namespace UserInterface.Presenters
             try
             {
                 Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
-                Commands.RunCommand run = new Commands.RunCommand(Apsim.Parent(Experiment, typeof(Simulations)) as Simulations,
-                                                                  simulation,
+                Commands.RunCommand run = new Commands.RunCommand(simulation, 
+                                                                  simulation.Name,
                                                                   ExplorerPresenter);
                 run.Do(null);
             }
