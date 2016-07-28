@@ -251,7 +251,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        virtual protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Plant.IsAlive)
                 DoDailyCleanup();
