@@ -22,7 +22,8 @@
 
             // Clean up temporary files.
             string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            Directory.Delete(tempFolder, true);
+            if (Directory.Exists(tempFolder))
+                Directory.Delete(tempFolder, true);
             Directory.CreateDirectory(tempFolder);
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
