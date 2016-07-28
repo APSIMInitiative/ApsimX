@@ -1,0 +1,339 @@
+---
+title: "Stats"
+output: word_document
+---
+
+## Load observed
+
+```{r ReadObserved, echo=FALSE, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library (hydroGOF)
+library(xtable)
+library(knitr)
+library(tidyr)
+library(RSQLite)
+
+# load data
+setwd("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\Observations")
+obsData <- read.table("ObservedDataForStats.txt", header = TRUE)
+
+# get time format right
+obsData <- obsData %>% mutate(Date = dmy(Date))
+str(obsData)
+head(obsData)
+summary(obsData)
+
+# create N categories
+obsData$N_cat <- NULL
+obsData$N_cat[obsData$N_Treat<=75] <- "low N"
+obsData$N_cat[obsData$N_Treat>75 & obsData$NTrmt<=150] <- "mid N"
+obsData$N_cat[obsData$N_Treat>150] <- "high N"
+
+
+# create yield categories
+obsData$yieldCat <- NULL
+obsData$yieldCat[obsData$N_lim== "No" & obsData$W_lim== "No"] <- "Potential"
+obsData$yieldCat[obsData$N_lim== "Yes" & obsData$W_lim== "No"] <- "N-limited only"
+obsData$yieldCat[obsData$N_lim== "No" & obsData$W_lim== "Yes"] <- "Water-limited only"
+obsData$yieldCat[obsData$N_lim== "Yes" & obsData$W_lim== "Yes"] <- "Co-limited"
+
+obsData$N_cat <- as.factor(obsData$N_cat)
+
+summary(obsData)
+
+head(obsData)
+
+print(unique(obsData$Name))
+
+```
+
+## Define stats
+
+```{r CustomStats}
+
+gauchStats <- function(sim, meas) {
+  
+  n_s <- length(sim)
+  n_m <- length(meas)
+  model <- lm(meas~sim)
+  sim_sq <- sum((sim - mean(sim))^2)
+  mes_sq <- sum((meas - mean(meas))^2)
+  r2 <- summary(model)$r.squared
+  slope <- model$coefficients[[2]]
+  
+  sb <- (sum(mean(meas)) - sum(mean(sim)))^2
+  nu <- (1-slope)^2 * (sim_sq/n_s)
+  lc <- (1-r2) * (mes_sq/n_m)
+  msd <- sb+nu+lc
+  
+  sb_r <- round((sb/msd)*100,1)
+  nu_r <- round((nu/msd)*100,1)
+  lc_r <- round((lc/msd)*100,1)
+  
+  msd_r <- sb_r+nu_r+lc_r
+  
+  out <- c(sb_r,nu_r,lc_r, msd_r)
+ # out <- c(sb,nu,lc, msd,sim_sq,mes_sq,r2,n_s,n_m,slope ) # testing
+  
+  return(out)
+  
+}
+
+# test dataset
+s <- c(342.5,	68.3,	70.1,	286.1,	333.8)
+m <- c(299.64,	161.36,	201.45,	220.8,	217.67)
+
+
+
+x <- gauchStats(s,m)
+
+x[1]
+x[2]
+x[3]
+x[4]
+
+
+```
+
+## Load simulated
+
+```{r, ReadSimulated, echo=FALSE, include=FALSE}
+
+
+# create function to read data (Justin's script)
+GetApsimNGTable <- function(dbLoc, table) 
+{
+  connection <- dbConnect(SQLite(), dbname = dbLoc, flags = SQLITE_RW)
+  table <- dbReadTable(connection, table, row.names=NULL)
+  dbDisconnect(connection)
+  return(table)
+}
+
+
+# load address of db
+db.address <- "C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\FodderBeet.db"
+
+# check what's inside db
+con <- dbConnect(SQLite(), dbname = db.address, flags = SQLITE_RW)
+alltables <- dbListTables(con)
+alltables
+
+# set table to be enquierd
+tableName <- "Report" # 
+
+# load table into an object
+myDbTable <- GetApsimNGTable(db.address,tableName)
+
+# make it a dataframe
+df <- as.data.frame(myDbTable)
+
+# change date to corerct format 
+df$Date <- ymd_hms(df$Clock.Today)
+
+# explore the df
+head(df)
+summary(df)
+str(df)
+
+
+# add sim names (FIXME: this should come from DF????)
+simNameDf <- data.frame(
+  Name = c(
+"Lincoln2014CvRiv_Oct",
+"Lincoln2014CvRiv_Sep",
+"Lincoln2014CvRiv_Nov",
+"Lincoln2014CvRiv_Dec",
+"Lincoln2014CvBri_Sep",
+"Lincoln2014CvBri_Nov",
+"Lincoln2014CvBri_Oct",
+"Lincoln2014CvBri_Dec",
+"LincolnP21_Cv2011",
+"LincolnP21_Cv2012"
+
+),
+  SimulationID = c(1,2,3,4,5,6,7,8,9,10)
+)
+
+
+# merge names
+myDb <- merge(df, simNameDf, by=("SimulationID"))
+
+# remove unecessary variables
+myDb <- myDb %>%
+  dplyr::select(-FodderBeet.Phenology.CurrentPhaseName, 
+         -Phenology.Photoperiod.Value) 
+
+
+# explore the df
+head(myDb)
+summary(myDb)
+str(myDb)
+
+```
+
+
+```{r MergeObsPred, echo=FALSE, include=FALSE}
+
+# Add info for merging
+
+# Remove extra variables that are not for comparing with observed data
+varsToDelete <- grep("ExtraVariables|Phenology|irrigation",
+                     names(myDb)) # find output variables
+varsToDelete
+myDb <- myDb %>% select(-varsToDelete)
+
+# re-arrange
+outVarsPos <- grep("FodderBeet",names(myDb)) # find output variables
+simData <- myDb %>% gather("Variable", "Predicted", outVarsPos)
+
+head(simData)
+head(obsData)
+str(simData)
+summary(simData)
+summary(obsData)
+
+mergedDF <- merge(obsData,simData, by=c("Date","Variable","Name")) # FIXME: add experiment?
+
+head(mergedDF)
+tail(mergedDF)
+summary(mergedDF)
+
+unique(mergedDF$Name)
+
+mergedDF %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+obsData %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+simData %>%
+  filter(Name == "LincolnP21_Cv2012")
+
+summary(simData)
+unique(simData$Name)
+
+```
+
+
+
+Potential yield
+
+```{r, echo=FALSE,echo=FALSE, fig.height=18,fig.width=12}
+
+varNameDf <- read.table("C:\\GitHubRepos\\ApsimX\\Prototypes\\FodderBeet\\VariableNames.txt", header = TRUE)
+summary(varNameDf)
+
+mergedDF <- merge(mergedDF,varNameDf, by="Variable")
+
+
+mergedDF$SimpleName <- 
+  factor(mergedDF$SimpleName, 
+         levels = c("Node Number",
+"Green Leaves",
+"Seneced Leaves",
+"LAI",
+"Total DM",
+"Bulb DM",
+"Leaf DM",
+"Petiole DM",
+"Total N",
+"Bulb N",
+"Leaf N",
+"Petiole N",
+"Light Interception"
+)
+         )
+
+
+# sort out xlim and ylim for graphs
+maxAxesValues <- mergedDF %>%
+  group_by(Calib_Test, SimpleName) %>%
+  summarise(axes.limits = max(Observed, Predicted))
+head(maxAxesValues, 20)
+
+mergedDF <- merge(mergedDF, maxAxesValues, by=c("Calib_Test", "SimpleName"))
+
+
+# TODO: set limits for 1:1
+# facetlims <- mergedDF %>% 
+#     group_by(Name,Variable) %>% 
+#     summarise(min = min(Predicted, Observed), max = max(Predicted, Observed)) %>%
+#     gather(range, displ, -class) %>%
+#     mutate(hwy = displ, range = NULL)
+
+
+#potential
+mergedDF %>%
+  mutate(Calib_Test = ifelse(Calib_Test=="Calib","Calibration data", "Test data"))  %>%
+  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
+#  filter(Name == "LincolnP21_Cv2011" | Name == "LincolnP21_Cv2012") %>%
+#  filter(W_lim == "No", N_lim == "No") %>%
+ # filter(Calib_Test == "Calib") %>%
+ # filter(SowingDate_Treat == "Oct") %>%
+  ggplot(aes(x=Observed, y= Predicted, 
+             colour= factor(Name))) +
+  geom_point(size=1.5) +
+  geom_smooth(method = "lm", se = TRUE, linetype = 3, colour="darkgrey") +
+  geom_abline(intercept = 0, slope = 1) +
+  coord_fixed(ratio = 1) +
+  facet_wrap(Calib_Test~SimpleName, scales = "free") + theme(legend.title=element_blank())
+
+```
+
+
+Stats table
+
+```{r, echo=FALSE ,fig.align='right'}
+# Give stats
+mergedDF %>%
+  filter(Cultivar_Treat != "Bri") %>% # get rid of Brigarier
+  group_by(Calib_Test,SimpleName) %>%
+  summarise(
+    n = n(),
+    r2 = round(br2(Predicted,Observed)*100,0),
+  #  rmse = round(rmse(Predicted,Observed),0),
+    r_rmse = round(rmse(Predicted,Observed)/mean(Observed)*100,1),
+    nse = round(NSE(Predicted,Observed),1),
+    sb = gauchStats(Predicted,Observed)[1],
+  nu = gauchStats(Predicted,Observed)[2],
+  lc = gauchStats(Predicted,Observed)[3]
+  ) %>%
+  kable(format = "markdown")
+
+```
+
+
+Analysing starts across sowing dates
+
+```{r}
+
+levels(mergedDF$SowingDate_Treat) <- c("Sep","Oct", "Nov", "Dec")
+mergedDF$SowDate <- mergedDF$SowingDate_Treat
+levels(mergedDF$SowDate) <- c("1/09/2000","1/10/2000", "1/11/2000", "1/12/2000")
+mergedDF$SowDate <- dmy(mergedDF$SowDate)
+
+mergedDF %>%
+ # mutate(SimpleName = factor(levels(SimpleName)[c("Sep","Oct", "Nov", "Dec")])) %>%
+  filter(Experiment =="Lincoln2014" & Cultivar_Treat == "Riv") %>%
+  group_by(SimpleName,SowDate, Cultivar_Treat) %>%
+  summarise(
+    n = n(),
+    r2 = round(br2(Predicted,Observed)*100,0),
+  #  rmse = round(rmse(Predicted,Observed),0),
+    r_rmse = round(rmse(Predicted,Observed)/mean(Observed)*100,1),
+    nse = round(NSE(Predicted,Observed),1),
+    sb = gauchStats(Predicted,Observed)[1],
+  nu = gauchStats(Predicted,Observed)[2],
+  lc = gauchStats(Predicted,Observed)[3]
+  ) %>%
+  ggplot(aes(x=SowDate, y=r_rmse)) +
+  geom_point()+
+  geom_line() +
+  facet_wrap(~SimpleName, scale="free", ncol=4) +
+  ylab("Relative Root Mean Squated Error (rRMSE, %) ") +
+  xlab("Sowing Date ")
+
+```
+
