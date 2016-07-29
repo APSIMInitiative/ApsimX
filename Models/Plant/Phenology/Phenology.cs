@@ -265,17 +265,8 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the days after sowing.</summary>
         /// <value>The days after sowing.</value>
-        public int DaysAfterSowing
-        {
-            get
-            {
-                if (SowDate == DateTime.MinValue)
-                    return 0;
-                else
-                    return (Clock.Today - SowDate).Days;
-            }
-        }
-
+        public int DaysAfterSowing { get; set; }
+       
         #endregion
 
         /// <summary>Constructor</summary>
@@ -349,6 +340,8 @@ namespace Models.PMF.Phen
                 CurrentlyOnFirstDayOfPhase[i] = "";
             //reset StagesPassedToday to zero to restart count for the new day
             StagesPassedToday = 0;
+            if (PlantIsAlive)
+                DaysAfterSowing += 1;
         }
 
 
