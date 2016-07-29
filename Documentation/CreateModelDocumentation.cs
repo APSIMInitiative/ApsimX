@@ -7,13 +7,14 @@ using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models;
 using Models.Core;
+using System.Windows.Forms;
 
 /// <summary>
 /// This script creates model documentation for a single model.
 /// </summary>
 public class Script
 {
-    public void Execute(TabbedExplorerPresenter tabbedExplorerPresenter)
+    public void Execute(MainPresenter mainPresenter)
     {
         // Set the current working directory to the bin folder.
         string binFolder = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
@@ -23,13 +24,13 @@ public class Script
         string modelName = System.Environment.GetEnvironmentVariable("ModelName");
         
         // Open wheat validation in a tab
-        string fileName = Path.Combine(binFolder, @"..\Tests\Validation\" + modelName + @"\" + modelName + ".apsimx");
+		string fileName = Path.Combine(binFolder, @"..\Tests\Validation\" + modelName + @"\" + modelName + ".apsimx");
         if (File.Exists(fileName))
         {
-            tabbedExplorerPresenter.OpenApsimXFileInTab(fileName);
+            mainPresenter.OpenApsimXFileInTab(fileName, true);
         
             // Get the presenter for this tab.
-            ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0];
+            ExplorerPresenter presenter = mainPresenter.presenters1[0];
             presenter.SelectNode(".Simulations");
 
             // Export the model to HTML
@@ -43,6 +44,6 @@ public class Script
             File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
         }
         // Close the user interface.
-        tabbedExplorerPresenter.Close(false);
+        mainPresenter.Close(false);
     }
 }

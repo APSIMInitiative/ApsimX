@@ -8193,7 +8193,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8257,7 +8257,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8321,7 +8321,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8385,7 +8385,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8449,7 +8449,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8513,7 +8513,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8577,7 +8577,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
