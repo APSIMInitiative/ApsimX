@@ -197,6 +197,7 @@ namespace Models.PMF.Phen
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
+            DaysAfterSowing = 0;
             Stage = 1;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;

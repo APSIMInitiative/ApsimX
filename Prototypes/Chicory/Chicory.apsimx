@@ -255,6 +255,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <FractionComplete>0</FractionComplete>
           <PhaseNameToGoto>Vegetative</PhaseNameToGoto>
         </GotoPhase>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
