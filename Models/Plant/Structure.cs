@@ -241,10 +241,6 @@ namespace Models.PMF
         [Link]
         [Units("/d")]
         IFunction BranchMortality = null;
-
-        /// <summary>The plant mortality</summary>
-        [Link(IsOptional = true)]
-        IFunction PlantMortality = null;
         #endregion
 
         #region States
@@ -313,6 +309,12 @@ namespace Models.PMF
         [XmlIgnore]
         public double NextLeafProportion { get; set; }
 
+        /// <summary>
+        /// The change in plant population due to plant mortality set in the plant class
+        /// </summary>
+        [XmlIgnore]
+        public double DeltaPlantPopulation { get; set; }
+
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -374,12 +376,22 @@ namespace Models.PMF
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            DeltaPlantPopulation = 0;
+            ProportionPlantMortality = 0;
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsGerminated)
             {
-                DeltaHaunStage = 0;
+                 DeltaHaunStage = 0;
                 if (MainStemNodeAppearanceRate.Value > 0)
                     DeltaHaunStage = ThermalTime.Value / MainStemNodeAppearanceRate.Value;
                
@@ -458,15 +470,10 @@ namespace Models.PMF
                         }
                     }
 
-                    //Reduce plant population incase of mortality
-                    if (PlantMortality != null)
-                    {
-                        double DeltaPopn = Plant.Population * PlantMortality.Value;
-                        Plant.Population -= DeltaPopn;
-                        TotalStemPopn -= DeltaPopn * TotalStemPopn / Plant.Population;
-                        ProportionPlantMortality = PlantMortality.Value;
-                    }
-
+                    //Reduce population if there has been plant mortality 
+                    if(DeltaPlantPopulation>0)
+                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
+                    
                     //Reduce stem number incase of mortality
                     double PropnMortality = 0;
                     PropnMortality = BranchMortality.Value;
