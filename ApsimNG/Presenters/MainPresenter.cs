@@ -106,7 +106,6 @@ namespace UserInterface.Presenters
         /// <summary>Execute the specified script, returning any error messages or NULL if all OK.</summary>
         public string ProcessStartupScript(string code)
         {
-            try
             {
                 Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
 
@@ -127,10 +126,6 @@ namespace UserInterface.Presenters
                 object[] arguments = new object[] { this };
                 executeMethod.Invoke(script, arguments);
                 return null;
-            }
-            catch (Exception err)
-            {
-                return err.ToString();
             }
         }
 
@@ -526,8 +521,8 @@ namespace UserInterface.Presenters
             {
                 if (AllowClose())
                 {
-                    Forms.UpgradeForm form = new Forms.UpgradeForm(/* TBI view */);
-                    /// TBI form.Show();
+                    Forms.UpgradeForm form = new Forms.UpgradeForm(view);
+                    form.Show();
                 }
             }
         }

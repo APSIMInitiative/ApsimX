@@ -10,14 +10,15 @@ namespace UserInterface.Forms
     using System.IO;
     using System.Net;
     using System.Reflection;
-    //using System.Windows.Forms;
     using APSIM.Shared.Utilities;
-    using global::UserInterface.Presenters;
+    using Glade;
+    using Gtk;
+    using Views;
 
     /// <summary>
     /// An upgrade form.
     /// </summary>
-    public partial class UpgradeForm { /* TBI : Form
+    public class UpgradeForm
     {
         public class Upgrade
         {
@@ -36,15 +37,83 @@ namespace UserInterface.Forms
         /// <summary>
         /// Our explorer presenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private IMainView tabbedExplorerView;
+        [Widget]
+        private VBox vbox1;
+        [Widget]
+        private Window window1;
+        [Widget]
+        private Button button1;
+        [Widget]
+        private Button button2;
+        [Widget]
+        private Entry firstNameBox;
+        [Widget]
+        private Entry lastNameBox;
+        [Widget]
+        private Entry organisationBox;
+        [Widget]
+        private Entry emailBox;
+        [Widget]
+        private Entry address1Box;
+        [Widget]
+        private Entry address2Box;
+        [Widget]
+        private Entry cityBox;
+        [Widget]
+        private Entry stateBox;
+        [Widget]
+        private Entry countryBox;
+        [Widget]
+        private Entry postcodeBox;
+        [Widget]
+        private Label label1;
+        [Widget]
+        private Alignment HTMLalign;
+        [Widget]
+        private CheckButton checkbutton1;
+        [Widget]
+        private TreeView listview1;
+        private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
+        private Views.HTMLView HTMLview;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpgradeForm(ExplorerPresenter explorerPresenter)
+        public UpgradeForm(IMainView explorerPresenter)
         {
-            InitializeComponent();
-            this.explorerPresenter = explorerPresenter;
+            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.UpgradeForm.glade", "window1");
+            gxml.Autoconnect(this);
+            listview1.Model = listmodel;
+
+            CellRendererText textRender = new Gtk.CellRendererText();
+            textRender.Editable = false;
+
+            TreeViewColumn column0 = new TreeViewColumn("Version", textRender, "text", 0);
+            listview1.AppendColumn(column0);
+            column0.Sizing = TreeViewColumnSizing.Autosize;
+            column0.Resizable = true;
+
+            TreeViewColumn column1 = new TreeViewColumn("Description", textRender, "text", 1);
+            listview1.AppendColumn(column1);
+            column1.Sizing = TreeViewColumnSizing.Autosize;
+            column1.Resizable = true;
+
+            HTMLview = new HTMLView(null);
+            HTMLalign.Add(HTMLview.MainWidget);
+            this.tabbedExplorerView = explorerPresenter;
+            button1.Clicked += OnUpgrade;
+            button2.Clicked += OnViewMoreDetail;
+            window1.Destroyed += OnFormClosing;
+            ///window1.Realized += OnShown;
+            window1.ShowAll();
+            while (Gtk.Application.EventsPending())
+                Gtk.Application.RunIteration();
+        }
+
+        public void Show()
+        {
+            OnShown(null, null);
         }
 
         /// <summary>
@@ -54,9 +123,11 @@ namespace UserInterface.Forms
         /// <param name="e"></param>
         private void OnShown(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            while (Gtk.Application.EventsPending())
+                Gtk.Application.RunIteration();
+            window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             PopulateForm();
-            Cursor.Current = Cursors.Default;
+            window1.GdkWindow.Cursor = null;
         }
 
         /// <summary>
@@ -64,8 +135,8 @@ namespace UserInterface.Forms
         /// </summary>
         private void PopulateForm()
         {
-            listView1.Items.Clear();
-            Version version = new Version(Application.ProductVersion);
+            listmodel.Clear();
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Major == 0)
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
@@ -99,12 +170,12 @@ namespace UserInterface.Forms
 
             try
             {
-                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.rtf", tempLicenseFileName);
-                htmlView1.SetContents(File.ReadAllText(tempLicenseFileName), false);
+                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false);
             }
             catch (Exception)
             {
-                MessageBox.Show("Cannot download the license.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok);
             }
 
         }
@@ -114,18 +185,24 @@ namespace UserInterface.Forms
         /// </summary>
         private void PopulateUpgradeList()
         {
-            Version version = new Version(Application.ProductVersion);
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
             //version = new Version(0, 0, 0, 652);  
             upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
                 string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
-                ListViewItem newItem = new ListViewItem(versionNumber);
-                newItem.SubItems.Add(upgrade.IssueTitle);
-                listView1.Items.Add(newItem);
+                listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
-            if (listView1.Items.Count > 0)
-                listView1.Items[0].Selected = true;
+            if (listmodel.IterNChildren() > 0)
+                listview1.SetCursor(new TreePath("0"), null, false);
+        }
+
+        private int GetSelIndex()
+        {
+            TreePath selPath;
+            TreeViewColumn selCol;
+            listview1.GetCursor(out selPath, out selCol);
+            return selPath != null ? selPath.Indices[0] : -1;
         }
 
         /// <summary>
@@ -135,8 +212,9 @@ namespace UserInterface.Forms
         /// <param name="e"></param>
         private void OnViewMoreDetail(object sender, EventArgs e)
         {
-            if (listView1.SelectedIndices.Count == 1)
-                Process.Start(upgrades[listView1.SelectedIndices[0]].IssueURL);
+            int selIndex = GetSelIndex();
+            if (selIndex >= 0)
+                Process.Start(upgrades[selIndex].IssueURL);
         }
 
         /// <summary>
@@ -146,26 +224,25 @@ namespace UserInterface.Forms
         /// <param name="e"></param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            if (listView1.SelectedIndices.Count == 1)
+            int selIndex = GetSelIndex();
+            if (selIndex >= 0)
             {
                 try
                 {
-                    if (!checkBox1.Checked)
+                    if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
                     if (firstNameBox.Text == null || lastNameBox.Text == null ||
                         emailBox.Text == null || countryBox.Text == null)
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
-                    Upgrade upgrade = upgrades[listView1.SelectedIndices[0]];
+                    Upgrade upgrade = upgrades[selIndex];
                     string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
-                    if (MessageBox.Show("Are you sure you want to upgrade to version " + versionNumber + "?",
-                                        "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if ((Gtk.ResponseType)ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
+                                            "Are you sure?", MessageType.Question, ButtonsType.YesNo) == Gtk.ResponseType.Yes)
                     {
-                        Cursor.Current = Cursors.WaitCursor;
-
-                        explorerPresenter.Save();
+                        window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
@@ -179,7 +256,7 @@ namespace UserInterface.Forms
                         }
                         catch (Exception err)
                         {
-                            MessageBox.Show("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok);
                         }
 
                         // Write to the registration database.
@@ -210,18 +287,18 @@ namespace UserInterface.Forms
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
 
-                            Cursor.Current = Cursors.Default;
+                            window1.GdkWindow.Cursor = null;
 
                             // Shutdown the user interface
-                            Close();
-                            explorerPresenter.Close();
+                            window1.Destroy();
+                            tabbedExplorerView.Close();
                         }
                     }
                 }
                 catch (Exception err)
                 {
-                    Cursor.Current = Cursors.Default;
-                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    window1.GdkWindow.Cursor = null;
+                    ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok);
                 }
             }
         }
@@ -261,7 +338,7 @@ namespace UserInterface.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        private void OnFormClosing(object sender, EventArgs e)
         {
             Utility.Configuration.Settings.FirstName = firstNameBox.Text;
             Utility.Configuration.Settings.LastName = lastNameBox.Text;
@@ -274,6 +351,19 @@ namespace UserInterface.Forms
             Utility.Configuration.Settings.Country = countryBox.Text;
             Utility.Configuration.Settings.Email = emailBox.Text;
         }
-        */
+
+        /// <summary>Show a message in a dialog box</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType)
+        {
+            Gtk.MessageDialog md = new Gtk.MessageDialog(window1, Gtk.DialogFlags.Modal,
+                msgType, buttonType, message);
+            md.Title = title;
+            int result = md.Run();
+            md.Destroy();
+            return result;
+        }
+
     }
 }
