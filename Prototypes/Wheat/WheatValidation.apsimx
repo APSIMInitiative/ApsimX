@@ -5787,17 +5787,17 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
-            <n>451</n>
-            <Slope>0.99604392899645433</Slope>
-            <Intercept>-0.13914711854578465</Intercept>
-            <SEslope>0.030864596218188226</SEslope>
-            <SEintercept>0.12385074360667683</SEintercept>
-            <R2>0.698747421285576</R2>
-            <RMSE>1.6218150239803368</RMSE>
-            <NSE>0.56848298216287663</NSE>
-            <ME>-0.15166133149620073</ME>
-            <MAE>1.2069935813899859</MAE>
-            <RSR>0.656170875118756</RSR>
+            <n>446</n>
+            <Slope>0.99539689463848224</Slope>
+            <Intercept>-0.16654565021279444</Intercept>
+            <SEslope>0.030755169239478183</SEslope>
+            <SEintercept>0.12508927216050178</SEintercept>
+            <R2>0.70231420954486268</R2>
+            <RMSE>1.6148152760955341</RMSE>
+            <NSE>0.57464029956084062</NSE>
+            <ME>-0.18139892110014683</ME>
+            <MAE>1.1935169357647717</MAE>
+            <RSR>0.651464488009689</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
@@ -5815,31 +5815,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>287</n>
-            <Slope>0.863958154533244</Slope>
-            <Intercept>-21.129162120110095</Intercept>
-            <SEslope>0.030951123699177317</SEslope>
-            <SEintercept>5.7100096536237519</SEintercept>
-            <R2>0.73218580574755876</R2>
-            <RMSE>72.853134896395488</RMSE>
-            <NSE>0.57199443506954806</NSE>
-            <ME>-41.138827451485064</ME>
-            <MAE>54.150607567294976</MAE>
-            <RSR>0.65308058946951109</RSR>
+            <n>285</n>
+            <Slope>0.86573863553616237</Slope>
+            <Intercept>-21.541156106570355</Intercept>
+            <SEslope>0.031237549595835787</SEslope>
+            <SEintercept>5.7830360360558428</SEintercept>
+            <R2>0.73075912136289212</R2>
+            <RMSE>73.108313032839931</RMSE>
+            <NSE>0.56668960111233191</NSE>
+            <ME>-41.4275209774604</ME>
+            <MAE>54.530611830925118</MAE>
+            <RSR>0.65710730594260636</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>83</n>
-            <Slope>0.22649533644856534</Slope>
-            <Intercept>18748.983584312413</Intercept>
-            <SEslope>0.069317240056812515</SEslope>
-            <SEintercept>1367.2393001314345</SEintercept>
-            <R2>0.11646009829139237</R2>
-            <RMSE>6202.5958616815706</RMSE>
-            <NSE>-0.66277402233333094</NSE>
-            <ME>3952.7138124416865</ME>
-            <MAE>4958.7002724535387</MAE>
-            <RSR>1.2816944255076979</RSR>
+            <Slope>0.25728724433180239</Slope>
+            <Intercept>17942.230911298971</Intercept>
+            <SEslope>0.0815950032100341</SEslope>
+            <SEintercept>1663.8974112156318</SEintercept>
+            <R2>0.10933041273156474</R2>
+            <RMSE>5292.7244003696733</RMSE>
+            <NSE>-0.66417490348240782</NSE>
+            <ME>3106.4290080033884</ME>
+            <MAE>4112.41546801524</MAE>
+            <RSR>1.2822342233150896</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
