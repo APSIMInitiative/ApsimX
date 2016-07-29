@@ -1170,6 +1170,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </HoldFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1740,12 +1741,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.95</double>
+                  <double>0.99</double>
                   <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>0.01</double>
+                  <double>0</double>
                 </Y>
               </XYPairs>
               <Memo>
@@ -1969,6 +1970,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2078,6 +2080,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </OrganBiomassRemovalType>
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2246,6 +2249,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
         </DivideFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2519,7 +2523,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
-            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 0.8,0.8</Command>
+            <Command>[Leaf].ExtinctionCoeff.PotentialExtinctionCoeff.XYPairs.Y = 1.0,1.0</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.Value = 3000</Command>
           </Cultivar>
@@ -2843,7 +2847,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Grain.N</string>
         <string>[Wheat].Grain.NConc</string>
         <string>[Wheat].Grain.Number</string>
-        <string>[Wheat].Grain.Size</string>
         <string>[Wheat].Grain.Wt</string>
         <string>[Wheat].Leaf.AppearedCohortNo</string>
         <string>[Wheat].Leaf.CoverDead</string>
@@ -3554,6 +3557,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -4358,6 +4362,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -4467,6 +4472,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </OrganBiomassRemovalType>
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
@@ -4606,6 +4612,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </OrganBiomassRemovalType>
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -4770,6 +4777,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </OrganBiomassRemovalType>
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -8147,7 +8155,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8211,7 +8219,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8275,7 +8283,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8339,7 +8347,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8403,7 +8411,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8467,7 +8475,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8531,7 +8539,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -32385,7 +32393,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>HarvestReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Wheat.Grain.Size</YFieldName>
               <ShowInLegend>false</ShowInLegend>
@@ -32408,7 +32416,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Grain.GrainSize</YFieldName>
+              <YFieldName>Wheat.Leaf.CohortMaxSize(4)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
