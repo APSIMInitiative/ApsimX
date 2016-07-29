@@ -464,9 +464,9 @@ namespace Models.PMF
                         int i = 1;
                         for (i = 1; i <= LeavesToAppear; i++)
                         {
-                            DoLeafTipAppearance();
                             TotalStemPopn += BranchingRate.Value * MainStemPopn;
                             BranchNumber += BranchingRate.Value;
+                            DoLeafTipAppearance();
                         }
                     }
 
