@@ -101,6 +101,7 @@
     <EmbeddedResource Include="Resources\Fonts\cour.ttf" />
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
+    <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -137,9 +138,6 @@
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
     <Compile Include="Forms\UpgradeForm.cs" />
-    <Compile Include="Forms\UpgradeForm.Designer.cs">
-      <DependentUpon>UpgradeForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
@@ -185,6 +183,7 @@
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -236,11 +235,6 @@
     </Compile>
     <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Forms\UpgradeForm.resx">
-      <DependentUpon>UpgradeForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Apsim.png" />

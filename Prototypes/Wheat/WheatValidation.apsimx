@@ -1168,7 +1168,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1390,6 +1392,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -1398,11 +1401,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>200</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1950,6 +1955,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1963,6 +1969,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2071,6 +2079,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2238,6 +2248,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -3543,7 +3555,9 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -3777,6 +3791,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           </XYPairs>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -3785,31 +3800,37 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>380</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[3]</Name>
           <Rank>3</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[4]</Name>
           <Rank>4</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[5]</Name>
           <Rank>5</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[6]</Name>
           <Rank>6</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -4326,6 +4347,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -4339,6 +4361,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -4447,6 +4471,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
@@ -4585,6 +4611,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -4748,6 +4776,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -5757,17 +5787,17 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
-            <n>451</n>
-            <Slope>0.99604392899645433</Slope>
-            <Intercept>-0.13914711854578465</Intercept>
-            <SEslope>0.030864596218188226</SEslope>
-            <SEintercept>0.12385074360667683</SEintercept>
-            <R2>0.698747421285576</R2>
-            <RMSE>1.6218150239803368</RMSE>
-            <NSE>0.56848298216287663</NSE>
-            <ME>-0.15166133149620073</ME>
-            <MAE>1.2069935813899859</MAE>
-            <RSR>0.656170875118756</RSR>
+            <n>446</n>
+            <Slope>0.99539689463848224</Slope>
+            <Intercept>-0.16654565021279444</Intercept>
+            <SEslope>0.030755169239478183</SEslope>
+            <SEintercept>0.12508927216050178</SEintercept>
+            <R2>0.70231420954486268</R2>
+            <RMSE>1.6148152760955341</RMSE>
+            <NSE>0.57464029956084062</NSE>
+            <ME>-0.18139892110014683</ME>
+            <MAE>1.1935169357647717</MAE>
+            <RSR>0.651464488009689</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
@@ -5785,31 +5815,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>287</n>
-            <Slope>0.863958154533244</Slope>
-            <Intercept>-21.129162120110095</Intercept>
-            <SEslope>0.030951123699177317</SEslope>
-            <SEintercept>5.7100096536237519</SEintercept>
-            <R2>0.73218580574755876</R2>
-            <RMSE>72.853134896395488</RMSE>
-            <NSE>0.57199443506954806</NSE>
-            <ME>-41.138827451485064</ME>
-            <MAE>54.150607567294976</MAE>
-            <RSR>0.65308058946951109</RSR>
+            <n>285</n>
+            <Slope>0.86573863553616237</Slope>
+            <Intercept>-21.541156106570355</Intercept>
+            <SEslope>0.031237549595835787</SEslope>
+            <SEintercept>5.7830360360558428</SEintercept>
+            <R2>0.73075912136289212</R2>
+            <RMSE>73.108313032839931</RMSE>
+            <NSE>0.56668960111233191</NSE>
+            <ME>-41.4275209774604</ME>
+            <MAE>54.530611830925118</MAE>
+            <RSR>0.65710730594260636</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>83</n>
-            <Slope>0.22649533644856534</Slope>
-            <Intercept>18748.983584312413</Intercept>
-            <SEslope>0.069317240056812515</SEslope>
-            <SEintercept>1367.2393001314345</SEintercept>
-            <R2>0.11646009829139237</R2>
-            <RMSE>6202.5958616815706</RMSE>
-            <NSE>-0.66277402233333094</NSE>
-            <ME>3952.7138124416865</ME>
-            <MAE>4958.7002724535387</MAE>
-            <RSR>1.2816944255076979</RSR>
+            <Slope>0.25728724433180239</Slope>
+            <Intercept>17942.230911298971</Intercept>
+            <SEslope>0.0815950032100341</SEslope>
+            <SEintercept>1663.8974112156318</SEintercept>
+            <R2>0.10933041273156474</R2>
+            <RMSE>5292.7244003696733</RMSE>
+            <NSE>-0.66417490348240782</NSE>
+            <ME>3106.4290080033884</ME>
+            <MAE>4112.41546801524</MAE>
+            <RSR>1.2822342233150896</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -6023,16 +6053,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>123</n>
-            <Slope>1.0199643837905059</Slope>
-            <Intercept>-235.42772765407602</Intercept>
-            <SEslope>0.051518281326365822</SEslope>
-            <SEintercept>29.1329687392876</SEintercept>
-            <R2>0.76411645689974461</R2>
-            <RMSE>264.66925254519367</RMSE>
-            <NSE>-0.16641846238851166</NSE>
-            <ME>-225.2533092450721</ME>
-            <MAE>233.0894769445936</MAE>
-            <RSR>1.0756093089307675</RSR>
+            <Slope>1.0200402146152827</Slope>
+            <Intercept>-235.30168803832254</Intercept>
+            <SEslope>0.051465156434979537</SEslope>
+            <SEintercept>29.102927251874025</SEintercept>
+            <R2>0.76451494233307016</R2>
+            <RMSE>264.45429609832996</RMSE>
+            <NSE>-0.16452457144003652</NSE>
+            <ME>-225.08862408194412</ME>
+            <MAE>232.92479178146562</MAE>
+            <RSR>1.0747357312369559</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -6288,31 +6318,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FlagLeafDAS.Value</Name>
-            <n>259</n>
-            <Slope>0.98439880998373652</Slope>
-            <Intercept>3.546619355624884</Intercept>
-            <SEslope>0.010615525702399811</SEslope>
-            <SEintercept>1.4668857449250488</SEintercept>
-            <R2>0.97098085305109716</R2>
-            <RMSE>8.2312147191587552</RMSE>
-            <NSE>0.96976264834037973</NSE>
-            <ME>1.5212355212355213</ME>
-            <MAE>5.66023166023166</MAE>
-            <RSR>0.17355288856171766</RSR>
+            <n>255</n>
+            <Slope>0.98896866417915863</Slope>
+            <Intercept>2.6824021284681976</Intercept>
+            <SEslope>0.010337940504486434</SEslope>
+            <SEintercept>1.4349328380438648</SEintercept>
+            <R2>0.9730982695855821</R2>
+            <RMSE>7.9045779736287294</RMSE>
+            <NSE>0.97215063238168486</NSE>
+            <ME>1.2431372549019608</ME>
+            <MAE>5.447058823529412</MAE>
+            <RSR>0.16655375832435856</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FloweringDAS.Value</Name>
-            <n>297</n>
-            <Slope>0.95184416700476793</Slope>
-            <Intercept>6.3478641923715884</Intercept>
-            <SEslope>0.0094531711112627419</SEslope>
-            <SEintercept>1.4825428829696461</SEintercept>
-            <R2>0.97172587866764115</R2>
-            <RMSE>8.8015915304002537</RMSE>
-            <NSE>0.97109139223572327</NSE>
-            <ME>-0.78114478114478114</ME>
-            <MAE>5.6969696969696964</MAE>
-            <RSR>0.16973883581726088</RSR>
+            <n>293</n>
+            <Slope>0.95867654004716252</Slope>
+            <Intercept>4.7060341608506349</Intercept>
+            <SEslope>0.00729313821157969</SEslope>
+            <SEintercept>1.1467995392674426</SEintercept>
+            <R2>0.98343755436222824</R2>
+            <RMSE>6.9611305032989463</RMSE>
+            <NSE>0.98206065369171014</NSE>
+            <ME>-1.4266211604095562</ME>
+            <MAE>5.1399317406143341</MAE>
+            <RSR>0.13370908671581608</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -8125,7 +8155,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8189,7 +8219,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8253,7 +8283,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8317,7 +8347,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8381,7 +8411,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8445,7 +8475,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -8509,7 +8539,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
