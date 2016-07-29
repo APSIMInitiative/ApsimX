@@ -99,21 +99,18 @@ namespace UserInterface.Forms
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
 
-            HTMLview = new HTMLView(null);
+            HTMLview = new HTMLView(new ViewBase(null));
             HTMLalign.Add(HTMLview.MainWidget);
             this.tabbedExplorerView = explorerPresenter;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
             window1.Destroyed += OnFormClosing;
-            ///window1.Realized += OnShown;
-            window1.ShowAll();
-            while (Gtk.Application.EventsPending())
-                Gtk.Application.RunIteration();
+            window1.MapEvent += OnShown;
         }
 
         public void Show()
         {
-            OnShown(null, null);
+            window1.ShowAll();
         }
 
         /// <summary>
@@ -123,9 +120,9 @@ namespace UserInterface.Forms
         /// <param name="e"></param>
         private void OnShown(object sender, EventArgs e)
         {
+            window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             while (Gtk.Application.EventsPending())
                 Gtk.Application.RunIteration();
-            window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             PopulateForm();
             window1.GdkWindow.Cursor = null;
         }
@@ -232,8 +229,8 @@ namespace UserInterface.Forms
                     if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
-                    if (firstNameBox.Text == null || lastNameBox.Text == null ||
-                        emailBox.Text == null || countryBox.Text == null)
+                    if (String.IsNullOrWhiteSpace(firstNameBox.Text) || String.IsNullOrWhiteSpace(lastNameBox.Text) ||
+                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
                     Upgrade upgrade = upgrades[selIndex];
