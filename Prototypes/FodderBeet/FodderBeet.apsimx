@@ -278,21 +278,6 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <LinearInterpolationFunction>
-          <Name>PlantMortality</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0.98</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].CoverGreen</XProperty>
-        </LinearInterpolationFunction>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
@@ -303,6 +288,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>50</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -741,6 +727,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -754,6 +741,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -934,6 +923,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -1032,6 +1022,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1137,6 +1129,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1187,6 +1181,21 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[Root].Dead</string>
         </Propertys>
       </CompositeBiomass>
+      <LinearInterpolationFunction>
+        <Name>MortalityRate</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <X>
+            <double>0.98</double>
+            <double>1</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+        <XProperty>[Leaf].CoverGreen</XProperty>
+      </LinearInterpolationFunction>
       <CropType>FodderBeet</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
