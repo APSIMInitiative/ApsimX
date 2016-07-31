@@ -46,7 +46,7 @@ namespace Models.PMF.Phen
             double SowDepth = 0;
             double accumDepth = 0;
             if (Plant != null)
-                SowDepth = Plant.SowingData.Depth;
+                SowDepth = Plant.SowingData.Depth;  
             if (Plant15 != null)
                 SowDepth = Plant15.SowingData.Depth;
             bool layerfound = false;
