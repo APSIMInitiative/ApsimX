@@ -588,10 +588,6 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>LeafInitiationRate</Name>
           <Value>21.6</Value>
         </Constant>
-        <Constant>
-          <Name>PlantMortality</Name>
-          <Value>0</Value>
-        </Constant>
         <VariableReference>
           <Name>MainStemPrimordiaInitiationRate</Name>
           <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
@@ -863,7 +859,9 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>DMDemandFunction33</Name>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1076,6 +1074,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <SimpleLeaf>
@@ -1471,6 +1470,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>MaximumNConc</Name>
           <Value>100</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1591,6 +1592,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1672,6 +1675,8 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Value>0</Value>
           </Constant>
         </MaximumFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Cultivar>
         <Name>Buster</Name>
