@@ -60,7 +60,7 @@ namespace Models.PMF.Functions.DemandFunctions
                 ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration.Value - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
-            else if(Phenology.Stage < StartStage.Value)
+            else if (Phenology.Stage < StartStage.Value)
             {
                 AccumulatedThermalTime = 0.0;
             }
@@ -82,6 +82,12 @@ namespace Models.PMF.Functions.DemandFunctions
 
                 return Value * ExpansionStress.Value;
             }
+        }
+
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            AccumulatedThermalTime = 0;
         }
 
     }
