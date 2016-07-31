@@ -10387,6 +10387,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -10910,6 +10911,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -11433,6 +11435,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -11956,6 +11959,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -12479,6 +12483,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -13002,6 +13007,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -13525,6 +13531,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -14076,6 +14083,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -15766,6 +15774,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -16284,6 +16293,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -16802,6 +16812,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -17320,6 +17331,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -17838,6 +17850,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -18356,6 +18369,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -18874,6 +18888,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -19392,6 +19407,7 @@ namespace Models
             <Name>Maize</Name>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
