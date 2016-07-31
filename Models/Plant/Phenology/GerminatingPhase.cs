@@ -25,6 +25,34 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         Soils.Soil Soil = null;
 
+        [Link]
+        Plant Plant = null;
+
+        /// <summary>
+        /// The soil layer in which the seed is sown
+        /// </summary>
+        private int SowLayer = 0;
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            double SowDepth = 0;
+            double accumDepth = 0;
+            SowDepth = Plant.SowingData.Depth;
+            bool layerfound = false;
+            for (int layer = 0; layerfound; layer++)
+            {
+                accumDepth += Soil.Thickness[layer];
+                if (SowDepth <= accumDepth)
+                {
+                    SowLayer = layer;
+                    layerfound = true;
+                }
+            }
+        }
         /// <summary>
         /// Do our timestep development
         /// </summary>
@@ -33,7 +61,7 @@ namespace Models.PMF.Phen
             bool CanGerminate = true;
             if (Soil != null)
             {
-                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.ESW > 0;
+                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.Water[SowLayer] > Soil.SoilWater.LL15mm[SowLayer];
             }
 
             if (CanGerminate)
