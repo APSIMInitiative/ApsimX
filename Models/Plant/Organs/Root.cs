@@ -756,6 +756,8 @@ namespace Models.PMF.Organs
                         throw new Exception("Error trying to partition root biomass");
                         
                 }
+
+                AllocatedWt = value.Structural + value.NonStructural - value.Retranslocation;
             }
         }
 
@@ -945,6 +947,8 @@ namespace Models.PMF.Organs
                 {
                     throw new Exception("Error in N Allocation: " + Name);
                 }
+
+                AllocatedN = value.Structural + value.NonStructural - value.Retranslocation - value.Reallocation;
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>

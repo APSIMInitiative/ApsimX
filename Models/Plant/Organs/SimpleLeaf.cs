@@ -356,7 +356,9 @@ namespace Models.PMF.Organs
 
             set
             {
+                //TODO : this may be deleted and we should be able to rely on code in GenericOrgan
                 Live.StructuralWt += value.Structural;
+                AllocatedWt = value.Structural + value.NonStructural - value.Retranslocation;
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
@@ -411,6 +413,7 @@ namespace Models.PMF.Organs
                 if (value.NonStructural > 0)
                     Live.NonStructuralN += value.NonStructural;
 
+                AllocatedN = value.Structural + value.NonStructural - value.Retranslocation - value.Reallocation;
             }
         }
 

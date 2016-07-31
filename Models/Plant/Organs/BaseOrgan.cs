@@ -160,20 +160,44 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
         public double Nconc { get { return N / Wt; } }
 
+        /// <summary>Gets the dm amount allocated (growth) (g/m2)</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public double AllocatedWt { get; set; }
+
+        /// <summary>Gets the N amount allocated (growth) (g/m2)</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public double AllocatedN { get; set; }
+
+        /// <summary>Gets the dm amount senesced (sent from live to dead) (g/m2)</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public double SenescedWt { get; set; }
+
+        /// <summary>Gets the N amount senesced (sent from live to dead) (g/m2)</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public double SenescedN { get; set; }
+
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double DetachedWt { get; set; }
 
         /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double DetachedN { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double RemovedWt { get; set; }
 
         /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
+        [Units("g/m^2")]
         public double RemovedN { get; set; }
 
         /// <summary>Gets the dm supply photosynthesis.</summary>
@@ -322,6 +346,10 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some varibles.</summary>
         virtual protected void DoDailyCleanup()
         {
+            AllocatedWt = 0.0;
+            AllocatedN = 0.0;
+            SenescedWt = 0.0;
+            SenescedN = 0.0;
             DetachedWt = 0.0;
             DetachedN = 0.0;
             RemovedWt = 0.0;
