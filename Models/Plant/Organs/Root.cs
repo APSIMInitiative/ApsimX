@@ -146,6 +146,10 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction MaximumRootDepth = null;
+        /// <summary>The proportion of biomass repired each day</summary>
+        [Link(IsOptional = true)]
+        public IFunction MaintenanceRespirationFunction = null;
+
 
         #endregion
 

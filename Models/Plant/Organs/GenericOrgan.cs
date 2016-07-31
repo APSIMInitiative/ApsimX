@@ -99,6 +99,12 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         [Link(IsOptional = true)]
         public IFunction MinimumNConc = null;
+        /// <summary>The proportion of biomass repired each day</summary>
+        [Link(IsOptional = true)]
+        public IFunction MaintenanceRespirationFunction = null;
+        /// <summary>Dry matter conversion efficiency</summary>
+        [Link(IsOptional = true)]
+        public IFunction DMConversionEfficiencyFunction = null;
         #endregion
 
         #region States
@@ -144,6 +150,10 @@ namespace Models.PMF.Organs
         }
         #endregion
 
+        /// <summary>Growth Respiration</summary>
+        public double GrowthRespiration { get; set; }
+
+
         #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
@@ -168,12 +178,18 @@ namespace Models.PMF.Organs
             get
             {
                 if (DMDemandFunction != null)
+                {
                     StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+
+                    StructuralDMDemand /= DMConversionEfficiency;
+                }
                 else
                     StructuralDMDemand = 0;
                 double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
                 MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
                 NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
+                NonStructuralDMDemand /= DMConversionEfficiency;
+
                 return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
             }
         }
@@ -293,15 +309,19 @@ namespace Models.PMF.Organs
         {
             set
             {
-                Live.StructuralWt += Math.Min(value.Structural, StructuralDMDemand);
-
+                GrowthRespiration = 0;
+                GrowthRespiration += value.Structural * (1-DMConversionEfficiency)
+                                   + value.NonStructural * (1-DMConversionEfficiency);
+                
+                Live.StructuralWt += Math.Min(value.Structural* DMConversionEfficiency, StructuralDMDemand);
+                
                 // Excess allocation
                 if (value.NonStructural < -0.0000000001)
                     throw new Exception("-ve NonStructuralDM Allocation to " + Name);
-                if ((value.NonStructural - DMDemand.NonStructural) > 0.0000000001)
+                if ((value.NonStructural*DMConversionEfficiency - DMDemand.NonStructural) > 0.0000000001)
                     throw new Exception("Non StructuralDM Allocation to " + Name + " is in excess of its Capacity");
                 if (DMDemand.NonStructural > 0)
-                    Live.NonStructuralWt += value.NonStructural;
+                    Live.NonStructuralWt += value.NonStructural * DMConversionEfficiency;
 
                 // Retranslocation
                 if (value.Retranslocation - StartLive.NonStructuralWt > 0.0000000001)
@@ -392,6 +412,12 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
+
+            if (DMConversionEfficiencyFunction != null)
+                DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+            else
+                DMConversionEfficiency = 1.0;
+
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -478,6 +504,16 @@ namespace Models.PMF.Organs
                         DetachedN += detachingN;
                         SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
                     }
+                }
+
+                MaintenanceRespiration = 0;
+                //Do Maintenance respiration
+                if (MaintenanceRespirationFunction != null)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
+                    Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
+                    Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
                 }
 
                 if (DryMatterContent != null) 

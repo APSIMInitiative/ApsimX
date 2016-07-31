@@ -255,6 +255,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <FractionComplete>0</FractionComplete>
           <PhaseNameToGoto>Vegetative</PhaseNameToGoto>
         </GotoPhase>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -759,6 +760,8 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -993,6 +996,8 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Inflorescence</Name>
@@ -1161,6 +1166,8 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
@@ -1426,6 +1433,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericBelowGroundOrgan>
@@ -1578,6 +1586,8 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericBelowGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

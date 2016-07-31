@@ -63,6 +63,10 @@ namespace Models.PMF.Organs
         /// <value>The dm demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType DMDemand { get { return new BiomassPoolType(); } set { } }
+        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
+        /// <value>The efficiency.</value>
+        [XmlIgnore]
+        virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
         /// <summary>Gets or sets the n supply.</summary>
         /// <value>The n supply.</value>
@@ -204,13 +208,17 @@ namespace Models.PMF.Organs
         /// <value>The dm supply photosynthesis.</value>
         [Units("g/m^2")]
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
+        /// <summary>
+        /// The amount of mass lost each day from maintenance respiration
+        /// </summary>
+        virtual public double MaintenanceRespiration { get { return 0; }  set { } }
 
         #endregion
 
-        #region Biomass removal
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+            #region Biomass removal
+            /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+            /// <param name="value">The fractions of biomass to remove</param>
+            virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
                                            + value.FractionLiveToResidue + value.FractionDeadToResidue;
@@ -267,7 +275,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        virtual protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Plant.IsAlive)
                 DoDailyCleanup();

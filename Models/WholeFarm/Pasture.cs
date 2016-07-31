@@ -24,12 +24,11 @@ namespace Models.WholeFarm
     public class Pasture: Model
     {
 
-
         /// <summary>
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<PastureItem> Pastures;
+        public List<PastureType> Items;
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -38,16 +37,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Pastures = new List<PastureItem>();
+            Items = new List<PastureType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                PastureType pastureInit = childModel as PastureType;
-                PastureItem pasture = pastureInit.CreateListItem();
-                Pastures.Add(pasture);
+                PastureType pasture = childModel as PastureType;
+                Items.Add(pasture);
             }
         }
 
