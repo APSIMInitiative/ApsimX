@@ -7120,7 +7120,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\APSIMX\Prototypes\Wheat\APS26.met</FileName>
+          <FileName>APS26.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
@@ -28657,6 +28657,54 @@ namespace Models
                 <double>0.31</double>
               </SAT>
             </Water>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>530</double>
+                <double>15</double>
+                <double>15</double>
+                <double>10</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+              </NO3>
+              <NH4>
+                <double>3</double>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NH4>
+              <SW>
+                <double>0.35</double>
+                <double>0.35</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.2</double>
+                <double>0.18</double>
+                <double>0.2</double>
+              </SW>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <Specifications>
               <string>[IrrigationEvents]</string>
               <string>[Water]</string>
@@ -28970,6 +29018,54 @@ namespace Models
                 <Action>[Irrigation].Apply(5);</Action>
               </Operation>
             </Operations>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>530</double>
+                <double>15</double>
+                <double>15</double>
+                <double>10</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+              </NO3>
+              <NH4>
+                <double>3</double>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NH4>
+              <SW>
+                <double>0.35</double>
+                <double>0.35</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.2</double>
+                <double>0.18</double>
+                <double>0.2</double>
+              </SW>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <Specifications>
               <string>[IrrigationEvents]</string>
               <string>[Water]</string>
@@ -29124,6 +29220,54 @@ namespace Models
                 <Action>[Irrigation].Apply(5);</Action>
               </Operation>
             </Operations>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>530</double>
+                <double>15</double>
+                <double>15</double>
+                <double>10</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+              </NO3>
+              <NH4>
+                <double>3</double>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NH4>
+              <SW>
+                <double>0.35</double>
+                <double>0.35</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.2</double>
+                <double>0.18</double>
+                <double>0.2</double>
+              </SW>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <Specifications>
               <string>[IrrigationEvents]</string>
               <string>[Water]</string>
@@ -29270,6 +29414,54 @@ namespace Models
                 <Action>[Irrigation].Apply(5);</Action>
               </Operation>
             </Operations>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>530</double>
+                <double>15</double>
+                <double>15</double>
+                <double>10</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+              </NO3>
+              <NH4>
+                <double>3</double>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NH4>
+              <SW>
+                <double>0.35</double>
+                <double>0.35</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.2</double>
+                <double>0.18</double>
+                <double>0.2</double>
+              </SW>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <Specifications>
               <string>[IrrigationEvents]</string>
               <string>[Water]</string>
@@ -29412,6 +29604,54 @@ namespace Models
                 <Action>[Irrigation].Apply(39);</Action>
               </Operation>
             </Operations>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>530</double>
+                <double>15</double>
+                <double>15</double>
+                <double>10</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+                <double>5</double>
+              </NO3>
+              <NH4>
+                <double>3</double>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </NH4>
+              <SW>
+                <double>0.35</double>
+                <double>0.35</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.2</double>
+                <double>0.18</double>
+                <double>0.2</double>
+              </SW>
+              <NO3Units>kgha</NO3Units>
+              <NH4Units>kgha</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
             <Specifications>
               <string>[IrrigationEvents]</string>
               <string>[Water]</string>
@@ -29562,8 +29802,8 @@ namespace Models
               <Name>SoilWater</Name>
               <residueinterception>0</residueinterception>
               <SummerDate>1-sep</SummerDate>
-              <SummerU>9</SummerU>
-              <SummerCona>4.4</SummerCona>
+              <SummerU>6</SummerU>
+              <SummerCona>3</SummerCona>
               <WinterDate>1-Apr</WinterDate>
               <WinterU>2</WinterU>
               <WinterCona>1.5</WinterCona>
@@ -29914,7 +30154,7 @@ namespace Models
               <Pool>
                 <PoolName>wheat_stubble</PoolName>
                 <ResidueType>wheat</ResidueType>
-                <Mass>0</Mass>
+                <Mass>500</Mass>
                 <CNRatio>80</CNRatio>
                 <CPRatio>NaN</CPRatio>
                 <StandingFraction>0</StandingFraction>
@@ -29922,7 +30162,7 @@ namespace Models
             </Pools>
             <PoolName>wheat_stubble</PoolName>
             <type>wheat</type>
-            <mass>0</mass>
+            <mass>500</mass>
             <standing_fraction>0</standing_fraction>
             <cpr />
             <cnr>80</cnr>
