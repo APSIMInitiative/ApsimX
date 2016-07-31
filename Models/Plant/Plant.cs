@@ -170,13 +170,21 @@ namespace Models.PMF
             get { return plantPopulation; }
             set
             {
+                double InitialPopn = plantPopulation;
                 if (IsAlive && value <= 0.1)
                 {
                     // the plant is dying due to population decline
                     EndCrop();
                 }
                 else
+                {
                     plantPopulation = value;
+                    if (Structure != null)
+                    {
+                        Structure.DeltaPlantPopulation = InitialPopn - value;
+                        Structure.ProportionPlantMortality = 1 - (value / InitialPopn);
+                    }
+                }
             }
         }
 
@@ -220,13 +228,6 @@ namespace Models.PMF
         [Link(IsOptional = true)]
         [Units("")]
         IFunction MortalityRate = null;
-
-        /// <summary>Gets or sets a modifier for the plant mortality rate.</summary>
-        [XmlIgnore]
-        [Description("Modifier for the plant mortality rate")]
-        [Units("")]
-        public double MortalityRateModifier { get; set; }
-
         #endregion
 
         #region Class Events
@@ -287,8 +288,13 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
             {
-                double DeltaPopulation = Population * MortalityRate.Value * MortalityRateModifier;
+                double DeltaPopulation = Population * MortalityRate.Value;
                 Population -= DeltaPopulation;
+                if (Structure != null)
+                {
+                    Structure.DeltaPlantPopulation = DeltaPopulation;
+                    Structure.ProportionPlantMortality = MortalityRate.Value;
+                }
             }
         }
 
@@ -413,7 +419,6 @@ namespace Models.PMF
         {
             SowingData = null;
             plantPopulation = 0.0;
-            MortalityRateModifier = 1.0;
         }
         #endregion
         

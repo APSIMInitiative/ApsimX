@@ -294,23 +294,9 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <LinearInterpolationFunction>
-          <Name>PlantMortality</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0.98</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].CoverGreen</XProperty>
-        </LinearInterpolationFunction>
-        <InitialiseStage>PreEmerge</InitialiseStage>
-        <PrimaryBudNo>1</PrimaryBudNo>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -318,6 +304,7 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>50</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -730,28 +717,36 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0</Albedo>
@@ -759,8 +754,13 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
@@ -858,22 +858,30 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
         <LinearInterpolationFunction>
@@ -931,6 +939,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -1003,24 +1012,34 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Petiole</Name>
@@ -1100,24 +1119,34 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1168,7 +1197,23 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <string>[Root].Dead</string>
         </Propertys>
       </CompositeBiomass>
+      <LinearInterpolationFunction>
+        <Name>MortalityRate</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <X>
+            <double>0.98</double>
+            <double>1</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+        <XProperty>[Leaf].CoverGreen</XProperty>
+      </LinearInterpolationFunction>
       <CropType>FodderBeet</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -1569,6 +1614,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Name>FodderBeet</Name>
           <ResourceName>FodderBeet</ResourceName>
           <CropType>FodderBeet</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
