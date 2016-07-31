@@ -351,16 +351,16 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>BiomassWt</Name>
             <n>9</n>
-            <Slope>0.53113157309145043</Slope>
-            <Intercept>352.10338452383223</Intercept>
-            <SEslope>0.27016217649496249</SEslope>
-            <SEintercept>120.1027382255652</SEintercept>
-            <R2>0.35573238612507618</R2>
-            <RMSE>344.13502099129914</RMSE>
-            <NSE>-0.15030547808369188</NSE>
-            <ME>207.8339798905302</ME>
-            <MAE>229.67878169238418</MAE>
-            <RSR>1.0111843344794336</RSR>
+            <Slope>0.510102200958125</Slope>
+            <Intercept>289.63225875453372</Intercept>
+            <SEslope>0.3229565870396317</SEslope>
+            <SEintercept>143.5729121473305</SEintercept>
+            <R2>0.26275005244951943</R2>
+            <RMSE>345.20673998588376</RMSE>
+            <NSE>-0.15748128861822219</NSE>
+            <ME>138.89217957082366</ME>
+            <MAE>253.45240209137182</MAE>
+            <RSR>1.0143334050249606</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Distance</Name>
@@ -379,30 +379,30 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>GrainWt</Name>
             <n>7</n>
-            <Slope>0.35947823203995988</Slope>
-            <Intercept>130.82842765132611</Intercept>
-            <SEslope>0.24196822943630697</SEslope>
-            <SEintercept>44.808850810286771</SEintercept>
-            <R2>0.30624285534241769</R2>
-            <RMSE>131.61386908025017</RMSE>
-            <NSE>0.14751219735380095</NSE>
-            <ME>55.11173684745026</ME>
-            <MAE>108.1577412550534</MAE>
-            <RSR>0.85481216114395531</RSR>
+            <Slope>0.29747280243970342</Slope>
+            <Intercept>112.23250769904966</Intercept>
+            <SEslope>0.26901530024637027</SEslope>
+            <SEintercept>49.817558621253376</SEintercept>
+            <R2>0.19649777850651551</R2>
+            <RMSE>135.02971098564919</RMSE>
+            <NSE>0.10268787270102775</NSE>
+            <ME>29.186095758363074</ME>
+            <MAE>109.35209560024219</MAE>
+            <RSR>0.87699753736368968</RSR>
           </RegrStats>
           <RegrStats>
             <Name>SW90cm</Name>
             <n>96</n>
-            <Slope>0.99487954842630089</Slope>
-            <Intercept>-2.050276826724172</Intercept>
-            <SEslope>0.034907150485085817</SEslope>
-            <SEintercept>8.8700157210205735</SEintercept>
-            <R2>0.89628067618855889</R2>
-            <RMSE>16.6131418118846</RMSE>
-            <NSE>0.88064457502038673</NSE>
-            <ME>-3.3278885182342006</ME>
-            <MAE>12.715305458780559</MAE>
-            <RSR>0.34367446705093224</RSR>
+            <Slope>0.96137790362135045</Slope>
+            <Intercept>10.442591789648219</Intercept>
+            <SEslope>0.038821940826786076</SEslope>
+            <SEintercept>9.8647761466879977</SEintercept>
+            <R2>0.8670898440491126</R2>
+            <RMSE>18.21259772634988</RMSE>
+            <NSE>0.85655599273290528</NSE>
+            <ME>0.80593354305176135</ME>
+            <MAE>14.109678911882241</MAE>
+            <RSR>0.37676225774095584</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
