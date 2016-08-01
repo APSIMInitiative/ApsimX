@@ -21,7 +21,7 @@ using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
-namespace Models.AgPasture1
+namespace Models.AgPasture
 {
 	/// <summary>A multi-mySpecies pasture model</summary>
 	[Serializable]
@@ -78,9 +78,10 @@ namespace Models.AgPasture1
 		/// <summary>Occurs when the plant takes up soil N.</summary>
 		public event NitrogenChangedDelegate NitrogenChanged;
 
-		#endregion
+        #endregion
 
-        #region Canopy interface
+        #region Canopy interface  ------------------------------------------------------------------------------------------
+
         /// <summary>Canopy type</summary>
         [Description("Generic type of crop")]
         public string CanopyType
@@ -197,8 +198,6 @@ namespace Models.AgPasture1
         #endregion
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
-
-
 
 		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
 		public string[] CultivarNames

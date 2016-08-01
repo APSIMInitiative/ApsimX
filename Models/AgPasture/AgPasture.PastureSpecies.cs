@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AgPasture1.PastureSpecies.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
+// <copyright file="AgPasture1.PastureSpecies1.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
 //     Copyright (c) ASPIM initiative. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -22,13 +22,13 @@ using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
-namespace Models.AgPasture1
+namespace Models.AgPasture
 {
 	/// <summary>Describes a pasture species</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class PastureSpecies : Model, ICrop, ICrop2, IUptake
+	public class PastureSpecies : Model, ICrop, ICrop2, ICanopy, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -85,11 +85,41 @@ namespace Models.AgPasture1
 		/// <summary>Occurs when the plant takes up soil N.</summary>
 		public event NitrogenChangedDelegate NitrogenChanged;
 
-		#endregion
+        #endregion
 
-        #region Canopy interface
+        #region Canopy interface  ------------------------------------------------------------------------------------------
+
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return CropType; } }
+
+	    /// <summary>Albedo value</summary>
+	    private double myAlbedo = 0.26;
+	    /// <summary>Gets or sets the species albedo.</summary>
+	    /// <value>The albedo value.</value>
+	    [Description("Albedo for canopy:")]
+	    public double Albedo
+	    {
+	        get { return myAlbedo; }
+            set { myAlbedo = value; }
+	    }
+
+	    /// <summary>Gsmax value</summary>
+	    private double myGsmax = 0.011;
+	    /// <summary>Gets or sets the gsmax</summary>
+	    public double Gsmax
+	    {
+	        get { return myGsmax; }
+            set { myGsmax = value; }
+	    }
+
+        /// <summary>The R50 value</summary>
+        private double myR50 =200;
+	    /// <summary>Gets or sets the R50</summary>
+	    public double R50
+	    {
+	        get { return myR50; }
+            set { myR50 = value; }
+	    }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         public double LAI { get { return GreenLAI; } }
@@ -108,8 +138,8 @@ namespace Models.AgPasture1
         [Units("mm")]
         public double Height
         {
-            get { return myHeight; }  // minimum = 20mm  - TODO: update this function
-        }
+            get { return Math.Max(20.0, HeightFromMass.Value(StandingWt)); } // TODO: update this function
+            }
 
         /// <summary>Gets the canopy depth (mm)</summary>
         public double Depth { get { return Height; } }
@@ -142,11 +172,9 @@ namespace Models.AgPasture1
 			set
 			{
 				interceptedRadn = 0.0;
-				for (int s = 0; s < value.Length; s++)
-				{
-					myLightProfile = value;
-					interceptedRadn += myLightProfile[s].amount;
-				}
+                myLightProfile = value;
+                foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
+                    interceptedRadn += canopyLayer.amount;
 			}
 		}
         #endregion
@@ -3193,8 +3221,8 @@ namespace Models.AgPasture1
 			myCanopyProperties.Name = Name;
 			myCanopyProperties.CoverGreen = GreenCover;
 			myCanopyProperties.CoverTot = TotalCover;
-			myCanopyProperties.CanopyDepth = myHeight;
-			myCanopyProperties.CanopyHeight = myHeight;
+			myCanopyProperties.CanopyDepth = Height;
+			myCanopyProperties.CanopyHeight = Height;
 			myCanopyProperties.LAIGreen = greenLAI;
 			myCanopyProperties.LAItot = TotalLAI;
 			myCanopyProperties.MaximumStomatalConductance = myStomatalConductanceMax;
