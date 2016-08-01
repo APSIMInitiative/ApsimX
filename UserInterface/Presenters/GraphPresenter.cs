@@ -152,7 +152,7 @@ namespace UserInterface.Presenters
                 double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                 double yPosition = largestAxisScale - i * interval;
-                graphView.DrawText(annotations[i].text, minimumX, yPosition, Axis.AxisType.Bottom, Axis.AxisType.Left, annotations[i].colour);
+                graphView.DrawText(annotations[i].text, minimumX, yPosition, annotations[i].leftAlign, Axis.AxisType.Bottom, Axis.AxisType.Left, annotations[i].colour);
             }
         }
 

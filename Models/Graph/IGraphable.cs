@@ -191,5 +191,8 @@ namespace Models.Graph
 
         /// <summary>The colour of the text</summary>
         public Color colour;
+
+        /// <summary>Left align the text?</summary>
+        public bool leftAlign;
     }
 }

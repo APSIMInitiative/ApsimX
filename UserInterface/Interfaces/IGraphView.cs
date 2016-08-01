@@ -150,6 +150,7 @@ namespace UserInterface.Interfaces
         /// <param name="text">The text to put on the graph</param>
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
+        /// <param name="leftAlign">Left align the text?</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
         /// <param name="colour">The color of the text</param>
@@ -158,6 +159,7 @@ namespace UserInterface.Interfaces
             string text, 
             double x, 
             double y,
+            bool leftAlign,
             Models.Graph.Axis.AxisType xAxisType, 
             Models.Graph.Axis.AxisType yAxisType,
             Color colour);
