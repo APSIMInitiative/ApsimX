@@ -172,7 +172,7 @@ namespace SWIMFrame
                 double[] hFind = new double[n[i] + 1];
                 for (int x = 1; x <= n[i] + 1; x++)
                     hFind[x - n[i] + 1] = h[i, x];
-                ii = Find(he[j], hFind, n[i]);
+                ii = Find(he[j], hFind);
                 for (k = 1; k <= n[i] - ii; k++)
                 {
                     h[j, n[j] + k] = h[i, ii + k];//test these
@@ -568,7 +568,7 @@ namespace SWIMFrame
                     double[] phiiFind = new double[ni + 1];
                     for (int x = 1; x <= ni; x++)
                         phiiFind[x] = phii[x, 1];
-                    ii = Find(phia, phiiFind, ni);
+                    ii = Find(phia, phiiFind);
                     v = phia - phii[ii, 1];
                     der = coq[ii, 2] + v * 2.0 * coq[ii, 3];
                     phib = coq[ii, 1] + v * (coq[ii, 2] + v * coq[ii, 3]);
@@ -689,11 +689,14 @@ namespace SWIMFrame
         }
 
         //Return i where xa(i) <= x < xa(i+1)
-        public static int Find(double x, double[] xa, int n)
+        public static int Find(double x, double[] xa)
         {
             int i1 = 1;
-            int i2 = n - 1;
+            int i2 = Array.IndexOf(xa.Skip(1).ToArray(), 0);
             int im;
+
+            if (i2 == -1) // in case there are no 0's in xa
+                i2 = xa.Length;
 
             while (true) //use bisection
             {

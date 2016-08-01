@@ -753,8 +753,8 @@ namespace SWIMFrame
             double[] dwex = new double[n + 1];
             double[] qsex = new double[n + 1];
             double[] qsexd = new double[n + 1];
-            double[,] qsexs = new double[n + 1, nex + 1];
-            double[,] qsexsd = new double[n + 1, nex + 1];
+            double[,] qsexs = new double[nex + 1, n + 1];
+            double[,] qsexsd = new double[nex + 1, n + 1];
             double[] aa = new double[n + 1]; // these are 0 based
             double[] bb = new double[n + 1];
             double[] cc = new double[n + 1];
@@ -769,16 +769,16 @@ namespace SWIMFrame
             sig = 0.5;
             rsig = 1.0 / sig;
             tfin = tf;
-            for(int x=2;x<= n;x++)
-                dz[x-1] = 0.5 * (dx[x-1] + dx[x]);
+            for (int x = 2; x <= n; x++)
+                dz[x - 1] = 0.5 * (dx[x - 1] + dx[x]);
             //get average water fluxes
             //dwex = sum(dwexs, 2) !total changes in sink water extraction since last call
-            if (dwexs.GetLength(1) > 0)
+            if (dwexs.GetLength(0) > 0 && dwexs.GetLength(1) > 0)
             {
                 Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
                 for (int x = 0; x < dwexs.GetLength(1); x++)
                 {
-                    dwex[x] = MathUtilities.Sum(dwexsM.Column(x));
+                    dwex[x] = MathUtilities.Sum(dwexsM.Row(x));
                 }
             }
 
@@ -816,31 +816,31 @@ namespace SWIMFrame
                         //get c and csm = dc / dsm(with theta constant)
                         k = jt[i];
                         th = thi[i] + (t - ti) * tht[i];
-                        if (solProps.isotype[k, j] == "no" || sm[i, j] < 0.0) //handle sm < 0 here
+                        if (solProps.isotype[j, k] == "no" || sm[j, i] < 0.0) //handle sm < 0 here
                         {
                             csm[i] = 1.0 / th;
-                            c[i, j] = csm[i] * sm[i, j];
+                            c[j, i] = csm[i] * sm[j, i];
                         }
-                        else if (solProps.isotype[k, j] == "li")
+                        else if (solProps.isotype[j, k] == "li")
                         {
                             csm[i] = 1.0 / (th + solProps.bd[k] * solProps.isopar[k, j].ElementAt(1));
-                            c[i, j] = csm[i] * sm[i, j];
+                            c[j, i] = csm[i] * sm[j, i];
                         }
                         else
                         {
                             for (it = 1; it <= itmax; it++) //get c from sm using Newton's method and bisection
                             {
-                                if (c[i, j] < 0.0)
-                                    c[i, j] = 0.0; //c and sm are >= 0
-                                solProps.Isosub(solProps.isotype[k, j], c[i, j], dsmmax, ref solProps.isopar[k, j], out f, out fc);
+                                if (c[j, i] < 0.0)
+                                    c[j, i] = 0.0; //c and sm are >= 0
+                                solProps.Isosub(solProps.isotype[j, k], c[j, i], dsmmax, ref solProps.isopar[j,k], out f, out fc);
                                 csm[i] = 1.0 / (th + solProps.bd[k] * fc);
-                                dm = sm[i, j] - (solProps.bd[k] * f + th * c[i, j]);
+                                dm = sm[j, i] - (solProps.bd[k] * f + th * c[j, i]);
                                 dc = dm * csm[i];
-                                if (sm[i, j] >= 0.0 && c[i, j] + dc < 0.0)
-                                    c[i, j] = 0.5 * c[i, j];
+                                if (sm[j, i] >= 0.0 && c[j, i] + dc < 0.0)
+                                    c[j, i] = 0.5 * c[j, i];
                                 else
-                                    c[i, j] = c[i, j] + dc;
-                                if (Math.Abs(dm) < eps * (sm[i, j] + 10.0 * dsmmax))
+                                    c[j, i] = c[j, i] + dc;
+                                if (Math.Abs(dm) < eps * (sm[j, i] + 10.0 * dsmmax))
                                     break;
                                 if (it == itmax)
                                 {
@@ -853,11 +853,11 @@ namespace SWIMFrame
 
                     for (int x = 1; x <= n - 1; x++)
                     {
-                        q[x] = coef1[x] * c[x, j] + coef2[x] * c[x + 1, j];
+                        q[x] = coef1[x] * c[j, x] + coef2[x] * c[j, x + 1];
                         qya[x] = coef1[x] * csm[x];
                         qyb[x] = coef2[x] * csm[x + 1];
                     }
-                    q[n] = qw[n] * c[n, j];
+                    q[n] = qw[n] * c[j, n];
                     qya[n] = qw[n] * csm[n];
                     //get time step
                     double[] absQ = new double[n+1];
@@ -888,8 +888,8 @@ namespace SWIMFrame
                     sigdt = sig * dt; rsigdt = 1.0 / sigdt;
                     //adjust q for change in theta
                     for (int x = 1; x <= n - 1; x++)
-                        q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[x, j] + qyb[x] * tht[x + 1] * c[x, j]);
-                    q[n] = q[n] - sigdt * qya[n] * tht[n] * c[n, j];
+                        q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[j, x] + qyb[x] * tht[x + 1] * c[j, x]);
+                    q[n] = q[n] - sigdt * qya[n] * tht[n] * c[j, n];
                     //get and solve eqns
                     for (int x = 1; x <= n - 1; x++)
                     {
@@ -902,7 +902,7 @@ namespace SWIMFrame
                     {
                         double[] ctemp = new double[n - 1];
                         for (int x = 1; x <= n; x++)
-                            ctemp[x] = c[x, j];
+                            ctemp[x] = c[j, x];
 
                         qsexs = qsexsM.ToArray();
                         qsexsd = qsexsdM.ToArray();
@@ -930,7 +930,7 @@ namespace SWIMFrame
                     qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
                     qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
                     sdrn[j] = sdrn[j] + (q[n] + sig * qya[n] * dy[n]) * dt;
-                    smM.SetColumn(j, smM.Column(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1, n)));
+                    smM.SetRow(j, smM.Row(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1, n)));
                     sm = smM.ToArray();
                     if (extraction)
                     {

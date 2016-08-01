@@ -20,10 +20,13 @@ namespace SWIMFrame
         /// <param name="ns">Number of solutes.</param>
         public SolProps(int nt, int ns)
         {
-            isotype = new string[nt + 1, ns + 1];
+            isotype = new string[ns + 1, nt + 1];
             bd = new double[nt + 1];
             dis = new double[nt + 1];
-            isopar = new double[nt+1,ns+1][];
+            isopar = new double[ns + 1, nt + 1][];
+            for (int j = 1; j < isotype.GetLength(0); j++)
+                for (int x = 1; x < isotype.GetLength(1); x++)
+                isotype[j, x] = "no"; //will be changed if required in sub setiso
         }
 
         /// <summary>
@@ -36,8 +39,6 @@ namespace SWIMFrame
         {
             bd[j] = bdj;
             dis[j] = disj;
-            for (int x = 1; x < isotype.GetLength(1); x++)
-                isotype[j, x] = "no"; //will be changed if required in sub setiso
         }
 
         /// <summary>
@@ -49,13 +50,13 @@ namespace SWIMFrame
         /// <param name="isoparji">Isotherm parameters.</param>
         public void Setiso(int j, int isol, string isotypeji, double[] isoparji)
         {
-            isotype[j, isol] = isotypeji;
+            isotype[isol, j] = isotypeji;
             np = isoparji.Length - 1; // -1 to ignore 0th element
             if (isotypeji == "Fr")
-                isopar[j, isol] = new double[np + 2 + 1]; //check these
+                isopar[isol, j] = new double[np + 2 + 1]; //check these
             else
-                isopar[j, isol] = new double[np + 1];
-            Array.Copy(isoparji, isopar[j, isol], isoparji.Length);
+                isopar[isol, j] = new double[np + 1];
+            Array.Copy(isoparji, isopar[isol, j], isoparji.Length);
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace SWIMFrame
                     }
                     else
                     {
-                        x = p[1] * Math.Exp(p[2] - 1.0) * Math.Log(c);
+                        x = p[1] * Math.Exp((p[2] - 1.0) * Math.Log(c));
                         f = x * c;
                         fd = p[2] * x;
                     }
