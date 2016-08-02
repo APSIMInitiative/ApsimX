@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using Models.PMF.OldPlant;
 
 
 namespace Models.PMF.Phen
@@ -25,6 +26,40 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         Soils.Soil Soil = null;
 
+        [Link(IsOptional = true)]
+        private Plant Plant = null;
+
+        [Link(IsOptional = true)]
+        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
+
+        /// <summary>
+        /// The soil layer in which the seed is sown
+        /// </summary>
+        private int SowLayer = 0;
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            double SowDepth = 0;
+            double accumDepth = 0;
+            if (Plant != null)
+                SowDepth = Plant.SowingData.Depth;  
+            if (Plant15 != null)
+                SowDepth = Plant15.SowingData.Depth;
+            bool layerfound = false;
+            for (int layer = 0; layerfound; layer++)
+            {
+                accumDepth += Soil.Thickness[layer];
+                if (SowDepth <= accumDepth)
+                {
+                    SowLayer = layer;
+                    layerfound = true;
+                }
+            }
+        }
         /// <summary>
         /// Do our timestep development
         /// </summary>
@@ -33,7 +68,7 @@ namespace Models.PMF.Phen
             bool CanGerminate = true;
             if (Soil != null)
             {
-                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.ESW > 0;
+                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.Water[SowLayer] > Soil.SoilWater.LL15mm[SowLayer];
             }
 
             if (CanGerminate)
@@ -58,6 +93,5 @@ namespace Models.PMF.Phen
                 throw new Exception("Not possible to set phenology into " + this + " phase (at least not at the moment because there is no code to do it");
             }
         }
-
     }
 }

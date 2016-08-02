@@ -30,17 +30,6 @@ namespace Models.Core
         [XmlAttribute("Version")]
         public int Version { get; set; }
 
-        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
-        [XmlIgnore]
-        public bool IsCompleted { get; set; }
-
-        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
-        [XmlIgnore]
-        public string ErrorMessage { get; set; }
-
-        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
-        public bool IsComputationallyTimeConsuming { get { return false; } }
-
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
         [XmlIgnore]
@@ -146,6 +135,36 @@ namespace Models.Core
             return simulations;
         }
 
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="simulations">The simulations to make substitutions in.</param>
+        /// <param name="parentSimulations">Parent simulations object</param>
+        public static void MakeSubstitutions(Simulations parentSimulations, List<Simulation> simulations)
+        {
+            IModel replacements = Apsim.Child(parentSimulations, "Replacements");
+            if (replacements != null)
+            {
+                foreach (IModel replacement in replacements.Children)
+                {
+                    foreach (Simulation simulation in simulations)
+                    {
+                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        {
+                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                // Do replacement.
+                                IModel newModel = Apsim.Clone(replacement);
+                                int index = match.Parent.Children.IndexOf(match as Model);
+                                match.Parent.Children.Insert(index, newModel as Model);
+                                newModel.Parent = match.Parent;
+                                match.Parent.Children.Remove(match as Model);
+                                CallOnLoaded(newModel);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>Call Loaded event in specified model and all children</summary>
         /// <param name="model">The model.</param>
         public static void CallOnLoaded(IModel model)
@@ -197,45 +216,8 @@ namespace Models.Core
         }
 
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
-        private Simulations() { }
-
-        /// <summary>Find all simulations under the specified parent model.</summary>
-        /// <param name="parent">The parent.</param>
-        /// <returns></returns>
-        public static Simulation[] FindAllSimulationsToRun(Model parent)
+        private Simulations()
         {
-            List<Simulation> simulations = new List<Simulation>();
-
-            if (parent is Experiment)
-                simulations.AddRange((parent as Experiment).Create());
-            else if (parent is Simulation)
-            {
-                Simulation clonedSim = Apsim.Clone(parent) as Simulation;
-                CallOnLoaded(clonedSim);
-                simulations.Add(clonedSim);
-            }
-            else
-            {
-                // Look for simulations.
-                foreach (Model model in Apsim.ChildrenRecursively(parent))
-                {
-                    if (model is Experiment)
-                        simulations.AddRange((model as Experiment).Create());
-                    else if (model is Simulation && !(model.Parent is Experiment))
-                    {
-                        Simulation clonedSim = Apsim.Clone(model) as Simulation;
-                        CallOnLoaded(clonedSim);
-                        simulations.Add(clonedSim);
-                    }
-                }
-            }
-            // Make sure each simulation has it's filename set correctly.
-            foreach (Simulation simulation in simulations)
-            {
-                if (simulation.FileName == null)
-                    simulation.FileName = RootSimulations(parent).FileName;
-            }
-            return simulations.ToArray();
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
@@ -265,53 +247,24 @@ namespace Models.Core
 
         }
 
+        /// <summary>Find and return a list of duplicate simulation names.</summary>
+        public List<string> FindDuplicateSimulationNames()
+        {
+            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
+            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
+            var duplicates = allSimNames
+                .GroupBy(i => i)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+            return duplicates.ToList();
+        }
+
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
             foreach (Model simulation in Apsim.ChildrenRecursively(this))
                 if (simulation is Simulation)
                     (simulation as Simulation).FileName = FileName;
-        }
-
-        /// <summary>Roots the simulations.</summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        private static Simulations RootSimulations(Model model)
-        {
-            Model m = model;
-            while (m != null && m.Parent != null && !(m is Simulations))
-                m = m.Parent as Model;
-
-            return m as Simulations;
-        }
-
-        /// <summary>Make model substitutions if necessary.</summary>
-        /// <param name="simulations">The simulations to make substitutions in.</param>
-        public void MakeSubstitutions(Simulation[] simulations)
-        {
-            IModel replacements = Apsim.Child(this, "Replacements");
-            if (replacements != null)
-            {
-                foreach (IModel replacement in replacements.Children)
-                {
-                    foreach (Simulation simulation in simulations)
-                    {
-                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
-                        {
-                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                // Do replacement.
-                                IModel newModel = Apsim.Clone(replacement);
-                                int index = match.Parent.Children.IndexOf(match as Model);
-                                match.Parent.Children.Insert(index, newModel as Model);
-                                newModel.Parent = match.Parent;
-                                match.Parent.Children.Remove(match as Model);
-                                CallOnLoaded(newModel);
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -344,7 +297,7 @@ namespace Models.Core
                 Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
                 // Make any substitutions.
-                MakeSubstitutions(new Simulation[] { clonedSimulation });
+                Simulations.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
 
                 // Now use the path to get the model we want to document.
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;

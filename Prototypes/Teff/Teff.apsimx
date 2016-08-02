@@ -362,18 +362,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
         <PhaseLookup>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <PhaseLookupValue>
-            <Name>Plastochron</Name>
-            <Constant>
-              <Name>ConstantPlastochron</Name>
-              <Value>50</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>FloralInitiation</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
@@ -436,43 +424,12 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>150</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
+              <XProperty>[Structure].LeafTipsAppeared</XProperty>
             </LinearInterpolationFunction>
             <Start>Emergence</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <MainStemFinalNodeNumberFunction>
-          <Name>MainStemFinalNodeNumber</Name>
-          <OnEventFunction>
-            <Name>FinalLeafNumber</Name>
-            <AddFunction>
-              <Name>PreEventValue</Name>
-              <Constant>
-                <Name>PrimordiaAtEmergence</Name>
-                <Value>5</Value>
-              </Constant>
-              <DivideFunction>
-                <Name>PrimordiaDuringJuvenilePhase</Name>
-                <VariableReference>
-                  <Name>JuvenilePhaseDuration</Name>
-                  <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>Plastochron</Name>
-                  <VariableName>[Structure].MainStemPrimordiaInitiationRate.Plastochron.Value</VariableName>
-                </VariableReference>
-              </DivideFunction>
-            </AddFunction>
-            <VariableReference>
-              <Name>PostEventValue</Name>
-              <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
-            </VariableReference>
-            <SetEvent>FloralInitiation</SetEvent>
-            <ReSetEvent />
-          </OnEventFunction>
-          <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-        </MainStemFinalNodeNumberFunction>
         <HeightFunction>
           <Name>HeightModel</Name>
           <LinearInterpolationFunction>
@@ -702,15 +659,86 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
-          <Name>ShadeInducedBranchMortality</Name>
+          <Name>BranchMortality</Name>
           <Value>0</Value>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
           <Value>0</Value>
         </Constant>
-        <InitialiseStage>Emergence</InitialiseStage>
-        <PrimaryBudNo>1</PrimaryBudNo>
+        <HoldFunction>
+          <Name>MainStemFinalNodeNumber</Name>
+          <AddFunction>
+            <Name>ValueToHold</Name>
+            <Constant>
+              <Name>PrimordiaAtEmergence</Name>
+              <Value>6</Value>
+            </Constant>
+            <DivideFunction>
+              <Name>PrimordiaDuringJuvenilePhase</Name>
+              <AddFunction>
+                <Name>AddFunction</Name>
+                <VariableReference>
+                  <Name>JuvenilePhaseDuration</Name>
+                  <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>PhotoSensitivePhaseDuration</Name>
+                  <VariableName>[Phenology].Photosensitive.Target.Value</VariableName>
+                </VariableReference>
+              </AddFunction>
+              <PhaseLookup>
+                <Name>MeanPlastochron</Name>
+                <PhaseLookupValue>
+                  <Name>PreEmerg</Name>
+                  <Constant>
+                    <Name>Constant</Name>
+                    <Value>15</Value>
+                  </Constant>
+                  <Start>Germination</Start>
+                  <End>Emergence</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>PostEmerg</Name>
+                  <DivideFunction>
+                    <Name>MeanPlastochron</Name>
+                    <AccumulateFunction>
+                      <Name>AccumulatedPlastochron</Name>
+                      <MultiplyFunction>
+                        <Name>Plastochron</Name>
+                        <VariableReference>
+                          <Name>Phyllochron</Name>
+                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                        </VariableReference>
+                        <Constant>
+                          <Name>LeafTipsPerPrimordia</Name>
+                          <Value>0.5</Value>
+                        </Constant>
+                      </MultiplyFunction>
+                      <StartStageName>Emergence</StartStageName>
+                      <EndStageName>FloralInitiation</EndStageName>
+                    </AccumulateFunction>
+                    <AccumulateFunction>
+                      <Name>Days</Name>
+                      <Constant>
+                        <Name>Constant</Name>
+                        <Value>1</Value>
+                      </Constant>
+                      <StartStageName>Emergence</StartStageName>
+                      <EndStageName>FloralInitiation</EndStageName>
+                    </AccumulateFunction>
+                  </DivideFunction>
+                  <Start>Emergence</Start>
+                  <End>FlagLeaf</End>
+                </PhaseLookupValue>
+              </PhaseLookup>
+            </DivideFunction>
+          </AddFunction>
+          <WhenToHold>FloralInitiation</WhenToHold>
+        </HoldFunction>
+        <Initialised>false</Initialised>
+        <Germinated>false</Germinated>
+        <Emerged>false</Emerged>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -886,9 +914,40 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Units>/g</Units>
           </Constant>
         </MultiplyFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.8</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1034,26 +1093,93 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
-        <InitialDM>0.2</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0</double>
-          <double>0.03</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0.0003</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.03</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.0003</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>0.2</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -1062,31 +1188,13 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>380</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[3]</Name>
-          <Rank>3</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[4]</Name>
-          <Rank>4</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[5]</Name>
-          <Rank>5</Rank>
-          <Area>0</Area>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[6]</Name>
-          <Rank>6</Rank>
-          <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1116,6 +1224,11 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </ArrayBiomass>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
+          <Constant>
+            <Name>SenessingLeafRelativeSize</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
             <Value>0.05</Value>
@@ -1608,12 +1721,41 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <_ExpandedNodeNo>0</_ExpandedNodeNo>
         <DeadNodesYesterday>0</DeadNodesYesterday>
         <MaxCover>1</MaxCover>
         <Albedo>0.18</Albedo>
@@ -1621,7 +1763,13 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
+        <MaximumMainStemLeafNumber>50</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1691,8 +1839,39 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -1748,7 +1927,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>PotentialDMAccumulation</Name>
             <VariableReference>
               <Name>NodesAppearing</Name>
-              <VariableName>[Structure].DeltaNodeNumber</VariableName>
+              <VariableName>[Structure].DeltaTipNumber</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>Branches</Name>
@@ -1816,8 +1995,39 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <FractionRemoved>0</FractionRemoved>
-        <FractionToResidue>0</FractionToResidue>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2079,6 +2289,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
       </Cultivar>
       <CropType>Teff</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -2711,6 +2922,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -3498,6 +3710,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -5041,6 +5254,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -6782,6 +6996,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -7699,6 +7914,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -9142,6 +9358,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -9840,6 +10057,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -10565,6 +10783,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -11354,6 +11573,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -12796,6 +13016,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -14391,6 +14612,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>HarvestReport</Name>

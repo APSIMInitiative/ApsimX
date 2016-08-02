@@ -14,8 +14,8 @@ namespace Models.PMF.Organs
     public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
         /// <summary>Gets or sets the above ground.</summary>
-        /// <value>The above ground.</value>
-        public Biomass AboveGround { get; set; }
+        [Link]
+        IFunction AboveGroundWt = null;
 
         /// <summary>The water content</summary>
         [Link]
@@ -77,8 +77,8 @@ namespace Models.PMF.Organs
             get
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
-                if (AboveGround.Wt > 0)
-                    return CurrentWt / AboveGround.Wt;
+                if (AboveGroundWt.Value > 0)
+                    return CurrentWt / AboveGroundWt.Value;
                 else
                     return 0.0;
             }
@@ -91,7 +91,7 @@ namespace Models.PMF.Organs
             {
                 double CurrentWt = (Live.Wt + Dead.Wt);
                 double NewHI = HI + HIIncrement.Value;
-                double NewWt = NewHI * AboveGround.Wt;
+                double NewWt = NewHI * AboveGroundWt.Value;
                 double Demand = Math.Max(0.0, NewWt - CurrentWt);
 
                 return new BiomassPoolType { Structural = Demand };
@@ -133,64 +133,5 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        #region Biomass removal 
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on harvest.
-        /// </summary>
-        public override OrganBiomassRemovalType HarvestDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 1,
-                    FractionToResidue = 0
-                };
-            }
-        }
-
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Cutting
-        /// </summary>
-        public override OrganBiomassRemovalType CutDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 1,
-                    FractionToResidue = 0
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Pruning
-        /// </summary>
-        public override OrganBiomassRemovalType PruneDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0,
-                    FractionToResidue = 0.8
-                };
-            }
-        }
-        /// <summary>
-        /// The default proportions biomass to removeed from each organ on Grazing
-        /// </summary>
-        public override OrganBiomassRemovalType GrazeDefault
-        {
-            get
-            {
-                return new OrganBiomassRemovalType
-                {
-                    FractionRemoved = 0.6,
-                    FractionToResidue = 0.2
-                };
-            }
-        }
-        #endregion
     }
 }

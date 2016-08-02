@@ -10,10 +10,12 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
+    using APSIM.Shared.Utilities;
 
     ///<summary>
     /// The generic plant model
@@ -77,6 +79,11 @@ namespace Models.PMF
         public Root Root = null;
         [Link(IsOptional = true)]
         Biomass AboveGround = null;
+        /// <summary>
+        /// Clock
+        /// </summary>
+        [Link]
+        public Clock Clock = null;
 
         #endregion
 
@@ -91,10 +98,7 @@ namespace Models.PMF
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
         public IOrgan[] Organs { get; private set; }
-
-        ///<summary></summary>
-        public RemovalFractions BiomassRemovalData { get; set; }
-       
+ 
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
@@ -121,7 +125,7 @@ namespace Models.PMF
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
+                foreach (Model model in Apsim.ChildrenRecursively(this, typeof(Cultivar)))
                 {
                     cultivars.Add(model as Cultivar);
                 }
@@ -149,11 +153,40 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets or sets the population.</summary>
+
+        /// <summary>Holds the number of plants.</summary>
+        private double plantPopulation = 0.0;
+        /// <summary>
+        /// Holds the date of sowing
+        /// </summary>
+        public DateTime SowingDate { get; set; }
+
+        /// <summary>Gets or sets the plant population.</summary>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
-        public double Population { get; set; }
+        public double Population
+        {
+            get { return plantPopulation; }
+            set
+            {
+                double InitialPopn = plantPopulation;
+                if (IsAlive && value <= 0.1)
+                {
+                    // the plant is dying due to population decline
+                    EndCrop();
+                }
+                else
+                {
+                    plantPopulation = value;
+                    if (Structure != null)
+                    {
+                        Structure.DeltaPlantPopulation = InitialPopn - value;
+                        Structure.ProportionPlantMortality = 1 - (value / InitialPopn);
+                    }
+                }
+            }
+        }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
@@ -171,7 +204,30 @@ namespace Models.PMF
                     //Else if the crop is in the grown returen true
             }
         }
-        
+
+        /// <summary>Return true if plant has germinated</summary>
+        public bool IsGerminated
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.Germinated;
+                //If the crop model has phenology and the crop is emerged return true
+                else
+                    return IsAlive;
+                //Else if the crop is in the grown returen true
+            }
+        }
+        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+
+        /// <summary>Harvest the crop</summary>
+        public void Harvest() { Harvest(null); }
+
+        /// <summary>The plant mortality rate</summary>
+        [Link(IsOptional = true)]
+        [Units("")]
+        IFunction MortalityRate = null;
         #endregion
 
         #region Class Events
@@ -181,14 +237,10 @@ namespace Models.PMF
         public event EventHandler<SowPlant2Type> PlantSowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
-        /// <summary>Occurs when a plant is about to be cut.</summary>
-        public event EventHandler Cutting;
-        /// <summary>Occurs when a plant is about to be grazed.</summary>
-        public event EventHandler Grazing;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
-        public event EventHandler Pruning;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
+        /// <summary>Occurs when a plant is sown.</summary>
+        public event EventHandler<RemovingBiomassArgs> RemovingBiomass;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -207,8 +259,6 @@ namespace Models.PMF
 
             Organs = organs.ToArray();
 
-            BiomassRemovalData = new RemovalFractions(Organs);
-            
             Clear();
         }
 
@@ -229,6 +279,25 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            //Reduce plant population in case of mortality
+            if (Population > 0.0 && MortalityRate != null)
+            {
+                double DeltaPopulation = Population * MortalityRate.Value;
+                Population -= DeltaPopulation;
+                if (Structure != null)
+                {
+                    Structure.DeltaPlantPopulation = DeltaPopulation;
+                    Structure.ProportionPlantMortality = MortalityRate.Value;
+                }
+            }
+        }
+
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
@@ -238,6 +307,8 @@ namespace Models.PMF
         /// <param name="budNumber">The bud number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
+            SowingDate = Clock.Today;
+
             SowingData = new SowPlant2Type();
             SowingData.Plant = this;
             SowingData.Population = population;
@@ -263,123 +334,69 @@ namespace Models.PMF
             
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
-        
+
         /// <summary>Harvest the crop.</summary>
-        public void Harvest(RemovalFractions ManagerRemovalData = null)
+        public void Harvest(RemovalFractions removalData)
         {
-            // Invoke a harvesting event.
-            if (Harvesting != null)
+            RemoveBiomass("Harvest", removalData);
+        }
+
+        /// <summary>Harvest the crop.</summary>
+        public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
+        {
+            // Set up the default BiomassRemovalData values
+            RemovingBiomassArgs allData = new RemovingBiomassArgs();
+            allData.biomassRemoveType = biomassRemoveType;
+            foreach (IOrgan organ in Organs)
+            {
+                // Get the default removal fractions
+                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+                if (biomassRemoval == null)
+                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
+
+                // Override the defaults if values were supplied as arguments
+                if (removalData != null)
+                {
+                    OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
+                    if (userFractions != null)
+                    {
+                        if(!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
+                            biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
+                            biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
+                            biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
+                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
+                            biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
+                    }
+                }
+                allData.removalData.Add(organ.Name, biomassRemoval);
+            }
+
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+
+            // Invoke an event.
+            if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-
-            int i = 0;
-            //Set up the default BiomassRemovalData values
+            else if (RemovingBiomass != null)
+                RemovingBiomass.Invoke(this, allData);
+            
+            // Remove the biomass
             foreach (IOrgan organ in Organs)
             {
-               BiomassRemovalData.OrganList[i].FractionRemoved = organ.HarvestDefault.FractionRemoved;
-               BiomassRemovalData.OrganList[i].FractionToResidue = organ.HarvestDefault.FractionToResidue;
-               i += 1;
-            }
-            
-            //OverWriter default values in BiomassRemovalData with any manager specified values
-            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
-            
-            //Remove biomas from organs
-            RemoveBiomassFromOrgans(BiomassRemovalData);
-
-
-
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
-            
-            foreach (IOrgan O in Organs)
-                O.DoHarvest();
-
-        }
-        /// <summary>Cut the crop.</summary>
-        public void Cut(RemovalFractions ManagerRemovalData = null)
-        {
-            int i = 0;
-            //Set up the default values
-            foreach (IOrgan organ in Organs)
-            {
-                BiomassRemovalData.OrganList[i].FractionRemoved = organ.CutDefault.FractionRemoved;
-                BiomassRemovalData.OrganList[i].FractionToResidue = organ.CutDefault.FractionToResidue;
-                i += 1;
+                organ.DoRemoveBiomass(allData.removalData[organ.Name]);
             }
 
-            //Do adjustments to phenology
-            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
-                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
-            
-            //OverWriter default values in BiomassRemovalData with any manager specified values
-            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
+            // Reset the phenology if SetPhenologyStage specified.
+            if (removalData != null && removalData.SetPhenologyStage != 0)
+                Phenology.ReSetToStage(removalData.SetPhenologyStage);
 
-            //Remove biomas from organs
-            RemoveBiomassFromOrgans(BiomassRemovalData);
-
-            foreach (IOrgan O in Organs)
-                O.DoCut();
-
-            // Invoke a cutting event.
-            if (Cutting != null)
-                Cutting.Invoke(this, new EventArgs());
+            // Reduce plant and stem population if thinning proportion specified
+            if (removalData != null && removalData.SetThinningProportion != 0)
+                Structure.doThin(removalData.SetThinningProportion);
         }
-        /// <summary>Harvest the crop.</summary>
-        public void Graze(RemovalFractions ManagerRemovalData = null)
-        {
-            int i = 0;
-            //Set up the default BiomassRemovalData values
-            foreach (IOrgan organ in Organs)
-            {
-                BiomassRemovalData.OrganList[i].FractionRemoved = organ.GrazeDefault.FractionRemoved;
-                BiomassRemovalData.OrganList[i].FractionToResidue = organ.GrazeDefault.FractionToResidue;
-                i += 1;
-            }
-
-            //Do adjustments to phenology
-            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
-                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
-
-            //OverWriter default values in BiomassRemovalData with any manager specified values
-            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
-
-            //Remove biomas from organs
-            RemoveBiomassFromOrgans(BiomassRemovalData);
-
-            foreach (IOrgan O in Organs)
-                O.DoGraze();
-
-            // Invoke a cutting event.
-            if (Grazing != null)
-                Grazing.Invoke(this, new EventArgs());
-        }
-        /// <summary>Cut the crop.</summary>
-        public void Prune(RemovalFractions ManagerRemovalData = null)
-        {
-            int i = 0;
-            //Set up the default values
-            foreach (IOrgan organ in Organs)
-            {
-                BiomassRemovalData.OrganList[i].FractionRemoved = organ.PruneDefault.FractionRemoved;
-                BiomassRemovalData.OrganList[i].FractionToResidue = organ.PruneDefault.FractionToResidue;
-                i += 1;
-            }
-
-            //Do adjustments to phenology
-            if ((ManagerRemovalData != null) && (ManagerRemovalData.PhenologyStageSet != 0))
-                Phenology.ReSetToStage(ManagerRemovalData.PhenologyStageSet);
-
-            //OverWriter default values in BiomassRemovalData with any manager specified values
-            ApplyManagerSpecifiedOverwrites(ManagerRemovalData);
-
-            //Remove biomas from organs
-            RemoveBiomassFromOrgans(BiomassRemovalData);
-
-            // Invoke a pruning event.
-            if (Pruning != null)
-                Pruning.Invoke(this, new EventArgs());
-        }
+        
         /// <summary>End the crop.</summary>
-
         public void EndCrop()
         {
             Summary.WriteMessage(this, "Crop ending");
@@ -401,35 +418,7 @@ namespace Models.PMF
         private void Clear()
         {
             SowingData = null;
-            Population = 0;
-        }
-
-        private void RemoveBiomassFromOrgans(RemovalFractions BiomassRemovalData)
-        {
-            if (BiomassRemovalData != null)  //Defalt is to remove nothing so unless some data is sent from manager do nothing
-            {
-                int i = 0;
-                foreach (IOrgan organ in Organs)
-                {
-                    organ.RemoveBiomass = BiomassRemovalData.OrganList[i];
-                    i += 1;
-                }
-            }
-        }
-
-        private void ApplyManagerSpecifiedOverwrites(RemovalFractions ManagerRemovalData)
-        {
-            //OverWriter default values in BiomassRemovalData with any manager specified values
-            if (ManagerRemovalData != null)
-                foreach (OrganBiomassRemovalType m in ManagerRemovalData.OrganList) //Set through each organ in manager sent RemovalData list
-                    foreach (OrganBiomassRemovalType p in BiomassRemovalData.OrganList) //Step throgh each organ in plant constructed RemovalData list
-                        if (String.Equals(m.NameOfOrgan, p.NameOfOrgan, StringComparison.OrdinalIgnoreCase)) //find a match on orgn names
-                        {//Over write data if there is data there
-                            if (m.FractionRemoved >= 0)
-                                p.FractionRemoved = m.FractionRemoved;
-                            if (m.FractionToResidue >= 0)
-                                p.FractionToResidue = m.FractionToResidue;
-                        }
+            plantPopulation = 0.0;
         }
         #endregion
         
@@ -439,21 +428,8 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child is Cultivar)
-                {
-                }
-                else
-                    child.Document(tags, headingLevel + 1, indent);
-            }
-
-            // now write all cultivars in a list.
-            tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel+1));
-            tags.Add(new AutoDocumentation.Paragraph("The section below lists each of the cultivars currently included in the model and each of the parameters that they differ from the base model", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
-                child.Document(tags, headingLevel+2, indent);
+                child.Document(tags, headingLevel + 1, indent);
         }
     }
 }

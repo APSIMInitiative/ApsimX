@@ -84,7 +84,8 @@ namespace Models.PMF.Organs
     [Description("Leaf Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Leaf : BaseOrgan, AboveGround, ICanopy
+    [ValidParent(ParentType = typeof(Plant))]
+    public class Leaf : BaseOrgan, AboveGround, ICanopy, ILeaf
     {
         #region Canopy interface
 
@@ -112,7 +113,11 @@ namespace Models.PMF.Organs
                 int MM2ToM2 = 1000000; // Conversion of mm2 to m2
                 double value = 0;
                 foreach (LeafCohort L in Leaves)
+                {
+                    if (Double.IsNaN(L.LiveArea))
+                        throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
                     value = value + L.LiveArea / MM2ToM2;
+                }
                 return value;
             }
         }
@@ -126,8 +131,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Plant.IsAlive)
-                    return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+                if (Plant != null && Plant.IsAlive)
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
                 else
                     return 0;
             }
@@ -139,10 +144,16 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant.IsAlive)
-                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                if (Plant != null)
+                {
+                    if (Plant.IsAlive)
+                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                    else
+                        return 0;
+                }
                 else
                     return 0;
+
             } 
         }
 
@@ -162,6 +173,11 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double PotentialEP { get;  set; }
 
+        /// <summary>
+        /// This paramater is applied to ETDemand.  It is a fudge for testing
+        /// </summary>
+        public double FudgeToGetETDemandRight { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
@@ -177,6 +193,8 @@ namespace Models.PMF.Organs
         [Link]
         public Phenology Phenology = null;
         #endregion
+
+    
 
         #region Structures
         /// <summary>
@@ -260,13 +278,24 @@ namespace Models.PMF.Organs
             /// <summary>The cell division stress</summary>
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
+            /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
+            [Link(IsOptional = true)]
+            public IFunction LeafSizeShapeParameter = null;
+            /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
+            [Link(IsOptional = true)]
+            public IFunction SenessingLeafRelativeSize = null;
+            /// <summary>
+            /// The proportion of mass that is respired each day
+            /// </summary>
+            [Link(IsOptional = true)]
+            public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
 
         #region Parameters
         // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
         // in the XML. No need for it to be in leaf.
-        
+
         // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
@@ -299,6 +328,9 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link(IsOptional = true)]
         IFunction DMDemandFunction = null;
+
+        [Link(IsOptional = true)]
+        IFunction DMConversionEfficiencyFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;
@@ -308,6 +340,10 @@ namespace Models.PMF.Organs
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
         
+        /// <value>The Maximum Number of Leaves that will be produced.  Used for determining the number of members in cohort properties</value>
+        [Description("Maximum number of Main-Stem leaves")]
+        public int MaximumMainStemLeafNumber { get; set; }
+
         #endregion
 
         #region States
@@ -321,10 +357,12 @@ namespace Models.PMF.Organs
         public double StartFractionExpanded = 0;
         /// <summary>The fraction nextleaf expanded</summary>
         public double FractionNextleafExpanded = 0;
-        /// <summary>The _ expanded node no</summary>
-        public double _ExpandedNodeNo = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
+        /// <summary>
+        /// 
+        /// </summary>
+        public override double DMConversionEfficiency { get; set; }
         #endregion
 
         #region Outputs
@@ -336,18 +374,36 @@ namespace Models.PMF.Organs
 
         /// <summary>Return the</summary>
         /// <value>The cohort current rank cover above.</value>
+        /// 
+
+            public double GrowthRespiration { get; set;  }
+
+        /// <summary>Return the</summary>
+        /// <value>The cohort current rank cover above.</value>
+
         public double CohortCurrentRankCoverAbove
         {
             get
             {
-                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                if (CurrentRank > Leaves.Count)
+                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
+                else if (CurrentRank <= 0)
                     return 0;
                 else
-                    return Leaves[CurrentRank-1].CoverAbove;
+                    return Leaves[CurrentRank - 1].CoverAbove;
             }
         }
 
-
+        /// <summary>
+        /// The number of leaves that have visiable tips on the day of emergence
+        /// </summary>
+        public int TipsAtEmergence {get; set;}
+        
+        /// <summary>
+        /// The number of leaf cohorts to initialised
+        /// </summary>
+        public int CohortsAtInitialisation { get; set; }
+        
         /// <summary>Gets or sets the fraction died.</summary>
         /// <value>The fraction died.</value>
         public double FractionDied { get; set; }
@@ -376,99 +432,22 @@ namespace Models.PMF.Organs
         /// <summary>Gets the appeared cohort no.</summary>
         /// <value>The appeared cohort no.</value>
         [Description("Number of leaf cohort that have appeared")] //Note:  AppearedCohortNo is an interger of AppearedNodeNo, increasing every time AppearedNodeNo increses by one and a new cohort is appeared
-        public double AppearedCohortNo
-        {
-            get
-            {
-                int Count = CohortCounter("IsAppeared");
-                if (FinalLeafAppeared)
-                    return Count - (1 - FinalLeafFraction);
-                else
-                    return Count;
-            }
-        }
-
-        /// <summary>Gets the final leaf fraction.</summary>
-        /// <value>The final leaf fraction.</value>
-        [Description("If last leaf has appeared, return the fraction of the final part leaf")]
-        public double FinalLeafFraction
-        {
-            get
-            {
-                double FLF = 1;
-                //int Count = CohortCounter("IsIniated");
-                if (InitialisedCohortNo < Structure.MainStemFinalNodeNo)
-                    FLF = Math.Min(Structure.MainStemFinalNodeNo - InitialisedCohortNo, 1);
-                else
-                    FLF = 1 - Math.Min(InitialisedCohortNo - Structure.MainStemFinalNodeNo, 1);
-                return FLF;
-                    
-                //int Count = CohortCounter("IsAppeared");
-                // DeanH: I don't think this next if statement will ever be true. Isn't MaximumNodeNumber
-                // always equal to MainStemFinalNodeNo?
-                //if (Count == (int)Structure.MainStemFinalNodeNo && Count < Structure.MaximumNodeNumber) 
-                //    return Leaves[Count-1].FractionExpanded;
-                //else
-                    //return 1.0;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether [final leaf appeared].
-        /// </summary>
-        /// <value><c>true</c> if [final leaf appeared]; otherwise, <c>false</c>.</value>
-        [Description("Returns true if the final leaf has appeared")]
-        public bool FinalLeafAppeared
-        {
-            get
-            {
-                if (Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
-                    return true;
-                else
-                    return false;
-            }
-        }
+        public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
         /// <value>The expanding cohort no.</value>
         [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
         public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
-        //FIXME ExpandedNodeNo and Expanded Cohort need to be merged
-        /// <summary>Gets the expanded node no.</summary>
-        /// <value>The expanded node no.</value>
-        [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedNodeNo
-        {
-            get
-            {
-                //HamishB  I have had to change this back because it was not returning the correct values
-                //foreach (LeafCohort L in Leaves)
-                //    if (!L.IsFullyExpanded)
-                //        return ExpandedCohortNo + L.FractionExpanded;
-                return _ExpandedNodeNo;
-            }
-        }
-
         /// <summary>Gets the expanded cohort no.</summary>
         /// <value>The expanded cohort no.</value>
         [Description("Number of leaf cohorts that are fully expanded")]
-        public double ExpandedCohortNo { get { return Math.Min(CohortCounter("IsFullyExpanded"), Structure.MainStemFinalNodeNo); } }
+        public double ExpandedCohortNo { get { return CohortCounter("IsFullyExpanded"); } }
 
         /// <summary>Gets the green cohort no.</summary>
         /// <value>The green cohort no.</value>
         [Description("Number of leaf cohorts that are have expanded but not yet fully senesced")]
-        public double GreenCohortNo
-        {
-            get
-            {
-                int Count = CohortCounter("IsGreen");
-                if (FinalLeafAppeared)
-                    return Count - (1 - FinalLeafFraction);
-                else
-                    return Count;
-            }
-        }
+        public double GreenCohortNo  { get { return CohortCounter("IsGreen"); } }
 
         /// <summary>Gets the senescing cohort no.</summary>
         /// <value>The senescing cohort no.</value>
@@ -478,7 +457,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the dead cohort no.</summary>
         /// <value>The dead cohort no.</value>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNo); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         /// <value>The plant appeared green leaf no.</value>
@@ -600,6 +579,29 @@ namespace Models.PMF.Organs
         }
         //Cohort State variable outputs
 
+        /// <summary>
+        /// Returns the relative expansion of the next leaf to produce its ligule
+        /// </summary>
+        public double NextExpandingLeafProportion
+        {
+            get
+            {
+                if (Plant.IsEmerged)
+                    if (ExpandedCohortNo < InitialisedCohortNo)
+                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
+                            if(AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                            else
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                        else
+                            return 0;
+                    else
+                        return Structure.NextLeafProportion - 1 ;
+                else
+                    return 0;
+            }
+        }
+
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
         [XmlIgnore]
@@ -610,8 +612,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -649,8 +651,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -672,8 +674,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -695,8 +697,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -718,8 +720,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -741,8 +743,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -764,8 +766,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -787,8 +789,8 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[Structure.MaximumNodeNumber];
-                for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -831,6 +833,19 @@ namespace Models.PMF.Organs
         /// <value>The transpiration.</value>
         [Units("mm")]
         public double Transpiration { get { return WaterAllocation; } }
+        /// <summary>
+        /// The amount of mass lost to maintenance respiration
+        /// </summary>
+        public override double MaintenanceRespiration
+        {
+            get
+            {
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                    value = value + L.MaintenanceRespiration;
+                return value;
+            }
+        }
 
         /// <summary>Gets the fw.</summary>
         /// <value>The fw.</value>
@@ -856,13 +871,16 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
-                if (FunctionalNConc == 0)
-                    F = 1;
-                else
+                if (CohortParameters != null)
                 {
-                    F = Live.MetabolicNConc / FunctionalNConc;
-                    F = Math.Max(0.0, Math.Min(F, 1.0));
+                    double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
+                    if (FunctionalNConc == 0)
+                        F = 1;
+                    else
+                    {
+                        F = Live.MetabolicNConc / FunctionalNConc;
+                        F = Math.Max(0.0, Math.Min(F, 1.0));
+                    }
                 }
                 return F;
             }
@@ -870,27 +888,10 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
-        /// <summary>1 based rank of the current leaf.</summary>
-        /// <value>The current rank.</value>
+         /// <summary>1 based rank of the current leaf.</summary>
+    /// <value>The current rank.</value>
         private int CurrentRank { get; set; }
-        /*private int CurrentRank
-        {
-            get
-            {
-                if (Leaves.Count == 0)
-                    return 0;
 
-                // Find the first non appeared leaf.
-                int i = 0;
-                while (i < Leaves.Count && Leaves[i].IsAppeared)
-                    i++;
-
-                if (i == 0)
-                    throw new ApsimXException(this.FullPath, "No leaves have appeared. Cannot calculate Leaf.CurrentRank");
-
-                return Leaves[i - 1].Rank;
-            }
-        }*/
         /// <summary>Cohorts the counter.</summary>
         /// <param name="Condition">The condition.</param>
         /// <returns></returns>
@@ -929,47 +930,6 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                         L.DoFrost(FrostFraction.Value);
 
-                // On the initial day set up initial cohorts and set their properties
-                if (Phenology.OnDayOf(Structure.InitialiseStage))
-                    InitialiseCohorts();
-
-                //When primordia number is 1 more than current cohort number produce a new cohort
-                if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
-                {
-                    if (CohortsInitialised == false)
-                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
-
-                    LeafCohort NewLeaf = InitialLeaves[0].Clone();
-                    NewLeaf.CohortPopulation = 0;
-                    NewLeaf.Age = 0;
-                    NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
-                    NewLeaf.Area = 0.0;
-                    NewLeaf.DoInitialisation();
-                    Leaves.Add(NewLeaf);
-                }
-
-                //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
-                double FinalFraction = 1;
-                if (Structure.MainStemFinalNodeNo - AppearedCohortNo <= 1)
-                    FinalFraction = FinalLeafFraction;
-                if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalFraction) && (FinalFraction > 0.0))
-                {
-
-                    if (CohortsInitialised == false)
-                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-                    int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalFraction));
-                    double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalFraction;
-                    if (AppearingNode > InitialisedCohortNo)
-                        throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
-                    int i = AppearingNode - 1;
-                    Leaves[i].Rank = AppearingNode;
-                    Leaves[i].CohortPopulation = Structure.TotalStemPopn;
-                    Leaves[i].Age = CohortAge;
-                    Leaves[i].DoAppearance(FinalFraction, CohortParameters);
-                    if (NewLeaf != null)
-                        NewLeaf.Invoke();
-                }
-
                 bool NextExpandingLeaf = false;
                 foreach (LeafCohort L in Leaves)
                 {
@@ -986,9 +946,9 @@ namespace Models.PMF.Organs
                         FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                     }
                 }
-                _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
-
+               
                 FRGR = FRGRFunction.Value;
+
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -997,27 +957,54 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             WaterDemand = 0;
             WaterAllocation = 0;
+            CohortsAtInitialisation = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
-        public virtual void InitialiseCohorts() //This sets up cohorts on the day growth starts (eg at emergence)
+        [EventSubscribe("InitialiseLeafCohorts")]
+        private void OnInitialiseLeafCohorts(object sender, EventArgs e) //This sets up cohorts (eg at germination)
         {
             Leaves = new List<LeafCohort>();
             CopyLeaves(InitialLeaves, Leaves);
             foreach (LeafCohort Leaf in Leaves)
             {
-                if (Leaf.Area > 0)//If initial cohorts have an area set the are considered to be appeared on day of emergence so we do appearance and count up the appeared nodes on the first day
-                {
-                    Leaf.CohortPopulation = Structure.TotalStemPopn;
-
-                    Leaf.DoInitialisation();
-                    Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0, CohortParameters);
-                }
-                else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
-                    Leaf.DoInitialisation();
-                Structure.MainStemPrimordiaNo += 1.0;
+                CohortsAtInitialisation += 1;
+                if (Leaf.Area > 0)
+                    TipsAtEmergence += 1;
+                Leaf.DoInitialisation();
             }
         }
+
+        /// <summary>Method to initialise new cohorts</summary>
+        [EventSubscribe("AddLeafCohort")]
+        private void OnAddLeafCohort(object sender, CohortInitParams InitParams)
+        {
+            if (CohortsInitialised == false)
+                throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+
+            LeafCohort NewLeaf = InitialLeaves[0].Clone();
+            NewLeaf.CohortPopulation = 0;
+            NewLeaf.Age = 0;
+            NewLeaf.Rank = InitParams.Rank;
+            NewLeaf.Area = 0.0;
+            NewLeaf.DoInitialisation();
+            Leaves.Add(NewLeaf);
+        }
+        /// <summary>Method to make leaf cohort appear and start expansion</summary>
+        [EventSubscribe("LeafTipAppearance")]
+        private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
+        {
+            if (CohortsInitialised == false)
+                throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
+            if (CohortParams.CohortToAppear > InitialisedCohortNo)
+                throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
+            int i = CohortParams.CohortToAppear - 1;
+            Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
+            Leaves[i].Age = CohortParams.CohortAge;
+            Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
+            if (NewLeaf != null)
+                NewLeaf.Invoke();
+        }
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1045,7 +1032,7 @@ namespace Models.PMF.Organs
         /// <summary>Zeroes the leaves.</summary>
         public virtual void ZeroLeaves()
         {
-            Structure.MainStemNodeNo = 0;
+            Structure.LeafTipsAppeared = 0;
             Structure.Clear();
             Leaves.Clear();
             Summary.WriteMessage(this, "Removing leaves from plant");
@@ -1062,6 +1049,39 @@ namespace Models.PMF.Organs
             return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
 
+        /// <summary>
+        /// remove biomass from the leaf.
+        /// </summary>
+        /// <param name="value">The frations of biomass to remove</param>
+        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        {
+            foreach (LeafCohort leaf in Leaves)
+            {
+                leaf.DoLeafBiomassRemoval(value);
+                DetachedWt += leaf.DetachedWt;
+                DetachedN += leaf.DetachedN;
+                RemovedWt += leaf.RemovedWt;
+                RemovedN += leaf.RemovedN;
+            }
+
+            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
+            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
+            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
+                                     + "% of " + Name + " Biomass from " + Plant.Name
+                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
+        }
+
+        /// <summary>
+        /// remove population elements from the leaf.
+        /// </summary>
+        /// <param name="ProportionRemoved">The proportion of stems removed by thinning</param>
+        public void DoThin(double ProportionRemoved)
+        {
+            foreach (LeafCohort leaf in Leaves)
+                leaf.DoThin(ProportionRemoved);
+        }
         #endregion
 
         #region Arbitrator methods
@@ -1073,6 +1093,10 @@ namespace Models.PMF.Organs
         {
             get
             {
+                if (DMConversionEfficiencyFunction == null)
+                    DMConversionEfficiency = 1;
+                else
+                    DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
                 double StructuralDemand = 0.0;
                 double NonStructuralDemand = 0.0;
                 double MetabolicDemand = 0.0;
@@ -1086,9 +1110,9 @@ namespace Models.PMF.Organs
                 {
                     foreach (LeafCohort L in Leaves)
                     {
-                        StructuralDemand += L.StructuralDMDemand;
-                        MetabolicDemand += L.MetabolicDMDemand;
-                        NonStructuralDemand += L.NonStructuralDMDemand;
+                        StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
+                        MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
+                        NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
                     }
                 }
                 return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
@@ -1143,7 +1167,7 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMPotentialsupply = value.Structural;
+                    double DMPotentialsupply = value.Structural * DMConversionEfficiency;
                     double DMPotentialallocated = 0;
                     double TotalPotentialDemand = 0;
                     foreach (LeafCohort L in Leaves)
@@ -1173,7 +1197,7 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMPotentialsupply = value.Metabolic;
+                    double DMPotentialsupply = value.Metabolic * DMConversionEfficiency;
                     double DMPotentialallocated = 0;
                     double TotalPotentialDemand = 0;
                     foreach (LeafCohort L in Leaves)
@@ -1229,8 +1253,14 @@ namespace Models.PMF.Organs
         {
             set
             {
-                double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
+                GrowthRespiration = 0;
 
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
+
+                double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
+                double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
                 double check = Live.StructuralWt;
                 //Structural DM allocation
                 if (DMDemand.Structural == 0)
@@ -1241,12 +1271,12 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMsupply = value.Structural;
+                    double DMsupply = value.Structural * DMConversionEfficiency;
                     double DMallocated = 0;
                     double TotalDemand = 0;
                     foreach (LeafCohort L in Leaves)
                         TotalDemand += L.StructuralDMDemand;
-                    double DemandFraction = (value.Structural) / TotalDemand;//
+                    double DemandFraction = (value.Structural * DMConversionEfficiency) / TotalDemand;//
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1258,7 +1288,7 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Structural) > 0.000000001)
+                    if ((DMallocated - value.Structural * DMConversionEfficiency) > 0.000000001)
                         throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1273,12 +1303,12 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-                    double DMsupply = value.Metabolic;
+                    double DMsupply = value.Metabolic * DMConversionEfficiency;
                     double DMallocated = 0;
                     double TotalDemand = 0;
                     foreach (LeafCohort L in Leaves)
                         TotalDemand += L.MetabolicDMDemand;
-                    double DemandFraction = (value.Metabolic) / TotalDemand;//
+                    double DemandFraction = (value.Metabolic * DMConversionEfficiency) / TotalDemand;//
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1290,7 +1320,7 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("Metabolic DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Metabolic) > 0.000000001)
+                    if ((DMallocated - value.Metabolic * DMConversionEfficiency) > 0.000000001)
                         throw new Exception("the sum of Metabolic DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1299,18 +1329,18 @@ namespace Models.PMF.Organs
                 double TotalSinkCapacity = 0;
                 foreach (LeafCohort L in Leaves)
                     TotalSinkCapacity += L.NonStructuralDMDemand;
-                if (value.NonStructural > TotalSinkCapacity)
+                if ((value.NonStructural * DMConversionEfficiency) > TotalSinkCapacity)
                 //Fixme, this exception needs to be turned on again
                 { }
                     //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
                 if (TotalSinkCapacity > 0.0)
                 {
-                    double SinkFraction = value.NonStructural / TotalSinkCapacity;
+                    double SinkFraction = (value.NonStructural * DMConversionEfficiency )/ TotalSinkCapacity;
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural);
+                        double Allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural * DMConversionEfficiency);
                         NonStructuralDMAllocationCohort[i] = Allocation;
                     }
                 }
@@ -1370,6 +1400,13 @@ namespace Models.PMF.Organs
                         Reallocation = DMReAllocationCohort[a],
                     };
                 }
+
+                double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
+                double CheckValue = StartWt + value.Structural*DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.NonStructural * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
+                double ExtentOfCockUp = Math.Abs(EndWt - CheckValue);
+                double FloatingPointError = 0.00000001;
+                if (ExtentOfCockUp > FloatingPointError)
+                    throw new Exception(Name + "Leaf DM allocation has gone squiffy");
             }
         }
         /// <summary>Gets or sets the water demand.</summary>
@@ -1380,7 +1417,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP;
+                return PotentialEP * FudgeToGetETDemandRight;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1429,6 +1466,8 @@ namespace Models.PMF.Organs
                     else
                         throw new Exception("Invalid allocation of N");
 
+                double StartN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
+
                 double[] StructuralNAllocationCohort = new double[Leaves.Count + 2];
                 double[] MetabolicNAllocationCohort = new double[Leaves.Count + 2];
                 double[] NonStructuralNAllocationCohort = new double[Leaves.Count + 2];
@@ -1438,8 +1477,7 @@ namespace Models.PMF.Organs
                 { }// do nothing
                 else
                 {
-
-
+                    
                     //setup allocation variables
                     double[] CohortNAllocation = new double[Leaves.Count + 2];
                     double[] StructuralNDemand = new double[Leaves.Count + 2];
@@ -1464,8 +1502,7 @@ namespace Models.PMF.Organs
                         }
                     }
                     double NSupplyValue = value.Structural;
-                    //double LeafNAllocated = 0;
-
+                    
                     // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for nonstructural growth)
                     if ((NSupplyValue > 0) & (TotalStructuralNDemand > 0))
                     {
@@ -1473,10 +1510,7 @@ namespace Models.PMF.Organs
                         foreach (LeafCohort L in Leaves)
                         {
                             i++;
-                            //double allocation = 0;
-                            //allocation = Math.Min(StructuralNDemand[i], NSupplyValue * (StructuralNDemand[i] / TotalStructuralNDemand));
                             StructuralNAllocationCohort[i] = Math.Min(StructuralNDemand[i], NSupplyValue * (StructuralNDemand[i] / TotalStructuralNDemand));
-                            //LeafNAllocated += allocation;
                         }
 
                     }
@@ -1488,10 +1522,7 @@ namespace Models.PMF.Organs
                         foreach (LeafCohort L in Leaves)
                         {
                             i++;
-                            //double allocation = 0;
-                            //allocation = Math.Min(MetabolicNDemand[i], NSupplyValue * (MetabolicNDemand[i] / TotalMetabolicNDemand));
                             MetabolicNAllocationCohort[i] = Math.Min(MetabolicNDemand[i], NSupplyValue * (MetabolicNDemand[i] / TotalMetabolicNDemand));
-                            //LeafNAllocated += allocation;
                         }
                     }
                     // then allocate excess N relative to leaves N sink capacity
@@ -1502,26 +1533,9 @@ namespace Models.PMF.Organs
                         foreach (LeafCohort L in Leaves)
                         {
                             i++;
-                            //double allocation = 0;
-                            //allocation = Math.Min(NonStructuralNDemand[i], NSupplyValue * (NonStructuralNDemand[i] / TotalNonStructuralNDemand));
                             NonStructuralNAllocationCohort[i] += Math.Min(NonStructuralNDemand[i], NSupplyValue * (NonStructuralNDemand[i] / TotalNonStructuralNDemand));
-                            //LeafNAllocated += allocation;
                         }
-                        //NSupplyValue = value.Structural - LeafNAllocated;
                     }
-
-                    //if (NSupplyValue > 0.0000000001)
-                    //    throw new Exception("N allocated to Leaf left over after allocation to leaf cohorts");
-                    //if ((LeafNAllocated - value.Structural) > 0.000000001)
-                    //    throw new Exception("the sum of N allocation to leaf cohorts is more that that allocated to leaf organ");
-
-                    //send N allocations to each cohort
-                    //i = 0;
-                    //foreach (LeafCohort L in Leaves)
-                    //{
-                    //    i++;
-                    //    L.NAllocation = CohortNAllocation[i];
-                    //}
                 }
 
                 // Retranslocation
@@ -1537,7 +1551,6 @@ namespace Models.PMF.Organs
                     {
                         i++;
                         double Retrans = Math.Min(remainder, L.LeafStartNRetranslocationSupply);
-                        //L.NRetranslocation = Retrans;
                         NRetranslocationCohort[i] = Retrans;
                         remainder = Math.Max(0.0, remainder - Retrans);
                     }
@@ -1558,7 +1571,6 @@ namespace Models.PMF.Organs
                     {
                         i++;
                         double ReAlloc = Math.Min(remainder, L.LeafStartNReallocationSupply);
-                        //L.NReallocation = ReAlloc;
                         NReallocationCohort[i] = ReAlloc;
                         remainder = Math.Max(0.0, remainder - ReAlloc);
                     }
@@ -1580,6 +1592,13 @@ namespace Models.PMF.Organs
                         Reallocation = NReallocationCohort[a],
                     };
                 }
+
+                double EndN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
+                double CheckValue = StartN + value.Structural + value.Metabolic + value.NonStructural - value.Reallocation - value.Retranslocation - value.Respired;
+                double ExtentOfCockUp = Math.Abs(EndN - CheckValue);
+                double FloatingPointError = 0.00000001;
+                if (ExtentOfCockUp > FloatingPointError)
+                    throw new Exception(Name + "Leaf N allocation has gone squiffy");
             }
         }
         /// <summary>Gets or sets the n supply.</summary>
@@ -1642,8 +1661,7 @@ namespace Models.PMF.Organs
             Summary.WriteMessage(this, "Removing lowest Leaf");
             Leaves.RemoveAt(0);
         }
-
-
+        
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1656,6 +1674,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                FudgeToGetETDemandRight = 1.0;
             }
         }
 
@@ -1683,14 +1702,10 @@ namespace Models.PMF.Organs
 
                 if (Wt > 0)
                     SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-
-                Structure.MainStemNodeNo = 0;
-                Structure.Clear();
                 Live.Clear();
                 Dead.Clear();
                 Leaves.Clear();
-                Structure.ResetStemPopn();
-                InitialiseCohorts();
+                CohortsAtInitialisation = 0;
             }
         }
 
@@ -1704,6 +1719,24 @@ namespace Models.PMF.Organs
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
+        }
+
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            CohortsAtInitialisation = 0;
         }
         #endregion
     }

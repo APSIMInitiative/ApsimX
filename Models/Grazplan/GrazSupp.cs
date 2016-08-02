@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Models.Grazplan
+namespace Models.GrazPlan
 {
     using Models.Core;
     using System;
@@ -859,7 +859,28 @@ namespace Models.Grazplan
             && (AshAlkalinity == otherSupp.AshAlkalinity)
             && (MaxPassage == otherSupp.MaxPassage);
         }
+
+        /// <summary>
+        /// Populates fields of this TSupplement from a SuppToStockType                            
+        /// </summary>
+        /// <param name="aValue"></param>
+        public void SetSuppAttrs(SuppToStockType aValue)
+        {
+            this.IsRoughage = aValue.IsRoughage;        // "roughage"                            
+            this.DM_Propn = aValue.DMContent;           // "dm_content"                          
+            this.DM_Digestibility = aValue.DMD;         // "dmd"                                 
+            this.ME_2_DM = aValue.MEContent;            // "me_content"                          
+            this.CrudeProt = aValue.CPConc;             // "cp_conc"                             
+            this.DgProt = aValue.ProtDg;                // "prot_dg"                             
+            this.Phosphorus = aValue.PConc;             // "p_conc"                              
+            this.Sulphur = aValue.SConc;                // "s_conc"                              
+            this.EtherExtract = aValue.EEConc;          // "ee_conc"                             
+            this.ADIP_2_CP = aValue.ADIP2CP;            // "adip2cp"                             
+            this.AshAlkalinity = aValue.AshAlk;         // "ash_alk"                             
+            this.MaxPassage = aValue.MaxPassage;        // "max_passage"                         
+        }
     }
+
 
     /// <summary>
     /// A record to allow us to hold amount and cost information along
@@ -1178,14 +1199,14 @@ namespace Models.Grazplan
         /// <summary>
         /// The property n_ attrs
         /// </summary>
-        static TSupplement.TSuppAttribute[] PROPN_ATTRS = { TSupplement.TSuppAttribute.spaDMP, 
-                                                            TSupplement.TSuppAttribute.spaDMD, 
-                                                            TSupplement.TSuppAttribute.spaEE, 
-                                                            TSupplement.TSuppAttribute.spaCP, 
-                                                            TSupplement.TSuppAttribute.spaDG, 
-                                                            TSupplement.TSuppAttribute.spaADIP, 
-                                                            TSupplement.TSuppAttribute.spaPH, 
-                                                            TSupplement.TSuppAttribute.spaSU, 
+        static TSupplement.TSuppAttribute[] PROPN_ATTRS = { TSupplement.TSuppAttribute.spaDMP,
+                                                            TSupplement.TSuppAttribute.spaDMD,
+                                                            TSupplement.TSuppAttribute.spaEE,
+                                                            TSupplement.TSuppAttribute.spaCP,
+                                                            TSupplement.TSuppAttribute.spaDG,
+                                                            TSupplement.TSuppAttribute.spaADIP,
+                                                            TSupplement.TSuppAttribute.spaPH,
+                                                            TSupplement.TSuppAttribute.spaSU,
                                                             TSupplement.TSuppAttribute.spaMaxP };
         /// <summary>
         /// Scales the attributes of the members of the supplement so that the weighted
@@ -1513,5 +1534,4 @@ namespace Models.Grazplan
         internal static TSupplementLibrary GDefSupp = null;
 
     }
-
 }

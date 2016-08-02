@@ -28,6 +28,11 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
+            Directory.CreateDirectory(tempFolder);
+            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+
             int exitCode = 0 ;
             try
             {
@@ -88,16 +93,17 @@ namespace Models
                     // pass the job to a job runner.
                     JobManager.IRunnable job;
                     if (fileName.Contains('*') || fileName.Contains('?'))
-                        job = Runner.ForFolder(fileName, args.Contains("/Recurse"));
+                        job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"));
                     else
-                        job = Runner.ForFile(fileName);
+                        job = Runner.ForFile(fileName, args.Contains("/RunTests"));
                     JobManager jobManager = new JobManager();
                     jobManager.AddJob(job);
                     jobManager.Start(waitUntilFinished: true);
 
-                    if (jobManager.SomeHadErrors)
+                    List<Exception> errors = jobManager.Errors(job);
+                    if (errors.Count > 0)
                     {
-                        Console.WriteLine(job.ErrorMessage);
+                        errors.ForEach(e => Console.WriteLine(e.ToString() + Environment.NewLine));
                         exitCode = 1;
                     }
                     else
@@ -128,9 +134,10 @@ namespace Models
             Simulations simulations = Simulations.Read(fileName);
 
             // Don't use JobManager - just run the simulations.
-            Simulation[] simulationsToRun = Simulations.FindAllSimulationsToRun(simulations);
-            foreach (Simulation simulation in simulationsToRun) 
-                simulation.Run(null, null);
+            JobManager.IRunnable simulationsToRun = Runner.ForSimulations(simulations, simulations, false);
+            JobManager jobManager = new JobManager();
+            jobManager.AddJob(simulationsToRun);
+            jobManager.Run();
         }
 
         /// <summary>

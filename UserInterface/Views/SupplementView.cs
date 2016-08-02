@@ -6,7 +6,7 @@
 
 namespace UserInterface.Views
 {
-    using Models.Grazplan;   // For access to the TSuppAttribute enumeration
+    using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

@@ -4,6 +4,7 @@
     using Models.Soils;
     using Models.Core;
     using PMF.Interfaces;
+    using System.Collections.Generic;
 
     /// <summary>
     /// An event arguments class for some events.
@@ -15,7 +16,31 @@
         /// </summary>
         public IModel Model;
     }
+    /// <summary>
+    /// Data passed to leaf tip appearance occurs.
+    /// </summary>
+    [Serializable]
+    public class ApparingLeafParams : EventArgs
+    {
+        /// <summary>The numeric rank of the cohort appaeraing</summary>
+        public int CohortToAppear { get; set; }
+        /// <summary>The populations of leaves in the appearing cohort</summary>
+        public double TotalStemPopn { get; set; }
+        /// <summary>The Tt age of the the cohort appearing</summary>
+        public double CohortAge { get; set; }
+        /// <summary>The proportion of the cohort appearing if final cohort</summary>
+        public double FinalFraction { get; set; }
+    }
 
+    /// <summary>
+    /// Data passed to leaf tip appearance occurs.
+    /// </summary>
+    [Serializable]
+    public class CohortInitParams : EventArgs
+    {
+        /// <summary>The numeric rank of the cohort appaeraing</summary>
+        public int Rank { get; set; }
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -147,6 +172,23 @@
         /// <summary>The fraction_to_residue</summary>
         public Single[] fraction_to_residue;
     }
+
+    /// <summary>
+    /// Event arguments when biomass is removed.
+    /// </summary>
+    public class RemovingBiomassArgs : EventArgs
+    {
+        /// <summary>
+        /// Type of biomass removal.
+        /// </summary>
+        public string biomassRemoveType;
+
+        /// <summary>
+        /// Removal fractions for each organ.
+        /// </summary>
+        public Dictionary<string, OrganBiomassRemovalType> removalData = new Dictionary<string, OrganBiomassRemovalType>();
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -158,26 +200,54 @@
         public String crop_type = "";
     }
 
-    ///<summary>Data passed to each organ when a biomass remove event occurs.  The proportion of biomass removed from each organ is the sum of the FractionRemoved and the FractionToRedidues</summary>
+    ///<summary>Data passed to each organ when a biomass remove event occurs.  The proportion of biomass to be removed from each organ is the sum of the FractionToRemove and the FractionToRedidues</summary>
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    public class OrganBiomassRemovalType
+    public class OrganBiomassRemovalType : Model
     {
         /// <summary>
-        /// The name of each organ
+        /// The amount of live biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        public string NameOfOrgan { get; set; }
+        [Description("Fraction of live biomass to remove from plant (lost to system)")]
+        public double FractionLiveToRemove { get; set; }
+
         /// <summary>
-        /// The amount of biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
+        /// The amount of dead biomass taken from each organ and removeed from the zone on harvest, cut, graze or prune.
         /// </summary>
-        public double FractionRemoved { get; set; }
+        [Description("Fraction of dead biomass to remove from plant (lost to system)")]
+        public double FractionDeadToRemove { get; set; }
+
         /// <summary>
-        /// The amount of biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
+        /// The amount of live biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        public double FractionToResidue { get; set; }
+        [Description("Fraction of live biomass to remove from plant (and send to surface organic matter")]
+        public double FractionLiveToResidue { get; set; }
+
         /// <summary>
-        /// Removal method specifies for cohorted organs (leaf) if biomass removal events take biomass from the top, bottom or side of cohorts.
+        /// The amount of dead biomass to removed from each organ and passed to residue pool on on harvest, cut, graze or prune
         /// </summary>
-        public string RemovalMethod { get; set; }
+        [Description("Fraction of dead biomass to remove from plant (and send to surface organic matter")]
+        public double FractionDeadToResidue { get; set; }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            double totalPercent = (FractionLiveToRemove + FractionLiveToResidue) * 100;
+
+            string text = "If a **" + Name.ToLower() + "** is performed and no fractions are specified then " + totalPercent + "% of " +
+                           Parent.Parent.Name.ToLower() + " biomass will be removed";
+            if (FractionLiveToResidue == 0)
+                text += " with none of it going to the surface organic matter pool";
+            else if (FractionLiveToRemove == 0)
+                text += " with all of it going to the surface organic matter pool";
+            else
+                text += " with " + (FractionLiveToResidue * 100) + "% of it going to the surface organic matter pool";
+            tags.Add(new AutoDocumentation.Paragraph(text, indent));
+        }
     }
 
     ///<summary>Data structure to hold removal and residue returns fractions for all plant organs</summary>
@@ -187,71 +257,77 @@
         /// <summary>
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
-        public OrganBiomassRemovalType[] OrganList {get; set;}
+        private Dictionary<string, OrganBiomassRemovalType> removalValues = new Dictionary<string, OrganBiomassRemovalType>();
+        /// <summary>
+        /// The Phenological stage that biomass removal resets phenology to.
+        ///</summary>
+        public double SetThinningProportion { get; set; }
 
         /// <summary>
         /// The Phenological stage that biomass removal resets phenology to.
         ///</summary>
-        public double PhenologyStageSet { get; set; }
+        public double SetPhenologyStage { get; set; }
 
-        ///<summary>
-        ///Method to construct list
+        /// <summary>
+        /// Method to set the FractionToRemove for specified Organ
         ///</summary>
-        public RemovalFractions(IOrgan[] Organs)
+        public void SetFractionToRemove(string organName, double fraction, string biomassType = "live")
         {
-            OrganList = new OrganBiomassRemovalType[Organs.Length];
-            int k = 0;
-            foreach (IOrgan o in Organs)
+            if (removalValues.ContainsKey(organName))
             {
-                OrganList[k] = new OrganBiomassRemovalType();
-                OrganList[k].NameOfOrgan = o.Name;
-                k += 1;
+                if (biomassType.ToLower() == "live")
+                    removalValues[organName].FractionLiveToRemove = fraction;
+                else if (biomassType.ToLower() == "dead")
+                    removalValues[organName].FractionDeadToRemove = fraction;
+                else
+                    throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
             }
-        }
-
-        ///<summary>
-        ///Default constructor
-        ///</summary>
-        public RemovalFractions() { }
-
-        /// <summary>
-        /// Method to set the FractionRemoved for specified Organ
-        ///</summary>
-        public void SetPhenologyStage(double NewStage)
-        {
-            PhenologyStageSet = NewStage;
-        }
-
-        /// <summary>
-        /// Method to set the FractionRemoved for specified Organ
-        ///</summary>
-        public void SetFractionRemoved(string organName, double Fraction)
-        {
-            bool Matchfound = false;
-            foreach (OrganBiomassRemovalType r in OrganList)
-                if (String.Equals(r.NameOfOrgan, organName, StringComparison.OrdinalIgnoreCase))
-                {
-                    r.FractionRemoved = Fraction;
-                    Matchfound = true;
-                }
-            if (Matchfound == false)
-            throw new Exception("The plant model could not find an organ with a name that matches " + organName+ " when matching FractionRemoved. Check your spelling?");
+            else
+            {
+                if (biomassType.ToLower() == "live")
+                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToRemove = fraction });
+                else if (biomassType.ToLower() == "dead")
+                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToRemove = fraction });
+                else
+                    throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
+            }
         }
         
         /// <summary>
         /// Method to set the FractionToResidue for specified Organ
         ///</summary>
-        public void SetFractionToResidue(string organName, double Fraction)
+        public void SetFractionToResidue(string organName, double fraction, string biomassType = "live")
         {
-            bool Matchfound = false;
-            foreach (OrganBiomassRemovalType r in OrganList)
-                if (String.Equals(r.NameOfOrgan, organName, StringComparison.OrdinalIgnoreCase))
-                {
-                    r.FractionToResidue = Fraction;
-                    Matchfound = true;
-                }
-            if (Matchfound == false)
-            throw new Exception("The plant model could not find an organ with a name that matches " + organName + " when matching FractionToResidue. Check your spelling?");
+            if (removalValues.ContainsKey(organName))
+            {
+                if (biomassType.ToLower() == "live")
+                    removalValues[organName].FractionLiveToResidue = fraction;
+                else if (biomassType.ToLower() == "dead")
+                    removalValues[organName].FractionDeadToResidue = fraction;
+                else
+                    throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+            }
+            else
+            {
+                if (biomassType.ToLower() == "live")
+                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToResidue = fraction });
+                else if (biomassType.ToLower() == "dead")
+                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToResidue = fraction });
+                else
+                    throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+            }
+        }
+
+        /// <summary>
+        /// Gets the removal fractions for the specified organ or null if not found.
+        /// </summary>
+        /// <param name="organName">The organ name to look for.</param>
+        public OrganBiomassRemovalType GetFractionsForOrgan(string organName)
+        {
+            if (removalValues.ContainsKey(organName))
+                return removalValues[organName];
+            else
+                return null;
         }
     }
 }

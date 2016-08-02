@@ -12,6 +12,7 @@ namespace Models.Soils
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Interfaces;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -120,7 +121,7 @@ namespace Models.Soils
         public string Comments { get; set; }
 
         /// <summary>Gets the soil water.</summary>
-        [XmlIgnore] public SoilWater SoilWater { get; private set; }
+        [XmlIgnore] public ISoilWater SoilWater { get; private set; }
 
         /// <summary>Gets the soil organic matter.</summary>
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
@@ -149,7 +150,7 @@ namespace Models.Soils
         {
             waterNode = Apsim.Child(this, typeof(Water)) as Water;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
-            SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
+            SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
             }
@@ -869,9 +870,11 @@ namespace Models.Soils
         }
 
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
+        [XmlIgnore]
         public double[] NO3N { get { return SoilNitrogen.NO3; } set { SoilNitrogen.NO3 = value; } }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
+        [XmlIgnore]
         public double[] NH4N { get { return SoilNitrogen.NH4; } }
 
         /// <summary>Gets the temperature of each layer</summary>

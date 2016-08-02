@@ -10,19 +10,19 @@ using UserInterface.Presenters;
 /// </summary>
 public class Script
 {
-    public void Execute(TabbedExplorerPresenter tabbedExplorerPresenter)
+    public void Execute(MainPresenter mainPresenter)
     {
         // Open the standard toolbox in a tab
-        tabbedExplorerPresenter.OnStandardToolboxClick(null, null);
+        mainPresenter.OnStandardToolboxClick(null, null);
     
         // Get the presenter for this tab.
-        ExplorerPresenter presenter = tabbedExplorerPresenter.Presenters[0];
+        ExplorerPresenter presenter = mainPresenter.presenters1[0];
     
         // Loop through all nodes in the standard toolbox and select each in turn.
         while (presenter.SelectNextNode());
         
         // Close the user interface.
-        tabbedExplorerPresenter.Close();
+        mainPresenter.Close(askToSave:false);
     }
 
 

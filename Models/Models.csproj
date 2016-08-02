@@ -134,24 +134,39 @@
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Runner.cs" />
+    <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
+    <Compile Include="Core\Runners\RunClonedSimulation.cs" />
+    <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
+    <Compile Include="Core\Runners\RunExternal.cs" />
+    <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
+    <Compile Include="IClock.cs" />
+    <Compile Include="IIrrigation.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
+    <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\MovingAverage.cs" />
     <Compile Include="Plant\Functions\HoldFunction.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
+    <Compile Include="Plant\Phenology\QualitativePPEffect.cs" />
+    <Compile Include="Plant\Phenology\VernalisationC.cs" />
     <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
@@ -206,6 +221,7 @@
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\MultiPoreWater.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
@@ -216,6 +232,24 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="Stock\animgrp.cs" />
+    <Compile Include="Stock\animprm.cs" />
+    <Compile Include="Stock\grazenv.cs" />
+    <Compile Include="Stock\grazparam.cs" />
+    <Compile Include="Stock\grazprmread.cs" />
+    <Compile Include="Stock\graztype.cs" />
+    <Compile Include="Stock\sdmlpsr.cs" />
+    <Compile Include="Stock\stddate.cs" />
+    <Compile Include="Stock\stdmath.cs" />
+    <Compile Include="Stock\stdstrng.cs" />
+    <Compile Include="Stock\stock.cs" />
+    <Compile Include="Stock\stock_ent.cs" />
+    <Compile Include="Stock\stock_intf.cs" />
+    <Compile Include="Stock\stock_manage.cs" />
+    <Compile Include="Stock\stock_padd.cs" />
+    <Compile Include="Stock\stock_vars.cs" />
+    <Compile Include="Stock\typedval.cs" />
+    <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />
@@ -271,7 +305,6 @@
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
     <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\MainStemFinalNodeNumberFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
@@ -367,12 +400,39 @@
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="WaterModel\CNReductionForCover.cs" />
+    <Compile Include="WaterModel\CNReductionForTillage.cs" />
+    <Compile Include="WaterModel\Conversions.cs" />
+    <Compile Include="WaterModel\EvaporationModel.cs" />
+    <Compile Include="WaterModel\ISoil.cs" />
+    <Compile Include="WaterModel\LateralFlow.cs" />
+    <Compile Include="WaterModel\Runoff.cs" />
+    <Compile Include="WaterModel\SaturatedFlow.cs" />
+    <Compile Include="WaterModel\Soil.cs" />
+    <Compile Include="WaterModel\UnsaturatedFlow.cs" />
+    <Compile Include="WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
+    <Compile Include="WholeFarm\IResource.cs" />
+    <Compile Include="WholeFarm\RuminantTypeCohort.cs" />
+    <Compile Include="WholeFarm\RuminantType.cs" />
+    <Compile Include="WholeFarm\RuminantHerd.cs" />
+    <Compile Include="WholeFarm\PastureType.cs" />
+    <Compile Include="WholeFarm\Pasture.cs" />
+    <Compile Include="WholeFarm\FoodStoreType.cs" />
+    <Compile Include="WholeFarm\FoodStore.cs" />
+    <Compile Include="WholeFarm\Fodder.cs" />
+    <Compile Include="WholeFarm\FodderType.cs" />
+    <Compile Include="WholeFarm\LandType.cs" />
+    <Compile Include="WholeFarm\Land.cs" />
+    <Compile Include="WholeFarm\LabourFamily.cs" />
+    <Compile Include="WholeFarm\LabourFamilyType.cs" />
+    <Compile Include="WholeFarm\LabourHired.cs" />
+    <Compile Include="WholeFarm\LabourHiredType.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
@@ -411,6 +471,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\ruminant.prm" />
     <None Include="Resources\Wheat.xml">
       <SubType>Designer</SubType>
     </None>
@@ -435,12 +496,15 @@
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Resources\SCUM.xml" />
+    <None Include="Resources\SCRUM.xml" />
     <None Include="Resources\Slurp.xml" />
     <None Include="Resources\Supplement.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Soils\MultiPoreWater\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

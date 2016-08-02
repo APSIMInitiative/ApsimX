@@ -42,8 +42,15 @@ namespace Utility
                 string summaryJpg = Path.Combine(ConfigurationFolder, "ApsimSummary.png");
                 if (!File.Exists(summaryJpg))
                 {
-                    Bitmap b = UserInterface.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
-                    b.Save(summaryJpg);
+                    try
+                    {
+                        Bitmap b = UserInterface.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
+                        b.Save(summaryJpg);
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 return summaryJpg;
             }
@@ -182,7 +189,7 @@ namespace Utility
                     instance.PreviousFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 }
 
-                instance.FilesInHistory = 10;
+                instance.FilesInHistory = 20;
                 instance.ConfigurationFile = ConfigurationFile;
                 return instance;
             }

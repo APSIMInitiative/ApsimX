@@ -125,7 +125,7 @@ namespace Models.PMF.Phen
                 if (Phenology.CurrentPhaseName == "Emerging")
                     DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this
                 else
-                    DeltaHaunStage = Structure.DeltaNodeNumber;
+                    DeltaHaunStage = Structure.DeltaTipNumber;
 
                 //Pre-Vernalisation lag, determine the repression of Vrn4
                 if (IsPreVernalised == false)
@@ -146,7 +146,7 @@ namespace Models.PMF.Phen
                 //Update Vernalisation target to reflect photoperiod conditions and determine Vernalisation status
                 if ((IsVernalised == false) && (Vrn1Target <= 1.0))
                 {
-                    if (Structure.MainStemNodeNo >= 1.1)
+                    if (Structure.LeafTipsAppeared >= 1.1)
                     {
                         Vrn2 += Vrn2rate.Value * DeltaHaunStage;
                         Vrn1Target = Math.Min(1.0, BaseVrn1Target + Vrn2);
@@ -165,12 +165,12 @@ namespace Models.PMF.Phen
                 if ((Vrn3 >= 0.3) && (IsInduced == false))
                 {
                     IsInduced = true;
-                    FIHS = Structure.MainStemNodeNo;
+                    FIHS = Structure.LeafTipsAppeared;
                 }
                 if ((Vrn3 >= 1.0) && (IsReproductive == false))
                 {
                     IsReproductive = true;
-                    TSHS = Structure.MainStemNodeNo + 1.0;
+                    TSHS = Structure.LeafTipsAppeared + 1.0;
                     FLN = 2.86 + 1.1 * TSHS;
                 }
             }

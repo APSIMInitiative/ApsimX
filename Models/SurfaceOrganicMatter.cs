@@ -1356,6 +1356,9 @@
 
         #region published events
 
+        /// <summary>Published when a tillage has been completed.</summary>
+        public event TillageTypeDelegate TillageCompleted;
+
         /// <summary>Occurs when [external mass flow].</summary>
         public event Models.Soils.SoilNitrogen.ExternalMassFlowDelegate ExternalMassFlow;
         /// <summary>Publishes the external mass flow.</summary>
@@ -1550,13 +1553,6 @@
 
         /// <summary>The initialised</summary>
         bool initialised = false;
-
-        /// <summary>Called when [tillage].</summary>
-        /// <param name="data">The data.</param>
-        public void OnTillage(TillageType data)
-        {
-            Tillage(data);
-        }
 
         /// <summary>
         /// 
@@ -1758,8 +1754,7 @@
 
         /// <summary>Called when [add faeces].</summary>
         /// <param name="data">The data.</param>
-        [EventSubscribe("AddFaeces")]
-        private void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
+        public void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
         #endregion
 
@@ -2600,6 +2595,10 @@
     @"Residue removed using {0}
     Fraction Incorporated = {1:0.0##}
     Incorporated Depth    = {2:0.0##}", data.Name, data.f_incorp, data.tillage_depth));
+
+            // publish tillage event.
+            if (TillageCompleted != null)
+                TillageCompleted.Invoke(this, data);
         }
 
         /// <summary>
@@ -2931,7 +2930,7 @@
         /// an alternative to using add_surfaceom directly
         /// </summary>
         /// <param name="data">structure holding description of the added faeces</param>
-        private void AddFaeces(AddFaecesType data)
+        public void AddFaeces(AddFaecesType data)
         {
             string Manure = "manure";
             Add((double)(data.OMWeight * FractionFaecesAdded),

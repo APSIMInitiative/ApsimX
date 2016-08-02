@@ -11,7 +11,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Clock : Model
+    public class Clock : Model, IClock
     {
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
@@ -97,6 +97,31 @@ namespace Models
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
+        /// <summary> Process stock methods in GrazPlan Stock </summary>
+        public event EventHandler DoStock;
+
+
+        /// <summary>WholeFarm Activities Request Resources for this month</summary>
+        public event EventHandler WFRequestResources;
+        /// <summary>WholeFarm Resources do Arbitration based on what Activities have asked for it's resource</summary>
+        public event EventHandler WFDoResourceAllocation;
+        /// <summary>WholeFarm Activities now make decisions based on the resources they were given this month</summary>
+        public event EventHandler WFResourcesAllocated;
+        /// <summary>WholeFarm Calculate Ruminant Animals actual intake from the amount given by the Pasture Resource</summary>
+        public event EventHandler WFRuminantGraze;
+        /// <summary>WholeFarm Calculate Animals (Ruminant and Other) actual intake from amount give by the Fodder Resource</summary>
+        public event EventHandler WFAnimalFeed;
+        /// <summary>WholeFarm Calculate Animals (Ruminant and Other) Growth</summary>
+        public event EventHandler WFAnimalGrowth;
+        /// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding</summary>
+        public event EventHandler WFAnimalBreed;
+        /// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+        public event EventHandler WFAnimalManageHerd;
+        /// <summary>WholeFarm Trade Animals (Ruminant and Other)</summary>
+        public event EventHandler WFAnimalTrade;
+        /// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+        public event EventHandler WFAgeResources;
+
 
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
@@ -117,10 +142,8 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, EventArgs e)
+        private void OnDoCommence(object sender, Simulation.CommenceArgs e)
         {
-            System.ComponentModel.BackgroundWorker bw = sender as System.ComponentModel.BackgroundWorker;
-
             if (DoInitialSummary != null)
                 DoInitialSummary.Invoke(this, args);
 
@@ -130,7 +153,7 @@ namespace Models
             while (Today <= EndDate)
             {
                 // If this is being run on a background worker thread then check for cancellation
-                if (bw != null && bw.CancellationPending)
+                if (e.workerThread.CancellationPending)
                 {
                     Summary.WriteMessage(this, "Simulation cancelled");
                     return;
@@ -146,7 +169,30 @@ namespace Models
                     StartOfDay.Invoke(this, args);
 
                 if (Today.Day == 1 && StartOfMonth != null)
+                {
                     StartOfMonth.Invoke(this, args);
+
+                    if (WFRequestResources != null)
+                        WFRequestResources.Invoke(this, args);
+                    if (WFDoResourceAllocation != null)
+                        WFDoResourceAllocation.Invoke(this, args);
+                    if (WFResourcesAllocated != null)
+                        WFResourcesAllocated.Invoke(this, args);
+                    if (WFRuminantGraze != null)
+                        WFRuminantGraze.Invoke(this, args);
+                    if (WFAnimalFeed != null)
+                        WFAnimalFeed.Invoke(this, args);
+                    if (WFAnimalGrowth != null)
+                        WFAnimalGrowth.Invoke(this, args);
+                    if (WFAnimalBreed != null)
+                        WFAnimalBreed.Invoke(this, args);
+                    if (WFAnimalManageHerd != null)
+                        WFAnimalManageHerd.Invoke(this, args);
+                    if (WFAnimalTrade != null)
+                        WFAnimalTrade.Invoke(this, args);
+                    if (WFAgeResources != null)
+                        WFAgeResources.Invoke(this, args);
+                }
 
                 if (Today.DayOfYear == 1 && StartOfYear != null)
                     StartOfYear.Invoke(this, args);
@@ -202,6 +248,9 @@ namespace Models
 
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
+
+                if (DoStock != null)
+                    DoStock.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);

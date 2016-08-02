@@ -50,7 +50,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return 1.0 - Math.Exp(-K * LAI);
+                return Math.Min(1.0 - Math.Exp(-K * LAI), 0.999999999);
             }
         }
         
@@ -196,7 +196,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             EP = 0;
         }

@@ -148,10 +148,6 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            // Get a list of all child models that we need to notify about the (de)serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively(model);
-            modelsToNotify.Add(model);
-
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
             model.Parent = null;
@@ -160,37 +156,47 @@ namespace Models.Core
             Stream stream = new MemoryStream();
             using (stream)
             {
-                object[] args = new object[] { false };
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Serialising", args);
-                }
-
                 formatter.Serialize(stream, model);
-
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Serialised", args);
-                }
-
                 stream.Seek(0, SeekOrigin.Begin);
-
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Deserialising", args);
-                }
-
                 IModel returnObject = (IModel)formatter.Deserialize(stream);
-                foreach (IModel modelToNotify in modelsToNotify)
-                {
-                    CallEventHandler(modelToNotify, "Deserialised", args);
-                }
 
                 // Reinstate parent
                 model.Parent = parent;
 
                 return returnObject;
             }
+        }
+
+        /// <summary>
+        /// Perform a deep serialise of the model.
+        /// </summary>
+        /// <param name="model">The model to clone</param>
+        /// <returns>The model serialised to a stream.</returns>
+        public static Stream SerialiseToStream(IModel model)
+        {
+            // Get rid of our parent temporarily as we don't want to serialise that.
+            IModel parent = model.Parent;
+            model.Parent = null;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+
+            formatter.Serialize(stream, model);
+            return stream;
+        }
+
+        /// <summary>
+        /// Deserialise a model from a stream.
+        /// </summary>
+        /// <param name="stream">The stream to deserialise from.</param>
+        /// <returns>The newly created model</returns>
+        public static IModel DeserialiseFromStream(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+
+            IFormatter formatter = new BinaryFormatter();
+            IModel model = (IModel)formatter.Deserialize(stream);
+            return model;
         }
 
         /// <summary>Adds a new model (as specified by the xml node) to the specified parent.</summary>
@@ -211,9 +217,7 @@ namespace Models.Core
                 CallEventHandler(modelToNotify, "Deserialised", args);
 
             // Corrently parent all models.
-            modelToAdd.Parent = parent;
-            Apsim.ParentAllChildren(modelToAdd);
-            parent.Children.Add(modelToAdd as Model);
+            Add(parent, modelToAdd);
 
             // Ensure the model name is valid.
             Apsim.EnsureNameIsUnique(modelToAdd);
@@ -226,6 +230,16 @@ namespace Models.Core
             Locator(parent).Clear();
 
             return modelToAdd;
+        }
+
+        /// <summary>Add the specified model to the parent.</summary>
+        /// <param name="parent">The parent model</param>
+        /// <param name="modelToAdd">The child model.</param>
+        public static void Add(IModel parent, IModel modelToAdd)
+        {
+            modelToAdd.Parent = parent;
+            Apsim.ParentAllChildren(modelToAdd);
+            parent.Children.Add(modelToAdd as Model);
         }
 
         /// <summary>Deletes the specified model.</summary>
