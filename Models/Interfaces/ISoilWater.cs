@@ -15,6 +15,8 @@ namespace Models.Interfaces
     /// </summary>
     public interface ISoilWater
     {
+        /// <summary>The amount of rainfall intercepted by surface residues</summary>
+        double residueinterception { get; set; }
         ///<summary> Who knows</summary>
         string act_evap_method { get; set; }
         ///<summary> Who knows</summary>

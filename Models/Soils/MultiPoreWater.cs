@@ -29,6 +29,8 @@ namespace Models.Soils
     {
 
         #region Soil Water Interface
+        /// <summary>The amount of rainfall intercepted by surface residues</summary>
+        public double residueinterception { get; set; }
         ///<summary> Who knows</summary>
         public string act_evap_method { get; set; }
         ///<summary> Who knows</summary>

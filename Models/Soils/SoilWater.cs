@@ -1676,7 +1676,7 @@ namespace Models.Soils
         /// The residueinterception
         /// </summary>
         [Units("mm")]
-        public double residueinterception;     //residue interception loss (mm)
+        public double residueinterception { get; set; }     //residue interception loss (mm)
 
 
 
