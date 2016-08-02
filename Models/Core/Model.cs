@@ -84,6 +84,7 @@ namespace Models.Core
         [XmlElement(typeof(Memo))]
         [XmlElement(typeof(Folder))]
         [XmlElement(typeof(Replacements))]
+        [XmlElement(typeof(Soils.MultiPoreWater))]
         [XmlElement(typeof(Soils.Water))]
         [XmlElement(typeof(Soils.SoilCrop))]
         [XmlElement(typeof(Soils.SoilCropOilPalm))]
