@@ -32,9 +32,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public string act_evap_method { get; set; }
         ///<summary> Who knows</summary>
-        public double[] AIRDRY { get; }
+        public double[] AIRDRY { get; set; }
         ///<summary> Who knows</summary>
-        public double[] AIRDRYmm { get; }
+        public double[] AIRDRYmm { get; set; }
         ///<summary> Who knows</summary>
         public double A_to_evap_fact { get; set; }
         ///<summary> Who knows</summary>
@@ -50,7 +50,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double CN2Bare { get; set; }
         ///<summary> Who knows</summary>
-        public double cn2_new { get; }
+        public double cn2_new { get; set; }
         ///<summary> Who knows</summary>
         public double CNCov { get; set; }
         ///<summary> Who knows</summary>
@@ -64,35 +64,35 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double discharge_width { get; set; }
         ///<summary> Who knows</summary>
-        public double[] dlayer { get; }
+        public double[] dlayer { get; set; }
         ///<summary> Who knows</summary>
         public double[] dlt_sw { get; set; }
         ///<summary> Who knows</summary>
         public double[] dlt_sw_dep { get; set; }
         ///<summary> Who knows</summary>
-        public double Drainage { get; }
+        public double Drainage { get; set; }
         ///<summary> Who knows</summary>
-        public double[] DUL { get; }
+        public double[] DUL { get; set; }
         ///<summary> Who knows</summary>
-        public double[] DULmm { get; }
+        public double[] DULmm { get; set; }
         ///<summary> Who knows</summary>
-        public double Eo { get; }
+        public double Eo { get; set; }
         ///<summary> Who knows</summary>
-        public double Eos { get; }
+        public double Eos { get; set; }
         ///<summary> Who knows</summary>
-        public double Es { get; }
+        public double Es { get; set; }
         ///<summary> Who knows</summary>
-        public double ESW { get; }
+        public double ESW { get; set; }
         ///<summary> Who knows</summary>
-        public double[] flow { get; }
+        public double[] flow { get; set; }
         ///<summary> Who knows</summary>
-        public double[] flow_nh4 { get; }
+        public double[] flow_nh4 { get; set; }
         ///<summary> Who knows</summary>
-        public double[] flow_no3 { get; }
+        public double[] flow_no3 { get; set; }
         ///<summary> Who knows</summary>
-        public double[] flow_urea { get; }
+        public double[] flow_urea { get; set; }
         ///<summary> Who knows</summary>
-        public double[] flux { get; }
+        public double[] flux { get; set; }
         ///<summary> Who knows</summary>
         public double gravity_gradient { get; set; }
         ///<summary> Who knows</summary>
@@ -100,21 +100,21 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public string[] immobile_solutes { get; set; }
         ///<summary> Who knows</summary>
-        public double Infiltration { get; }
+        public double Infiltration { get; set; }
         ///<summary> Who knows</summary>
-        public int IrrigLayer { get; }
+        public int IrrigLayer { get; set; }
         ///<summary> Who knows</summary>
         public double[] KLAT { get; set; }
         ///<summary> Who knows</summary>
-        public double LeachNH4 { get; }
+        public double LeachNH4 { get; set; }
         ///<summary> Who knows</summary>
-        public double LeachNO3 { get; }
+        public double LeachNO3 { get; set; }
         ///<summary> Who knows</summary>
-        public double LeachUrea { get; }
+        public double LeachUrea { get; set; }
         ///<summary> Who knows</summary>
-        public double[] LL15 { get; }
+        public double[] LL15 { get; set; }
         ///<summary> Who knows</summary>
-        public double[] LL15mm { get; }
+        public double[] LL15mm { get; set; }
         ///<summary> Who knows</summary>
         ///<summary> Who knows</summary>
         public double max_albedo { get; set; }
@@ -127,19 +127,19 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public string[] mobile_solutes { get; set; }
         ///<summary> Who knows</summary>
-        public double[] outflow_lat { get; }
+        public double[] outflow_lat { get; set; }
         ///<summary> Who knows</summary>
-        public double pond { get; }
+        public double pond { get; set; }
         ///<summary> Who knows</summary>
-        public double pond_evap { get; }
+        public double pond_evap { get; set; }
         ///<summary> Who knows</summary>
-        public double Runoff { get; }
+        public double Runoff { get; set; }
         ///<summary> Who knows</summary>
         public double Salb { get; set; }
         ///<summary> Who knows</summary>
-        public double[] SAT { get; }
+        public double[] SAT { get; set; }
         ///<summary> Who knows</summary>
-        public double[] SATmm { get; }
+        public double[] SATmm { get; set; }
         ///<summary> Who knows</summary>
         public double slope { get; set; }
         ///<summary> Who knows</summary>
@@ -167,7 +167,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double sw_top_crit { get; set; }
         ///<summary> Who knows</summary>
-        public double t { get; }
+        public double t { get; set; }
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
         ///<summary> Who knows</summary>
