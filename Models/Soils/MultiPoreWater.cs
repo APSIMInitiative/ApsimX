@@ -32,43 +32,19 @@ namespace Models.Soils
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         public double residueinterception { get; set; }
         ///<summary> Who knows</summary>
-        public string act_evap_method { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] AIRDRY { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] AIRDRYmm { get; set; }
-        ///<summary> Who knows</summary>
-        public double A_to_evap_fact { get; set; }
-        ///<summary> Who knows</summary>
-        public double canopy_eos_coef { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] canopy_fact { get; set; }
-        ///<summary> Who knows</summary>
-        public double canopy_fact_default { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] canopy_fact_height { get; set; }
-        ///<summary> Who knows</summary>
         public double catchment_area { get; set; }
         ///<summary> Who knows</summary>
         public double CN2Bare { get; set; }
         ///<summary> Who knows</summary>
-        public double cn2_new { get; set; }
-        ///<summary> Who knows</summary>
         public double CNCov { get; set; }
         ///<summary> Who knows</summary>
         public double CNRed { get; set; }
-        ///<summary> Who knows</summary>
-        public string[] Depth { get; set; }
         ///<summary> Who knows</summary>
         public double DiffusConst { get; set; }
         ///<summary> Who knows</summary>
         public double DiffusSlope { get; set; }
         ///<summary> Who knows</summary>
         public double discharge_width { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] dlayer { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] dlt_sw { get; set; }
         ///<summary> Who knows</summary>
         public double[] dlt_sw_dep { get; set; }
         ///<summary> Who knows</summary>
@@ -98,13 +74,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double gravity_gradient { get; set; }
         ///<summary> Who knows</summary>
-        public double hydrol_effective_depth { get; set; }
-        ///<summary> Who knows</summary>
-        public string[] immobile_solutes { get; set; }
-        ///<summary> Who knows</summary>
         public double Infiltration { get; set; }
-        ///<summary> Who knows</summary>
-        public int IrrigLayer { get; set; }
         ///<summary> Who knows</summary>
         public double[] KLAT { get; set; }
         ///<summary> Who knows</summary>
@@ -118,16 +88,8 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double[] LL15mm { get; set; }
         ///<summary> Who knows</summary>
-        ///<summary> Who knows</summary>
-        public double max_albedo { get; set; }
-        ///<summary> Who knows</summary>
-        public double max_crit_temp { get; set; }
-        ///<summary> Who knows</summary>
         public double max_pond { get; set; }
         ///<summary> Who knows</summary>
-        public double min_crit_temp { get; set; }
-        ///<summary> Who knows</summary>
-        public string[] mobile_solutes { get; set; }
         ///<summary> Who knows</summary>
         public double[] outflow_lat { get; set; }
         ///<summary> Who knows</summary>
@@ -139,8 +101,6 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double Salb { get; set; }
         ///<summary> Who knows</summary>
-        public double[] SAT { get; set; }
-        ///<summary> Who knows</summary>
         public double[] SATmm { get; set; }
         ///<summary> Who knows</summary>
         public double slope { get; set; }
@@ -150,10 +110,6 @@ namespace Models.Soils
         public double[] solute_flux_eff { get; set; }
         ///<summary> Who knows</summary>
         public double specific_bd { get; set; }
-        ///<summary> Who knows</summary>
-        public double sumes1_max { get; set; }
-        ///<summary> Who knows</summary>
-        public double sumes2_max { get; set; }
         ///<summary> Who knows</summary>
         public double SummerCona { get; set; }
         ///<summary> Who knows</summary>
@@ -167,10 +123,6 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double[] SWmm { get; set; }
         ///<summary> Who knows</summary>
-        public double sw_top_crit { get; set; }
-        ///<summary> Who knows</summary>
-        public double t { get; set; }
-        ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
         ///<summary> Who knows</summary>
         public double WaterTable { get; set; }
@@ -180,34 +132,9 @@ namespace Models.Soils
         public string WinterDate { get; set; }
         ///<summary> Who knows</summary>
         public double WinterU { get; set; }
+        ///<summary> Who knows</summary>
+        public void SetSWmm(int Layer, double NewSWmm){ }
 
-        /////<summary> Who knows</summary>
-        //public event NitrogenChangedDelegate NitrogenChanged;
-
-        ///<summary> Who knows</summary>
-        public void Reset()
-        { }
-        ///<summary> Who knows</summary>
-        public void SetMaxPond(double NewDepth)
-        { }
-        ///<summary> Who knows</summary>
-        public void SetSWmm(int Layer, double NewSWmm)
-        { }
-        ///<summary> Who knows</summary>
-        public void SetWaterTable(double InitialDepth)
-        { }
-        ///<summary> Who knows</summary>
-        public void SetWater_frac(double[] New_SW)
-        { }
-        ///<summary> Who knows</summary>
-        public void SetWater_mm(double[] New_SW_dep)
-        { }
-        ///<summary> Who knows</summary>
-        public void Tillage(TillageType Data)
-        { }
-        ///<summary> Who knows</summary>
-        public void Tillage(string DefaultTillageName)
-        { }
         #endregion
 
         /// <summary>
