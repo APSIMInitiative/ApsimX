@@ -29,6 +29,21 @@ namespace Models.PMF.Functions
         [Description("XProperty")]
         public string XProperty { get; set; }
 
+        /// <summary>Constructor</summary>
+        public LinearInterpolationFunction() { }
+
+        /// <summary>Constructor</summary>
+        /// <param name="xproperty">x property</param>
+        /// <param name="x">x values.</param>
+        /// <param name="y">y values.</param>
+        public LinearInterpolationFunction(string xproperty, double[] x, double[] y)
+        {
+            XProperty = xproperty;
+            XYPairs = new XYPairs();
+            XYPairs.X = x;
+            XYPairs.Y = y;
+        }
+
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()

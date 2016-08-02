@@ -17,6 +17,7 @@ namespace Importer
     using Models.Core;
     using APSIM.Shared.Utilities;
     using APSIM.Shared.OldAPSIM;
+    using Models.Interfaces;
 
     /// <summary>
     /// This is a worker class for the import process that converts
