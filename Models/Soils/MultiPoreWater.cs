@@ -94,7 +94,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double pond { get; set; }
         ///<summary> Who knows</summary>
-        public double pond_evap { get; }
+        public double pond_evap { get; set; }
         ///<summary> Who knows</summary>
         public double Runoff { get; set; }
         ///<summary> Who knows</summary>
