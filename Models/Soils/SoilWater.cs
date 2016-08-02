@@ -27,7 +27,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class SoilWater : Model
+    public class SoilWater : Model, ISoilWater
     {
 
 
