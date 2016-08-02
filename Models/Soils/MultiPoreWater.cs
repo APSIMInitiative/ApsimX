@@ -46,11 +46,13 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double discharge_width { get; set; }
         ///<summary> Who knows</summary>
+        public double[] dlayer { get; }
+        ///<summary> Who knows</summary>
+        public double[] dlt_sw { get;  set; }
+        ///<summary> Who knows</summary>
         public double[] dlt_sw_dep { get; set; }
         ///<summary> Who knows</summary>
         public double Drainage { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] DUL { get; set; }
         ///<summary> Who knows</summary>
         public double[] DULmm { get; set; }
         ///<summary> Who knows</summary>
@@ -83,19 +85,16 @@ namespace Models.Soils
         public double LeachNO3 { get; set; }
         ///<summary> Who knows</summary>
         public double LeachUrea { get; set; }
-        ///<summary> Who knows</summary>
-        public double[] LL15 { get; set; }
-        ///<summary> Who knows</summary>
+         ///<summary> Who knows</summary>
         public double[] LL15mm { get; set; }
         ///<summary> Who knows</summary>
         public double max_pond { get; set; }
-        ///<summary> Who knows</summary>
         ///<summary> Who knows</summary>
         public double[] outflow_lat { get; set; }
         ///<summary> Who knows</summary>
         public double pond { get; set; }
         ///<summary> Who knows</summary>
-        public double pond_evap { get; set; }
+        public double pond_evap { get; }
         ///<summary> Who knows</summary>
         public double Runoff { get; set; }
         ///<summary> Who knows</summary>
@@ -134,7 +133,14 @@ namespace Models.Soils
         public double WinterU { get; set; }
         ///<summary> Who knows</summary>
         public void SetSWmm(int Layer, double NewSWmm){ }
-
+        ///<summary> Who knows</summary>
+        public void Reset() { }
+        ///<summary> Who knows</summary>
+        public void SetWaterTable(double InitialDepth) { }
+        ///<summary> Who knows</summary>
+        public void Tillage(TillageType Data) { }
+        ///<summary> Who knows</summary>
+        public void Tillage(string DefaultTillageName) { }
         #endregion
 
         /// <summary>

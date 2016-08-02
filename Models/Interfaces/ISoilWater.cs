@@ -32,11 +32,13 @@ namespace Models.Interfaces
         ///<summary> Who knows</summary>
         double discharge_width { get; set; }
         ///<summary> Who knows</summary>
+        double[] dlayer { get; }
+        ///<summary> Who knows</summary>
+        double[] dlt_sw { set; }
+        ///<summary> Who knows</summary>
         double[] dlt_sw_dep { set; }
         ///<summary> Who knows</summary>
         double Drainage { get; }
-        ///<summary> Who knows</summary>
-        double[] DUL { get; }
         ///<summary> Who knows</summary>
         double[] DULmm { get; }
         ///<summary> Who knows</summary>
@@ -77,6 +79,7 @@ namespace Models.Interfaces
         ///<summary> Who knows</summary>
         double pond { get; }
         ///<summary> Who knows</summary>
+        double pond_evap { get; }
         ///<summary> Who knows</summary>
         double Runoff { get; }
         ///<summary> Who knows</summary>
@@ -113,5 +116,13 @@ namespace Models.Interfaces
         double WinterU { get; set; }
         ///<summary> Who knows</summary>
         void SetSWmm(int Layer, double NewSWmm);
-        }
+        ///<summary> Who knows</summary>
+        void Reset();
+        ///<summary> Who knows</summary>
+        void SetWaterTable(double InitialDepth);
+        ///<summary> Who knows</summary>
+        void Tillage(TillageType Data);
+        ///<summary> Who knows</summary>
+        void Tillage(string DefaultTillageName);
+    }
 }
