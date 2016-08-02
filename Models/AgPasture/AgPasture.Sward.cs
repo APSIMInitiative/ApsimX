@@ -27,15 +27,11 @@ namespace Models.AgPasture
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Sward : Model, ICrop, ICanopy, IUptake
+	public class Sward : Model, ICrop, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 
 		//- Links  ----------------------------------------------------------------------------------------------------
-
-		/// <summary>Link to APSIM's WeatherFile (meteorological information)</summary>
-		[Link]
-		private IWeather MetData = null;
 
 		/// <summary>Link to the Soil (soil layers and other information)</summary>
 		[Link]
@@ -43,12 +39,12 @@ namespace Models.AgPasture
 
 		//- Events  ---------------------------------------------------------------------------------------------------
 
-		/// <summary>Reference to a NewCrop event</summary>
-		/// <param name="Data">Data about crop type</param>
-		public delegate void NewCropDelegate(PMF.NewCropType Data);
+		///// <summary>Reference to a NewCrop event</summary>
+		///// <param name="Data">Data about crop type</param>
+		//public delegate void NewCropDelegate(PMF.NewCropType Data);
 
-		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this plant).</summary>
-		public event EventHandler Sowing;
+		///// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this plant).</summary>
+		//public event EventHandler Sowing;
 
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
@@ -80,123 +76,6 @@ namespace Models.AgPasture
 
         #endregion
 
-        #region Canopy interface  ------------------------------------------------------------------------------------------
-
-        /// <summary>Canopy type</summary>
-        [Description("Generic type of crop")]
-        public string CanopyType
-        {
-            get { return Name; }
-        }
-
-        /// <summary>Albedo.</summary>
-        public double Albedo { get { return 0.26; } }
-
-        /// <summary>Gets or sets the gsmax.</summary>
-        public double Gsmax { get { return 0.011; } }
-
-        /// <summary>Gets or sets the R50.</summary>
-        public double R50 { get { return 200; } }
-
-        /// <summary>Gets the LAI (m^2/m^2)</summary>
-        public double LAI { get { return GreenLAI; } }
-
-        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
-        public double LAITotal { get { return TotalLAI; } }
-
-        /// <summary>Gets the cover green (0-1)</summary>
-        public double CoverGreen { get { return GreenCover; } }
-
-        /// <summary>Gets the cover total (0-1)</summary>
-        public double CoverTotal { get { return TotalCover; } }
-
-        /// <summary>Gets the canopy height (mm)</summary>
-        [Description("Sward average height")]
-        [Units("mm")]
-        public double Height
-        {
-            get { return Math.Max(20.0, HeightFromMass.Value(AboveGroundWt)); } //speciesInSward.Max(mySpecies => mySpecies.Height); }
-        }
-
-        /// <summary>Gets the canopy depth (mm)</summary>
-        public double Depth { get { return Height; } }
-
-        //// TODO: have to verify how this works (what exactly is needed by MicroClimate
-        /// <summary>Gets the plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
-        public double FRGR
-        {
-            get
-            {
-                double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;
-                double gft;
-                if (Tday < 20)
-                    gft = Math.Sqrt(GlfTemperature);
-                else
-                    gft = GlfTemperature;
-                // Note: p_gftemp is for gross photosysthsis.
-                // This is different from that for net production as used in other APSIM crop models, and is
-                // assumesd in calculation of temperature effect on transpiration (in micromet).
-                // Here we passed it as sqrt - (Doing so by a comparison of p_gftemp and that
-                // used in wheat). Temperature effects on NET produciton of forage mySpecies in other models
-                // (e.g., grassgro) are not so significant for T = 10-20 degrees(C)
-
-                //Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater),
-                //coulnd't see any differnece for results
-                return Math.Min(FVPD, gft);
-                //// RCichota, Jan/2014: removed AgPasture's Frgr from here, it is considered at the same level as nitrogen etc...
-            }
-        }
-
-        /// <summary>Gets or sets the potential evapotranspiration, as calculated by MicroClimate</summary>
-        [XmlIgnore]
-        public double PotentialEP
-        {
-            get
-            {
-                return swardWaterDemand;
-            }
-            set
-            {
-                swardWaterDemand = value;
-
-                // partition the demand among species
-                if (isSwardControlled)
-                {
-                    double spDemand = 0.0;
-                    foreach (PastureSpecies mySpecies in mySward)
-                    {
-                        spDemand = MathUtilities.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
-                        mySpecies.PotentialEP = spDemand;
-                    }
-                }
-            }
-        }
-
-        /// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
-        {
-            get
-            {
-                return myLightProfile;
-            }
-            set
-            {
-                // get the total intercepted radiation (sum all canopy layers)
-                interceptedRadn = 0.0;
-                foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in value)
-                    interceptedRadn += canopyLayer.amount;
-
-                // pass on the radiation to each species  -  shouldn't this be partitioned???
-                if (isSwardControlled)
-                    foreach (PastureSpecies mySpecies in mySward)
-                        mySpecies.interceptedRadn = interceptedRadn;
-                //// TODO: remove this once energy balance by species is running
-            }
-        }
-
-        #endregion
-
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
 		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
@@ -205,19 +84,13 @@ namespace Models.AgPasture
 			get { return null; }
 		}
 
-		/// <summary>The intercepted solar radiation</summary>
-		private double interceptedRadn;
-
-		/// <summary>Light profile (energy available for each canopy layer)</summary>
-		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile = null;
-
-		//// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
-		/// <summary>Invokes the NewCrop event (info about this crop type)</summary>
-		private void DoNewCropEvent()
-		{
-			if (Sowing != null)
-				Sowing.Invoke(this, new EventArgs());
-		}
+		////// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
+		///// <summary>Invokes the NewCrop event (info about this crop type)</summary>
+		//private void DoNewCropEvent()
+		//{
+		//	if (Sowing != null)
+		//		Sowing.Invoke(this, new EventArgs());
+		//}
 
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
@@ -1194,11 +1067,11 @@ namespace Models.AgPasture
 		{
 			get
 			{
-				// TODO: check whether this should be updated everyday - now it uses the value at the beginning of the simulation only
-				//double result = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff)
-				//              / mySward.Sum(mySpecies => mySpecies.TotalLAI);
+                // TODO: check whether this should be updated everyday - now it uses the value at the beginning of the simulation only
+                double result = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff)
+                              / mySward.Sum(mySpecies => mySpecies.TotalLAI);
 
-				return initialLightExtCoeff;
+                return result;
 			}
 		}
 
@@ -1276,18 +1149,18 @@ namespace Models.AgPasture
 		{
 			get
 			{
-				if (isSwardControlled)
-				{
-					return swardRootFraction;
-				}
-				else
-				{
+				//if (isSwardControlled)
+				//{
+				//	return swardRootFraction;
+				//}
+				//else
+				//{
 					double[] result = new double[nLayers];
 					if (RootWt > 0.0)
 						for (int layer = 0; layer < nLayers; layer++)
 							result[layer] = mySward.Sum(mySpecies => mySpecies.RootWt * mySpecies.RootWtFraction[layer]) / RootWt;
 					return result;
-				}
+				//}
 			}
 		}
 
@@ -1300,20 +1173,20 @@ namespace Models.AgPasture
 			get
 			{
 				double[] result = new double[nLayers];
-				if (isSwardControlled)
-				{
-					double Total_Rlength = RootWt * avgSRL;   // m root/ha
-					Total_Rlength *= 0.0000001;  // convert into mm root/mm2 soil)
-					for (int layer = 0; layer < result.Length; layer++)
-					{
-						result[layer] = swardRootFraction[layer] * Total_Rlength / Soil.Thickness[layer];    // mm root/mm3 soil
-					}
-				}
-				else
-				{
+				//if (isSwardControlled)
+				//{
+				//	double Total_Rlength = RootWt * avgSRL;   // m root/ha
+				//	Total_Rlength *= 0.0000001;  // convert into mm root/mm2 soil)
+				//	for (int layer = 0; layer < result.Length; layer++)
+				//	{
+				//		result[layer] = swardRootFraction[layer] * Total_Rlength / Soil.Thickness[layer];    // mm root/mm3 soil
+				//	}
+				//}
+				//else
+				//{
 					for (int layer = 0; layer < nLayers; layer++)
 						result[layer] = mySward.Sum(mySpecies => mySpecies.RLD[layer]);
-				}
+				//}
 				return result;
 			}
 		}
@@ -1525,21 +1398,21 @@ namespace Models.AgPasture
 		/// <summary>Flag whether crop is alive (not killed)</summary>
 		private bool isAlive = true;
 
-		// -- Root variables  -----------------------------------------------------------------------------------------
+        // -- Root variables  -----------------------------------------------------------------------------------------
 
-		/// <summary>sward root depth (maximum depth of all species)</summary>
-		private double swardRootDepth;
+        /// <summary>sward root depth (maximum depth of all species)</summary>
+        private double swardRootDepth;
 
-		/// <summary>average root distribution over the soil profile</summary>
-		private double[] swardRootFraction;
+        /// <summary>average root distribution over the soil profile</summary>
+        private double[] swardRootFraction;
 
-		/// <summary>average specific root length</summary>
-		private double avgSRL;
+        ///// <summary>average specific root length</summary>
+        //private double avgSRL;
 
-		// -- Water variables  ----------------------------------------------------------------------------------------
+        // -- Water variables  ----------------------------------------------------------------------------------------
 
-		/// <summary>Amount of soil water available to the sward, from each soil layer (mm)</summary>
-		private double[] soilAvailableWater;
+        /// <summary>Amount of soil water available to the sward, from each soil layer (mm)</summary>
+        private double[] soilAvailableWater;
 
 		/// <summary>Daily soil water demand for the whole sward (mm)</summary>
 		private double swardWaterDemand = 0.0;
@@ -1593,8 +1466,8 @@ namespace Models.AgPasture
 		/// <summary>Number of soil layers</summary>
 		private int nLayers = 0;
 
-		/// <summary>The average light extinction coefficient for the whole sward at the beginning of the simulation</summary>
-		private double initialLightExtCoeff;
+		///// <summary>The average light extinction coefficient for the whole sward at the beginning of the simulation</summary>
+		//private double initialLightExtCoeff;
 
 		#endregion
 
@@ -1642,11 +1515,11 @@ namespace Models.AgPasture
 				mySpecies.myWaterUptakeSource = waterUptakeSource;
 				mySpecies.myNitrogenUptakeSource = nUptakeSource;
 
-				if (isSwardControlled)
-				{
-					mySpecies.ExpoLinearDepthParam = expoLinearDepthParam;
-					mySpecies.ExpoLinearCurveParam = expoLinearCurveParam;
-				}
+				//if (isSwardControlled)
+				//{
+				//	mySpecies.ExpoLinearDepthParam = expoLinearDepthParam;
+				//	mySpecies.ExpoLinearCurveParam = expoLinearCurveParam;
+				//}
 			}
 
 			// get the number of layers in the soil profile
@@ -1669,40 +1542,48 @@ namespace Models.AgPasture
 		{
 			if (!hasInitialised)
 			{
-				// perform the initialisation of some sward-species variables
-				//  (this is suppose to be OnSimulationCommencing, but it should be done here because
-				//   values from PastureSpecies are needed and there are initialise after the sward.
-				//   once PastureSpecies is running properly the bits here might be unnecessary)
-				if (isSwardControlled)
-				{
-					// root depth and distribution (assume a single and invariable root distribution for the whole sward)
-					swardRootDepth = mySward.Max(mySpecies => mySpecies.RootDepth);
-					swardRootFraction = RootProfileDistribution();
+                // perform the initialisation of some sward-species variables
+                //  (this is supposed to be OnSimulationCommencing, but it has to be done here because
+                //   values from PastureSpecies are needed and they are initialise only after the sward;
+                //   once PastureSpecies is running properly the bits here might be unnecessary)
+                //if (isSwardControlled)
+                //{
+                //// root depth and distribution (assume a single and invariable root distribution for the whole sward)
+                //swardRootDepth = mySward.Max(mySpecies => mySpecies.RootDepth);
+                //swardRootFraction = RootProfileDistribution();
 
-					// set the light extinction coefficient for each species
-					double sumLightExtCoeff = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff);
-					double sumLAI = mySward.Sum(mySpecies => mySpecies.TotalLAI);
-					initialLightExtCoeff = sumLightExtCoeff / sumLAI;
-					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.swardLightExtCoeff = initialLightExtCoeff;
-					//// TODO: check whether this should be updated every day
+                //// set the light extinction coefficient for each species
+                //double sumLightExtCoeff = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff);
+                //double sumLAI = mySward.Sum(mySpecies => mySpecies.TotalLAI);
+                //initialLightExtCoeff = sumLightExtCoeff / sumLAI;
+                //foreach (PastureSpecies mySpecies in mySward)
+                //	mySpecies.swardLightExtCoeff = initialLightExtCoeff;
+                ////// TODO: check whether this should be updated every day
 
-					// tell other modules about the existence of this plant (whole sward)
-					DoNewCropEvent();
-				}
+                //// tell other modules about the existence of this plant (whole sward)
+                //DoNewCropEvent();
+                //}
 
-				// get the average specific root length (should go away with root distribution - done by species)
-				avgSRL = mySward.Average(mySpecies => mySpecies.SpecificRootLength);
+                //// get the average specific root length (should go away with root distribution - done by species)
+                //avgSRL = mySward.Average(mySpecies => mySpecies.SpecificRootLength);
 
-				hasInitialised = true;
-			}
+                // Get root distribution for whole sward
+                swardRootDepth = mySward.Max(mySpecies => mySpecies.RootDepth);
+			    nLayers = Soil.Thickness.Length;
+                swardRootFraction = new double[nLayers];
+                if (RootWt > 0.0)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        for (int s = 0; s < NumSpecies; s++)
+                        {
+                            swardRootFraction[layer] += mySward[s].RootWt * mySward[s].RootWtFraction[layer];
+                        }
+                        swardRootFraction[layer] /= RootWt;
+                    }
+                }
 
-			// Send new canopy event
-			//  needed this for at least untill the radiation budget can be done for each species separately
-			if (isSwardControlled)
-			{
-
-				// TODO: this event should be unnecessary once the energy balance for each species is done properly
+                hasInitialised = true;
 			}
 		}
 
@@ -1719,16 +1600,16 @@ namespace Models.AgPasture
 					// stores the current state for this mySpecies
 					mySpecies.SaveState();
 
-					// pass on the fraction of radiation and green vover to each species update 
-					//  needed this for at least untill the radiation budget can be done for each species separately
-					if (isSwardControlled)
-					{
-						// plant green cover
-						mySpecies.swardGreenCover = GreenCover;
+					//// pass on the fraction of radiation and green vover to each species update 
+					////  needed this for at least untill the radiation budget can be done for each species separately
+					//if (isSwardControlled)
+					//{
+					//	// plant green cover
+					//	mySpecies.swardGreenCover = GreenCover;
 
-						// fraction of light intercepted by each species
-						mySpecies.intRadnFrac = mySpecies.GreenCover / mySward.Sum(aSpecies => aSpecies.GreenCover);
-					}
+					//	// fraction of light intercepted by each species
+					//	mySpecies.intRadnFrac = mySpecies.GreenCover / mySward.Sum(aSpecies => aSpecies.GreenCover);
+					//}
 
 					// step 01 - preparation and potential growth
 					mySpecies.CalcPotentialGrowth();
@@ -1787,7 +1668,7 @@ namespace Models.AgPasture
 			soilAvailableWater = GetSoilAvailableWater();
 
 			// Get the water demand for all mySpecies
-			if (!isSwardControlled)
+			//if (!isSwardControlled)
 				swardWaterDemand = mySward.Sum(mySpecies => mySpecies.WaterDemand);
 
 			// Do the water uptake (and partition between mySpecies)
@@ -2225,32 +2106,32 @@ namespace Models.AgPasture
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#endregion
+        #endregion
 
-		#region Other processes  -------------------------------------------------------------------------------------------
+        #region Other processes  -------------------------------------------------------------------------------------------
 
-		//--- Not supported yet  -----------------------------------------        
+        //--- Not supported yet  -----------------------------------------        
 
-		/// <summary>Sows the plant</summary>
-		/// <param name="cultivar">Cultivar type</param>
-		/// <param name="population">Plants per area</param>
-		/// <param name="depth">Sowing depth</param>
-		/// <param name="rowSpacing">space between rows</param>
-		/// <param name="maxCover">maximum ground cover</param>
-		/// <param name="budNumber">Number of buds</param>
-		public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
-		{
-			//isAlive = true;
-			//ResetZero();
-			//for (int s = 0; s < numSpecies; s++)
-			//    mySpecies[s].SetInGermination();
-		}
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar">Cultivar type</param>
+        /// <param name="population">Plants per area</param>
+        /// <param name="depth">Sowing depth</param>
+        /// <param name="rowSpacing">space between rows</param>
+        /// <param name="maxCover">maximum ground cover</param>
+        /// <param name="budNumber">Number of buds</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        {
+            //isAlive = true;
+            //ResetZero();
+            //for (int s = 0; s < numSpecies; s++)
+            //    mySpecies[s].SetInGermination();
+        }
 
-		/// <summary>Kills all the plant mySpecies in the sward (zero variables and set to not alive)</summary>
-		/// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
-		[EventSubscribe("KillCrop")]
+        /// <summary>Kills all the plant mySpecies in the sward (zero variables and set to not alive)</summary>
+        /// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
+        [EventSubscribe("KillCrop")]
 		private void OnKillCrop(KillCropType KillData)
 		{
 			foreach (PastureSpecies mySpecies in mySward)
@@ -2496,90 +2377,90 @@ namespace Models.AgPasture
         public void SetNUptake(List<ZoneWaterAndN> info)
         { }    
 
-		/// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
-		/// <returns>The proportion of root mass in each soil layer</returns>
-		/// <exception cref="System.Exception">
-		/// No valid method for computing root distribution was selected
-		/// or
-		/// Could not calculate root distribution
-		/// </exception>
-		private double[] RootProfileDistribution()
-		{
-			double[] result = new double[nLayers];
-			double sumProportion = 0;
+		///// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
+		///// <returns>The proportion of root mass in each soil layer</returns>
+		///// <exception cref="System.Exception">
+		///// No valid method for computing root distribution was selected
+		///// or
+		///// Could not calculate root distribution
+		///// </exception>
+		//private double[] RootProfileDistribution()
+		//{
+		//	double[] result = new double[nLayers];
+		//	double sumProportion = 0;
 
-			switch (rootDistributionMethod.ToLower())
-			{
-				case "homogeneous":
-					{
-						// homogenous distribution over soil profile (same root density throughout the profile)
-						double DepthTop = 0;
-						for (int layer = 0; layer < nLayers; layer++)
-						{
-							if (DepthTop >= swardRootDepth)
-								result[layer] = 0.0;
-							else if (DepthTop + Soil.Thickness[layer] <= swardRootDepth)
-								result[layer] = 1.0;
-							else
-								result[layer] = (swardRootDepth - DepthTop) / Soil.Thickness[layer];
-							sumProportion += result[layer] * Soil.Thickness[layer];
-							DepthTop += Soil.Thickness[layer];
-						}
-						break;
-					}
-				case "userdefined":
-					{
-						// distribution given by the user
-						// Option no longer available
-						break;
-					}
-				case "expolinear":
-					{
-						// distribution calculated using ExpoLinear method
-						//  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
-						//   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
-						//   if exponent is one than the proportion decreases linearly.
-						double DepthTop = 0;
-						double DepthFirstStage = swardRootDepth * expoLinearDepthParam;
-						double DepthSecondStage = swardRootDepth - DepthFirstStage;
-						for (int layer = 0; layer < nLayers; layer++)
-						{
-							if (DepthTop >= swardRootDepth)
-								result[layer] = 0.0;
-							else if (DepthTop + Soil.Thickness[layer] <= DepthFirstStage)
-								result[layer] = 1.0;
-							else
-							{
-								if (DepthTop < DepthFirstStage)
-									result[layer] = (DepthFirstStage - DepthTop) / Soil.Thickness[layer];
-								if ((expoLinearDepthParam < 1.0) && (expoLinearCurveParam > 0.0))
-								{
-									double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
-									double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-									thisDepth = Math.Min(DepthTop + Soil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
-									double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-									result[layer] += Math.Max(0.0, Fbottom - Ftop) / Soil.Thickness[layer];
-								}
-								else if (DepthTop + Soil.Thickness[layer] <= swardRootDepth)
-									result[layer] += Math.Min(DepthTop + Soil.Thickness[layer], swardRootDepth) - Math.Max(DepthTop, DepthFirstStage) / Soil.Thickness[layer];
-							}
-							sumProportion += result[layer];
-							DepthTop += Soil.Thickness[layer];
-						}
-						break;
-					}
-				default:
-					{
-						throw new Exception("No valid method for computing root distribution was selected");
-					}
-			}
-			if (sumProportion > 0)
-				for (int layer = 0; layer < nLayers; layer++)
-					result[layer] = result[layer] / sumProportion;
-			else
-				throw new Exception("Could not calculate root distribution");
-			return result;
-		}
+		//	switch (rootDistributionMethod.ToLower())
+		//	{
+		//		case "homogeneous":
+		//			{
+		//				// homogenous distribution over soil profile (same root density throughout the profile)
+		//				double DepthTop = 0;
+		//				for (int layer = 0; layer < nLayers; layer++)
+		//				{
+		//					if (DepthTop >= swardRootDepth)
+		//						result[layer] = 0.0;
+		//					else if (DepthTop + Soil.Thickness[layer] <= swardRootDepth)
+		//						result[layer] = 1.0;
+		//					else
+		//						result[layer] = (swardRootDepth - DepthTop) / Soil.Thickness[layer];
+		//					sumProportion += result[layer] * Soil.Thickness[layer];
+		//					DepthTop += Soil.Thickness[layer];
+		//				}
+		//				break;
+		//			}
+		//		case "userdefined":
+		//			{
+		//				// distribution given by the user
+		//				// Option no longer available
+		//				break;
+		//			}
+		//		case "expolinear":
+		//			{
+		//				// distribution calculated using ExpoLinear method
+		//				//  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
+		//				//   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
+		//				//   if exponent is one than the proportion decreases linearly.
+		//				double DepthTop = 0;
+		//				double DepthFirstStage = swardRootDepth * expoLinearDepthParam;
+		//				double DepthSecondStage = swardRootDepth - DepthFirstStage;
+		//				for (int layer = 0; layer < nLayers; layer++)
+		//				{
+		//					if (DepthTop >= swardRootDepth)
+		//						result[layer] = 0.0;
+		//					else if (DepthTop + Soil.Thickness[layer] <= DepthFirstStage)
+		//						result[layer] = 1.0;
+		//					else
+		//					{
+		//						if (DepthTop < DepthFirstStage)
+		//							result[layer] = (DepthFirstStage - DepthTop) / Soil.Thickness[layer];
+		//						if ((expoLinearDepthParam < 1.0) && (expoLinearCurveParam > 0.0))
+		//						{
+		//							double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
+		//							double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
+		//							thisDepth = Math.Min(DepthTop + Soil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
+		//							double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
+		//							result[layer] += Math.Max(0.0, Fbottom - Ftop) / Soil.Thickness[layer];
+		//						}
+		//						else if (DepthTop + Soil.Thickness[layer] <= swardRootDepth)
+		//							result[layer] += Math.Min(DepthTop + Soil.Thickness[layer], swardRootDepth) - Math.Max(DepthTop, DepthFirstStage) / Soil.Thickness[layer];
+		//					}
+		//					sumProportion += result[layer];
+		//					DepthTop += Soil.Thickness[layer];
+		//				}
+		//				break;
+		//			}
+		//		default:
+		//			{
+		//				throw new Exception("No valid method for computing root distribution was selected");
+		//			}
+		//	}
+		//	if (sumProportion > 0)
+		//		for (int layer = 0; layer < nLayers; layer++)
+		//			result[layer] = result[layer] / sumProportion;
+		//	else
+		//		throw new Exception("Could not calculate root distribution");
+		//	return result;
+		//}
 
 		/// <summary>
 		/// Compute how much of the layer is actually explored by roots (considering depth only)

@@ -52,14 +52,14 @@ namespace Models.AgPasture
 
 		//- Events  ---------------------------------------------------------------------------------------------------
 
-		/// <summary>Reference to a NewCrop event</summary>
-		/// <param name="Data">Data about crop type</param>
-		public delegate void NewCropDelegate(PMF.NewCropType Data);
-		/// <summary>Event to be invoked to tell other models about the existence of this species</summary>
-		public event NewCropDelegate NewCrop;
+		///// <summary>Reference to a NewCrop event</summary>
+		///// <param name="Data">Data about crop type</param>
+		//public delegate void NewCropDelegate(PMF.NewCropType Data);
+		///// <summary>Event to be invoked to tell other models about the existence of this species</summary>
+		//public event NewCropDelegate NewCrop;
 
-		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this species).</summary>
-		public event EventHandler Sowing;
+		///// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this species).</summary>
+		//public event EventHandler Sowing;
 
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
@@ -211,22 +211,22 @@ namespace Models.AgPasture
 		/// <summary>Light profile (energy available for each canopy layer)</summary>
 		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
-		// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
-		/// <summary>Invokes the NewCrop event (info about this crop type)</summary>
-		private void DoNewCropEvent()
-		{
-			if (NewCrop != null)
-			{
-				// Send out New Crop Event to tell other modules who I am and what I am
-				PMF.NewCropType EventData = new PMF.NewCropType();
-				EventData.crop_type = speciesFamily;
-				EventData.sender = Name;
-				NewCrop.Invoke(EventData);
-			}
+		//// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
+		///// <summary>Invokes the NewCrop event (info about this crop type)</summary>
+		//private void DoNewCropEvent()
+		//{
+		//	if (NewCrop != null)
+		//	{
+		//		// Send out New Crop Event to tell other modules who I am and what I am
+		//		PMF.NewCropType EventData = new PMF.NewCropType();
+		//		EventData.crop_type = speciesFamily;
+		//		EventData.sender = Name;
+		//		NewCrop.Invoke(EventData);
+		//	}
 
-			if (Sowing != null)
-				Sowing.Invoke(this, new EventArgs());
-		}
+		//	if (Sowing != null)
+		//		Sowing.Invoke(this, new EventArgs());
+		//}
 
 		/// <summary>Sows the plant</summary>
 		/// <param name="cultivar"></param>
@@ -2477,8 +2477,10 @@ namespace Models.AgPasture
 		{
 			get
 			{
-				if (greenLAI + deadLAI == 0) return 0;
-				return (1.0 - (Math.Exp(-lightExtentionCoeff * (greenLAI + deadLAI))));
+				if (greenLAI + deadLAI == 0)
+                    return 0;
+                else
+                    return CalcPlantCover(greenLAI + deadLAI);
 			}
 		}
 
@@ -2490,12 +2492,12 @@ namespace Models.AgPasture
 		{
 			get
 			{
-				if (greenLAI == 0)
-					return 0.0;
-				else
-					return (1.0 - Math.Exp(-lightExtentionCoeff * greenLAI));
-			}
-		}
+			    if (greenLAI == 0)
+			        return 0.0;
+			    else
+			        return CalcPlantCover(greenLAI);
+            }
+        }
 
 		/// <summary>Gets the plant's dead cover.</summary>
 		/// <value>The dead cover.</value>
@@ -2508,7 +2510,7 @@ namespace Models.AgPasture
 				if (deadLAI == 0)
 					return 0.0;
 				else
-					return (1.0 - Math.Exp(-lightExtentionCoeff * deadLAI));
+                    return CalcPlantCover(deadLAI);
 			}
 		}
 
@@ -3100,9 +3102,9 @@ namespace Models.AgPasture
 				myNitrogenUptakeSource = "arbitrator";
 			}
 
-			// tell other modules about the existence of this species
-			if (!isSwardControlled)
-				DoNewCropEvent();
+			//// tell other modules about the existence of this species
+			//if (!isSwardControlled)
+			//	DoNewCropEvent();
 		}
 
 		/// <summary>
@@ -3416,7 +3418,7 @@ namespace Models.AgPasture
 			// TODO:
 			// these are needed when AgPasture controls the growth (not necessarily the partition of soil stuff)
 			// this is not sound and we should get rid of it very soon
-			intRadnFrac = 1.0;
+			//intRadnFrac = 1.0;
 			if (!isSwardControlled)
 			{
 				swardLightExtCoeff = lightExtentionCoeff;
@@ -3663,12 +3665,12 @@ namespace Models.AgPasture
 
 			double myDayLength = 3600 * MetData.CalculateDayLength(-6);  //conversion of hour to seconds
 
-			// Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
-			double myPAR = 0.5 * interceptedRadn * 1000000;
+            // Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
+            double myPAR = 0.5 * interceptedRadn * 1000000;
 
 			// Irradiance, or radiation, on the canopy at the middle of the day (W/m^2)
 			//IL = (4.0 / 3.0) * myPAR * swardLightExtCoeff / myDayLength;  TODO: enable this
-			IL = 1.33333 * myPAR * swardLightExtCoeff / myDayLength;
+			IL = 1.33333 * myPAR * lightExtentionCoeff / myDayLength;
 			double IL2 = IL / 2;                      //IL for early & late period of a day
 
 			// Photosynthesis per LAI under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
@@ -3684,7 +3686,7 @@ namespace Models.AgPasture
 			double Pl_Daily = myDayLength * (Pl_MiddleDay + Pl_EarlyLateDay) * 0.5;
 
 			// Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-			double Pc_Daily = Pl_Daily * swardGreenCover * intRadnFrac / lightExtentionCoeff;
+			double Pc_Daily = Pl_Daily * GreenCover / lightExtentionCoeff;
 
 			//  Carbon assimilation per leaf area (g C/m^2/day)
 			double CarbonAssim = Pc_Daily * 0.001 * (12.0 / 44.0);         // Convert to from mgCO2 to kgC           
