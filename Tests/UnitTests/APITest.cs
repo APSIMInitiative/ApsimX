@@ -45,6 +45,7 @@ namespace UnitTests
         public void Initialise()
         {
             string tempFolder = Path.Combine(Path.GetTempPath(), "UnitTests");
+            Directory.CreateDirectory(tempFolder);
             Directory.SetCurrentDirectory(tempFolder);
             FileStream oldfile = new FileStream("Continuous_Wheat.apsim", FileMode.Create);
             oldfile.Write(UnitTests.Properties.Resources.Continuous_Wheat, 0, UnitTests.Properties.Resources.Continuous_Wheat.Length);
