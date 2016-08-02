@@ -19,7 +19,7 @@ namespace Models.WaterModel
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private Soil soil = null;
+        private SoilModel soil = null;
 
         /// <summary>Depth of water table (mm)</summary>
         [XmlIgnore]

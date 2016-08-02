@@ -55,7 +55,7 @@ namespace Models.WaterModel
 
         /// <summary>The water movement model.</summary>
         [Link]
-        private Soil soil = null;
+        private SoilModel soil = null;
 
         /// <summary>A function for reducing CN due to cover.</summary>
         [Link]

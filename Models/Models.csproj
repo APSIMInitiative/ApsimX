@@ -145,6 +145,8 @@
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
+    <Compile Include="IClock.cs" />
+    <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
@@ -396,6 +398,17 @@
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="WaterModel\CNReductionForCover.cs" />
+    <Compile Include="WaterModel\CNReductionForTillage.cs" />
+    <Compile Include="WaterModel\Conversions.cs" />
+    <Compile Include="WaterModel\EvaporationModel.cs" />
+    <Compile Include="WaterModel\ISoil.cs" />
+    <Compile Include="WaterModel\LateralFlow.cs" />
+    <Compile Include="WaterModel\Runoff.cs" />
+    <Compile Include="WaterModel\SaturatedFlow.cs" />
+    <Compile Include="WaterModel\Soil.cs" />
+    <Compile Include="WaterModel\UnsaturatedFlow.cs" />
+    <Compile Include="WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />

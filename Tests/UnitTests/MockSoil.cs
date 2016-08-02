@@ -19,7 +19,7 @@ namespace UnitTests
 
         public double PotentialRunoff { get; set; }
 
-        public SoilProperties Properties { get; set; }
+        public APSIM.Shared.Soils.Soil Properties { get; set; }
 
         public double[] Water { get; set; }
     }

@@ -30,9 +30,9 @@ namespace UnitTests
         }
 
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
-        public static SoilProperties Setup()
+        public static APSIM.Shared.Soils.Soil Setup()
         {
-            SoilProperties soil = new SoilProperties();
+            APSIM.Shared.Soils.Soil soil = new APSIM.Shared.Soils.Soil();
             soil.Water = new Water();
             soil.Water.Thickness = new double[] { 100, 300, 300, 300, 300, 300 };
             soil.Water.BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 };
@@ -76,7 +76,7 @@ namespace UnitTests
         [Test]
         public void TestLayerStructure()
         {
-            SoilProperties soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
 
             // convert sw from gravimetric to volumetric.
             APSIMReadySoil.Create(soil); 
@@ -105,7 +105,7 @@ namespace UnitTests
         [Test]
         public void TestPredictedCrops()
         {
-            SoilProperties soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.SoilType = "Black vertosol";
 
             APSIMReadySoil.Create(soil);
@@ -135,7 +135,7 @@ namespace UnitTests
         [Test]
         public void TestInitialWater()
         {
-            SoilProperties soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.Samples[0].SW = null;
             soil.InitialWater = new InitialWater();
             soil.InitialWater.PercentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
@@ -163,7 +163,7 @@ namespace UnitTests
         [Test]
         public void CheckUserLayerStructure()
         {
-            SoilProperties soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.LayerStructure = new LayerStructure();
             soil.LayerStructure.Thickness = new double[]  { 200, 200, 200, 200 };
 
@@ -176,11 +176,11 @@ namespace UnitTests
         [Test]
         public void TestLateralFlow()
         {
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             soilProperties.Samples.Clear();
 
             // Setup our objects with links.
-            Soil soil = new Soil();
+            SoilModel soil = new SoilModel();
             LateralFlowModel lateralFlow = new LateralFlowModel();
 
             SetLink(soil, "properties", soilProperties);
@@ -214,9 +214,9 @@ namespace UnitTests
         [Test]
         public void TestRunoff()
         {
-            Soil soil = new Soil();
+            SoilModel soil = new SoilModel();
 
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             APSIMReadySoil.Create(soilProperties);
 
             MockWeather weather = new MockWeather();
@@ -283,9 +283,9 @@ namespace UnitTests
         [Test]
         public void TestSaturatedFlow()
         {
-            Soil soil = new Soil();
+            SoilModel soil = new SoilModel();
 
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             APSIMReadySoil.Create(soilProperties);
 
             SaturatedFlowModel saturatedFlow = new SaturatedFlowModel();
@@ -324,7 +324,7 @@ namespace UnitTests
         {
             MockSoil soil = new MockSoil();
 
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             APSIMReadySoil.Create(soilProperties);
 
             MockClock clock = new MockClock();
@@ -389,9 +389,9 @@ namespace UnitTests
         [Test]
         public void TestUnsaturatedFlow()
         {
-            Soil soil = new Soil();
+            SoilModel soil = new SoilModel();
 
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             APSIMReadySoil.Create(soilProperties);
 
             UnsaturatedFlowModel unsaturatedFlow = new UnsaturatedFlowModel();
@@ -422,9 +422,9 @@ namespace UnitTests
         [Test]
         public void TestWaterTable()
         {
-            Soil soil = new Soil();
+            SoilModel soil = new SoilModel();
 
-            SoilProperties soilProperties = Setup();
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
             APSIMReadySoil.Create(soilProperties);
 
             WaterTableModel waterTable = new WaterTableModel();

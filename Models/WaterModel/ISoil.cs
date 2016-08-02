@@ -21,6 +21,6 @@ namespace Models.WaterModel
         double PotentialRunoff { get; }
 
         /// <summary>Provides access to the soil properties.</summary>
-        SoilProperties Properties { get; }
+        APSIM.Shared.Soils.Soil Properties { get; }
     }
 }

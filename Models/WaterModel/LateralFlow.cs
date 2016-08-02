@@ -36,7 +36,7 @@ namespace Models.WaterModel
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private Soil soil = null;
+        private SoilModel soil = null;
 
         /// <summary>The discharge_width (m)</summary>
         public double DischargeWidth { get; set; }

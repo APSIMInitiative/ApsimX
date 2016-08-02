@@ -25,7 +25,7 @@ namespace Models.WaterModel
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private Soil soil = null;
+        private SoilModel soil = null;
 
         /// <summary>Gets or sets the swcon.</summary>
         [UnitsAttribute("0-1")]

@@ -42,13 +42,13 @@ namespace Models.WaterModel
     /// SoilWater is called by APSIM on a daily basis, and typical of such models, the various processes are calculated consecutively. 
     /// This contrasts with models such as SWIM that solve simultaneously a set of differential equations that describe the flow processes.
     /// </summary>
-    public class Soil : Model, ISoil
+    public class SoilModel : Model, ISoil
     {
         // --- Links -------------------------------------------------------------------------
 
         /// <summary>Link to the soil properties.</summary>
         [Link]
-        private SoilProperties properties = null;
+        private APSIM.Shared.Soils.Soil properties = null;
 
         /// <summary>Link to the lateral flow model.</summary>
         [Link]
@@ -204,7 +204,7 @@ namespace Models.WaterModel
         }
 
         /// <summary>Provides access to the soil properties.</summary>
-        public SoilProperties Properties {  get { return properties; } }
+        public APSIM.Shared.Soils.Soil Properties {  get { return properties; } }
 
         // --- Event handlers ------------------------------------------------------------
 
