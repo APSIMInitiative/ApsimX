@@ -42,6 +42,8 @@ namespace Models.WaterModel
     /// SoilWater is called by APSIM on a daily basis, and typical of such models, the various processes are calculated consecutively. 
     /// This contrasts with models such as SWIM that solve simultaneously a set of differential equations that describe the flow processes.
     /// </summary>
+    [ValidParent(ParentType = typeof(Zone))]
+    [Serializable]
     public class SoilModel : Model, ISoil
     {
         // --- Links -------------------------------------------------------------------------

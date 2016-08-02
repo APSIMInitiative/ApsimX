@@ -49,6 +49,7 @@ namespace Models.WaterModel
     /// the rainfall amount required to remove the tillage roughness. CN2 is immediately reduced and increases linearly with 
     /// cumulative rain, ie.roughness is smoothed out by rain. 
     /// </summary>
+    [Serializable]
     public class RunoffModel : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------

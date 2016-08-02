@@ -15,6 +15,7 @@ namespace Models.WaterModel
     /// <summary>
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
     /// </summary>
+    [Serializable]
     public class WaterTableModel : Model, IFunction
     {
         /// <summary>The water movement model.</summary>

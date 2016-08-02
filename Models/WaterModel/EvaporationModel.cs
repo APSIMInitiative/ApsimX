@@ -44,6 +44,7 @@ namespace Models.WaterModel
     /// For t &gt; t<sub>1</sub>
     ///    Es = U x t + CONA x Sqrt(t-t<sub>1</sub>)
     /// </summary>
+    [Serializable]
     public class EvaporationModel : Model
     {
         /// <summary>The water movement model.</summary>

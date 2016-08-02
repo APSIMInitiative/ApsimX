@@ -30,6 +30,7 @@ namespace Models.WaterModel
     ///    thet_av is the average of SW - LL15 across the two layers.
     ///    Flow = Diffusivity x Volumetric Soil Water Gradient
     /// </summary>
+    [Serializable]
     public class UnsaturatedFlowModel : Model, IFunctionArray
     {
         /// <summary>The water movement model.</summary>

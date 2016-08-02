@@ -18,6 +18,7 @@ namespace Models.WaterModel
     /// of alfisols in the SAT's I. Modelling the effects of soil management on runoff
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
+    [Serializable]
     public class CNReductionForTillage : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------

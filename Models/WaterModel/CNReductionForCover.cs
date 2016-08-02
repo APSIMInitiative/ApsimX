@@ -12,6 +12,7 @@ namespace Models.WaterModel
     using System.Text;
 
     /// <summary>Implements the curve number reduction caused by cover.</summary>
+    [Serializable]
     public class CNReductionForCover : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------

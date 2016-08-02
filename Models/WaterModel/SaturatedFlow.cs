@@ -21,6 +21,7 @@ namespace Models.WaterModel
     /// Infiltration or water movement into any layer that exceeds the saturation capacity of the layer automatically 
     /// cascades to the next layer.
     /// </summary>
+    [Serializable]
     public class SaturatedFlowModel : Model, IFunctionArray
     {
         /// <summary>The water movement model.</summary>
