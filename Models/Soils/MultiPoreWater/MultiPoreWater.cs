@@ -150,6 +150,11 @@ namespace Models.Soils
         public double[] Water { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Pore[][] Pores;
+
+        /// <summary>
         /// Called when [simulation commencing].
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -161,6 +166,7 @@ namespace Models.Soils
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Water = new double[] { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
+            //Pores = new Pore[][Pores];
         }
     }
 
