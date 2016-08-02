@@ -10,6 +10,9 @@ namespace Models.Interfaces
     /// <summary>Surface organic matter interface.</summary>
     public interface ISurfaceOrganicMatter
     {
+        /// <summary>Fraction of ground covered by all surface OMs</summary>
+        double Cover { get; }
+
         /// <summary>Adds material to the surface organic matter pool.</summary>
         /// <param name="biomass">The amount of biomass added (kg/ha).</param>
         /// <param name="N">The amount of N added (ppm).</param>
