@@ -46,7 +46,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public double discharge_width { get; set; }
         ///<summary> Who knows</summary>
-        public double[] dlayer { get; }
+        public double[] dlayer { get; set; }
         ///<summary> Who knows</summary>
         public double[] dlt_sw { get;  set; }
         ///<summary> Who knows</summary>
