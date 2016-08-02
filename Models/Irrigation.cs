@@ -49,6 +49,7 @@ namespace Models
         public bool WillRunoff { get; set; }
 
         /// <summary>Indicates the depth of irrigation.</summary>
+        [XmlIgnore]
         public double Depth { get; set; }
 
         // Events we're going to send.
