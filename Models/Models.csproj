@@ -221,7 +221,8 @@
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
-    <Compile Include="Soils\MultiPoreWater.cs" />
+    <Compile Include="Soils\MultiPoreWater\MultiPoreWater.cs" />
+    <Compile Include="Soils\MultiPoreWater\Pore.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
@@ -503,9 +504,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Soils\MultiPoreWater\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
