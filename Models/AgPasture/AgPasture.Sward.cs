@@ -1292,17 +1292,26 @@ namespace Models.AgPasture
 
 		/// <summary>Gets the average generic growth limiting factor (arbitrary limitation).</summary>
 		/// <value>The generic growth limiting factor.</value>
-		[Description("Average generic plant growth limiting factor, used for other factors")]
+		[Description("Average generic plant growth limiting factor, used at potential growth level")]
 		[Units("0-1")]
 		public double GlfGeneric
 		{
 			get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.AboveGrounLivedWt), AboveGroundLiveWt, 0.0); }
 		}
 
-		//// TODO: verify that this is really needed
-		/// <summary>Gets the vapour pressure deficit factor.</summary>
-		/// <value>The vapour pressure deficit factor.</value>
-		[Description("Effect of vapour pressure on growth (used by micromet)")]
+        /// <summary>Gets the average generic growth limiting factor (arbitrary limitation).</summary>
+        /// <value>The generic growth limiting factor.</value>
+        [Description("Average generic plant growth limiting factor, used for nutrients other than N")]
+        [Units("0-1")]
+        public double GlfSFertility
+        {
+            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfSFertility * mySpecies.AboveGrounLivedWt), AboveGroundLiveWt, 0.0); }
+        }
+
+        //// TODO: verify that this is really needed
+        /// <summary>Gets the vapour pressure deficit factor.</summary>
+        /// <value>The vapour pressure deficit factor.</value>
+        [Description("Effect of vapour pressure on growth (used by micromet)")]
 		[Units("0-1")]
 		public double FVPD
 		{

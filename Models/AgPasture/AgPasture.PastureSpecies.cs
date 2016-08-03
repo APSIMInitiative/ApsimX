@@ -689,7 +689,7 @@ namespace Models.AgPasture
 		/// <summary>
 		/// Number of days defining the duration of the three phases with higher DM allocation to shoot (onset, sill, return)
 		/// </summary>
-		private int[] higherShootAllocationPeriods = new int[] { 35, 60, 30 };
+		private int[] higherShootAllocationPeriods = { 30, 60, 30 };
 		/// <summary>
 		/// Number of days defining the duration of the three phases with higher DM allocation to shoot (onset, sill, return)
 		/// </summary>
@@ -1113,21 +1113,34 @@ namespace Models.AgPasture
 			set { dillutionCoefN = value; }
 		}
 
-		/// <summary>Generic growth limiting factor [0-1]</summary>
-		private double glfGeneric = 1.0;
-		/// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
-		/// <value>The generic growth limiting factor.</value>
-		/// <remarks> This factor is applied at same level as N, so it can be considered a nutrient limitation effect </remarks>
-		[Description("Generic growth limiting factor [0-1]:")]
-		[Units("0-1")]
-		public double GlfGeneric
-		{
-			get { return glfGeneric; }
-			set { glfGeneric = value; }
-		}
+        /// <summary>Generic growth limiting factor [0-1]</summary>
+        private double glfGeneric = 1.0;
+        /// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
+        /// <value>The generic growth limiting factor.</value>
+		/// <remarks> This factor is applied at the level of potential growth</remarks>
+        [Description("Generic growth limiting factor [0-1]:")]
+        [Units("0-1")]
+        public double GlfGeneric
+        {
+            get { return glfGeneric; }
+            set { glfGeneric = value; }
+        }
 
-		/// <summary>Exponent factor for the water stress function</summary>
-		private double waterStressExponent = 1.0;
+        /// <summary>Generic growth limiting factor [0-1]</summary>
+        private double glfSfertility = 1.0;
+        /// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
+        /// <value>The generic growth limiting factor.</value>
+		/// <remarks> This factor is applied at the same level as N, used for other nutrients</remarks>
+        [Description("Generic limiting factor due to soil fertilisty [0-1]:")]
+        [Units("0-1")]
+        public double GlfSFertility
+        {
+            get { return glfSfertility; }
+            set { glfSfertility = value; }
+        }
+
+        /// <summary>Exponent factor for the water stress function</summary>
+        private double waterStressExponent = 1.0;
 		/// <summary>Exponent factor for the water stress function</summary>
 		/// <value>The water stress exponent.</value>
 		[Description("Exponent factor for the water stress function:")]
@@ -3698,9 +3711,7 @@ namespace Models.AgPasture
 			double ExtremeTemperatureFactor = HeatStress() * ColdStress();
 
 			// Actual gross photosynthesis (gross potential growth - kg C/ha/day)
-			return BaseGrossPhotosynthesis * ExtremeTemperatureFactor;
-
-			// TODO: implement GLFGeneric...
+		    return BaseGrossPhotosynthesis * ExtremeTemperatureFactor * glfGeneric;
 		}
 
 		/// <summary>Computes the plant's loss of C due to respiration</summary>
@@ -3734,7 +3745,8 @@ namespace Models.AgPasture
 		{
 			return Pgross * growthRespirationCoef;
 		}
-		/// <summary>Compute the plant's net potential growth</summary>
+		
+        /// <summary>Compute the plant's net potential growth</summary>
 		/// <returns>The net potential growth (kg DM/ha)</returns>
 		private double DailyNetPotentialGrowth()
 		{
@@ -3765,7 +3777,7 @@ namespace Models.AgPasture
 			double glfNit = Math.Pow(glfN, dillutionCoefN);
 
 			// The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
-			dGrowthActual = dGrowthWstress * Math.Min(glfNit, glfGeneric);   // TODO: uptade the use of GLFGeneric
+			dGrowthActual = dGrowthWstress * Math.Min(glfNit, glfSfertility);   // TODO: uptade the use of GLFGeneric
 
 			return dGrowthActual;
 		}
@@ -5134,7 +5146,7 @@ namespace Models.AgPasture
 			double result = 0.0;
 			if (photosynthesisPathway == "C3")
 			{
-				if (Temp > growthTmin && Temp < growthTmax)
+				if (Temp > growthTmin && Temp < growthTmax)  // TODO: Tmax should be calculated not given as a parameter
 				{
 					double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
 					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
