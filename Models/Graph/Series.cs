@@ -626,6 +626,7 @@ namespace Models.Graph
                             data.Columns.Contains(YFieldName) &&
                             dataView.Count > 0)
                         {
+                            definition.dataView = dataView;
                             definition.x = GetDataFromTable(dataView, XFieldName);
                             definition.y = GetDataFromTable(dataView, YFieldName);
                             if (Cumulative)

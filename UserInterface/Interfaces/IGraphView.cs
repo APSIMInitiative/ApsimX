@@ -151,17 +151,40 @@ namespace UserInterface.Interfaces
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
         /// <param name="colour">The color of the text</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawText(
             string text, 
-            double x, 
-            double y,
+            object x, 
+            object y,
             bool leftAlign,
+            double textRotation,
             Models.Graph.Axis.AxisType xAxisType, 
             Models.Graph.Axis.AxisType yAxisType,
+            Color colour);
+
+        /// <summary>
+        /// Draw line on the graph at the specified coordinates.
+        /// </summary>
+        /// <param name="x1">The x1 position in graph coordinates</param>
+        /// <param name="y1">The y1 position in graph coordinates</param>
+        /// <param name="x2">The x2 position in graph coordinates</param>
+        /// <param name="y2">The y2 position in graph coordinates</param>
+        /// <param name="type">Line type</param>
+        /// <param name="textRotation">Text rotation</param>
+        /// <param name="thickness">Line thickness</param>
+        /// <param name="colour">The color of the text</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawLine(
+            object x1,
+            object y1,
+            object x2,
+            object y2,
+            Models.Graph.LineType type,
+            Models.Graph.LineThicknessType thickness,
             Color colour);
 
         /// <summary>
