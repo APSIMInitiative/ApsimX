@@ -16,9 +16,13 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(FoodStore))]
-    public class FoodStoreType : Model
+    public class FoodStoreType : Model, IResource
     {
+        [Link]
+        ISummary Summary = null;
 
+
+        event EventHandler FoodStoreChanged;
 
 
         /// <summary>
@@ -29,9 +33,9 @@ namespace Models.WholeFarm
 
 
         /// <summary>
-        /// Dry Matter (%)
+        /// Dry Matter Digestibility (%)
         /// </summary>
-        [Description("DMD (%)")]
+        [Description("Dry Matter Digestibility (%)")]
         public double DMD { get; set; }
 
 
@@ -58,70 +62,93 @@ namespace Models.WholeFarm
         public double StartingAmount { get; set; }
 
 
+        /// <summary>
+        /// Age of this Human Food (Months)
+        /// </summary>
+        [XmlIgnore]
+        public double Age { get; set; } 
 
+
+        /// <summary>
+        /// Amount (kg)
+        /// </summary>
+        [XmlIgnore]
+        public double Amount { get { return _Amount; } }
+
+        private double _Amount;
 
 
 
 
         /// <summary>
-        ///  Creates a Fodder Item   
+        /// Add Fodder
         /// </summary>
-        /// <returns></returns>
-        public FoodStoreItem CreateListItem()
+        /// <param name="AddAmount"></param>
+        public void Add(double AddAmount)
         {
-            FoodStoreItem food = new FoodStoreItem();
+            this._Amount = this._Amount + AddAmount;
 
-            food.DryMatter  = this.DryMatter;
-            food.DMD = this.DMD;
-            food.Nitrogen = this.Nitrogen;
-            food.Age = this.StartingAge;
-            food.Amount = this.StartingAmount;
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
+        }
 
-            return food;
+        /// <summary>
+        /// Remove Fodder
+        /// </summary>
+        /// <param name="RemoveAmount"></param>
+        public void Remove(double RemoveAmount)
+        {
+            if (this._Amount - RemoveAmount < 0)
+            {
+                string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+                    + "Current Amount: " + this._Amount + Environment.NewLine
+                    + "Tried to Remove: " + RemoveAmount;
+                Summary.WriteWarning(this, message);
+                this._Amount = 0;
+            }
+            else
+            {
+                this._Amount = this._Amount - RemoveAmount;
+            }
+
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Set Amount of Fodder
+        /// </summary>
+        /// <param name="NewValue"></param>
+        public void Set(double NewValue)
+        {
+            this._Amount = NewValue;
+
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
+        }
+
+
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
+        {
+            this.Age = this.StartingAge;
+            this._Amount = this.StartingAmount;
+        }
+
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
         }
 
     }
 
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class FoodStoreItem
-    {
-
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DryMatter;
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DMD;
-
-
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        public double Nitrogen;
-
-
-        /// <summary>
-        /// Age of this Human Food (Months)
-        /// </summary>
-        public double Age { get; set; }
-
-
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
-        public double Amount { get; set; }
-
-
-    }
 }

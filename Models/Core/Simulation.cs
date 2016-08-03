@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
+using System.ComponentModel;
 
 namespace Models.Core 
 {
@@ -17,7 +18,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
-    public class Simulation : Zone, JobManager.IRunnable
+    public class Simulation : Zone, JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
     {
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
@@ -62,8 +63,15 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Argument for a DoCommence event.</summary>
+        public class CommenceArgs : EventArgs
+        {
+            /// <summary>Is a cancellation pending?</summary>
+            public BackgroundWorker workerThread;
+        }
+
         /// <summary>To commence the simulation, this event will be invoked.</summary>
-        public event EventHandler DoCommence;
+        public event EventHandler<CommenceArgs> DoCommence;
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
@@ -83,17 +91,15 @@ namespace Models.Core
             locater = new Locater();
         }
 
-        /// <summary>Run the simulation. Will throw on error.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="System.Exception">
-        /// </exception>
-        public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
+        /// <summary>Called to start the job.</summary>
+        /// <param name="jobManager">The job manager running this job.</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
+        public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
             try
             {
                 StartRun();
-                DoRun(sender);
+                DoRun(jobManager, workerThread);
                 CleanupRun();
             }
             catch (ApsimXException err)
@@ -120,8 +126,6 @@ namespace Models.Core
 
                 throw new Exception(ErrorMessage);
             }
-            if (e != null)
-                e.Result = this;
         }
 
         /// <summary>Startup the run.</summary>
@@ -146,13 +150,13 @@ namespace Models.Core
         }
 
         /// <summary>Perform the run. Will throw if error occurs.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <exception cref="ApsimXException">Cannot invoke Commenced</exception>
-        public void DoRun(object sender)
+        /// <param name="jobManager">The job manager</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
+        public void DoRun(JobManager jobManager, BackgroundWorker workerThread)
         {
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " has commenced.");
             if (DoCommence != null)
-                DoCommence.Invoke(sender, new EventArgs());
+                DoCommence.Invoke(jobManager, new CommenceArgs() { workerThread = workerThread } );
             else
                 throw new ApsimXException(this, "Cannot invoke Commenced");
         }

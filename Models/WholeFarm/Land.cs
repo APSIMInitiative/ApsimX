@@ -29,7 +29,7 @@ namespace Models.WholeFarm
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<LandItem> LandList;
+        public List<LandType> Items;
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -38,16 +38,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            LandList = new List<LandItem>();
+            Items = new List<LandType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                LandType landInit = childModel as LandType;
-                LandItem land = landInit.CreateListItem();
-                LandList.Add(land);
+                LandType land = childModel as LandType;
+                Items.Add(land);
             }
         }
 

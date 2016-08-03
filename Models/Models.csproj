@@ -134,15 +134,23 @@
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Runner.cs" />
+    <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
+    <Compile Include="Core\Runners\RunClonedSimulation.cs" />
+    <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
+    <Compile Include="Core\Runners\RunExternal.cs" />
+    <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
+    <Compile Include="IClock.cs" />
+    <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
+    <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
@@ -150,6 +158,7 @@
     <Compile Include="Plant\Functions\HoldFunction.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
@@ -212,6 +221,7 @@
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\MultiPoreWater.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
@@ -390,14 +400,27 @@
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="WaterModel\CNReductionForCover.cs" />
+    <Compile Include="WaterModel\CNReductionForTillage.cs" />
+    <Compile Include="WaterModel\Conversions.cs" />
+    <Compile Include="WaterModel\EvaporationModel.cs" />
+    <Compile Include="WaterModel\ISoil.cs" />
+    <Compile Include="WaterModel\LateralFlow.cs" />
+    <Compile Include="WaterModel\Runoff.cs" />
+    <Compile Include="WaterModel\SaturatedFlow.cs" />
+    <Compile Include="WaterModel\Soil.cs" />
+    <Compile Include="WaterModel\UnsaturatedFlow.cs" />
+    <Compile Include="WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
+    <Compile Include="WholeFarm\IResource.cs" />
+    <Compile Include="WholeFarm\RuminantTypeCohort.cs" />
     <Compile Include="WholeFarm\RuminantType.cs" />
-    <Compile Include="WholeFarm\Ruminant.cs" />
+    <Compile Include="WholeFarm\RuminantHerd.cs" />
     <Compile Include="WholeFarm\PastureType.cs" />
     <Compile Include="WholeFarm\Pasture.cs" />
     <Compile Include="WholeFarm\FoodStoreType.cs" />
@@ -407,10 +430,9 @@
     <Compile Include="WholeFarm\LandType.cs" />
     <Compile Include="WholeFarm\Land.cs" />
     <Compile Include="WholeFarm\LabourFamily.cs" />
-    <Compile Include="WholeFarm\LabourFamilyPerson.cs" />
+    <Compile Include="WholeFarm\LabourFamilyType.cs" />
     <Compile Include="WholeFarm\LabourHired.cs" />
-    <Compile Include="WholeFarm\LabourHiredPerson.cs" />
-    <Compile Include="WholeFarm\LabourItem.cs" />
+    <Compile Include="WholeFarm\LabourHiredType.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
@@ -481,7 +503,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Soils\MultiPoreWater\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
