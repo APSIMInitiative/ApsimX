@@ -217,9 +217,7 @@ namespace Models.Core
                 CallEventHandler(modelToNotify, "Deserialised", args);
 
             // Corrently parent all models.
-            modelToAdd.Parent = parent;
-            Apsim.ParentAllChildren(modelToAdd);
-            parent.Children.Add(modelToAdd as Model);
+            Add(parent, modelToAdd);
 
             // Ensure the model name is valid.
             Apsim.EnsureNameIsUnique(modelToAdd);
@@ -232,6 +230,16 @@ namespace Models.Core
             Locator(parent).Clear();
 
             return modelToAdd;
+        }
+
+        /// <summary>Add the specified model to the parent.</summary>
+        /// <param name="parent">The parent model</param>
+        /// <param name="modelToAdd">The child model.</param>
+        public static void Add(IModel parent, IModel modelToAdd)
+        {
+            modelToAdd.Parent = parent;
+            Apsim.ParentAllChildren(modelToAdd);
+            parent.Children.Add(modelToAdd as Model);
         }
 
         /// <summary>Deletes the specified model.</summary>

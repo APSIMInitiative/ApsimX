@@ -27,7 +27,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class SoilWater : Model
+    public class SoilWater : Model, ISoilWater
     {
 
 
@@ -1676,7 +1676,7 @@ namespace Models.Soils
         /// The residueinterception
         /// </summary>
         [Units("mm")]
-        public double residueinterception;     //residue interception loss (mm)
+        public double residueinterception { get; set; }     //residue interception loss (mm)
 
 
 
