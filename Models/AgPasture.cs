@@ -5066,7 +5066,7 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.Water[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.Water[layer] - soilCrop.LL[layer]) / (Soil.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     p_soilNavailable += (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);
                     SNSupply[layer] = (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);

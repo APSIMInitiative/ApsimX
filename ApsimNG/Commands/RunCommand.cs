@@ -116,9 +116,9 @@
 
                     SoundPlayer player = new SoundPlayer();
                     if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                        player.Stream = ApsimNG.Properties.Resources.notes;
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
                     else
-                        player.Stream = ApsimNG.Properties.Resources.success;
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
                     player.Play();
                     IsRunning = false;
                 }
