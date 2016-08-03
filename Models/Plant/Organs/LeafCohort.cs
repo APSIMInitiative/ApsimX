@@ -259,7 +259,9 @@ namespace Models.PMF.Organs
         /// <summary>The delta potential area</summary>
         private double DeltaPotentialArea = 0;
         /// <summary>The delta water constrained area</summary>
-        private double DeltaWaterConstrainedArea = 0;
+        public double DeltaWaterConstrainedArea = 0;
+        /// <summary>The delta carbon constrained area</summary>
+        public double DeltaCarbonConstrainedArea = 0;
         //private double StructuralDMDemand = 0;
         //private double MetabolicDMDemand = 0;
         /// <summary>The potential structural dm allocation</summary>
@@ -989,7 +991,7 @@ namespace Models.PMF.Organs
                 else _ThermalTime = TT;
 
                 //Growing leaf area after DM allocated
-                double DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
+                DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
                 double DeltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
                 LiveArea += DeltaActualArea; // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
