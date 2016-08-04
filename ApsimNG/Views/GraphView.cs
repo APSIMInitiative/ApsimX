@@ -67,7 +67,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
-        public GraphView(ViewBase owner) : base(owner)
+        public GraphView(ViewBase owner = null) : base(owner)
         {
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.GraphView.glade", "vbox1");
             gxml.Autoconnect(this);
@@ -206,9 +206,12 @@ namespace UserInterface.Views
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
             {
-                TextAnnotation textAnnotation = annotation as TextAnnotation;
-                if (textAnnotation != null)
-                    textAnnotation.FontSize = FontSize;
+                if (annotation is OxyPlot.Annotations.TextAnnotation)
+                {
+                    OxyPlot.Annotations.TextAnnotation textAnnotation = annotation as OxyPlot.Annotations.TextAnnotation;
+                    if (textAnnotation != null)
+                        textAnnotation.FontSize = FontSize;
+                }
             }
 
             this.plot1.Model.InvalidatePlot(true);
@@ -386,28 +389,117 @@ namespace UserInterface.Views
         /// <param name="text">The text to put on the graph</param>
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
+        /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
         /// <param name="colour">The color of the text</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawText(
             string text,
-            double x,
-            double y,
+            object x,
+            object y,
+            bool leftAlign,
+            double textRotation,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
             Color colour)
         {
-            TextAnnotation annotation = new TextAnnotation();
+            OxyPlot.Annotations.TextAnnotation annotation = new OxyPlot.Annotations.TextAnnotation();
             annotation.Text = text;
-            annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
+            if (leftAlign)
+                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
+            else
+                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Center;
             annotation.TextVerticalAlignment = VerticalAlignment.Top;
             annotation.Stroke = OxyColors.White;
-            annotation.TextPosition = new DataPoint(x, y);
-            //annotation.XAxis = this.GetAxis(xAxisType);
-            //annotation.YAxis = this.GetAxis(yAxisType);
+            annotation.Font = Font;
+            annotation.TextRotation = textRotation;
+
+            double xPosition = 0.0;
+            if (x is DateTime)
+                xPosition = DateTimeAxis.ToDouble(x);
+            else
+                xPosition = Convert.ToDouble(x);
+            double yPosition = 0.0;
+            if ((double)y == double.MinValue)
+            {
+                yPosition = AxisMinimum(yAxisType);
+                annotation.TextVerticalAlignment = VerticalAlignment.Bottom;
+            }
+            else if ((double)y == double.MaxValue)
+                yPosition = AxisMaximum(yAxisType);
+            else
+                yPosition = (double)y;
+            annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-            annotation.FontSize = FontSize - 1;
+            this.plot1.Model.Annotations.Add(annotation);
+        }
+        /// <summary>
+        /// Draw line on the graph at the specified coordinates.
+        /// </summary>
+        /// <param name="x1">The x1 position in graph coordinates</param>
+        /// <param name="y1">The y1 position in graph coordinates</param>
+        /// <param name="x2">The x2 position in graph coordinates</param>
+        /// <param name="y2">The y2 position in graph coordinates</param>
+        /// <param name="type">Line type</param>
+        /// <param name="textRotation">Text rotation</param>
+        /// <param name="thickness">Line thickness</param>
+        /// <param name="colour">The color of the text</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawLine(
+            object x1,
+            object y1,
+            object x2,
+            object y2,
+            Models.Graph.LineType type,
+            Models.Graph.LineThicknessType thickness,
+            Color colour)
+        {
+            OxyPlot.Annotations.LineAnnotation annotation = new OxyPlot.Annotations.LineAnnotation();
+
+            double x1Position = 0.0;
+            if (x1 is DateTime)
+                x1Position = DateTimeAxis.ToDouble(x1);
+            else
+                x1Position = Convert.ToDouble(x1);
+            double y1Position = 0.0;
+            if ((double)y1 == double.MinValue)
+                y1Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
+            else if ((double)y1 == double.MaxValue)
+                y1Position = AxisMaximum(Models.Graph.Axis.AxisType.Left);
+            else
+                y1Position = (double)y1;
+            double x2Position = 0.0;
+            if (x2 is DateTime)
+                x2Position = DateTimeAxis.ToDouble(x2);
+            else
+                x2Position = Convert.ToDouble(x2);
+            double y2Position = 0.0;
+            if ((double)y2 == double.MinValue)
+                y2Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
+            else if ((double)y2 == double.MaxValue)
+                y2Position = AxisMaximum(Models.Graph.Axis.AxisType.Left);
+            else
+                y2Position = (double)y2;
+
+            annotation.X = x1Position;
+            annotation.Y = y1Position;
+            annotation.MinimumX = x1Position;
+            annotation.MinimumY = y1Position;
+            annotation.MaximumX = x2Position;
+            annotation.MaximumY = y2Position;
+            annotation.Type = LineAnnotationType.Vertical;
+            annotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+
+            // Line type.
+            //LineStyle oxyLineType;
+            //if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
+            //    annotation.LineStyle = oxyLineType;
+
+            // Line thickness
+            if (thickness == LineThicknessType.Thin)
+                annotation.StrokeThickness = 0.5;
             this.plot1.Model.Annotations.Add(annotation);
         }
 

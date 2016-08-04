@@ -315,6 +315,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeaf.png" />
