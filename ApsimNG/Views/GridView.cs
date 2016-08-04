@@ -175,19 +175,23 @@ namespace UserInterface.Views
         {
             get
             {
-                int i = 0;
-                foreach (object[] row in gridmodel)
-                    i++;
-                return i;
+                return gridmodel.IterNChildren();
             }
             
             set
             {
+                // The main use of this will be to allow "empty" rows at the bottom of the grid to allow for
+                // additional data to be entered (primarily soil profile stuff). 
+                if (value > RowCount) // Add new rows
+                {
+                    for (int i = RowCount; i < value; i++)
+                        gridmodel.Append(); // Will this suffice?
+                }
+                else if (value < RowCount) // Remove existing rows. But let's check first to be sure they're empty
+                {
+                    /// TBI
+                }
                 /// TBI this.Grid.RowCount = value;
-                /// ? Does this even make sense with the GTK liststore?
-                /// Perhaps it does it the situation where we want to add a
-                /// new empty row for data entry, but that doesn't seem to 
-                /// be how it is being used.
             }
         }
 
@@ -476,13 +480,13 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
             int colNo;
-            if (colLookup.TryGetValue(cell, out colNo))
+            if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count)
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType(); //  DataSource.Columns[colNo].DataType;
                 string text;
-                if (dataType == typeof(float) ||
-                    dataType == typeof(double))
+                if ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
+                    (dataType == typeof(double) && !Double.IsNaN((double)dataVal)))
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
@@ -501,6 +505,14 @@ namespace UserInterface.Views
         {
             this.userEditingCell = true;
             IGridCell where = GetCurrentCell;
+            if (where.RowIndex >= DataSource.Rows.Count)
+            {
+                for (int i = DataSource.Rows.Count; i <= where.RowIndex; i++)
+                {
+                    DataRow row = DataSource.NewRow();
+                    DataSource.Rows.Add(row);
+                }
+            }
             this.valueBeforeEdit = this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
         }
 
@@ -527,7 +539,10 @@ namespace UserInterface.Views
                 {
                     newValue = DBNull.Value;
                 }
+
                 Type dataType = oldValue.GetType();
+                if (oldValue == DBNull.Value)
+                    dataType = this.DataSource.Columns[where.ColumnIndex].DataType;
                 if (dataType == typeof(string))
                     newValue = newtext;
                 else if (dataType == typeof(double))
