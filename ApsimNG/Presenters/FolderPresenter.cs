@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
 
             foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
             {
-                GraphView graphView = new GraphView(null /* TBI */);
+                GraphView graphView = new GraphView();
                 GraphPresenter presenter = new GraphPresenter();
                 presenter.Attach(graph, graphView, explorerPresenter);
                 presenters.Add(presenter);
