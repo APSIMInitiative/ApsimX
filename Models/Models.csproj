@@ -117,9 +117,11 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPasture.cs" />
-    <Compile Include="AgPasture\AgPasture1.Sward.cs" />
-    <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="AgPastureProto.cs" />
+    <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
+    <Compile Include="AgPasture\AgPasture.SwardProto.cs" />
+    <Compile Include="AgPasture\AgPasture.PastureSpeciesSwd.cs" />
+    <Compile Include="AgPasture\AgPasture.Sward.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
+    <Compile Include="Graph\EventNamesOnGraph.cs" />
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
