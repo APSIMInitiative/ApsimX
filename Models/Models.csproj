@@ -142,6 +142,7 @@
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
+    <Compile Include="Graph\EventNamesOnGraph.cs" />
     <Compile Include="Graph\Regression.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
