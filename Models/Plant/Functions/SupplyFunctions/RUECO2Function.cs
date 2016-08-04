@@ -26,9 +26,6 @@ namespace Models.PMF.Functions.SupplyFunctions
         [Link]
         protected IWeather MetData = null;
 
-        /// <summary>The c o2</summary>
-        double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm
-
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -53,9 +50,9 @@ namespace Models.PMF.Functions.SupplyFunctions
                     if (temp >= 50.0)
                         throw new Exception("Average daily temperature too high for RUE CO2 Function");
 
-                    if (CO2 < 350)
+                    if (MetData.CO2 < 350)
                         throw new Exception("CO2 concentration too low for RUE CO2 Function");
-                    else if (CO2 == 350)
+                    else if (MetData.CO2 == 350)
                         return 1.0;
                     else
                     {
@@ -65,14 +62,14 @@ namespace Models.PMF.Functions.SupplyFunctions
 
                         CP = (163.0 - temp) / (5.0 - 0.1 * temp);
 
-                        first = (CO2 - CP) * (350.0 + 2.0 * CP);
-                        second = (CO2 + 2.0 * CP) * (350.0 - CP);
+                        first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
+                        second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
                         return first / second;
                     }
                 }
                 else if (PhotosyntheticPathway == "C4")
                 {
-                    return 0.000143 * CO2 + 0.95; //Mark Howden, personal communication
+                    return 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
                 }
                 else
                     throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
