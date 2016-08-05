@@ -421,7 +421,9 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
-    <Compile Include="WholeFarm\IResource.cs" />
+    <Compile Include="WholeFarm\IResourceGroup.cs" />
+    <Compile Include="WholeFarm\Resources.cs" />
+    <Compile Include="WholeFarm\IResourceType.cs" />
     <Compile Include="WholeFarm\RuminantTypeCohort.cs" />
     <Compile Include="WholeFarm\RuminantType.cs" />
     <Compile Include="WholeFarm\RuminantHerd.cs" />
