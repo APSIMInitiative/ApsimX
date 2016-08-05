@@ -189,6 +189,9 @@ namespace UserInterface.Interfaces
         /// </summary>
         void AddRightHandView(object Control);
 
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        System.Drawing.Image GetScreenshotOfRightHandPanel();
+
         /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>

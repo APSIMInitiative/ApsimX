@@ -540,5 +540,10 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormMaximized = view.WindowMaximised;
             }
         }
+
+        public void CloseTabContaining(object o)
+        {
+            view.CloseTabContaining(o);
+        }
     }
 }

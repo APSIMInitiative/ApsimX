@@ -863,6 +863,16 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        public System.Drawing.Image GetScreenhotOfRightHandPanel()
+        {
+            return view.GetScreenshotOfRightHandPanel();
+        }
+
+        public ViewBase GetView()
+        {
+            return view as ExplorerView;
+        }
         #endregion
     }
 
