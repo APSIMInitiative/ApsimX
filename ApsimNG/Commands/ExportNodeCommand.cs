@@ -259,7 +259,6 @@ namespace UserInterface.Commands
         /// <param name="modelName">Name of model to document.</param>
         private void AddUserDocumentation(List<AutoDocumentation.ITag> tags, string modelName)
         {
-            /* TBI
             // Look for some instructions on which models in the example file we should write.
             // Instructions will be in a memo in the validation .apsimx file 
 
@@ -282,12 +281,13 @@ namespace UserInterface.Commands
                     if (model != null)
                     {
                         examplePresenter.SelectNode(Apsim.FullPath(model));
-                        Application.DoEvents();
+                        while (Gtk.Application.EventsPending())
+                            Gtk.Application.RunIteration();
                         if (model is Memo)
                             model.Document(tags, 1, 0);
                         else
                         {
-                            System.Drawing.Image image;
+                            System.Drawing.Image image = null;
 
                             if (model is Manager)
                                 image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
@@ -304,8 +304,10 @@ namespace UserInterface.Commands
                 }
 
                 // Close the tab
-                examplePresenter.MainPresenter.CloseTab(exampleFileName);
-            } */
+                examplePresenter.MainPresenter.CloseTabContaining(examplePresenter.GetView().MainWidget);
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
+            }
         }
 
         /// <summary>Adds a software availability section</summary>
@@ -615,6 +617,15 @@ namespace UserInterface.Commands
                        section.AddImage(PNGFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
+                }
+                else if (tag is AutoDocumentation.Image)
+                {
+                    AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
+                    if (imageTag.image.Width > 700)
+                        imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
+                    string PNGFileName = Path.Combine(workingDirectory, imageTag.name);
+                    imageTag.image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+                    section.AddImage(PNGFileName);
                 }
             }
         }
