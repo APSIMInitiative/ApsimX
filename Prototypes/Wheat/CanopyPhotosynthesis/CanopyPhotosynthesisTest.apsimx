@@ -1156,8 +1156,34 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>0.8</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1862,6 +1888,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Folder>
         <CanopyPhotosynthesis>
           <Name>Photosynthesis</Name>
+          <fPgmmax>40</fPgmmax>
+          <fMaxLUE>0.6</fMaxLUE>
+          <fCO2Cmp>50</fCO2Cmp>
+          <fCO2R>38</fCO2R>
+          <fKDIF>0.5</fKDIF>
+          <fMaxTmp>35</fMaxTmp>
+          <fOptTmp>27</fOptTmp>
+          <fMinTmp>0</fMinTmp>
+          <pathway>C3</pathway>
           <GrossPhotosynthesis>0</GrossPhotosynthesis>
         </CanopyPhotosynthesis>
         <Constant>
@@ -1976,6 +2011,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2084,7 +2120,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>0.8</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2252,7 +2314,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
+        <LinearInterpolationFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>20</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0.006</double>
+              <double>0.0125</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].MeanTemp.Value</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>0.8</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -3282,9 +3370,25 @@ namespace Models
         <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Wheat].Leaf.MaintenanceRespiration</string>
-          <string>[Wheat].Arbitrator.DMSupply</string>
           <string>[Wheat].Leaf.Live.Wt</string>
+          <string>[Wheat].Stem.Wt</string>
+          <string>[Wheat].Spike.Wt</string>
+          <string>[Wheat].Grain.Wt</string>
+          <string />
+          <string>[Wheat].Leaf.GrowthRespiration</string>
+          <string>[Wheat].Stem.GrowthRespiration</string>
+          <string>[Wheat].Spike.GrowthRespiration</string>
+          <string>[Wheat].Grain.GrowthRespiration</string>
+          <string>[Wheat].Leaf.MaintenanceRespiration</string>
+          <string>[Wheat].Stem.MaintenanceRespiration</string>
+          <string>[Wheat].Spike.MaintenanceRespiration</string>
+          <string>[Wheat].Grain.MaintenanceRespiration</string>
+          <string />
+          <string>[Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration as MaintenanceRespiration</string>
+          <string>[Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration as GrowthRespiration</string>
+          <string />
+          <string>[Wheat].Arbitrator.DMSupply as GrossPhotosynthesis</string>
+          <string>[Wheat].Arbitrator.DMSupply - ([Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration ) - ([Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration) as NetPhotosynthesis</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3449,6 +3553,151 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>Graph</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>GrowthRespiration</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Graph1</Name>
+      <Series>
+        <Name>GrowthResp</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-11094807</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>GrowthRespiration</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>MaintResp</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-3376729</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>MaintenanceRespiration</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series11</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>GrossPhotosynthesis</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Leaf.GrowthRespiration</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
@@ -3457,5 +3706,5 @@ namespace Models
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  <ExplorerWidth>271</ExplorerWidth>
+  <ExplorerWidth>313</ExplorerWidth>
 </Simulations>

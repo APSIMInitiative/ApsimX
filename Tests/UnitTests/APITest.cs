@@ -20,7 +20,7 @@ namespace UnitTests
     using UserInterface.Commands;
     using UserInterface;
     using UserInterface.Presenters;
-
+    using System.Reflection;
     /// <summary> 
     /// This is a test class for SystemComponentTest and is intended
     /// to contain all SystemComponentTest Unit Tests
@@ -44,6 +44,9 @@ namespace UnitTests
         [SetUp]
         public void Initialise()
         {
+            string tempFolder = Path.Combine(Path.GetTempPath(), "UnitTests");
+            Directory.CreateDirectory(tempFolder);
+            Directory.SetCurrentDirectory(tempFolder);
             FileStream oldfile = new FileStream("Continuous_Wheat.apsim", FileMode.Create);
             oldfile.Write(UnitTests.Properties.Resources.Continuous_Wheat, 0, UnitTests.Properties.Resources.Continuous_Wheat.Length);
             oldfile.Close();
@@ -74,9 +77,9 @@ namespace UnitTests
         [TearDown]
         public void Cleanup()
         {
-            this.simulation.CleanupRun();
-            File.Delete("Test.apsimx");
-            File.Delete("Goondiwindi.met");
+            //this.simulation.CleanupRun();
+            //File.Delete("Test.apsimx");
+            //File.Delete("Goondiwindi.met");
         }
 
         /// <summary>
@@ -339,7 +342,7 @@ namespace UnitTests
         /// <returns>The filename</returns>
         private string FindSqlite3DLL()
         {
-            string directory = Directory.GetCurrentDirectory();
+            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             while (directory != null) 
             {
                 string[] directories = Directory.GetDirectories(directory, "Bin");

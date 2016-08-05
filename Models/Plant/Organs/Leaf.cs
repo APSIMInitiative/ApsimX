@@ -194,6 +194,8 @@ namespace Models.PMF.Organs
         public Phenology Phenology = null;
         #endregion
 
+    
+
         #region Structures
         /// <summary>
         /// 
@@ -372,6 +374,13 @@ namespace Models.PMF.Organs
 
         /// <summary>Return the</summary>
         /// <value>The cohort current rank cover above.</value>
+        /// 
+
+            public double GrowthRespiration { get; set;  }
+
+        /// <summary>Return the</summary>
+        /// <value>The cohort current rank cover above.</value>
+
         public double CohortCurrentRankCoverAbove
         {
             get
@@ -569,6 +578,105 @@ namespace Models.PMF.Organs
             }
         }
         //Cohort State variable outputs
+
+        /// <summary>Gets the growth duration of the cohort.</summary>
+        /// <value>The growth duration of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortGrowthDuration
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.GrowthDuration;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
+        /// <summary>Gets the lag duration of the cohort.</summary>
+        /// <value>The lag duration of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortLagDuration
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.LagDuration;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
+        /// <summary>Gets the delta water constrained area of the cohort.</summary>
+        /// <value>The delta water constrained area of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortDeltaWaterConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.DeltaWaterConstrainedArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
+        /// <value>The delta carbon constrained area of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortDeltaCarbonConstrainedArea
+        {
+            get
+            {
+                int i = 0;
+
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.DeltaCarbonConstrainedArea;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+
 
         /// <summary>
         /// Returns the relative expansion of the next leaf to produce its ligule
@@ -1244,6 +1352,12 @@ namespace Models.PMF.Organs
         {
             set
             {
+                GrowthRespiration = 0;
+
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
+
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
                 double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
                 double check = Live.StructuralWt;

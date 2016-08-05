@@ -21,13 +21,13 @@ using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
-namespace Models.AgPasture1
+namespace Models.AgPasture
 {
 	/// <summary>A multi-mySpecies pasture model</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Sward : Model, ICrop, ICanopy, IUptake
+	public class SwardProto : Model, ICrop, ICanopy, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -78,9 +78,10 @@ namespace Models.AgPasture1
 		/// <summary>Occurs when the plant takes up soil N.</summary>
 		public event NitrogenChangedDelegate NitrogenChanged;
 
-		#endregion
+        #endregion
 
-        #region Canopy interface
+        #region Canopy interface  ------------------------------------------------------------------------------------------
+
         /// <summary>Canopy type</summary>
         [Description("Generic type of crop")]
         public string CanopyType
@@ -162,7 +163,7 @@ namespace Models.AgPasture1
                 if (isSwardControlled)
                 {
                     double spDemand = 0.0;
-                    foreach (PastureSpecies mySpecies in mySward)
+                    foreach (PastureSpeciesSwd mySpecies in mySward)
                     {
                         spDemand = MathUtilities.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
                         mySpecies.PotentialEP = spDemand;
@@ -188,7 +189,7 @@ namespace Models.AgPasture1
 
                 // pass on the radiation to each species  -  shouldn't this be partitioned???
                 if (isSwardControlled)
-                    foreach (PastureSpecies mySpecies in mySward)
+                    foreach (PastureSpeciesSwd mySpecies in mySward)
                         mySpecies.interceptedRadn = interceptedRadn;
                 //// TODO: remove this once energy balance by species is running
             }
@@ -197,8 +198,6 @@ namespace Models.AgPasture1
         #endregion
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
-
-
 
 		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
 		public string[] CultivarNames
@@ -237,7 +236,7 @@ namespace Models.AgPasture1
         /// <summary>Gets the reference to the species present in the sward.</summary>
         /// <value>Pasture species.</value>
         [XmlIgnore]
-		public PastureSpecies[] mySward { get; private set; }
+		public PastureSpeciesSwd[] mySward { get; private set; }
 
 		/// <summary>The number of species in the sward</summary>
 		private int numSpecies = 1;
@@ -1616,10 +1615,10 @@ namespace Models.AgPasture1
 		private void OnLoaded()
 		{
 			// get the number and reference to the mySpecies in the sward
-			numSpecies = Apsim.Children(this, typeof(PastureSpecies)).Count;
-			mySward = new PastureSpecies[numSpecies];
+			numSpecies = Apsim.Children(this, typeof(PastureSpeciesSwd)).Count;
+			mySward = new PastureSpeciesSwd[numSpecies];
 			int s = 0;
-			foreach (PastureSpecies mySpecies in Apsim.Children(this, typeof(PastureSpecies)))
+			foreach (PastureSpeciesSwd mySpecies in Apsim.Children(this, typeof(PastureSpeciesSwd)))
 			{
 				mySward[s] = mySpecies;
 				s += 1;
@@ -1637,7 +1636,7 @@ namespace Models.AgPasture1
 			//  it cannot be done here because it needs the mySpecies to be initialised, which is not 
 			//  only happen after this...
 
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 			{
 				mySpecies.isSwardControlled = isSwardControlled;
 				mySpecies.myWaterUptakeSource = waterUptakeSource;
@@ -1684,7 +1683,7 @@ namespace Models.AgPasture1
 					double sumLightExtCoeff = mySward.Sum(mySpecies => mySpecies.TotalLAI * mySpecies.LightExtentionCoeff);
 					double sumLAI = mySward.Sum(mySpecies => mySpecies.TotalLAI);
 					initialLightExtCoeff = sumLightExtCoeff / sumLAI;
-					foreach (PastureSpecies mySpecies in mySward)
+					foreach (PastureSpeciesSwd mySpecies in mySward)
 						mySpecies.swardLightExtCoeff = initialLightExtCoeff;
 					//// TODO: check whether this should be updated every day
 
@@ -1715,7 +1714,7 @@ namespace Models.AgPasture1
 		{
 			if (isAlive)
 			{
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					// stores the current state for this mySpecies
 					mySpecies.SaveState();
@@ -1739,13 +1738,13 @@ namespace Models.AgPasture1
 				DoWaterCalculations();
 
 				// step 02 - Potential growth after water limitations
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.CalcGrowthWithWaterLimitations();
 
 				// Nitrogen demand, supply, and uptake
 				DoNitrogenCalculations();
 
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					// step 03 - Actual growth after nutrient limitations, but before senescence
 					mySpecies.CalcActualGrowthAndPartition();
@@ -1810,13 +1809,13 @@ namespace Models.AgPasture1
 				}
 				double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
 				double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.glfWater = waterLimitingFactor;
 				//mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
 			}
 			else
 			{ //Water uptake is done by each species or by another apsim module
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.DoWaterCalculations();
 			}
 		}
@@ -1853,7 +1852,7 @@ namespace Models.AgPasture1
 
 				// get sum water available for all mySpecies
 				double[] sumWaterAvailable = new double[nLayers];
-				foreach (PastureSpecies plant in mySward)
+				foreach (PastureSpeciesSwd plant in mySward)
 					sumWaterAvailable.Zip(plant.GetSoilAvailableWater(), (x, y) => x + y);
 
 				for (int layer = 0; layer <= RootFrontier; layer++)
@@ -1899,7 +1898,7 @@ namespace Models.AgPasture1
 				}
 
 				// partition uptake between species, as function of their demand only
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					mySpecies.mySoilWaterTakenUp = new double[nLayers];
 					speciesFraction = mySpecies.WaterDemand / swardWaterDemand;
@@ -1918,7 +1917,7 @@ namespace Models.AgPasture1
 				for (int layer = 0; layer < RootFrontier; layer++)
 					sumWaterAvailable[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					// get adjusted water available
 					adjustedWAvailable = new double[nLayers];
@@ -1941,7 +1940,7 @@ namespace Models.AgPasture1
 			}
 
 			// aggregate all water taken up
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 				swardWaterUptake.Zip(mySpecies.WaterUptake, (x, y) => x + y);
 
 			// send the delta water taken up
@@ -1966,7 +1965,7 @@ namespace Models.AgPasture1
 				// partition N available between species, based on their relative demand (luxury minus minimum fixation)
 				double sumDemand = mySward.Sum(mySpecies => mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation));
 				double speciesFraction = 0.0;
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					speciesFraction = mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation) / sumDemand;
 					for (int layer = 0; layer < nLayers; layer++)
@@ -1981,7 +1980,7 @@ namespace Models.AgPasture1
 				swardNFixation = CalcNFixation();
 
 				// evaluate the use of N remobilised and any soil demand
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.CalcSoilNDemand();
 				swardRemobilisedN = mySward.Sum(mySpecies => mySpecies.RemobilisableN);
 				swardNRemobNewGrowth = mySward.Sum(mySpecies => mySpecies.RemobilisedN);
@@ -1991,12 +1990,12 @@ namespace Models.AgPasture1
 				swardSoilNuptake = CalcSoilNUptake();
 
 				// preliminary N budget
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.newGrowthN = mySpecies.FixedN + mySpecies.RemobilisedN + mySpecies.mySoilNuptake;
 				swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNuptake;
 
 				// evaluate whether further remobilisation (from luxury N) is needed
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					mySpecies.CalcNLuxuryRemob();
 					mySpecies.newGrowthN += mySpecies.RemobT2LuxuryN + mySpecies.RemobT3LuxuryN;
@@ -2009,7 +2008,7 @@ namespace Models.AgPasture1
 				DoSoilNitrogenUptake();
 
 				// get the glfN for each species
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 				{
 					if (mySpecies.ActualGrowthN > 0.0)
 						mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
@@ -2019,7 +2018,7 @@ namespace Models.AgPasture1
 			}
 			else
 			{ // N uptake is evaluated by the plant mySpecies or some other module
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.DoNitrogenCalculations();
 			}
 		}
@@ -2071,11 +2070,11 @@ namespace Models.AgPasture1
 		/// </summary>
 		private void GetNDemand()
 		{
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 				mySpecies.CalcNDemand();
 			// get N demand for optimum growth (discount minimum N fixation in legumes)
 			swardNdemand = 0.0;
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 				swardNdemand += mySpecies.RequiredOptimumN * (1 - mySpecies.MinimumNFixation);
 		}
 
@@ -2083,7 +2082,7 @@ namespace Models.AgPasture1
 		/// <returns>The total amount of N fixed in the sward</returns>
 		private double CalcNFixation()
 		{
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 				mySpecies.Nfixation = mySpecies.CalcNFixation();
 			return mySward.Sum(mySpecies => mySpecies.FixedN);
 		}
@@ -2096,7 +2095,7 @@ namespace Models.AgPasture1
 			if (swardSoilNdemand == 0.0)
 			{ // No demand, no uptake
 				result = 0.0;
-				foreach (PastureSpecies mySpecies in mySward)
+				foreach (PastureSpeciesSwd mySpecies in mySward)
 					mySpecies.mySoilNuptake = 0.0;
 			}
 			else
@@ -2104,7 +2103,7 @@ namespace Models.AgPasture1
 				if (soilAvailableN.Sum() >= swardSoilNdemand)
 				{ // soil can supply all remaining N needed
 					result = swardSoilNdemand;
-					foreach (PastureSpecies mySpecies in mySward)
+					foreach (PastureSpeciesSwd mySpecies in mySward)
 						mySpecies.mySoilNuptake = mySpecies.DemandSoilN;
 				}
 				else
@@ -2112,7 +2111,7 @@ namespace Models.AgPasture1
 					result = soilAvailableN.Sum();
 					// for species, uptake is equal demand adjusted to total uptake
 					double uptakeFraction = result / swardSoilNdemand;
-					foreach (PastureSpecies mySpecies in mySward)
+					foreach (PastureSpeciesSwd mySpecies in mySward)
 						mySpecies.mySoilNuptake = mySpecies.DemandSoilN * uptakeFraction;
 				}
 			}
@@ -2154,7 +2153,7 @@ namespace Models.AgPasture1
 						}
 
 						// partition the amount taken up between species, considering amount actually taken up
-						foreach (PastureSpecies mySpecies in mySward)
+						foreach (PastureSpeciesSwd mySpecies in mySward)
 						{
 							mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
 							if (swardSoilNuptake > 0.0)
@@ -2180,7 +2179,7 @@ namespace Models.AgPasture1
 							sumNH4Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 							sumNO3Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 						}
-						foreach (PastureSpecies mySpecies in mySward)
+						foreach (PastureSpeciesSwd mySpecies in mySward)
 						{
 							// get adjusted N available
 							adjustedNH4Available = new double[nLayers];
@@ -2214,7 +2213,7 @@ namespace Models.AgPasture1
 				else
 				{
 					// No uptake, just zero out the arrays
-					foreach (PastureSpecies mySpecies in mySward)
+					foreach (PastureSpeciesSwd mySpecies in mySward)
 						mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
 				}
 			}
@@ -2254,7 +2253,7 @@ namespace Models.AgPasture1
 		[EventSubscribe("KillCrop")]
 		private void OnKillCrop(KillCropType KillData)
 		{
-			foreach (PastureSpecies mySpecies in mySward)
+			foreach (PastureSpeciesSwd mySpecies in mySward)
 				mySpecies.OnKillCrop(KillData);
 
 			isAlive = false;

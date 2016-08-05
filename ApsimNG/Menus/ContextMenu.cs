@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Models.Soils;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -132,9 +133,21 @@ namespace UserInterface.Presenters
         {
             if (this.explorerPresenter.Save())
             {
-                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                this.command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
-                this.command.Do(null);
+                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
+                if (duplicates.Count > 0)
+                {
+                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
+                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                }
+                else
+                {
+                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+
+                    JobManager.IRunnable job = Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false);
+
+                    this.command = new Commands.RunCommand(job, model.Name, this.explorerPresenter);
+                    this.command.Do(null);
+                }
             }
         }
 

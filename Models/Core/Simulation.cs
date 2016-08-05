@@ -18,7 +18,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
-    public class Simulation : Zone, JobManager.IRunnable
+    public class Simulation : Zone, JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
     {
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
@@ -91,11 +91,9 @@ namespace Models.Core
             locater = new Locater();
         }
 
-        /// <summary>Run the simulation. Will throw on error.</summary>
-        /// <param name="jobManager">The job manager</param>
-        /// <param name="workerThread">The thread this simulation is running on</param>
-        /// <exception cref="System.Exception">
-        /// </exception>
+        /// <summary>Called to start the job.</summary>
+        /// <param name="jobManager">The job manager running this job.</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
         public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
             try
@@ -152,13 +150,13 @@ namespace Models.Core
         }
 
         /// <summary>Perform the run. Will throw if error occurs.</summary>
-        /// <param name="jobManager">The job manager.</param>
-        /// <param name="workerThread">The worker thread.</param>
+        /// <param name="jobManager">The job manager</param>
+        /// <param name="workerThread">The thread this job is running on.</param>
         public void DoRun(JobManager jobManager, BackgroundWorker workerThread)
         {
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " has commenced.");
             if (DoCommence != null)
-                DoCommence.Invoke(jobManager, new CommenceArgs() { workerThread = workerThread });
+                DoCommence.Invoke(jobManager, new CommenceArgs() { workerThread = workerThread } );
             else
                 throw new ApsimXException(this, "Cannot invoke Commenced");
         }

@@ -22,13 +22,13 @@ using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
-namespace Models.AgPasture1
+namespace Models.AgPasture
 {
 	/// <summary>Describes a pasture species</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class PastureSpecies : Model, ICrop, ICrop2, IUptake
+	public class PastureSpeciesSwd : Model, ICrop, ICrop2, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -5484,142 +5484,5 @@ namespace Models.AgPasture1
 		}
 
 		#endregion
-	}
-
-	/// <summary>Stores the state variables of a pasture species</summary>
-	[Serializable]
-	public class SpeciesState
-	{
-		/// <summary>Initializes a new instance of the species state<see cref="SpeciesState"/> class.</summary>
-		public SpeciesState() { }
-
-		// DM pools  ------------------------------------------------------------------------------
-		/// <summary>The DM weight of leaves at stage1</summary>
-		public double dmLeaf1;
-		/// <summary>The DM weight of leaves at stage2</summary>
-		public double dmLeaf2;
-		/// <summary>The DM weight of leaves at stage3</summary>
-		public double dmLeaf3;
-		/// <summary>The DM weight of leaves at stage4</summary>
-		public double dmLeaf4;
-
-		/// <summary>The DM weight of stems at stage1</summary>
-		public double dmStem1;
-		/// <summary>The DM weight of stems at stage2</summary>
-		public double dmStem2;
-		/// <summary>The DM weight of stems at stage3</summary>
-		public double dmStem3;
-		/// <summary>The DM weight of stems at stage4</summary>
-		public double dmStem4;
-
-		/// <summary>The DM weight of stolons at stage1</summary>
-		public double dmStolon1;
-		/// <summary>The DM weight of stolons at stage2</summary>
-		public double dmStolon2;
-		/// <summary>The DM weight of stolons at stage3</summary>
-		public double dmStolon3;
-
-		/// <summary>The DM weight of roots</summary>
-		public double dmRoot;
-
-		/// <summary>The DM weight of all leaves</summary>
-		public double dmLeaf
-		{ get { return dmLeaf1 + dmLeaf2 + dmLeaf3 + dmLeaf4; } }
-		/// <summary>The DM weight of all stem and sheath</summary>
-		public double dmStem
-		{ get { return dmStem1 + dmStem2 + dmStem3 + dmStem4; } }
-		/// <summary>The DM weight of all stolons</summary>
-		public double dmStolon
-		{ get { return dmStolon1 + dmStolon2 + dmStolon3; } }
-
-
-		// N pools  -------------------------------------------------------------------------------
-		/// <summary>The amount of N in leaves at stage 1</summary>
-		public double Nleaf1;
-		/// <summary>The amount of N in leaves at stage 2</summary>
-		public double Nleaf2;
-		/// <summary>The amount of N in leaves at stage 3</summary>
-		public double Nleaf3;
-		/// <summary>The amount of N in leaves at stage 4</summary>
-		public double Nleaf4;
-
-		/// <summary>The amount of N in stems at stage 1</summary>
-		public double Nstem1;
-		/// <summary>The amount of N in stems at stage 2</summary>
-		public double Nstem2;
-		/// <summary>The amount of N in stems at stage 3</summary>
-		public double Nstem3;
-		/// <summary>The amount of N in stems at stage 4</summary>
-		public double Nstem4;
-
-		/// <summary>The amount of N in stolons at stage 1</summary>
-		public double Nstolon1;
-		/// <summary>The amount of N in stolons at stage 2</summary>
-		public double Nstolon2;
-		/// <summary>The amount of N in stolons at stage 3</summary>
-		public double Nstolon3;
-
-		/// <summary>The amount of N in roots</summary>
-		public double Nroot;
-
-		// N concentrations  ----------------------------------------------------------------------
-		/// <summary>The N concentration in leaves at stage 1</summary>
-		public double NconcLeaf1
-		{ get { return (dmLeaf1 > 0.0) ? Nleaf1 / dmLeaf1 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 2</summary>
-		public double NconcLeaf2
-		{ get { return (dmLeaf2 > 0.0) ? Nleaf2 / dmLeaf2 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 3</summary>
-		public double NconcLeaf3
-		{ get { return (dmLeaf3 > 0.0) ? Nleaf3 / dmLeaf3 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 4</summary>
-		public double NconcLeaf4
-		{ get { return (dmLeaf4 > 0.0) ? Nleaf4 / dmLeaf4 : 0.0; } }
-
-		/// <summary>The N concentration in stems at stage 1</summary>
-		public double NconcStem1
-		{ get { return (dmStem1 > 0.0) ? Nstem1 / dmStem1 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 2</summary>
-		public double NconcStem2
-		{ get { return (dmStem2 > 0.0) ? Nstem2 / dmStem2 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 3</summary>
-		public double NconcStem3
-		{ get { return (dmStem3 > 0.0) ? Nstem3 / dmStem3 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 4</summary>
-		public double NconcStem4
-		{ get { return (dmStem4 > 0.0) ? Nstem4 / dmStem4 : 0.0; } }
-
-		/// <summary>The N concentration in stolons at stage 1</summary>
-		public double NconcStolon1
-		{ get { return (dmStolon1 > 0.0) ? Nstolon1 / dmStolon1 : 0.0; } }
-		/// <summary>The N concentration in stolons at stage 2</summary>
-		public double NconcStolon2
-		{ get { return (dmStolon2 > 0.0) ? Nstolon2 / dmStolon2 : 0.0; } }
-		/// <summary>The N concentration in stolons at stage 3</summary>
-		public double NconcStolon3
-		{ get { return (dmStolon3 > 0.0) ? Nstolon3 / dmStolon3 : 0.0; } }
-
-		/// <summary>The N concentration in roots</summary>
-		public double NconcRoot
-		{ get { return (dmRoot > 0.0) ? Nroot / dmRoot : 0.0; } }
-	}
-
-	/// <summary>Defines a broken stick (piecewise) function</summary>
-	[Serializable]
-	public class BrokenStick
-	{
-		/// <summary>The x</summary>
-		public double[] X;
-		/// <summary>The y</summary>
-		public double[] Y;
-
-		/// <summary>Values the specified new x.</summary>
-		/// <param name="newX">The new x.</param>
-		/// <returns></returns>
-		public double Value(double newX)
-		{
-			bool DidInterpolate = false;
-			return MathUtilities.LinearInterpReal(newX, X, Y, out DidInterpolate);
-		}
 	}
 }
