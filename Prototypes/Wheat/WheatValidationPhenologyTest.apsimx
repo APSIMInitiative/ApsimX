@@ -677,6 +677,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <WhenToHold>TerminalSpikelet</WhenToHold>
         </HoldFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <CultivarFolder>
         <Name>Cultivars</Name>
@@ -1604,7 +1605,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -1648,6 +1648,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -2859,7 +2860,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -2903,6 +2903,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -3574,7 +3575,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -3618,6 +3618,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -4289,7 +4290,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -4333,6 +4333,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -5004,7 +5005,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -5048,6 +5048,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -5714,7 +5715,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -5758,6 +5758,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -6517,7 +6518,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>7</SummerU>
               <SummerCona>3</SummerCona>
@@ -6564,6 +6564,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -7406,7 +7407,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -7453,6 +7453,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -7946,7 +7947,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -7993,6 +7993,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -8848,7 +8849,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -8895,6 +8895,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -9388,7 +9389,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -9435,6 +9435,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -10031,7 +10032,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -10078,6 +10078,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -10571,7 +10572,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -10618,6 +10618,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -11227,7 +11228,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -11274,6 +11274,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -11767,7 +11768,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -11814,6 +11814,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -12307,7 +12308,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -12354,6 +12354,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -12847,7 +12848,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -12894,6 +12894,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -13387,7 +13388,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>7</SummerU>
                 <SummerCona>3</SummerCona>
@@ -13434,6 +13434,7 @@ namespace Models
                   <double>0</double>
                   <double>0</double>
                 </KLAT>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -13939,7 +13940,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -13983,6 +13983,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -14693,7 +14694,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -14737,6 +14737,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -15447,7 +15448,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -15491,6 +15491,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16162,7 +16163,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -16206,6 +16206,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
