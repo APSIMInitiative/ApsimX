@@ -118,9 +118,9 @@ namespace Models.PMF.Organs
                 Clear();
         }
 
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <value>The water supply.</value>
-        public override double[] WaterSupply(List<ZoneWaterAndN> zones)
+        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
+        /// <param name="zone">The zone.</param>
+        public override double[] NO3NSupply(ZoneWaterAndN zone)
         {
             throw new NotImplementedException("SimpleRoot doesn't currently support SoilArbitrator");
             //CurrentPaddockName = Apsim.FullPath(this);
@@ -155,9 +155,8 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
-        /// <exception cref="System.NotImplementedException">
-        /// </exception>
-        public override void DoWaterUptake(double[] Amount)
+        /// <param name="zoneName">Zone name to do water uptake in</param>
+        public override void DoWaterUptake(double[] Amount, string zoneName)
         {
             Uptake = MathUtilities.Sum(Amount);
             throw new NotImplementedException();

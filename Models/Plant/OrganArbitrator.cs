@@ -652,67 +652,76 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
-                // Model can only handle one root zone at present
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
-                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == ParentZone.Name)
-                        MyZone = Z;
-
-                double Supply = 0;
-                double Demand = 0;
-                double[] supply = null;
-                foreach (IArbitration o in Organs)
+                // Get all water supplies.
+                double waterSupply = 0;
+                List<double[]> supplies = new List<double[]>();
+                List<string> zoneNames = new List<string>();
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    double[] organSupply = o.WaterSupply(soilstate.Zones);
-                    if (organSupply != null)
+                    foreach (IArbitration o in Organs)
                     {
-                        supply = organSupply;
-                        Supply += MathUtilities.Sum(organSupply);
+                        double[] organSupply = o.WaterSupply(zone);
+                        if (organSupply != null)
+                        {
+                            supplies.Add(organSupply);
+                            zoneNames.Add(zone.Name);
+                            waterSupply += MathUtilities.Sum(organSupply);
+                        }
                     }
-                    Demand += o.WaterDemand;
                 }
 
-                double FractionUsed = 0;
-                if (Supply > 0)
-                    FractionUsed = Math.Min(1.0, Demand / Supply);
+                // Calculate total water demand.
+                double waterDemand = 0;
+                foreach (IArbitration o in Organs)
+                    waterDemand += o.WaterDemand;
 
-                // Just send uptake from my zone
-                ZoneWaterAndN uptake = new ZoneWaterAndN();
-                uptake.Name = MyZone.Name;
-                uptake.Water = MathUtilities.Multiply_Value(supply, FractionUsed);
-                uptake.NO3N = new double[uptake.Water.Length];
-                uptake.NH4N = new double[uptake.Water.Length];
+                // Calculate demand / supply ratio.
+                double fractionUsed = 0;
+                if (waterSupply > 0)
+                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
 
+                // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
+                // to return to caller.
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(uptake);
+                for (int i = 0; i < supplies.Count; i++)
+                {
+                    // Just send uptake from my zone
+                    ZoneWaterAndN uptake = new ZoneWaterAndN();
+                    uptake.Name = zoneNames[i];
+                    uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                    uptake.NO3N = new double[uptake.Water.Length];
+                    uptake.NH4N = new double[uptake.Water.Length];
+                    zones.Add(uptake);
+                }
+
                 return zones;
             }
             else
                 return null;
         }
+
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
-            // Model can only handle one root zone at present
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            // Calculate the total water supply across all zones.
+            double waterSupply = 0;
             foreach (ZoneWaterAndN Z in zones)
-                if (Z.Name == ParentZone.Name)
-                    MyZone = Z;
-
-            double[] uptake = MyZone.Water;
-            waterSupply = MathUtilities.Sum(uptake);
+                if (Plant.Root.HaveRootsInZone(Z.Name))
+                    waterSupply += MathUtilities.Sum(Z.Water);
+            
+            // Calculate total plant water demand.
             waterDemand = 0.0;
             foreach (IArbitration o in Organs)
                 waterDemand += o.WaterDemand;
 
+            // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
             if (waterDemand > 0)
-                fraction = Math.Min(1.0, waterSupply / waterDemand);
+                fraction = Math.Min(1.0, this.waterSupply / waterDemand);
 
+            // Proportionally allocate supply across organs.
             waterUptake = 0.0;
             foreach (IArbitration o in Organs)
                 if (o.WaterDemand > 0)
@@ -721,7 +730,10 @@ namespace Models.PMF
                     waterUptake += o.WaterAllocation;
                 }
 
-            Plant.Root.DoWaterUptake(uptake);
+            // Give the water uptake for each zone to Root so that it can perform the uptake
+            // i.e. Root will do pass the uptake to the soil water balance.
+            foreach (ZoneWaterAndN Z in zones)
+                Plant.Root.DoWaterUptake(Z.Water, Z.Name);
         }
 
         /// <summary>
@@ -731,50 +743,46 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
-                // Model can only handle one root zone at present
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
-                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == ParentZone.Name)
-                        MyZone = Z;
-
-                ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
-                if (Plant.Phenology != null)
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    if (Plant.Phenology.Emerged == true)
+                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
+                    if (Plant.Phenology != null)
                     {
-                        DoNUptakeDemandCalculations(soilstate);
+                        if (Plant.Phenology.Emerged == true)
+                        {
+                            DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
+
+                            //Pack results into uptake structure
+                            UptakeDemands.NO3N = PotentialNO3NUptake;
+                            UptakeDemands.NH4N = PotentialNH4NUptake;
+                        }
+                        else //Uptakes are zero
+                        {
+                            UptakeDemands.NO3N = new double[zone.NO3N.Length];
+                            for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
+                            UptakeDemands.NH4N = new double[zone.NH4N.Length];
+                            for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
+                        }
+                    }
+                    else
+                    {
+                        DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
                         //Pack results into uptake structure
                         UptakeDemands.NO3N = PotentialNO3NUptake;
                         UptakeDemands.NH4N = PotentialNH4NUptake;
                     }
-                    else //Uptakes are zero
-                    {
-                        UptakeDemands.NO3N = new double[MyZone.NO3N.Length];
-                        for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                        UptakeDemands.NH4N = new double[MyZone.NH4N.Length];
-                        for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
-                    }
+
+                    UptakeDemands.Name = zone.Name;
+                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
+
+                    List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                    zones.Add(UptakeDemands);
+                    return zones;
                 }
-                else 
-                {
-                    DoNUptakeDemandCalculations(soilstate);
-
-                    //Pack results into uptake structure
-                    UptakeDemands.NO3N = PotentialNO3NUptake;
-                    UptakeDemands.NH4N = PotentialNH4NUptake;
-                }
-
-                UptakeDemands.Name = MyZone.Name;
-                UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(UptakeDemands);
-                return zones;
             }
-            else
-                return null;
+
+            return null;
         }
         
         /// <summary>
@@ -784,29 +792,38 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
-                // Model can only handle one root zone at present
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
-                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                // Calculate the total no3 and nh4 across all zones.
+                double[] no3Supply = null;
+                double[] nh4Supply = null;
                 foreach (ZoneWaterAndN Z in zones)
-                    if (Z.Name == ParentZone.Name)
-                        MyZone = Z;
+                {
+                    if (Plant.Root.HaveRootsInZone(Z.Name))
+                    {
+                        if (no3Supply == null)
+                            no3Supply = Z.NO3N;
+                        else
+                            no3Supply = MathUtilities.Add(no3Supply, Z.NO3N);
+                        if (nh4Supply == null)
+                            nh4Supply = Z.NH4N;
+                        else
+                            nh4Supply = MathUtilities.Add(nh4Supply, Z.NH4N);
+                    }
+                }
 
                 if (Plant.Phenology != null)
                 {
                     if (Plant.Phenology.Emerged == true)
                     {
-                        double[] AllocatedNO3Nuptake = MyZone.NO3N;
-                        double[] AllocatedNH4Nuptake = MyZone.NH4N;
-                        DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
-                        Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
+                        DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
+                        foreach (ZoneWaterAndN Z in zones)
+                            Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
                     }
                 }
                 else
                 {
-                    double[] AllocatedNO3Nuptake = MyZone.NO3N;
-                    double[] AllocatedNH4Nuptake = MyZone.NH4N;
-                    DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
-                    Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
+                    DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
+                    foreach (ZoneWaterAndN Z in zones)
+                        Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
                 }
             }
         }
@@ -871,13 +888,6 @@ namespace Models.PMF
             }
         }
         
-        /// <summary>Calculates how much N the roots will take up in the absence of competition</summary>
-        /// <param name="soilstate">The state of the soil.</param>
-        public void DoNUptakeDemandCalculations(SoilState soilstate)
-        {
-            DoPotentialNutrientUptake(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
-        }
-
         /// <summary>Allocates the NUptake that the soil arbitrator has returned</summary>
         /// <param name="AllocatedNO3Nuptake">AllocatedNO3Nuptake</param>
         /// <param name="AllocatedNH4Nuptake">AllocatedNH4Nuptake</param>
@@ -1138,34 +1148,26 @@ namespace Models.PMF
                 BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
             }
         }
-       
-        /// <summary>Does the uptake.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="soilstate">The soilstate.</param>
-        virtual public void DoPotentialNutrientUptake(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
-        {
-            // Model can only handle one root zone at present
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-            foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == ParentZone.Name)
-                    MyZone = Z;
 
+        /// <summary>Does the uptake from the specified zone.</summary>
+        /// <param name="BAT">The bat.</param>
+        /// <param name="MyZone">The zone.</param>
+        virtual public void DoPotentialNutrientUptake(ref BiomassArbitrationType BAT, ZoneWaterAndN MyZone)
+        {
             PotentialNO3NUptake = new double[MyZone.NO3N.Length];
             PotentialNH4NUptake = new double[MyZone.NH4N.Length];
 
             //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
             for (int i = 0; i < Organs.Length; i++)
             {
-                double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
+                double[] organNO3Supply = Organs[i].NO3NSupply(MyZone);
                 if (organNO3Supply != null)
                 {
                     PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                    BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
+                    BAT.UptakeSupply[i] += MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
-                double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
+                double[] organNH4Supply = Organs[i].NH4NSupply(MyZone);
                 if (organNH4Supply != null)
                 {
                     PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);

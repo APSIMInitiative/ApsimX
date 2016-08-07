@@ -738,6 +738,13 @@ namespace Models.Soils
 
         /// <summary>Gets the changes in mineral N made by other modules</summary>
         /// <param name="NitrogenChanges">The nitrogen changes.</param>
+        public void SetNitrogenChanged(NitrogenChangedType NitrogenChanges)
+        {
+            OnNitrogenChanged(NitrogenChanges);
+        }
+
+        /// <summary>Gets the changes in mineral N made by other modules</summary>
+        /// <param name="NitrogenChanges">The nitrogen changes.</param>
         [EventSubscribe("NitrogenChanged")]
         private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
