@@ -16,10 +16,12 @@
           <widget class="GtkEventBox" id="captionEventBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="no_show_all">True</property>
             <child>
               <widget class="GtkLabel" id="captionLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="no_show_all">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">label</property>
               </widget>
