@@ -424,6 +424,20 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the length.</summary>
+        /// <value>The length.</value>
+        [XmlIgnore]
+        public double Length
+        {
+            get
+            {
+                if (plantZone == null)
+                    return 0;
+                else
+                    return plantZone.Length;
+            }
+        }
+
         #endregion
 
         #region Functions

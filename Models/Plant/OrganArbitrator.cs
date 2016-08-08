@@ -810,20 +810,23 @@ namespace Models.PMF
                     }
                 }
 
-                if (Plant.Phenology != null)
+                if (no3Supply != null && nh4Supply != null)
                 {
-                    if (Plant.Phenology.Emerged == true)
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                        {
+                            DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
+                            foreach (ZoneWaterAndN Z in zones)
+                                Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
+                        }
+                    }
+                    else
                     {
                         DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
                         foreach (ZoneWaterAndN Z in zones)
                             Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
                     }
-                }
-                else
-                {
-                    DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                    foreach (ZoneWaterAndN Z in zones)
-                        Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
                 }
             }
         }
