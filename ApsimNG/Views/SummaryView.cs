@@ -93,7 +93,6 @@ namespace UserInterface.Views
         /// <param name="content">The html content</param>
         public void SetSummaryContent(string content)
         {
-            /// TBI htmlView1.UseMonoSpacedFont();
             this.htmlview.SetContents(content, false);
         }
 
