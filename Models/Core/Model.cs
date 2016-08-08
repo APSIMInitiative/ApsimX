@@ -232,6 +232,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Aqua.PondWater))]
         [XmlElement(typeof(Models.Aqua.FoodInPond))]
         [XmlElement(typeof(Models.Aqua.Prawns))]
+        [XmlElement(typeof(Models.WholeFarm.Resources))]
         [XmlElement(typeof(Models.WholeFarm.Fodder))]
         [XmlElement(typeof(Models.WholeFarm.FodderType))]
         [XmlElement(typeof(Models.WholeFarm.FoodStore))]
