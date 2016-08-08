@@ -443,7 +443,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-           
+            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
+            if (soil == null)
+                throw new Exception("Cannot find soil");
+
+            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaxNconc);
+
         }
 
         /// <summary>Called when crop is sown</summary>
