@@ -22,7 +22,15 @@
             // Clean up temporary files.
             string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
             if (Directory.Exists(tempFolder))
-                Directory.Delete(tempFolder, true);
+                // This may fail if another ApsimX instance is running. If so,
+                // we just ignore the exception and leave the cleanup for another day.
+                try
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+                catch (Exception)
+                {
+                }
             Directory.CreateDirectory(tempFolder);
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
@@ -32,7 +40,7 @@
                 mainPresenter.Attach(mainForm, args);
                 mainForm.MainWidget.ShowAll();
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
-                    Gtk.Application.Run();  
+                    Gtk.Application.Run();
             }
             catch (Exception err)
             {
