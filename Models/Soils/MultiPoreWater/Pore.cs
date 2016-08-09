@@ -13,25 +13,29 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
-        /// <summary>The thickness of the pore layer</summary>
+        /// <summary>The thickness of the layer that the pore is within</summary>
         [XmlIgnore]
         [Units("mm")]
         public double Thickness { get; set; }
-        /// <summary>The thickness of the pore layer</summary>
+        /// <summary>The diameter of the upper boundry of the pore</summary>
         [XmlIgnore]
         [Units("nm")]
         public double MaxDiameter { get; set; }
-        /// <summary>The thickness of the pore layer</summary>
+        /// <summary>The diameter of the lower boundry of the pore</summary>
         [XmlIgnore]
         [Units("nm")]
         public double MinDiameter { get; set; }
-        /// <summary>The thickness of the pore layer</summary>
+        /// <summary>The volume of the the pore</summary>
         [XmlIgnore]
-        [Units("ml")]
+        [Units("ml/ml")]
         public double Volume { get; set; }
-        /// <summary>The thickness of the pore layer</summary>
+        /// <summary>The water filled volume of the pore</summary>
         [XmlIgnore]
-        [Units("g")]
-        public double Watermass { get; set; }
+        [Units("ml/ml")]
+        public double WaterFilledVolume { get; set; }
+        /// <summary>The depth of water in the pore</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double Waterdepth { get { return WaterFilledVolume * Thickness; } }
     }
 }

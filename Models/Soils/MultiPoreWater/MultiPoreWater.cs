@@ -13,6 +13,7 @@ using Models.SurfaceOM;
 using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.Soils
@@ -195,6 +196,8 @@ namespace Models.Soils
         #region Class Dependancy Links
         [Link]
         private Water Water2 = null;
+        [Link]
+        private Soil Soil = null;
         #endregion
         
         #region Structures
@@ -209,14 +212,8 @@ namespace Models.Soils
         /// The maximum diameter of pore compartments
         /// </summary>
         [Units("nm")]
-        [Description("The upper boundary of poresize for each pore group")]
-        public double[] PoreMaxDiameter { get; set; }
-        /// <summary>
-        /// The minimum diameter of pore compartments
-        /// </summary>
-        [Units("nm")]
-        [Description("The lower boundary of poresize for each pore group")]
-        public double[] PoreMinDiameter { get; set; }
+        [Description("The pore diameters the seperate modeled pore compartemnts")]
+        public double[] PoreBounds { get; set; }
         #endregion
 
         #region Outputs
@@ -250,11 +247,9 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-             
-            if (PoreMaxDiameter.Length != PoreMinDiameter.Length)
-                throw new Exception(this + "Must enter the same number of max and min pore diameters");
             ProfileLayers = Water2.Thickness.Length;
-            PoreCompartments = PoreMaxDiameter.Length;
+            PoreCompartments = PoreBounds.Length-1;
+            SWmm = new double[ProfileLayers];
             
             double[] InitialWater = new double[Water2.Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
@@ -265,16 +260,27 @@ namespace Models.Soils
             Pores = new Pore[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
+                double AccumVolume = 0;
+                double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
-                for (int c = 0; c < PoreCompartments; c++)
+                for (int c = PoreCompartments-1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
-                    Pores[l][c].MaxDiameter = PoreMaxDiameter[c];
-                    Pores[l][c].MinDiameter = PoreMinDiameter[c];
+                    Pores[l][c].MaxDiameter = PoreBounds[c];
+                    Pores[l][c].MinDiameter = PoreBounds[c+1];
                     Pores[l][c].Thickness = Water2.Thickness[l];
-                    Pores[l][c].Volume = Water2.SAT[l] * RelativePoreVolume(PoreMaxDiameter[c], PoreMinDiameter[c]);
-                    Pores[l][c].Watermass = 0;
+                    double PoreVolume = Water2.SAT[l] * ProportionPoreVolume(PoreBounds[c], PoreBounds[c + 1]);
+                    AccumVolume += PoreVolume;
+                    Pores[l][c].Volume = PoreVolume;
+                    double PoreWaterFilledVolume = Math.Min(PoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    AccumWaterVolume += PoreWaterFilledVolume;
+                    Pores[l][c].WaterFilledVolume = PoreWaterFilledVolume;
                 }
+                if (Math.Abs(AccumVolume - Water2.SAT[l])>FloatingPointTolerance)
+                    throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
+                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
+                    throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
+                SWmm[l] = LayerSum(Pores[l],"Waterdepth"); 
             }
         }
         /// <summary>
@@ -300,21 +306,37 @@ namespace Models.Soils
         #endregion
 
         #region Internal States
-
+        private double FloatingPointTolerance = 0.000000001;
         #endregion
 
         #region Internal Properties and Methods
-        private double RelativePoreVolume(double MaxDiameter, double MinDiameter)
+        /// <summary>
+        /// Calculates the proportion of total porosity the resides between the two specified pore diameters
+        /// </summary>
+        /// <param name="MaxDiameter"></param>
+        /// <param name="MinDiameter"></param>
+        /// <returns>proportion of totol porosity</returns>
+        private double ProportionPoreVolume(double MaxDiameter, double MinDiameter)
         {
-            double RelativeVolumeMaxDiameter = CumPoreVolume(MaxDiameter);
-            double RelativeVolumeMinDiameter = CumPoreVolume(MinDiameter);
-            return RelativeVolumeMaxDiameter - RelativeVolumeMinDiameter;
+            return CumPoreVolume(MaxDiameter) - CumPoreVolume(MinDiameter);
         }
 
         private double CumPoreVolume(double PoreDiameter)
         {
             double PoreVolume = PoreDiameter * 0.0003;
             return Math.Min(1,PoreVolume);
+        }
+        private double LayerSum(Pore[] Compartments, string Property)
+        {
+            double Sum = 0;
+            foreach (Pore P in Compartments)
+            {
+                object o = ReflectionUtilities.GetValueOfFieldOrProperty(Property, P);
+                if (o == null)
+                    throw new NotImplementedException();
+                Sum += (double)o;
+            }
+            return Sum;
         }
         #endregion
     }
