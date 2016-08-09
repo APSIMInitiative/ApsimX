@@ -719,7 +719,7 @@ namespace Models.PMF
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
             if (waterDemand > 0)
-                fraction = Math.Min(1.0, this.waterSupply / waterDemand);
+                fraction = Math.Min(1.0, waterSupply / waterDemand);
 
             // Proportionally allocate supply across organs.
             waterUptake = 0.0;
@@ -1167,7 +1167,7 @@ namespace Models.PMF
                 if (organNO3Supply != null)
                 {
                     PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                    BAT.UptakeSupply[i] += MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
+                    BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
                 double[] organNH4Supply = Organs[i].NH4NSupply(MyZone);
