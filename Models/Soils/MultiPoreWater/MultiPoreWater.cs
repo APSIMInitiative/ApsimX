@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 using Models.PMF;
 using System.Runtime.Serialization;
 using Models.SurfaceOM;
-
+using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 
@@ -161,13 +161,12 @@ namespace Models.Soils
         [XmlIgnore]
         public double[] SW { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        
         public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] SWmm { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
         public double[] Thickness { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
@@ -193,21 +192,30 @@ namespace Models.Soils
         public void Tillage(string DefaultTillageName) { }
         #endregion
 
+        #region Class Dependancy Links
+        //[Link]
+        //Soil Soil = null;
+        #endregion
+        
         #region Structures
         /// <summary>
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
         /// </summary>
-        public Pore[,] Pores;
+        public Pore[][] Pores;
         #endregion
 
         #region Parameters
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
+        [Units("nm")]
+        [Description("The upper boundary of poresize for each pore group")]
         public double[] PoreMaxDiameter { get; set; }
         /// <summary>
         /// The minimum diameter of pore compartments
         /// </summary>
+        [Units("nm")]
+        [Description("The lower boundary of poresize for each pore group")]
         public double[] PoreMinDiameter { get; set; }
         #endregion
 
@@ -223,11 +231,11 @@ namespace Models.Soils
         /// <summary>
         /// The number of layers in the soil profiel
         /// </summary>
-        public int ProfileLayers { get; set; }
+        private int ProfileLayers { get; set; }
         /// <summary>
         /// The number of compartments the soils porosity is divided into
         /// </summary>
-        public int PoreCompartments { get; set; }
+        private int PoreCompartments { get; set; }
         #endregion
 
         #region Event Handlers
@@ -247,7 +255,7 @@ namespace Models.Soils
                 throw new Exception(this + "Must enter the same number of max and min pore diameters");
             ProfileLayers = Thickness.Length;
             PoreCompartments = PoreMaxDiameter.Length;
-            Pores = new Pore[ProfileLayers,PoreCompartments];
+            
 
             double[] InitialWater = new double[Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
@@ -255,15 +263,17 @@ namespace Models.Soils
                 
             }
 
+            Pores = new Pore[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
+                Pores[l] = new Pore[PoreCompartments];
                 for (int c = 0; c < PoreCompartments; c++)
                 {
-                    Pores[l, c].MaxDiameter = PoreMaxDiameter[c];
-                    Pores[l, c].MinDiameter = PoreMinDiameter[c];
-                    Pores[l, c].Thickness = Thickness[l];
-                    Pores[l, c].Volume = 0;
-                    Pores[l, c].Watermass = 0;
+                    Pores[l][c].MaxDiameter = PoreMaxDiameter[c];
+                    Pores[l][c].MinDiameter = PoreMinDiameter[c];
+                    Pores[l][c].Thickness = Thickness[l];
+                    Pores[l][c].Volume = 0;
+                    Pores[l][c].Watermass = 0;
                 }
             }
         }
