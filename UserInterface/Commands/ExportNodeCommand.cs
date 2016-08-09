@@ -78,7 +78,8 @@ namespace UserInterface.Commands
             citations = new List<BibTeX.Citation>();
 
             // Get the model we are to export.
-            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", ""));
+            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
+            modelName = modelName.Replace("validation", string.Empty);  
             DoExportPDF(modelName);
         }
 
