@@ -20,7 +20,7 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(DropAnywhere = true)]
+    [ValidParent(ParentType = typeof(Resources))]
     public class LabourFamily: Model
     {
         /// <summary>

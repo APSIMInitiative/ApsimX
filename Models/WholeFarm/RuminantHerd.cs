@@ -15,12 +15,12 @@ namespace Models.WholeFarm
 {
 
     ///<summary>
-    /// Parent model of Land Types.
+    /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(DropAnywhere = true)]
+    [ValidParent(ParentType = typeof(Resources))]
     public class RuminantHerd: Model
     {
 

@@ -82,6 +82,7 @@ namespace UserInterface.Views
             largestDate = DateTime.MinValue;
             this.LeftRightPadding = 40;
             expander1.Visible = false;
+            captionEventBox.Visible = true;
 
             plot1.Model.MouseDown += OnChartClick;
 
@@ -1067,5 +1068,12 @@ namespace UserInterface.Views
                     OnMouseDoubleClick(sender, e);
             }
         }
+
+        public void ShowControls(bool visible)
+        {
+            captionEventBox.Visible = visible;
+            expander1.Visible = visible && expander1.Expanded;
+        }
+     
     }
 }

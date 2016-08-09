@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(FoodStore))]
-    public class FoodStoreType : Model, IResource
+    public class FoodStoreType : Model, IResourceType
     {
         [Link]
         ISummary Summary = null;

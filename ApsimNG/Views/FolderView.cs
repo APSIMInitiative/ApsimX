@@ -24,33 +24,26 @@ namespace UserInterface.Views
     /// </summary>
     public class FolderView : ViewBase, IFolderView
     {
-        private DrawingArea drawingArea = new DrawingArea();
+        private Table table;
+        private ScrolledWindow scroller;
+
         public FolderView(ViewBase owner) : base(owner)
         {
-            _mainWidget = drawingArea;
+            scroller = new ScrolledWindow();
+            scroller.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+            table = new Table(1, 1, false);
+            scroller.AddWithViewport(table);
+            _mainWidget = scroller;
         }
 
         /// <summary>Sets the controls to show.</summary>
         public void SetContols(List<GraphView> controls)
         {
-            /* TBI
-            foreach (UserControl control in controls)
-                control.Parent = this;
-
-            PositionAndRefreshControls();
-            */
-        }
-
-        /// <summary>Positions and refreshes all controls.</summary>
-        private void PositionAndRefreshControls()
-        {
-            /* TBI
-            this.Resize -= OnResize;
-            int numControls = Controls.Count;
+            int numControls = controls.Count;
             if (numControls > 0)
             {
-                int numCols = 2;
-                int numRows;
+                uint numCols = 2;
+                uint numRows;
                 if (numControls == 1)
                 {
                     numCols = 1;
@@ -59,35 +52,26 @@ namespace UserInterface.Views
                 else
                 {
                     numCols = 2;
-                    numRows = (int)Math.Ceiling((double)numControls / numCols);
+                    numRows = (uint)Math.Ceiling((double)numControls / numCols);
                 }
-
-                int width = (Size.Width - 50) / numCols;
-                int height = Size.Height / numRows - 1;
-                if (height < Size.Height / 2)
+                table.Resize(numRows, numCols);
+                uint col = 0;
+                uint row = 0;
+                foreach (GraphView gview in controls)
                 {
-                    height = Size.Height / 2;
-                    AutoScroll = true;
-                    VScroll = true;
-                }
-                int controlNumber = 0;
-                int col = 0;
-                int row = 0;
-                foreach (Control control in Controls)
-                {
-                    GraphView graphView = control as GraphView;
-                    if (graphView != null)
+                    if (gview != null)
                     {
-                        graphView.FontSize = 10;
-                        graphView.Refresh();
-                        graphView.SingleClick += OnGraphClick;
-                        graphView.IsLegendVisible = false;
+                        gview.FontSize = 10;
+                        gview.ShowControls(false);
+                        gview.Refresh();
+                        gview.SingleClick += OnGraphClick;
+                        gview.IsLegendVisible = false;
+                        gview.MainWidget.SetSizeRequest(200, 200);
+                        gview.ShowControls(false);
+                        table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
+                        gview.MainWidget.ShowAll();
                     }
 
-                    control.Location = new Point(col * width, row * height);
-                    control.Width = width;
-                    control.Height = height;
-                    controlNumber++;
                     col++;
                     if (col >= numCols)
                     {
@@ -96,8 +80,6 @@ namespace UserInterface.Views
                     }
                 }
             }
-            this.Resize += OnResize;
-            */
         }
 
         /// <summary>User has double clicked a graph.</summary>
@@ -112,14 +94,5 @@ namespace UserInterface.Views
                 graphView.Refresh();
             }
         }
-
-        /// <summary>Called when user resized view.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnResize(object sender, EventArgs e)
-        {
-            PositionAndRefreshControls();
-        }
-
     }
 }

@@ -6,7 +6,10 @@ using System.Text;
 
 namespace Models.WholeFarm
 {
-    interface IResource
+    /// <summary>
+    /// Interface of a Resource Type.
+    /// </summary>
+    public interface IResourceType
     {
 
         //event EventHandler ResourceChanged;
