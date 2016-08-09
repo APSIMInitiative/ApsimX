@@ -40,16 +40,16 @@
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.startPage1 = new System.Windows.Forms.TabPage();
-            this.listButtonView1 = new ListButtonView();
+            this.listButtonView1 = new Views.ListButtonView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.startPage2 = new System.Windows.Forms.TabPage();
-            this.listButtonView2 = new ListButtonView();
+            this.listButtonView2 = new Views.ListButtonView();
             this.statusPanel = new System.Windows.Forms.Panel();
             this.StatusWindow = new System.Windows.Forms.TextBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.splitter1 = new System.Windows.Forms.SplitContainer();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.tabPopupMenu1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -61,10 +61,6 @@
             this.tabPopupMenu2.SuspendLayout();
             this.startPage2.SuspendLayout();
             this.statusPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitter1)).BeginInit();
-            this.splitter1.Panel1.SuspendLayout();
-            this.splitter1.Panel2.SuspendLayout();
-            this.splitter1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ListViewImages
@@ -118,7 +114,7 @@
             // 
             this.splitContainer.Panel2.Controls.Add(this.tabControl2);
             this.splitContainer.Panel2Collapsed = true;
-            this.splitContainer.Size = new System.Drawing.Size(769, 435);
+            this.splitContainer.Size = new System.Drawing.Size(769, 464);
             this.splitContainer.SplitterDistance = 383;
             this.splitContainer.TabIndex = 1;
             // 
@@ -131,7 +127,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(769, 435);
+            this.tabControl1.Size = new System.Drawing.Size(769, 464);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseDown);
             // 
@@ -142,7 +138,7 @@
             this.startPage1.Margin = new System.Windows.Forms.Padding(4);
             this.startPage1.Name = "startPage1";
             this.startPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.startPage1.Size = new System.Drawing.Size(761, 406);
+            this.startPage1.Size = new System.Drawing.Size(761, 435);
             this.startPage1.TabIndex = 0;
             this.startPage1.Text = "+";
             this.startPage1.UseVisualStyleBackColor = true;
@@ -153,7 +149,7 @@
             this.listButtonView1.Location = new System.Drawing.Point(4, 4);
             this.listButtonView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.listButtonView1.Name = "listButtonView1";
-            this.listButtonView1.Size = new System.Drawing.Size(753, 398);
+            this.listButtonView1.Size = new System.Drawing.Size(753, 427);
             this.listButtonView1.TabIndex = 0;
             // 
             // tabControl2
@@ -191,7 +187,7 @@
             this.startPage2.Margin = new System.Windows.Forms.Padding(4);
             this.startPage2.Name = "startPage2";
             this.startPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.startPage2.Size = new System.Drawing.Size(374, 435);
+            this.startPage2.Size = new System.Drawing.Size(88, 71);
             this.startPage2.TabIndex = 0;
             this.startPage2.Text = "+";
             this.startPage2.UseVisualStyleBackColor = true;
@@ -202,18 +198,18 @@
             this.listButtonView2.Location = new System.Drawing.Point(4, 4);
             this.listButtonView2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.listButtonView2.Name = "listButtonView2";
-            this.listButtonView2.Size = new System.Drawing.Size(366, 427);
+            this.listButtonView2.Size = new System.Drawing.Size(80, 63);
             this.listButtonView2.TabIndex = 0;
             // 
             // statusPanel
             // 
             this.statusPanel.Controls.Add(this.StatusWindow);
             this.statusPanel.Controls.Add(this.progressBar);
-            this.statusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusPanel.Location = new System.Drawing.Point(0, 0);
+            this.statusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.statusPanel.Location = new System.Drawing.Point(0, 444);
             this.statusPanel.Margin = new System.Windows.Forms.Padding(2);
             this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(769, 25);
+            this.statusPanel.Size = new System.Drawing.Size(769, 20);
             this.statusPanel.TabIndex = 15;
             // 
             // StatusWindow
@@ -226,7 +222,7 @@
             this.StatusWindow.Name = "StatusWindow";
             this.StatusWindow.ReadOnly = true;
             this.StatusWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.StatusWindow.Size = new System.Drawing.Size(677, 25);
+            this.StatusWindow.Size = new System.Drawing.Size(677, 20);
             this.StatusWindow.TabIndex = 13;
             // 
             // progressBar
@@ -235,27 +231,16 @@
             this.progressBar.Location = new System.Drawing.Point(0, 0);
             this.progressBar.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(92, 25);
+            this.progressBar.Size = new System.Drawing.Size(92, 20);
             this.progressBar.TabIndex = 14;
             this.progressBar.Visible = false;
             // 
             // splitter1
             // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitter1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitter1.Location = new System.Drawing.Point(0, 0);
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter1.Location = new System.Drawing.Point(0, 441);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitter1.Panel1
-            // 
-            this.splitter1.Panel1.Controls.Add(this.splitContainer);
-            // 
-            // splitter1.Panel2
-            // 
-            this.splitter1.Panel2.Controls.Add(this.statusPanel);
-            this.splitter1.Size = new System.Drawing.Size(769, 464);
-            this.splitter1.SplitterDistance = 435;
+            this.splitter1.Size = new System.Drawing.Size(769, 3);
             this.splitter1.TabIndex = 16;
             this.splitter1.TabStop = false;
             // 
@@ -265,6 +250,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(769, 464);
             this.Controls.Add(this.splitter1);
+            this.Controls.Add(this.statusPanel);
+            this.Controls.Add(this.splitContainer);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -281,10 +268,6 @@
             this.startPage2.ResumeLayout(false);
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
-            this.splitter1.Panel1.ResumeLayout(false);
-            this.splitter1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitter1)).EndInit();
-            this.splitter1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -307,7 +290,7 @@
         private System.Windows.Forms.Panel statusPanel;
         private System.Windows.Forms.TextBox StatusWindow;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.SplitContainer splitter1;
+        private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ContextMenuStrip tabPopupMenu2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
