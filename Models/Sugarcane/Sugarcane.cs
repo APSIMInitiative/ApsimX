@@ -17,7 +17,7 @@ namespace Models
     {
 
     /// <summary>
-    ///**1. Model Components Overview **
+    ///##Model Components Overview
     ///
     ///Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
     ///
@@ -34,9 +34,9 @@ namespace Models
     ///Since sugarcane is grown both as a plant and ratoon crop, the model also needs to be able to simulate differences between crop classes based on any known physiological differences between these classes.
     ///
     /// 
-    ///**2. Crop growth in the absence of nitrogen or water limitation **
+    ///##Crop growth in the absence of nitrogen or water limitation
     ///
-    ///**2.1 Thermal time **
+    ///###Thermal time
     ///
     ///Thermal time is used in the model to drive phenological development and canopy expansion. 
     ///
@@ -49,7 +49,7 @@ namespace Models
     ///
     ///For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by Jones and Kiniry (1986). 
     ///
-    ///**2.2 Phenology**
+    ///###Phenology
     ///
     ///The sugar model uses six different stages to define crop growth and status. 
     ///
@@ -74,7 +74,7 @@ namespace Models
     ///While the model structure has been developed to include flowering as a phenological stage, it has been deactivated until a better physiological basis for prediction is available. 
     ///
     ///
-    ///**2.3 Canopy expansion**
+    ///###Canopy expansion
     ///
     ///The experimental basis for the canopy expansion model is described by Robertson et al (in press).
     ///
@@ -107,7 +107,7 @@ namespace Models
     ///Frosting removes 10% of the LAI per day if the minimum temperature reaches 0 oC, and 100% if it reaches -5 oC. 
     ///
     ///
-    ///**2.4 Root growth and development**
+    ///###Root growth and development
     ///
     ///Root biomass is produced independently from the shoot, so that a proportion of daily above-ground biomass production is added to the root system. 
     ///The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
@@ -119,7 +119,7 @@ namespace Models
     ///
     ///
     ///
-    ///**2.5 Biomass accumulation and partitioning** 
+    ///###Biomass accumulation and partitioning
     ///
     ///The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
     ///
@@ -157,7 +157,7 @@ namespace Models
     ///This stress factor influences both the onset and rate of assimilate partitioning to sucrose at the expense of structural stem. 
     ///
     ///
-    ///**2.6 Stem water content**
+    ///###Stem water content
     ///
     ///A stem water pool is simulated for the purposes of calculating cane fresh weight and CCS%. 
     ///
@@ -169,20 +169,19 @@ namespace Models
     ///
     ///Sucrose deposition in the stem removes water content at the rate of 1 g water g-1 sucrose. 
     ///
-    ///**2.7 Varietal effects**
+    ///###Varietal effects
     ///
     ///Currently varieties differ in only two respects in the model. 
     ///
     ///* Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
     ///The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
-    ///
     ///* Secondly, Robertson et al. (1996a) found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
     ///There is scope for incorporating other varietal differences as new knowledge becomes available.
     ///
     ///
     ///
     ///
-    ///**3. Water deficit limitation**
+    ///##Water deficit limitation
     ///
     ///Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework (Probert et al., 1996, Verburg et al, 1997). 
     ///
@@ -211,12 +210,12 @@ namespace Models
     ///Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
     ///
     ///
-    ///**4. Water excess limitation**
+    ///#Water excess limitation
     ///The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
     ///This factor reduces photosynthetic activity via an effect on RUE.
     ///
     ///
-    ///**5. Nitrogen limitation**
+    ///##Nitrogen limitation
     ///N supply from the soil is simulated in other modules in the APSIM framework (Probert et al., 1996). 
     ///
     ///Crop nitrogen demand is simulated using an approach similar to that used in the CERES models (Godwin and Vlek 1984). 
@@ -242,7 +241,7 @@ namespace Models
     ///Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
     ///
     ///
-    ///**6. Other features of the sugar module**
+    ///##Other features of the sugar module
     ///APSIM-Sugarcane includes a number of features relevant to sugarcane production systems.
     ///
     ///Either plant or ratoon crops can be simulated at the outset or a plant crop will regenerate as a ratoon crop if a crop cycle is being simulated. 
@@ -269,7 +268,7 @@ namespace Models
     ///A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence (Singh, 2002; Singh et al., 2002).
     ///
     /// 
-    ///**7. Parameterisation**
+    ///##Parameterisation
     ///
     ///**(Structure of the xml in the .apsimx file)**
     ///
@@ -299,7 +298,7 @@ namespace Models
     /// 
     /// 
     /// 
-    ///**8. Sugar Module Outputs**
+    ///**Sugar Module Outputs**
     ///
     ///
     /// |Variable Name  | Units      | Description                                                               |
@@ -349,7 +348,7 @@ namespace Models
     ///
     ///
     ///
-    ///**9. REFERENCES**
+    ///##REFERENCES
     ///
     ///Ball-Coelho, B. Sampaio, E. V. S. B.; Tiessen, H.; Stewart, J. W. B. (1992). Root dynamics in plant and ratoon crops of sugar cane. Plant and Soil 142:297-305.
     ///
