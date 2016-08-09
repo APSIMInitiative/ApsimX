@@ -73,7 +73,9 @@ namespace UserInterface.Presenters
             ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             List<string> newPaths = new List<string>();
-            newPaths.AddRange(FactorView.Lines);
+            foreach (string line in FactorView.Lines)
+                if (line != string.Empty)
+                    newPaths.Add(line);
             ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Specifications", newPaths));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
