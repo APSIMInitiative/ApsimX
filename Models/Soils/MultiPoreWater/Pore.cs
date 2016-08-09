@@ -19,19 +19,19 @@ namespace Models.Soils
         public double Thickness { get; set; }
         /// <summary>The thickness of the pore layer</summary>
         [XmlIgnore]
-        [Units("mm")]
+        [Units("nm")]
         public double MaxDiameter { get; set; }
         /// <summary>The thickness of the pore layer</summary>
         [XmlIgnore]
-        [Units("mm")]
+        [Units("nm")]
         public double MinDiameter { get; set; }
         /// <summary>The thickness of the pore layer</summary>
         [XmlIgnore]
-        [Units("mm")]
+        [Units("ml")]
         public double Volume { get; set; }
         /// <summary>The thickness of the pore layer</summary>
         [XmlIgnore]
-        [Units("mm")]
-        public double WaterVolume { get; set; }
+        [Units("g")]
+        public double Watermass { get; set; }
     }
 }
