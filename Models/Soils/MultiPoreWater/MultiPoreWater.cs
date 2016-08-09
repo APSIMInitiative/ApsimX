@@ -193,8 +193,8 @@ namespace Models.Soils
         #endregion
 
         #region Class Dependancy Links
-        //[Link]
-        //Soil Soil = null;
+        [Link]
+        private Water Water2 = null;
         #endregion
         
         #region Structures
@@ -253,11 +253,10 @@ namespace Models.Soils
              
             if (PoreMaxDiameter.Length != PoreMinDiameter.Length)
                 throw new Exception(this + "Must enter the same number of max and min pore diameters");
-            ProfileLayers = Thickness.Length;
+            ProfileLayers = Water2.Thickness.Length;
             PoreCompartments = PoreMaxDiameter.Length;
             
-
-            double[] InitialWater = new double[Thickness.Length];
+            double[] InitialWater = new double[Water2.Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
             {
                 
@@ -269,10 +268,11 @@ namespace Models.Soils
                 Pores[l] = new Pore[PoreCompartments];
                 for (int c = 0; c < PoreCompartments; c++)
                 {
+                    Pores[l][c] = new Pore();
                     Pores[l][c].MaxDiameter = PoreMaxDiameter[c];
                     Pores[l][c].MinDiameter = PoreMinDiameter[c];
-                    Pores[l][c].Thickness = Thickness[l];
-                    Pores[l][c].Volume = 0;
+                    Pores[l][c].Thickness = Water2.Thickness[l];
+                    Pores[l][c].Volume = Water2.SAT[l] * RelativePoreVolume(PoreMaxDiameter[c], PoreMinDiameter[c]);
                     Pores[l][c].Watermass = 0;
                 }
             }
@@ -304,7 +304,18 @@ namespace Models.Soils
         #endregion
 
         #region Internal Properties and Methods
+        private double RelativePoreVolume(double MaxDiameter, double MinDiameter)
+        {
+            double RelativeVolumeMaxDiameter = CumPoreVolume(MaxDiameter);
+            double RelativeVolumeMinDiameter = CumPoreVolume(MinDiameter);
+            return RelativeVolumeMaxDiameter - RelativeVolumeMinDiameter;
+        }
 
+        private double CumPoreVolume(double PoreDiameter)
+        {
+            double PoreVolume = PoreDiameter * 0.0003;
+            return Math.Min(1,PoreVolume);
+        }
         #endregion
     }
 
