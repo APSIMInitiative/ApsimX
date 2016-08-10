@@ -75,6 +75,11 @@ namespace Models
         private int evaporationIndex;
 
         /// <summary>
+        /// The index of the evaporation column in the weather file
+        /// </summary>
+        private int rainfallHoursIndex;
+
+        /// <summary>
         /// The index of the vapor pressure column in the weather file
         /// </summary>
         private int vapourPressureIndex;
@@ -272,6 +277,23 @@ namespace Models
             }
 
         /// <summary>
+        /// Gets or sets the number of hours rainfall occured in
+        /// </summary>
+        [XmlIgnore]
+        public double RainfallHours
+        {
+            get
+            {
+                return this.MetData.RainfallHours;
+            }
+
+            set
+            {
+                this.todaysMetData.RainfallHours = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
         [XmlIgnore]
@@ -438,6 +460,7 @@ namespace Models
             this.radiationIndex = 0;
             this.rainIndex = 0;
             this.evaporationIndex = 0;
+            this.rainfallHoursIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.CO2 = 350;
@@ -538,6 +561,16 @@ namespace Models
                 this.todaysMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
                 }
 
+            if (this.rainfallHoursIndex == -1)
+            {
+                // If Evap is not present in the weather file assign a default value
+                this.todaysMetData.RainfallHours = double.NaN;
+            }
+            else
+            {
+                this.todaysMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
+            }
+
             if (this.vapourPressureIndex == -1)
             {
                 // If VP is not present in the weather file assign a defalt value
@@ -582,6 +615,7 @@ namespace Models
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
                     this.rainIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Rain");
                     this.evaporationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Evap");
+                    this.rainfallHoursIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "RainHours");
                     this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     if (this.maximumTemperatureIndex == -1)
@@ -804,6 +838,11 @@ namespace Models
             /// Pan Evaporation (mm) (Class A pan) (NaN if not present)
             /// </summary>
             public double PanEvap;
+
+            /// <summary>
+            /// Pan Evaporation (mm) (Class A pan) (NaN if not present)
+            /// </summary>
+            public double RainfallHours;
 
             /// <summary>
             /// The vapor pressure (hPa)
