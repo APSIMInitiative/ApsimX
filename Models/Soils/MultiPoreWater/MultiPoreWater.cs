@@ -205,6 +205,10 @@ namespace Models.Soils
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
         /// </summary>
         public Pore[][] Pores;
+        /// <summary>
+        /// Water reaching the soil surface
+        /// </summary>
+        public double[] SurfaceWater { get; set; }
         #endregion
 
         #region Parameters
@@ -301,7 +305,13 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-
+            doPrecipitation();
+            doInfiltration();
+            doUnSaturatedDrainage();
+            doEvaporation();
+            doTranspiration();
+            doDownwardDiffusion();
+            doUpwardDiffusion();
         }
         #endregion
 
@@ -310,6 +320,55 @@ namespace Models.Soils
         #endregion
 
         #region Internal Properties and Methods
+        /// <summary>
+        /// Potential gradients moves water out of layers each time step
+        /// </summary>
+        private void doPrecipitation()
+        {
+            //calculate 
+        }
+        /// <summary>
+        /// Carries out infiltration processes at each time step
+        /// </summary>
+        private void doInfiltration()
+        {
+
+        }
+        /// <summary>
+        /// Gravity moves mobile water out of layers each time step
+        /// </summary>
+        private void doUnSaturatedDrainage()
+        {
+
+        }
+        /// <summary>
+        /// Potential gradients moves water out of layers each time step
+        /// </summary>
+        private void doEvaporation()
+        {
+            //Evaporate water from top layer
+        }
+        /// <summary>
+        /// Potential gradients moves water out of layers each time step
+        /// </summary>
+        private void doTranspiration()
+        {
+            //write some temporary stuff to be replaced by arbitrator at some stage
+        }
+        /// <summary>
+        /// Potential gradients moves water out of layers each time step
+        /// </summary>
+        private void doDownwardDiffusion()
+        {
+            //Move water down into lower layers if they are dryer than above
+        }
+        /// <summary>
+        /// Potential gradients moves water out of layers each time step
+        /// </summary>
+        private void doUpwardDiffusion()
+        {
+            //Move water up into lower layers if they are dryer than below
+        }
         /// <summary>
         /// Calculates the proportion of total porosity the resides between the two specified pore diameters
         /// </summary>
@@ -320,12 +379,22 @@ namespace Models.Soils
         {
             return CumPoreVolume(MaxDiameter) - CumPoreVolume(MinDiameter);
         }
-
+        /// <summary>
+        /// Calculates the proportion of total porosity below the specified pore diameter
+        /// </summary>
+        /// <param name="PoreDiameter"></param>
+        /// <returns>proportion of total porosity</returns>
         private double CumPoreVolume(double PoreDiameter)
         {
             double PoreVolume = PoreDiameter * 0.0003;
             return Math.Min(1,PoreVolume);
         }
+        /// <summary>
+        /// Utility to sum the specified propertie from all pore compartments in the pore layer input 
+        /// </summary>
+        /// <param name="Compartments"></param>
+        /// <param name="Property"></param>
+        /// <returns>sum</returns>
         private double LayerSum(Pore[] Compartments, string Property)
         {
             double Sum = 0;
