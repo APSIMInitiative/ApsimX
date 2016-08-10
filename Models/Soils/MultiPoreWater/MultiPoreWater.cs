@@ -58,7 +58,7 @@ namespace Models.Soils
         public double[] dlayer { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] dlt_sw { get;  set; }
+        public double[] dlt_sw { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] dlt_sw_dep { get; set; }
@@ -162,7 +162,7 @@ namespace Models.Soils
         [XmlIgnore]
         public double[] SW { get; set; }
         ///<summary> Who knows</summary>
-        
+
         public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
@@ -182,7 +182,7 @@ namespace Models.Soils
         [XmlIgnore]
         public double WinterU { get; set; }
         ///<summary> Who knows</summary>
-        public void SetSWmm(int Layer, double NewSWmm){ }
+        public void SetSWmm(int Layer, double NewSWmm) { }
         ///<summary> Who knows</summary>
         public void Reset() { }
         ///<summary> Who knows</summary>
@@ -201,7 +201,7 @@ namespace Models.Soils
         [Link]
         private SurfaceOrganicMatter SurfaceOM = null;
         #endregion
-        
+
         #region Structures
         /// <summary>
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
@@ -211,6 +211,10 @@ namespace Models.Soils
         /// Water reaching the soil surface
         /// </summary>
         public double[] SurfaceWater { get; set; }
+        /// <summary>
+        /// Contains data extrapolated out to hourly values
+        /// </summary>
+        public HourlyData Hourly;
         #endregion
 
         #region Parameters
@@ -232,10 +236,6 @@ namespace Models.Soils
         /// The amount of water stored in the surface residue
         /// </summary>
         public double ResidueWater { get; set; }
-        /// <summary>
-        /// The amount of irrigation and rainfall recieved Hourly
-        /// </summary>
-        public double HourlyPrecipitation { get; set; }
         #endregion
 
         #region Properties
@@ -262,13 +262,13 @@ namespace Models.Soils
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             ProfileLayers = Water2.Thickness.Length;
-            PoreCompartments = PoreBounds.Length-1;
+            PoreCompartments = PoreBounds.Length - 1;
             SWmm = new double[ProfileLayers];
-            
+
             double[] InitialWater = new double[Water2.Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
             {
-                
+
             }
 
             Pores = new Pore[ProfileLayers][];
@@ -277,11 +277,11 @@ namespace Models.Soils
                 double AccumVolume = 0;
                 double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
-                for (int c = PoreCompartments-1; c >= 0; c--)
+                for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
                     Pores[l][c].MaxDiameter = PoreBounds[c];
-                    Pores[l][c].MinDiameter = PoreBounds[c+1];
+                    Pores[l][c].MinDiameter = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water2.Thickness[l];
                     double PoreVolume = Water2.SAT[l] * ProportionPoreVolume(PoreBounds[c], PoreBounds[c + 1]);
                     AccumVolume += PoreVolume;
@@ -290,12 +290,14 @@ namespace Models.Soils
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterFilledVolume = PoreWaterFilledVolume;
                 }
-                if (Math.Abs(AccumVolume - Water2.SAT[l])>FloatingPointTolerance)
+                if (Math.Abs(AccumVolume - Water2.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
-                SWmm[l] = LayerSum(Pores[l],"Waterdepth"); 
+                SWmm[l] = LayerSum(Pores[l], "Waterdepth");
             }
+
+            Hourly = new HourlyData();
         }
         /// <summary>
         /// Called at the start of each daily timestep
@@ -305,7 +307,10 @@ namespace Models.Soils
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            
+            DailyIrrigation += 0;
+            IrrigationDuration += 0;
+            Array.Clear(Hourly.Irrigation, 0, 24);
+            Array.Clear(Hourly.Rainfall, 0, 24);
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -315,7 +320,6 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-
             doPrecipitation();
             doInfiltration();
             doUnSaturatedDrainage();
@@ -324,10 +328,24 @@ namespace Models.Soils
             doDownwardDiffusion();
             doUpwardDiffusion();
         }
+        /// <summary>
+        /// Adds irrigation events into daily total
+        /// </summary>
+        /// <param name="sender">Irrigation</param>
+        /// <param name="IrrigationData">The irrigation data.</param>
+        [EventSubscribe("Irrigated")]
+        private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
+        {
+            DailyIrrigation += IrrigationData.Amount;
+            IrrigationDuration += IrrigationData.Duration;
+        }
+        
         #endregion
 
         #region Internal States
         private double FloatingPointTolerance = 0.000000001;
+        private double DailyIrrigation {get;set; }
+        private double IrrigationDuration { get; set; } 
         #endregion
 
         #region Internal Properties and Methods
@@ -341,7 +359,17 @@ namespace Models.Soils
         /// </summary>
         private void doPrecipitation()
         {
-             
+            if (IrrigationDuration > 24)
+                throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
+            int Irrighours = (int)Math.Truncate(IrrigationDuration) + 1;
+            double IrrigationRate = DailyIrrigation / IrrigationDuration;
+            for (int h = 0; h<Irrighours; h++)
+            {
+                Hourly.Irrigation[h] = IrrigationRate;
+            }
+
+
+            
         }
         /// <summary>
         /// Carries out infiltration processes at each time step

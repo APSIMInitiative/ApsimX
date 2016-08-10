@@ -225,6 +225,7 @@
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\ProfileParameters.cs" />
     <Compile Include="Soils\MultiPoreWater\MultiPoreWater.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
