@@ -200,6 +200,8 @@ namespace Models.Soils
         private Soil Soil = null;
         [Link]
         private SurfaceOrganicMatter SurfaceOM = null;
+        [Link]
+        private Weather Met = null;
         #endregion
 
         #region Structures
@@ -307,8 +309,9 @@ namespace Models.Soils
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            DailyIrrigation += 0;
-            IrrigationDuration += 0;
+            DailyIrrigation = 0;
+            IrrigationDuration = 0;
+            DailyRainfall = 0;
             Array.Clear(Hourly.Irrigation, 0, 24);
             Array.Clear(Hourly.Rainfall, 0, 24);
         }
@@ -336,22 +339,44 @@ namespace Models.Soils
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
         {
-            DailyIrrigation += IrrigationData.Amount;
+            ResidueWater = ResidueWater + ResidueInterception(IrrigationData.Amount);
+            DailyIrrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
+            //Fix me.  Need to subtract out canopy interception also
             IrrigationDuration += IrrigationData.Duration;
         }
-        
+        /// <summary>
+        /// sets up daily met data
+        /// </summary>
+        [EventSubscribe("PreparingNewWeatherData")]
+        private void OnPreparingNewWeatherData(object sender, EventArgs e)
+        {
+            if (Met.Rain > 0)
+            {
+                ResidueWater = ResidueWater + ResidueInterception(Met.Rain);
+                double DailyRainfall = Met.Rain - ResidueInterception(Met.Rain);
+                //Fix me.  Need to subtract out canopy interception also
+            }
+        }
+
         #endregion
 
         #region Internal States
         private double FloatingPointTolerance = 0.000000001;
+        /// <summary>
+        /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
+        /// </summary>
         private double DailyIrrigation {get;set; }
-        private double IrrigationDuration { get; set; } 
+        private double IrrigationDuration { get; set; }
+        /// <summary>
+        /// This is the rainfall ariving at the soil surface, less what has been intercepted by residue
+        /// </summary>
+        private double DailyRainfall { get; set; }
         #endregion
 
         #region Internal Properties and Methods
         private double ResidueInterception(double Precipitation)
         {
-            double ResidueWaterCapacity = 0.0002 * SurfaceOM.Wt; //coefficient should be obtained from surface OM
+            double ResidueWaterCapacity = 0.0002 * SurfaceOM.Wt; //Fixme coefficient should be obtained from surface OM
             return Math.Min(Precipitation * SurfaceOM.Cover, ResidueWaterCapacity - ResidueWater);
         }
         /// <summary>
@@ -359,17 +384,31 @@ namespace Models.Soils
         /// </summary>
         private void doPrecipitation()
         {
-            if (IrrigationDuration > 24)
-                throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
-            int Irrighours = (int)Math.Truncate(IrrigationDuration) + 1;
-            double IrrigationRate = DailyIrrigation / IrrigationDuration;
-            for (int h = 0; h<Irrighours; h++)
-            {
-                Hourly.Irrigation[h] = IrrigationRate;
+            if (DailyIrrigation > 0)
+            { //On days when irrigation is applies spread it out into hourly increments
+                if (IrrigationDuration > 24)
+                    throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
+                int Irrighours = (int)IrrigationDuration;
+                double IrrigationRate = DailyIrrigation / IrrigationDuration;
+
+                for (int h = 0; h < Irrighours; h++)
+                {
+                    Hourly.Irrigation[h] = IrrigationRate;
+                }
+                if (Math.Abs(MathUtilities.Sum(Hourly.Irrigation) - DailyIrrigation) > FloatingPointTolerance)
+                    throw new Exception(this + " hourly irrigation partition has gone wrong.  Check you are specifying a Duration > 0 in the irrigation method call");
             }
-
-
-            
+            if (Met.Rain > 0)
+            {  //On days when rainfall occurs put it into hourly increments
+                int RainHours = (int)Met.RainfallHours;
+                double RainRate = Met.Rain / RainHours;
+                for (int h = 0; h < RainHours; h++)
+                {
+                    Hourly.Rainfall[h] = RainRate;
+                }
+                if (Math.Abs(MathUtilities.Sum(Hourly.Rainfall) - Met.Rain) > FloatingPointTolerance)
+                    throw new Exception(this + " hourly rainfall partition has gone wrong");
+            }
         }
         /// <summary>
         /// Carries out infiltration processes at each time step
