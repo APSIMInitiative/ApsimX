@@ -33,9 +33,26 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double WaterFilledVolume { get; set; }
+        /// <summary>The air filled volume of the pore</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double AirFilledVolume { get { return Volume - WaterFilledVolume; }  }
         /// <summary>The depth of water in the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double Waterdepth { get { return WaterFilledVolume * Thickness; } }
+        public double WaterDepth { get { return WaterFilledVolume * Thickness; } }
+        /// <summary>The depth of Air in the pore</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double AirDepth { get { return AirFilledVolume * Thickness; } }
+        /// <summary>The conductivity of water moving into a pore, The net result of gravity driving it in, capilary forces drawing it in and repellency stopping it</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityIn { get; set; }
+        /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityOut { get; set; }
+
     }
 }

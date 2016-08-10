@@ -238,6 +238,10 @@ namespace Models.Soils
         /// The amount of water stored in the surface residue
         /// </summary>
         public double ResidueWater { get; set; }
+        /// <summary>
+        /// The amount of water ponded on the surface
+        /// </summary>
+        public double SurfacePond { get; set; }
         #endregion
 
         #region Properties
@@ -265,6 +269,7 @@ namespace Models.Soils
         {
             ProfileLayers = Water2.Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
+            SurfacePond = 0;
             SWmm = new double[ProfileLayers];
 
             double[] InitialWater = new double[Water2.Thickness.Length];
@@ -291,6 +296,8 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(PoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterFilledVolume = PoreWaterFilledVolume;
+                    Pores[l][c].HydraulicConductivityIn = 0.00001 * Math.Exp((PoreCompartments / c));//arbitary function to give a range of hydraulic conductivity over pores
+                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - 30);//arbitary function to give a range of hydraulic conductivity over pores
                 }
                 if (Math.Abs(AccumVolume - Water2.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
@@ -357,7 +364,6 @@ namespace Models.Soils
                 //Fix me.  Need to subtract out canopy interception also
             }
         }
-
         #endregion
 
         #region Internal States
@@ -382,6 +388,11 @@ namespace Models.Soils
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
+        private double Infiltrate(Pore P)
+        {
+            double PotentialAdsorbtion = Math.Min(P.HydraulicConductivityIn, P.AirDepth);
+            return PotentialAdsorbtion;
+        }
         private void doPrecipitation()
         {
             if (DailyIrrigation > 0)
@@ -415,7 +426,36 @@ namespace Models.Soils
         /// </summary>
         private void doInfiltration()
         {
-
+            for (int h = 0; h < 24; h++)
+            {//Do infiltration processes each hour
+                double WaterToInfiltrate = Hourly.Rainfall[h] + Hourly.Irrigation[h] + SurfacePond;
+                for (int l = 0; l < ProfileLayers; l++)
+                { //Start process in the top layer
+                    if (WaterToInfiltrate > 0) //Only do infiltration if there is something to infiltrate
+                    {
+                        double WaterToAdsorb = WaterToInfiltrate;
+                        for (int c = PoreCompartments - 1; c >= 0; c--)
+                        { //Workout how much water is adsorbed into each pore
+                            if (WaterToAdsorb > 0) //Only do adsorption if there is something to absorb
+                            {
+                                double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
+                                double Adsorbtion = Math.Min(WaterToAdsorb, PotentialAdsorbtion);
+                                Pores[l][c].WaterFilledVolume += Adsorbtion;
+                                WaterToAdsorb -= Adsorbtion;
+                            }
+                        }
+                        //If there is water left over it won't infiltrate the surface layer this hour so add it to surgace pond
+                        if (l == 0)
+                            SurfacePond = WaterToAdsorb;
+                    }
+                    double WaterToPercolate = 0;
+                    for (int c = PoreCompartments - 1; c >= 0; c--)
+                    { //Workout how much water is passed to the next layer
+                        double Percolation = Math.Min(Pores[l][c].HydraulicConductivityOut, Pores[l][c].WaterDepth);
+                        WaterToPercolate += Percolation;
+                    }
+                }
+            }
         }
         /// <summary>
         /// Gravity moves mobile water out of layers each time step
