@@ -198,6 +198,8 @@ namespace Models.Soils
         private Water Water2 = null;
         [Link]
         private Soil Soil = null;
+        [Link]
+        private SurfaceOrganicMatter SurfaceOM = null;
         #endregion
         
         #region Structures
@@ -226,6 +228,14 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         public double[] Water { get; set; }
+        /// <summary>
+        /// The amount of water stored in the surface residue
+        /// </summary>
+        public double ResidueWater { get; set; }
+        /// <summary>
+        /// The amount of irrigation and rainfall recieved Hourly
+        /// </summary>
+        public double HourlyPrecipitation { get; set; }
         #endregion
 
         #region Properties
@@ -305,6 +315,7 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
+
             doPrecipitation();
             doInfiltration();
             doUnSaturatedDrainage();
@@ -320,12 +331,17 @@ namespace Models.Soils
         #endregion
 
         #region Internal Properties and Methods
+        private double ResidueInterception(double Precipitation)
+        {
+            double ResidueWaterCapacity = 0.0002 * SurfaceOM.Wt; //coefficient should be obtained from surface OM
+            return Math.Min(Precipitation * SurfaceOM.Cover, ResidueWaterCapacity - ResidueWater);
+        }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
         private void doPrecipitation()
         {
-            //calculate 
+             
         }
         /// <summary>
         /// Carries out infiltration processes at each time step
