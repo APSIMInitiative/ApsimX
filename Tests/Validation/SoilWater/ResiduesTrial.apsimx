@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
@@ -15,15 +15,75 @@
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>ProfileWater</Name>
+            <n>672</n>
+            <Slope>0.56862162149068274</Slope>
+            <Intercept>65.33579920444194</Intercept>
+            <SEslope>0.013179387068618294</SEslope>
+            <SEintercept>2.0533033477862728</SEintercept>
+            <R2>0.735331766855714</R2>
+            <RMSE>15.033304598721664</RMSE>
+            <NSE>0.69660656606676663</NSE>
+            <ME>-0.8321660935667814</ME>
+            <MAE>10.612271921488889</MAE>
+            <RSR>0.55040163118301888</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SWmm(1)</Name>
+            <n>672</n>
+            <Slope>0.71042241781896343</Slope>
+            <Intercept>14.344401294918747</Intercept>
+            <SEslope>0.016524577217125924</SEslope>
+            <SEintercept>0.864586002974971</SEintercept>
+            <R2>0.73394756616107215</R2>
+            <RMSE>4.051720206570768</RMSE>
+            <NSE>0.7263726519748378</NSE>
+            <ME>-0.63970452379359388</ME>
+            <MAE>3.111053164736552</MAE>
+            <RSR>0.52270466276048588</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SWmm(2)</Name>
+            <n>672</n>
+            <Slope>0.42096232091257429</Slope>
+            <Intercept>29.000687394997847</Intercept>
+            <SEslope>0.014810493531516462</SEslope>
+            <SEintercept>0.74380598089200378</SEintercept>
+            <R2>0.54664820458461094</R2>
+            <RMSE>6.690130631324978</RMSE>
+            <NSE>0.515479481607044</NSE>
+            <ME>0.45801300796548883</ME>
+            <MAE>5.100428859041644</MAE>
+            <RSR>0.69555697517656745</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SWmm(3)</Name>
+            <n>672</n>
+            <Slope>0.55594840109954</Slope>
+            <Intercept>22.595317838172516</Intercept>
+            <SEslope>0.014997724145910038</SEslope>
+            <SEintercept>0.80407053340381363</SEintercept>
+            <R2>0.672227339870227</R2>
+            <RMSE>6.8556803019035106</RMSE>
+            <NSE>0.64895364616263773</NSE>
+            <ME>-0.65047497510295416</ME>
+            <MAE>4.2505216850810612</MAE>
+            <RSR>0.59205064262262752</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObservedSoilWater</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <TimeSeriesStats>
-      <Name>TimeSeriesStats</Name>
-      <TableName>PredictedObserved</TableName>
-    </TimeSeriesStats>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Experiment>
     <Name>Residues</Name>
@@ -318,7 +378,6 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -386,6 +445,7 @@
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -692,6 +752,11 @@
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
           <air_pressure>1010</air_pressure>
           <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
@@ -703,14 +768,11 @@
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.3</soil_albedo>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[SurfaceOrganicMatter].Cover</string>
@@ -728,6 +790,7 @@
             <string>[Soil].SoilWater.DUL</string>
             <string>[Soil].SoilWater.LL15mm</string>
             <string>[Soil].SoilWater.DULmm</string>
+            <string>sum([Soil].SoilWater.SWmm[1:3] as ProfileWater</string>
             <string>[ExtraVariables].Script.SWDep60</string>
             <string>[ExtraVariables].Script.FomN</string>
             <string>[ExtraVariables].Script.HumN</string>
@@ -757,18 +820,6 @@
             <string>[Soil].NO3N</string>
             <string>[Soil].NH4N</string>
             <string>[Soil].SoilNitrogen.urea</string>
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
-            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -776,57 +827,6 @@
             <string />
           </EventNames>
         </Report>
-        <Graph>
-          <Name>Graph</Name>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Depth (mm)</Title>
-            <Inverted>true</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Name>SWC20cm</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SoilWater.sw_dep(1)</YFieldName>
-          </Series>
-          <Series>
-            <Name>Obs SWC 20cm</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-            <TableName>Input</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>sw_dep(1)</YFieldName>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-        </Graph>
         <Operations>
           <Name>Operations</Name>
           <Operation>
@@ -850,90 +850,90 @@
           <Name>ResiduePrecipitationInterception</Name>
           <Script />
           <Code><![CDATA[
-        using System;
-        using Models.Core;
-		using System.Collections.Generic;
-        using System.Text;
-        using Models.Soils;
-        using Models;
-        using System.Xml.Serialization;
-        using APSIM.Shared.Utilities;
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
-        namespace Models
-        {
-[Serializable] 
-public class Script : Model
-{      
-[Link] Clock Clock;
-[Link] Soils.Soil Soil;
-[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;        
-[Link] Weather Met;   
-[Link] Irrigation Irrig;  
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Irrigation Irrig;
                
-[XmlIgnore] public bool InitialDay { get; set; }
+		[XmlIgnore] public bool InitialDay { get; set; }
 
-[XmlIgnore] public double Precip { get; set; }
-[XmlIgnore] public double Maximum_interception { get; set; }
-[XmlIgnore] public double Residue_water { get; set; }
-[XmlIgnore] public double Interception_today { get; set; }
-[XmlIgnore] public double Evaporated_interception { get; set; }
-[XmlIgnore] public double SWC60 { get; set; }
+		[XmlIgnore] public double Precip { get; set; }
+		[XmlIgnore] public double Maximum_interception { get; set; }
+		[XmlIgnore] public double Residue_water { get; set; }
+		[XmlIgnore] public double Interception_today { get; set; }
+		[XmlIgnore] public double Evaporated_interception { get; set; }
+		[XmlIgnore] public double SWC60 { get; set; }
 
-[EventSubscribe("Initialised")]
-private void OnInitialised(object sender, EventArgs e)
-{
-Precip = 0;
-Maximum_interception = 0;
-Residue_water = 0;
-Interception_today = 0;
-Evaporated_interception = 0;
-SWC60 = 0;
-}	   
+		[EventSubscribe("Initialised")]
+		private void OnInitialised(object sender, EventArgs e)
+		{
+			Precip = 0;
+			Maximum_interception = 0;
+			Residue_water = 0;
+			Interception_today = 0;
+			Evaporated_interception = 0;
+			SWC60 = 0;
+		}
 
-[EventSubscribe("DoManagementCalculations")]
-private void OnDoManagementCalculations(object sender, EventArgs e)
-{
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
 //calculate the amount of water that is going to evaporate from the residue water pool
 
-if (Residue_water > Soil.SoilWater.Eo)
-   Evaporated_interception = Soil.SoilWater.Eo;
-else
-   Evaporated_interception = Residue_water;
+			if (Residue_water > Soil.SoilWater.Eo)
+				Evaporated_interception = Soil.SoilWater.Eo;
+			else
+				Evaporated_interception = Residue_water;
 
-SWC60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];
+			SWC60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];
 
 // remove evaporation from residue water pool               
 
-Residue_water = Residue_water - Evaporated_interception;
-}
+			Residue_water = Residue_water - Evaporated_interception;
+		}
 
-[EventSubscribe("DoManagement")]
-private void OnDoManagement(object sender, EventArgs e)
-{
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 //Set interception variables
-Precip = Met.Rain + Irrig.IrrigationApplied; 
-Maximum_interception = 0.0002 * SOM.Wt;
+			Precip = Met.Rain + Irrig.IrrigationApplied; 
+			Maximum_interception = 0.0002 * SOM.Wt;
           
 //Determine the amount of water intercepted by residue today
-if ((Precip * SOM.Cover) >= (Maximum_interception - Residue_water))
-   Interception_today = (Maximum_interception - Residue_water);
-else
-   Interception_today = (Precip * SOM.Cover) ;
+			if ((Precip * SOM.Cover) >= (Maximum_interception - Residue_water))
+				Interception_today = (Maximum_interception - Residue_water);
+			else
+				Interception_today = (Precip * SOM.Cover);
 
 // Send message to soil module to take interception out of water balance
     
-Soil.SoilWater.residueinterception = Interception_today;
+			Soil.SoilWater.residueinterception = Interception_today;
             
 //Add intercepted water into residual water pool
 
- Residue_water = Residue_water + Interception_today;
+			Residue_water = Residue_water + Interception_today;
 
 
 
             
 
-}
-}
+		}
+	}
 }
 	   ]]></Code>
         </Manager>
@@ -953,13 +953,13 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
+		[Link] Weather Met;
 		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
+		[Link] Irrigation Irrig;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -1008,20 +1008,20 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
 			InitialDay = true;
-		}	   
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
@@ -1029,7 +1029,7 @@ namespace Models
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
+			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -1040,8 +1040,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -1054,7 +1054,7 @@ namespace Models
 			SWDep60 = 0;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-			SoilWaterDeficit =  (SWC - DUL);
+			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			SWDep60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];
@@ -1083,6 +1083,48 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>Residue mass</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ObservedResidues</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>surfaceom_wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SurfaceOrganicMatter.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1098,91 +1140,54 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Name>Residue</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>ObservedResidues</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>surfaceom_wt</YFieldName>
-      </Series>
-      <Series>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>ObservedResidues</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>surfaceom_wt</YFieldName>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Residue cover</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Residue biomass (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <Series>
-        <Name>Residue</Name>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
+        <Name>Observed</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <LineThickness>Normal</LineThickness>
         <TableName>ObservedResidues</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Cover</YFieldName>
+        <YFieldName>surfaceom_cover</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>BottomRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>sw_dep 0 - 20 cm</Name>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1198,20 +1203,32 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>sw_dep 0 - 20 cm</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Observed</Name>
@@ -1219,21 +1236,84 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
-        <Marker>Circle</Marker>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <LineThickness>Normal</LineThickness>
         <TableName>ObservedSoilWater</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Residue biomass (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>sw_dep 20 - 40 cm</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1249,42 +1329,54 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>Circle</Marker>
-        <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>ObservedSoilWater</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>sw_dep 40 - 60 cm</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1300,42 +1392,54 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>Circle</Marker>
-        <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>ObservedSoilWater</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>sw_dep 0 - 60 cm</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ProfileWater</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Observed</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>ObservedSoilWater</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>ProfileWater</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1351,39 +1455,54 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Profile</Name>
       <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.SWDep60</YFieldName>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
+        <Name>Series</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>true</ForEachSeries>
+        </Regression>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
-        <Marker>Circle</Marker>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>None</Line>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.ProfileWater</XFieldName>
+        <YFieldName>Predicted.ProfileWater</YFieldName>
         <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
-        <TableName>ObservedSoilWater</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>ExtraVariables.Script.SWDep60</YFieldName>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <ExplorerWidth>300</ExplorerWidth>
