@@ -85,7 +85,7 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
       <Name>CropCompBase</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
+        <FileName>C:\ApsimX\Examples\WeatherFiles\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
