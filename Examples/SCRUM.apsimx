@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
+  </DataStore>
+  <Experiment>
+    <Name>Crop Comparisions</Name>
+    <Memo>
+      <Name>Description</Name>
+      <MemoText><![CDATA[This test simply simulates a range of different SCRUM crop types to show how they differ in their canopy and biomass accumulation patterns.  The 5 graphs demonstrate the differences in:  
+ - The speed at which cover is attained  
+ - The maximum cover that is achieved  
+ - The speed and which cover is senesced again
+ - The speed and extent of biomass and N accumulation
+ - The timing and extent of dry and fresh yield productin
+These graphs are intended to demonstrate how SCRUM represents approximate differences in differnt crops types with simple yet realistic temporal patterns]]></MemoText>
+    </Memo>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Crop</Name>
+        <Factor>
+          <Name>SpringWheat</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Wheat_Spring</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-09-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>AutumnWheat</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Wheat_Autumn</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-05-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Potatoes</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Potatoes_Long</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Peas</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Green_Peas</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Maize</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Maize_Short</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-11-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Spinach</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Spinach</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-05-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Kale</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Kale</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Rape</Name>
+          <Specifications>
+            <string>[SCRUMSowingRule].Script.CultivarName = Rape</string>
+            <string>[SCRUMSowingRule].Script.SowingDate = 1998-10-15</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
+      </Factor>
+    </Factors>
+    <Simulation>
+      <Name>CropCompBase</Name>
+      <Weather>
+        <Name>Weather</Name> 
+        <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+      </Weather>
+      <Clock>
+        <Name>Clock</Name>
+        <StartDate>1998-05-01T00:00:00</StartDate>
+        <EndDate>1999-07-01T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>Summary</Name>
+      </Summary>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Field</Name>
+        <Soil>
+          <Name>Soil</Name>
+          <Analysis>
+            <Name>Analysis</Name>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <PH>
+              <double>6.6</double>
+              <double>6.2</double>
+              <double>5.7</double>
+              <double>5.5</double>
+              <double>5.5</double>
+              <double>5.5</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <InitialWater>
+            <Name>Initial water</Name>
+            <PercentMethod>EvenlyDistributed</PercentMethod>
+            <FractionFull>1</FractionFull>
+            <DepthWetSoil>NaN</DepthWetSoil>
+          </InitialWater>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>SCRUMSoil</Name>
+              <LL>
+                <double>0.13</double>
+                <double>0.13</double>
+                <double>0.1</double>
+                <double>0.08</double>
+                <double>0.11</double>
+                <double>0.11</double>
+              </LL>
+              <KL>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.08</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <SoilCrop>
+              <Name>PotatoSoil</Name>
+              <LL>
+                <double>0.13</double>
+                <double>0.13</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.06</double>
+                <double>0.03</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>0.1</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </XF>
+            </SoilCrop>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </AirDry>
+            <LL15>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.06</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
+            <DiffusConst>88</DiffusConst>
+            <DiffusSlope>35.4</DiffusSlope>
+            <Salb>0.18</Salb>
+            <CN2Bare>68</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+            </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
+            <residueinterception>0</residueinterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
+            <oc>
+              <double>1.8356606676098439</double>
+              <double>1.4633385968844384</double>
+              <double>1.1988393325681357</double>
+              <double>1.0301002994895852</double>
+              <double>0.4703383219429832</double>
+              <double>0.47013790451920212</double>
+            </oc>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <RootCN>30</RootCN>
+            <RootWt>3000</RootWt>
+            <SoilCN>11.5</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-10</string>
+              <string>10-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+            </Depth>
+            <OC>
+              <double>1.82</double>
+              <double>1.47</double>
+              <double>1.2</double>
+              <double>1.03</double>
+              <double>0.47</double>
+              <double>0.47</double>
+            </OC>
+            <FBiom>
+              <double>0.025</double>
+              <double>0.025</double>
+              <double>0.015</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.3</double>
+              <double>0.4</double>
+              <double>0.75</double>
+              <double>0.9</double>
+              <double>0.96</double>
+              <double>0.96</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Sample>
+            <Name>Initial nitrogen</Name>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>270</double>
+              <double>30</double>
+              <double>5</double>
+              <double>5</double>
+              <double>0</double>
+              <double>0</double>
+            </NO3>
+            <NH4>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NH4>
+            <NO3Units>kgha</NO3Units>
+            <NH4Units>ppm</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <RecordNumber>0</RecordNumber>
+          <SoilType />
+          <LocalName />
+          <Site />
+          <NearestTown />
+          <Region />
+          <NaturalVegetation />
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
+        </Soil>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.23</soil_albedo>
+          <air_pressure>1010</air_pressure>
+          <soil_emissivity>0.96</soil_emissivity>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <windspeed_default>3</windspeed_default>
+          <refheight>2</refheight>
+          <albedo>0.26</albedo>
+          <emissivity>0.96</emissivity>
+          <gsmax>0.01</gsmax>
+          <r50>200</r50>
+        </MicroClimate>
+        <Irrigation>
+          <Name>Irrigation</Name>
+        </Irrigation>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+        </Fertiliser>
+        <Manager>
+          <Name>SCRUMSowingRule</Name>
+          <Script>
+            <CultivarName>Barley_Spring</CultivarName>
+            <InitialRootDepth>10</InitialRootDepth>
+            <SowingDate>1998-10-14</SowingDate>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant SCRUM;
+		[Link] Clock Clock;
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+               
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+				SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
+			//PMFCrop.Sow(... Contains the following arguements:
+			//Population  double  Optional  Seeds sowing/m2.  Default is zero
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <SurfaceOrganicMatter>
+          <Name>surface organic matter</Name>
+          <PondActive>no</PondActive>
+          <ReportAdditions>no</ReportAdditions>
+          <ReportRemovals>no</ReportRemovals>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>2000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>wheat</PoolName>
+          <type>wheat</type>
+          <mass>2000</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <Report>
+          <Name>Report</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
+            <string>[SCRUM].Stover.Live.Wt</string>
+            <string>[SCRUM].Root.Live.Wt</string>
+            <string>[SCRUM].Product.Live.Wt</string>
+            <string>[SCRUM].Stover.Live.N</string>
+            <string>[SCRUM].Root.Live.N</string>
+            <string>[SCRUM].Product.Live.N</string>
+            <string>[SCRUM].Stover.Live.NConc</string>
+            <string>[SCRUM].Root.Live.NConc</string>
+            <string>[SCRUM].Product.Live.NConc</string>
+            <string>[SCRUM].Root.WaterSupply</string>
+            <string>[SCRUM].Root.WaterUptake</string>
+            <string>[SCRUM].Stover.Transpiration</string>
+            <string>[SCRUM].Stover.WaterDemand</string>
+            <string>[SCRUM].Root.Depth</string>
+            <string>[SCRUM].Stover.CoverTotal</string>
+            <string>[SCRUM].Stover.CoverDead</string>
+            <string>[SCRUM].Stover.CoverGreen</string>
+            <string>[SCRUM].Stover.LAI</string>
+            <string>[SCRUM].Stover.Height</string>
+            <string>[SCRUM].Product.LiveFWt</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.CurrentPhaseName</string>
+            <string>[SCRUM].Phenology.Stage</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Plant>
+          <Name>SCRUM</Name>
+          <ResourceName>SCRUM</ResourceName>
+          <CropType>SCRUM</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
+        </Plant>
+        <Manager>
+          <Name>AutomaticIrrigation</Name>
+          <Script>
+            <Irrigation_Yes_No>yes</Irrigation_Yes_No>
+            <Season_Start>1-Oct</Season_Start>
+            <Season_End>30-Apr</Season_End>
+            <Season_Allocation>1000</Season_Allocation>
+            <Refull_Frac>0.9</Refull_Frac>
+            <Trigger_Frac>0.7</Trigger_Frac>
+            <Return_days>3</Return_days>
+            <Maximum_Irrigation_Amount>40</Maximum_Irrigation_Amount>
+            <Top_Depth>600</Top_Depth>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Irrigation Irrigation;
+	   [Link] Clock Clock;
+	   [Link] Soil Soil;
+	   [Link] Plant SCRUM;
+	   
+	   //User inputs from properties tab
+	   [Description("Irrigation on (yes or no)")]
+	   public string Irrigation_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (mm)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("% PAWC to refill soil to (0-1)")]
+	   public double Refull_Frac { get; set; }
+	   [Description("% PAWC to trigger irrigation (0-1)")]
+	   public double Trigger_Frac { get; set; }
+	   [Description("Minimum days for irrigation to return")]
+	   public double Return_days { get; set; }
+	   [Description("Maximum irrigation application (mm)")]
+	   public double Maximum_Irrigation_Amount { get; set; }
+	   [Description("Depth to calculate PAWC (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool IrrigationIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilIsDry { get; set; }
+	   [XmlIgnore] public double Top_DUL { get; set; }
+	   [XmlIgnore] public double Top_Refull { get; set; }
+	   [XmlIgnore] public double Top_Trigger { get; set; }
+	   [XmlIgnore] public double Top_LL { get; set; }
+	   [XmlIgnore] public double Top_SW { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_irrigation { get; set; }
+	   [XmlIgnore] public double Amount_to_apply { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   
+	
+	   //Calculate static soil variables
+	   [EventSubscribe("StartOfSimulation")]
+	   private void OnStartOfSimulation(object sender, EventArgs e)
+	   {   
+	      //Calculated soil water variables
+	      Accumulated_depth = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_LL += Soil.SoilWater.LL15mm[layer];
+	         Top_DUL += Soil.SoilWater.DULmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
+	   }
+	   
+	  
+	   //Determine daily requirement for irrigation
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      IrrigationIsAvailable = false; 
+	      if (Irrigation_Yes_No == "yes")
+	         IrrigationIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      IrrigatorIsAvailable = false;
+	      Days_since_irrigation += 1;
+	      if (Days_since_irrigation >= Return_days)
+	         IrrigatorIsAvailable = true;
+	      
+	      //Is the soil dry enough to require irrigation?
+	      SoilIsDry = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = SCRUM.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
+	      Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1-Trigger_Frac)); 
+	      
+	      Accumulated_depth = 0;
+	      Top_SW = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SW += Soil.SoilWater.SWmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SW <= Top_Trigger)
+	         SoilIsDry = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+	      {
+	         Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+	         Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
+	         Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
+	         Irrigation.Apply(Amount_to_apply);
+	         Days_since_irrigation = 0;
+	         Season_Application += Amount_to_apply;
+	         summary.WriteMessage(this, "Automatic Irrigation");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+        </Manager>
+        <Manager>
+          <Name>AutomaticFertiliser</Name>
+          <Script>
+            <Fertiliser_Yes_No>yes</Fertiliser_Yes_No>
+            <Season_Start>1-Aug</Season_Start>
+            <Season_End>30-Apr</Season_End>
+            <Season_Allocation>1000</Season_Allocation>
+            <TriggerN>50</TriggerN>
+            <NApplicationAmount>25</NApplicationAmount>
+            <Return_days>3</Return_days>
+            <Top_Depth>300</Top_Depth>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Fertiliser Fertiliser;
+	   [Link] Clock Clock;
+	   [Link] Soils.Soil Soil;
+	   [Link] Plant SCRUM;
+	   
+	   //User inputs from properties tab
+	   [Description("Fertiliser on (yes or no)")]
+	   public string Fertiliser_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (kg/ha)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("Mineral N to maintain soil above (kg/ha)")]
+	   public double TriggerN { get; set; }
+	   [Description("Amount of N to apply (kg/ha)")]
+	   public double NApplicationAmount { get; set; }
+	   [Description("Minimum days for Fertiliser spreader to return")]
+	   public double Return_days { get; set; }
+	   [Description("Depth to calculate mineral N (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool FertiliserIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilNIsLow { get; set; }
+	   [XmlIgnore] public double Top_SoilN { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_fertiliser { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   	   
+	   //Determine daily requirement for fertiliser
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      FertiliserIsAvailable = false; 
+	      if (Fertiliser_Yes_No == "yes")
+	         FertiliserIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      FertSpreaderIsAvailable = false;
+	      Days_since_fertiliser += 1;
+	      if (Days_since_fertiliser >= Return_days)
+	         FertSpreaderIsAvailable = true;
+	      
+	      //Is the soil N low enough to require fertiliser?
+	      SoilNIsLow = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = SCRUM.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      Accumulated_depth = 0;
+	      Top_SoilN = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SoilN += Soil.NO3N[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SoilN <= TriggerN)
+	         SoilNIsLow = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
+	      {
+	         Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
+	         Days_since_fertiliser = 0;
+	         Season_Application += NApplicationAmount;
+	         summary.WriteMessage(this, "Automatic Fertiliser");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+        </Manager>
+        <Area>0</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
+    </Simulation>
+    <Graph>
+      <Name>ProductDryYield</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+  </Experiment>
+  <ExplorerWidth>286</ExplorerWidth>
+</Simulations>
