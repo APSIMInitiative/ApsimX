@@ -23,6 +23,7 @@ namespace Models.Graph
     public class EventNamesOnGraph : Model, IGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
+        [NonSerialized]
         private DataView data;
 
         /// <summary>The x variable name</summary>

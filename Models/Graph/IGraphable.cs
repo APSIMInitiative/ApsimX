@@ -12,7 +12,7 @@ namespace Models.Graph
     using System.Drawing;
     using System.Collections;
     using System.Data;
-
+    using System.Xml.Serialization;
     /// <summary>
     /// An interface for a model that can graph itself.
     /// </summary>
@@ -167,6 +167,7 @@ namespace Models.Graph
         public string title;
 
         /// <summary>Gets the dataview</summary>
+        [XmlIgnore]
         public DataView dataView;
 
         /// <summary>Gets the x values</summary>
