@@ -10,7 +10,7 @@ namespace Models.Core
 {
     /// <summary>
     /// Converts a .apsim file format into something that the XmlSerializer can read
-    /// into a tree of ModelNode objects.
+    /// into a tree of ModelWrapper objects.
     /// </summary>
     class APSIMFileReader : XmlReaderCustom
     {
@@ -23,8 +23,8 @@ namespace Models.Core
         /// <summary>The model name</summary>
         private string modelName;
 
-//        /// <summary>The version number of the file.</summary>
-//        private string version;
+    //    /// <summary>The version number of the file.</summary>
+    //    private string version;
 
         /// <summary>The reader we're to read from.</summary>
         XmlNodeReader reader = null;
@@ -32,7 +32,7 @@ namespace Models.Core
         /// <summary>Constructor.</summary>
         /// <param name="node"></param>
         public APSIMFileReader(XmlNode node)
-        {
+        { 
             reader = new XmlNodeReader(node);
             currentState = States.Initial;
         }
@@ -53,21 +53,21 @@ namespace Models.Core
             //      </Simulation>
             //    </Simulations>
             // to this:
-            //    <ModelNode xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            //    <ModelWrapper xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             //       <Model xsi:type=Simulations>
             //           <ExplorerWidth>10</ExplorerWidth>
             //       </Model>
-            //       <Child xsi:type="ModelNode">
+            //       <Child xsi:type="ModelWrapper">
             //           <Model xsi:type="Simulation">
             //           </Model>
-            //           <Child xsi:type="ModelNode">
+            //           <Child xsi:type="ModelWrapper">
             //               <Model xsi:type="Clock">
             //                   <StartDate>0001-01-01T00:00:00</StartDate>
             //                   <EndDate>0001-01-01T00:00:00</EndDate>
             //               </Model>
             //           </Child>
             //       </Child>
-            //    </ModelNode>
+            //    </ModelWrapper>
 
             bool ok = false;
             CustomElement element = null;
@@ -82,7 +82,7 @@ namespace Models.Core
                         ok = reader.Read();
                         if (!ok) return null;
                         currentState = States.ModelNode;
-                        element = new CustomElement() { Name = "ModelNode" };
+                        element = new CustomElement() { Name = "ModelWrapper" };
                         modelName = reader.Name;
 
                         while (reader.MoveToNextAttribute())
@@ -124,7 +124,7 @@ namespace Models.Core
                     case States.Child:
                         currentState = States.ModelNode;
                         element = new CustomElement() { Name = "Child" };
-                        element.attributes.Add(new KeyValuePair<string, string>("xsi:type", "ModelNode"));
+                        element.attributes.Add(new KeyValuePair<string, string>("xsi:type", "ModelWrapper"));
                         currentState = States.ModelNode;
                         modelName = reader.Name;
                         break;
@@ -147,7 +147,7 @@ namespace Models.Core
         {
             get
             {
-                return reader.NamespaceURI;
+                return string.Empty;
             }
         }
 

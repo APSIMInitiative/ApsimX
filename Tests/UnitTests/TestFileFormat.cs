@@ -52,6 +52,8 @@ namespace UnitTests
                 "  <ExplorerWidth>0</ExplorerWidth>\r\n" +
                 "  <Simulation>\r\n" +
                 "    <Name>Simulation</Name>\r\n" +
+                "    <Area>0</Area>\r\n" +
+                "    <Slope>0</Slope>\r\n" +
                 "    <Clock>\r\n" +
                 "      <Name>Clock</Name>\r\n" +
                 "      <StartDate>2015-01-01T00:00:00</StartDate>\r\n" +

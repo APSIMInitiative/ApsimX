@@ -130,16 +130,20 @@ namespace Models.Core
                     // Write version element.
                     if (version != -1)
                     {
-                        base.WriteAttributeString("Version", version.ToString());
+                        base.WriteStartAttribute("Version");
+                        base.WriteString(version.ToString());
+                        base.WriteEndAttribute();
+
+                       // base.WriteAttributeString("Version", version.ToString());
                         version = -1;
                     }
 
                     // Write name element.
                     if (foundName != null)
                     {
-                        base.WriteStartElement("Name");
-                        base.WriteString(foundName);
-                        base.WriteEndElement();
+                      //  base.WriteStartElement("Name");
+                      //  base.WriteString(foundName);
+                      //  base.WriteEndElement();
                         foundName = null;
 
                     }

@@ -29,7 +29,7 @@ namespace Models.Core
             types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
             foreach (Type t in types)
             {
-                if (t.IsPublic && !t.IsInterface &&  t.FullName.StartsWith("APSIM.Models."))
+                if (t.IsPublic && !t.IsInterface &&  t.FullName.StartsWith("Models.") && t.BaseType == typeof(Model))
                     modelTypes.Add(t);
             }
         }

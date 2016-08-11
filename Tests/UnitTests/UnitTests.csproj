@@ -137,7 +137,6 @@
     </Compile>
     <Compile Include="TestFileFormat.cs" />
     <Compile Include="TestLinks.cs" />
-    <Compile Include="TestLoadSave.cs" />
     <Compile Include="TestModelNode.cs" />
     <Compile Include="TestSoils.cs" />
     <Compile Include="TestStats.cs" />

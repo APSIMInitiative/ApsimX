@@ -88,7 +88,7 @@ namespace UnitTests
 
             Links.Resolve(simulations);
 
-            Assert.AreEqual(links.zones.Length, 2);
+            Assert.AreEqual(links.zones.Length, 3);
             Assert.NotNull(links.zones[0]);
             Assert.NotNull(links.zones[1]);
         }
