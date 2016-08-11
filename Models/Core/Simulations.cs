@@ -216,7 +216,7 @@ namespace Models.Core
         }
 
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
-        private Simulations()
+        public Simulations()
         {
         }
 
