@@ -29,7 +29,8 @@ namespace Models.Core
             types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
             foreach (Type t in types)
             {
-                if (t.IsPublic && !t.IsInterface &&  t.FullName.StartsWith("Models.") && t.BaseType == typeof(Model))
+                if (t.IsPublic && !t.IsInterface &&  t.FullName.StartsWith("Models.") && t.BaseType == typeof(Model) &&
+                    t.FullName != "Models.Script")
                     modelTypes.Add(t);
             }
         }
