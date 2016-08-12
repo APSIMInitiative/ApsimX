@@ -16,6 +16,8 @@ namespace Models.Soils
         public bool will_runoff;
         /// <summary>The depth</summary>
         public double Depth;
+        /// <summary>The depth</summary>
+        public double Duration;
         /// <summary>The n o3</summary>
         public double NO3;
         /// <summary>The n h4</summary>
