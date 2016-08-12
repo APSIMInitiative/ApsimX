@@ -9184,7 +9184,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\ApsimX\Prototypes\Wheat\APS6.met</FileName>
+          <FileName>APS6.met</FileName>
         </Weather>
         <Zone>
           <Name>paddock</Name>
@@ -24344,7 +24344,7 @@ namespace Models
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\ApsimX\Prototypes\Wheat\Konya.met</FileName>
+          <FileName>Konya.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
