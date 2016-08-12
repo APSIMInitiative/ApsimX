@@ -31,7 +31,7 @@ namespace Models.Soils
         #region IsoilInterface
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
-        public double residueinterception { get; set; }
+        public double residueinterception { get { return ResidueWater; } set { } }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double catchment_area { get; set; }
@@ -124,7 +124,7 @@ namespace Models.Soils
         public double[] outflow_lat { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double pond { get; set; }
+        public double pond { get { return SurfaceWater; } set { } }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double pond_evap { get; set; }
@@ -210,10 +210,6 @@ namespace Models.Soils
         /// </summary>
         public Pore[][] Pores;
         /// <summary>
-        /// Water reaching the soil surface
-        /// </summary>
-        public double SurfaceWater { get; set; }
-        /// <summary>
         /// Contains data extrapolated out to hourly values
         /// </summary>
         public HourlyData Hourly;
@@ -247,7 +243,7 @@ namespace Models.Soils
         /// <summary>
         /// The amount of water ponded on the surface
         /// </summary>
-        public double SurfacePond { get; set; }
+        public double SurfaceWater { get; set; }
         #endregion
 
         #region Properties
@@ -298,7 +294,7 @@ namespace Models.Soils
             AdsorptionCapacity = new double[ProfileLayers];
             AdsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
-            SurfacePond = 0;
+            SurfaceWater = 0;
             SWmm = new double[ProfileLayers];
 
             double[] InitialWater = new double[Water2.Thickness.Length];
@@ -348,6 +344,7 @@ namespace Models.Soils
             DailyIrrigation = 0;
             IrrigationDuration = 0;
             DailyRainfall = 0;
+            Infiltration = 0;
             Array.Clear(Hourly.Irrigation, 0, 24);
             Array.Clear(Hourly.Rainfall, 0, 24);
         }
@@ -359,15 +356,17 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
+            //First we work out how much water is reaching the soil surface each hour
+            doPrecipitation();
             for (int h = 0; h < 24; h++)
             {
-                //First we work out how much water is reaching the soil surface each hour
-                doPrecipitation();
+                //Update the depth of Surface water that may infiltrate this hour
+                SurfaceWater += Hourly.Rainfall[h] + Hourly.Irrigation[h];
                 //The we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                double InfiltrationSupply = Hourly.Rainfall[h] + Hourly.Irrigation[h] + SurfacePond;
-                double HourlyInfiltration = Math.Min(InfiltrationSupply, PotentialInfiltration);
+                SurfaceWater = Math.Max(0,SurfaceWater - PotentialInfiltration);
+                double HourlyInfiltration = Math.Min(SurfaceWater, PotentialInfiltration);
                 if (HourlyInfiltration>0)
                     doInfiltration(HourlyInfiltration);
                 doDrainage();
@@ -375,6 +374,11 @@ namespace Models.Soils
                 doTranspiration();
                 doDownwardDiffusion();
                 doUpwardDiffusion();
+
+                for (int l = ProfileLayers - 1; l >= 0; l--)
+                {
+                    SWmm[l] = LayerSum(Pores[l], "Waterdepth");
+                }
             }
         }
         /// <summary>
@@ -514,8 +518,8 @@ namespace Models.Soils
                     }
                 }
             }
-            //If Water remains that could not infiltrate, leave it in the surface pond
-            SurfaceWater = RemainingInfiltration;
+            //Add infiltration to daily sum for reporting
+            Infiltration += WaterToInfiltrate;
         }
         /// <summary>
         /// Gravity moves mobile water out of layers each time step
