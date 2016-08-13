@@ -6868,7 +6868,7 @@ namespace Models
             <GlfSFertility>1</GlfSFertility>
             <WaterStressExponent>1</WaterStressExponent>
             <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
-            <MinimumWaterFreePorosity>10</MinimumWaterFreePorosity>
+            <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
             <ReferenceCO2>380</ReferenceCO2>
             <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
             <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
@@ -9698,7 +9698,7 @@ namespace Models
           <GlfSFertility>1</GlfSFertility>
           <WaterStressExponent>1</WaterStressExponent>
           <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
-          <MinimumWaterFreePorosity>10</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
           <ReferenceCO2>380</ReferenceCO2>
           <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
           <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
@@ -12688,7 +12688,7 @@ namespace Models
             <GlfSFertility>1</GlfSFertility>
             <WaterStressExponent>1</WaterStressExponent>
             <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
-            <MinimumWaterFreePorosity>10</MinimumWaterFreePorosity>
+            <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
             <ReferenceCO2>380</ReferenceCO2>
             <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
             <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
@@ -15521,7 +15521,7 @@ namespace Models
           <GlfSFertility>1</GlfSFertility>
           <WaterStressExponent>1</WaterStressExponent>
           <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
-          <MinimumWaterFreePorosity>10</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
           <ReferenceCO2>380</ReferenceCO2>
           <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
           <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>

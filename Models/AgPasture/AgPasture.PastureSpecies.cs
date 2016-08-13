@@ -2114,6 +2114,24 @@ namespace Models.AgPasture
 
         #region - Growth limiting factors  ---------------------------------------------------------------------------------
 
+        /// <summary>Gets the growth factor due to variations in intercepted radiation.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to variations in intercepted radiation")]
+        [Units("0-1")]
+        public double RadiationGF
+        {
+            get { return radnGFactor; }
+        }
+
+        /// <summary>Gets the growth factor due to variations in atmospheric CO2.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to variations in atmospheric CO2")]
+        [Units("0-1")]
+        public double CO2GF
+        {
+            get { return co2GFactor; }
+        }
+
         /// <summary>Gets the growth limiting factor due to N concentration in the plant.</summary>
         /// <value>The growth limiting factor due to N concentration.</value>
         [Description("Plant growth limiting factor due to plant N concentration")]
@@ -2132,6 +2150,24 @@ namespace Models.AgPasture
             get { return TemperatureLimitingFactor(TmeanW); }
         }
 
+        /// <summary>Gets the growth factor due to heat stress.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to heat stress")]
+        [Units("0-1")]
+        public double HeatGF
+        {
+            get { return heatGFactor; }
+        }
+
+        /// <summary>Gets the growth factor due to cold stress.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to cold stress")]
+        [Units("0-1")]
+        public double ColdGF
+        {
+            get { return coldGFactor; }
+        }
+
         /// <summary>Gets the growth limiting factor due to water deficit.</summary>
         /// <value>The growth limiting factor due to water.</value>
         [Description("Growth limiting factor due to water deficit")]
@@ -2141,7 +2177,16 @@ namespace Models.AgPasture
             get { return glfWater; }
         }
 
-        /// <summary>Gets the growth limiting factor due to N availability.</summary>
+        /// <summary>Gets the growth limiting factor due to lack of soil aeration.</summary>
+        /// <value>The growth limiting factor due to lack of soil aeration.</value>
+        [Description("Growth limiting factor due to lack of soil aeration")]
+        [Units("0-1")]
+        public double GlfAeration
+        {
+            get { return glfAeration; }
+        }
+
+        /// <summary>Gets the growth limiting factor due to soil N availability.</summary>
         /// <value>The growth limiting factor due to N.</value>
         [Description("Growth limiting factor due to soil N availability")]
         [Units("0-1")]
@@ -2616,11 +2661,28 @@ namespace Models.AgPasture
 
         // growth limiting factors ------------------------------------------------------------------------------------
 
-        /// <summary>The growth factor for N concentration</summary>
+        /// <summary>The growth factor due to N concentration</summary>
+        private double radnGFactor = 1.0;
+
+        /// <summary>The growth factor due to N concentration</summary>
+        private double co2GFactor = 1.0;
+
+        /// <summary>The growth factor due to N concentration</summary>
         private double nConcGFactor = 1.0;
+
+        /// <summary>The growth factor due to N concentration</summary>
+        private double tempGFactor = 1.0;
+
+        /// <summary>The growth factor due to N concentration</summary>
+        private double heatGFactor = 1.0;
+        
+        /// <summary>The growth factor due to N concentration</summary>
+        private double coldGFactor = 1.0;
 
         /// <summary>The GLF due to water stress</summary>
         internal double glfWater = 1.0;
+        /// <summary>The GLF due to water stress</summary>
+        internal double glfWater0 = 1.0;
 
         /// <summary>Some Description</summary>
         internal double glfAeration = 1.0;
@@ -3271,9 +3333,9 @@ namespace Models.AgPasture
         private double DailyGrossPotentialGrowth()
         {
             // CO2 effects on Pmax
-            double co2GFactor = PCO2Effects();
+            co2GFactor = PCO2Effects();
 
-            // N effects on Pmax
+            // N concentration effects on Pmax
             nConcGFactor = PmxNeffect();
 
             // Temperature effects to Pmax
@@ -3281,10 +3343,12 @@ namespace Models.AgPasture
             double tempFactor2 = TemperatureLimitingFactor(TmeanW);
 
             //Temperature growth factor (for reporting purposes only)
-            double tempGFactor = (0.25 * tempFactor1) + (0.75 * tempFactor2);
+            tempGFactor = (0.25 * tempFactor1) + (0.75 * tempFactor2);
 
             // Potential photosynthetic rate (mg CO2/m^2 leaf/s)
+            //   at dawn and dusk (first and last quarter of the day)
             double Pmax1 = ReferencePhotosynthesisRate * tempFactor1 * co2GFactor * nConcGFactor;
+            //   at bright light (half of sunlight length, middle of day)
             double Pmax2 = ReferencePhotosynthesisRate * tempFactor2 * co2GFactor * nConcGFactor;
 
             // Day light length, converted to seconds
@@ -3309,7 +3373,7 @@ namespace Models.AgPasture
             double Pl_Daily = myDayLength * (Pl1 + Pl2) * 0.5;
 
             // Radiation effects (for reporting purposes only)
-            double radnGFactor = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
+            radnGFactor = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
             double Pc_Daily = Pl_Daily * CoverGreen / LightExtentionCoefficient;
@@ -3321,8 +3385,8 @@ namespace Models.AgPasture
             double BaseGrossPhotosynthesis = CarbonAssim * 10; // convert from g/m2 to kg/ha (= 10000/1000)
 
             // Consider the extreme temperature effects (in practice only one temp stress factor is < 1)
-            double heatGFactor = HeatStress();
-            double coldGFactor = ColdStress();
+            heatGFactor = HeatStress();
+            coldGFactor = ColdStress();
 
             // Actual gross photosynthesis (gross potential growth - kg C/ha/day)
             return BaseGrossPhotosynthesis * Math.Min(heatGFactor, coldGFactor) * GenericGF;
@@ -3838,6 +3902,8 @@ namespace Models.AgPasture
 
                 // get the drought effects
                 glfWater = WaterDeficitFactor();
+                glfWater0 = glfWater;
+
                 // get the water logging effects (only if there is no drought effect)
                 if (glfWater > 0.999)
                     glfWater = WaterLoggingFactor();
@@ -3857,6 +3923,8 @@ namespace Models.AgPasture
 
                 // get the drought effects
                 glfWater = WaterDeficitFactor();
+                glfWater0 = glfWater;
+
                 // get the water logging effects (only if there is no drought effect)
                 if (glfWater > 0.999)
                     glfWater = WaterLoggingFactor();
@@ -5232,8 +5300,11 @@ namespace Models.AgPasture
                 mySWater += mySoil.Water[layer] * fractionLayer;
                 // water content at saturation
                 mySaturation += mySoil.SoilWater.SATmm[layer] * fractionLayer;
-                // water content at field capacity
-                myDUL += mySoil.SoilWater.DULmm[layer] * fractionLayer;
+                // water content at low threshold for limitation (correspond to minimum water-free pore space)
+                if (MinimumWaterFreePorosity <= -myEpsilon)
+                    myDUL += mySoil.SoilWater.DULmm[layer] * fractionLayer;
+                else
+                    myDUL = mySoil.SoilWater.SATmm[layer] * (1.0 - 0.01 * MinimumWaterFreePorosity) * fractionLayer;
             }
 
             result = 1.0 - WaterLoggingCoefficient * Math.Max(0.0, mySWater - myDUL) / (mySaturation - myDUL);
