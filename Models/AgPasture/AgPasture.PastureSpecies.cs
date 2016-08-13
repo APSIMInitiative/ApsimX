@@ -767,7 +767,40 @@ namespace Models.AgPasture
         [Description("Maximum rooting depth [mm]:")]
         [Units("mm")]
         public double MaximumRootDepth { get; set; } = 750.0;
-        
+
+        /// <summary>Depth for constant distribution of roots, proportion decreases below this value [mm]</summary>
+        [Description("Depth for constant distribution of roots [mm]:")]
+        [Units("mm")]
+        public double DepthForConstantRootProportion { get; set; } = 90.0;
+
+        /// <summary>Coefficient for the root distribution, exponent to reduce proportion as function of depth [-]</summary>
+        [Description("Coefficient for the root distribution [-]:")]
+        [Units("-")]
+        public double ExponentRootDistribution { get; set; } = 3.2;
+
+        /// <summary>Factor to compute root distribution (where below maxRootDepth the function is zero)</summary>
+        private double rootDistributionFactor = 1.05;
+
+        /// <summary>Minimum shoot height [mm]</summary>
+        [Description("Minimum shoot height [mm]:")]
+        [Units("mm")]
+        public double MinimumPlantHeight { get; set; } = 25.0;
+
+        /// <summary>Maximum shoot height [mm]</summary>
+        [Description("Maximum shoot height [mm]:")]
+        [Units("mm")]
+        public double MaximumPlantHeight { get; set; } = 600.0;
+
+        /// <summary>Exponent of shoot height funtion [>1.0]</summary>
+        [Description("Exponent of shoot height funtion [>1.0]:")]
+        [Units(">1.0")]
+        public double ExponentHeightFromMass { get; set; } = 2.8;
+
+        /// <summary>DM weight for maximum shoot height[g/m2]</summary>
+        [Description("DM weight for maximum shoot height[g/m2]:")]
+        [Units("g/m2")]
+        public double MassForMaximumHeight { get; set; } = 1000;
+
         /// <summary>Root distribution method (Homogeneous, ExpoLinear, UserDefined)</summary>
         private string rootDistributionMethod = "ExpoLinear";
 
@@ -2141,6 +2174,15 @@ namespace Models.AgPasture
             get { return nConcGFactor; }
         }
 
+        /// <summary>Gets the growth factor due to variations in temperature.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to variations in temperature")]
+        [Units("0-1")]
+        public double TemperatureGF
+        {
+            get { return tempGFactor; }
+        }
+
         /// <summary>Gets the growth limiting factor due to temperature.</summary>
         /// <value>The growth limiting factor due to temperature.</value>
         [Description("Growth limiting factor due to temperature")]
@@ -2588,6 +2630,9 @@ namespace Models.AgPasture
         /// <summary>The fraction of roots DM in each layer</summary>
         private double[] rootFraction;
 
+        /// <summary>The ideal fraction of roots DM in each layer</summary>
+        private double[] targetRootAllocation;
+
         /// <summary>The maximum shoot-root ratio</summary>
         private double maxSRratio;
 
@@ -2881,17 +2926,16 @@ namespace Models.AgPasture
 
             // 3. Initialise root DM, N, depth, and distribution
             myRootDepth = InitialRootDepth;
+            targetRootAllocation = RootDistributionTarget();
             double cumDepth = 0.0;
+            double cumAllocation = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
                 cumDepth += mySoil.Thickness[layer];
                 if (cumDepth <= myRootDepth)
                 {
                     myRootFrontier = layer;
-                }
-                else
-                {
-                    layer = mySoil.Thickness.Length;
+                    cumAllocation += targetRootAllocation[layer];
                 }
             }
             rootFraction = RootProfileDistribution();
@@ -5420,6 +5464,59 @@ namespace Models.AgPasture
                 throw new Exception("Could not calculate root distribution");
             return result;
         }
+        
+        /// <summary>Compute the ideal distribution of roots in the soil profile</summary>
+        /// <remarks>
+        /// These values are used to allocate initial rootDM as well as any growth over the profile
+        /// </remarks>
+        /// <returns>A weighting factor for each soil layer (mm of soil)</returns>
+        private double[] RootDistributionTarget()
+        {
+            // 1. Base distribution calculated using and ExpoLinear function
+            //  Considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion)
+            //   below this depth, the proportion of root decrease following a power function, it reaches zero slightly
+            //   below the maxRootDepth (defined by rootDistributionFactor), function's exponent is given by ExponentRootDistribution
+            //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
+
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
+            double depthTop = 0.0;
+            double depthBottom = 0.0;
+            double depthFirstStage = Math.Min(MaximumRootDepth, DepthForConstantRootProportion);
+
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                depthBottom += mySoil.Thickness[layer];
+                if (depthTop >= MaximumRootDepth)
+                {
+                    // totally out of root zone
+                    result[layer] = 0.0;
+                }
+                else if (depthBottom <= depthFirstStage)
+                {
+                    // totally in the first stage
+                    result[layer] = mySoil.Thickness[layer] * soilCropData.XF[layer];
+                }
+                else
+                {
+                    // at least partially on second stage
+                    result[layer] = Math.Pow(MaximumRootDepth * rootDistributionFactor - Math.Max(depthTop, depthFirstStage), ExponentRootDistribution + 1)
+                                               - Math.Pow(MaximumRootDepth * rootDistributionFactor - Math.Min(depthBottom, MaximumRootDepth), ExponentRootDistribution + 1);
+                    result[layer] /= (ExponentRootDistribution + 1) * Math.Pow(MaximumRootDepth * rootDistributionFactor - depthFirstStage, ExponentRootDistribution);
+                    if (depthTop < depthFirstStage)
+                    {
+                        // partially in first stage
+                        result[layer] += depthFirstStage - depthTop;
+                    }
+
+                    result[layer] *= soilCropData.XF[layer];
+                }
+
+                depthTop += mySoil.Thickness[layer];
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Compute how much of the layer is actually explored by roots (considering depth only)
@@ -5441,6 +5538,25 @@ namespace Models.AgPasture
             return fractionInLayer;
         }
 
+        /// <summary>
+        /// Plant height calculation based on DM
+        /// </summary>
+        /// <returns>Plant height (mm)</returns>
+        private double HeightfromDM()
+        {
+            //double TodaysHeight = MaxPlantHeight[0] - MinimumHeight;
+            double TodaysHeight = MaximumPlantHeight;
+
+            if (0.1 * AboveGroundWt <= MassForMaximumHeight)
+            {
+                double myX = 0.1 * AboveGroundWt / MassForMaximumHeight;
+                double heightF = ExponentHeightFromMass - (ExponentHeightFromMass * myX) + myX;
+                heightF *= Math.Pow(myX, ExponentHeightFromMass - 1);
+                TodaysHeight *= heightF;
+            }
+            //return TodaysHeight + MinimumHeight;
+            return Math.Max(TodaysHeight, MinimumPlantHeight);
+        }
 
         /// <summary>VPDs this instance.</summary>
         /// <returns></returns>

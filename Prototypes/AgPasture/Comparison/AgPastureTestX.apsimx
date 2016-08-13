@@ -6875,6 +6875,12 @@ namespace Models
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
             <MaximumRootDepth>750</MaximumRootDepth>
+            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
+            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <MinimumPlantHeight>25</MinimumPlantHeight>
+            <MaximumPlantHeight>600</MaximumPlantHeight>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <MassForMaximumHeight>1000</MassForMaximumHeight>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
             <KNO3>1</KNO3>
@@ -9705,6 +9711,12 @@ namespace Models
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
           <MaximumRootDepth>750</MaximumRootDepth>
+          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
+          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <MinimumPlantHeight>25</MinimumPlantHeight>
+          <MaximumPlantHeight>600</MaximumPlantHeight>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <MassForMaximumHeight>1000</MassForMaximumHeight>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
           <KNO3>1</KNO3>
@@ -12695,6 +12707,12 @@ namespace Models
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
             <MaximumRootDepth>750</MaximumRootDepth>
+            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
+            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <MinimumPlantHeight>25</MinimumPlantHeight>
+            <MaximumPlantHeight>600</MaximumPlantHeight>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <MassForMaximumHeight>1000</MassForMaximumHeight>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
             <KNO3>1</KNO3>
@@ -15528,6 +15546,12 @@ namespace Models
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
           <MaximumRootDepth>750</MaximumRootDepth>
+          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
+          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <MinimumPlantHeight>25</MinimumPlantHeight>
+          <MaximumPlantHeight>600</MaximumPlantHeight>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <MassForMaximumHeight>1000</MassForMaximumHeight>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
           <KNO3>1</KNO3>
