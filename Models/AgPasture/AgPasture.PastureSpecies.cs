@@ -252,17 +252,17 @@ namespace Models.AgPasture
         ///// <summary>Invokes the NewCrop event (info about this crop type)</summary>
         //private void DoNewCropEvent()
         //{
-        //	if (NewCrop != null)
-        //	{
-        //		// Send out New Crop Event to tell other modules who I am and what I am
-        //		PMF.NewCropType EventData = new PMF.NewCropType();
-        //		EventData.crop_type = speciesFamily;
-        //		EventData.sender = Name;
-        //		NewCrop.Invoke(EventData);
-        //	}
+        //  if (NewCrop != null)
+        //  {
+        //      // Send out New Crop Event to tell other modules who I am and what I am
+        //      PMF.NewCropType EventData = new PMF.NewCropType();
+        //      EventData.crop_type = speciesFamily;
+        //      EventData.sender = Name;
+        //      NewCrop.Invoke(EventData);
+        //  }
 
-        //	if (Sowing != null)
-        //		Sowing.Invoke(this, new EventArgs());
+        //  if (Sowing != null)
+        //      Sowing.Invoke(this, new EventArgs());
         //}
 
         /// <summary>Sows the plant</summary>
@@ -3385,7 +3385,7 @@ namespace Models.AgPasture
 
             //// tell other modules about the existence of this species
             //if (!isSwardControlled)
-            //	DoNewCropEvent();
+            //  DoNewCropEvent();
         }
 
         /// <summary>
@@ -3830,12 +3830,12 @@ namespace Models.AgPasture
                 greenLAI += greenTissue * specificLeafArea * Math.Sqrt((1000 - dmGreen) / 10000);
             }
             /* 
-			 This adjust assumes cover will be bigger for the same amount of DM when DM is low, due to:
-			 - light extinction coefficient will be bigger - plant leaves will be more horizontal than in dense high swards
-			 - more parts (stems) will turn green for photosysnthesis (?)
-			 - quick response of plant shoots to favoured conditions after release of stress
-			 » Specific leaf area should be reduced (RCichota2014) - TODO
-			 */
+             This adjust assumes cover will be bigger for the same amount of DM when DM is low, due to:
+             - light extinction coefficient will be bigger - plant leaves will be more horizontal than in dense high swards
+             - more parts (stems) will turn green for photosysnthesis (?)
+             - quick response of plant shoots to favoured conditions after release of stress
+             » Specific leaf area should be reduced (RCichota2014) - TODO
+             */
 
             deadLAI = (dmLeaf4 / 10000) * specificLeafArea;
         }
@@ -5116,7 +5116,7 @@ namespace Models.AgPasture
                         }
                     }
 
-                    //mySoilUptakeN.Sum()	2.2427998752781684	double
+                    //mySoilUptakeN.Sum()   2.2427998752781684  double
 
                     if (Math.Abs(mySoilNuptake - mySoilNitrogenTakenUp.Sum()) > 0.0001)
                         throw new Exception("Error on computing N uptake");
@@ -5664,531 +5664,531 @@ namespace Models.AgPasture
             }
         }    
 
-		/// <summary>Growth limiting factor due to temperature</summary>
-		/// <param name="Temp">Temperature for which the limiting factor will be computed</param>
-		/// <returns>The value for the limiting factor (0-1)</returns>
-		/// <exception cref="System.Exception">Photosynthesis pathway is not valid</exception>
-		private double TemperatureLimitingFactor(double Temp)
-		{
-			double result = 0.0;
-			if (photosynthesisPathway == "C3")
-			{
-				if (Temp > growthTmin && Temp < growthTmax)  // TODO: Tmax should be calculated not given as a parameter
-				{
-					double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
-					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
-					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
-					result = val1 / val2;
-				}
-			}
-			else if (photosynthesisPathway == "C4")
-			{
-				if (Temp > growthTmin)
-				{
-					if (Temp > growthTopt)
-						Temp = growthTopt;
+        /// <summary>Growth limiting factor due to temperature</summary>
+        /// <param name="Temp">Temperature for which the limiting factor will be computed</param>
+        /// <returns>The value for the limiting factor (0-1)</returns>
+        /// <exception cref="System.Exception">Photosynthesis pathway is not valid</exception>
+        private double TemperatureLimitingFactor(double Temp)
+        {
+            double result = 0.0;
+            if (photosynthesisPathway == "C3")
+            {
+                if (Temp > growthTmin && Temp < growthTmax)  // TODO: Tmax should be calculated not given as a parameter
+                {
+                    double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
+                    double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
+                    double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
+                    result = val1 / val2;
+                }
+            }
+            else if (photosynthesisPathway == "C4")
+            {
+                if (Temp > growthTmin)
+                {
+                    if (Temp > growthTopt)
+                        Temp = growthTopt;
 
-					double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
-					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
-					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
-					result = val1 / val2;
-				}
-			}
-			else
-				throw new Exception("Photosynthesis pathway is not valid");
-			return result;
-		}
+                    double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
+                    double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
+                    double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
+                    result = val1 / val2;
+                }
+            }
+            else
+                throw new Exception("Photosynthesis pathway is not valid");
+            return result;
+        }
 
-		/// <summary>Effect of temperature on tissue turnover</summary>
-		/// <param name="Temp">The temporary.</param>
-		/// <returns>Temperature factor (0-1)</returns>
-		private double TempFactorForTissueTurnover(double Temp)
-		{
-			double result = 0.0;
-			if (Temp > tissueTurnoverTmin && Temp <= tissueTurnoverTopt)
-			{
-				result = (Temp - tissueTurnoverTmin) / (tissueTurnoverTopt - tissueTurnoverTmin);  // TODO: implement power function
-			}
-			else if (Temp > tissueTurnoverTopt)
-			{
-				result = 1.0;
-			}
-			return result;
-		}
+        /// <summary>Effect of temperature on tissue turnover</summary>
+        /// <param name="Temp">The temporary.</param>
+        /// <returns>Temperature factor (0-1)</returns>
+        private double TempFactorForTissueTurnover(double Temp)
+        {
+            double result = 0.0;
+            if (Temp > tissueTurnoverTmin && Temp <= tissueTurnoverTopt)
+            {
+                result = (Temp - tissueTurnoverTmin) / (tissueTurnoverTopt - tissueTurnoverTmin);  // TODO: implement power function
+            }
+            else if (Temp > tissueTurnoverTopt)
+            {
+                result = 1.0;
+            }
+            return result;
+        }
 
-		/// <summary>Photosynthesis reduction factor due to high temperatures (heat stress)</summary>
-		/// <returns>The reduction in photosynthesis rate (0-1)</returns>
-		private double HeatStress()
-		{
-			// evaluate recovery from the previous high temperature effects
-			double recoverF = 1.0;
+        /// <summary>Photosynthesis reduction factor due to high temperatures (heat stress)</summary>
+        /// <returns>The reduction in photosynthesis rate (0-1)</returns>
+        private double HeatStress()
+        {
+            // evaluate recovery from the previous high temperature effects
+            double recoverF = 1.0;
 
-			if (highTempEffect < 1.0)
-			{
-				if (referenceT4Heat > Tmean)
-					accumT4Heat += (referenceT4Heat - Tmean);
+            if (highTempEffect < 1.0)
+            {
+                if (referenceT4Heat > Tmean)
+                    accumT4Heat += (referenceT4Heat - Tmean);
 
-				if (accumT4Heat < heatSumT)
-					recoverF = highTempEffect + (1 - highTempEffect) * accumT4Heat / heatSumT;
-			}
+                if (accumT4Heat < heatSumT)
+                    recoverF = highTempEffect + (1 - highTempEffect) * accumT4Heat / heatSumT;
+            }
 
-			// Evaluate the high temperature factor for today
-			double newHeatF = 1.0;
-			if (MetData.MaxT > heatFullT)
-				newHeatF = 0;
-			else if (MetData.MaxT > heatOnsetT)
-				newHeatF = (MetData.MaxT - heatOnsetT) / (heatFullT - heatOnsetT);
+            // Evaluate the high temperature factor for today
+            double newHeatF = 1.0;
+            if (MetData.MaxT > heatFullT)
+                newHeatF = 0;
+            else if (MetData.MaxT > heatOnsetT)
+                newHeatF = (MetData.MaxT - heatOnsetT) / (heatFullT - heatOnsetT);
 
-			// If this new high temp. factor is smaller than 1.0, then it is compounded with the old one
-			// also, the cumulative heat for recovery is re-started
-			if (newHeatF < 1.0)
-			{
-				highTempEffect = recoverF * newHeatF;
-				accumT4Heat = 0;
-				recoverF = highTempEffect;
-			}
+            // If this new high temp. factor is smaller than 1.0, then it is compounded with the old one
+            // also, the cumulative heat for recovery is re-started
+            if (newHeatF < 1.0)
+            {
+                highTempEffect = recoverF * newHeatF;
+                accumT4Heat = 0;
+                recoverF = highTempEffect;
+            }
 
-			return recoverF;  // TODO: revise this function
-		}
+            return recoverF;  // TODO: revise this function
+        }
 
-		/// <summary>Photosynthesis reduction factor due to low temperatures (cold stress)</summary>
-		/// <returns>The reduction in potosynthesis rate (0-1)</returns>
-		private double ColdStress()
-		{
-			//recover from the previous high temp. effect
-			double recoverF = 1.0;
-			if (lowTempEffect < 1.0)
-			{
-				if (Tmean > referenceT4Cold)
-					accumT4Cold += (Tmean - referenceT4Cold);
+        /// <summary>Photosynthesis reduction factor due to low temperatures (cold stress)</summary>
+        /// <returns>The reduction in potosynthesis rate (0-1)</returns>
+        private double ColdStress()
+        {
+            //recover from the previous high temp. effect
+            double recoverF = 1.0;
+            if (lowTempEffect < 1.0)
+            {
+                if (Tmean > referenceT4Cold)
+                    accumT4Cold += (Tmean - referenceT4Cold);
 
-				if (accumT4Cold < coldSumT)
-					recoverF = lowTempEffect + (1 - lowTempEffect) * accumT4Cold / coldSumT;
-			}
+                if (accumT4Cold < coldSumT)
+                    recoverF = lowTempEffect + (1 - lowTempEffect) * accumT4Cold / coldSumT;
+            }
 
-			//possible new low temp. effect
-			double newColdF = 1.0;
-			if (MetData.MinT < coldFullT)
-				newColdF = 0;
-			else if (MetData.MinT < coldOnsetT)
-				newColdF = (MetData.MinT - coldFullT) / (coldOnsetT - coldFullT);
+            //possible new low temp. effect
+            double newColdF = 1.0;
+            if (MetData.MinT < coldFullT)
+                newColdF = 0;
+            else if (MetData.MinT < coldOnsetT)
+                newColdF = (MetData.MinT - coldFullT) / (coldOnsetT - coldFullT);
 
-			// If this new cold temp. effect happens when serious cold effect is still on,
-			// compound & then re-start of the recovery from the new effect
-			if (newColdF < 1.0)
-			{
-				lowTempEffect = newColdF * recoverF;
-				accumT4Cold = 0;
-				recoverF = lowTempEffect;
-			}
+            // If this new cold temp. effect happens when serious cold effect is still on,
+            // compound & then re-start of the recovery from the new effect
+            if (newColdF < 1.0)
+            {
+                lowTempEffect = newColdF * recoverF;
+                accumT4Cold = 0;
+                recoverF = lowTempEffect;
+            }
 
-			return recoverF; // TODO: revise this function
-		}
+            return recoverF; // TODO: revise this function
+        }
 
-		/// <summary>Photosynthesis factor (reduction or increase) to eleveated [CO2]</summary>
-		/// <returns>A factor to adjust photosynthesis due to CO2</returns>
-		private double PCO2Effects()
-		{
-			if (Math.Abs(MetData.CO2 - referenceCO2) < 0.01)
-				return 1.0;
+        /// <summary>Photosynthesis factor (reduction or increase) to eleveated [CO2]</summary>
+        /// <returns>A factor to adjust photosynthesis due to CO2</returns>
+        private double PCO2Effects()
+        {
+            if (Math.Abs(MetData.CO2 - referenceCO2) < 0.01)
+                return 1.0;
 
-			double Fp1 = MetData.CO2 / (coefficientCO2EffectOnPhotosynthesis + MetData.CO2);
-			double Fp2 = (referenceCO2 + coefficientCO2EffectOnPhotosynthesis) / referenceCO2;
+            double Fp1 = MetData.CO2 / (coefficientCO2EffectOnPhotosynthesis + MetData.CO2);
+            double Fp2 = (referenceCO2 + coefficientCO2EffectOnPhotosynthesis) / referenceCO2;
 
-			return Fp1 * Fp2;
-		}
+            return Fp1 * Fp2;
+        }
 
-		/// <summary>Effect on photosynthesis due to variations in optimum N concentration as affected by CO2</summary>
-		/// <returns>A factor to adjust photosynthesis</returns>
-		private double PmxNeffect()
-		{
-			if (isAnnual)
-				return 0.0;
-			else
-			{
-				double fN = NCO2Effects();
+        /// <summary>Effect on photosynthesis due to variations in optimum N concentration as affected by CO2</summary>
+        /// <returns>A factor to adjust photosynthesis</returns>
+        private double PmxNeffect()
+        {
+            if (isAnnual)
+                return 0.0;
+            else
+            {
+                double fN = NCO2Effects();
 
-				double result = 1.0;
-				double NcleafGreen = MathUtilities.Divide(Nleaf1 + Nleaf2 + Nleaf3, dmLeaf1 + dmLeaf2 + dmLeaf3, 0.0);
-				if (NcleafGreen < leafNopt * fN)
-				{
-					if (NcleafGreen > leafNmin)
-					{
-						result = MathUtilities.Divide(NcleafGreen - leafNmin, (leafNopt * fN) - leafNmin, 1.0);
-						result = Math.Min(1.0, Math.Max(0.0, result));
-					}
-					else
-					{
-						result = 0.0;
-					}
-				}
+                double result = 1.0;
+                double NcleafGreen = MathUtilities.Divide(Nleaf1 + Nleaf2 + Nleaf3, dmLeaf1 + dmLeaf2 + dmLeaf3, 0.0);
+                if (NcleafGreen < leafNopt * fN)
+                {
+                    if (NcleafGreen > leafNmin)
+                    {
+                        result = MathUtilities.Divide(NcleafGreen - leafNmin, (leafNopt * fN) - leafNmin, 1.0);
+                        result = Math.Min(1.0, Math.Max(0.0, result));
+                    }
+                    else
+                    {
+                        result = 0.0;
+                    }
+                }
 
-				return result;
-			}
-		}
+                return result;
+            }
+        }
 
-		/// <summary>Plant nitrogen [N] decline to elevated [CO2]</summary>
-		/// <returns>A factor to adjust N demand</returns>
-		private double NCO2Effects()
-		{
-			if (Math.Abs(MetData.CO2 - referenceCO2) < 0.01)
-				return 1.0;
+        /// <summary>Plant nitrogen [N] decline to elevated [CO2]</summary>
+        /// <returns>A factor to adjust N demand</returns>
+        private double NCO2Effects()
+        {
+            if (Math.Abs(MetData.CO2 - referenceCO2) < 0.01)
+                return 1.0;
 
-			double termK = Math.Pow(offsetCO2EffectOnNuptake - referenceCO2, exponentCO2EffectOnNuptake);
-			double termC = Math.Pow(MetData.CO2 - referenceCO2, exponentCO2EffectOnNuptake);
-			double result = (1 - minimumCO2EffectOnNuptake) * termK / (termK + termC);
+            double termK = Math.Pow(offsetCO2EffectOnNuptake - referenceCO2, exponentCO2EffectOnNuptake);
+            double termC = Math.Pow(MetData.CO2 - referenceCO2, exponentCO2EffectOnNuptake);
+            double result = (1 - minimumCO2EffectOnNuptake) * termK / (termK + termC);
 
-			return minimumCO2EffectOnNuptake + result;
-		}
+            return minimumCO2EffectOnNuptake + result;
+        }
 
-		//Canopy conductance decline to elevated [CO2]
-		/// <summary>Conductances the c o2 effects.</summary>
-		/// <returns></returns>
-		private double ConductanceCO2Effects()
-		{
-			if (Math.Abs(MetData.CO2 - referenceCO2) < 0.5)
-				return 1.0;
-			//Hard coded here, not used, should go to Micromet!   - TODO
-			double Gmin = 0.2;      //Fc = Gmin when CO2->unlimited
-			double Gmax = 1.25;     //Fc = Gmax when CO2 = 0;
-			double beta = 2.5;      //curvature factor,
+        //Canopy conductance decline to elevated [CO2]
+        /// <summary>Conductances the c o2 effects.</summary>
+        /// <returns></returns>
+        private double ConductanceCO2Effects()
+        {
+            if (Math.Abs(MetData.CO2 - referenceCO2) < 0.5)
+                return 1.0;
+            //Hard coded here, not used, should go to Micromet!   - TODO
+            double Gmin = 0.2;      //Fc = Gmin when CO2->unlimited
+            double Gmax = 1.25;     //Fc = Gmax when CO2 = 0;
+            double beta = 2.5;      //curvature factor,
 
-			double aux1 = (1 - Gmin) * Math.Pow(referenceCO2, beta);
-			double aux2 = (Gmax - 1) * Math.Pow(MetData.CO2, beta);
-			double Fc = (Gmax - Gmin) * aux1 / (aux2 + aux1);
-			return Gmin + Fc;
-		}
+            double aux1 = (1 - Gmin) * Math.Pow(referenceCO2, beta);
+            double aux2 = (Gmax - 1) * Math.Pow(MetData.CO2, beta);
+            double Fc = (Gmax - Gmin) * aux1 / (aux2 + aux1);
+            return Gmin + Fc;
+        }
 
-		/// <summary>Growth limiting factor due to soil moisture deficit</summary>
-		/// <returns>The limiting factor due to soil water deficit (0-1)</returns>
-		internal double WaterDeficitFactor()
-		{
-			double result = 0.0;
+        /// <summary>Growth limiting factor due to soil moisture deficit</summary>
+        /// <returns>The limiting factor due to soil water deficit (0-1)</returns>
+        internal double WaterDeficitFactor()
+        {
+            double result = 0.0;
 
-			if (myWaterDemand <= 0.0001)         // demand should never be really negative, but might be slightly because of precision of float numbers
-				result = 1.0;
-			else
-				result = mySoilWaterTakenUp.Sum() / myWaterDemand;
+            if (myWaterDemand <= 0.0001)         // demand should never be really negative, but might be slightly because of precision of float numbers
+                result = 1.0;
+            else
+                result = mySoilWaterTakenUp.Sum() / myWaterDemand;
 
-			return Math.Max(0.0, Math.Min(1.0, result));
-		}
+            return Math.Max(0.0, Math.Min(1.0, result));
+        }
 
-		/// <summary>Growth limiting factor due to excess of water in soil (logging/saturation)</summary>
-		/// <returns>The limiting factor due to excess of soil water</returns>
-		/// <remarks>Assuming that water above field capacity is not good</remarks>
-		internal double WaterLoggingFactor()
-		{
-			double result = 1.0;
+        /// <summary>Growth limiting factor due to excess of water in soil (logging/saturation)</summary>
+        /// <returns>The limiting factor due to excess of soil water</returns>
+        /// <remarks>Assuming that water above field capacity is not good</remarks>
+        internal double WaterLoggingFactor()
+        {
+            double result = 1.0;
 
-			// calculate soil moisture thresholds in the root zone
-			double mySWater = 0.0;
-			double mySaturation = 0.0;
-			double myDUL = 0.0;
-			double fractionLayer = 0.0;
-			for (int layer = 0; layer <= myRootFrontier; layer++)
-			{
-				// fraction of layer with roots 
-				fractionLayer = LayerFractionWithRoots(layer);
-				// actual soil water content
-				mySWater += Soil.Water[layer] * fractionLayer;
-				// water content at saturation
-				mySaturation += Soil.SoilWater.SATmm[layer] * fractionLayer;
-				// water content at field capacity
-				myDUL += Soil.SoilWater.DULmm[layer] * fractionLayer;
-			}
+            // calculate soil moisture thresholds in the root zone
+            double mySWater = 0.0;
+            double mySaturation = 0.0;
+            double myDUL = 0.0;
+            double fractionLayer = 0.0;
+            for (int layer = 0; layer <= myRootFrontier; layer++)
+            {
+                // fraction of layer with roots 
+                fractionLayer = LayerFractionWithRoots(layer);
+                // actual soil water content
+                mySWater += Soil.Water[layer] * fractionLayer;
+                // water content at saturation
+                mySaturation += Soil.SoilWater.SATmm[layer] * fractionLayer;
+                // water content at field capacity
+                myDUL += Soil.SoilWater.DULmm[layer] * fractionLayer;
+            }
 
-			result = 1.0 - waterLoggingCoefficient * Math.Max(0.0, mySWater - myDUL) / (mySaturation - myDUL);
+            result = 1.0 - waterLoggingCoefficient * Math.Max(0.0, mySWater - myDUL) / (mySaturation - myDUL);
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>Effect of water stress on tissue turnover</summary>
-		/// <returns>Water stress factor (0-1)</returns>
-		private double WaterFactorForTissueTurnover()
-		{
-			double result = 1.0;
-			if (glfWater < tissueTurnoverGLFWopt)
-			{
-				result = (tissueTurnoverGLFWopt - glfWater) / tissueTurnoverGLFWopt;
-				result = (tissueTurnoverWFactorMax - 1.0) * result;
-				result = Math.Min(tissueTurnoverWFactorMax, Math.Max(1.0, 1 + result));
-			}
+        /// <summary>Effect of water stress on tissue turnover</summary>
+        /// <returns>Water stress factor (0-1)</returns>
+        private double WaterFactorForTissueTurnover()
+        {
+            double result = 1.0;
+            if (glfWater < tissueTurnoverGLFWopt)
+            {
+                result = (tissueTurnoverGLFWopt - glfWater) / tissueTurnoverGLFWopt;
+                result = (tissueTurnoverWFactorMax - 1.0) * result;
+                result = Math.Min(tissueTurnoverWFactorMax, Math.Max(1.0, 1 + result));
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>Computes the ground cover for the plant, or plant part</summary>
-		/// <param name="thisLAI">The LAI for this plant or part</param>
-		/// <returns>Fraction of ground effectively covered (0-1)</returns>
-		private double CalcPlantCover(double thisLAI)
-		{
-			return (1.0 - Math.Exp(-lightExtentionCoeff * thisLAI));
-		}
+        /// <summary>Computes the ground cover for the plant, or plant part</summary>
+        /// <param name="thisLAI">The LAI for this plant or part</param>
+        /// <returns>Fraction of ground effectively covered (0-1)</returns>
+        private double CalcPlantCover(double thisLAI)
+        {
+            return (1.0 - Math.Exp(-lightExtentionCoeff * thisLAI));
+        }
 
-		/// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
-		/// <returns>The proportion of root mass in each soil layer</returns>
-		/// <exception cref="System.Exception">
-		/// No valid method for computing root distribution was selected
-		/// or
-		/// Could not calculate root distribution
-		/// </exception>
-		private double[] RootProfileDistribution()
-		{
-			double[] result = new double[nLayers];
-			double sumProportion = 0;
+        /// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
+        /// <returns>The proportion of root mass in each soil layer</returns>
+        /// <exception cref="System.Exception">
+        /// No valid method for computing root distribution was selected
+        /// or
+        /// Could not calculate root distribution
+        /// </exception>
+        private double[] RootProfileDistribution()
+        {
+            double[] result = new double[nLayers];
+            double sumProportion = 0;
 
-			switch (rootDistributionMethod.ToLower())
-			{
-				case "homogeneous":
-					{
-						// homogenous distribution over soil profile (same root density throughout the profile)
-						double DepthTop = 0;
-						for (int layer = 0; layer < nLayers; layer++)
-						{
-							if (DepthTop >= myRootDepth)
-								result[layer] = 0.0;
-							else if (DepthTop + Soil.Thickness[layer] <= myRootDepth)
-								result[layer] = 1.0;
-							else
-								result[layer] = (myRootDepth - DepthTop) / Soil.Thickness[layer];
-							sumProportion += result[layer] * Soil.Thickness[layer];
-							DepthTop += Soil.Thickness[layer];
-						}
-						break;
-					}
-				case "userdefined":
-					{
-						// distribution given by the user
-						// Option no longer available
-						break;
-					}
-				case "expolinear":
-					{
-						// distribution calculated using ExpoLinear method
-						//  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
-						//   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
-						//   if exponent is one than the proportion decreases linearly.
-						double DepthTop = 0;
-						double DepthFirstStage = myRootDepth * expoLinearDepthParam;
-						double DepthSecondStage = myRootDepth - DepthFirstStage;
-						for (int layer = 0; layer < nLayers; layer++)
-						{
-							if (DepthTop >= myRootDepth)
-								result[layer] = 0.0;
-							else if (DepthTop + Soil.Thickness[layer] <= DepthFirstStage)
-								result[layer] = 1.0;
-							else
-							{
-								if (DepthTop < DepthFirstStage)
-									result[layer] = (DepthFirstStage - DepthTop) / Soil.Thickness[layer];
-								if ((expoLinearDepthParam < 1.0) && (expoLinearCurveParam > 0.0))
-								{
-									double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
-									double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-									thisDepth = Math.Min(DepthTop + Soil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
-									double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-									result[layer] += Math.Max(0.0, Fbottom - Ftop) / Soil.Thickness[layer];
-								}
-								else if (DepthTop + Soil.Thickness[layer] <= myRootDepth)
-									result[layer] += Math.Min(DepthTop + Soil.Thickness[layer], myRootDepth) - Math.Max(DepthTop, DepthFirstStage) / Soil.Thickness[layer];
-							}
-							sumProportion += result[layer];
-							DepthTop += Soil.Thickness[layer];
-						}
-						break;
-					}
-				default:
-					{
-						throw new Exception("No valid method for computing root distribution was selected");
-					}
-			}
-			if (sumProportion > 0)
-				for (int layer = 0; layer < nLayers; layer++)
-					result[layer] = MathUtilities.Divide(result[layer], sumProportion, 0.0);
-			else
-				throw new Exception("Could not calculate root distribution");
-			return result;
-		}
+            switch (rootDistributionMethod.ToLower())
+            {
+                case "homogeneous":
+                    {
+                        // homogenous distribution over soil profile (same root density throughout the profile)
+                        double DepthTop = 0;
+                        for (int layer = 0; layer < nLayers; layer++)
+                        {
+                            if (DepthTop >= myRootDepth)
+                                result[layer] = 0.0;
+                            else if (DepthTop + Soil.Thickness[layer] <= myRootDepth)
+                                result[layer] = 1.0;
+                            else
+                                result[layer] = (myRootDepth - DepthTop) / Soil.Thickness[layer];
+                            sumProportion += result[layer] * Soil.Thickness[layer];
+                            DepthTop += Soil.Thickness[layer];
+                        }
+                        break;
+                    }
+                case "userdefined":
+                    {
+                        // distribution given by the user
+                        // Option no longer available
+                        break;
+                    }
+                case "expolinear":
+                    {
+                        // distribution calculated using ExpoLinear method
+                        //  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
+                        //   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
+                        //   if exponent is one than the proportion decreases linearly.
+                        double DepthTop = 0;
+                        double DepthFirstStage = myRootDepth * expoLinearDepthParam;
+                        double DepthSecondStage = myRootDepth - DepthFirstStage;
+                        for (int layer = 0; layer < nLayers; layer++)
+                        {
+                            if (DepthTop >= myRootDepth)
+                                result[layer] = 0.0;
+                            else if (DepthTop + Soil.Thickness[layer] <= DepthFirstStage)
+                                result[layer] = 1.0;
+                            else
+                            {
+                                if (DepthTop < DepthFirstStage)
+                                    result[layer] = (DepthFirstStage - DepthTop) / Soil.Thickness[layer];
+                                if ((expoLinearDepthParam < 1.0) && (expoLinearCurveParam > 0.0))
+                                {
+                                    double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
+                                    double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
+                                    thisDepth = Math.Min(DepthTop + Soil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
+                                    double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
+                                    result[layer] += Math.Max(0.0, Fbottom - Ftop) / Soil.Thickness[layer];
+                                }
+                                else if (DepthTop + Soil.Thickness[layer] <= myRootDepth)
+                                    result[layer] += Math.Min(DepthTop + Soil.Thickness[layer], myRootDepth) - Math.Max(DepthTop, DepthFirstStage) / Soil.Thickness[layer];
+                            }
+                            sumProportion += result[layer];
+                            DepthTop += Soil.Thickness[layer];
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception("No valid method for computing root distribution was selected");
+                    }
+            }
+            if (sumProportion > 0)
+                for (int layer = 0; layer < nLayers; layer++)
+                    result[layer] = MathUtilities.Divide(result[layer], sumProportion, 0.0);
+            else
+                throw new Exception("Could not calculate root distribution");
+            return result;
+        }
 
-		/// <summary>
-		/// Compute how much of the layer is actually explored by roots (considering depth only)
-		/// </summary>
-		/// <param name="layer">The index for the layer being considered</param>
-		/// <returns>Fraction of the layer in consideration that is explored by roots</returns>
-		public double LayerFractionWithRoots(int layer)
-		{
-			if (layer > myRootFrontier)
-				return 0.0;
-			else
-			{
-				double depthAtTopThisLayer = 0;   // depth till the top of the layer being considered
-				for (int z = 0; z < layer; z++)
-					depthAtTopThisLayer += Soil.Thickness[z];
-				double result = (myRootDepth - depthAtTopThisLayer) / Soil.Thickness[layer];
-				return Math.Min(1.0, Math.Max(0.0, result));
-			}
-		}
-
-
-		/// <summary>VPDs this instance.</summary>
-		/// <returns></returns>
-		/// The following helper functions [VDP and svp] are for calculating Fvdp
-		private double VPD()
-		{
-			double VPDmint = svp(MetData.MinT) - MetData.VP;
-			VPDmint = Math.Max(VPDmint, 0.0);
-
-			double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
-			VPDmaxt = Math.Max(VPDmaxt, 0.0);
-
-			double vdp = 0.66 * VPDmaxt + 0.34 * VPDmint;
-			return vdp;
-		}
-		/// <summary>SVPs the specified temporary.</summary>
-		/// <param name="temp">The temporary.</param>
-		/// <returns></returns>
-		private double svp(double temp)  // from Growth.for documented in MicroMet
-		{
-			return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
-		}
-
-		#endregion
-	}
-
-	/// <summary>Stores the state variables of a pasture species</summary>
-	[Serializable]
-	public class SpeciesState
-	{
-		/// <summary>Initializes a new instance of the species state<see cref="SpeciesState"/> class.</summary>
-		public SpeciesState() { }
-
-		// DM pools  ------------------------------------------------------------------------------
-		/// <summary>The DM weight of leaves at stage1</summary>
-		public double dmLeaf1;
-		/// <summary>The DM weight of leaves at stage2</summary>
-		public double dmLeaf2;
-		/// <summary>The DM weight of leaves at stage3</summary>
-		public double dmLeaf3;
-		/// <summary>The DM weight of leaves at stage4</summary>
-		public double dmLeaf4;
-
-		/// <summary>The DM weight of stems at stage1</summary>
-		public double dmStem1;
-		/// <summary>The DM weight of stems at stage2</summary>
-		public double dmStem2;
-		/// <summary>The DM weight of stems at stage3</summary>
-		public double dmStem3;
-		/// <summary>The DM weight of stems at stage4</summary>
-		public double dmStem4;
-
-		/// <summary>The DM weight of stolons at stage1</summary>
-		public double dmStolon1;
-		/// <summary>The DM weight of stolons at stage2</summary>
-		public double dmStolon2;
-		/// <summary>The DM weight of stolons at stage3</summary>
-		public double dmStolon3;
-
-		/// <summary>The DM weight of roots</summary>
-		public double dmRoot;
-
-		/// <summary>The DM weight of all leaves</summary>
-		public double dmLeaf
-		{ get { return dmLeaf1 + dmLeaf2 + dmLeaf3 + dmLeaf4; } }
-		/// <summary>The DM weight of all stem and sheath</summary>
-		public double dmStem
-		{ get { return dmStem1 + dmStem2 + dmStem3 + dmStem4; } }
-		/// <summary>The DM weight of all stolons</summary>
-		public double dmStolon
-		{ get { return dmStolon1 + dmStolon2 + dmStolon3; } }
+        /// <summary>
+        /// Compute how much of the layer is actually explored by roots (considering depth only)
+        /// </summary>
+        /// <param name="layer">The index for the layer being considered</param>
+        /// <returns>Fraction of the layer in consideration that is explored by roots</returns>
+        public double LayerFractionWithRoots(int layer)
+        {
+            if (layer > myRootFrontier)
+                return 0.0;
+            else
+            {
+                double depthAtTopThisLayer = 0;   // depth till the top of the layer being considered
+                for (int z = 0; z < layer; z++)
+                    depthAtTopThisLayer += Soil.Thickness[z];
+                double result = (myRootDepth - depthAtTopThisLayer) / Soil.Thickness[layer];
+                return Math.Min(1.0, Math.Max(0.0, result));
+            }
+        }
 
 
-		// N pools  -------------------------------------------------------------------------------
-		/// <summary>The amount of N in leaves at stage 1</summary>
-		public double Nleaf1;
-		/// <summary>The amount of N in leaves at stage 2</summary>
-		public double Nleaf2;
-		/// <summary>The amount of N in leaves at stage 3</summary>
-		public double Nleaf3;
-		/// <summary>The amount of N in leaves at stage 4</summary>
-		public double Nleaf4;
+        /// <summary>VPDs this instance.</summary>
+        /// <returns></returns>
+        /// The following helper functions [VDP and svp] are for calculating Fvdp
+        private double VPD()
+        {
+            double VPDmint = svp(MetData.MinT) - MetData.VP;
+            VPDmint = Math.Max(VPDmint, 0.0);
 
-		/// <summary>The amount of N in stems at stage 1</summary>
-		public double Nstem1;
-		/// <summary>The amount of N in stems at stage 2</summary>
-		public double Nstem2;
-		/// <summary>The amount of N in stems at stage 3</summary>
-		public double Nstem3;
-		/// <summary>The amount of N in stems at stage 4</summary>
-		public double Nstem4;
+            double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
+            VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
-		/// <summary>The amount of N in stolons at stage 1</summary>
-		public double Nstolon1;
-		/// <summary>The amount of N in stolons at stage 2</summary>
-		public double Nstolon2;
-		/// <summary>The amount of N in stolons at stage 3</summary>
-		public double Nstolon3;
+            double vdp = 0.66 * VPDmaxt + 0.34 * VPDmint;
+            return vdp;
+        }
+        /// <summary>SVPs the specified temporary.</summary>
+        /// <param name="temp">The temporary.</param>
+        /// <returns></returns>
+        private double svp(double temp)  // from Growth.for documented in MicroMet
+        {
+            return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
+        }
 
-		/// <summary>The amount of N in roots</summary>
-		public double Nroot;
+        #endregion
+    }
 
-		// N concentrations  ----------------------------------------------------------------------
-		/// <summary>The N concentration in leaves at stage 1</summary>
-		public double NconcLeaf1
-		{ get { return (dmLeaf1 > 0.0) ? Nleaf1 / dmLeaf1 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 2</summary>
-		public double NconcLeaf2
-		{ get { return (dmLeaf2 > 0.0) ? Nleaf2 / dmLeaf2 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 3</summary>
-		public double NconcLeaf3
-		{ get { return (dmLeaf3 > 0.0) ? Nleaf3 / dmLeaf3 : 0.0; } }
-		/// <summary>The N concentration in leaves at stage 4</summary>
-		public double NconcLeaf4
-		{ get { return (dmLeaf4 > 0.0) ? Nleaf4 / dmLeaf4 : 0.0; } }
+    /// <summary>Stores the state variables of a pasture species</summary>
+    [Serializable]
+    public class SpeciesState
+    {
+        /// <summary>Initializes a new instance of the species state<see cref="SpeciesState"/> class.</summary>
+        public SpeciesState() { }
 
-		/// <summary>The N concentration in stems at stage 1</summary>
-		public double NconcStem1
-		{ get { return (dmStem1 > 0.0) ? Nstem1 / dmStem1 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 2</summary>
-		public double NconcStem2
-		{ get { return (dmStem2 > 0.0) ? Nstem2 / dmStem2 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 3</summary>
-		public double NconcStem3
-		{ get { return (dmStem3 > 0.0) ? Nstem3 / dmStem3 : 0.0; } }
-		/// <summary>The N concentration in stems at stage 4</summary>
-		public double NconcStem4
-		{ get { return (dmStem4 > 0.0) ? Nstem4 / dmStem4 : 0.0; } }
+        // DM pools  ------------------------------------------------------------------------------
+        /// <summary>The DM weight of leaves at stage1</summary>
+        public double dmLeaf1;
+        /// <summary>The DM weight of leaves at stage2</summary>
+        public double dmLeaf2;
+        /// <summary>The DM weight of leaves at stage3</summary>
+        public double dmLeaf3;
+        /// <summary>The DM weight of leaves at stage4</summary>
+        public double dmLeaf4;
 
-		/// <summary>The N concentration in stolons at stage 1</summary>
-		public double NconcStolon1
-		{ get { return (dmStolon1 > 0.0) ? Nstolon1 / dmStolon1 : 0.0; } }
-		/// <summary>The N concentration in stolons at stage 2</summary>
-		public double NconcStolon2
-		{ get { return (dmStolon2 > 0.0) ? Nstolon2 / dmStolon2 : 0.0; } }
-		/// <summary>The N concentration in stolons at stage 3</summary>
-		public double NconcStolon3
-		{ get { return (dmStolon3 > 0.0) ? Nstolon3 / dmStolon3 : 0.0; } }
+        /// <summary>The DM weight of stems at stage1</summary>
+        public double dmStem1;
+        /// <summary>The DM weight of stems at stage2</summary>
+        public double dmStem2;
+        /// <summary>The DM weight of stems at stage3</summary>
+        public double dmStem3;
+        /// <summary>The DM weight of stems at stage4</summary>
+        public double dmStem4;
 
-		/// <summary>The N concentration in roots</summary>
-		public double NconcRoot
-		{ get { return (dmRoot > 0.0) ? Nroot / dmRoot : 0.0; } }
-	}
+        /// <summary>The DM weight of stolons at stage1</summary>
+        public double dmStolon1;
+        /// <summary>The DM weight of stolons at stage2</summary>
+        public double dmStolon2;
+        /// <summary>The DM weight of stolons at stage3</summary>
+        public double dmStolon3;
 
-	/// <summary>Defines a broken stick (piecewise) function</summary>
-	[Serializable]
-	public class BrokenStick
-	{
-		/// <summary>The x</summary>
-		public double[] X;
-		/// <summary>The y</summary>
-		public double[] Y;
+        /// <summary>The DM weight of roots</summary>
+        public double dmRoot;
 
-		/// <summary>Values the specified new x.</summary>
-		/// <param name="newX">The new x.</param>
-		/// <returns></returns>
-		public double Value(double newX)
-		{
-			bool DidInterpolate = false;
-			return MathUtilities.LinearInterpReal(newX, X, Y, out DidInterpolate);
-		}
-	}
+        /// <summary>The DM weight of all leaves</summary>
+        public double dmLeaf
+        { get { return dmLeaf1 + dmLeaf2 + dmLeaf3 + dmLeaf4; } }
+        /// <summary>The DM weight of all stem and sheath</summary>
+        public double dmStem
+        { get { return dmStem1 + dmStem2 + dmStem3 + dmStem4; } }
+        /// <summary>The DM weight of all stolons</summary>
+        public double dmStolon
+        { get { return dmStolon1 + dmStolon2 + dmStolon3; } }
+
+
+        // N pools  -------------------------------------------------------------------------------
+        /// <summary>The amount of N in leaves at stage 1</summary>
+        public double Nleaf1;
+        /// <summary>The amount of N in leaves at stage 2</summary>
+        public double Nleaf2;
+        /// <summary>The amount of N in leaves at stage 3</summary>
+        public double Nleaf3;
+        /// <summary>The amount of N in leaves at stage 4</summary>
+        public double Nleaf4;
+
+        /// <summary>The amount of N in stems at stage 1</summary>
+        public double Nstem1;
+        /// <summary>The amount of N in stems at stage 2</summary>
+        public double Nstem2;
+        /// <summary>The amount of N in stems at stage 3</summary>
+        public double Nstem3;
+        /// <summary>The amount of N in stems at stage 4</summary>
+        public double Nstem4;
+
+        /// <summary>The amount of N in stolons at stage 1</summary>
+        public double Nstolon1;
+        /// <summary>The amount of N in stolons at stage 2</summary>
+        public double Nstolon2;
+        /// <summary>The amount of N in stolons at stage 3</summary>
+        public double Nstolon3;
+
+        /// <summary>The amount of N in roots</summary>
+        public double Nroot;
+
+        // N concentrations  ----------------------------------------------------------------------
+        /// <summary>The N concentration in leaves at stage 1</summary>
+        public double NconcLeaf1
+        { get { return (dmLeaf1 > 0.0) ? Nleaf1 / dmLeaf1 : 0.0; } }
+        /// <summary>The N concentration in leaves at stage 2</summary>
+        public double NconcLeaf2
+        { get { return (dmLeaf2 > 0.0) ? Nleaf2 / dmLeaf2 : 0.0; } }
+        /// <summary>The N concentration in leaves at stage 3</summary>
+        public double NconcLeaf3
+        { get { return (dmLeaf3 > 0.0) ? Nleaf3 / dmLeaf3 : 0.0; } }
+        /// <summary>The N concentration in leaves at stage 4</summary>
+        public double NconcLeaf4
+        { get { return (dmLeaf4 > 0.0) ? Nleaf4 / dmLeaf4 : 0.0; } }
+
+        /// <summary>The N concentration in stems at stage 1</summary>
+        public double NconcStem1
+        { get { return (dmStem1 > 0.0) ? Nstem1 / dmStem1 : 0.0; } }
+        /// <summary>The N concentration in stems at stage 2</summary>
+        public double NconcStem2
+        { get { return (dmStem2 > 0.0) ? Nstem2 / dmStem2 : 0.0; } }
+        /// <summary>The N concentration in stems at stage 3</summary>
+        public double NconcStem3
+        { get { return (dmStem3 > 0.0) ? Nstem3 / dmStem3 : 0.0; } }
+        /// <summary>The N concentration in stems at stage 4</summary>
+        public double NconcStem4
+        { get { return (dmStem4 > 0.0) ? Nstem4 / dmStem4 : 0.0; } }
+
+        /// <summary>The N concentration in stolons at stage 1</summary>
+        public double NconcStolon1
+        { get { return (dmStolon1 > 0.0) ? Nstolon1 / dmStolon1 : 0.0; } }
+        /// <summary>The N concentration in stolons at stage 2</summary>
+        public double NconcStolon2
+        { get { return (dmStolon2 > 0.0) ? Nstolon2 / dmStolon2 : 0.0; } }
+        /// <summary>The N concentration in stolons at stage 3</summary>
+        public double NconcStolon3
+        { get { return (dmStolon3 > 0.0) ? Nstolon3 / dmStolon3 : 0.0; } }
+
+        /// <summary>The N concentration in roots</summary>
+        public double NconcRoot
+        { get { return (dmRoot > 0.0) ? Nroot / dmRoot : 0.0; } }
+    }
+
+    /// <summary>Defines a broken stick (piecewise) function</summary>
+    [Serializable]
+    public class BrokenStick
+    {
+        /// <summary>The x</summary>
+        public double[] X;
+        /// <summary>The y</summary>
+        public double[] Y;
+
+        /// <summary>Values the specified new x.</summary>
+        /// <param name="newX">The new x.</param>
+        /// <returns></returns>
+        public double Value(double newX)
+        {
+            bool DidInterpolate = false;
+            return MathUtilities.LinearInterpReal(newX, X, Y, out DidInterpolate);
+        }
+    }
 }
