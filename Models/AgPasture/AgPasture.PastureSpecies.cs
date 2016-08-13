@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AgPasture1.PastureSpecies1.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
+// <copyright file="AgPasture.PastureSpecies.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
 //     Copyright (c) ASPIM initiative. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,15 +9,12 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Models;
 using Models.Core;
 using Models.Soils;
 using Models.PMF;
-using Models.Arbitrator;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -56,15 +53,6 @@ namespace Models.AgPasture
 
         //- Events  ---------------------------------------------------------------------------------------------------
 
-        ///// <summary>Reference to a NewCrop event</summary>
-        ///// <param name="Data">Data about crop type</param>
-        //public delegate void NewCropDelegate(PMF.NewCropType Data);
-        ///// <summary>Event to be invoked to tell other models about the existence of this species</summary>
-        //public event NewCropDelegate NewCrop;
-
-        ///// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this species).</summary>
-        //public event EventHandler Sowing;
-
         /// <summary>Reference to a FOM incorporation event</summary>
         /// <param name="Data">The data with soil FOM to be added.</param>
         public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
@@ -100,10 +88,10 @@ namespace Models.AgPasture
         /// <summary>Canopy type</summary>
         public string CanopyType
         {
-            get { return CropType; }
+            get { return Name; }
         }
 
-        /// <summary>Albedo value</summary>
+        /// <summary>The albedo value for this species</summary>
         private double myAlbedo = 0.26;
 
         /// <summary>Gets or sets the species albedo.</summary>
@@ -115,7 +103,7 @@ namespace Models.AgPasture
             set { myAlbedo = value; }
         }
 
-        /// <summary>Gsmax value</summary>
+        /// <summary>The maximum stomatal conductance (m/s)</summary>
         private double myGsmax = 0.011;
 
         /// <summary>Gets or sets the gsmax</summary>
@@ -125,7 +113,7 @@ namespace Models.AgPasture
             set { myGsmax = value; }
         }
 
-        /// <summary>The R50 value</summary>
+        /// <summary>The solar radiation at which stomatal conductance decreases to 50% (W/m2)</summary>
         private double myR50 = 200;
 
         /// <summary>Gets or sets the R50</summary>
@@ -135,13 +123,13 @@ namespace Models.AgPasture
             set { myR50 = value; }
         }
 
-        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        /// <summary>Gets the LAI of live tissue (m^2/m^2)</summary>
         public double LAI
         {
             get { return GreenLAI; }
         }
 
-        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        /// <summary>Gets the total LAI, live + dead (m^2/m^2)</summary>
         public double LAITotal
         {
             get { return TotalLAI; }
@@ -210,20 +198,23 @@ namespace Models.AgPasture
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
-        /// </summary>
-        [Description("Generic type of crop")]
-        [Units("")]
-        public string CropType
-        {
-            get { return Name; }
-        }
-
         /// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
         public string[] CultivarNames
         {
             get { return null; }
+        }
+
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1,
+            double budNumber = 1)
+        {
+
         }
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
@@ -248,55 +239,19 @@ namespace Models.AgPasture
         /// <summary>Light profile (energy available for each canopy layer)</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
-        //// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
-        ///// <summary>Invokes the NewCrop event (info about this crop type)</summary>
-        //private void DoNewCropEvent()
-        //{
-        //  if (NewCrop != null)
-        //  {
-        //      // Send out New Crop Event to tell other modules who I am and what I am
-        //      PMF.NewCropType EventData = new PMF.NewCropType();
-        //      EventData.crop_type = speciesFamily;
-        //      EventData.sender = Name;
-        //      NewCrop.Invoke(EventData);
-        //  }
-
-        //  if (Sowing != null)
-        //      Sowing.Invoke(this, new EventArgs());
-        //}
-
-        /// <summary>Sows the plant</summary>
-        /// <param name="cultivar"></param>
-        /// <param name="population"></param>
-        /// <param name="depth"></param>
-        /// <param name="rowSpacing"></param>
-        /// <param name="maxCover"></param>
-        /// <param name="budNumber"></param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1,
-            double budNumber = 1)
-        {
-
-        }
-
         #endregion
 
         #region ICrop2 implementation  -------------------------------------------------------------------------------------
 
-        ///// <summary>
-        ///// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
-        ///// </summary>
-        //[Description("Generic type of crop")]
-        //[Units("")]
-        //public string CropType
-        //{
-        //    get { return speciesFamily; }
-        //}
-
-        ///// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
-        //public string[] CultivarNames
-        //{
-        //    get { return null; }
-        //}
+        /// <summary>
+        /// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
+        /// </summary>
+        [Description("Generic type of crop")]
+        [Units("")]
+        public string CropType
+        {
+            get { return Name; }
+        }
 
         /// <summary>Flag whether the plant in the ground</summary>
         [XmlIgnore]
@@ -333,26 +288,6 @@ namespace Models.AgPasture
 
         /// <summary>The root data for this plant</summary>
         RootProperties myRootProperties = new RootProperties();
-
-        ///// <summary>The intercepted solar radiation</summary>
-        //internal double interceptedRadn;
-        ///// <summary>Light profile (energy available for each canopy layer)</summary>
-        //private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
-        ///// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
-        //[XmlIgnore]
-        //public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
-        //{
-        //    get { return myLightProfile; }
-        //    set
-        //    {
-        //        interceptedRadn = 0.0;
-        //        for (int s = 0; s < value.Length; s++)
-        //        {
-        //            myLightProfile = value;
-        //            interceptedRadn += myLightProfile[s].amount;
-        //        }
-        //    }
-        //}
 
         /// <summary> Water demand for this plant (mm/day)</summary>
         [XmlIgnore]
@@ -398,7 +333,6 @@ namespace Models.AgPasture
         private string speciesFamily = "Grass";
 
         /// <summary>Gets or sets the species family type.</summary>
-        /// <value>The species family descriptor.</value>
         [Description("Family type for this plant species [grass/legume/brassica]:")]
         public string SpeciesFamily
         {
@@ -414,7 +348,6 @@ namespace Models.AgPasture
         private string photosynthesisPathway = "C3";
 
         /// <summary>Gets or sets the species photosynthetic pathway.</summary>
-        /// <value>The species photo pathway.</value>
         [Description("Metabolic pathway for C fixation during photosynthesis [C3/C4/CAM]:")]
         public string SpeciesPhotoPathway
         {
@@ -426,7 +359,6 @@ namespace Models.AgPasture
         private double iniDMShoot = 2000.0;
 
         /// <summary>Gets or sets the initial shoot DM.</summary>
-        /// <value>The initial DM amount.</value>
         [Description("Initial above ground DM (leaf, stem, stolon, etc) [kg DM/ha]:")]
         [Units("kg/ha")]
         public double InitialDMShoot
@@ -439,7 +371,6 @@ namespace Models.AgPasture
         private double iniDMRoot = 500.0;
 
         /// <summary>Gets or sets the initial dm root.</summary>
-        /// <value>The initial dm root.</value>
         [Description("Initial below ground DM (roots) [kg DM/ha]:")]
         [Units("kg/ha")]
         public double InitialDMRoot
@@ -452,7 +383,6 @@ namespace Models.AgPasture
         private double iniRootDepth = 750.0;
 
         /// <summary>Gets or sets the initial root depth.</summary>
-        /// <value>The initial root depth.</value>
         [Description("Initial depth for roots [mm]:")]
         [Units("mm")]
         public double InitialRootDepth
@@ -461,7 +391,7 @@ namespace Models.AgPasture
             set { iniRootDepth = value; }
         }
 
-        // temporary?? initial DM fractions for grass or legume species
+        // TODO: temporary?? initial DM fractions for grass or legume species
         /// <summary>The initial fractions of DM for grass</summary>
         private double[] initialDMFractions_grass = new double[]
         {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00};
@@ -470,13 +400,16 @@ namespace Models.AgPasture
         private double[] initialDMFractions_legume = new double[]
         {0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12};
 
+        /// <summary>The initial fractions of DM for legume</summary>
+        private double[] initialDMFractions_forbs = new double[]
+        {0.20, 0.20, 0.15, 0.05, 0.15, 0.15, 0.10, 0.00, 0.00, 0.00, 0.00};
+
         /// <summary>
         /// Initial DM fractions for each plant tissue (in order: leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3)
         /// </summary>
         private double[] iniDMFraction;
 
         /// <summary>Gets or sets the initial dm fractions.</summary>
-        /// <value>The initial dm fractions.</value>
         [XmlIgnore]
         [Units("0-1")]
         public double[] initialDMFractions
@@ -498,7 +431,6 @@ namespace Models.AgPasture
         private double referencePhotosynthesisRate = 1.0;
 
         /// <summary>Reference CO2 assimilation rate during photosynthesis [mg CO2/m2 leaf/s]</summary>
-        /// <value>The reference photosynthesis rate.</value>
         [Description("Reference CO2 assimilation rate during photosynthesis [mg CO2/m2/s]:")]
         [Units("mg/m^2/s")]
         public double ReferencePhotosynthesisRate
@@ -515,7 +447,6 @@ namespace Models.AgPasture
         /// <summary>
         /// Maintenance respiration coefficient - Fraction of DM consumed by respiration [0-1]
         /// </summary>
-        /// <value>The maintenance respiration coefficient.</value>
         [Description("Maintenance respiration coefficient [0-1]:")]
         [Units("0-1")]
         public double MaintenanceRespirationCoefficient
@@ -532,7 +463,6 @@ namespace Models.AgPasture
         /// <summary>
         /// Growth respiration coefficient - fraction of photosynthesis CO2 not assimilated (0-1)
         /// </summary>
-        /// <value>The growth respiration coefficient.</value>
         [Description("Growth respiration coefficient [0-1]:")]
         [Units("0-1")]
         public double GrowthRespirationCoefficient
@@ -545,7 +475,6 @@ namespace Models.AgPasture
         private double lightExtentionCoeff = 0.5;
 
         /// <summary>Light extinction coefficient (0-1)</summary>
-        /// <value>The light extention coeff.</value>
         [Description("Light extinction coefficient [0-1]:")]
         [Units("0-1")]
         public double LightExtentionCoeff
@@ -558,7 +487,6 @@ namespace Models.AgPasture
         private double growthTmin = 2.0;
 
         /// <summary>Minimum temperature for growth [oC]</summary>
-        /// <value>The growth tmin.</value>
         [Description("Minimum temperature for growth [oC]:")]
         [Units("oC")]
         public double GrowthTmin
@@ -571,7 +499,6 @@ namespace Models.AgPasture
         private double growthTmax = 32.0;
 
         /// <summary>Maximum temperature for growth [oC]</summary>
-        /// <value>The growth tmax.</value>
         [Description("Maximum temperature for growth [oC]:")]
         [Units("oC")]
         public double GrowthTmax
@@ -584,7 +511,6 @@ namespace Models.AgPasture
         private double growthTopt = 20.0;
 
         /// <summary>Optimum temperature for growth [oC]</summary>
-        /// <value>The growth topt.</value>
         [Description("Optimum temperature for growth [oC]:")]
         [Units("oC")]
         public double GrowthTopt
@@ -597,7 +523,6 @@ namespace Models.AgPasture
         private double growthTq = 1.75;
 
         /// <summary>Curve parameter for growth response to temperature</summary>
-        /// <value>The growth tq.</value>
         [Description("Curve parameter for growth response to temperature:")]
         [Units("-")]
         public double GrowthTq
@@ -610,7 +535,6 @@ namespace Models.AgPasture
         private double heatOnsetT = 28.0;
 
         /// <summary>Onset temperature for heat effects on growth [oC]</summary>
-        /// <value>The heat onset t.</value>
         [Description("Onset temperature for heat effects on growth [oC]:")]
         [Units("oC")]
         public double HeatOnsetT
@@ -623,7 +547,6 @@ namespace Models.AgPasture
         private double heatFullT = 35.0;
 
         /// <summary>Temperature for full heat effect on growth (no growth) [oC]</summary>
-        /// <value>The heat full t.</value>
         [Description("Temperature for full heat effect on growth [oC]:")]
         [Units("oC")]
         public double HeatFullT
@@ -636,7 +559,6 @@ namespace Models.AgPasture
         private double heatSumT = 30.0;
 
         /// <summary>Cumulative degrees for recovery from heat stress [oC]</summary>
-        /// <value>The heat sum t.</value>
         [Description("Cumulative degrees for recovery from heat stress [oC]:")]
         [Units("oC")]
         public double HeatSumT
@@ -649,7 +571,6 @@ namespace Models.AgPasture
         private double referenceT4Heat = 25.0;
 
         /// <summary>Reference temperature for recovery from heat stress [oC]</summary>
-        /// <value>The reference t4 heat.</value>
         [Description("Reference temperature for recovery from heat stress [oC]:")]
         [Units("oC")]
         public double ReferenceT4Heat
@@ -662,7 +583,6 @@ namespace Models.AgPasture
         private double coldOnsetT = 0.0;
 
         /// <summary>Onset temperature for cold effects on growth [oC]</summary>
-        /// <value>The cold onset t.</value>
         [Description("Onset temperature for cold effects on growth [oC]:")]
         [Units("oC")]
         public double ColdOnsetT
@@ -675,7 +595,6 @@ namespace Models.AgPasture
         private double coldFullT = -3.0;
 
         /// <summary>Temperature for full cold effect on growth (no growth) [oC]</summary>
-        /// <value>The cold full t.</value>
         [Description("Temperature for full cold effect on growth [oC]:")]
         [Units("oC")]
         public double ColdFullT
@@ -688,7 +607,6 @@ namespace Models.AgPasture
         private double coldSumT = 20.0;
 
         /// <summary>Cumulative degrees for recovery from cold stress [oC]</summary>
-        /// <value>The cold sum t.</value>
         [Description("Cumulative degrees for recovery from cold stress [oC]:")]
         [Units("oC")]
         public double ColdSumT
@@ -701,7 +619,6 @@ namespace Models.AgPasture
         private double referenceT4Cold = 0.0;
 
         /// <summary>Reference temperature for recovery from cold stress [oC]</summary>
-        /// <value>The reference t4 cold.</value>
         [Description("Reference temperature for recovery from cold stress [oC]:")]
         [Units("oC")]
         public double ReferenceT4Cold
@@ -714,7 +631,6 @@ namespace Models.AgPasture
         private double specificLeafArea = 20.0;
 
         /// <summary>Specific leaf area [m^2/kg DM]</summary>
-        /// <value>The specific leaf area.</value>
         [Description("Specific leaf area [m^2/kg DM]:")]
         [Units("m^2/kg")]
         public double SpecificLeafArea
@@ -727,7 +643,6 @@ namespace Models.AgPasture
         private double specificRootLength = 75.0;
 
         /// <summary>Specific root length [m/g DM]</summary>
-        /// <value>The length of the specific root.</value>
         [Description("Specific root length [m/g DM]:")]
         [Units("m/g")]
         public double SpecificRootLength
@@ -740,7 +655,6 @@ namespace Models.AgPasture
         private double maxRootFraction = 0.25;
 
         /// <summary>Maximum fraction of DM allocated to roots (from daily growth) [0-1]</summary>
-        /// <value>The maximum root fraction.</value>
         [Description("Maximum fraction of DM allocated to roots (from daily growth) [0-1]:")]
         [Units("0-1")]
         public double MaxRootFraction
@@ -753,7 +667,6 @@ namespace Models.AgPasture
         private double shootSeasonalAllocationIncrease = 0.8;
 
         /// <summary>Factor by which DM allocation to shoot is increased during 'spring' [0-1]</summary>
-        /// <value>The shoot seasonal allocation increase.</value>
         /// <remarks>
         /// Allocation to shoot is typically given by 1-maxRootFraction, but for a certain 'spring' period it can be increased to simulate reproductive growth
         /// at this period shoot allocation is corrected by multiplying it by 1 + SeasonShootAllocationIncrease
@@ -770,7 +683,6 @@ namespace Models.AgPasture
         private int doyIniHighShoot = 232;
 
         /// <summary>Day for the beginning of the period with higher shoot allocation ('spring')</summary>
-        /// <value>The day initialize higher shoot allocation.</value>
         /// <remarks>Care must be taken as this varies with north or south hemisphere</remarks>
         [Description("Day for the beginning of the period with higher shoot allocation ('spring'):")]
         [Units("-")]
@@ -788,7 +700,6 @@ namespace Models.AgPasture
         /// <summary>
         /// Number of days defining the duration of the three phases with higher DM allocation to shoot (onset, sill, return)
         /// </summary>
-        /// <value>The higher shoot allocation periods.</value>
         /// <remarks>
         /// Three numbers are needed, they define the duration of the phases for increase, plateau, and the deacrease in allocation
         /// The allocation to shoot is maximum at the plateau phase, it is 1 + SeasonShootAllocationIncrease times the value of maxSRratio
@@ -810,7 +721,6 @@ namespace Models.AgPasture
         private double fracToLeaf = 0.7;
 
         /// <summary>Fraction of new shoot growth allocated to leaves [0-1]</summary>
-        /// <value>The frac to leaf.</value>
         [Description("Fraction of new shoot growth allocated to leaves [0-1]:")]
         [Units("0-1")]
         public double FracToLeaf
@@ -823,7 +733,6 @@ namespace Models.AgPasture
         private double fracToStolon = 0.0;
 
         /// <summary>Fraction of new shoot growth allocated to stolons [0-1]</summary>
-        /// <value>The frac to stolon.</value>
         [Description("Fraction of new shoot growth allocated to stolons [0-1]:")]
         [Units("0-1")]
         public double FracToStolon
@@ -838,7 +747,6 @@ namespace Models.AgPasture
         private double turnoverRateLive2Dead = 0.025;
 
         /// <summary>Daily turnover rate for DM live to dead [0-1]</summary>
-        /// <value>The turnover rate live2 dead.</value>
         [Description("Daily turnover rate for DM live to dead [0-1]:")]
         [Units("0-1")]
         public double TurnoverRateLive2Dead
@@ -851,7 +759,6 @@ namespace Models.AgPasture
         private double turnoverRateDead2Litter = 0.11;
 
         /// <summary>Daily turnover rate for DM dead to litter [0-1]</summary>
-        /// <value>The turnover rate dead2 litter.</value>
         [Description("Daily turnover rate for DM dead to litter [0-1]:")]
         [Units("0-1")]
         public double TurnoverRateDead2Litter
@@ -864,7 +771,6 @@ namespace Models.AgPasture
         private double turnoverRateRootSenescence = 0.02;
 
         /// <summary>Daily turnover rate for root senescence [0-1]</summary>
-        /// <value>The turnover rate root senescence.</value>
         [Description("Daily turnover rate for root senescence [0-1]")]
         [Units("0-1")]
         public double TurnoverRateRootSenescence
@@ -877,7 +783,6 @@ namespace Models.AgPasture
         private double tissueTurnoverTmin = 2.0;
 
         /// <summary>Minimum temperature for tissue turnover [oC]</summary>
-        /// <value>The tissue turnover tmin.</value>
         [Description("Minimum temperature for tissue turnover [oC]:")]
         [Units("oC")]
         public double TissueTurnoverTmin
@@ -890,7 +795,6 @@ namespace Models.AgPasture
         private double tissueTurnoverTopt = 20.0;
 
         /// <summary>Optimum temperature for tissue turnover [oC]</summary>
-        /// <value>The tissue turnover topt.</value>
         [Description("Optimum temperature for tissue turnover [oC]:")]
         [Units("oC")]
         public double TissueTurnoverTopt
@@ -903,7 +807,6 @@ namespace Models.AgPasture
         private double tissueTurnoverWFactorMax = 2.0;
 
         /// <summary>Maximum increase in tissue turnover due to water stress</summary>
-        /// <value>The tissue turnover w factor maximum.</value>
         [Description("Maximum increase in tissue turnover due to water stress:")]
         [Units("-")]
         public double TissueTurnoverWFactorMax
@@ -920,7 +823,6 @@ namespace Models.AgPasture
         /// <summary>
         /// Optimum value GLFwater for tissue turnover [0-1] - below this value tissue turnover increases
         /// </summary>
-        /// <value>The tissue turnover GLF wopt.</value>
         [Description("Optimum value GLFwater for tissue turnover [0-1]")]
         [Units("0-1")]
         public double TissueTurnoverGLFWopt
@@ -933,7 +835,6 @@ namespace Models.AgPasture
         private double stockParameter = 0.05;
 
         /// <summary>Stock factor for increasing tissue turnover rate</summary>
-        /// <value>The stock parameter.</value>
         [XmlIgnore]
         [Units("-")]
         public double StockParameter
@@ -948,7 +849,6 @@ namespace Models.AgPasture
         private double digestibilityLive = 0.6;
 
         /// <summary>Digestibility of live plant material [0-1]</summary>
-        /// <value>The digestibility live.</value>
         [Description("Digestibility of live plant material [0-1]:")]
         [Units("0-1")]
         public double DigestibilityLive
@@ -961,7 +861,6 @@ namespace Models.AgPasture
         private double digestibilityDead = 0.2;
 
         /// <summary>Digestibility of dead plant material [0-1]</summary>
-        /// <value>The digestibility dead.</value>
         [Description("Digestibility of dead plant material [0-1]:")]
         [Units("0-1")]
         public double DigestibilityDead
@@ -976,7 +875,6 @@ namespace Models.AgPasture
         private double minimumGreenWt = 300.0;
 
         /// <summary>Minimum above ground green DM [kg DM/ha]</summary>
-        /// <value>The minimum green DM weight.</value>
         [Description("Minimum above ground green DM [kg DM/ha]:")]
         [Units("kg/ha")]
         public double MinimumGreenWt
@@ -989,7 +887,6 @@ namespace Models.AgPasture
         private double minimumDeadWt = 0.0;
 
         /// <summary>Minimum above ground dead DM [kg DM/ha]</summary>
-        /// <value>The minimum dead DM weight.</value>
         [Description("Minimum above ground dead DM [kg DM/ha]")]
         [Units("kg/ha")]
         public double MinimumDeadWt
@@ -1002,7 +899,6 @@ namespace Models.AgPasture
         private double preferenceForGreenDM = 1.0;
 
         /// <summary>Preference for green DM during graze (weight factor)</summary>
-        /// <value>The preference for green dm.</value>
         [Description("Preference for green DM during graze (weight factor):")]
         [Units("-")]
         public double PreferenceForGreenDM
@@ -1015,7 +911,6 @@ namespace Models.AgPasture
         private double preferenceForDeadDM = 1.0;
 
         /// <summary>Preference for dead DM during graze (weight factor)</summary>
-        /// <value>The preference for dead dm.</value>
         [Description("Preference for dead DM during graze (weight factor):")]
         [Units("-")]
         public double PreferenceForDeadDM
@@ -1030,7 +925,6 @@ namespace Models.AgPasture
         private double leafNopt = 0.04;
 
         /// <summary>Optimum N concentration in leaves [%]</summary>
-        /// <value>The leaf nopt.</value>
         [Description("Optimum N concentration in young leaves [%]:")]
         [Units("%")]
         public double LeafNopt
@@ -1043,7 +937,6 @@ namespace Models.AgPasture
         private double leafNmax = 0.05;
 
         /// <summary>Maximum N concentration in leaves (luxury N) [%]</summary>
-        /// <value>The leaf nmax.</value>
         [Description("Maximum N concentration in leaves (luxury N) [%]:")]
         [Units("%")]
         public double LeafNmax
@@ -1056,7 +949,6 @@ namespace Models.AgPasture
         private double leafNmin = 0.012;
 
         /// <summary>Minimum N concentration in leaves (dead material) [%]</summary>
-        /// <value>The leaf nmin.</value>
         [Description("Minimum N concentration in leaves (dead material) [%]:")]
         [Units("%")]
         public double LeafNmin
@@ -1069,7 +961,6 @@ namespace Models.AgPasture
         private double relativeNStems = 0.5;
 
         /// <summary>Concentration of N in stems relative to leaves [0-1]</summary>
-        /// <value>The relative n stems.</value>
         [Description("Concentration of N in stems relative to leaves [0-1]:")]
         [Units("0-1")]
         public double RelativeNStems
@@ -1082,7 +973,6 @@ namespace Models.AgPasture
         private double relativeNStolons = 0.0;
 
         /// <summary>Concentration of N in stolons relative to leaves [0-1]</summary>
-        /// <value>The relative n stolons.</value>
         [Description("Concentration of N in stolons relative to leaves [0-1]:")]
         [Units("0-1")]
         public double RelativeNStolons
@@ -1095,7 +985,6 @@ namespace Models.AgPasture
         private double relativeNRoots = 0.5;
 
         /// <summary>Concentration of N in roots relative to leaves [0-1]</summary>
-        /// <value>The relative n roots.</value>
         [Description("Concentration of N in roots relative to leaves [0-1]:")]
         [Units("0-1")]
         public double RelativeNRoots
@@ -1108,7 +997,6 @@ namespace Models.AgPasture
         private double relativeNStage2 = 1.0;
 
         /// <summary>Concentration of N in tissues at stage 2 relative to stage 1 [0-1]</summary>
-        /// <value>The relative n stage2.</value>
         [Description("Concentration of N in tissues at stage 2 relative to stage 1 [0-1]:")]
         [Units("0-1")]
         public double RelativeNStage2
@@ -1121,7 +1009,6 @@ namespace Models.AgPasture
         private double relativeNStage3 = 1.0;
 
         /// <summary>Concentration of N in tissues at stage 3 relative to stage 1 [0-1]</summary>
-        /// <value>The relative n stage3.</value>
         [Description("Concentration of N in tissues at stage 3 relative to stage 1 [0-1]:")]
         [Units("0-1")]
         public double RelativeNStage3
@@ -1136,7 +1023,6 @@ namespace Models.AgPasture
         private double minimumNFixation = 0.0;
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation [0-1]</summary>
-        /// <value>The minimum n fixation.</value>
         [Description("Minimum fraction of N demand supplied by biologic N fixation [0-1]:")]
         [Units("0-1")]
         public double MinimumNFixation
@@ -1149,7 +1035,6 @@ namespace Models.AgPasture
         private double maximumNFixation = 0.0;
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation [0-1]</summary>
-        /// <value>The maximum n fixation.</value>
         [Description("Maximum fraction of N demand supplied by biologic N fixation [0-1]:")]
         [Units("0-1")]
         public double MaximumNFixation
@@ -1164,7 +1049,6 @@ namespace Models.AgPasture
         private double kappaNRemob2 = 0.0;
 
         /// <summary>Fraction of luxury N in tissue 2 available for remobilisation [0-1]</summary>
-        /// <value>The kappa n remob2.</value>
         [Description("Fraction of luxury N in tissue 2 available for remobilisation [0-1]:")]
         [Units("0-1")]
         public double KappaNRemob2
@@ -1177,7 +1061,6 @@ namespace Models.AgPasture
         private double kappaNRemob3 = 0.0;
 
         /// <summary>Fraction of luxury N in tissue 3 available for remobilisation [0-1]</summary>
-        /// <value>The kappa n remob3.</value>
         [Description("Fraction of luxury N in tissue 3 available for remobilisation [0-1]:")]
         [Units("0-1")]
         public double KappaNRemob3
@@ -1190,7 +1073,6 @@ namespace Models.AgPasture
         private double kappaNRemob4 = 0.0;
 
         /// <summary>Fraction of non-utilised remobilised N that is returned to dead material [0-1]</summary>
-        /// <value>The kappa n remob4.</value>
         [Description("Fraction of non-utilised remobilised N that is returned to dead material [0-1]:")]
         [Units("0-1")]
         public double KappaNRemob4
@@ -1203,7 +1085,6 @@ namespace Models.AgPasture
         private double kappaCRemob = 0.0;
 
         /// <summary>Fraction of senescent DM that is remobilised (as carbohydrate) [0-1]</summary>
-        /// <value>The kappa c remob.</value>
         [XmlIgnore]
         [Units("0-1")]
         public double KappaCRemob
@@ -1216,7 +1097,6 @@ namespace Models.AgPasture
         private double facCNRemob = 0.0;
 
         /// <summary>Fraction of senescent DM (protein) that is remobilised to new growth [0-1]</summary>
-        /// <value>The fac cn remob.</value>
         [XmlIgnore]
         [Units("0-1")]
         public double FacCNRemob
@@ -1231,7 +1111,6 @@ namespace Models.AgPasture
         private double dillutionCoefN = 0.5;
 
         /// <summary>Curve parameter for the effect of N deficiency on plant growth</summary>
-        /// <value>The dillution coef n.</value>
         [Description("Curve parameter for the effect of N deficiency on plant growth:")]
         [Units("-")]
         public double DillutionCoefN
@@ -1244,7 +1123,6 @@ namespace Models.AgPasture
         private double glfGeneric = 1.0;
 
         /// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
-        /// <value>The generic growth limiting factor.</value>
         /// <remarks> This factor is applied at the level of potential growth</remarks>
         [Description("Generic growth limiting factor [0-1]:")]
         [Units("0-1")]
@@ -1258,7 +1136,6 @@ namespace Models.AgPasture
         private double glfSfertility = 1.0;
 
         /// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
-        /// <value>The generic growth limiting factor.</value>
         /// <remarks> This factor is applied at the same level as N, used for other nutrients</remarks>
         [Description("Generic limiting factor due to soil fertilisty [0-1]:")]
         [Units("0-1")]
@@ -1272,7 +1149,6 @@ namespace Models.AgPasture
         private double waterStressExponent = 1.0;
 
         /// <summary>Exponent factor for the water stress function</summary>
-        /// <value>The water stress exponent.</value>
         [Description("Exponent factor for the water stress function:")]
         [Units("-")]
         public double WaterStressExponent
@@ -1285,7 +1161,6 @@ namespace Models.AgPasture
         private double waterLoggingCoefficient = 0.1;
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) [0-1]</summary>
-        /// <value>The water logging coefficient.</value>
         [Description("Maximum reduction in plant growth due to water logging (saturated soil) [0-1]:")]
         [Units("0-1")]
         public double WaterLoggingCoefficient
@@ -1300,7 +1175,6 @@ namespace Models.AgPasture
         private double referenceCO2 = 380.0;
 
         /// <summary>Reference CO2 concentration for photosynthesis [ppm]</summary>
-        /// <value>The reference c o2.</value>
         [Description("Reference CO2 concentration for photosynthesis [ppm]:")]
         [Units("ppm")]
         public double ReferenceCO2
@@ -1317,7 +1191,6 @@ namespace Models.AgPasture
         /// <summary>
         /// Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]
         /// </summary>
-        /// <value>The coefficient c o2 effect on photosynthesis.</value>
         [Description("Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]:")]
         [Units("ppm")]
         public double CoefficientCO2EffectOnPhotosynthesis
@@ -1330,7 +1203,6 @@ namespace Models.AgPasture
         private double offsetCO2EffectOnNuptake = 600.0;
 
         /// <summary>Scalling paramenter for the CO2 effects on N uptake [ppm Co2]</summary>
-        /// <value>The offset c o2 effect on nuptake.</value>
         [Description("Scalling paramenter for the CO2 effects on N requirement [ppm Co2]:")]
         [Units("ppm")]
         public double OffsetCO2EffectOnNuptake
@@ -1343,7 +1215,6 @@ namespace Models.AgPasture
         private double minimumCO2EffectOnNuptake = 0.7;
 
         /// <summary>Minimum value for the effect of CO2 on N requirement [0-1]</summary>
-        /// <value>The minimum c o2 effect on nuptake.</value>
         [Description("Minimum value for the effect of CO2 on N requirement [0-1]:")]
         [Units("0-1")]
         public double MinimumCO2EffectOnNuptake
@@ -1356,7 +1227,6 @@ namespace Models.AgPasture
         private double exponentCO2EffectOnNuptake = 2.0;
 
         /// <summary>Exponent of the function describing the effect of CO2 on N requirement</summary>
-        /// <value>The exponent c o2 effect on nuptake.</value>
         [Description("Exponent of the function describing the effect of CO2 on N requirement:")]
         [Units("-")]
         public double ExponentCO2EffectOnNuptake
@@ -1371,7 +1241,6 @@ namespace Models.AgPasture
         private string rootDistributionMethod = "ExpoLinear";
 
         /// <summary>Root distribution method (Homogeneous, ExpoLinear, UserDefined)</summary>
-        /// <value>The root distribution method.</value>
         /// <exception cref="System.Exception">Root distribution method given ( + value +  is no valid</exception>
         [XmlIgnore]
         public string RootDistributionMethod
@@ -1396,7 +1265,6 @@ namespace Models.AgPasture
         private double expoLinearDepthParam = 0.12;
 
         /// <summary>Fraction of root depth where its proportion starts to decrease</summary>
-        /// <value>The expo linear depth parameter.</value>
         [Description("Fraction of root depth where its proportion starts to decrease")]
         public double ExpoLinearDepthParam
         {
@@ -1413,7 +1281,6 @@ namespace Models.AgPasture
         private double expoLinearCurveParam = 3.2;
 
         /// <summary>Exponent to determine mass distribution in the soil profile</summary>
-        /// <value>The expo linear curve parameter.</value>
         [Description("Exponent to determine mass distribution in the soil profile")]
         public double ExpoLinearCurveParam
         {
@@ -1472,7 +1339,6 @@ namespace Models.AgPasture
         private double myStomatalConductanceMax = 1.0;
 
         /// <summary>The value for the maximum stomatal conductance (m/s)</summary>
-        /// <value>Maximum stomatal conductance.</value>
         [Description("Maximum stomatal conductance (m/s)")]
         public double MaximumStomatalConductance
         {
@@ -1484,7 +1350,6 @@ namespace Models.AgPasture
         private double myKNO3 = 1.0;
 
         /// <summary>The value for the nitrate uptake coefficient</summary>
-        /// <value>The kNO3 for this plant.</value>
         [Description("Nitrate uptake coefficient")]
         public double KNO3
         {
@@ -1496,7 +1361,6 @@ namespace Models.AgPasture
         private double myKNH4 = 1.0;
 
         /// <summary>The value for the ammonium uptake coefficient</summary>
-        /// <value>The local kNH4 for this plant.</value>
         [Description("Ammonium uptake coefficient")]
         public double KNH4
         {
