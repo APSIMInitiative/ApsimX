@@ -6877,7 +6877,6 @@ namespace Models
             <MaximumRootDepth>750</MaximumRootDepth>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
-            <MaximumStomatalConductance>1</MaximumStomatalConductance>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -9708,7 +9707,6 @@ namespace Models
           <MaximumRootDepth>750</MaximumRootDepth>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
-          <MaximumStomatalConductance>1</MaximumStomatalConductance>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>
@@ -12699,7 +12697,6 @@ namespace Models
             <MaximumRootDepth>750</MaximumRootDepth>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
-            <MaximumStomatalConductance>1</MaximumStomatalConductance>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -15533,7 +15530,6 @@ namespace Models
           <MaximumRootDepth>750</MaximumRootDepth>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
-          <MaximumStomatalConductance>1</MaximumStomatalConductance>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>

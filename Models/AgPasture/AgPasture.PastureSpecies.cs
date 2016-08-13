@@ -650,30 +650,16 @@ namespace Models.AgPasture
         public double RelativeNRoots { get; set; } = 0.5;
 
         /// <summary>Concentration of N in tissues at stage 2 relative to stage 1 [0-1]</summary>
-        private double relativeNStage2 = 1.0;
-
-        /// <summary>Concentration of N in tissues at stage 2 relative to stage 1 [0-1]</summary>
         /// <value>The relative n stage2.</value>
         [Description("Concentration of N in tissues at stage 2 relative to stage 1 [0-1]:")]
         [Units("0-1")]
-        public double RelativeNStage2
-        {
-            get { return relativeNStage2; }
-            set { relativeNStage2 = value; }
-        }
-
-        /// <summary>Concentration of N in tissues at stage 3 relative to stage 1 [0-1]</summary>
-        private double relativeNStage3 = 1.0;
+        public double RelativeNStage2 { get; set; } = 1.0;
 
         /// <summary>Concentration of N in tissues at stage 3 relative to stage 1 [0-1]</summary>
         /// <value>The relative n stage3.</value>
         [Description("Concentration of N in tissues at stage 3 relative to stage 1 [0-1]:")]
         [Units("0-1")]
-        public double RelativeNStage3
-        {
-            get { return relativeNStage3; }
-            set { relativeNStage3 = value; }
-        }
+        public double RelativeNStage3 { get; set; } = 1.0;
 
         // - N fixation  ----------------------------------------------------------------------------------------------
 
@@ -879,17 +865,6 @@ namespace Models.AgPasture
 
         /// <summary>Reference value for root length density fot the Water and N availability</summary>
         internal double ReferenceRLD = 2.0;
-
-        /// <summary>the local value for stomatal conductance</summary>
-        private double myStomatalConductanceMax = 1.0;
-
-        /// <summary>The value for the maximum stomatal conductance (m/s)</summary>
-        [Description("Maximum stomatal conductance (m/s)")]
-        public double MaximumStomatalConductance
-        {
-            get { return myStomatalConductanceMax; }
-            set { myStomatalConductanceMax = value; }
-        }
 
         /// <summary>the local value for KNO3</summary>
         private double myKNO3 = 1.0;
@@ -2029,7 +2004,7 @@ namespace Models.AgPasture
         [Units("W.m^2/m^2")]
         public double IrradianceTopCanopy
         {
-            get { return IL; }
+            get { return irradianceTopOfCanopy; }
         }
 
         /// <summary>Gets the plant's dead cover.</summary>
@@ -2145,7 +2120,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double GlfNConcentration
         {
-            get { return NcFactor; }
+            get { return nConcGFactor; }
         }
 
         /// <summary>Gets the growth limiting factor due to temperature.</summary>
@@ -2195,7 +2170,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double HarvestableWt
         {
-            get { return Math.Max(0.0, StandingLiveWt - MinimumGreenWt) + Math.Max(0.0, StandingDeadWt); }
+            get { return Math.Max(0.0, StandingLiveWt - MinimumGreenWt) + StandingDeadWt; }
         }
 
         /// <summary>Gets the amount of dry matter harvested.</summary>
@@ -2313,7 +2288,7 @@ namespace Models.AgPasture
         private int daysEmgToAnth = 0;
 
         /// <summary>The phenologic stage (0= pre_emergence, 1= vegetative, 2= reproductive)</summary>
-        private int phenologicStage = 1;
+        private int phenologicStage = 0;
 
         ///// <summary>The phenologic factor</summary>
         //private double phenoFactor = 1;
@@ -2551,9 +2526,6 @@ namespace Models.AgPasture
 
         // Plant height, LAI and cover  -------------------------------------------------------------------------------
 
-        /// <summary>The plant's average height</summary>
-        private double myHeight;
-
         /// <summary>The plant's green LAI</summary>
         private double greenLAI;
 
@@ -2574,9 +2546,6 @@ namespace Models.AgPasture
         /// <summary>The maximum shoot-root ratio</summary>
         private double maxSRratio;
 
-        /// <summary>The fraction of each layer that is actually explored by roots (0-1)</summary>
-        private double[] myRootExplorationFactor;
-
         // photosynthesis, growth and turnover  -----------------------------------------------------------------------
 
         /// <summary>The intercepted solar radiation</summary>
@@ -2586,7 +2555,7 @@ namespace Models.AgPasture
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
         /// <summary>The irradiance on top of canopy</summary>
-        private double IL;
+        private double irradianceTopOfCanopy;
 
         /// <summary>The gross photosynthesis rate (C assimilation)</summary>
         private double Pgross = 0.0;
@@ -2647,6 +2616,9 @@ namespace Models.AgPasture
 
         // growth limiting factors ------------------------------------------------------------------------------------
 
+        /// <summary>The growth factor for N concentration</summary>
+        private double nConcGFactor = 1.0;
+
         /// <summary>The GLF due to water stress</summary>
         internal double glfWater = 1.0;
 
@@ -2656,9 +2628,6 @@ namespace Models.AgPasture
         // private double glfTemp;   //The GLF due to temperature stress
         /// <summary>The GLF due to N stress</summary>
         internal double glfN = 0.0;
-
-        /// <summary>The growth factor for N concentration</summary>
-        private double NcFactor = 1.0;
 
         // auxiliary variables for radiation and temperature stress  --------------------------------------------------
 
@@ -2687,16 +2656,6 @@ namespace Models.AgPasture
 
         /// <summary>State for this plant on the previous day</summary>
         private SpeciesState prevState;
-
-        // TODO: Hope to get rid of these soon  --------------------------------------------------------
-        /// <summary>fraction of Radn intercepted by this species</summary>
-        internal double intRadnFrac = 1.0;
-
-        /// <summary>Light extintion coefficient for all species</summary>
-        internal double swardLightExtCoeff;
-
-        /// <summary>average green cover for all species</summary>
-        internal double swardGreenCover;
 
         #endregion
 
@@ -2860,7 +2819,6 @@ namespace Models.AgPasture
 
             // 3. Initialise root DM, N, depth, and distribution
             myRootDepth = InitialRootDepth;
-            myRootExplorationFactor = new double[nLayers];
             double cumDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
@@ -2868,7 +2826,6 @@ namespace Models.AgPasture
                 if (cumDepth <= myRootDepth)
                 {
                     myRootFrontier = layer;
-                    myRootExplorationFactor[layer] = FractionLayerWithRoots(layer);
                 }
                 else
                 {
@@ -2882,11 +2839,10 @@ namespace Models.AgPasture
             maxSRratio = (1 - MaxRootAllocation) / MaxRootAllocation;
 
             // 5. Canopy height and related variables
-            myHeight = Math.Max(20.0, HeightFromMass.Value(StandingWt)); // TODO:update this approach
             InitialiseCanopy();
 
             // 6. Set initial phenological stage
-            if (dmTotal == 0.0)
+            if (dmTotal < myEpsilon)
                 phenologicStage = 0;
             else
                 phenologicStage = 1;
@@ -2909,9 +2865,9 @@ namespace Models.AgPasture
             myCanopyProperties.CanopyHeight = Height;
             myCanopyProperties.LAIGreen = LAIGreen;
             myCanopyProperties.LAItot = LAITotal;
-            myCanopyProperties.MaximumStomatalConductance = myStomatalConductanceMax;
-            myCanopyProperties.HalfSatStomatalConductance = 200.0; // TODO: this should be on the UI
-            myCanopyProperties.CanopyEmissivity = 0.96; // TODO: this should be on the UI
+            myCanopyProperties.MaximumStomatalConductance = myGsmax;
+            myCanopyProperties.HalfSatStomatalConductance = myR50;
+            myCanopyProperties.CanopyEmissivity = 0.96; // TODO: this should be on the UI (maybe)
             myCanopyProperties.Frgr = FRGR;
         }
 
@@ -3099,19 +3055,6 @@ namespace Models.AgPasture
             dmDefoliated = 0.0;
             Ndefoliated = 0.0;
             digestDefoliated = 0.0;
-
-            // TODO:
-            // these are needed when AgPasture controls the growth (not necessarily the partition of soil stuff)
-            // this is not sound and we should get rid of it very soon
-            //intRadnFrac = 1.0;
-            if (!isSwardControlled)
-            {
-                swardLightExtCoeff = LightExtentionCoefficient;
-                swardGreenCover = CalcPlantCover(greenLAI);
-            }
-            //else
-            //    Sward will set these values
-
         }
 
         /// <summary>Stores the current state for this species</summary>
@@ -3313,7 +3256,6 @@ namespace Models.AgPasture
                     if (cumDepth <= myRootDepth)
                     {
                         myRootFrontier = layer;
-                        myRootExplorationFactor[layer] = FractionLayerWithRoots(layer);
                     }
                     else
                     {
@@ -3328,64 +3270,62 @@ namespace Models.AgPasture
         /// <returns>The potential amount of C assimilated via photosynthesis (kgC/ha)</returns>
         private double DailyGrossPotentialGrowth()
         {
-            // 1. compute photosynthesis rate per leaf area
-
-            // to be moved to parameter section
-            // Photochemical, or photosynthetic, efficiency (mg CO2/J) - typically with small variance and little effect
-            const double alpha = 0.01;
-            // Photosynthesis curvature parameter (J/kg^2/s) - typically with small variance and little effect
-            const double theta = 0.8;
-
-            // Temp effects to Pmax
-            double effTemp1 = TemperatureLimitingFactor(Tmean);
-            double effTemp2 = TemperatureLimitingFactor(TmeanW);
-
             // CO2 effects on Pmax
-            double efCO2 = PCO2Effects();
+            double co2GFactor = PCO2Effects();
 
             // N effects on Pmax
-            NcFactor = PmxNeffect();
+            nConcGFactor = PmxNeffect();
 
-            // Maximum photosynthetic rate (mg CO2/m^2 leaf/s)
-            double Pmax_EarlyLateDay = ReferencePhotosynthesisRate * effTemp1 * efCO2 * NcFactor;
-            double Pmax_MiddleDay = ReferencePhotosynthesisRate * effTemp2 * efCO2 * NcFactor;
+            // Temperature effects to Pmax
+            double tempFactor1 = TemperatureLimitingFactor(Tmean);
+            double tempFactor2 = TemperatureLimitingFactor(TmeanW);
 
-            double myDayLength = 3600 * myMetData.CalculateDayLength(-6); //conversion of hour to seconds
+            //Temperature growth factor (for reporting purposes only)
+            double tempGFactor = (0.25 * tempFactor1) + (0.75 * tempFactor2);
 
-            // Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
-            double myPAR = 0.5 * interceptedRadn * 1000000;
+            // Potential photosynthetic rate (mg CO2/m^2 leaf/s)
+            double Pmax1 = ReferencePhotosynthesisRate * tempFactor1 * co2GFactor * nConcGFactor;
+            double Pmax2 = ReferencePhotosynthesisRate * tempFactor2 * co2GFactor * nConcGFactor;
 
-            // Irradiance, or radiation, on the canopy at the middle of the day (W/m^2)
-            //IL = (4.0 / 3.0) * myPAR * swardLightExtCoeff / myDayLength;  TODO: enable this
-            IL = 1.33333 * myPAR * LightExtentionCoefficient / myDayLength;
-            double IL2 = IL / 2; //IL for early & late period of a day
+            // Day light length, converted to seconds
+            double myDayLength = 3600 * myMetData.CalculateDayLength(-6);
 
-            // Photosynthesis per LAI under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
-            double photoAux1 = alpha * IL + Pmax_MiddleDay;
-            double photoAux2 = 4 * theta * alpha * IL * Pmax_MiddleDay;
-            double Pl_MiddleDay = (0.5 / theta) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
+            // Photosynthetically active radiation, converted from MJ/m2.day to J/m2.s
+            double interceptedPAR = fractionPAR * interceptedRadn * 1000000;
 
-            photoAux1 = alpha * IL2 + Pmax_EarlyLateDay;
-            photoAux2 = 4 * theta * alpha * IL2 * Pmax_EarlyLateDay;
-            double Pl_EarlyLateDay = (0.5 / theta) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
+            // Irradiance at top of canopy in the middle of the day (J/m2 leaf/s)
+            irradianceTopOfCanopy = 1.33333 * interceptedPAR * LightExtentionCoefficient / myDayLength;
+            double IL2 = irradianceTopOfCanopy / 2; //IL for early & late period of a day
+
+            //Photosynthesis per leaf area under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
+            double photoAux1 = PhotosyntheticEfficiency * irradianceTopOfCanopy + Pmax2;
+            double photoAux2 = 4 * PhotosynthesisCurveFactor * PhotosyntheticEfficiency * irradianceTopOfCanopy * Pmax2;
+            double Pl1 = (0.5 / PhotosynthesisCurveFactor) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
+            photoAux1 = PhotosyntheticEfficiency * IL2 + Pmax1;
+            photoAux2 = 4 * PhotosynthesisCurveFactor * PhotosyntheticEfficiency * IL2 * Pmax1;
+            double Pl2 = (0.5 / PhotosynthesisCurveFactor) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
 
             // Photosynthesis per leaf area for the day (mg CO2/m^2 leaf/day)
-            double Pl_Daily = myDayLength * (Pl_MiddleDay + Pl_EarlyLateDay) * 0.5;
+            double Pl_Daily = myDayLength * (Pl1 + Pl2) * 0.5;
+
+            // Radiation effects (for reporting purposes only)
+            double radnGFactor = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
             double Pc_Daily = Pl_Daily * CoverGreen / LightExtentionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
-            double CarbonAssim = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert to from mgCO2 to kgC           
+            double CarbonAssim = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
 
-            // Base gross photosynthesis, converted to kg C/ha/day)
-            double BaseGrossPhotosynthesis = CarbonAssim * 10; // convertion = 10000 / 1000
+            // Base gross photosynthesis, converted to kg C/ha/day
+            double BaseGrossPhotosynthesis = CarbonAssim * 10; // convert from g/m2 to kg/ha (= 10000/1000)
 
             // Consider the extreme temperature effects (in practice only one temp stress factor is < 1)
-            double ExtremeTemperatureFactor = HeatStress() * ColdStress();
+            double heatGFactor = HeatStress();
+            double coldGFactor = ColdStress();
 
             // Actual gross photosynthesis (gross potential growth - kg C/ha/day)
-            return BaseGrossPhotosynthesis * ExtremeTemperatureFactor * GenericGF;
+            return BaseGrossPhotosynthesis * Math.Min(heatGFactor, coldGFactor) * GenericGF;
         }
 
         /// <summary>Computes the plant's loss of C due to maintenance respiration</summary>
@@ -3410,7 +3350,7 @@ namespace Models.AgPasture
 
             // Total DM converted to C (kg/ha)
             double dmLive = (dmGreen + dmRoot) * CarbonFractionInDM;
-            double result = dmLive * MaintenanceRespirationCoefficient * Teffect * NcFactor;
+            double result = dmLive * MaintenanceRespirationCoefficient * Teffect * nConcGFactor;
             return Math.Max(0.0, result);
         }
 
@@ -3843,12 +3783,12 @@ namespace Models.AgPasture
                 NRemobilised = 0.0;
             }
             // N remobilisable from luxury N to be potentially used for growth tomorrow
-            NLuxury2 = Math.Max(0.0, Nleaf2 - (dmLeaf2 * LeafNopt * relativeNStage3))
-                       + Math.Max(0.0, Nstem2 - (dmStem2 * NcStemOpt * relativeNStage3))
-                       + Math.Max(0.0, Nstolon2 - (dmStolon2 * NcStolonOpt * relativeNStage3));
-            NLuxury3 = Math.Max(0.0, Nleaf3 - (dmLeaf3 * LeafNopt * relativeNStage3))
-                       + Math.Max(0.0, Nstem3 - (dmStem3 * NcStemOpt * relativeNStage3))
-                       + Math.Max(0.0, Nstolon3 - (dmStolon3 * NcStolonOpt * relativeNStage3));
+            NLuxury2 = Math.Max(0.0, Nleaf2 - (dmLeaf2 * LeafNopt * RelativeNStage3))
+                       + Math.Max(0.0, Nstem2 - (dmStem2 * NcStemOpt * RelativeNStage3))
+                       + Math.Max(0.0, Nstolon2 - (dmStolon2 * NcStolonOpt * RelativeNStage3));
+            NLuxury3 = Math.Max(0.0, Nleaf3 - (dmLeaf3 * LeafNopt * RelativeNStage3))
+                       + Math.Max(0.0, Nstem3 - (dmStem3 * NcStemOpt * RelativeNStage3))
+                       + Math.Max(0.0, Nstolon3 - (dmStolon3 * NcStolonOpt * RelativeNStage3));
             // only a fraction of luxury N is actually available for remobilisation:
             NLuxury2 *= KappaNRemob2;
             NLuxury3 *= KappaNRemob3;
@@ -5072,14 +5012,13 @@ namespace Models.AgPasture
         private double TemperatureLimitingFactor(double Temp)
         {
             double result = 0.0;
-            double growthTmax = 32.0;
-            double growthTmax1 = GrowthTopt + (GrowthTopt - GrowthTmin) / GrowthTq;
+            double growthTmax = GrowthTopt + (GrowthTopt - GrowthTmin) / GrowthTq;
             if (photosynthesisPathway == "C3")
             {
-                if (Temp > GrowthTmin && Temp < growthTmax)  // TODO: Tmax should be calculated not given as a parameter
+                if (Temp > GrowthTmin && Temp < growthTmax)
                 {
-                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax1 - Temp);
-                    double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax1 - GrowthTopt);
+                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax - Temp);
+                    double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax - GrowthTopt);
                     result = val1 / val2;
                 }
             }
@@ -5090,8 +5029,8 @@ namespace Models.AgPasture
                     if (Temp > GrowthTopt)
                         Temp = GrowthTopt;
 
-                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax1 - Temp);
-                    double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax1 - GrowthTopt);
+                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax - Temp);
+                    double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax - GrowthTopt);
                     result = val1 / val2;
                 }
             }
@@ -5418,16 +5357,17 @@ namespace Models.AgPasture
         /// <returns>Fraction of the layer in consideration that is explored by roots</returns>
         internal double FractionLayerWithRoots(int layer)
         {
-            if (layer > myRootFrontier)
-                return 0.0;
-            else
+            double fractionInLayer = 0.0;
+            if (layer <= myRootFrontier)
             {
-                double depthAtTopThisLayer = 0;   // depth till the top of the layer being considered
+                double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
-                    depthAtTopThisLayer += mySoil.Thickness[z];
-                double result = (myRootDepth - depthAtTopThisLayer) / mySoil.Thickness[layer];
-                return Math.Min(1.0, Math.Max(0.0, result));
+                    depthTillTopThisLayer += mySoil.Thickness[z];
+                fractionInLayer = (myRootDepth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer= Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
+
+            return fractionInLayer;
         }
 
 
