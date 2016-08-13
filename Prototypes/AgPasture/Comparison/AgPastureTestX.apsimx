@@ -6883,6 +6883,7 @@ namespace Models
             <MassForMaximumHeight>1000</MassForMaximumHeight>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
+            <DegreesDayForGermination>100</DegreesDayForGermination>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -9719,6 +9720,7 @@ namespace Models
           <MassForMaximumHeight>1000</MassForMaximumHeight>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
+          <DegreesDayForGermination>100</DegreesDayForGermination>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>
@@ -12715,6 +12717,7 @@ namespace Models
             <MassForMaximumHeight>1000</MassForMaximumHeight>
             <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
             <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
+            <DegreesDayForGermination>100</DegreesDayForGermination>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -15554,6 +15557,7 @@ namespace Models
           <MassForMaximumHeight>1000</MassForMaximumHeight>
           <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
           <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
+          <DegreesDayForGermination>100</DegreesDayForGermination>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>

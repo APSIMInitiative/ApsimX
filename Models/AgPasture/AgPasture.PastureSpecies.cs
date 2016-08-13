@@ -858,6 +858,13 @@ namespace Models.AgPasture
             }
         }
 
+        // - Plant growth and annuals  --------------------------------------------------------------------------------
+
+        /// <summary>Cumulative degrees-day needed for seed germination [oCd]</summary>
+        [Description("Cumulative degrees-day needed for seed germination [oCd]:")]
+        [Units("oCd")]
+        public double DegreesDayForGermination { get; set; } = 100.0;
+
         // - Other parameters  ----------------------------------------------------------------------------------------
         /// <summary>Broken stick type function describing how plant height varies with DM</summary>
         [XmlIgnore]
@@ -2388,6 +2395,12 @@ namespace Models.AgPasture
         /// <summary>The daily variation in root depth</summary>
         private double dRootDepth = 50;
 
+        /// <summary>The cumulative degrees-day during germination phase</summary>
+        private double germinationGDD = 0.0;
+
+        /// <summary>The cumulatve degrees day during vegetative phase</summary>
+        private double growingGDD = 0.0;
+
         // DM in various plant parts and tissue pools (kg DM/ha)  -----------------------------------------------------
 
         /// <summary>The total plant DM</summary>
@@ -2960,6 +2973,12 @@ namespace Models.AgPasture
             EvaluateLAI();
         }
 
+        /// <summary>Set the plant state at germination</summary>
+        internal void SetEmergenceState()
+        {
+            phenologicStage = 1;
+        }
+
         /// <summary>Initialise the variables in canopy properties</summary>
         private void InitialiseCanopy()
         {
@@ -3050,6 +3069,17 @@ namespace Models.AgPasture
                 SaveState();
 
                 // step 01 - preparation and potential growth
+                if (phenologicStage == 0)
+                {
+                    // not germinated yet, check germination progress
+                    if (DailyGerminationProgress() >= 1.0)
+                    {
+                        // germination completed
+                        SetEmergenceState();
+                    }
+                }
+                //TODO: verify whether the previous test should skip all calculations
+
                 DailyPotentialGrowth();
 
                 // Water demand, supply, and uptake
@@ -3073,6 +3103,16 @@ namespace Models.AgPasture
             }
             //else
             //    Growth is controlled by Sward (all species)
+        }
+
+        /// <summary>Computation of daily progress through germination</summary>
+        /// <returns>Fraction of germination phase completed</returns>
+        internal double DailyGerminationProgress()
+        {
+            double result = 0.0;
+            germinationGDD += Math.Max(0.0, Tmean - GrowthTmin);
+            result = germinationGDD / DegreesDayForGermination;
+            return result;
         }
 
         /// <summary>Calculates the potential growth.</summary>
@@ -3249,6 +3289,10 @@ namespace Models.AgPasture
                     daysfromAnthesis = 0;
                 }
             }
+
+            if (growingGDD > 200.0)
+                phenologicStage = 1;
+
             return result;
         }
 
@@ -3434,6 +3478,20 @@ namespace Models.AgPasture
 
             // Actual gross photosynthesis (gross potential growth - kg C/ha/day)
             return BaseGrossPhotosynthesis * Math.Min(heatGFactor, coldGFactor) * GenericGF;
+        }
+
+        /// <summary>
+        /// Compute the photosynthetic rate for a single leaf
+        /// </summary>
+        /// <param name="IL">Instantaneous intercepted radiation (depends on time of day)</param>
+        /// <param name="Pmax">Max photosynthetic rate, given T, CO2 and N concentration</param>
+        /// <returns>the photosynthetic rate [mgCO2/m2 leaf/s]</returns>
+        private double SingleLeafPhotosynthesis(double IL, double Pmax)
+        {
+            double photoAux1 = PhotosyntheticEfficiency * IL + Pmax;
+            double photoAux2 = 4 * PhotosynthesisCurveFactor * PhotosyntheticEfficiency * IL * Pmax;
+            double Pl = (0.5 / PhotosynthesisCurveFactor) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2) - photoAux2));
+            return Pl;
         }
 
         /// <summary>Computes the plant's loss of C due to maintenance respiration</summary>
