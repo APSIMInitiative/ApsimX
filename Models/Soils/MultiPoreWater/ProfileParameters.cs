@@ -6,10 +6,26 @@ using Models.Core;
 
 namespace Models.Soils
 {
-    class ProfileParameters : Model
+    /// <summary>
+    /// Data structure that holds parameters aspecific to each layer in the soil profile
+    /// </summary>
+    [Serializable]
+    public class ProfileParameters : Model
     {
-
-
-
+        /// <summary>
+        /// Hourly Ksat values
+        /// </summary>
+        public double[] Ksat { get; set; }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ProfileParameters(){}
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ProfileParameters(int Layers)
+        {
+            Ksat = new double[Layers];
+        }
     }
 }

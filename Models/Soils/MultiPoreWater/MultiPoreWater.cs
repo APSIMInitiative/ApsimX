@@ -213,6 +213,10 @@ namespace Models.Soils
         /// Contains data extrapolated out to hourly values
         /// </summary>
         public HourlyData Hourly;
+        /// <summary>
+        /// Contains parameters specific to each layer in the soil
+        /// </summary>
+        public ProfileParameters ProfileParams = null;
         #endregion
 
         #region Parameters
@@ -296,6 +300,8 @@ namespace Models.Soils
             PercolationCapacityBelow = new double[ProfileLayers];
             SurfaceWater = 0;
             SWmm = new double[ProfileLayers];
+            SW = new double[ProfileLayers];
+            ProfileParams = new ProfileParameters(ProfileLayers);
 
             double[] InitialWater = new double[Water2.Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
@@ -306,6 +312,7 @@ namespace Models.Soils
             Pores = new Pore[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
+                ProfileParams.Ksat[l] = Water2.KS[l] / 24; //Convert daily values to hourly
                 double AccumVolume = 0;
                 double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
@@ -321,14 +328,15 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(PoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterFilledVolume = PoreWaterFilledVolume;
-                    Pores[l][c].HydraulicConductivityIn = Water2.KS[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
-                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - Water2.KS[l]*0.5);//arbitary function to give a range of hydraulic conductivity over pores
+                    Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
+                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.5);//arbitary function to give a range of hydraulic conductivity over pores
                 }
                 if (Math.Abs(AccumVolume - Water2.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
-                SWmm[l] = LayerSum(Pores[l], "Waterdepth");
+                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water2.Thickness[l];
             }
 
             Hourly = new HourlyData();
@@ -365,7 +373,7 @@ namespace Models.Soils
                 //The we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                SurfaceWater = Math.Max(0,SurfaceWater - PotentialInfiltration);
+                //SurfaceWater = Math.Max(0,SurfaceWater - PotentialInfiltration);
                 double HourlyInfiltration = Math.Min(SurfaceWater, PotentialInfiltration);
                 if (HourlyInfiltration>0)
                     doInfiltration(HourlyInfiltration);
@@ -377,7 +385,8 @@ namespace Models.Soils
 
                 for (int l = ProfileLayers - 1; l >= 0; l--)
                 {
-                    SWmm[l] = LayerSum(Pores[l], "Waterdepth");
+                    SWmm[l] = LayerSum(Pores[l], "WaterDepth");
+                    SW[l] = LayerSum(Pores[l], "WaterDepth") / Water2.Thickness[l];
                 }
             }
         }
@@ -494,7 +503,7 @@ namespace Models.Soils
                     //For subsequent layers up the profile the percolation capacity below is the amount that the layer below may absorb
                     //plus the minimum of what may drain through the layer below (ksat of layer below) and what may potentially percolate
                     //Into the rest of the profile below that
-                    PercolationCapacityBelow[l] = AdsorptionCapacity[l + 1] + Math.Min(Water2.KS[l + 1],PercolationCapacityBelow[l+1]);
+                    PercolationCapacityBelow[l] = AdsorptionCapacity[l + 1] + Math.Min(ProfileParams.Ksat[l + 1],PercolationCapacityBelow[l+1]);
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
@@ -513,13 +522,14 @@ namespace Models.Soils
                     {
                         double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
                         double Adsorbtion = Math.Min(RemainingInfiltration, PotentialAdsorbtion);
-                        Pores[l][c].WaterFilledVolume += Adsorbtion;
+                        Pores[l][c].WaterFilledVolume += Adsorbtion/Pores[l][c].Thickness;
                         RemainingInfiltration -= Adsorbtion;
                     }
                 }
             }
             //Add infiltration to daily sum for reporting
             Infiltration += WaterToInfiltrate;
+            SurfaceWater -= WaterToInfiltrate;
         }
         /// <summary>
         /// Gravity moves mobile water out of layers each time step
