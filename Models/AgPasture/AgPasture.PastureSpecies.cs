@@ -711,7 +711,7 @@ namespace Models.AgPasture
         /// <remarks> This factor can be used to describe the effects of conditions such as disease, etc.</remarks>
         [Description("Generic factor affecting potential plant growth [0-1]:")]
         [Units("0-1")]
-        public double GenericGF { get; set; } = 1.0;
+        public double GlfGeneric { get; set; } = 1.0;
 
         /// <summary>Gets or sets a generic growth limiting factor, represents an arbitrary soil limitation.</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
@@ -2086,6 +2086,14 @@ namespace Models.AgPasture
         {
             get { return rootFraction; }
         }
+        /// <summary>Gets the fraction of root dry matter for each soil layer.</summary>
+        /// <value>The root fraction.</value>
+        [Description("Fraction of root dry matter for each soil layer")]
+        [Units("0-1")]
+        public double[] RootWtFraction1
+        {
+            get { return rootFraction1; }
+        }
 
         /// <summary>Gets the plant's root length density for each soil layer.</summary>
         /// <value>The root length density.</value>
@@ -2158,88 +2166,79 @@ namespace Models.AgPasture
         /// <value>A factor influencing potential plant growth.</value>
         [Description("Growth factor due to variations in intercepted radiation")]
         [Units("0-1")]
-        public double RadiationGF
+        public double GlfRadnIntercept
         {
-            get { return radnGFactor; }
+            get { return glfRadn; }
         }
 
-        /// <summary>Gets the growth factor due to variations in atmospheric CO2.</summary>
+        /// <summary>Gets the growth limiting factor due to variations in atmospheric CO2.</summary>
         /// <value>A factor influencing potential plant growth.</value>
-        [Description("Growth factor due to variations in atmospheric CO2")]
+        [Description("Growth limiting factor due to variations in atmospheric CO2")]
         [Units("0-1")]
-        public double CO2GF
+        public double GlfCO2
         {
-            get { return co2GFactor; }
+            get { return glfCO2; }
         }
 
-        /// <summary>Gets the growth limiting factor due to N concentration in the plant.</summary>
-        /// <value>The growth limiting factor due to N concentration.</value>
-        [Description("Plant growth limiting factor due to plant N concentration")]
-        [Units("0-1")]
-        public double GlfNConcentration
-        {
-            get { return nConcGFactor; }
-        }
-
-        /// <summary>Gets the growth factor due to variations in temperature.</summary>
+        /// <summary>Gets the growth limiting factor due to variations in plant N concentration.</summary>
         /// <value>A factor influencing potential plant growth.</value>
-        [Description("Growth factor due to variations in temperature")]
+        [Description("Growth limiting factor due to variations in plant N concentration")]
         [Units("0-1")]
-        public double TemperatureGF
+        public double GlfNContent
         {
-            get { return tempGFactor; }
+            get { return glfNc; }
         }
 
-        /// <summary>Gets the growth limiting factor due to temperature.</summary>
-        /// <value>The growth limiting factor due to temperature.</value>
-        [Description("Growth limiting factor due to temperature")]
+        /// <summary>Gets the growth limiting factor due to variations in air temperature.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth limiting factor due to variations in air temperature")]
         [Units("0-1")]
         public double GlfTemperature
         {
-            get { return TemperatureLimitingFactor(TmeanW); }
+            get { return glfTemp; }
         }
 
-        /// <summary>Gets the growth factor due to heat stress.</summary>
+        /// <summary>Gets the growth limiting factor due to heat stress.</summary>
         /// <value>A factor influencing potential plant growth.</value>
-        [Description("Growth factor due to heat stress")]
+        [Description("Growth limiting factor due to heat stress")]
         [Units("0-1")]
-        public double HeatGF
+        public double GlfHeatDamage
         {
-            get { return heatGFactor; }
+            get { return glfHeat; }
         }
 
-        /// <summary>Gets the growth factor due to cold stress.</summary>
+        /// <summary>Gets the growth limiting factor due to cold stress.</summary>
         /// <value>A factor influencing potential plant growth.</value>
-        [Description("Growth factor due to cold stress")]
+        [Description("Growth limiting factor due to cold stress")]
         [Units("0-1")]
-        public double ColdGF
+        public double GlfColdDamage
         {
-            get { return coldGFactor; }
+            get { return glfCold; }
         }
 
         /// <summary>Gets the growth limiting factor due to water deficit.</summary>
-        /// <value>The growth limiting factor due to water.</value>
+        /// <value>A factor limiting plant growth.</value>
         [Description("Growth limiting factor due to water deficit")]
         [Units("0-1")]
-        public double GlfWater
+        public double GlfWaterSupply
         {
             get { return glfWater; }
         }
 
         /// <summary>Gets the growth limiting factor due to lack of soil aeration.</summary>
-        /// <value>The growth limiting factor due to lack of soil aeration.</value>
+        /// <value>A factor limiting plant growth.</value>
         [Description("Growth limiting factor due to lack of soil aeration")]
         [Units("0-1")]
-        public double GlfAeration
+        public double GlfWaterLogging
         {
             get { return glfAeration; }
         }
 
         /// <summary>Gets the growth limiting factor due to soil N availability.</summary>
-        /// <value>The growth limiting factor due to N.</value>
+        /// <value>A factor limiting plant growth.</value>
         [Description("Growth limiting factor due to soil N availability")]
         [Units("0-1")]
-        public double GlfN
+        public double GlfNSupply
         {
             get { return glfN; }
         }
@@ -2642,6 +2641,7 @@ namespace Models.AgPasture
 
         /// <summary>The fraction of roots DM in each layer</summary>
         private double[] rootFraction;
+        private double[] rootFraction1;
 
         /// <summary>The ideal fraction of roots DM in each layer</summary>
         private double[] targetRootAllocation;
@@ -2720,27 +2720,25 @@ namespace Models.AgPasture
         // growth limiting factors ------------------------------------------------------------------------------------
 
         /// <summary>The growth factor due to N concentration</summary>
-        private double radnGFactor = 1.0;
+        private double glfRadn = 1.0;
 
         /// <summary>The growth factor due to N concentration</summary>
-        private double co2GFactor = 1.0;
+        private double glfCO2 = 1.0;
 
         /// <summary>The growth factor due to N concentration</summary>
-        private double nConcGFactor = 1.0;
+        private double glfNc = 1.0;
 
         /// <summary>The growth factor due to N concentration</summary>
-        private double tempGFactor = 1.0;
+        private double glfTemp = 1.0;
 
         /// <summary>The growth factor due to N concentration</summary>
-        private double heatGFactor = 1.0;
+        private double glfHeat = 1.0;
         
         /// <summary>The growth factor due to N concentration</summary>
-        private double coldGFactor = 1.0;
+        private double glfCold = 1.0;
 
         /// <summary>The GLF due to water stress</summary>
         internal double glfWater = 1.0;
-        /// <summary>The GLF due to water stress</summary>
-        internal double glfWater0 = 1.0;
 
         /// <summary>Some Description</summary>
         internal double glfAeration = 1.0;
@@ -2944,15 +2942,32 @@ namespace Models.AgPasture
             double cumAllocation = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                cumDepth += mySoil.Thickness[layer];
-                if (cumDepth <= myRootDepth)
+                if (cumDepth < myRootDepth)
                 {
                     myRootFrontier = layer;
-                    cumAllocation += targetRootAllocation[layer];
+                    cumDepth += mySoil.Thickness[layer];
+                    if (cumDepth <= myRootDepth)
+                    {
+                        // fully in the root zone
+                        cumAllocation += targetRootAllocation[layer];
+                    }
+                    else
+                    {
+                        // part of layer in the root zone
+                        double layerFrac = (myRootDepth - (cumDepth - mySoil.Thickness[layer]))
+                                         / (MaximumRootDepth - (cumDepth - mySoil.Thickness[layer]));
+                        cumAllocation += targetRootAllocation[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
+                    }
                 }
+                else
+                    layer = nLayers;
             }
             rootFraction = RootProfileDistribution();
             InitialiseRootsProperties();
+
+            rootFraction1 = new double[nLayers];
+            for (int layer = 0; layer < nLayers; layer++)
+                rootFraction1[layer] = targetRootAllocation[layer] / cumAllocation;
 
             // maximum shoot:root ratio
             maxSRratio = (1 - MaxRootAllocation) / MaxRootAllocation;
@@ -3405,7 +3420,7 @@ namespace Models.AgPasture
                     cumDepth += mySoil.Thickness[layer];
                     if (cumDepth <= myRootDepth)
                     {
-                        myRootFrontier = layer;
+                        myRootFrontier = layer; // TODO: need to update this, it is offset by one
                     }
                     else
                     {
@@ -3421,47 +3436,43 @@ namespace Models.AgPasture
         private double DailyGrossPotentialGrowth()
         {
             // CO2 effects on Pmax
-            co2GFactor = PCO2Effects();
+            glfCO2 = PCO2Effects();
 
             // N concentration effects on Pmax
-            nConcGFactor = PmxNeffect();
+            glfNc = PmxNeffect();
 
             // Temperature effects to Pmax
-            double tempFactor1 = TemperatureLimitingFactor(Tmean);
-            double tempFactor2 = TemperatureLimitingFactor(TmeanW);
+            double tempGlf1 = TemperatureLimitingFactor(Tmean);
+            double tempGlf2 = TemperatureLimitingFactor(TmeanW);
 
             //Temperature growth factor (for reporting purposes only)
-            tempGFactor = (0.25 * tempFactor1) + (0.75 * tempFactor2);
+            glfTemp = (0.25 * tempGlf1) + (0.75 * tempGlf2);
 
             // Potential photosynthetic rate (mg CO2/m^2 leaf/s)
             //   at dawn and dusk (first and last quarter of the day)
-            double Pmax1 = ReferencePhotosynthesisRate * tempFactor1 * co2GFactor * nConcGFactor;
+            double Pmax1 = ReferencePhotosynthesisRate * tempGlf1 * glfCO2 * glfNc;
             //   at bright light (half of sunlight length, middle of day)
-            double Pmax2 = ReferencePhotosynthesisRate * tempFactor2 * co2GFactor * nConcGFactor;
+            double Pmax2 = ReferencePhotosynthesisRate * tempGlf2 * glfCO2 * glfNc;
 
             // Day light length, converted to seconds
             double myDayLength = 3600 * myMetData.CalculateDayLength(-6);
 
             // Photosynthetically active radiation, converted from MJ/m2.day to J/m2.s
-            double interceptedPAR = fractionPAR * interceptedRadn * 1000000;
+            double interceptedPAR = fractionPAR * interceptedRadn * 1000000.0 / myDayLength;
 
             // Irradiance at top of canopy in the middle of the day (J/m2 leaf/s)
-            irradianceTopOfCanopy = 1.33333 * interceptedPAR * LightExtentionCoefficient / myDayLength;
-            double IL2 = irradianceTopOfCanopy / 2; //IL for early & late period of a day
+            //irradianceTopOfCanopy = interceptedPAR * LightExtentionCoefficient * (4.0 / 3.0); TODO: enable this
+            irradianceTopOfCanopy = interceptedPAR * LightExtentionCoefficient * 1.33333;
 
             //Photosynthesis per leaf area under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
-            double photoAux1 = PhotosyntheticEfficiency * irradianceTopOfCanopy + Pmax2;
-            double photoAux2 = 4 * PhotosynthesisCurveFactor * PhotosyntheticEfficiency * irradianceTopOfCanopy * Pmax2;
-            double Pl1 = (0.5 / PhotosynthesisCurveFactor) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
-            photoAux1 = PhotosyntheticEfficiency * IL2 + Pmax1;
-            photoAux2 = 4 * PhotosynthesisCurveFactor * PhotosyntheticEfficiency * IL2 * Pmax1;
-            double Pl2 = (0.5 / PhotosynthesisCurveFactor) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
+            double Pl1 = SingleLeafPhotosynthesis(0.5 * irradianceTopOfCanopy, Pmax1);
+            double Pl2 = SingleLeafPhotosynthesis(irradianceTopOfCanopy, Pmax2);
 
             // Photosynthesis per leaf area for the day (mg CO2/m^2 leaf/day)
             double Pl_Daily = myDayLength * (Pl1 + Pl2) * 0.5;
 
             // Radiation effects (for reporting purposes only)
-            radnGFactor = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
+            glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
             double Pc_Daily = Pl_Daily * CoverGreen / LightExtentionCoefficient;
@@ -3473,11 +3484,11 @@ namespace Models.AgPasture
             double BaseGrossPhotosynthesis = CarbonAssim * 10; // convert from g/m2 to kg/ha (= 10000/1000)
 
             // Consider the extreme temperature effects (in practice only one temp stress factor is < 1)
-            heatGFactor = HeatStress();
-            coldGFactor = ColdStress();
+            glfHeat = HeatStress();
+            glfCold = ColdStress();
 
             // Actual gross photosynthesis (gross potential growth - kg C/ha/day)
-            return BaseGrossPhotosynthesis * Math.Min(heatGFactor, coldGFactor) * GenericGF;
+            return BaseGrossPhotosynthesis * Math.Min(glfHeat, glfCold) * GlfGeneric;
         }
 
         /// <summary>
@@ -3516,7 +3527,7 @@ namespace Models.AgPasture
 
             // Total DM converted to C (kg/ha)
             double dmLive = (dmGreen + dmRoot) * CarbonFractionInDM;
-            double result = dmLive * MaintenanceRespirationCoefficient * Teffect * nConcGFactor;
+            double result = dmLive * MaintenanceRespirationCoefficient * Teffect * glfNc;
             return Math.Max(0.0, result);
         }
 
@@ -3988,7 +3999,7 @@ namespace Models.AgPasture
         private void GetWaterUptake()
         {
             Array.Clear(mySoilWaterTakenUp, 0, mySoilWaterTakenUp.Length);
-            for (int layer = 0; layer <= myRootFrontier; layer++)
+            for (int layer = 0; layer < myRootFrontier; layer++)
                 mySoilWaterTakenUp[layer] = uptakeWater[layer];
         }
 
@@ -4004,11 +4015,11 @@ namespace Models.AgPasture
 
                 // get the drought effects
                 glfWater = WaterDeficitFactor();
-                glfWater0 = glfWater;
 
                 // get the water logging effects (only if there is no drought effect)
+                glfAeration = WaterLoggingFactor();
                 if (glfWater > 0.999)
-                    glfWater = WaterLoggingFactor();
+                    glfWater = glfAeration;
             }
             //else if myWaterUptakeSource == "AgPasture"
             //      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
@@ -4025,11 +4036,11 @@ namespace Models.AgPasture
 
                 // get the drought effects
                 glfWater = WaterDeficitFactor();
-                glfWater0 = glfWater;
 
                 // get the water logging effects (only if there is no drought effect)
+                glfAeration = WaterLoggingFactor();
                 if (glfWater > 0.999)
-                    glfWater = WaterLoggingFactor();
+                    glfWater = glfAeration;
             }
             //else
             //      water uptake be calculated by other modules (e.g. SWIM) and supplied as
@@ -4064,7 +4075,7 @@ namespace Models.AgPasture
             SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
             if (useAltWUptake == "no")
             {
-                for (int layer = 0; layer <= myRootFrontier; layer++)
+                for (int layer = 0; layer < myRootFrontier; layer++)
                 {
                     result[layer] = Math.Max(0.0, mySoil.Water[layer] - soilCropData.LL[layer] * mySoil.Thickness[layer])
                                     * FractionLayerWithRoots(layer);
@@ -4083,7 +4094,7 @@ namespace Models.AgPasture
                 double facRLD = 0.0;
                 double facCond = 0.0;
                 double facWcontent = 0.0;
-                for (int layer = 0; layer <= myRootFrontier; layer++)
+                for (int layer = 0; layer < myRootFrontier; layer++)
                 {
                     facRLD = 1 - Math.Pow(10, -myRLD[layer] / ReferenceRLD);
                     facCond = 1 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
@@ -4115,7 +4126,7 @@ namespace Models.AgPasture
 
             if (useAltWUptake == "no")
             {
-                for (int layer = 0; layer <= myRootFrontier; layer++)
+                for (int layer = 0; layer < myRootFrontier; layer++)
                 {
                     result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
                     WaterTakenUp.DeltaWater[layer] = -result[layer];
@@ -4127,7 +4138,7 @@ namespace Models.AgPasture
                 // Uptake is distributed over the profile according to water availability,
                 //  this means that water status and root distribution have been taken into account
 
-                for (int layer = 0; layer <= myRootFrontier; layer++)
+                for (int layer = 0; layer < myRootFrontier; layer++)
                 {
                     result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
                     WaterTakenUp.DeltaWater[layer] = -result[layer];
@@ -4148,7 +4159,7 @@ namespace Models.AgPasture
             WaterChangedType WaterTakenUp = new WaterChangedType();
             WaterTakenUp.DeltaWater = new double[nLayers];
 
-            for (int layer = 0; layer <= myRootFrontier; layer++)
+            for (int layer = 0; layer < myRootFrontier; layer++)
                 WaterTakenUp.DeltaWater[layer] = -mySoilWaterTakenUp[layer];
 
             // send the delta water taken up
@@ -4167,7 +4178,7 @@ namespace Models.AgPasture
             // get the amount of N taken up from soil
             Array.Clear(mySoilNitrogenTakenUp, 0, mySoilNitrogenTakenUp.Length);
             mySoilNuptake = 0.0;
-            for (int layer = 0; layer <= myRootFrontier; layer++)
+            for (int layer = 0; layer < myRootFrontier; layer++)
             {
                 mySoilNitrogenTakenUp[layer] = uptakeNH4[layer] + uptakeNO3[layer];
                 mySoilNuptake += mySoilNitrogenTakenUp[layer];
@@ -4364,7 +4375,7 @@ namespace Models.AgPasture
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer <= myRootFrontier; layer++) // TODO: this should be <=
+            for (int layer = 0; layer < myRootFrontier; layer++)
             {
                 if (useAltNUptake == "no")
                 {
@@ -4404,7 +4415,7 @@ namespace Models.AgPasture
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer <= myRootFrontier; layer++) // TODO: this should be <=
+            for (int layer = 0; layer < myRootFrontier; layer++)
             {
                 if (useAltNUptake == "no")
                 {
@@ -4465,7 +4476,7 @@ namespace Models.AgPasture
                 }
 
                 double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(result, mySoilAvailableN.Sum(), 0.0));
-                for (int layer = 0; layer <= myRootFrontier; layer++)
+                for (int layer = 0; layer < myRootFrontier; layer++)
                 {
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                     {
@@ -4584,7 +4595,7 @@ namespace Models.AgPasture
                             uptakeFraction = Math.Min(1.0,
                                 MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
 
-                        for (int layer = 0; layer <= myRootFrontier; layer++)
+                        for (int layer = 0; layer < myRootFrontier; layer++)
                         {
                             NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
                             NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
@@ -4660,7 +4671,7 @@ namespace Models.AgPasture
             NUptake.DeltaNO3 = new double[nLayers];
             NUptake.DeltaNH4 = new double[nLayers];
 
-            for (int layer = 0; layer <= myRootFrontier; layer++)
+            for (int layer = 0; layer < myRootFrontier; layer++)
             {
                 NUptake.DeltaNH4[layer] = -uptakeNH4[layer];
                 NUptake.DeltaNO3[layer] = -uptakeNO3[layer];
@@ -5394,7 +5405,7 @@ namespace Models.AgPasture
             double mySaturation = 0.0;
             double myDUL = 0.0;
             double fractionLayer = 0.0;
-            for (int layer = 0; layer <= myRootFrontier; layer++)
+            for (int layer = 0; layer < myRootFrontier; layer++)
             {
                 // fraction of layer with roots 
                 fractionLayer = FractionLayerWithRoots(layer);
@@ -5584,7 +5595,7 @@ namespace Models.AgPasture
         internal double FractionLayerWithRoots(int layer)
         {
             double fractionInLayer = 0.0;
-            if (layer <= myRootFrontier)
+            if (layer < myRootFrontier)
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)

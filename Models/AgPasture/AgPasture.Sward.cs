@@ -1225,67 +1225,136 @@ namespace Models.AgPasture
 
         #region - Growth limiting factors  ---------------------------------------------------------------------------------
 
-        /// <summary>Gets the average growth limiting factor due to N availability.</summary>
-        /// <value>The growth limiting factor due to N.</value>
-        [Description("Average plant growth limiting factor due to nitrogen availability")]
+        /// <summary>Gets the growth factor due to variations in intercepted radiation.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth factor due to variations in intercepted radiation")]
         [Units("0-1")]
-        public double GlfN
+        public double GlfRadnIntercept
         {
             get
             {
-                double result = 1.0;
-                if (PotGrowthWt_Wstress > 0)
-                    result = MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfN * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
-                return result;
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfRadnIntercept * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+            }
+        }
+
+        /// <summary>Gets the growth limiting factor due to variations in atmospheric CO2.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth limiting factor due to variations in atmospheric CO2")]
+        [Units("0-1")]
+        public double GlfCO2
+        {
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfCO2 * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
         /// <summary>Gets the average growth limiting factor due to N concentration in the plant.</summary>
-        /// <value>The growth limiting factor due to N concentration.</value>
+        /// <value>A factor influencing potential plant growth.</value>
         [Description("Average plant growth limiting factor due to plant N concentration")]
         [Units("0-1")]
         public double GlfNConcentration
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfNConcentration * mySpecies.AboveGroundWt), AboveGroundWt, 0.0); }
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfNContent * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+            }
         }
 
         /// <summary>Gets the average growth limiting factor due to temperature.</summary>
-        /// <value>The growth limiting factor due to temperature.</value>
+        /// <value>A factor influencing potential plant growth.</value>
         [Description("Average plant growth limiting factor due to temperature")]
         [Units("0-1")]
         public double GlfTemperature
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.AboveGroundLivedWt), AboveGroundLiveWt, 0.0); }
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+            }
         }
 
-        /// <summary>Gets the average growth limiting factor due to water availability.</summary>
-        /// <value>The growth limiting factor due to water.</value>
-        [Description("Average plant growth limiting factor due to water deficit")]
+        /// <summary>Gets the growth limiting factor due to heat stress.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth limiting factor due to heat stress")]
         [Units("0-1")]
-        public double GlfWater
+        public double GlfHeatDamage
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfWater * mySpecies.LAIGreen), LAIGreen, 0.0);
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfHeatDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+            }
+        }
+
+        /// <summary>Gets the growth limiting factor due to cold stress.</summary>
+        /// <value>A factor influencing potential plant growth.</value>
+        [Description("Growth limiting factor due to cold stress")]
+        [Units("0-1")]
+        public double GlfColdDamage
+        {
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfColdDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
         /// <summary>Gets the average generic growth limiting factor (arbitrary limitation).</summary>
-        /// <value>The generic growth limiting factor.</value>
+        /// <value>A factor influencing potential plant growth.</value>
         [Description("Average generic plant growth limiting factor, used at potential growth level")]
         [Units("0-1")]
         public double GlfGeneric
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GenericGF * mySpecies.AboveGroundLivedWt), AboveGroundLiveWt, 0.0); }
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+            }
         }
 
-        /// <summary>Gets the average generic growth limiting factor (arbitrary limitation).</summary>
-        /// <value>The generic growth limiting factor.</value>
-        [Description("Average generic plant growth limiting factor, used for nutrients other than N")]
+        /// <summary>Gets the average growth limiting factor due to water availability.</summary>
+        /// <value>A factor limiting plant growth.</value>
+        [Description("Average plant growth limiting factor due to water deficit")]
+        [Units("0-1")]
+        public double GlfWaterSupply
+        {
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfWaterSupply * mySpecies.LAIGreen), LAIGreen, 0.0);
+            }
+        }
+
+        /// <summary>Gets the average growth limiting factor due to lack of soil aeration.</summary>
+        /// <value>A factor limiting plant growth.</value>
+        [Description("Average growth limiting factor due to lack of soil aeration")]
+        [Units("0-1")]
+        public double GlfWaterLogging
+        {
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfWaterLogging * mySpecies.NetPotentialGrowthWt), NetPotentialGrowthWt, 0.0);
+            }
+        }
+
+        /// <summary>Gets the average growth limiting factor due to N availability.</summary>
+        /// <value>A factor limiting plant growth.</value>
+        [Description("Average growth limiting factor due to nitrogen availability")]
+        [Units("0-1")]
+        public double GlfNSupply
+        {
+            get
+            {
+                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfNSupply * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
+            }
+        }
+
+        /// <summary>Gets the average generic growth limiting factor due to soil fertility, for nutrients other than N.</summary>
+        /// <value>A factor limiting plant growth.</value>
+        [Description("Average generic growth limiting factor due to soil fertility, for nutrients other than N")]
         [Units("0-1")]
         public double GlfSFertility
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfSFertility * mySpecies.AboveGroundLivedWt), AboveGroundLiveWt, 0.0); }
+            get
+            {
+                return MathUtilities.Divide( mySward.Sum(mySpecies => mySpecies.GlfSFertility * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
+            }
         }
 
         //// TODO: verify that this is really needed
