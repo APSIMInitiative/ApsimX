@@ -263,12 +263,12 @@ namespace Models.Soils
         /// How much of the current air filled volume of a layer may be water filled in the comming hour
         /// </summary>
         [Units("mm")]
-        private double[] AdsorptionCapacity { get; set; }
+        private double[] AbsorptionCapacity { get; set; }
         /// <summary>
         /// How much water can the profile below this layer absorb in the comming hour
         /// </summary>
         [Units("mm")]
-        private double[] AdsorptionCapacityBelow { get; set; }
+        private double[] AbsorptionCapacityBelow { get; set; }
         /// <summary>
         /// The amount of water that may flow into and through the profile below this layer in the comming hour
         /// </summary>
@@ -295,8 +295,8 @@ namespace Models.Soils
         {
             ProfileLayers = Water2.Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
-            AdsorptionCapacity = new double[ProfileLayers];
-            AdsorptionCapacityBelow = new double[ProfileLayers];
+            AbsorptionCapacity = new double[ProfileLayers];
+            AbsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
             SurfaceWater = 0;
             SWmm = new double[ProfileLayers];
@@ -373,7 +373,6 @@ namespace Models.Soils
                 //The we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                //SurfaceWater = Math.Max(0,SurfaceWater - PotentialInfiltration);
                 double HourlyInfiltration = Math.Min(SurfaceWater, PotentialInfiltration);
                 if (HourlyInfiltration>0)
                     doInfiltration(HourlyInfiltration);
@@ -485,47 +484,37 @@ namespace Models.Soils
                 {//Workout how much water may be adsorbed into each pore
                     PotentialAbsorption = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
                 }
-                AdsorptionCapacity[l] = PotentialAbsorption;
+                AbsorptionCapacity[l] = PotentialAbsorption;
             }
             for (int l = ProfileLayers-1; l >=0; l--)
             {//Then step through each layer and work out how much water the profile below can take
                 if (l == ProfileLayers - 1)
                 {
                     //In the bottom layer of the profile absorption capaicity below is the amount of water this layer can absorb
-                    AdsorptionCapacityBelow[l] = AdsorptionCapacity[l];
+                    AbsorptionCapacityBelow[l] = AbsorptionCapacity[l];
                     //In the bottom layer of the profile percolation capacity below is the conductance of the bottom of the profile
                     PercolationCapacityBelow[l] = BottomBoundryConductance;
                 }
                 else
                 {
                     //For subsequent layers up the profile absorpbion capacity below adds the current layer to the sum of the layers below
-                    AdsorptionCapacityBelow[l] = AdsorptionCapacityBelow[l + 1] + AdsorptionCapacity[l];
+                    AbsorptionCapacityBelow[l] = AbsorptionCapacityBelow[l + 1] + AbsorptionCapacity[l];
                     //For subsequent layers up the profile the percolation capacity below is the amount that the layer below may absorb
                     //plus the minimum of what may drain through the layer below (ksat of layer below) and what may potentially percolate
                     //Into the rest of the profile below that
-                    PercolationCapacityBelow[l] = AdsorptionCapacity[l + 1] + Math.Min(ProfileParams.Ksat[l + 1],PercolationCapacityBelow[l+1]);
+                    PercolationCapacityBelow[l] = AbsorptionCapacity[l + 1] + Math.Min(ProfileParams.Ksat[l + 1],PercolationCapacityBelow[l+1]);
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AdsorptionCapacity[0] + PercolationCapacityBelow[0];
+            PotentialInfiltration = AbsorptionCapacity[0] + PercolationCapacityBelow[0];
         }
         private void doInfiltration(double WaterToInfiltrate)
         {
             //Do infiltration processes each hour
             double RemainingInfiltration = WaterToInfiltrate;
-            for (int l = 0; l < ProfileLayers; l++)
+            for (int l = 0; l < ProfileLayers && RemainingInfiltration > 0; l++)
             { //Start process in the top layer
-                if (RemainingInfiltration>0)
-                for (int c = PoreCompartments - 1; c >= 0; c--)
-                {//AdsorbWater onto samllest pores first followed by larger ones
-                    if (RemainingInfiltration > 0) //Only do adsorption if there is something to absorb
-                    {
-                        double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
-                        double Adsorbtion = Math.Min(RemainingInfiltration, PotentialAdsorbtion);
-                        Pores[l][c].WaterFilledVolume += Adsorbtion/Pores[l][c].Thickness;
-                        RemainingInfiltration -= Adsorbtion;
-                    }
-                }
+                DistributWaterInFlux(l, ref RemainingInfiltration);
             }
             //Add infiltration to daily sum for reporting
             Infiltration += WaterToInfiltrate;
@@ -536,7 +525,40 @@ namespace Models.Soils
         /// </summary>
         private void doDrainage()
         {
+            //Influx is zero for a start becasue distirbution of infiltration already done by infiltration method
+            double InFlux = 0;
+            double SaturatedDrainage = 0;
+            for (int l = 0; l < ProfileLayers; l++)
+            {//Step through each layer from the top down
+                double PotentialDrainage = 0;
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {//Step through each pore compartment and work out how much may drain
+                    PotentialDrainage += Math.Min(Pores[l][c].HydraulicConductivityOut, Pores[l][c].WaterDepth);
+                }
+                //Limit drainage to that of what the layer may drain and that of which the provile below will allow to drain
+                double OutFlux = Math.Min(PotentialDrainage + SaturatedDrainage, PercolationCapacityBelow[l]);
+                //Catch the drainage for this layer to be the InFlux to the next Layer
+                InFlux = OutFlux;
+                //Discharge water from current layer
+                for (int c = 0; c < PoreCompartments && OutFlux > 0; c++)
+                {//Step through each pore compartment and remove the water that drains starting with the largest pores
+                    double drain = Math.Min(OutFlux, Pores[l][c].HydraulicConductivityOut);
+                    Pores[l][c].WaterFilledVolume -= drain / Water2.Thickness[l];
+                    OutFlux -= drain;
+                }
 
+                if (l != ProfileLayers - 1) 
+                {//If this is not the bottom layer distribute drainage into the layer below
+                    DistributWaterInFlux(l + 1, ref InFlux);
+                    //Any water not stored by this layer will flow to the layer below as saturated drainage
+                    SaturatedDrainage = InFlux;
+                }
+                //If it is the bottom layer, any drainage recorded as drainage from the profile
+                else
+                {
+                    Drainage = InFlux + SaturatedDrainage;
+                }
+            } 
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -603,6 +625,21 @@ namespace Models.Soils
                 Sum += (double)o;
             }
             return Sum;
+        }
+        /// <summary>
+        /// Method takes water flowing into a layer and distributes it between the pore compartments in that layer
+        /// </summary>
+        /// <param name="l"></param>
+        /// <param name="InFlux"></param>
+        private void DistributWaterInFlux(int l, ref double InFlux)
+        {
+            for (int c = PoreCompartments - 1; c >= 0 && InFlux > 0; c--)
+            {//Absorb Water onto samllest pores first followed by larger ones
+                double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
+                double Absorbtion = Math.Min(InFlux, PotentialAdsorbtion);
+                Pores[l][c].WaterFilledVolume += Absorbtion / Pores[l][c].Thickness;
+                InFlux -= Absorbtion;
+            }
         }
         #endregion
     }
