@@ -7186,8 +7186,8 @@ namespace Models
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
-            <SpeciesFamily>grass</SpeciesFamily>
-            <SpeciesPhotoPathway>C3</SpeciesPhotoPathway>
+            <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
@@ -7368,12 +7368,12 @@ namespace Models
             <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
             <string>[Sward].Ryegrass.StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
             <string>[Sward].Ryegrass.RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.TotalLAI as Ryegrass.TotalLAI</string>
-            <string>[Sward].Ryegrass.GreenLAI as Ryegrass.GreenLAI</string>
-            <string>[Sward].Ryegrass.DeadLAI as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
+            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
+            <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfN</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
             <string>[Sward].Ryegrass.IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -10214,8 +10214,8 @@ namespace Models
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <SpeciesFamily>grass</SpeciesFamily>
-          <SpeciesPhotoPathway>C3</SpeciesPhotoPathway>
+          <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
@@ -10388,12 +10388,12 @@ namespace Models
             <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
             <string>[Ryegrass].StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
             <string>[Ryegrass].RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Ryegrass].TotalLAI as Ryegrass.TotalLAI</string>
-            <string>[Ryegrass].GreenLAI as Ryegrass.GreenLAI</string>
-            <string>[Ryegrass].DeadLAI as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
+            <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
+            <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Ryegrass].GlfNContent as Ryegrass.GlfN</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
             <string>[Ryegrass].IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -13212,8 +13212,8 @@ namespace Models
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
-            <SpeciesFamily>grass</SpeciesFamily>
-            <SpeciesPhotoPathway>C3</SpeciesPhotoPathway>
+            <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
@@ -13394,12 +13394,12 @@ namespace Models
             <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
             <string>[Sward].Ryegrass.StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
             <string>[Sward].Ryegrass.RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.TotalLAI as Ryegrass.TotalLAI</string>
-            <string>[Sward].Ryegrass.GreenLAI as Ryegrass.GreenLAI</string>
-            <string>[Sward].Ryegrass.DeadLAI as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
+            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
+            <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfN</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
             <string>[Sward].Ryegrass.IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -16243,8 +16243,8 @@ namespace Models
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <SpeciesFamily>grass</SpeciesFamily>
-          <SpeciesPhotoPathway>C3</SpeciesPhotoPathway>
+          <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
@@ -16417,12 +16417,12 @@ namespace Models
             <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
             <string>[Ryegrass].StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
             <string>[Ryegrass].RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Ryegrass].TotalLAI as Ryegrass.TotalLAI</string>
-            <string>[Ryegrass].GreenLAI as Ryegrass.GreenLAI</string>
-            <string>[Ryegrass].DeadLAI as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
+            <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
+            <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Ryegrass].GlfNContent as Ryegrass.GlfN</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
             <string>[Ryegrass].IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
