@@ -39,6 +39,10 @@ namespace Models.AgPasture
         [Link]
         private IWeather myMetData = null;
 
+        /// <summary>Link to APSIM summary</summary>
+        [Link]
+        private ISummary mySummary = null;
+
         /// <summary>Link to the Soil (soil layers and other information)</summary>
         [Link]
         private Soils.Soil mySoil = null;
@@ -205,16 +209,28 @@ namespace Models.AgPasture
         }
 
         /// <summary>Sows the plant</summary>
-        /// <param name="cultivar"></param>
-        /// <param name="population"></param>
-        /// <param name="depth"></param>
-        /// <param name="rowSpacing"></param>
-        /// <param name="maxCover"></param>
-        /// <param name="budNumber"></param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1,
-            double budNumber = 1)
+        /// <param name="cultivar">Cultivar type (not used)</param>
+        /// <param name="population">Plants per area (not used)</param>
+        /// <param name="depth">Sowing depth (not used)</param>
+        /// <param name="rowSpacing">Space between rows (not used)</param>
+        /// <param name="maxCover">Maximum ground cover (not used)</param>
+        /// <param name="budNumber">Number of buds (not used)</param>
+        /// <remarks>
+        /// For AgPasture species the sow parameters are not used, the command to sow simply enables the plant to grow,
+        /// This is done by setting the plant 'alive'. From this point germination processes takes place and eventually emergence.
+        /// At emergence, plant DM is set to its default minimum value, allocated according to EmergenceFractions and with
+        /// optimum N concentration. Plant height and root depth are set to their minimum values.
+        /// </remarks>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
-
+            if (isAlive)
+                mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + CropType + "\", as it is already growing");
+            else
+            {
+                ResetZero();
+                isAlive = true;
+                mySummary.WriteMessage(this, " The pasture species \"" + CropType + "\" has been sown today");
+            }
         }
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
@@ -359,19 +375,19 @@ namespace Models.AgPasture
         public double InitialRootDepth { get; set; } = 750.0;
 
         // TODO: temporary?? initial DM fractions for grass or legume species
-        /// <summary>The initial fractions of DM for grass</summary>
+        /// <summary>The initial fractions of DM for each plant part in grass</summary>
         private double[] initialDMFractions_grass = new double[]
         {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00};
 
-        /// <summary>The initial fractions of DM for legume</summary>
+        /// <summary>The initial fractions of DM for each plant part in legume</summary>
         private double[] initialDMFractions_legume = new double[]
         {0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12};
 
-        /// <summary>The initial fractions of DM for legume</summary>
+        /// <summary>The initial fractions of DM for each plant part in forbs</summary>
         private double[] initialDMFractions_forbs = new double[]
         {0.20, 0.20, 0.15, 0.05, 0.15, 0.15, 0.10, 0.00, 0.00, 0.00, 0.00};
 
-        /// <summary>The initial fractions of DM for legume</summary>
+        /// <summary>The fractions of DM for each plant part at emergence (all plants)</summary>
         private double[] EmergenceDMFractions = new double[]
         {0.60, 0.25, 0.00, 0.00, 0.15, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
 
@@ -756,10 +772,20 @@ namespace Models.AgPasture
 
         // - Root distribution and height  ----------------------------------------------------------------------------
 
+        /// <summary>Minimum rooting depth, at emergence [mm]</summary>
+        [Description("Minimum rooting depth, at emergence [mm]:")]
+        [Units("mm")]
+        public double MinimumRootDepth { get; set; }
+
         /// <summary>Maximum rooting depth [mm]</summary>
         [Description("Maximum rooting depth [mm]:")]
         [Units("mm")]
         public double MaximumRootDepth { get; set; } = 750.0;
+
+        /// <summary>Daily root elongation rate at optimum temperature [mm/day]</summary>
+        [Description("Daily root elongation rate at optimum temperature [mm/day]:")]
+        [Units("mm/day")]
+        public double RootElongationRate { get; set; }
 
         /// <summary>Depth for constant distribution of roots, proportion decreases below this value [mm]</summary>
         [Description("Depth for constant distribution of roots [mm]:")]
@@ -2850,10 +2876,11 @@ namespace Models.AgPasture
             InitialState = new SpeciesStateSettings();
             if (InitialShootDM > -myEpsilon)
             {
-                // DM is zero or positive, so the plant is on the ground and able to grow straight away
+                // DM is zero (not sown yet) or positive (plant is on the ground and able to grow straightaway)
                 for (int pool = 0; pool < 11; pool++)
                     InitialState.DMWeight[pool] = initialDMFractions[pool] * InitialShootDM;
                 InitialState.DMWeight[11] = InitialRootDM;
+                InitialState.RootDepth = InitialRootDepth;
                 // assume N concentration is at optimum for green pools and minimum for dead pools
                 InitialState.NAmount[0] = InitialState.DMWeight[0] * leaves.NConcOptimum;
                 InitialState.NAmount[1] = InitialState.DMWeight[1] * leaves.NConcOptimum;
@@ -2903,42 +2930,17 @@ namespace Models.AgPasture
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
 
             // 3. Initialise root DM, N, depth, and distribution
-            myRootDepth = InitialRootDepth;
+            myRootDepth = InitialState.RootDepth;
+            myRootFrontier = RootZoneBottomLayer();
             targetRootAllocation = RootDistributionTarget();
-            double cumDepth = 0.0;
-            double cumAllocation = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (cumDepth < myRootDepth)
-                {
-                    myRootFrontier = layer;
-                    cumDepth += mySoil.Thickness[layer];
-                    if (cumDepth <= myRootDepth)
-                    {
-                        // fully in the root zone
-                        cumAllocation += targetRootAllocation[layer];
-                    }
-                    else
-                    {
-                        // part of layer in the root zone
-                        double layerFrac = (myRootDepth - (cumDepth - mySoil.Thickness[layer]))
-                                         / (MaximumRootDepth - (cumDepth - mySoil.Thickness[layer]));
-                        cumAllocation += targetRootAllocation[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
-                    }
-                }
-                else
-                    layer = nLayers;
-            }
-            rootFraction = RootProfileDistribution();
-            InitialiseRootsProperties();
 
-            rootFraction1 = new double[nLayers];
+            rootFraction1 = RootDistributionCurrentTarget();
+            rootFraction = RootProfileDistribution();
             for (int layer = 0; layer < nLayers; layer++)
-            {
-                rootFraction1[layer] = targetRootAllocation[layer] / cumAllocation;
                 roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFraction[layer];
-            }
+
             roots.Tissue[0].Namount = InitialState.NAmount[11];
+            InitialiseRootsProperties();
 
             // maximum shoot:root ratio
             maxSRratio = (1 - MaxRootAllocation) / MaxRootAllocation;
@@ -2959,7 +2961,45 @@ namespace Models.AgPasture
         /// <summary>Set the plant state at germination</summary>
         internal void SetEmergenceState()
         {
+            // 1. Set the above ground DM, equals MinimumGreenWt
+            leaves.Tissue[0].DM = MinimumGreenWt * EmergenceDMFractions[0];
+            leaves.Tissue[1].DM = MinimumGreenWt * EmergenceDMFractions[1];
+            leaves.Tissue[2].DM = MinimumGreenWt * EmergenceDMFractions[2];
+            leaves.Tissue[3].DM = MinimumGreenWt * EmergenceDMFractions[3];
+            stems.Tissue[0].DM = MinimumGreenWt * EmergenceDMFractions[4];
+            stems.Tissue[1].DM = MinimumGreenWt * EmergenceDMFractions[5];
+            stems.Tissue[2].DM = MinimumGreenWt * EmergenceDMFractions[6];
+            stems.Tissue[3].DM = MinimumGreenWt * EmergenceDMFractions[7];
+            stolons.Tissue[0].DM = MinimumGreenWt * EmergenceDMFractions[8];
+            stolons.Tissue[1].DM = MinimumGreenWt * EmergenceDMFractions[9];
+            stolons.Tissue[2].DM = MinimumGreenWt * EmergenceDMFractions[10];
+
+            // 2. Set root depth and DM (root DM equals shoot)
+            myRootDepth = MinimumRootDepth;
+            myRootFrontier = RootZoneBottomLayer();
+            double[] rootFractions = RootDistributionCurrentTarget();            
+            for (int layer = 0; layer < nLayers; layer++)
+                roots.Tissue[0].DMLayer[layer] = MinimumGreenWt * rootFractions[layer];
+
+            // 3. Set the N amounts in each plant part (assume to be at optimum)
+            leaves.Tissue[0].Nconc = leaves.NConcOptimum;
+            leaves.Tissue[1].Nconc = leaves.NConcOptimum;
+            leaves.Tissue[2].Nconc = leaves.NConcOptimum;
+            leaves.Tissue[3].Nconc = leaves.NConcOptimum;
+            stems.Tissue[0].Nconc = stems.NConcOptimum;
+            stems.Tissue[1].Nconc = stems.NConcOptimum;
+            stems.Tissue[2].Nconc = stems.NConcOptimum;
+            stems.Tissue[3].Nconc = stems.NConcOptimum;
+            stolons.Tissue[0].Nconc = stolons.NConcOptimum;
+            stolons.Tissue[1].Nconc = stolons.NConcOptimum;
+            stolons.Tissue[2].Nconc = stolons.NConcOptimum;
+            roots.Tissue[0].Nconc = roots.NConcOptimum;
+
+            // 4. Set phenological stage to vegetative
             phenologicStage = 1;
+
+            // 5. Calculate the values for LAI
+            EvaluateLAI();
         }
 
         /// <summary>Initialise the variables in canopy properties</summary>
@@ -3092,10 +3132,8 @@ namespace Models.AgPasture
         /// <returns>Fraction of germination phase completed</returns>
         internal double DailyGerminationProgress()
         {
-            double result = 0.0;
             germinationGDD += Math.Max(0.0, Tmean - GrowthTmin);
-            result = germinationGDD / DegreesDayForGermination;
-            return result;
+            return MathUtilities.Divide(germinationGDD, DegreesDayForGermination, 1.0);
         }
 
         /// <summary>Calculates the potential growth.</summary>
@@ -3365,7 +3403,20 @@ namespace Models.AgPasture
                     }
                 }
             }
-            // else:  both myRootDepth and myRootFrontier have been set at initialisation and do not change
+            else
+            {
+                if ((phenologicStage > 0) && (myRootDepth < MaximumRootDepth))
+                {
+                    double tempFactor = TemperatureLimitingFactor(Tmean);
+                    dRootDepth = RootElongationRate * tempFactor;
+                    myRootDepth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, myRootDepth + dRootDepth));
+                    myRootFrontier = RootZoneBottomLayer();
+                }
+                else
+                {
+                    dRootDepth = 0.0;
+                }
+            }
         }
 
         /// <summary>Computes the plant's gross potential growth rate</summary>
@@ -5463,9 +5514,50 @@ namespace Models.AgPasture
                 throw new Exception("Could not calculate root distribution");
             return result;
         }
-        
-        /// <summary>Compute the ideal distribution of roots in the soil profile</summary>
+
+        /// <summary>Compute the current target distribution of roots in the soil profile</summary>
         /// <remarks>
+        /// This distribution is a correction of the target distribution, taking into account the depth of soil
+        /// as well as the current rooting depth
+        /// </remarks>
+        /// <returns>The proportion of root mass in each soil layer</returns>
+        private double[] RootDistributionCurrentTarget()
+        {
+            double currentDepth = 0.0;
+            double cumAllocation = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                if (currentDepth < myRootDepth)
+                {
+                    // layer is within the root zone
+                    currentDepth += mySoil.Thickness[layer];
+                    if (currentDepth <= myRootDepth)
+                    {
+                        // layer is fully in the root zone
+                        cumAllocation += targetRootAllocation[layer];
+                    }
+                    else
+                    {
+                        // layer is partially in the root zone
+                        double layerFrac = (myRootDepth - (currentDepth - mySoil.Thickness[layer]))
+                                         / (MaximumRootDepth - (currentDepth - mySoil.Thickness[layer]));
+                        cumAllocation += targetRootAllocation[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
+                    }
+                }
+                else
+                    layer = nLayers;
+            }
+
+            double[] result = new double[nLayers];
+            for (int layer = 0; layer < nLayers; layer++)
+                result[layer] = targetRootAllocation[layer] / cumAllocation;
+
+            return result;
+        }
+
+        /// <summary>Compute the target (or ideal) distribution of roots in the soil profile</summary>
+        /// <remarks>
+        /// This distribution is solely based on root parameters (maximum depth and distribution function)
         /// These values are used to allocate initial rootDM as well as any growth over the profile
         /// </remarks>
         /// <returns>A weighting factor for each soil layer (mm of soil)</returns>
@@ -5478,7 +5570,7 @@ namespace Models.AgPasture
             //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
 
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
+            SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
             double depthTop = 0.0;
             double depthBottom = 0.0;
             double depthFirstStage = Math.Min(MaximumRootDepth, DepthForConstantRootProportion);
@@ -5499,9 +5591,10 @@ namespace Models.AgPasture
                 else
                 {
                     // at least partially on second stage
-                    result[layer] = Math.Pow(MaximumRootDepth * rootDistributionFactor - Math.Max(depthTop, depthFirstStage), ExponentRootDistribution + 1)
-                                               - Math.Pow(MaximumRootDepth * rootDistributionFactor - Math.Min(depthBottom, MaximumRootDepth), ExponentRootDistribution + 1);
-                    result[layer] /= (ExponentRootDistribution + 1) * Math.Pow(MaximumRootDepth * rootDistributionFactor - depthFirstStage, ExponentRootDistribution);
+                    double maxRootDepth = MaximumRootDepth * rootDistributionFactor;
+                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), ExponentRootDistribution + 1)
+                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, MaximumRootDepth), ExponentRootDistribution + 1);
+                    result[layer] /= (ExponentRootDistribution + 1) * Math.Pow(maxRootDepth - depthFirstStage, ExponentRootDistribution);
                     if (depthTop < depthFirstStage)
                     {
                         // partially in first stage
@@ -5535,6 +5628,28 @@ namespace Models.AgPasture
             }
 
             return fractionInLayer;
+        }
+
+        /// <summary>
+        /// Compute the index of the layer at the bottom of the root zone
+        /// </summary>
+        /// <returns>Index of a layer</returns>
+        private int RootZoneBottomLayer()
+        {
+            int result = 0;
+            double currentDepth = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                if (myRootDepth > currentDepth)
+                {
+                    result = layer;
+                    currentDepth += mySoil.Thickness[layer];
+                }
+                else
+                    layer = nLayers;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -5654,12 +5769,15 @@ namespace Models.AgPasture
             /// <summary>N amount for each biomass pool</summary>
             internal double[] NAmount;
 
+            /// <summary>Root depth</summary>
+            internal double RootDepth;
+
             /// <summary>Constructor, initialise the arrays</summary>
             public SpeciesStateSettings()
             {
                 // there are 12 tissue pools, in order: leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3, and root
-                Array.Resize(ref DMWeight, 12);
-                Array.Resize(ref NAmount, 12);
+                DMWeight = new double[12];
+                NAmount = new double[12];
             }
         }
 
@@ -5867,7 +5985,6 @@ namespace Models.AgPasture
             }
         }
     }
-
 
     /// <summary>
     /// Defines a generic above-ground organ of a pasture species

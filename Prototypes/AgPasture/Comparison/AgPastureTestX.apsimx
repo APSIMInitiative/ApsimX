@@ -7256,7 +7256,9 @@ namespace Models
             <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+            <MinimumRootDepth>0</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
+            <RootElongationRate>0</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
             <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -10284,7 +10286,9 @@ namespace Models
           <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+          <MinimumRootDepth>0</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
+          <RootElongationRate>0</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
           <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -13282,7 +13286,9 @@ namespace Models
             <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+            <MinimumRootDepth>0</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
+            <RootElongationRate>0</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
             <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -16313,7 +16319,9 @@ namespace Models
           <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+          <MinimumRootDepth>0</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
+          <RootElongationRate>0</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
           <MinimumPlantHeight>25</MinimumPlantHeight>

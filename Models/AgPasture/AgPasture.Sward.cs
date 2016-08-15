@@ -84,10 +84,11 @@ namespace Models.AgPasture
         /// <param name="budNumber">Number of buds</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
-            //isAlive = true;
-            //ResetZero();
-            //for (int s = 0; s < numSpecies; s++)
-            //    mySpecies[s].SetInGermination();
+            // sward being sown, sow each species available
+            for (int s = 0; s < numSpecies; s++)
+                mySward[s].Sow(cultivar, population, depth, rowSpacing);
+
+            swardIsAlive = true;
         }
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
@@ -536,6 +537,22 @@ namespace Models.AgPasture
         public double RootWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.RootWt); }
+        }
+
+        /// <summary>Gets the root DM weight foreach layer.</summary>
+        /// <value>The root DM weight.</value>
+        [Description("Root dry matter weight by layer")]
+        [Units("kgDM/ha")]
+        public double[] RootLayerWt
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int s = 0; s < numSpecies; s++)
+                        result[layer] = mySward[s].RootLayerWt[layer];
+                return result;
+            }
         }
 
         #endregion
