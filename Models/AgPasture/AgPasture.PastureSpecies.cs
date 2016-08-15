@@ -224,12 +224,12 @@ namespace Models.AgPasture
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             if (isAlive)
-                mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + CropType + "\", as it is already growing");
+                mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
             else
             {
                 ResetZero();
                 isAlive = true;
-                mySummary.WriteMessage(this, " The pasture species \"" + CropType + "\" has been sown today");
+                mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today");
             }
         }
 
@@ -557,20 +557,20 @@ namespace Models.AgPasture
 
         // Turnover rate  ---------------------------------------------------------------------------------------------
 
-        /// <summary>Daily turnover rate for DM live to dead [0-1]</summary>
-        [Description("Daily turnover rate for DM live to dead [0-1]:")]
+        /// <summary>Daily DM turnover rate for shoot tissue [0-1]</summary>
+        [Description("Daily DM turnover rate for shoot tissue  [0-1]:")]
         [Units("0-1")]
-        public double TurnoverRateLive2Dead { get; set; } = 0.025;
+        public double TissueTurnoverRateShoot { get; set; } = 0.025;
 
-        /// <summary>Daily turnover rate for DM dead to litter [0-1]</summary>
-        [Description("Daily turnover rate for DM dead to litter [0-1]:")]
+        /// <summary>Daily detachment rate for DM dead [0-1]</summary>
+        [Description("Daily detachment rate for DM dead [0-1]:")]
         [Units("0-1")]
-        public double TurnoverRateDead2Litter { get; set; } = 0.11;
+        public double DetachmentRate { get; set; } = 0.11;
 
-        /// <summary>Daily turnover rate for root senescence [0-1]</summary>
-        [Description("Daily turnover rate for root senescence [0-1]")]
+        /// <summary>Daily DM turnover rate for root tissue [0-1]</summary>
+        [Description("Daily DM turnover rate for root tissue [0-1]")]
         [Units("0-1")]
-        public double TurnoverRateRootSenescence { get; set; } = 0.02;
+        public double TissueTurnoverRateRoot { get; set; } = 0.02;
 
         /// <summary>Minimum temperature for tissue turnover [oC]</summary>
         [Description("Minimum temperature for tissue turnover [oC]:")]
@@ -3768,7 +3768,7 @@ namespace Models.AgPasture
             double StockFac2Litter = StockParameter * SR;
 
             // Turnover rate for leaf and stem
-            gama = TurnoverRateLive2Dead * TempFac * WaterFac;
+            gama = TissueTurnoverRateShoot * TempFac * WaterFac;
 
             // Turnover rate for stolon
             gamaS = gama;
@@ -3776,11 +3776,11 @@ namespace Models.AgPasture
             //double gamad = gftt * gfwt * rateDead2Litter;
 
             // Turnover rate for dead to litter (TODO: check the use of digestibility here)
-            gamaD = TurnoverRateDead2Litter * WaterFac2Litter * DigestibilityDead / 0.4;
+            gamaD = DetachmentRate * WaterFac2Litter * DigestibilityDead / 0.4;
             gamaD += StockFac2Litter;
 
             // Turnover rate for roots
-            gamaR = TurnoverRateRootSenescence * TempFac * WaterFac2Root;
+            gamaR = TissueTurnoverRateRoot * TempFac * WaterFac2Root;
 
 
             if (gama > 0.0)
@@ -3948,9 +3948,9 @@ namespace Models.AgPasture
                 NRemobilised = 0.0;
             }
             // N remobilisable from luxury N to be potentially used for growth tomorrow
-            NLuxury2 = Math.Max(0.0, leaves.Tissue[1].Namount - (leaves.Tissue[1].DM * leaves.NConcOptimum * RelativeNStage3))
-                     + Math.Max(0.0, stems.Tissue[1].Namount - (stems.Tissue[1].DM * stems.NConcOptimum * RelativeNStage3))
-                     + Math.Max(0.0, stolons.Tissue[1].Namount - (stolons.Tissue[1].DM * stolons.NConcOptimum * RelativeNStage3));
+            NLuxury2 = Math.Max(0.0, leaves.Tissue[1].Namount - (leaves.Tissue[1].DM * leaves.NConcOptimum * RelativeNStage2))
+                     + Math.Max(0.0, stems.Tissue[1].Namount - (stems.Tissue[1].DM * stems.NConcOptimum * RelativeNStage2))
+                     + Math.Max(0.0, stolons.Tissue[1].Namount - (stolons.Tissue[1].DM * stolons.NConcOptimum * RelativeNStage2));
             NLuxury3 = Math.Max(0.0, leaves.Tissue[2].Namount - (leaves.Tissue[2].DM * leaves.NConcOptimum * RelativeNStage3))
                      + Math.Max(0.0, stems.Tissue[2].Namount - (stems.Tissue[2].DM * stems.NConcOptimum * RelativeNStage3))
                      + Math.Max(0.0, stolons.Tissue[2].Namount - (stolons.Tissue[2].DM * stolons.NConcOptimum * RelativeNStage3));
@@ -5316,7 +5316,7 @@ namespace Models.AgPasture
                 {
                     if (leaves.NconcGreen > leaves.NConcMinimum)
                     {
-                        result = MathUtilities.Divide(leaves.NconcGreen - LeafNmin, (leaves.NConcOptimum * fN) - LeafNmin, 1.0);
+                        result = MathUtilities.Divide(leaves.NconcGreen - leaves.NConcMinimum, (leaves.NConcOptimum * fN) - leaves.NConcMinimum, 1.0);
                         result = Math.Min(1.0, Math.Max(0.0, result));
                     }
                     else

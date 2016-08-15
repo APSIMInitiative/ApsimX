@@ -7220,9 +7220,9 @@ namespace Models
             </HigherShootAllocationPeriods>
             <FracToLeaf>0.7</FracToLeaf>
             <FracToStolon>0</FracToStolon>
-            <TurnoverRateLive2Dead>0.025</TurnoverRateLive2Dead>
-            <TurnoverRateDead2Litter>0.11</TurnoverRateDead2Litter>
-            <TurnoverRateRootSenescence>0.02</TurnoverRateRootSenescence>
+            <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
+            <DetachmentRate>0.11</DetachmentRate>
+            <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
             <TissueTurnoverTmin>2</TissueTurnoverTmin>
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
             <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
@@ -10250,9 +10250,9 @@ namespace Models
           </HigherShootAllocationPeriods>
           <FracToLeaf>0.7</FracToLeaf>
           <FracToStolon>0</FracToStolon>
-          <TurnoverRateLive2Dead>0.025</TurnoverRateLive2Dead>
-          <TurnoverRateDead2Litter>0.11</TurnoverRateDead2Litter>
-          <TurnoverRateRootSenescence>0.02</TurnoverRateRootSenescence>
+          <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
+          <DetachmentRate>0.11</DetachmentRate>
+          <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
           <TissueTurnoverTmin>2</TissueTurnoverTmin>
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
           <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
@@ -13250,9 +13250,9 @@ namespace Models
             </HigherShootAllocationPeriods>
             <FracToLeaf>0.7</FracToLeaf>
             <FracToStolon>0</FracToStolon>
-            <TurnoverRateLive2Dead>0.025</TurnoverRateLive2Dead>
-            <TurnoverRateDead2Litter>0.11</TurnoverRateDead2Litter>
-            <TurnoverRateRootSenescence>0.02</TurnoverRateRootSenescence>
+            <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
+            <DetachmentRate>0.11</DetachmentRate>
+            <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
             <TissueTurnoverTmin>2</TissueTurnoverTmin>
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
             <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
@@ -16283,9 +16283,9 @@ namespace Models
           </HigherShootAllocationPeriods>
           <FracToLeaf>0.7</FracToLeaf>
           <FracToStolon>0</FracToStolon>
-          <TurnoverRateLive2Dead>0.025</TurnoverRateLive2Dead>
-          <TurnoverRateDead2Litter>0.11</TurnoverRateDead2Litter>
-          <TurnoverRateRootSenescence>0.02</TurnoverRateRootSenescence>
+          <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
+          <DetachmentRate>0.11</DetachmentRate>
+          <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
           <TissueTurnoverTmin>2</TissueTurnoverTmin>
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
           <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
