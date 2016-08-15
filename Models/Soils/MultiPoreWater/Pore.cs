@@ -32,7 +32,7 @@ namespace Models.Soils
         /// <summary>The water filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double WaterFilledVolume { get; set; }
+        public double WaterFilledVolume { get { return WaterDepth / Thickness; } }
         /// <summary>The air filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -40,7 +40,7 @@ namespace Models.Soils
         /// <summary>The depth of water in the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double WaterDepth { get { return WaterFilledVolume * Thickness; } }
+        public double WaterDepth { get; set; }
         /// <summary>The depth of Air in the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]

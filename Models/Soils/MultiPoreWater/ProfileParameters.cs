@@ -17,6 +17,10 @@ namespace Models.Soils
         /// </summary>
         public double[] Ksat { get; set; }
         /// <summary>
+        /// The amount of water mm stored in a layer at saturation
+        /// </summary>
+        public double[] SaturatedWaterDepth { get; set; }
+        /// <summary>
         /// Constructor
         /// </summary>
         public ProfileParameters(){}
@@ -26,6 +30,7 @@ namespace Models.Soils
         public ProfileParameters(int Layers)
         {
             Ksat = new double[Layers];
+            SaturatedWaterDepth = new double[Layers];
         }
     }
 }

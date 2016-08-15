@@ -124,7 +124,7 @@ namespace Models.Soils
         public double[] outflow_lat { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double pond { get { return SurfaceWater; } set { } }
+        public double pond { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double pond_evap { get; set; }
@@ -195,7 +195,7 @@ namespace Models.Soils
 
         #region Class Dependancy Links
         [Link]
-        private Water Water2 = null;
+        private Water Water = null;
         [Link]
         private Soil Soil = null;
         [Link]
@@ -236,18 +236,9 @@ namespace Models.Soils
 
         #region Outputs
         /// <summary>
-        /// The amount of water in the layer
-        /// </summary>
-        [XmlIgnore]
-        public double[] Water { get; set; }
-        /// <summary>
         /// The amount of water stored in the surface residue
         /// </summary>
         public double ResidueWater { get; set; }
-        /// <summary>
-        /// The amount of water ponded on the surface
-        /// </summary>
-        public double SurfaceWater { get; set; }
         #endregion
 
         #region Properties
@@ -293,17 +284,17 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ProfileLayers = Water2.Thickness.Length;
+            ProfileLayers = Water.Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
             AbsorptionCapacity = new double[ProfileLayers];
             AbsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
-            SurfaceWater = 0;
+            pond = 0;
             SWmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
             ProfileParams = new ProfileParameters(ProfileLayers);
 
-            double[] InitialWater = new double[Water2.Thickness.Length];
+            double[] InitialWater = new double[Water.Thickness.Length];
             for (int L = 0; L < ProfileLayers; L++)
             {
 
@@ -312,7 +303,8 @@ namespace Models.Soils
             Pores = new Pore[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
-                ProfileParams.Ksat[l] = Water2.KS[l] / 24; //Convert daily values to hourly
+                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
+                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
                 double AccumVolume = 0;
                 double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
@@ -321,25 +313,27 @@ namespace Models.Soils
                     Pores[l][c] = new Pore();
                     Pores[l][c].MaxDiameter = PoreBounds[c];
                     Pores[l][c].MinDiameter = PoreBounds[c + 1];
-                    Pores[l][c].Thickness = Water2.Thickness[l];
-                    double PoreVolume = Water2.SAT[l] * ProportionPoreVolume(PoreBounds[c], PoreBounds[c + 1]);
+                    Pores[l][c].Thickness = Water.Thickness[l];
+                    double PoreVolume = Water.SAT[l] * ProportionPoreVolume(PoreBounds[c], PoreBounds[c + 1]);
                     AccumVolume += PoreVolume;
                     Pores[l][c].Volume = PoreVolume;
                     double PoreWaterFilledVolume = Math.Min(PoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
-                    Pores[l][c].WaterFilledVolume = PoreWaterFilledVolume;
+                    Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
                     Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
                     Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.5);//arbitary function to give a range of hydraulic conductivity over pores
                 }
-                if (Math.Abs(AccumVolume - Water2.SAT[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
-                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water2.Thickness[l];
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+                ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
             }
 
             Hourly = new HourlyData();
+            ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
         }
         /// <summary>
         /// Called at the start of each daily timestep
@@ -349,12 +343,15 @@ namespace Models.Soils
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            DailyIrrigation = 0;
+            Irrigation = 0;
             IrrigationDuration = 0;
-            DailyRainfall = 0;
+            Rainfall = 0;
+            Drainage = 0;
             Infiltration = 0;
             Array.Clear(Hourly.Irrigation, 0, 24);
             Array.Clear(Hourly.Rainfall, 0, 24);
+            Array.Clear(Hourly.Drainage, 0, 24);
+            Array.Clear(Hourly.Infiltration, 0, 24);
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -364,30 +361,32 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
+            //
+            
+            
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
             for (int h = 0; h < 24; h++)
             {
+                InitialProfileWater = MathUtilities.Sum(SWmm);
+                InitialPondDepth = pond;
                 //Update the depth of Surface water that may infiltrate this hour
-                SurfaceWater += Hourly.Rainfall[h] + Hourly.Irrigation[h];
-                //The we work out how much of this may percolate into the profile each hour
+                pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
+                //Then we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                double HourlyInfiltration = Math.Min(SurfaceWater, PotentialInfiltration);
+                double HourlyInfiltration = Math.Min(pond, PotentialInfiltration);
                 if (HourlyInfiltration>0)
-                    doInfiltration(HourlyInfiltration);
-                doDrainage();
+                    doInfiltration(HourlyInfiltration,h);
+                //Next we redistribute water down the profile for draiange processes
+                doDrainage(h);
                 doEvaporation();
                 doTranspiration();
                 doDownwardDiffusion();
                 doUpwardDiffusion();
-
-                for (int l = ProfileLayers - 1; l >= 0; l--)
-                {
-                    SWmm[l] = LayerSum(Pores[l], "WaterDepth");
-                    SW[l] = LayerSum(Pores[l], "WaterDepth") / Water2.Thickness[l];
-                }
             }
+            Infiltration = MathUtilities.Sum(Hourly.Infiltration);
+            Drainage = MathUtilities.Sum(Hourly.Drainage);
         }
         /// <summary>
         /// Adds irrigation events into daily total
@@ -398,7 +397,7 @@ namespace Models.Soils
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
         {
             ResidueWater = ResidueWater + ResidueInterception(IrrigationData.Amount);
-            DailyIrrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
+            Irrigation += IrrigationData.Amount - ResidueInterception(IrrigationData.Amount);
             //Fix me.  Need to subtract out canopy interception also
             IrrigationDuration += IrrigationData.Duration;
         }
@@ -422,12 +421,21 @@ namespace Models.Soils
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
-        private double DailyIrrigation {get;set; }
+        private double Irrigation {get;set; }
         private double IrrigationDuration { get; set; }
         /// <summary>
         /// This is the rainfall ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
-        private double DailyRainfall { get; set; }
+        private double Rainfall { get; set; }
+        /// <summary>
+        /// Variable used for checking mass balance
+        /// </summary>
+        private double InitialProfileWater { get; set;  }
+        /// <summary>
+        /// Variable used for checking mass balance
+        /// </summary>
+        private double InitialPondDepth { get; set; }
+        private double ProfileSaturation { get; set; }
         #endregion
 
         #region Internal Properties and Methods
@@ -446,18 +454,18 @@ namespace Models.Soils
         }
         private void doPrecipitation()
         {
-            if (DailyIrrigation > 0)
+            if (Irrigation > 0)
             { //On days when irrigation is applies spread it out into hourly increments
                 if (IrrigationDuration > 24)
                     throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
                 int Irrighours = (int)IrrigationDuration;
-                double IrrigationRate = DailyIrrigation / IrrigationDuration;
+                double IrrigationRate = Irrigation / IrrigationDuration;
 
                 for (int h = 0; h < Irrighours; h++)
                 {
                     Hourly.Irrigation[h] = IrrigationRate;
                 }
-                if (Math.Abs(MathUtilities.Sum(Hourly.Irrigation) - DailyIrrigation) > FloatingPointTolerance)
+                if (Math.Abs(MathUtilities.Sum(Hourly.Irrigation) - Irrigation) > FloatingPointTolerance)
                     throw new Exception(this + " hourly irrigation partition has gone wrong.  Check you are specifying a Duration > 0 in the irrigation method call");
             }
             if (Met.Rain > 0)
@@ -508,7 +516,7 @@ namespace Models.Soils
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
             PotentialInfiltration = AbsorptionCapacity[0] + PercolationCapacityBelow[0];
         }
-        private void doInfiltration(double WaterToInfiltrate)
+        private void doInfiltration(double WaterToInfiltrate, int h)
         {
             //Do infiltration processes each hour
             double RemainingInfiltration = WaterToInfiltrate;
@@ -517,17 +525,19 @@ namespace Models.Soils
                 DistributWaterInFlux(l, ref RemainingInfiltration);
             }
             //Add infiltration to daily sum for reporting
-            Infiltration += WaterToInfiltrate;
-            SurfaceWater -= WaterToInfiltrate;
+            Hourly.Infiltration[h] = WaterToInfiltrate;
+            pond -= WaterToInfiltrate;
+
+            Hourly.Drainage[h] += RemainingInfiltration;
+            //Error checking for debugging.  To be removed when model complted
+            UpdateProfileValues();
+            CheckMassBalance("Infiltration",h);
         }
         /// <summary>
         /// Gravity moves mobile water out of layers each time step
         /// </summary>
-        private void doDrainage()
+        private void doDrainage(int h)
         {
-            //Influx is zero for a start becasue distirbution of infiltration already done by infiltration method
-            double InFlux = 0;
-            double SaturatedDrainage = 0;
             for (int l = 0; l < ProfileLayers; l++)
             {//Step through each layer from the top down
                 double PotentialDrainage = 0;
@@ -536,29 +546,35 @@ namespace Models.Soils
                     PotentialDrainage += Math.Min(Pores[l][c].HydraulicConductivityOut, Pores[l][c].WaterDepth);
                 }
                 //Limit drainage to that of what the layer may drain and that of which the provile below will allow to drain
-                double OutFlux = Math.Min(PotentialDrainage + SaturatedDrainage, PercolationCapacityBelow[l]);
-                //Catch the drainage for this layer to be the InFlux to the next Layer
-                InFlux = OutFlux;
+                double OutFluxCurrentLayer = Math.Min(PotentialDrainage, PercolationCapacityBelow[l]);
+                //Catch the drainage from this layer to be the InFlux to the next Layer down the profile
+                double InFluxLayerBelow = OutFluxCurrentLayer;
                 //Discharge water from current layer
-                for (int c = 0; c < PoreCompartments && OutFlux > 0; c++)
+                for (int c = 0; c < PoreCompartments && OutFluxCurrentLayer > 0; c++)
                 {//Step through each pore compartment and remove the water that drains starting with the largest pores
-                    double drain = Math.Min(OutFlux, Pores[l][c].HydraulicConductivityOut);
-                    Pores[l][c].WaterFilledVolume -= drain / Water2.Thickness[l];
-                    OutFlux -= drain;
+                    double drain = Math.Min(OutFluxCurrentLayer, Pores[l][c].HydraulicConductivityOut);
+                    Pores[l][c].WaterDepth -= drain;
+                    OutFluxCurrentLayer -= drain;
                 }
+                if (OutFluxCurrentLayer != 0)
+                    throw new Exception("Error in drainage calculation");
 
-                if (l != ProfileLayers - 1) 
-                {//If this is not the bottom layer distribute drainage into the layer below
-                    DistributWaterInFlux(l + 1, ref InFlux);
-                    //Any water not stored by this layer will flow to the layer below as saturated drainage
-                    SaturatedDrainage = InFlux;
-                }
-                //If it is the bottom layer, any drainage recorded as drainage from the profile
-                else
+                //Distribute water from this layer into the profile below and record draiange out the bottom
+                for (int l1 = l + 1; l1 < ProfileLayers + 1 && InFluxLayerBelow > 0; l1++)
                 {
-                    Drainage = InFlux + SaturatedDrainage;
+                    //Any water not stored by this layer will flow to the layer below as saturated drainage
+                    if (l1 < ProfileLayers)
+                        DistributWaterInFlux(l1, ref InFluxLayerBelow);
+                    //If it is the bottom layer, any discharge recorded as drainage from the profile
+                    else
+                    {
+                        Hourly.Drainage[h] += InFluxLayerBelow;
+                    }
                 }
-            } 
+            }
+            //Error checking for debugging.  To be removed when model complted
+            UpdateProfileValues();
+            CheckMassBalance("Drainage",h); 
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -637,8 +653,29 @@ namespace Models.Soils
             {//Absorb Water onto samllest pores first followed by larger ones
                 double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
                 double Absorbtion = Math.Min(InFlux, PotentialAdsorbtion);
-                Pores[l][c].WaterFilledVolume += Absorbtion / Pores[l][c].Thickness;
+                Pores[l][c].WaterDepth += Absorbtion;
                 InFlux -= Absorbtion;
+            }
+            if (LayerSum(Pores[l], "WaterDepth") > ProfileParams.SaturatedWaterDepth[l])
+                throw new Exception("Water content of layer " + l + " exceeds saturation.  This is not really possible");
+        }
+        private void CheckMassBalance(string Process, int h)
+        {
+            double WaterIn = InitialProfileWater + InitialPondDepth + Hourly.Rainfall[h] + Hourly.Irrigation[h];
+            double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
+            double WaterOut = ProfileWaterAtCalcEnd + pond + Hourly.Drainage[h];
+            if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
+                throw new Exception(this + " " + Process + " calculations are violating mass balance");
+        }
+        /// <summary>
+        /// Function to update profile summary values
+        /// </summary>
+        private void UpdateProfileValues()
+        {
+            for (int l = ProfileLayers - 1; l >= 0; l--)
+            {
+                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
             }
         }
         #endregion
