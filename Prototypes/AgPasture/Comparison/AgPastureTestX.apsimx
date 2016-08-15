@@ -7227,17 +7227,41 @@ namespace Models
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
             <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
             <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-            <DigestibilityLive>0.6</DigestibilityLive>
-            <DigestibilityDead>0.2</DigestibilityDead>
+            <DigestibilitiesCellWall>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.2</double>
+            </DigestibilitiesCellWall>
+            <DigestibilitiesProtein>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </DigestibilitiesProtein>
             <MinimumGreenWt>300</MinimumGreenWt>
             <PreferenceForGreenDM>1</PreferenceForGreenDM>
             <PreferenceForDeadDM>1</PreferenceForDeadDM>
-            <LeafNopt>0.04</LeafNopt>
-            <LeafNmax>0.05</LeafNmax>
-            <LeafNmin>0.012</LeafNmin>
-            <RelativeNStems>0.5</RelativeNStems>
-            <RelativeNStolons>0</RelativeNStolons>
-            <RelativeNRoots>0.5</RelativeNRoots>
+            <NThresholdsForLeaves>
+              <double>0.04</double>
+              <double>0.012</double>
+              <double>0.05</double>
+            </NThresholdsForLeaves>
+            <NThresholdsForStems>
+              <double>0.02</double>
+              <double>0.006</double>
+              <double>0.025</double>
+            </NThresholdsForStems>
+            <NThresholdsForStolons>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NThresholdsForStolons>
+            <NThresholdsForRoots>
+              <double>0.02</double>
+              <double>0.006</double>
+              <double>0.025</double>
+            </NThresholdsForRoots>
             <RelativeNStage2>1</RelativeNStage2>
             <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
@@ -10257,17 +10281,41 @@ namespace Models
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
           <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
           <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-          <DigestibilityLive>0.6</DigestibilityLive>
-          <DigestibilityDead>0.2</DigestibilityDead>
+          <DigestibilitiesCellWall>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.2</double>
+          </DigestibilitiesCellWall>
+          <DigestibilitiesProtein>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </DigestibilitiesProtein>
           <MinimumGreenWt>300</MinimumGreenWt>
           <PreferenceForGreenDM>1</PreferenceForGreenDM>
           <PreferenceForDeadDM>1</PreferenceForDeadDM>
-          <LeafNopt>0.04</LeafNopt>
-          <LeafNmax>0.05</LeafNmax>
-          <LeafNmin>0.012</LeafNmin>
-          <RelativeNStems>0.5</RelativeNStems>
-          <RelativeNStolons>0</RelativeNStolons>
-          <RelativeNRoots>0.5</RelativeNRoots>
+          <NThresholdsForLeaves>
+            <double>0.04</double>
+            <double>0.012</double>
+            <double>0.05</double>
+          </NThresholdsForLeaves>
+          <NThresholdsForStems>
+            <double>0.02</double>
+            <double>0.006</double>
+            <double>0.025</double>
+          </NThresholdsForStems>
+          <NThresholdsForStolons>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NThresholdsForStolons>
+          <NThresholdsForRoots>
+            <double>0.02</double>
+            <double>0.006</double>
+            <double>0.025</double>
+          </NThresholdsForRoots>
           <RelativeNStage2>1</RelativeNStage2>
           <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>
@@ -13257,17 +13305,41 @@ namespace Models
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
             <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
             <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-            <DigestibilityLive>0.6</DigestibilityLive>
-            <DigestibilityDead>0.2</DigestibilityDead>
+            <DigestibilitiesCellWall>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.2</double>
+            </DigestibilitiesCellWall>
+            <DigestibilitiesProtein>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </DigestibilitiesProtein>
             <MinimumGreenWt>300</MinimumGreenWt>
             <PreferenceForGreenDM>1</PreferenceForGreenDM>
             <PreferenceForDeadDM>1</PreferenceForDeadDM>
-            <LeafNopt>0.04</LeafNopt>
-            <LeafNmax>0.05</LeafNmax>
-            <LeafNmin>0.012</LeafNmin>
-            <RelativeNStems>0.5</RelativeNStems>
-            <RelativeNStolons>0</RelativeNStolons>
-            <RelativeNRoots>0.5</RelativeNRoots>
+            <NThresholdsForLeaves>
+              <double>0.04</double>
+              <double>0.012</double>
+              <double>0.05</double>
+            </NThresholdsForLeaves>
+            <NThresholdsForStems>
+              <double>0.02</double>
+              <double>0.006</double>
+              <double>0.025</double>
+            </NThresholdsForStems>
+            <NThresholdsForStolons>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </NThresholdsForStolons>
+            <NThresholdsForRoots>
+              <double>0.02</double>
+              <double>0.006</double>
+              <double>0.025</double>
+            </NThresholdsForRoots>
             <RelativeNStage2>1</RelativeNStage2>
             <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
@@ -16290,17 +16362,41 @@ namespace Models
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
           <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
           <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-          <DigestibilityLive>0.6</DigestibilityLive>
-          <DigestibilityDead>0.2</DigestibilityDead>
+          <DigestibilitiesCellWall>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.2</double>
+          </DigestibilitiesCellWall>
+          <DigestibilitiesProtein>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </DigestibilitiesProtein>
           <MinimumGreenWt>300</MinimumGreenWt>
           <PreferenceForGreenDM>1</PreferenceForGreenDM>
           <PreferenceForDeadDM>1</PreferenceForDeadDM>
-          <LeafNopt>0.04</LeafNopt>
-          <LeafNmax>0.05</LeafNmax>
-          <LeafNmin>0.012</LeafNmin>
-          <RelativeNStems>0.5</RelativeNStems>
-          <RelativeNStolons>0</RelativeNStolons>
-          <RelativeNRoots>0.5</RelativeNRoots>
+          <NThresholdsForLeaves>
+            <double>0.04</double>
+            <double>0.012</double>
+            <double>0.05</double>
+          </NThresholdsForLeaves>
+          <NThresholdsForStems>
+            <double>0.02</double>
+            <double>0.006</double>
+            <double>0.025</double>
+          </NThresholdsForStems>
+          <NThresholdsForStolons>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </NThresholdsForStolons>
+          <NThresholdsForRoots>
+            <double>0.02</double>
+            <double>0.006</double>
+            <double>0.025</double>
+          </NThresholdsForRoots>
           <RelativeNStage2>1</RelativeNStage2>
           <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>

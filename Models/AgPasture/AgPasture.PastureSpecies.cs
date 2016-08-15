@@ -599,15 +599,15 @@ namespace Models.AgPasture
 
         // - Digestibility values  ------------------------------------------------------------------------------------
 
-        /// <summary>Digestibility of live plant material [0-1]</summary>
-        [Description("Digestibility of live plant material [0-1]:")]
+        /// <summary>Digestibility of cell walls in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
+        [Description("Digestibility of cell wall in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
         [Units("0-1")]
-        public double DigestibilityLive { get; set; } = 0.6;
+        public double[] DigestibilitiesCellWall { get; set; } = {0.6, 0.6, 0.6, 0.2};
 
-        /// <summary>Digestibility of dead plant material [0-1]</summary>
-        [Description("Digestibility of dead plant material [0-1]:")]
+        /// <summary>Digestibility of protein in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
+        [Description("Digestibility of protein in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
         [Units("0-1")]
-        public double DigestibilityDead { get; set; } = 0.2;
+        public double[] DigestibilitiesProtein { get; set; } = { 1.0, 1.0, 1.0, 1.0 };
 
         // - Minimum DM and preferences when harvesting  --------------------------------------------------------------
 
@@ -628,35 +628,25 @@ namespace Models.AgPasture
 
         // - N concentration  -----------------------------------------------------------------------------------------
 
-        /// <summary>Optimum N concentration in leaves [0-1]</summary>
-        [Description("Optimum N concentration in young leaves [0-1]:")]
-        [Units("0-1")]
-        public double LeafNopt { get; set; } = 0.04;
+        /// <summary>N concentration thresholds for leaves (optimum, minimum and maximum) [g/g]</summary>
+        [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [g/g]:")]
+        [Units("g/g")]
+        public double[] NThresholdsForLeaves { get; set; } = { 0.040, 0.012, 0.050 };
 
-        /// <summary>Maximum N concentration in leaves (luxury N) [0-1]</summary>
-        [Description("Maximum N concentration in leaves (luxury N) [0-1]:")]
-        [Units("0-1")]
-        public double LeafNmax { get; set; } = 0.05;
+        /// <summary>N concentration thresholds for stems (optimum, minimum and maximum) [g/g]</summary>
+        [Description("N concentration thresholds for stems (optimum, minimum and maximum) [g/g:]")]
+        [Units("g/g")]
+        public double[] NThresholdsForStems { get; set; } = { 0.020, 0.006, 0.025 };
 
-        /// <summary>Minimum N concentration in leaves (dead material) [0-1]</summary>
-        [Description("Minimum N concentration in leaves (dead material) [0-1]:")]
-        [Units("0-1")]
-        public double LeafNmin { get; set; } = 0.012;
+        /// <summary>N concentration thresholds for stolons (optimum, minimum and maximum) [g/g]</summary>
+        [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [g/g:]")]
+        [Units("g/g")]
+        public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
 
-        /// <summary>Concentration of N in stems relative to leaves [0-1]</summary>
-        [Description("Concentration of N in stems relative to leaves [0-1]:")]
-        [Units("0-1")]
-        public double RelativeNStems { get; set; } = 0.5;
-
-        /// <summary>Concentration of N in stolons relative to leaves [0-1]</summary>
-        [Description("Concentration of N in stolons relative to leaves [0-1]:")]
-        [Units("0-1")]
-        public double RelativeNStolons { get; set; } = 0.0;
-
-        /// <summary>Concentration of N in roots relative to leaves [0-1]</summary>
-        [Description("Concentration of N in roots relative to leaves [0-1]:")]
-        [Units("0-1")]
-        public double RelativeNRoots { get; set; } = 0.5;
+        /// <summary>N concentration thresholds for roots (optimum, minimum and maximum) [g/g]</summary>
+        [Description("N concentration thresholds for roots (optimum, minimum and maximum) [g/g:]")]
+        [Units("g/g")]
+        public double[] NThresholdsForRoots { get; set; } = { 0.020, 0.006, 0.025 };
 
         /// <summary>Concentration of N in tissues at stage 2 relative to stage 1 [0-1]</summary>
         /// <value>The relative n stage2.</value>
@@ -2443,35 +2433,6 @@ namespace Models.AgPasture
         /// <summary>The cumulatve degrees day during vegetative phase</summary>
         private double growingGDD = 0.0;
 
-        // N concentration thresholds for various tissues (set relative to leaf N)  -----------------------------------
-
-        /// <summary>The optimum N concentration of stems and sheath</summary>
-        private double NcStemOpt;
-
-        /// <summary>The optimum N concentration of stolons</summary>
-        private double NcStolonOpt;
-
-        /// <summary>The optimum N concentration of roots</summary>
-        private double NcRootOpt;
-
-        /// <summary>The maximum N concentration of stems andd sheath</summary>
-        private double NcStemMax;
-
-        /// <summary>The maximum N concentration of stolons</summary>
-        private double NcStolonMax;
-
-        /// <summary>The maximum N concentration of roots</summary>
-        private double NcRootMax;
-
-        /// <summary>The minimum N concentration of stems and sheath</summary>
-        private double NcStemMin;
-
-        /// <summary>The minimum N concentration of stolons</summary>
-        private double NcStolonMin;
-
-        /// <summary>The minimum N concentration of roots</summary>
-        private double NcRootMin;
-
         // Amounts and fluxes of N in the plant  ----------------------------------------------------------------------
 
         /// <summary>The N demand for new growth, with luxury uptake</summary>
@@ -2843,34 +2804,22 @@ namespace Models.AgPasture
             else
                 initialDMFractions = initialDMFractions_forbs;
 
-            // 2. Initialise N content thresholds (optimum, maximum, and minimum)
-            NcStemOpt = LeafNopt * RelativeNStems;
-            NcStolonOpt = LeafNopt * RelativeNStolons;
-            NcRootOpt = LeafNopt * RelativeNRoots;
+            // 2. Initialise N concentration thresholds (optimum, minimum, and maximum)
+            leaves.NConcOptimum = NThresholdsForLeaves[0];
+            leaves.NConcMinimum = NThresholdsForLeaves[1];
+            leaves.NConcMaximum = NThresholdsForLeaves[2];
 
-            NcStemMax = LeafNmax * RelativeNStems;
-            NcStolonMax = LeafNmax * RelativeNStolons;
-            NcRootMax = LeafNmax * RelativeNRoots;
+            stems.NConcOptimum = NThresholdsForStems[0];
+            stems.NConcMinimum = NThresholdsForStems[1];
+            stems.NConcMaximum = NThresholdsForStems[2];
 
-            NcStemMin = LeafNmin * RelativeNStems;
-            NcStolonMin = LeafNmin * RelativeNStolons;
-            NcRootMin = LeafNmin * RelativeNRoots;
+            stolons.NConcOptimum = NThresholdsForStolons[0];
+            stolons.NConcMinimum = NThresholdsForStolons[1];
+            stolons.NConcMaximum = NThresholdsForStolons[2];
 
-            leaves.NConcMinimum = LeafNmin;
-            leaves.NConcOptimum = LeafNopt;
-            leaves.NConcMaximum = LeafNmax;
-
-            stems.NConcMinimum = NcStemMin;
-            stems.NConcOptimum = NcStemOpt;
-            stems.NConcMaximum = NcStemMax;
-
-            stolons.NConcMinimum = NcStolonMin;
-            stolons.NConcOptimum = NcStolonOpt;
-            stolons.NConcMaximum = NcStolonMax;
-
-            roots.NConcMinimum = NcRootMin;
-            roots.NConcOptimum = NcRootOpt;
-            roots.NConcMaximum = NcRootMax;
+            roots.NConcOptimum = NThresholdsForRoots[0];
+            roots.NConcMinimum = NThresholdsForRoots[1];
+            roots.NConcMaximum = NThresholdsForRoots[2];
 
             // 3. Save initial state (may be used later for reset)
             InitialState = new SpeciesStateSettings();
@@ -3349,7 +3298,7 @@ namespace Models.AgPasture
                 double ratio2 = CNratioCellWall / CNratioProtein;
                 double fProteinLive = (ratio1 - (1 - fSugar)) / (ratio2 - 1); //Fraction of protein in living shoot
                 double fWallLive = 1 - fSugar - fProteinLive; //Fraction of cell wall in living shoot
-                digestLive = fSugar + fProteinLive + (DigestibilityLive * fWallLive);
+                digestLive = fSugar + fProteinLive + (DigestibilitiesCellWall[0] * fWallLive);
             }
 
             //Dead
@@ -3362,7 +3311,7 @@ namespace Models.AgPasture
                 double ratio2 = CNratioCellWall / CNratioProtein;
                 double fProteinDead = (ratio1 - 1) / (ratio2 - 1); //Fraction of protein in standing dead
                 double fWallDead = 1 - fProteinDead; //Fraction of cell wall in standing dead
-                digestDead = fProteinDead + DigestibilityDead * fWallDead;
+                digestDead = fProteinDead + DigestibilitiesCellWall[3] * fWallDead;
             }
 
             double deadFrac = MathUtilities.Divide(StandingDeadWt, StandingWt, 1.0);
@@ -3776,7 +3725,7 @@ namespace Models.AgPasture
             //double gamad = gftt * gfwt * rateDead2Litter;
 
             // Turnover rate for dead to litter (TODO: check the use of digestibility here)
-            gamaD = DetachmentRate * WaterFac2Litter * DigestibilityDead / 0.4;
+            gamaD = DetachmentRate * WaterFac2Litter * DigestibilitiesCellWall[3] / 0.4;
             gamaD += StockFac2Litter;
 
             // Turnover rate for roots
