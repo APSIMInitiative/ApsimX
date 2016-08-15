@@ -621,15 +621,15 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double MinimumGreenWt { get; set; } = 300.0;
 
-        /// <summary>Preference for green DM during graze (weight factor)</summary>
-        [Description("Preference for green DM during graze (weight factor):")]
+        /// <summary>Relative preference for live over dead material during graze</summary>
+        [Description("Relative preference for live over dead material during graze:")]
         [Units("-")]
-        public double PreferenceForGreenDM { get; set; } = 1.0;
+        public double RelativePreferenceForGreen { get; set; } = 1.0;
 
-        /// <summary>Preference for dead DM during graze (weight factor)</summary>
-        [Description("Preference for dead DM during graze (weight factor):")]
+        /// <summary>Relative preference for leaf over stem material during graze</summary>
+        [Description("Relative preference for leaf over stem material during graze:")]
         [Units("-")]
-        public double PreferenceForDeadDM { get; set; } = 1.0;
+        public double RelativePreferenceForLeaf { get; set; } = 1.0;
 
         // - N concentration  -----------------------------------------------------------------------------------------
 
@@ -4851,8 +4851,8 @@ namespace Models.AgPasture
             if (HarvestableWt > 0.0)
             {
                 // get the DM weights for each pool, consider preference and available DM
-                double tempPrefGreen = PreferenceForGreenDM + (PreferenceForDeadDM * (AmountToRemove / HarvestableWt));
-                double tempPrefDead = PreferenceForDeadDM + (PreferenceForGreenDM * (AmountToRemove / HarvestableWt));
+                double tempPrefGreen = RelativePreferenceForGreen + (AmountToRemove / HarvestableWt);
+                double tempPrefDead = 1.0 + (RelativePreferenceForGreen * (AmountToRemove / HarvestableWt));
                 double tempRemovableGreen = Math.Max(0.0, StandingLiveWt - MinimumGreenWt);
                 double tempRemovableDead = StandingDeadWt;
 

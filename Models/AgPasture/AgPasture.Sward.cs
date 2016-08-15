@@ -2209,10 +2209,10 @@ namespace Models.AgPasture
                 double[] tempWeights = new double[numSpecies];
                 double[] tempAmounts = new double[numSpecies];
                 double tempTotal = 0.0;
-                double totalPreference = mySward.Sum(mySpecies => mySpecies.PreferenceForGreenDM + mySpecies.PreferenceForDeadDM);
+                double totalPreference = mySward.Sum(mySpecies => mySpecies.RelativePreferenceForGreen + 1.0);
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    tempWeights[s] = mySward[s].PreferenceForGreenDM + mySward[s].PreferenceForDeadDM;
+                    tempWeights[s] = mySward[s].RelativePreferenceForGreen + 1.0;
                     tempWeights[s] += (totalPreference - tempWeights[s]) * (amountToRemove / amountRemovable);
                     tempAmounts[s] = Math.Max(0.0, mySward[s].StandingLiveWt - mySward[s].MinimumGreenWt)
                                    + mySward[s].StandingDeadWt;

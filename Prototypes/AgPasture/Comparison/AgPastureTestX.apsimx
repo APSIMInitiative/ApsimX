@@ -7246,8 +7246,8 @@ namespace Models
               <double>0</double>
             </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
-            <PreferenceForGreenDM>1</PreferenceForGreenDM>
-            <PreferenceForDeadDM>1</PreferenceForDeadDM>
+            <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
+            <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
             <NThresholdsForLeaves>
               <double>0.04</double>
               <double>0.012</double>
@@ -10306,8 +10306,8 @@ namespace Models
             <double>0</double>
           </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
-          <PreferenceForGreenDM>1</PreferenceForGreenDM>
-          <PreferenceForDeadDM>1</PreferenceForDeadDM>
+          <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
+          <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
           <NThresholdsForLeaves>
             <double>0.04</double>
             <double>0.012</double>
@@ -13339,8 +13339,8 @@ namespace Models
               <double>0</double>
             </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
-            <PreferenceForGreenDM>1</PreferenceForGreenDM>
-            <PreferenceForDeadDM>1</PreferenceForDeadDM>
+            <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
+            <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
             <NThresholdsForLeaves>
               <double>0.04</double>
               <double>0.012</double>
@@ -16402,8 +16402,8 @@ namespace Models
             <double>0</double>
           </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
-          <PreferenceForGreenDM>1</PreferenceForGreenDM>
-          <PreferenceForDeadDM>1</PreferenceForDeadDM>
+          <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
+          <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
           <NThresholdsForLeaves>
             <double>0.04</double>
             <double>0.012</double>
