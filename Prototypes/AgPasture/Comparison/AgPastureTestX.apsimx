@@ -7239,6 +7239,12 @@ namespace Models
               <double>1</double>
               <double>1</double>
             </DigestibilitiesProtein>
+            <SugarFraction>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0</double>
+            </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
             <PreferenceForGreenDM>1</PreferenceForGreenDM>
             <PreferenceForDeadDM>1</PreferenceForDeadDM>
@@ -10293,6 +10299,12 @@ namespace Models
             <double>1</double>
             <double>1</double>
           </DigestibilitiesProtein>
+          <SugarFraction>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0</double>
+          </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
           <PreferenceForGreenDM>1</PreferenceForGreenDM>
           <PreferenceForDeadDM>1</PreferenceForDeadDM>
@@ -10473,6 +10485,9 @@ namespace Models
             <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].RootWtFraction1</string>
+            <string>[Ryegrass].HerbageDigestibility</string>
+            <string>[Ryegrass].AboveGroundDigestibility</string>
+            <string>[Ryegrass].StandingDigestibility</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -13317,6 +13332,12 @@ namespace Models
               <double>1</double>
               <double>1</double>
             </DigestibilitiesProtein>
+            <SugarFraction>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0</double>
+            </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
             <PreferenceForGreenDM>1</PreferenceForGreenDM>
             <PreferenceForDeadDM>1</PreferenceForDeadDM>
@@ -16374,6 +16395,12 @@ namespace Models
             <double>1</double>
             <double>1</double>
           </DigestibilitiesProtein>
+          <SugarFraction>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0</double>
+          </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
           <PreferenceForGreenDM>1</PreferenceForGreenDM>
           <PreferenceForDeadDM>1</PreferenceForDeadDM>

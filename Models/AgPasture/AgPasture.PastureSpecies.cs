@@ -609,6 +609,11 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double[] DigestibilitiesProtein { get; set; } = { 1.0, 1.0, 1.0, 1.0 };
 
+        /// <summary>Soluble fraction of carbohydrates in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
+        [Description("Soluble fraction of carbohydrates in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
+        [Units("0-1")]
+        public double[] SugarFraction { get; set; } = { 0.5, 0.5, 0.5, 0.0 };
+        
         // - Minimum DM and preferences when harvesting  --------------------------------------------------------------
 
         /// <summary>Minimum above ground green DM [kg DM/ha]</summary>
@@ -2329,6 +2334,24 @@ namespace Models.AgPasture
             get { return digestHerbage; }
         }
 
+        /// <summary>Gets the average herbage digestibility.</summary>
+        /// <value>The herbage digestibility.</value>
+        [Description("Average digestibility of herbage")]
+        [Units("0-1")]
+        public double AboveGroundDigestibility
+        {
+            get { return digestHerbAB; }
+        }
+
+        /// <summary>Gets the average herbage digestibility.</summary>
+        /// <value>The herbage digestibility.</value>
+        [Description("Average digestibility of herbage")]
+        [Units("0-1")]
+        public double StandingDigestibility
+        {
+            get { return digestHerbStand; }
+        }
+        
         // TODO: Digestibility of harvested material should be better calculated (consider fraction actually removed)
         /// <summary>Gets the average digestibility of harvested DM.</summary>
         /// <value>The harvested digestibility.</value>
@@ -2521,6 +2544,12 @@ namespace Models.AgPasture
         /// <summary>The digestibility of herbage</summary>
         private double digestHerbage = 0.0;
 
+        /// <summary>The digestibility of herbage</summary>
+        private double digestHerbAB = 0.0;
+
+        /// <summary>The digestibility of herbage</summary>
+        private double digestHerbStand = 0.0;
+        
         /// <summary>The digestibility of defoliated material</summary>
         private double digestDefoliated = 0.0;
 
@@ -2845,6 +2874,25 @@ namespace Models.AgPasture
                 InitialState.NAmount[11] = InitialState.DMWeight[11] * roots.NConcOptimum;
             }
             //else  { DM is negative, so the plant is not yet in the ground, needs to be sown }
+
+            // 3. Set the digestibility parameters for each tissue
+            for (int tissue = 0; tissue < 4; tissue++)
+            {
+                leaves.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
+                leaves.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                leaves.Tissue[tissue].SugarFraction = SugarFraction[tissue];
+
+                stems.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
+                stems.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                stems.Tissue[tissue].SugarFraction = SugarFraction[tissue];
+
+                if (tissue < 3)
+                {
+                    stolons.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
+                    stolons.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                    stolons.Tissue[tissue].SugarFraction = SugarFraction[tissue];
+                }
+            }
         }
 
         /// <summary>
@@ -3157,6 +3205,9 @@ namespace Models.AgPasture
             EvaluateLAI();
 
             digestHerbage = calcDigestibility();
+
+            digestHerbAB = calcDigestibility1();
+            digestHerbStand = calcDigestibility2();
         }
 
         #region - Handling and auxilary processes  -------------------------------------------------------------------------
@@ -3318,6 +3369,50 @@ namespace Models.AgPasture
             double result = (1 - deadFrac) * digestLive + deadFrac * digestDead;
 
             return result;
+        }
+
+        /// <summary>Compute the average digestibility of aboveground plant material</summary>
+        /// <returns>The digestibility of plant material (0-1)</returns>
+        private double calcDigestibility1()
+        {
+            if (AboveGroundWt <= 0.0)
+            {
+                return 0.0;
+            }
+            else
+            {
+                double cumDigest = 0.0;
+                for (int tissue = 0; tissue < 4; tissue++)
+                {
+                    cumDigest += (leaves.Tissue[tissue].Digestibility * leaves.Tissue[tissue].DM)
+                                  + (stems.Tissue[tissue].Digestibility * stems.Tissue[tissue].DM);
+                    if (tissue < 3)
+                        cumDigest += stolons.Tissue[tissue].Digestibility * stolons.Tissue[tissue].DM;
+                }
+
+                return cumDigest / AboveGroundWt;
+            }
+        }
+
+        /// <summary>Compute the average digestibility of aboveground plant material</summary>
+        /// <returns>The digestibility of plant material (0-1)</returns>
+        private double calcDigestibility2()
+        {
+            if (StandingWt <= 0.0)
+            {
+                return 0.0;
+            }
+            else
+            {
+                double cumDigest = 0.0;
+                for (int tissue = 0; tissue < 4; tissue++)
+                {
+                    cumDigest += (leaves.Tissue[tissue].Digestibility * leaves.Tissue[tissue].DM)
+                                  + (stems.Tissue[tissue].Digestibility * stems.Tissue[tissue].DM);
+                }
+
+                return cumDigest / StandingWt;
+            }
         }
 
         #endregion
@@ -5767,19 +5862,13 @@ namespace Models.AgPasture
     [Serializable]
     public class BaseOrgan
     {
-        /// <summary>the collection of tissues for this organ</summary>
-        internal GenericTissue[] Tissue { get; set; }
-
-        /// <summary>Number of tissue pools to create</summary>
-        internal int nTissues;
-
-        /// <summary>Initialise tissues</summary>
+        /// <summary>Constructor, Initialise tissues</summary>
         public BaseOrgan(int numTissues)
         {
             DoInitialisation(numTissues, 0);
         }
 
-        /// <summary>Initialise tissues</summary>
+        /// <summary>Constructor, Initialise tissues</summary>
         public BaseOrgan(int numTissues, int numLayers)
         {
             DoInitialisation(numTissues, numLayers);
@@ -5794,32 +5883,13 @@ namespace Models.AgPasture
                 Tissue[t] = new GenericTissue();
         }
 
-        /// <summary>Defines a generic plant tissue</summary>
-        internal class GenericTissue
-        {
-            /// <summary>The dry matter amount (g/m^2)</summary>
-            internal virtual double DM { get; set; } = 0.0;
+        /// <summary>the collection of tissues for this organ</summary>
+        internal GenericTissue[] Tissue { get; set; }
 
-            /// <summary>The N content (g/m^2)</summary>
-            internal virtual double Namount { get; set; } = 0.0;
+        /// <summary>Number of tissue pools to create</summary>
+        internal int nTissues;
 
-            /// <summary>The P content (g/m^2)</summary>
-            internal virtual double Pamount { get; set; } = 0.0;
-
-            /// <summary>The nitrogen concentration (kg/kg)</summary>
-            internal double Nconc
-            {
-                get { return MathUtilities.Divide(Namount, DM, 0.0); }
-                set { Namount = value * DM; }
-            }
-
-            /// <summary>The phosphorus concentration (g/g)</summary>
-            internal double Pconc
-            {
-                get { return MathUtilities.Divide(Pamount, DM, 0.0); }
-                set { Pamount = value * DM; }
-            }
-        }
+        #region Organ Properties (summary of tissues)  ----------------------------------------------------------------
 
         /// <summary>The total dry matter in this organ (g/m^2)</summary>
         internal virtual double DMTotal
@@ -5933,7 +6003,80 @@ namespace Models.AgPasture
                 return MathUtilities.Divide(NDead, DMDead, 0.0);
             }
         }
-    }
+
+        #endregion
+
+        /// <summary>Defines a generic plant tissue</summary>
+        internal class GenericTissue
+        {
+            /// <summary>The dry matter amount [g/m^2]</summary>
+            internal virtual double DM { get; set; } = 0.0;
+
+            /// <summary>The N content [g/m^2]</summary>
+            internal virtual double Namount { get; set; } = 0.0;
+
+            /// <summary>The P content [(g/m^2]</summary>
+            internal virtual double Pamount { get; set; } = 0.0;
+
+            /// <summary>The nitrogen concentration [kg/kg)</summary>
+            internal double Nconc
+            {
+                get { return MathUtilities.Divide(Namount, DM, 0.0); }
+                set { Namount = value * DM; }
+            }
+
+            /// <summary>The phosphorus concentration [g/g])</summary>
+            internal double Pconc
+            {
+                get { return MathUtilities.Divide(Pamount, DM, 0.0); }
+                set { Pamount = value * DM; }
+            }
+
+            /// <summary>The digestibility of cell walls [0-1]</summary>
+            internal double DigestibilityCellWall { get; set; } = 0.5;
+
+            /// <summary>The digestibility of protein [0-1]</summary>
+            internal double DigestibilityProtein { get; set; } = 0.5;
+            
+            /// <summary>The digestibility of cell wall [0-1]</summary>
+            internal double SugarFraction { get; set; } = 0.5;
+
+            /// <summary>The dry matter amount [g/g]</summary>
+            internal virtual double Digestibility
+            {
+                get
+                {
+                    double tissueDigestibility = 0.0;
+                    if (DM > 0.0)
+                    {
+                        double cnTissue = DM * CarbonFractionInDM / Namount;
+                        double ratio1 = CNratioCellWall / cnTissue;
+                        double ratio2 = CNratioCellWall / CNratioProtein;
+                        double proteinFraction = (ratio1 - (1.0 - SugarFraction)) / (ratio2 - 1.0);
+                        double cellWallFraction = 1.0 - SugarFraction - proteinFraction;
+                        tissueDigestibility = SugarFraction
+                                            + (proteinFraction * DigestibilityProtein)
+                                            + (cellWallFraction * DigestibilityCellWall);
+                    }
+
+                    return tissueDigestibility;
+                }
+            }
+
+            #region Constants  --------------------------------------------------------------------
+
+            /// <summary>Average carbon content in plant dry matter</summary>
+            const double CarbonFractionInDM = 0.4;
+
+            /// <summary>The C:N ratio of protein</summary>
+            const double CNratioProtein = 3.5;
+
+            /// <summary>The C:N ratio of cell wall</summary>
+            const double CNratioCellWall = 100.0;
+
+            #endregion
+        }
+        }
 
     /// <summary>
     /// Defines a generic above-ground organ of a pasture species
