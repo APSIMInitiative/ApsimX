@@ -161,7 +161,7 @@
           </PoreBounds>
           <BottomBoundryConductance>100</BottomBoundryConductance>
           <CalculateInfiltration>true</CalculateInfiltration>
-          <CalculateDrainage>false</CalculateDrainage>
+          <CalculateDrainage>true</CalculateDrainage>
           <ResidueWater>0</ResidueWater>
         </MultiPoreWater>
         <SoilNitrogen>
