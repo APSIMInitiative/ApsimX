@@ -235,12 +235,12 @@ namespace Models.Soils
         /// <summary>
         /// Allow infiltration processes to be switched off from the UI
         /// </summary>
-        [Description("Do you want the soil water model to calculate infiltration processes.  Normally yes, this is for testing")]
+        [Description("Calculate infiltration processes?.  Normally yes, this is for testing")]
         public bool CalculateInfiltration { get; set; }
         /// <summary>
         /// Allow drainage processes to be switched off from the UI
         /// </summary>
-        [Description("Do you want the soil water model to calculate draiange processes.  Normally yes, this is for testing")]
+        [Description("Calculate draiange processes.  Normally yes, this is for testing")]
         public bool CalculateDrainage { get; set; }
         #endregion
 
@@ -572,7 +572,7 @@ namespace Models.Soils
                     Pores[l][c].WaterDepth -= drain;
                     OutFluxCurrentLayer -= drain;
                 }
-                if (OutFluxCurrentLayer != 0)
+                if (Math.Abs(OutFluxCurrentLayer) > FloatingPointTolerance)
                     throw new Exception("Error in drainage calculation");
 
                 //Distribute water from this layer into the profile below and record draiange out the bottom
