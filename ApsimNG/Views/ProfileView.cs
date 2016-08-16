@@ -63,7 +63,7 @@ namespace UserInterface.Views
             ProfileGrid = new GridView(this);
             vpaned2.Pack1(ProfileGrid.MainWidget, true, true);
             Graph = new GraphView(this);
-            vpaned2.Pack2(Graph.MainWidget, true, true);
+            vpaned2.Pack2(Graph.MainWidget, true, false);
         }
 
         /// <summary>
