@@ -232,6 +232,16 @@ namespace Models.Soils
         [Units("mm/h")]
         [Description("The amount of water that will pass the bottom of the profile")]
         public double BottomBoundryConductance { get; set; }
+        /// <summary>
+        /// Allow infiltration processes to be switched off from the UI
+        /// </summary>
+        [Description("Do you want the soil water model to calculate infiltration processes.  Normally yes, this is for testing")]
+        public bool CalculateInfiltration { get; set; }
+        /// <summary>
+        /// Allow drainage processes to be switched off from the UI
+        /// </summary>
+        [Description("Do you want the soil water model to calculate draiange processes.  Normally yes, this is for testing")]
+        public bool CalculateDrainage { get; set; }
         #endregion
 
         #region Outputs
@@ -370,15 +380,17 @@ namespace Models.Soils
             {
                 InitialProfileWater = MathUtilities.Sum(SWmm);
                 InitialPondDepth = pond;
+                InitialResidueWater = ResidueWater;
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
                 //Then we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
                 double HourlyInfiltration = Math.Min(pond, PotentialInfiltration);
-                if (HourlyInfiltration>0)
+                if ((HourlyInfiltration>0)&&(CalculateInfiltration))
                     doInfiltration(HourlyInfiltration,h);
                 //Next we redistribute water down the profile for draiange processes
+                if (CalculateDrainage)
                 doDrainage(h);
                 doEvaporation();
                 doTranspiration();
@@ -417,7 +429,7 @@ namespace Models.Soils
         #endregion
 
         #region Internal States
-        private double FloatingPointTolerance = 0.000000001;
+        private double FloatingPointTolerance = 0.0000000001;
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
@@ -435,6 +447,10 @@ namespace Models.Soils
         /// Variable used for checking mass balance
         /// </summary>
         private double InitialPondDepth { get; set; }
+        /// <summary>
+        /// Variable used for checking mass balance
+        /// </summary>
+        private double InitialResidueWater { get; set; }
         private double ProfileSaturation { get; set; }
         #endregion
 
@@ -490,7 +506,7 @@ namespace Models.Soils
                 double PotentialAbsorption = 0;
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {//Workout how much water may be adsorbed into each pore
-                    PotentialAbsorption = Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
+                    PotentialAbsorption += Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
                 }
                 AbsorptionCapacity[l] = PotentialAbsorption;
             }
@@ -560,6 +576,7 @@ namespace Models.Soils
                     throw new Exception("Error in drainage calculation");
 
                 //Distribute water from this layer into the profile below and record draiange out the bottom
+                //Bring the layer below up to its maximum absorption then move to the next
                 for (int l1 = l + 1; l1 < ProfileLayers + 1 && InFluxLayerBelow > 0; l1++)
                 {
                     //Any water not stored by this layer will flow to the layer below as saturated drainage
@@ -656,16 +673,17 @@ namespace Models.Soils
                 Pores[l][c].WaterDepth += Absorbtion;
                 InFlux -= Absorbtion;
             }
-            if (LayerSum(Pores[l], "WaterDepth") > ProfileParams.SaturatedWaterDepth[l])
+            if ((LayerSum(Pores[l], "WaterDepth") - ProfileParams.SaturatedWaterDepth[l])>FloatingPointTolerance)
                 throw new Exception("Water content of layer " + l + " exceeds saturation.  This is not really possible");
         }
         private void CheckMassBalance(string Process, int h)
         {
-            double WaterIn = InitialProfileWater + InitialPondDepth + Hourly.Rainfall[h] + Hourly.Irrigation[h];
+            double WaterIn = InitialProfileWater + InitialPondDepth + InitialResidueWater 
+                             + Hourly.Rainfall[h] + Hourly.Irrigation[h];
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
-            double WaterOut = ProfileWaterAtCalcEnd + pond + Hourly.Drainage[h];
+            double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Hourly.Drainage[h];
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
-                throw new Exception(this + " " + Process + " calculations are violating mass balance");
+                throw new Exception(this + " " + Process + " calculations are violating mass balance");           
         }
         /// <summary>
         /// Function to update profile summary values

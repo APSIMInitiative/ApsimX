@@ -37,10 +37,21 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double AirFilledVolume { get { return Volume - WaterFilledVolume; }  }
+
+        private double _WaterDepth = 0;
         /// <summary>The depth of water in the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double WaterDepth { get; set; }
+        public double WaterDepth
+        {
+            get
+            { return _WaterDepth; }
+            set
+            {
+                if (value < -0.000000000001) throw new Exception("Trying to set a negative pore water depth");
+                _WaterDepth = Math.Max(value,0);//discard floating point errors
+            }
+        }
         /// <summary>The depth of Air in the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
