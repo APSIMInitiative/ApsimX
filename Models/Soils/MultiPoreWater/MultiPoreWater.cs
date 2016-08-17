@@ -28,6 +28,8 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class MultiPoreWater : Model, ISoilWater
     {
+        
+        
         #region IsoilInterface
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
@@ -204,6 +206,11 @@ namespace Models.Soils
         private Weather Met = null;
         #endregion
 
+        #region Class Events
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler ReportDetails;
+        #endregion
+
         #region Structures
         /// <summary>
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
@@ -242,6 +249,11 @@ namespace Models.Soils
         /// </summary>
         [Description("Calculate draiange processes.  Normally yes, this is for testing")]
         public bool CalculateDrainage { get; set; }
+        /// <summary>
+        /// Allow output of soil water content of all pores at each time step
+        /// </summary>
+        [Description("Report SW at all timesteps.  lots of data")]
+        public bool ReportDetail { get; set; }
         #endregion
 
         #region Outputs
@@ -249,6 +261,18 @@ namespace Models.Soils
         /// The amount of water stored in the surface residue
         /// </summary>
         public double ResidueWater { get; set; }
+        /// <summary>
+        /// Data object to put the water content of each pore into
+        /// </summary>
+        public double[][] PoreWater { get; set; }
+        /// <summary>
+        /// Describes the process just completed
+        /// </summary>
+        public string Process { get; set; }
+        /// <summary>
+        /// the current hour in the process
+        /// </summary>
+        public int Hour { get; set; }
         #endregion
 
         #region Properties
@@ -344,6 +368,19 @@ namespace Models.Soils
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
+            if (ReportDetail)
+            {
+                PoreWater = new double[ProfileLayers][];
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    PoreWater[l] = new double[PoreCompartments];
+                    for (int c = 0; c < PoreCompartments; c++)
+                    {
+                        PoreWater[l][c] = new double();
+                    }
+                }
+            }
+            DoDetailReport("Initialisation");
         }
         /// <summary>
         /// Called at the start of each daily timestep
@@ -371,9 +408,6 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-            //
-            
-            
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
             for (int h = 0; h < 24; h++)
@@ -383,6 +417,7 @@ namespace Models.Soils
                 InitialResidueWater = ResidueWater;
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
+                Process = "Pond";
                 //Then we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
@@ -694,6 +729,22 @@ namespace Models.Soils
             {
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+            }
+        }
+
+        private void DoDetailReport(string CallingProcess)
+        {
+            if (ReportDetail)
+            {
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    for (int c = 0; c < PoreCompartments; c++)
+                    {
+                        PoreWater[l][c] = Pores[l][c].WaterFilledVolume / Pores[l][c].Volume;
+                    }
+                }
+                Process = CallingProcess;
+                ReportDetails.Invoke(this, new EventArgs());
             }
         }
         #endregion
