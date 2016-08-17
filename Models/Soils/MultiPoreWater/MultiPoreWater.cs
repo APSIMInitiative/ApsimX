@@ -273,6 +273,14 @@ namespace Models.Soils
         /// the current hour in the process
         /// </summary>
         public int Hour { get; set; }
+        /// <summary>
+        /// The layer that is current encountering water flux
+        /// </summary>
+        public int ReportLayer { get; set; }
+        /// <summary>
+        /// Number of times water deltas have occured
+        /// </summary>
+        public int TimeStep { get; set; }
         #endregion
 
         #region Properties
@@ -380,7 +388,7 @@ namespace Models.Soils
                     }
                 }
             }
-            DoDetailReport("Initialisation");
+            DoDetailReport("Initialisation",0,0);
         }
         /// <summary>
         /// Called at the start of each daily timestep
@@ -417,7 +425,7 @@ namespace Models.Soils
                 InitialResidueWater = ResidueWater;
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
-                Process = "Pond";
+                DoDetailReport("UpdatePond",0,h);
                 //Then we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
@@ -574,6 +582,7 @@ namespace Models.Soils
             for (int l = 0; l < ProfileLayers && RemainingInfiltration > 0; l++)
             { //Start process in the top layer
                 DistributWaterInFlux(l, ref RemainingInfiltration);
+                DoDetailReport("Infiltrate",l,h);
             }
             //Add infiltration to daily sum for reporting
             Hourly.Infiltration[h] = WaterToInfiltrate;
@@ -606,6 +615,7 @@ namespace Models.Soils
                     double drain = Math.Min(OutFluxCurrentLayer, Pores[l][c].HydraulicConductivityOut);
                     Pores[l][c].WaterDepth -= drain;
                     OutFluxCurrentLayer -= drain;
+                    DoDetailReport("Drain", l, h);
                 }
                 if (Math.Abs(OutFluxCurrentLayer) > FloatingPointTolerance)
                     throw new Exception("Error in drainage calculation");
@@ -616,7 +626,10 @@ namespace Models.Soils
                 {
                     //Any water not stored by this layer will flow to the layer below as saturated drainage
                     if (l1 < ProfileLayers)
+                    {
+                        DoDetailReport("Redistribute", l1, h);
                         DistributWaterInFlux(l1, ref InFluxLayerBelow);
+                    }
                     //If it is the bottom layer, any discharge recorded as drainage from the profile
                     else
                     {
@@ -732,7 +745,7 @@ namespace Models.Soils
             }
         }
 
-        private void DoDetailReport(string CallingProcess)
+        private void DoDetailReport(string CallingProcess,int Layer,int hour)
         {
             if (ReportDetail)
             {
@@ -744,6 +757,9 @@ namespace Models.Soils
                     }
                 }
                 Process = CallingProcess;
+                ReportLayer = Layer;
+                Hour = hour;
+                TimeStep += 1;
                 ReportDetails.Invoke(this, new EventArgs());
             }
         }

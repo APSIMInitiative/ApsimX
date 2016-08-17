@@ -4,7 +4,7 @@
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    <MaximumResultsPerPage>1000</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>DetailOutputs</Name>
@@ -27,26 +27,19 @@
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Soil].MultiPoreWater.Process</string>
-          <string>[Soil].MultiPoreWater.PoreWater</string>
-          <string>[IWeather].MaxT</string>
-          <string>[IWeather].MinT</string>
-          <string>[IWeather].Rain</string>
-          <string>[IWeather].Radn</string>
-          <string>[IWeather].Wind</string>
-          <string>[IWeather].DayLength</string>
-          <string>[IWeather].VP</string>
-          <string>[IWeather].CO2</string>
-          <string>[IWeather].RainfallHours</string>
+          <string>[Soil].MultiPoreWater.TimeStep as TimeStep</string>
+          <string>[Clock].Today as Date</string>
+          <string>[Soil].MultiPoreWater.Process as Process</string>
+          <string>[Soil].MultiPoreWater.Hour as Hour</string>
+          <string>[Soil].MultiPoreWater.ReportLayer as Layer</string>
+          <string>[Soil].MultiPoreWater.PoreWater as PW</string>
           <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].SoilWater.SW</string>
-          <string>[Soil].MultiPoreWater.Water</string>
-          <string>[Soil].MultiPoreWater.Drainage</string>
-          <string>[Soil].MultiPoreWater.Infiltration</string>
-          <string>[Soil].MultiPoreWater.pond</string>
-          <string>[Irrigation].IrrigationApplied</string>
+          <string>[Soil].SoilWater.SWmm as SWmm</string>
+          <string>[Soil].SoilWater.SW as SW</string>
+          <string>[Soil].MultiPoreWater.Drainage as Drainage</string>
+          <string>[Soil].MultiPoreWater.Infiltration as Infiltration</string>
+          <string>[Soil].MultiPoreWater.pond as Pond</string>
+          <string>[Irrigation].IrrigationApplied as Irrigation</string>
         </VariableNames>
         <EventNames>
           <string>[Soil].MultiPoreWater.ReportDetails</string>
@@ -172,6 +165,8 @@
           <ReportDetail>true</ReportDetail>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
+          <ReportLayer>0</ReportLayer>
+          <TimeStep>0</TimeStep>
         </MultiPoreWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
