@@ -9,7 +9,7 @@ namespace SWIMFrame
     {
         int nex { get; set; }
         void SetSinks(int n, int ns, int idrip, int idrn, double driprate, double[] dripsol, double dcond);
-        void Wsinks(double t, int[] isat, double[] var, out double[,] qwex, out double[,] qwexd);
-        void Ssinks(double t, double ti, double tf, int isol, double[,] dwex, double[] c, out double[,] qsex, out double[,] qsexd);
+        void Wsinks(double t, int[] isat, double[] var, double[] he, ref double[,] qwex, ref double[,] qwexd);
+        void Ssinks(double t, double ti, double tf, int isol, double[,] dwex, double[] c, ref double[,] qsex, ref double[,] qsexd);
     }
 }

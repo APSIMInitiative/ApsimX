@@ -33,10 +33,10 @@ namespace SWIMFrame
             string[] ftname = new string[2+1];
             int i, j, ns, np, nc, i1;
             int[] isoil = new int[nin + 1];
-            int[,] isid = new int[nin + 1 + 1, 2 + 1];
+            int[,] isid = new int[2 + 1, nin + 1 + 1];
             int[] jt = new int[nin + 2]; //0-based FORTRAN array. +2 as first and last elements will be copied twice
-            double[,] dz = new double[nin + 1 + 1, 2 + 1];
-            double[] hdx = new double[nin + 1+1]; //0-based FORTRAN array
+            double[,] dz = new double[2 + 1, nin + 1 + 1];
+            double[] hdx = new double[nin + 1 + 1]; //0-based FORTRAN array
             double x1;
 
             n = nin;
@@ -61,7 +61,7 @@ namespace SWIMFrame
 
             // Get soil idents in array isid and lengths in array dz for the np paths.
             dx = MathUtilities.Subtract(x, x.Skip(x.Length - 1).Concat(x.Take(x.Length - 1)).ToArray()); //TEST
-            Array.Copy(dx, 1, x, 1, dx.Length / 2); //TEST
+            Array.Copy(dx, 1, x, 1, dx.Length / 2);
 
             //hdx=(/0.0,0.5*dx,0.0/) ! half delta x
             for (int x = 0; x < hdx.Length; x++)
@@ -78,29 +78,29 @@ namespace SWIMFrame
             np = 0; //no.of different paths out of possible n + 1
             for (i = 0; i <= n; i++)
             {
-                isid[np + 1, 1] = jt[i];
-                isid[np + 1, 2] = jt[i + 1];
+                isid[1, np + 1] = jt[i];
+                isid[2, np + 1] = jt[i + 1];
                 if (jt[i] == jt[i + 1]) //no interface between types
                 {
-                    dz[np + 1, 1] = hdx[i] + hdx[i + 1];
-                    dz[np + 1, 2] = 0;
+                    dz[1, np + 1] = hdx[i] + hdx[i + 1];
+                    dz[2,np + 1] = 0;
                 }
                 else
                 {
-                    dz[np + 1, 1] = hdx[i];
-                    dz[np + 1, 2] = hdx[i + 1];
+                    dz[1, np + 1] = hdx[i];
+                    dz[2, np + 1] = hdx[i + 1];
                 }
 
                 //Increment np if this path is new.
                 for (j = 1; j <= np; j++)
                 {
-                    if (isid[j, 1] != isid[np + 1, 1] || isid[j, 2] != isid[np + 1, 2])
+                    if (isid[1, j] != isid[1, np + 1] || isid[2, j] != isid[2, np + 1])
                         continue;
 
-                    double[] absdz = new double[dz.GetLength(1)];
+                    double[] absdz = new double[dz.GetLength(0)];
                     for (int x = 0; x < absdz.Length; x++)
                     {
-                        absdz[x] = Math.Abs(dz[j, x] - dz[np + 1, x]);
+                        absdz[x] = Math.Abs(dz[x, j] - dz[x, np + 1]);
                     }
                     double tsum = MathUtilities.Sum(absdz);
                     if (MathUtilities.Sum(absdz) < small)
@@ -130,42 +130,42 @@ namespace SWIMFrame
             }
 
             //Set up S and phi arrays to get phi from S.
-            S = new double[nphi + 1, ns + 1];
+            S = new double[ns + 1, nphi + 1];
             rdS = new double[ns + 1];
-            phi = new double[nphi + 1, ns + 1];
-            dphidS = new double[nphi - 1 + 1, ns + 1];
-            K = new double[nphi + 1, ns + 1];
-            dKdS = new double[nphi - 1 + 1, ns + 1];
+            phi = new double[ns + 1, nphi + 1];
+            dphidS = new double[ns + 1, nphi - 1 + 1];
+            K = new double[ns + 1, nphi + 1];
+            dKdS = new double[ns + 1, nphi - 1 + 1];
             for (i = 1; i <= ns; i++)
             {
                 nc = sp[i].nc;
 
                 //S(:,i)=sp(i)%Sc(1)+(/(j,j=0,nphi-1)/)*(sp(i)%Sc(nc)-sp(i)%Sc(1))/(nphi-1)
                 for (int x = 0; x < nphi; x++)
-                    S[x+1, i] = sp[i].Sc[1] + x * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
-                phi[1, i] = sp[i].phic[1];
-                phi[nphi, i] = sp[i].phic[nc];
+                    S[i, x+1] = sp[i].Sc[1] + x * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
+                phi[i, 1] = sp[i].phic[1];
+                phi[i, nphi] = sp[i].phic[nc];
                 j = 1;
                 for (i1 = 2; i1 <= nphi - 1; i1++)
                 {
                     while (true)
                     {
-                        if (S[i1, i] < sp[i].Sc[j + 1])
+                        if (S[i, i1] < sp[i].Sc[j + 1])
                             break;
                         j++;
                     }
-                    x1 = S[i1, i] - sp[i].Sc[j];
-                    phi[i1, i] = sp[i].phic[j] + x1 * (sp[i].phico[0, j] + x1 * (sp[i].phico[1, j] + x1 * sp[i].phico[2, j]));
-                    x1 = phi[i1, i] - sp[i].phic[j];
-                    K[i1, i] = sp[i].Kc[j] + x1 * (sp[i].Kco[0, j] + x1 * (sp[i].Kco[1, j] + x1 * sp[i].Kco[2, j]));
+                    x1 = S[i, i1] - sp[i].Sc[j];
+                    phi[i, i1] = sp[i].phic[j] + x1 * (sp[i].phico[0, j] + x1 * (sp[i].phico[1, j] + x1 * sp[i].phico[2, j]));
+                    x1 = phi[i, i1] - sp[i].phic[j];
+                    K[i, i1] = sp[i].Kc[j] + x1 * (sp[i].Kco[0, j] + x1 * (sp[i].Kco[1, j] + x1 * sp[i].Kco[2, j]));
                 }
 
-                rdS[i] = 1.0 / (S[2, i] - S[1, i]);
+                rdS[i] = 1.0 / (S[i, 2] - S[i, 1]);
 
                 for (int x = 2; x <= nphi; x++)
                 {
-                    dphidS[x - 1, i] = rdS[i] * (phi[x, i] - phi[x - 1, i]);
-                    dKdS[x - 1, i] = rdS[i] * (K[x, i] - K[x - 1, i]);
+                    dphidS[i, x - 1] = rdS[i] * (phi[i, x] - phi[i, x - 1]);
+                    dKdS[i, x - 1] = rdS[i] * (K[i, x] - K[i, x - 1]);
                 }
             }
 
@@ -177,13 +177,13 @@ namespace SWIMFrame
             {
                 for (j = 1; j <= 2; j++)
                 {
-                    id = isid[i, j].ToString();
-                    mm = Math.Round(10.0 * dz[i, j]).ToString();
+                    id = isid[j, i].ToString();
+                    mm = Math.Round(10.0 * dz[j, i]).ToString();
                     Console.WriteLine(id);
                     Console.WriteLine(mm);
                     ftname[j] = "soil" + id + "dz" + mm;
                 }
-                if (isid[i, 1] == isid[i, 2])
+                if (isid[1, i] == isid[2, i])
                     sfile = ftname[1] + ".dat";
                 else
                     sfile = ftname[1] + "_" + ftname[2] + ".dat";
@@ -197,11 +197,11 @@ namespace SWIMFrame
                 pe1.ths = sp[j].ths;
                 pe1.rdS = rdS[j];
                 pe1.Ks = sp[j].ks;
-                pe1.S = Extensions.GetRowCol(S, j, true);
-                pe1.phi = Extensions.GetRowCol(phi, j, true);
-                pe1.dphidS = Extensions.GetRowCol(dphidS, j, true);
-                pe1.K = Extensions.GetRowCol(K, j, true);
-                pe1.dKdS = Extensions.GetRowCol(dKdS, j, true);
+                pe1.S = Extensions.GetRowCol(S, j, false);
+                pe1.phi = Extensions.GetRowCol(phi, j, false);
+                pe1.dphidS = Extensions.GetRowCol(dphidS, j, false);
+                pe1.K = Extensions.GetRowCol(K, j, false);
+                pe1.dKdS = Extensions.GetRowCol(dKdS, j, false);
                 pe1.Sd = sp[j].Sd;
                 pe1.lnh = sp[j].lnh;
                 pe1.phif = ft[i].fend[0].phif;
@@ -217,15 +217,15 @@ namespace SWIMFrame
                     pe2.ths = sp[j].ths;
                     pe2.rdS = rdS[j];
                     pe2.Ks = sp[j].ks;
-                    pe2.S = Extensions.GetRowCol(S, j, true);
-                    pe2.phi = Extensions.GetRowCol(phi, j, true);
-                    pe2.dphidS = Extensions.GetRowCol(dphidS, j, true);
-                    pe2.K = Extensions.GetRowCol(K, j, true);
-                    pe2.dKdS = Extensions.GetRowCol(dKdS, j, true);
+                    pe2.S = Extensions.GetRowCol(S, j, false);
+                    pe2.phi = Extensions.GetRowCol(phi, j, false);
+                    pe2.dphidS = Extensions.GetRowCol(dphidS, j, false);
+                    pe2.K = Extensions.GetRowCol(K, j, false);
+                    pe2.dKdS = Extensions.GetRowCol(dKdS, j, false);
                     pe2.Sd = sp[j].Sd;
                     pe2.lnh = sp[j].lnh;
                     pe2.phif = ft[i].fend[1].phif;
-                    fpath[i].dz = ft[i].fend[1].dz;
+                    fpath[i].dz = fpath[i].dz + ft[i].fend[1].dz;
                 }
                 fpath[i].pend = new PathEnd[3];
                 fpath[i].pend[1] = pe1;
@@ -375,10 +375,10 @@ namespace SWIMFrame
 
             // Get flux from table
             qf = path.ftable;
-            f1 = qf[k[1], k[2]]; //use bilinear interp
-            f2 = qf[k[1] + 1, k[2]];
-            f3 = qf[k[1], k[2] + 1];
-            f4 = qf[k[1] + 1, k[2] + 1];
+            f1 = qf[k[2], k[1]]; //use bilinear interp
+            f2 = qf[k[2], k[1] + 1];
+            f3 = qf[k[2] + 1, k[1]];
+            f4 = qf[k[2] + 1, k[1] + 1];
             for (int count = 1; count < u.Length; count++)
                 omu[count] = 1.0 - u[count];
             q = omu[1] * omu[2] * f1 + u[1] * omu[2] * f2 + omu[1] * u[2] * f3 + u[1] * u[2] * f4;

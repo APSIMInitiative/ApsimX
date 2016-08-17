@@ -73,7 +73,7 @@ namespace SWIMFrame
         public static int nwsteps = 10;
         public static bool debug = false;
         public static int nless;
-        public static SoilData sd = new SoilData();
+        public static SoilData sd;
         public static ISink sink;
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SWIMFrame
         /// <param name="nssteps">cumulative no. of time steps for ADE soln.</param>
         /// <param name="wex">cumulative water extractions from layers.</param>
         /// <param name="sex">cumulative solute extractions from layers.</param>
-        public static void Solve(SolProps sol, double ts, double tfin, double qprec, double qevap, int nsol, int nex,
+        public static void Solve(SolProps sol, SoilData sdata, double ts, double tfin, double qprec, double qevap, int nsol, int nex,
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double[] c0, ref double[,] sm, ref double[] soff, ref double[] sinfil, ref double[] sdrn, ref int[] nssteps, ref double[,] wex, ref double[,,] sex)
         {
@@ -131,7 +131,9 @@ namespace SWIMFrame
             double[] qyb = new double[S.Length];
             double[] cav = new double[nsol + 1];
             double[] sinfili = new double[nsol + 1];
-            double[,] c = new double[sd.n + 1, nsol + 1];
+            double[,] c;
+            sd = sdata;
+            c = new double[nsol + 1, sd.n + 1];
             ISink sink = new SinkDripperDrain(); // Sink type can be changed here.
             /*
              ! The saturation status of a layer is stored as 0 or 1 in isat since S may be
@@ -300,7 +302,7 @@ namespace SWIMFrame
 
                     if (extraction) //get rate of extraction
                     {
-                        sink.Wsinks(t, isat, xtbl, out qwexs, out qwexsd);
+                        sink.Wsinks(t, isat, xtbl, sd.he, ref qwexs, ref qwexsd);
 
                         for (int x = 1; x < qwex.Length; x += 2)
                         {
@@ -603,11 +605,11 @@ namespace SWIMFrame
                             //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
                             for (i = 1; i <= nex; i++)
                             {
-                                dwexsV = dwexsM.Column(i);
-                                qwexsV = qwexsM.Column(i);
-                                qwexsdV = qwexsdM.Column(i);
+                                dwexsV = dwexsM.Row(i);
+                                qwexsV = qwexsM.Row(i);
+                                qwexsdV = qwexsdM.Row(i);
                                 dwexsV = dwexsV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1,sd.n))) * dt;
-                                dwexsM.Column(i, dwexsV);
+                                dwexsM.Row(i, dwexsV);
                             }
                             dwexs = dwexsM.ToArray();
                         }
@@ -795,7 +797,8 @@ namespace SWIMFrame
             {
                 v1 = 0.5 * qw[i];
                 v2 = 0.5 * (solProps.dis[jt[i]] + solProps.dis[jt[i + 1]]) * Math.Abs(qw[i]) / dz[i];
-                coef1[i] = v1 + v2; coef2[i] = v1 - v2;
+                coef1[i] = v1 + v2;
+                coef2[i] = v1 - v2;
             }
 
             for (j = 1; j <= ns; j++)
@@ -898,6 +901,7 @@ namespace SWIMFrame
                     }
                     Matrix<double> qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
                     Matrix<double> qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
+
                     if (extraction)  //get extraction
                     {
                         double[] ctemp = new double[n - 1];
@@ -906,7 +910,7 @@ namespace SWIMFrame
 
                         qsexs = qsexsM.ToArray();
                         qsexsd = qsexsdM.ToArray();
-                        sink.Ssinks(t, ti, tf, j, dwexs, ctemp, out qsexs, out qsexsd);
+                        sink.Ssinks(t, ti, tf, j, dwexs, ctemp, ref qsexs, ref qsexsd);
                         qsex = qsexsM.ColumnSums().ToArray();
                         qsexd = qsexsdM.ColumnSums().ToArray();
                         for (int x = 1; x <= n; x++)
@@ -942,12 +946,12 @@ namespace SWIMFrame
                         Vector<double> dysub = Vector<double>.Build.DenseOfArray(dy.Slice(1, n));
                         for (i = 1; i <= nex; i++)
                         {
-                            sexM.SetColumn(i, sexM.Column(i) + (qsexsM.Column(i) + sig * qsexsdM.Column(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
+                            sexM.SetRow(i, sexM.Row(i) + (qsexsM.Row(i) + sig * qsexsdM.Row(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
                         }
 
                         for (int x = 0; x < sex.GetLength(0); x++)
                             for (int y = 0; y < sex.GetLength(1); y++)
-                                sex[x, y, j] = sexM[x, y];
+                                sex[j, y, x] = sexM[y, x];
                     }
                     nssteps[j] = nssteps[j] + 1;
                 }

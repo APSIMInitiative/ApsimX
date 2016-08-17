@@ -38,16 +38,24 @@ namespace SWIMFrame
         static string[] isotype;//(nt)
         static double[,] isopar; //2 params (nt,2)
 
-        public static void Setup()
+        //public static void Setup()
+        public static void Main(string[] args)
         {
-            cin = new double[ns+1];
-            h = new double[n+1];
-            isotype = new string[nt+1];
-            isopar = new double[nt+1, 2+1];
+            c0 = new double[ns + 1];
+            cin = new double[ns + 1];
+            h = new double[n + 1];
+            S = new double[n + 1];
+            isotype = new string[nt + 1];
+            isopar = new double[nt + 1, 2 + 1];
+            soff = new double[ns + 1];
+            sdrn = new double[ns + 1];
+            sinfil = new double[ns + 1];
             SoilData sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
-            jt = new int[n];
-            sidx = new int[n];
+            jt = new int[n+1];
+            nssteps = new int[ns + 1];
+            sidx = new int[n+1];
+            sm = new double[ns + 1, n + 1];
             //set a list of soil layers(cm).
             x = new double[] { 0, 10.0, 20.0, 30.0, 40.0, 60.0, 80.0, 100.0, 120.0, 160.0, 200.0 };
             for (int c = 1; c <= n; c++)
@@ -55,14 +63,14 @@ namespace SWIMFrame
                                              //set required soil hydraulic params
             sd.GetTables(n, sidx, x);
             SolProps solProps = new SolProps(nt, ns);
-            bd = new double[] { 1.3, 1.3 };
-            dis = new double[] { 20.0, 20.0 };
+            bd = new double[] {0, 1.3, 1.3 };
+            dis = new double[] {0, 20.0, 20.0 };
             //set isotherm type and params for solute 2 here
             isotype[1] = "Fr";
             isotype[2] = "La";
             isopar[1, 1] = 1.0;
-            isopar[1, 2] = 0.5;
-            isopar[2, 1] = 1.0;
+            isopar[1, 2] = 1.0;
+            isopar[2, 1] = 0.5;
             isopar[1, 2] = 0.01;
             Matrix<double> isoparM = Matrix<double>.Build.DenseOfArray(isopar);
             for (j = 1; j <= nt; j++) //set params
@@ -93,14 +101,12 @@ namespace SWIMFrame
             runoff = 0.0;
             infil = 0.0;
             drn = 0.0;
-            Extensions.Populate2D(sm, 0.0);
-            Matrix<double> smM = Matrix<double>.Build.DenseOfArray(sm);
-            double[] dxtemp = new double[smM.Column(1).Count];
-            dxtemp.Populate(1000.0 / sd.dx[1]);
-            smM.Column(1, Vector<double>.Build.DenseOfArray(dxtemp)); //initial solute concn(mass units per cc of soil)
-            smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx)); //solute in profile initially
-            spi = smM.ColumnSums().ToArray();
-            sm = smM.ToArray();
+            for (int col = 1; col < sm.GetLength(0); col++)
+                sm[col, 1] = 1000.0 / sd.dx[1];
+            //initial solute concn(mass units per cc of soil)
+            //solute in profile initially
+            spi = S;sp = S;    //  spi = smM.ColumnSums().ToArray();
+        //    sm = smM.ToArray();
             Flow.dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
             Flow.nwsteps = 10;
             MathUtilities.Zero(c0);
@@ -118,7 +124,7 @@ namespace SWIMFrame
             for (j = 1; j <= 100; j++)
             {
                 tf = ti + 24.0;
-                Flow.Solve(solProps, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex,ref sex);
+                Flow.Solve(solProps, sd, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex,ref sex);
                 win = win + qprec * (tf - ti);
                 if (j == 1)
                 {
@@ -130,13 +136,15 @@ namespace SWIMFrame
             }
             win = win + qprec * (tf - ti);
             wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths,S), sd.dx)); //!water in profile
-            smM = Matrix<double>.Build.DenseOfArray(sm);
-            smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx));
-            sp = smM.ColumnSums().ToArray();
+     //       smM = Matrix<double>.Build.DenseOfArray(sm);
+     //       smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx));
+      //      sp = smM.ColumnSums().ToArray();
             double hS = 0; //hS is not used used here, but is a required parameter
             for (j = 1; j <= n; j++)
                 sd.hofS(S[j], j, out h[j], out hS);
 
+            int foo = 0;
+            foo++;
          /* write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
             write(2, "(10f8.4)") S;
             write(2, "(5e16.4)") h;

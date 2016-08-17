@@ -1011,7 +1011,7 @@ namespace UnitTests
             double[,] wex = new double[0, 0];
             double[,,] sex = new double[0, 0, 0];
 
-            Flow.Solve(sol, ts, tfin, qprec, qevap, nsol, nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn,
+            Flow.Solve(sol, sd, ts, tfin, qprec, qevap, nsol, nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn,
                        ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex, ref sex);
         }
 
