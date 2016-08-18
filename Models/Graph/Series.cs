@@ -681,7 +681,13 @@ namespace Models.Graph
                     // Try by assuming the name is a type.
                     Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
                     if (t != null)
-                        modelWithData = Apsim.Find(this.Parent.Parent, t) as IModel;
+                    {
+                        IModel parentOfGraph = this.Parent.Parent;
+                        if (t.IsAssignableFrom(parentOfGraph.GetType()))
+                            modelWithData = parentOfGraph;
+                        else
+                            modelWithData = Apsim.Find(parentOfGraph, t);
+                    }
                 }
 
                 if (modelWithData != null)

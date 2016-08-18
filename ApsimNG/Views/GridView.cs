@@ -452,13 +452,19 @@ namespace UserInterface.Views
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.Edited += OnCellValueChanged;
+                textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 gridview.AppendColumn(column);
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 column.Resizable = true;
                 column.SetCellDataFunc(textRender, OnSetCellData);
+                column.Alignment = 0.5f; // For centered alignment of the column header
             }
+            // Add an empty column at the end; auto-sizing will give this any "leftover" space
+            TreeViewColumn fillColumn = new TreeViewColumn();
+            gridview.AppendColumn(fillColumn);
+            fillColumn.Sizing = TreeViewColumnSizing.Autosize;
 
             int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
             for (int row = 0; row < nRows; row++)
