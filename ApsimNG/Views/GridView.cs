@@ -64,8 +64,8 @@ namespace UserInterface.Views
 
         [Widget]
         private ScrolledWindow scrolledwindow1 = null;
-        [Widget]
-        private ScrolledWindow scrolledwindow2 = null;
+        //[Widget]
+        //private ScrolledWindow scrolledwindow2 = null;
 
         [Widget]
         public TreeView gridview = null;
@@ -93,6 +93,8 @@ namespace UserInterface.Views
             gxml.Autoconnect(this);
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
+            gridview.Selection.Mode = SelectionMode.Multiple;
+            fixedcolview.Selection.Mode = SelectionMode.Multiple;
             Popup.AttachToWidget(gridview, null);
             AddContextAction("Copy", OnCopyToClipboard);
             AddContextAction("Paste", OnPasteFromClipboard);
@@ -100,8 +102,49 @@ namespace UserInterface.Views
             gridview.ButtonReleaseEvent += OnButtonUp;
             gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
             fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
+            gridview.Selection.Changed += Gridview_CursorChanged;
+            fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
+            fixedcolview.WidgetEvent += Fixedcolview_WidgetEvent;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void Fixedcolview_WidgetEvent(object o, WidgetEventArgs args)
+        {
+        }
+
+        private bool selfCursorMove = false;
+
+        private void Fixedcolview_CursorChanged(object sender, EventArgs e)
+        {
+            if (!selfCursorMove)
+            {
+                selfCursorMove = true;
+                TreeSelection fixedSel = fixedcolview.Selection;
+                TreePath[] selPaths = fixedSel.GetSelectedRows();
+
+                TreeSelection gridSel = gridview.Selection;
+                gridSel.UnselectAll();
+                foreach (TreePath path in selPaths)
+                    gridSel.SelectPath(path);
+                selfCursorMove = false;
+            }
+        }
+
+        private void Gridview_CursorChanged(object sender, EventArgs e)
+        {
+            if (fixedcolview.Visible && !selfCursorMove)
+            {
+                selfCursorMove = true;
+                TreeSelection gridSel = gridview.Selection;
+                TreePath[] selPaths = gridSel.GetSelectedRows();
+
+                TreeSelection fixedSel = fixedcolview.Selection;
+                fixedSel.UnselectAll();
+                foreach (TreePath path in selPaths)
+                    fixedSel.SelectPath(path);
+                selfCursorMove = false;
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -149,6 +192,19 @@ namespace UserInterface.Views
                     }
                 gridview.RemoveColumn(gridview.GetColumn(0));
             }
+            while (fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.Edited -= OnCellValueChanged;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                fixedcolview.RemoveColumn(fixedcolview.GetColumn(0));
+            }
         }
 
         /// <summary>
@@ -173,6 +229,7 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateGrid()
         {
+            WaitCursor = true;
             ClearGridColumns();
             colLookup.Clear();
             // Begin by creating a new ListStore with the appropriate number of
@@ -232,10 +289,10 @@ namespace UserInterface.Views
             gridview.Selection.Mode = SelectionMode.Multiple;
             gridview.ShowAll();
 
+            fixedcolview.Visible = false;
             fixedcolview.Model = gridmodel;
             fixedcolview.Selection.Mode = SelectionMode.Multiple;
-            fixedcolview.ShowAll();
-
+            
             // Now let's apply center-justification to all the column headers, just for the heck of it
             for (int i = 0; i < nCols; i++)
             {
@@ -244,6 +301,11 @@ namespace UserInterface.Views
                 label = GetColumnHeaderLabel(i, fixedcolview);
                 label.Justify = Justification.Center;
             }
+            gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
+            gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
+            fixedcolview.ModifyBase(StateType.Active, gridview.Style.Base(StateType.Selected));
+            fixedcolview.ModifyText(StateType.Active, gridview.Style.Text(StateType.Selected));
+            WaitCursor = false;
         }
 
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
@@ -261,7 +323,7 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
             int colNo;
-            if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count)
+            if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType(); //  DataSource.Columns[colNo].DataType;
@@ -536,8 +598,9 @@ namespace UserInterface.Views
                 fixedcolview.Columns[i].Visible = i < number;
                 gridview.Columns[i].Visible = i >= number;
             }
-            scrolledwindow2.SetPolicy(PolicyType.Never, number > 0 ? PolicyType.Always : PolicyType.Never);
-            scrolledwindow2.VScrollbar.WidthRequest = 1;
+            //scrolledwindow2.SetPolicy(PolicyType.Never, number > 0 ? PolicyType.Always : PolicyType.Never);
+            //scrolledwindow2.VScrollbar.WidthRequest = 1;
+            fixedcolview.Visible = number > 0;
         }
 
         /// <summary>Get screenshot of grid.</summary>

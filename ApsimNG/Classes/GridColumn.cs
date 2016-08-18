@@ -190,25 +190,19 @@ namespace UserInterface.Classes
         {
             get
             {
-                if (this.gridView.RowCount > 0)
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
                 {
-                    return ""; /// TBI this.gridView.Grid.Rows[0].Cells[this.ColumnIndex].ToolTipText;
+                    return label.TooltipText;
                 }
-
                 return null;
             }
 
             set
             {
-                /* TBI
-                for (int row = 0; row < this.gridView.Grid.RowCount; row++)
-                {
-                    if (row < value.Length)
-                    {
-                        this.gridView.Grid.Rows[row].Cells[this.ColumnIndex].ToolTipText = value;
-                    }
-                }
-                */
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                    label.TooltipText = value;
             }
         }
 
