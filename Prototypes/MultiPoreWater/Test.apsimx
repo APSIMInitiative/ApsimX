@@ -170,6 +170,8 @@
           <ReportDetail>false</ReportDetail>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
+          <ReportLayer>0</ReportLayer>
+          <TimeStep>0</TimeStep>
         </MultiPoreWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -1655,6 +1657,8 @@ namespace Models
             <ReportDetail>false</ReportDetail>
             <ResidueWater>0</ResidueWater>
             <Hour>0</Hour>
+            <ReportLayer>0</ReportLayer>
+            <TimeStep>0</TimeStep>
           </MultiPoreWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
