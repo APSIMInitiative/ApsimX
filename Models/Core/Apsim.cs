@@ -177,11 +177,16 @@ namespace Models.Core
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
             model.Parent = null;
-
-            IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
-
-            formatter.Serialize(stream, model);
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, model);
+            }
+            finally
+            {
+                model.Parent = parent;
+            }
             return stream;
         }
 
