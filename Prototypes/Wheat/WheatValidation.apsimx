@@ -6529,31 +6529,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FlagLeafDAS.Value</Name>
-            <n>115</n>
-            <Slope>0.97677922997936062</Slope>
-            <Intercept>5.5082916808439393</Intercept>
-            <SEslope>0.016918951960882993</SEslope>
-            <SEintercept>2.0305960376933689</SEintercept>
-            <R2>0.96720913193624414</R2>
-            <RMSE>8.1106478591819151</RMSE>
-            <NSE>0.9623104431578795</NSE>
-            <ME>2.8956521739130436</ME>
-            <MAE>5.5217391304347823</MAE>
-            <RSR>0.19329206286144421</RSR>
+            <n>255</n>
+            <Slope>0.99684986422892219</Slope>
+            <Intercept>3.379627518053951</Intercept>
+            <SEslope>0.009699658387315695</SEslope>
+            <SEintercept>1.3463376319225897</SEintercept>
+            <R2>0.97660658950970924</R2>
+            <RMSE>7.8891834613142642</RMSE>
+            <NSE>0.97225900248099661</NSE>
+            <ME>2.9686274509803923</ME>
+            <MAE>5.6745098039215689</MAE>
+            <RSR>0.16622938757463621</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FloweringDAS.Value</Name>
-            <n>153</n>
-            <Slope>0.93818492479511739</Slope>
-            <Intercept>8.5865495753878349</Intercept>
-            <SEslope>0.012618983410333847</SEslope>
-            <SEintercept>1.727157027749118</SEintercept>
-            <R2>0.973408435404347</R2>
-            <RMSE>7.42060371379069</RMSE>
-            <NSE>0.97196155139709028</NSE>
-            <ME>0.5816993464052288</ME>
-            <MAE>5.0915032679738568</MAE>
-            <RSR>0.16689874406029473</RSR>
+            <n>291</n>
+            <Slope>0.96255828541409427</Slope>
+            <Intercept>5.6096682135486162</Intercept>
+            <SEslope>0.007600685912243943</SEslope>
+            <SEintercept>1.1979475518602227</SEintercept>
+            <R2>0.98229919049712444</R2>
+            <RMSE>6.9842729563299812</RMSE>
+            <NSE>0.98190193465934839</NSE>
+            <ME>0.037800687285223365</ME>
+            <MAE>5.0137457044673539</MAE>
+            <RSR>0.13429770167895921</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
