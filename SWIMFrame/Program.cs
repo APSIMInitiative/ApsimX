@@ -11,7 +11,7 @@ namespace SWIMFrame
 {
     class Program
     {
-        static void Mains(string[] args)
+        static void Main_(string[] args)
         {
 
             MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);

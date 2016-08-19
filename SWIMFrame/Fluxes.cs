@@ -242,7 +242,7 @@ namespace SWIMFrame
                 ft.fend[ie].dz = dz;
                 ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
-            ft.ftable = qi5; // (1:i,1:i) as above
+            ft.ftable = Matrix<double>.Build.DenseOfArray(qi5).Transpose().ToArray(); // (1:i,1:i) as above
         }
 
         /// <summary>

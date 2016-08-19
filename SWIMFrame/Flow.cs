@@ -106,29 +106,33 @@ namespace SWIMFrame
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double[] c0, ref double[,] sm, ref double[] soff, ref double[] sinfil, ref double[] sdrn, ref int[] nssteps, ref double[,] wex, ref double[,,] sex)
         {
+            // Since S.Length is one greater in Fortran to account for the 0 based index, this is included
+            // so that the +1 nomenclature can be kept below to avoid confusion.
+            int sLength = S.Length - 1; 
+
             bool again, extraction, initpond, maxpond;
             int i, iflux, ih0, iok, isatbot, itmp, ns, nsat, nsatlast, nsteps0;
-            int[] isat = new int[S.Length];
+            int[] isat = new int[sLength + 1];
             double accel, dmax, dt, dwinfil, dwoff, fac, infili, qpme, qprec1, rsig, rsigdt, sig, t, ti, win, xtblbot;
-            double[] dSdt = new double[S.Length + 1];
-            double[] h = new double[S.Length + 1];
-            double[] xtbl = new double[S.Length + 1];
-            double[] thi = new double[S.Length + 1];
-            double[] thf = new double[S.Length + 1];
-            double[] qwex = new double[S.Length + 1];
-            double[] qwexd = new double[S.Length + 1];
-            double[,] dwexs = new double[S.Length + 1, nex + 1];
-            double[,] qwexs = new double[S.Length + 1, nex + 1];
-            double[,] qwexsd = new double[S.Length + 1, nex + 1];
-            double[] aa = new double[S.Length]; // these are 0 based
-            double[] bb = new double[S.Length];
-            double[] cc = new double[S.Length];
-            double[] dd = new double[S.Length];
-            double[] dy = new double[S.Length];
-            double[] ee = new double[S.Length];
-            double[] q = new double[S.Length];
-            double[] qya = new double[S.Length];
-            double[] qyb = new double[S.Length];
+            double[] dSdt = new double[sLength + 1];
+            double[] h = new double[sLength + 1];
+            double[] xtbl = new double[sLength + 1];
+            double[] thi = new double[sLength + 1];
+            double[] thf = new double[sLength + 1];
+            double[] qwex = new double[sLength + 1];
+            double[] qwexd = new double[sLength + 1];
+            double[,] dwexs = new double[sLength + 1, nex + 1];
+            double[,] qwexs = new double[sLength + 1, nex + 1];
+            double[,] qwexsd = new double[sLength + 1, nex + 1];
+            double[] aa = new double[sLength+1]; // these are 0 based
+            double[] bb = new double[sLength+1];
+            double[] cc = new double[sLength + 1];
+            double[] dd = new double[sLength + 1];
+            double[] dy = new double[sLength + 1];
+            double[] ee = new double[sLength + 1];
+            double[] q = new double[sLength + 1];
+            double[] qya = new double[sLength + 1];
+            double[] qyb = new double[sLength + 1];
             double[] cav = new double[nsol + 1];
             double[] sinfili = new double[nsol + 1];
             double[,] c;
@@ -161,7 +165,7 @@ namespace SWIMFrame
                 */
             }
 
-            if (S.Length - 1 != sd.n) //minus 1 to account for 1 based array
+            if (sLength != sd.n) 
             {
                 Console.WriteLine("solve: Size of S differs from table data.");
                 Environment.Exit(1);
@@ -185,7 +189,7 @@ namespace SWIMFrame
             nsteps0 = nsteps;
             nsat = 0;
             //initialise saturated regions
-            for (int x = 1; x < S.Length; x++)
+            for (int x = 1; x < sLength; x++)
                 if (S[x] >= 1.0)
                 {
                     isat[x] = 1;
@@ -315,45 +319,35 @@ namespace SWIMFrame
                                    //----estimate time step dt
                     dmax = 0;
                     dSdt = MathUtilities.CreateArrayOfValues(0, dSdt.Length);
-                    if (extraction)
+                    for (int x = 1; x <= sd.n; x++)
                     {
-                        for (int x = 1; x < isat.Length; x++)
-                        {
-                            if (isat[x] == 0)
-                            {
-                                for (int y = 1; y <= sd.n; y++)
-                                    dSdt[x] = Math.Abs(q[x] - q[x - 1] + qwex[x]) / (sd.ths[x] * sd.dx[x]);
-                            }
+                        if (isat[x] == 0)
+                            dSdt[x] = Math.Abs(q[x] - q[x - 1] + (extraction ? qwex[x] : 0)) / (sd.ths[x] * sd.dx[x]);
+                    }
 
-                        }
-                    }
-                    else
-                    {
-                        for (int x = 1; x < isat.Length; x++)
-                        {
-                            if (isat[x] == 0)
-                            {
-       //                         for (int y = 1; y <= sd.n; y++)
-                                    dSdt[x] = Math.Abs(q[x] - q[x - 1]) / (sd.ths[x] * sd.dx[x]);
-                            }
-                        }
-                    }
                     dmax = MathUtilities.Max(dSdt); //Max derivative | dS / dt |
                     if (dmax > 0)
                     {
                         dt = dSmax / dmax;
                         // if pond going adjust dt
                         if (h0 > 0 && (q[0] - qpme) * dt > h0)
+                        {
                             dt = (h0 - 0.5 * h0min) / (q[0] - qpme);
-                        else //steady state flow
-             if (qpme >= q[sd.n])
+                        }
+                    }
+                    else //steady state flow
+                    {
+                        if (qpme >= q[sd.n])
                         {
                             //step to finish -but what if extraction varies with time ???
                             dt = tfin - t;
                         }
                         else
+                        {
                             dt = -(h0 - 0.5 * h0min) / (qpme - q[sd.n]); //pond going so adjust dt
-}
+                        }
+                    }
+                    
                     if (dt > dtmax)
                         dt = dtmax; //user's limit
            // if initial step, improve h where S>= 1
@@ -412,32 +406,15 @@ namespace SWIMFrame
                             bb[0] = -qya[0] - rsigdt;
                             dd[0] = -(qpme - q[0]) * rsig;
                         }
-                        if (extraction)
+
+                        for (int x = 1; x <= sd.n; x++)
                         {
-                            for (int x = 0; x < isat.Length; x++)
-                            {
-                                if (isat[x] == 0)
-                                {
-                                    for (int y = 1; y <= sd.n; y++)
-                                        bb[y] = qyb[y - 1] - qya[y] - qwexd[y] - sd.ths[x] * sd.dx[x] * rsigdt;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            for (int x = 0; x < isat.Length; x++)
-                            {
-                                if (isat[x] == 0)
-                                {
-                                    for (int y = 1; y <= sd.n; y++)
-                                        bb[y] = qyb[y - 1] - qya[y] - sd.ths[x] * sd.dx[x] * rsigdt;
-                                }
-                                else
-                                {
-                                    for (int y = 1; y <= sd.n; y++)
-                                        bb[y] = qyb[y - 1] - qya[y];
-                                }
-                            }
+                            bb[x] = qyb[x - 1] - qya[x];
+                            if (isat[x]==0)
+                                bb[x] -= sd.ths[x] * sd.dx[x] * rsigdt;
+
+                            if (extraction)
+                                bb[x] -= qwexd[x];
                         }
 
                         Tri(ns, sd.n, aa, ref bb, cc, dd, ref ee, ref dy);
@@ -605,24 +582,27 @@ namespace SWIMFrame
                             //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
                             for (i = 1; i <= nex; i++)
                             {
-                                dwexsV = dwexsM.Row(i);
-                                qwexsV = qwexsM.Row(i);
-                                qwexsdV = qwexsdM.Row(i);
+                                dwexsV = dwexsM.Column(i);
+                                qwexsV = qwexsM.Column(i);
+                                qwexsdV = qwexsdM.Column(i);
                                 dwexsV = dwexsV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1,sd.n))) * dt;
-                                dwexsM.Row(i, dwexsV);
+                                dwexsM.Column(i, dwexsV);
                             }
                             dwexs = dwexsM.ToArray();
                         }
 
                         //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                        for (i = 1; i <= nex; i++)
+                        if (wex.GetLength(0) > 1) // analog for if (present(wex))
                         {
-                            qwexsV = qwexsM.Column(i);
-                            qwexsdV = qwexsdM.Column(i);
-                            wexV = wexM.Column(i);
-                            wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                            for (i = 1; i <= nex; i++)
+                            {
+                                qwexsV = qwexsM.Column(i);
+                                qwexsdV = qwexsdM.Column(i);
+                                wexV = wexM.Column(i);
+                                wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                            }
+                            wex = wexM.ToArray();
                         }
-                        wex = wexM.ToArray();
                     }
                     
                     for (i = 1; i <= sd.n; i++)
@@ -904,7 +884,7 @@ namespace SWIMFrame
 
                     if (extraction)  //get extraction
                     {
-                        double[] ctemp = new double[n - 1];
+                        double[] ctemp = new double[n + 1];
                         for (int x = 1; x <= n; x++)
                             ctemp[x] = c[j, x];
 
