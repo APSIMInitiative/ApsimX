@@ -94,6 +94,7 @@ namespace UserInterface.Views
             _mainWidget = hbox1;
             gridview.Model = gridmodel;
             gridview.Selection.Mode = SelectionMode.Multiple;
+            fixedcolview.Model = gridmodel;
             fixedcolview.Selection.Mode = SelectionMode.Multiple;
             Popup.AttachToWidget(gridview, null);
             AddContextAction("Copy", OnCopyToClipboard);
@@ -104,13 +105,8 @@ namespace UserInterface.Views
             fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
             gridview.Selection.Changed += Gridview_CursorChanged;
             fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
-            fixedcolview.WidgetEvent += Fixedcolview_WidgetEvent;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-        }
-
-        private void Fixedcolview_WidgetEvent(object o, WidgetEventArgs args)
-        {
         }
 
         private bool selfCursorMove = false;
@@ -231,6 +227,7 @@ namespace UserInterface.Views
         {
             WaitCursor = true;
             ClearGridColumns();
+            fixedcolview.Visible = false;
             colLookup.Clear();
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
@@ -239,6 +236,11 @@ namespace UserInterface.Views
             for (int i = 0; i < nCols; i++)
                 colTypes[i] = typeof(string);
             gridmodel = new ListStore(colTypes);
+            gridview.FixedHeightMode = false;
+            gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
+            gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
+            fixedcolview.ModifyBase(StateType.Active, gridview.Style.Base(StateType.Selected));
+            fixedcolview.ModifyText(StateType.Active, gridview.Style.Text(StateType.Selected));
 
             image1.Visible = false;
             // Now set up the grid columns
@@ -256,6 +258,7 @@ namespace UserInterface.Views
                 TreeViewColumn column = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 gridview.AppendColumn(column);
                 column.Sizing = TreeViewColumnSizing.Autosize;
+                column.FixedWidth = 100;
                 column.Resizable = true;
                 column.SetCellDataFunc(textRender, OnSetCellData);
                 column.Alignment = 0.5f; // For centered alignment of the column header
@@ -275,24 +278,6 @@ namespace UserInterface.Views
             gridview.AppendColumn(fillColumn);
             fillColumn.Sizing = TreeViewColumnSizing.Autosize;
 
-            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
-            for (int row = 0; row < nRows; row++)
-            {
-                string[] cells = new string[this.DataSource.Columns.Count];
-                // Put everything into the ListStore as a string, but set the actual text
-                // on the fly using the SetCellDataFunc callback
-                for (int col = 0; col < this.DataSource.Columns.Count; col++)
-                    cells[col] = this.DataSource.Rows[row][col].ToString();
-                gridmodel.AppendValues(cells);
-            }
-            gridview.Model = gridmodel;
-            gridview.Selection.Mode = SelectionMode.Multiple;
-            gridview.ShowAll();
-
-            fixedcolview.Visible = false;
-            fixedcolview.Model = gridmodel;
-            fixedcolview.Selection.Mode = SelectionMode.Multiple;
-            
             // Now let's apply center-justification to all the column headers, just for the heck of it
             for (int i = 0; i < nCols; i++)
             {
@@ -301,10 +286,25 @@ namespace UserInterface.Views
                 label = GetColumnHeaderLabel(i, fixedcolview);
                 label.Justify = Justification.Center;
             }
-            gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
-            gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
-            fixedcolview.ModifyBase(StateType.Active, gridview.Style.Base(StateType.Selected));
-            fixedcolview.ModifyText(StateType.Active, gridview.Style.Text(StateType.Selected));
+
+            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
+
+            gridview.Model = null;
+            fixedcolview.Model = null;
+            for (int row = 0; row < nRows; row++)
+            {
+                // We could store data into the grid model, but we don't.
+                // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
+                gridmodel.Append();
+            }
+            gridview.FixedHeightMode = true;
+            fixedcolview.FixedHeightMode = true;
+            gridview.Model = gridmodel;
+            fixedcolview.Model = gridmodel;
+
+            gridview.Show();
+            while (Gtk.Application.EventsPending())
+                Gtk.Application.RunIteration();
             WaitCursor = false;
         }
 
@@ -320,8 +320,12 @@ namespace UserInterface.Views
 
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
+            TreePath startPath;
+            TreePath endPath;
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
+            if (gridview.GetVisibleRange(out startPath, out endPath) &&  (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
+                return;
             int colNo;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
