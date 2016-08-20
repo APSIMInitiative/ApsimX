@@ -2405,7 +2405,7 @@ namespace Models.AgPasture
         internal GenericBelowGroundOrgan roots;
 
         /// <summary>basic state variables for each species (to be used for reset)</summary>
-        private SpeciesStateSettings InitialState;
+        private SpeciesBasicStateSettings InitialState;
 
         // defining the plant type  -----------------------------------------------------------------------------------
 
@@ -2706,7 +2706,7 @@ namespace Models.AgPasture
         private double TmeanW;
 
         /// <summary>State for this plant on the previous day</summary>
-        private SpeciesStateNew myPreviousState;
+        private SpeciesStateParameters myPreviousState;
 
         #endregion
 
@@ -2789,7 +2789,7 @@ namespace Models.AgPasture
             SetInitialState();
 
             // initialise the class which will hold yesterday's plant state
-            myPreviousState = new SpeciesStateNew(nLayers);
+            myPreviousState = new SpeciesStateParameters(nLayers);
 
             // check whether uptake is done here or by another module
             if (apsimArbitrator != null)
@@ -2851,7 +2851,7 @@ namespace Models.AgPasture
             roots.NConcMaximum = NThresholdsForRoots[2];
 
             // 3. Save initial state (may be used later for reset)
-            InitialState = new SpeciesStateSettings();
+            InitialState = new SpeciesBasicStateSettings();
             if (InitialShootDM > -myEpsilon)
             {
                 // DM is zero (not sown yet) or positive (plant is on the ground and able to grow straightaway)
@@ -2900,7 +2900,7 @@ namespace Models.AgPasture
         /// </summary>
         private void SetInitialState()
         {
-            // 1. Initialise DM of each tissue pool above-ground (initial valuesupplied by user)
+            // 1. Initialise DM of each tissue pool above-ground (initial values supplied by user)
             leaves.Tissue[0].DM = InitialState.DMWeight[0];
             leaves.Tissue[1].DM = InitialState.DMWeight[1];
             leaves.Tissue[2].DM = InitialState.DMWeight[2];
@@ -2913,7 +2913,7 @@ namespace Models.AgPasture
             stolons.Tissue[1].DM = InitialState.DMWeight[9];
             stolons.Tissue[2].DM = InitialState.DMWeight[10];
 
-            // 2. Initialise the N amounts in each pool above-ground (assume to be at optimum)
+            // 2. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
             leaves.Tissue[0].Namount = InitialState.NAmount[0];
             leaves.Tissue[1].Namount = InitialState.NAmount[1];
             leaves.Tissue[2].Namount = InitialState.NAmount[2];
@@ -2931,7 +2931,7 @@ namespace Models.AgPasture
             myRootFrontier = RootZoneBottomLayer();
             targetRootAllocation = RootDistributionTarget();
 
-            rootFraction1 = RootDistributionCurrentTarget();
+            rootFraction1 = CurrentRootDistributionTarget();
             rootFraction = RootProfileDistribution();
             for (int layer = 0; layer < nLayers; layer++)
                 roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFraction[layer];
@@ -2974,7 +2974,7 @@ namespace Models.AgPasture
             // 2. Set root depth and DM (root DM equals shoot)
             myRootDepth = MinimumRootDepth;
             myRootFrontier = RootZoneBottomLayer();
-            double[] rootFractions = RootDistributionCurrentTarget();            
+            double[] rootFractions = CurrentRootDistributionTarget();            
             for (int layer = 0; layer < nLayers; layer++)
                 roots.Tissue[0].DMLayer[layer] = MinimumGreenWt * rootFractions[layer];
 
@@ -3807,8 +3807,9 @@ namespace Models.AgPasture
             double WaterFac = WaterFactorForTissueTurnover();
             double WaterFac2Litter = Math.Pow(glfWater, 3);
             double WaterFac2Root = 2 - glfWater;
-            double SR = 0;
+
             //stocking rate affecting transfer of dead to litter (default as 0 for now - should be read in)
+            double SR = 0;
             double StockFac2Litter = StockParameter * SR;
 
             // Turnover rate for leaf and stem
@@ -5056,7 +5057,7 @@ namespace Models.AgPasture
         public void Reset()
         {
             SetInitialState();
-            myPreviousState = new SpeciesStateNew(nLayers);
+            myPreviousState = new SpeciesStateParameters(nLayers);
         }
 
         /// <summary>Kills this plant (zero all variables and set to not alive)</summary>
@@ -5097,7 +5098,7 @@ namespace Models.AgPasture
 
             phenologicStage = 0;
 
-            myPreviousState = new SpeciesStateNew(nLayers);
+            myPreviousState = new SpeciesStateParameters(nLayers);
         }
 
         #endregion
@@ -5565,7 +5566,7 @@ namespace Models.AgPasture
         /// as well as the current rooting depth
         /// </remarks>
         /// <returns>The proportion of root mass in each soil layer</returns>
-        private double[] RootDistributionCurrentTarget()
+        private double[] CurrentRootDistributionTarget()
         {
             double currentDepth = 0.0;
             double cumAllocation = 0.0;
@@ -5745,50 +5746,50 @@ namespace Models.AgPasture
 
         /// <summary>Stores the DM and N values of all plant parts</summary>
         [Serializable]
-        private class SpeciesStateNew
+        private class SpeciesStateParameters
         {
             /// <summary>The state of leaves (DM and N)</summary>
-            internal BaseOrgan leaves;
+            internal GenericAboveGroundOrgan leaves;
 
             /// <summary>The state of sheath/stems (DM and N)</summary>
-            internal BaseOrgan stems;
+            internal GenericAboveGroundOrgan stems;
 
             /// <summary>The state of stolons (DM and N)</summary>
-            internal BaseOrgan stolons;
+            internal GenericAboveGroundOrgan stolons;
 
             /// <summary>The state of roots (DM and N)</summary>
-            internal BaseOrgan roots;
+            internal GenericBelowGroundOrgan roots;
             //internal RootOrgan roots;
 
             /// <summary>The constructor</summary>
-            public SpeciesStateNew(int numLayers)
+            public SpeciesStateParameters(int numLayers)
             {
-                leaves = new BaseOrgan(4);
-                stems = new BaseOrgan(4);
-                stolons = new BaseOrgan(3);
-                roots = new BaseOrgan(1);
+                leaves = new GenericAboveGroundOrgan(4);
+                stems = new GenericAboveGroundOrgan(4);
+                stolons = new GenericAboveGroundOrgan(3);
+                roots = new GenericBelowGroundOrgan(1, numLayers);
             }
 
-            /// <summary>The DM of shoot (g/m^2)</summary>
-            internal double dmShoot
+            /// <summary>The DM weight above-ground [g/m^2]</summary>
+            internal double AboveGroundWt
             {
                 get { return leaves.DMTotal + stems.DMTotal + stolons.DMGreen; }
             }
 
-            /// <summary>The DM of roots (g/m^2)</summary>
-            internal double dmRoot
+            /// <summary>The DM weight below-ground [g/m^2]</summary>
+            internal double BelowGroundWt
             {
                 get { return roots.DMGreen; }
             }
 
-            /// <summary>The amount of N above ground (shoot)</summary>
-            internal double NShoot
+            /// <summary>The amount of N above ground [g/m^2]</summary>
+            internal double AboveGroundN
             {
                 get { return leaves.NTotal + stems.NTotal + stolons.NGreen; }
             }
 
-            /// <summary>The amount of N below ground (root)</summary>
-            internal double NRoot
+            /// <summary>The amount of N below ground [g/m^2]</summary>
+            internal double BelowGroundN
             {
                 get { return roots.NGreen; }
             }
@@ -5805,7 +5806,7 @@ namespace Models.AgPasture
 
         /// <summary>Basic values defining the state of a pasture species</summary>
         [Serializable]
-        internal class SpeciesStateSettings
+        internal class SpeciesBasicStateSettings
         {
             /// <summary>DM weight for each biomass pool</summary>
             internal double[] DMWeight;
@@ -5817,7 +5818,7 @@ namespace Models.AgPasture
             internal double RootDepth;
 
             /// <summary>Constructor, initialise the arrays</summary>
-            public SpeciesStateSettings()
+            public SpeciesBasicStateSettings()
             {
                 // there are 12 tissue pools, in order: leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3, and root
                 DMWeight = new double[12];
@@ -5850,54 +5851,59 @@ namespace Models.AgPasture
     #region Plant organs and tissues  ---------------------------------------------------------------------------------
 
     /// <summary>
-    /// Defines a basic generic organ of a pasture species
+    /// Defines a basic generic above-ground organ of a pasture species
     /// </summary>
     /// <remarks>
     /// Each organ (leaf, stem, etc) is defined as a collection of tissues (limited to four)
     /// Leaves and stems have four tissues, stolons three and roots only one.
     /// Three tissues are alive (growing, developed and mature), the fourth represents dead material
-    /// Each tissue has a record of DM and N amounts, from which N concentration is computed
-    /// The organ has methods to output DM and N as total, live, and dead tissues
+    /// Each organ has its own nutrient concentration thresholds (min, max, opt)
+    /// Each tissue has a record of DM and nutrient amounts, from which N concentration is computed
+    /// The organ has methods to output DM and nutrient as total, live, and dead tissues
+    /// The tissue has method to output is digestibility
     /// </remarks>
     [Serializable]
-    public class BaseOrgan
+    public class GenericAboveGroundOrgan
     {
         /// <summary>Constructor, Initialise tissues</summary>
-        public BaseOrgan(int numTissues)
+        public GenericAboveGroundOrgan(int numTissues)
         {
-            DoInitialisation(numTissues, 0);
-        }
-
-        /// <summary>Constructor, Initialise tissues</summary>
-        public BaseOrgan(int numTissues, int numLayers)
-        {
-            DoInitialisation(numTissues, numLayers);
+            DoInitialisation(numTissues);
         }
 
         /// <summary>Actuallly initialise the tissues</summary>
-        internal virtual void DoInitialisation(int numTissues, int numLayers)
+        internal void DoInitialisation(int numTissues)
         {
-            nTissues = numTissues;
-            Tissue = new GenericTissue[nTissues];
-            for (int t = 0; t < nTissues; t++)
+            TissueCount = numTissues;
+            Tissue = new GenericTissue[TissueCount];
+            for (int t = 0; t < TissueCount; t++)
                 Tissue[t] = new GenericTissue();
         }
 
         /// <summary>the collection of tissues for this organ</summary>
         internal GenericTissue[] Tissue { get; set; }
 
-        /// <summary>Number of tissue pools to create</summary>
-        internal int nTissues;
-
         #region Organ Properties (summary of tissues)  ----------------------------------------------------------------
 
-        /// <summary>The total dry matter in this organ (g/m^2)</summary>
-        internal virtual double DMTotal
+        /// <summary>Number of tissue pools to create</summary>
+        internal int TissueCount;
+
+        /// <summary>N concentration for optimal growth [g/g]</summary>
+        internal double NConcOptimum = 4.0;
+
+        /// <summary>Maximum N concentration, for luxury uptake [g/g]</summary>
+        internal double NConcMaximum = 6.0;
+
+        /// <summary>Minimum N concentration, structural N [g/g]</summary>
+        internal double NConcMinimum = 1.2;
+
+        /// <summary>The total dry matter in this organ [g/m^2]</summary>
+        internal double DMTotal
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < nTissues; t++)
+                for (int t = 0; t < TissueCount; t++)
                 {
                     result += Tissue[t].DM;
                 }
@@ -5906,13 +5912,13 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The dry matter in the green (alive) tissues (g/m^2)</summary>
-        internal virtual double DMGreen
+        /// <summary>The dry matter in the live (green) tissues [g/m^2]</summary>
+        internal double DMGreen
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, nTissues); t++)
+                for (int t = 0; t < Math.Min(3, TissueCount); t++)
                 {
                     result += Tissue[t].DM;
                 }
@@ -5921,13 +5927,13 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The dry matter in the dead tissues (g/m^2)</summary>
-        internal virtual double DMDead
+        /// <summary>The dry matter in the dead tissues [g/m^2]</summary>
+        internal double DMDead
         {
             get
             {
                 double result = 0.0;
-                if (nTissues > 3)
+                if (TissueCount > 3)
                 {
                     result += Tissue[3].DM;
                 }
@@ -5936,39 +5942,43 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The total N amount in this tissue (kg/ha)</summary>
-        internal virtual double NTotal
+        /// <summary>The total N amount in this tissue [g/m^2]</summary>
+        internal double NTotal
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < nTissues; t++)
-                { result += Tissue[t].Namount; }
+                for (int t = 0; t < TissueCount; t++)
+                {
+                    result += Tissue[t].Namount;
+                }
 
                 return result;
             }
         }
 
-        /// <summary>The N amount in the green (alive) tissues (kg/ha)</summary>
-        internal virtual double NGreen
+        /// <summary>The N amount in the live (green) tissues [g/m^2]</summary>
+        internal double NGreen
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, nTissues); t++)
-                { result += Tissue[t].Namount; }
+                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                {
+                    result += Tissue[t].Namount;
+                }
 
                 return result;
             }
         }
 
-        /// <summary>The N amount in the dead tissues (g/m^2)</summary>
-        internal virtual double NDead
+        /// <summary>The N amount in the dead tissues [g/m^2]</summary>
+        internal double NDead
         {
             get
             {
                 double result = 0.0;
-                if (nTissues > 3)
+                if (TissueCount > 3)
                 {
                     result += Tissue[3].Namount;
                 }
@@ -5977,7 +5987,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The average N concentration in this organ (g/g)</summary>
+        /// <summary>The average N concentration in this organ [g/g]</summary>
         internal double NconcTotal
         {
             get
@@ -5986,7 +5996,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The average N concentration in the live tissues (g/g)</summary>
+        /// <summary>The average N concentration in the live tissues [g/g]</summary>
         internal double NconcGreen
         {
             get
@@ -5995,7 +6005,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>The average N concentration in dead tissues (g/g)</summary>
+        /// <summary>The average N concentration in dead tissues [g/g]</summary>
         internal double NconcDead
         {
             get
@@ -6010,22 +6020,22 @@ namespace Models.AgPasture
         internal class GenericTissue
         {
             /// <summary>The dry matter amount [g/m^2]</summary>
-            internal virtual double DM { get; set; } = 0.0;
+            internal double DM { get; set; } = 0.0;
 
             /// <summary>The N content [g/m^2]</summary>
-            internal virtual double Namount { get; set; } = 0.0;
+            internal double Namount { get; set; } = 0.0;
 
-            /// <summary>The P content [(g/m^2]</summary>
-            internal virtual double Pamount { get; set; } = 0.0;
+            /// <summary>The P content [g/m^2]</summary>
+            internal double Pamount { get; set; } = 0.0;
 
-            /// <summary>The nitrogen concentration [kg/kg)</summary>
+            /// <summary>The nitrogen concentration [g/g]</summary>
             internal double Nconc
             {
                 get { return MathUtilities.Divide(Namount, DM, 0.0); }
                 set { Namount = value * DM; }
             }
 
-            /// <summary>The phosphorus concentration [g/g])</summary>
+            /// <summary>The phosphorus concentration [g/g]</summary>
             internal double Pconc
             {
                 get { return MathUtilities.Divide(Pamount, DM, 0.0); }
@@ -6037,12 +6047,12 @@ namespace Models.AgPasture
 
             /// <summary>The digestibility of protein [0-1]</summary>
             internal double DigestibilityProtein { get; set; } = 0.5;
-            
+
             /// <summary>The digestibility of cell wall [0-1]</summary>
             internal double SugarFraction { get; set; } = 0.5;
 
             /// <summary>The dry matter amount [g/g]</summary>
-            internal virtual double Digestibility
+            internal double Digestibility
             {
                 get
                 {
@@ -6076,7 +6086,7 @@ namespace Models.AgPasture
 
             #endregion
         }
-        }
+    }
 
     /// <summary>
     /// Defines a generic above-ground organ of a pasture species
@@ -6085,23 +6095,8 @@ namespace Models.AgPasture
     /// Contains the same properties of a BaseOrgan, extended by adding N thresholds
     /// </remarks>
     [Serializable]
-    internal class GenericAboveGroundOrgan : BaseOrgan
+    internal class GenericAboveGroundOrganOld
     {
-        /// <summary>Initialise tissues</summary>
-        public GenericAboveGroundOrgan(int numTissues) : base(numTissues)
-        {
-            DoInitialisation(numTissues, 0);
-        }
-
-        /// <summary>N concentration for optimal grow</summary>
-        internal double NConcOptimum = 4.0;
-
-        /// <summary>Maximum N concentration, for luxury uptake</summary>
-        internal double NConcMaximum = 6.0;
-
-        /// <summary>Minimum N concentration, structural N</summary>
-        internal double NConcMinimum = 1.2;
-
         /// <summary>The total luxury N amount in this organ (kg/ha)</summary>
         internal double NLuxuryTotal
         {
@@ -6110,7 +6105,7 @@ namespace Models.AgPasture
                 double result = 0.0;
                 for (int t = 0; t < 2; t++)
                 {
-                    result += Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
+                    result += 0;//Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
                 }
 
                 return result;
@@ -6120,7 +6115,10 @@ namespace Models.AgPasture
         /// <summary>The N amount in mature tissues taht can be reallocated (kg/ha)</summary>
         internal double NReallocatable
         {
-            get { return Tissue[2].DM * Math.Max(0.0, Tissue[2].Nconc - NConcMinimum); }
+            get
+            {
+                return 0;//Tissue[2].DM * Math.Max(0.0, Tissue[2].Nconc - NConcMinimum); 
+            }
         }
     }
 
@@ -6132,61 +6130,162 @@ namespace Models.AgPasture
     /// and especially by defining the tissues as arrays (to store values by soil layer)
     /// </remarks>
     [Serializable]
-    internal class GenericBelowGroundOrgan : BaseOrgan
+    internal class GenericBelowGroundOrgan
     {
-        /// <summary>the collection of tissues for this organ</summary>
-        internal new RootTissue[] Tissue { get; set; }
-
-        /// <summary>the collection of tissues for this organ</summary>
-        internal RootTissue[] layertissue { get; set; }
-
-        /// <summary>Initialise tissues</summary>
-        public GenericBelowGroundOrgan(int numTissues, int numLayers) : base(numTissues, numLayers)
+        /// <summary>Constructor, Initialise tissues</summary>
+        public GenericBelowGroundOrgan(int numTissues, int numLayers)
         {
             DoInitialisation(numTissues, numLayers);
         }
 
         /// <summary>Actuallly initialise the tissues</summary>
-        internal override void DoInitialisation(int numTissues, int numLayers)
+        internal void DoInitialisation(int numTissues, int numLayers)
         {
-            nTissues = numTissues;
-            Tissue = new RootTissue[nTissues];
-            layertissue = new RootTissue[nTissues];
-            for (int t = 0; t < nTissues; t++)
+            TissueCount = numTissues;
+            Tissue = new RootTissue[TissueCount];
+            for (int t = 0; t < TissueCount; t++)
                 Tissue[t] = new RootTissue(numLayers);
         }
 
-        /// <summary>N concentration for optimal grow</summary>
+        /// <summary>the collection of tissues for this organ</summary>
+        internal RootTissue[] Tissue { get; set; }
+
+        #region Organ Properties (summary of tissues)  ----------------------------------------------------------------
+
+        /// <summary>Number of tissue pools to create</summary>
+        internal int TissueCount;
+
+        /// <summary>N concentration for optimal growth [g/g]</summary>
         internal double NConcOptimum = 1.5;
 
-        /// <summary>Maximum N concentration, for luxury uptake</summary>
+        /// <summary>Maximum N concentration, for luxury uptake [g/g]</summary>
         internal double NConcMaximum = 2.0;
 
-        /// <summary>Minimum N concentration, structural N</summary>
+        /// <summary>Minimum N concentration, structural N [g/g]</summary>
         internal double NConcMinimum = 1.0;
-
-        /// <summary>The total luxury N amount in this organ (kg/ha)</summary>
-        internal double NLuxuryTotal
+        /// <summary>The total dry matter in this organ [g/m^2]</summary>
+        internal double DMTotal
         {
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < 2; t++)
-                {
-                    result += Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
+                for (int t = 0; t < TissueCount; t++)
+                { 
+                    result += Tissue[t].DM;
                 }
 
                 return result;
             }
         }
 
-        /// <summary>Defines a generic plant tissue</summary>
-        internal class RootTissue : GenericTissue
+        /// <summary>The dry matter in the live tissues [g/m^2]</summary>
+        internal double DMGreen
         {
-            /// <summary>THe number of layers in the soil</summary>
-            private int nlayers;
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                {
+                    result += Tissue[t].DM;
+                }
 
-            /// <summary>Constructor</summary>
+                return result;
+            }
+        }
+
+        /// <summary>The dry matter in the dead tissues [g/m^2]</summary>
+        internal double DMDead
+        {
+            get
+            {
+                double result = 0.0;
+                if (TissueCount > 3)
+                {
+                    result += Tissue[3].DM;
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>The total N amount in this tissue [g/m^2]</summary>
+        internal double NTotal
+        {
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < TissueCount; t++)
+                {
+                    result += Tissue[t].Namount;
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>The N amount in the live tissues [g/m^2]</summary>
+        internal double NGreen
+        {
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                {
+                    result += Tissue[t].Namount;
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>The N amount in the dead tissues [g/m^2]</summary>
+        internal double NDead
+        {
+            get
+            {
+                double result = 0.0;
+                if (TissueCount > 3)
+                {
+                    result += Tissue[3].Namount;
+                }
+
+                return result;
+            }
+        }
+        
+        /// <summary>The average N concentration in this organ [g/g]</summary>
+        internal double NconcTotal
+        {
+            get
+            {
+                return MathUtilities.Divide(NTotal, DMTotal, 0.0);
+            }
+        }
+
+        /// <summary>The average N concentration in the live tissues [g/g]</summary>
+        internal double NconcGreen
+        {
+            get
+            {
+                return MathUtilities.Divide(NGreen, DMGreen, 0.0);
+            }
+        }
+
+        /// <summary>The average N concentration in dead tissues [g/g]</summary>
+        internal double NconcDead
+        {
+            get
+            {
+                return MathUtilities.Divide(NDead, DMDead, 0.0);
+            }
+        }
+
+        #endregion
+
+        /// <summary>Defines a generic root tissue</summary>
+        internal class RootTissue
+        {
+            /// <summary>Constructor, initialise array</summary>
             /// <param name="numLayers">Number of layers in the soil</param>
             public RootTissue(int numLayers)
             {
@@ -6196,51 +6295,68 @@ namespace Models.AgPasture
                 PamountLayer = new double[nlayers];
             }
 
-            /// <summary>The dry matter amount (g/m^2)</summary>
-            internal override double DM
+            /// <summary>The number of layers in the soil</summary>
+            private int nlayers;
+
+            /// <summary>The dry matter amount [g/m^2]</summary>
+            internal double DM
             {
                 get { return DMLayer.Sum(); }
                 set
                 {
-                    double[] prevRootFraction = RootFraction;
+                    double[] prevRootFraction = FractionWt;
                     for (int layer = 0; layer < nlayers; layer++)
                         DMLayer[layer] = value * prevRootFraction[layer];
                 }
             }
 
-            /// <summary>The dry matter amount (g/m^2)</summary>
+            /// <summary>The dry matter amount by layer [g/m^2]</summary>
             internal double[] DMLayer;
 
-            /// <summary>The N content amount (g/m^2)</summary>
-            internal override double Namount
+            /// <summary>The N content [g/m^2]</summary>
+            internal double Namount
             {
                 get { return NamountLayer.Sum(); }
                 set
                 {
                     for (int layer = 0; layer < nlayers; layer++)
-                        NamountLayer[layer] = value * RootFraction[layer];
+                        NamountLayer[layer] = value * FractionWt[layer];
                 }
             }
 
-            /// <summary>The N content (g/m^2)</summary>
+            /// <summary>The N content by layer [g/m^2]</summary>
             internal double[] NamountLayer;
 
-            /// <summary>The P content amount (g/m^2)</summary>
-            internal override double Pamount
+            /// <summary>The P content amount [g/m^2]</summary>
+            internal double Pamount
             {
                 get { return PamountLayer.Sum(); }
                 set
                 {
                     for (int layer = 0; layer < nlayers; layer++)
-                        PamountLayer[layer] = value * RootFraction[layer];
+                        PamountLayer[layer] = value * FractionWt[layer];
                 }
             }
 
-            /// <summary>The P content (g/m^2)</summary>
+            /// <summary>The P content by layer [g/m^2]</summary>
             internal double[] PamountLayer;
 
-            /// <summary>The dry matter amount (g/m^2)</summary>
-            internal double[] RootFraction
+            /// <summary>The nitrogen concentration [g/g]</summary>
+            internal double Nconc
+            {
+                get { return MathUtilities.Divide(Namount, DM, 0.0); }
+                set { Namount = value * DM; }
+            }
+
+            /// <summary>The phosphorus concentration [g/g]</summary>
+            internal double Pconc
+            {
+                get { return MathUtilities.Divide(Pamount, DM, 0.0); }
+                set { Pamount = value * DM; }
+            }
+
+            /// <summary>The dry matter fraction by layer [0-1]</summary>
+            internal double[] FractionWt
             {
                 get
                 {
@@ -6249,92 +6365,6 @@ namespace Models.AgPasture
                         result[layer] = DMLayer[layer] / DM;
                     return result;
                 }
-            }
-        }
-
-        /// <summary>The total dry matter in this organ (g/m^2)</summary>
-        internal override double DMTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < nTissues; t++)
-                {
-                    result += Tissue[t].DM;
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>The dry matter in the green (alive) tissues (g/m^2)</summary>
-        internal override double DMGreen
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < Math.Min(3, nTissues); t++)
-                {
-                    result += Tissue[t].DM;
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>The dry matter in the dead tissues (g/m^2)</summary>
-        internal override double DMDead
-        {
-            get
-            {
-                double result = 0.0;
-                if (nTissues > 3)
-                {
-                    result += Tissue[3].DM;
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>The total N amount in this tissue (kg/ha)</summary>
-        internal override double NTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < nTissues; t++)
-                { result += Tissue[t].Namount; }
-
-                return result;
-            }
-        }
-
-        /// <summary>The N amount in the green (alive) tissues (kg/ha)</summary>
-        internal override double NGreen
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < Math.Min(3, nTissues); t++)
-                { result += Tissue[t].Namount; }
-
-                return result;
-            }
-        }
-
-        /// <summary>The N amount in the dead tissues (g/m^2)</summary>
-        internal override double NDead
-        {
-            get
-            {
-                double result = 0.0;
-                if (nTissues > 3)
-                {
-                    result += Tissue[nTissues].Namount;
-                }
-
-                return result;
             }
         }
     }

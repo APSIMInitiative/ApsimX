@@ -86,7 +86,7 @@ namespace Models.AgPasture
         {
             // sward being sown, sow each species available
             for (int s = 0; s < numSpecies; s++)
-                mySward[s].Sow(cultivar, population, depth, rowSpacing);
+                mySpecies[s].Sow(cultivar, population, depth, rowSpacing);
 
             swardIsAlive = true;
         }
@@ -107,7 +107,7 @@ namespace Models.AgPasture
         /// <summary>Gets the reference to the species present in the sward.</summary>
         /// <value>Pasture species.</value>
         [XmlIgnore]
-        public PastureSpecies[] mySward { get; private set; }
+        public PastureSpecies[] mySpecies { get; private set; }
 
         /// <summary>The number of species in the sward</summary>
         private int numSpecies = 1;
@@ -336,7 +336,7 @@ namespace Models.AgPasture
         {
             get
             {
-                if (mySward.Any(mySpecies => mySpecies.PlantStatus == "alive"))
+                if (mySpecies.Any(mySpecies => mySpecies.PlantStatus == "alive"))
                     return "alive";
                 else
                     return "out";
@@ -355,7 +355,7 @@ namespace Models.AgPasture
             {
                 if (PlantStatus == "alive")
                 {
-                    if (mySward.Any(mySpecies => mySpecies.Stage == 3))
+                    if (mySpecies.Any(mySpecies => mySpecies.Stage == 3))
                         return 3;    // 'emergence'
                     else
                         return 1;    //'sowing or germination';
@@ -392,7 +392,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double TotalC
         {
-            get { return mySward.Sum(mySpecies => mySpecies.TotalWt * CinDM); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.TotalWt * CinDM); }
         }
 
         /// <summary>Gets the plant total dry matter weight.</summary>
@@ -401,7 +401,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double TotalWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.TotalWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.TotalWt); }
         }
 
         /// <summary>Gets the plant DM weight above ground.</summary>
@@ -410,7 +410,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double AboveGroundWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundWt); }
         }
 
         /// <summary>Gets the DM weight of live plant parts above ground.</summary>
@@ -419,7 +419,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double AboveGroundLiveWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundLivedWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundLivedWt); }
         }
 
         /// <summary>Gets the DM weight of dead plant parts above ground.</summary>
@@ -428,7 +428,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double AboveGroundDeadWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundDeadWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundDeadWt); }
         }
 
         /// <summary>Gets the DM weight of the plant below ground.</summary>
@@ -437,7 +437,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double BelowGroundWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RootWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RootWt); }
         }
 
         /// <summary>Gets the total standing DM weight.</summary>
@@ -446,7 +446,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StandingWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingWt); }
         }
 
         /// <summary>Gets the DM weight of standing live plant material.</summary>
@@ -455,7 +455,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StandingLiveWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingLiveWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingLiveWt); }
         }
 
         /// <summary>Gets the DM weight of standing dead plant material.</summary>
@@ -464,7 +464,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StandingDeadWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingDeadWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingDeadWt); }
         }
 
         /// <summary>Gets the total DM weight of leaves.</summary>
@@ -473,7 +473,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double LeafWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LeafWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LeafWt); }
         }
 
         /// <summary>Gets the DM weight of green leaves.</summary>
@@ -482,7 +482,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double LeafLiveWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LeafGreenWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LeafGreenWt); }
         }
 
         /// <summary>Gets the DM weight of dead leaves.</summary>
@@ -491,7 +491,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double LeafDeadWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LeafDeadWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LeafDeadWt); }
         }
 
         /// <summary>Gets the total DM weight of stems and sheath.</summary>
@@ -500,7 +500,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StemWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StemWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StemWt); }
         }
 
         /// <summary>Gets the DM weight of live stems and sheath.</summary>
@@ -509,7 +509,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StemLiveWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StemGreenWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StemGreenWt); }
         }
 
         /// <summary>Gets the DM weight of dead stems and sheath.</summary>
@@ -518,7 +518,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StemDeadWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StemDeadWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StemDeadWt); }
         }
 
         /// <summary>Gets the total DM weight od stolons.</summary>
@@ -527,7 +527,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double StolonWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StolonWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StolonWt); }
         }
 
         /// <summary>Gets the total DM weight of roots.</summary>
@@ -536,7 +536,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RootWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RootWt); }
         }
 
         /// <summary>Gets the root DM weight foreach layer.</summary>
@@ -550,7 +550,7 @@ namespace Models.AgPasture
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
                     for (int s = 0; s < numSpecies; s++)
-                        result[layer] = mySward[s].RootLayerWt[layer];
+                        result[layer] = mySpecies[s].RootLayerWt[layer];
                 return result;
             }
         }
@@ -565,7 +565,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double GrossPotentialGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.GrossPotentialGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.GrossPotentialGrowthWt); }
         }
 
         /// <summary>Gets the respiration rate.</summary>
@@ -574,7 +574,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RespirationWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RespirationWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RespirationWt); }
         }
 
         /// <summary>Gets the remobilisation rate.</summary>
@@ -583,7 +583,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RemobilisationWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RemobilisationWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisationWt); }
         }
 
         /// <summary>Gets the net potential growth rate.</summary>
@@ -592,7 +592,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NetPotentialGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.NetPotentialGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.NetPotentialGrowthWt); }
         }
 
         /// <summary>Gets the potential growth rate after water stress.</summary>
@@ -601,7 +601,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double PotGrowthWt_Wstress
         {
-            get { return mySward.Sum(mySpecies => mySpecies.PotGrowthWt_Wstress); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.PotGrowthWt_Wstress); }
         }
 
         /// <summary>Gets the actual growth rate.</summary>
@@ -610,7 +610,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double ActualGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.ActualGrowthWt); }
         }
 
         /// <summary>Gets the effective growth rate.</summary>
@@ -619,7 +619,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double EffectiveGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.EffectiveGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.EffectiveGrowthWt); }
         }
 
         /// <summary>Gets the effective herbage growth rate.</summary>
@@ -628,7 +628,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double HerbageGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HerbageGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.HerbageGrowthWt); }
         }
 
         /// <summary>Gets the effective root growth rate.</summary>
@@ -637,7 +637,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootGrowthWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RootGrowthWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RootGrowthWt); }
         }
 
         /// <summary>Gets the litter DM weight deposited onto soil surface.</summary>
@@ -646,7 +646,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double LitterDepositionWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LitterWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LitterWt); }
         }
 
         /// <summary>Gets the senesced root DM weight.</summary>
@@ -655,7 +655,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootSenescenceWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RootSenescedWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RootSenescedWt); }
         }
 
         /// <summary>Gets the gross primary productivity.</summary>
@@ -664,7 +664,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double GPP
         {
-            get { return mySward.Sum(mySpecies => mySpecies.GPP); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.GPP); }
         }
 
         /// <summary>Gets the net primary productivity.</summary>
@@ -673,7 +673,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NPP
         {
-            get { return mySward.Sum(mySpecies => mySpecies.NPP); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.NPP); }
         }
 
         /// <summary>Gets the net above-ground primary productivity.</summary>
@@ -682,7 +682,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NAPP
         {
-            get { return mySward.Sum(mySpecies => mySpecies.NAPP); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.NAPP); }
         }
 
         /// <summary>Gets the net below-ground primary productivity.</summary>
@@ -691,7 +691,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NBPP
         {
-            get { return mySward.Sum(mySpecies => mySpecies.NBPP); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.NBPP); }
         }
 
         #endregion
@@ -704,7 +704,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double TotalN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.TotalN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.TotalN); }
         }
 
         /// <summary>Gets the N content in the plant above ground.</summary>
@@ -713,7 +713,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double AboveGroundN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundN); }
         }
 
         /// <summary>Gets the N content in live plant material above ground.</summary>
@@ -722,7 +722,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double AboveGroundLiveN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundLiveN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundLiveN); }
         }
 
         /// <summary>Gets the N content of dead plant material above ground.</summary>
@@ -731,7 +731,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double AboveGroundDeadN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.AboveGroundDeadN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundDeadN); }
         }
 
         /// <summary>Gets the N content of plants below ground.</summary>
@@ -740,7 +740,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double BelowGroundN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.BelowGroundN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.BelowGroundN); }
         }
 
         /// <summary>Gets the N content of standing plants.</summary>
@@ -749,7 +749,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double StandingN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingN); }
         }
 
         /// <summary>Gets the N content of standing live plant material.</summary>
@@ -758,7 +758,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double StandingLiveN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingLiveN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingLiveN); }
         }
 
         /// <summary>Gets the N content  of standing dead plant material.</summary>
@@ -767,7 +767,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double StandingDeadN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StandingDeadN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StandingDeadN); }
         }
 
         /// <summary>Gets the total N content of leaves.</summary>
@@ -776,7 +776,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double LeafN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LeafN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LeafN); }
         }
 
         /// <summary>Gets the total N content of stems and sheath.</summary>
@@ -785,7 +785,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double StemN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StemN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StemN); }
         }
 
         /// <summary>Gets the total N content of stolons.</summary>
@@ -794,7 +794,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double StolonN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.StolonN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.StolonN); }
         }
 
         /// <summary>Gets the total N content of roots.</summary>
@@ -803,7 +803,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RootN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RootN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RootN); }
         }
 
         #endregion
@@ -874,7 +874,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RemobilisedN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RemobilisedN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisedN); }
         }
 
         /// <summary>Gets the amount of luxury N potentially remobilisable.</summary>
@@ -883,7 +883,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double LuxuryNRemobilisable
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RemobilisableLuxuryN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisableLuxuryN); }
         }
 
         /// <summary>Gets the amount of luxury N remobilised.</summary>
@@ -892,7 +892,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double LuxuryNRemobilised
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RemobilisedLuxuryN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisedLuxuryN); }
         }
 
         /// <summary>Gets the amount of atmospheric N fixed.</summary>
@@ -901,7 +901,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double FixedN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.FixedN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.FixedN); }
         }
 
         /// <summary>Gets the amount of N required with luxury uptake.</summary>
@@ -910,7 +910,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double NitrogenRequiredLuxury
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RequiredLuxuryN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RequiredLuxuryN); }
         }
 
         /// <summary>Gets the amount of N required for optimum N content.</summary>
@@ -919,7 +919,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double NitrogenRequiredOptimum
         {
-            get { return mySward.Sum(mySpecies => mySpecies.RequiredOptimumN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RequiredOptimumN); }
         }
 
         /// <summary>Gets the amount of N demanded from soil.</summary>
@@ -928,7 +928,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double NitrogenDemand
         {
-            get { return mySward.Sum(mySpecies => mySpecies.DemandSoilN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.DemandSoilN); }
         }
 
         /// <summary>Gets the amount of plant available N in soil layer.</summary>
@@ -948,7 +948,7 @@ namespace Models.AgPasture
                 else
                 {
                     for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableN[layer]);
+                        result[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableN[layer]);
                 }
                 return result;
             }
@@ -964,7 +964,7 @@ namespace Models.AgPasture
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySward.Sum(mySpecies => mySpecies.UptakeN[layer]);
+                    result[layer] = mySpecies.Sum(mySpecies => mySpecies.UptakeN[layer]);
                 return result;
             }
         }
@@ -975,7 +975,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double LitterDepositionN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LitterN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LitterN); }
         }
 
         /// <summary>Gets the amount of N from senesced roots added to soil FOM.</summary>
@@ -984,7 +984,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RootSenescenceN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.SenescedRootN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.SenescedRootN); }
         }
 
         /// <summary>Gets the amount of N in new grown tissue.</summary>
@@ -993,7 +993,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double ActualGrowthN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.ActualGrowthN); }
         }
 
         /// <summary>Gets the N concentration in new grown tissue.</summary>
@@ -1004,8 +1004,8 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.ActualGrowthN),
-                    mySward.Sum(mySpecies => mySpecies.ActualGrowthWt), 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.ActualGrowthN),
+                    mySpecies.Sum(mySpecies => mySpecies.ActualGrowthWt), 0.0);
             }
         }
 
@@ -1019,7 +1019,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double DMToShoot
         {
-            get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthWt * mySpecies.ShootDMAllocation); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.ActualGrowthWt * mySpecies.ShootDMAllocation); }
         }
 
         /// <summary>Gets the DM weight allocated to roots.</summary>
@@ -1028,7 +1028,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double DMToRoots
         {
-            get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthWt * mySpecies.RootDMAllocation); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.ActualGrowthWt * mySpecies.RootDMAllocation); }
         }
 
         /// <summary>Gets the fraction of new growth allocated to root.</summary>
@@ -1068,7 +1068,7 @@ namespace Models.AgPasture
         [Units("m^2/m^2")]
         public double LAIGreen
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LAIGreen); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LAIGreen); }
         }
 
         /// <summary>Gets the plant's dead LAI (leaf area index).</summary>
@@ -1077,7 +1077,7 @@ namespace Models.AgPasture
         [Units("m^2/m^2")]
         public double LAIDead
         {
-            get { return mySward.Sum(mySpecies => mySpecies.LAIDead); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.LAIDead); }
         }
 
         /// <summary>Gets the average light extinction coefficient.</summary>
@@ -1088,8 +1088,8 @@ namespace Models.AgPasture
         {
             get
             {
-                double result = mySward.Sum(mySpecies => mySpecies.LAITotal * mySpecies.LightExtentionCoefficient);
-                result /= mySward.Sum(mySpecies => mySpecies.LAITotal);
+                double result = mySpecies.Sum(mySpecies => mySpecies.LAITotal * mySpecies.LightExtentionCoefficient);
+                result /= mySpecies.Sum(mySpecies => mySpecies.LAITotal);
 
                 return result;
             }
@@ -1144,7 +1144,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootZoneDepth
         {
-            get { return mySward.Max(mySpecies => mySpecies.RootDepth); }
+            get { return mySpecies.Max(mySpecies => mySpecies.RootDepth); }
         }
 
         /// <summary>Gets the root frontier.</summary>
@@ -1153,7 +1153,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootFrontier
         {
-            get { return mySward.Max(mySpecies => mySpecies.RootFrontier); }
+            get { return mySpecies.Max(mySpecies => mySpecies.RootFrontier); }
         }
 
         /// <summary>Gets the fraction of root dry matter for each soil layer.</summary>
@@ -1168,7 +1168,7 @@ namespace Models.AgPasture
                 //              rootFraction = RootLayerWt[layer] / RootWt;
                 if (RootWt > 0.0)
                     for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySward.Sum(mySpecies => mySpecies.RootWt * mySpecies.RootWtFraction[layer]) / RootWt;
+                        result[layer] = mySpecies.Sum(mySpecies => mySpecies.RootWt * mySpecies.RootWtFraction[layer]) / RootWt;
                 return result;
             }
         }
@@ -1183,7 +1183,7 @@ namespace Models.AgPasture
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySward.Sum(mySpecies => mySpecies.RLD[layer]);
+                    result[layer] = mySpecies.Sum(mySpecies => mySpecies.RLD[layer]);
                 return result;
             }
         }
@@ -1198,7 +1198,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double WaterDemand
         {
-            get { return mySward.Sum(mySpecies => mySpecies.WaterDemand); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.WaterDemand); }
         }
 
         /// <summary>Gets the amount of soil water available for uptake.</summary>
@@ -1217,7 +1217,7 @@ namespace Models.AgPasture
                 {
                     double[] result = new double[nLayers];
                     for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
+                        result[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
                     return result;
                 }
             }
@@ -1233,7 +1233,7 @@ namespace Models.AgPasture
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySward.Sum(mySpecies => mySpecies.WaterUptake[layer]);
+                    result[layer] = mySpecies.Sum(mySpecies => mySpecies.WaterUptake[layer]);
                 return result;
             }
         }
@@ -1250,7 +1250,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfRadnIntercept * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfRadnIntercept * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1262,7 +1262,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfCO2 * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfCO2 * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1274,7 +1274,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfNContent * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfNContent * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1286,7 +1286,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1298,7 +1298,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfHeatDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfHeatDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1310,7 +1310,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfColdDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfColdDamage * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1322,7 +1322,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.GrossPotentialGrowthWt), GrossPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1334,7 +1334,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfWaterSupply * mySpecies.LAIGreen), LAIGreen, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfWaterSupply * mySpecies.LAIGreen), LAIGreen, 0.0);
             }
         }
 
@@ -1346,7 +1346,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfWaterLogging * mySpecies.NetPotentialGrowthWt), NetPotentialGrowthWt, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfWaterLogging * mySpecies.NetPotentialGrowthWt), NetPotentialGrowthWt, 0.0);
             }
         }
 
@@ -1358,7 +1358,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.GlfNSupply * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.GlfNSupply * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
             }
         }
 
@@ -1370,7 +1370,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide( mySward.Sum(mySpecies => mySpecies.GlfSFertility * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
+                return MathUtilities.Divide( mySpecies.Sum(mySpecies => mySpecies.GlfSFertility * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
             }
         }
 
@@ -1381,7 +1381,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double FVPD
         {
-            get { return mySward[0].FVPD; }
+            get { return mySpecies[0].FVPD; }
         }
 
         #endregion
@@ -1394,7 +1394,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double HarvestableWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HarvestableWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.HarvestableWt); }
         }
 
         /// <summary>Gets the amount of dry matter harvested.</summary>
@@ -1403,7 +1403,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double HarvestedWt
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HarvestedWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.HarvestedWt); }
         }
 
         /// <summary>Gets the amount of plant N removed by harvest.</summary>
@@ -1412,7 +1412,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double HarvestedN
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HarvestedN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.HarvestedN); }
         }
 
         /// <summary>Gets the N concentration in harvested DM.</summary>
@@ -1430,7 +1430,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double HerbageDigestibility
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.HerbageDigestibility * mySpecies.StandingWt), StandingWt, 0.0); }
+            get { return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.HerbageDigestibility * mySpecies.StandingWt), StandingWt, 0.0); }
         }
 
         //// TODO: Digestibility of harvested material should be better calculated (consider fraction actually removed)
@@ -1440,7 +1440,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double HarvestedDigestibility
         {
-            get { return MathUtilities.Divide(mySward.Sum(mySpecies => mySpecies.HarvestedDigestibility * mySpecies.HarvestedWt), HarvestedWt, 0.0); }
+            get { return MathUtilities.Divide(mySpecies.Sum(mySpecies => mySpecies.HarvestedDigestibility * mySpecies.HarvestedWt), HarvestedWt, 0.0); }
         }
 
         /// <summary>Gets the average herbage ME (metabolisable energy).</summary>
@@ -1547,11 +1547,11 @@ namespace Models.AgPasture
         {
             // get the number and reference to the mySpecies in the sward
             numSpecies = Apsim.Children(this, typeof(PastureSpecies)).Count;
-            mySward = new PastureSpecies[numSpecies];
+            mySpecies = new PastureSpecies[numSpecies];
             int s = 0;
             foreach (PastureSpecies mySpecies in Apsim.Children(this, typeof(PastureSpecies)))
             {
-                mySward[s] = mySpecies;
+                this.mySpecies[s] = mySpecies;
                 s += 1;
             }
         }
@@ -1562,7 +1562,7 @@ namespace Models.AgPasture
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
             {
                 mySpecies.isSwardControlled = isSwardControlled;
                 mySpecies.myWaterUptakeSource = myWaterUptakeSource;
@@ -1599,7 +1599,7 @@ namespace Models.AgPasture
         {
             if (swardIsAlive)
             {
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     // stores the current state for this mySpecies
                     mySpecies.SaveState();
@@ -1612,13 +1612,13 @@ namespace Models.AgPasture
                 DoWaterCalculations();
 
                 // step 02 - Potential growth after water limitations
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.CalcGrowthWithWaterLimitations();
 
                 // Nitrogen demand, supply, and uptake
                 DoNitrogenCalculations();
 
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     // step 03 - Actual growth after nutrient limitations, but before senescence
                     mySpecies.CalcActualGrowthAndPartition();
@@ -1659,7 +1659,7 @@ namespace Models.AgPasture
             swardSoilAvailableWater = GetSoilAvailableWater();
 
             // Get the water demand for all mySpecies
-            swardWaterDemand = mySward.Sum(mySpecies => mySpecies.WaterDemand);
+            swardWaterDemand = mySpecies.Sum(mySpecies => mySpecies.WaterDemand);
 
             // Do the water uptake (and partition between mySpecies)
             if (myWaterUptakeSource.ToLower() == "sward")
@@ -1680,13 +1680,13 @@ namespace Models.AgPasture
                 }
                 double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
                 double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.glfWater = waterLimitingFactor;
                 //mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
             }
             else
             { //Water uptake is done by each species or by another apsim module
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.DoWaterCalculations();
             }
         }
@@ -1723,7 +1723,7 @@ namespace Models.AgPasture
 
                 // get sum water available for all mySpecies
                 double[] sumWaterAvailable = new double[nLayers];
-                foreach (PastureSpecies plant in mySward)
+                foreach (PastureSpecies plant in mySpecies)
                     sumWaterAvailable.Zip(plant.GetSoilAvailableWater(), (x, y) => x + y);
 
                 for (int layer = 0; layer <= RootFrontier; layer++)
@@ -1734,8 +1734,8 @@ namespace Models.AgPasture
                                 / (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]));
 
                     // theoretical total available water
-                    layerFraction = mySward.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
-                    layerLL = mySward.Min(mySpecies => mySpecies.LL[layer]) * mySoil.Thickness[layer];
+                    layerFraction = mySpecies.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
+                    layerLL = mySpecies.Min(mySpecies => mySpecies.LL[layer]) * mySoil.Thickness[layer];
                     result[layer] = Math.Max(0.0, mySoil.Water[layer] - layerLL) * layerFraction;
 
                     // actual available water
@@ -1769,7 +1769,7 @@ namespace Models.AgPasture
                 }
 
                 // partition uptake between species, as function of their demand only
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     mySpecies.mySoilWaterTakenUp = new double[nLayers];
                     speciesFraction = mySpecies.WaterDemand / swardWaterDemand;
@@ -1786,9 +1786,9 @@ namespace Models.AgPasture
 
                 double[] sumWaterAvailable = new double[nLayers];
                 for (int layer = 0; layer < RootFrontier; layer++)
-                    sumWaterAvailable[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
+                    sumWaterAvailable[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     // get adjusted water available
                     adjustedWAvailable = new double[nLayers];
@@ -1811,7 +1811,7 @@ namespace Models.AgPasture
             }
 
             // aggregate all water taken up
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
                 swardWaterUptake.Zip(mySpecies.WaterUptake, (x, y) => x + y);
 
             // send the delta water taken up
@@ -1834,9 +1834,9 @@ namespace Models.AgPasture
                 GetSoilAvailableN();
 
                 // partition N available between species, based on their relative demand (luxury minus minimum fixation)
-                double sumDemand = mySward.Sum(mySpecies => mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation));
+                double sumDemand = mySpecies.Sum(mySpecies => mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation));
                 double speciesFraction = 0.0;
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     speciesFraction = mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation) / sumDemand;
                     for (int layer = 0; layer < nLayers; layer++)
@@ -1851,35 +1851,35 @@ namespace Models.AgPasture
                 swardNFixation = CalcNFixation();
 
                 // evaluate the use of N remobilised and any soil demand
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.CalcSoilNDemand();
-                swardRemobilisedN = mySward.Sum(mySpecies => mySpecies.RemobilisableN);
-                swardNRemobNewGrowth = mySward.Sum(mySpecies => mySpecies.RemobilisedN);
-                swardSoilNdemand = mySward.Sum(mySpecies => mySpecies.DemandSoilN);
+                swardRemobilisedN = mySpecies.Sum(mySpecies => mySpecies.RemobilisableN);
+                swardNRemobNewGrowth = mySpecies.Sum(mySpecies => mySpecies.RemobilisedN);
+                swardSoilNdemand = mySpecies.Sum(mySpecies => mySpecies.DemandSoilN);
 
                 // get the amount of N taken up from soil
                 swardSoilNuptake = CalcSoilNUptake();
 
                 // preliminary N budget
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.newGrowthN = mySpecies.FixedN + mySpecies.RemobilisedN + mySpecies.mySoilNuptake;
                 swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNuptake;
 
                 // evaluate whether further remobilisation (from luxury N) is needed
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     mySpecies.CalcNLuxuryRemob();
                     mySpecies.newGrowthN += mySpecies.RemobT2LuxuryN + mySpecies.RemobT3LuxuryN;
                 }
-                swardNFastRemob2 = mySward.Sum(mySpecies => mySpecies.RemobT2LuxuryN);
-                swardNFastRemob3 = mySward.Sum(mySpecies => mySpecies.RemobT3LuxuryN);
+                swardNFastRemob2 = mySpecies.Sum(mySpecies => mySpecies.RemobT2LuxuryN);
+                swardNFastRemob3 = mySpecies.Sum(mySpecies => mySpecies.RemobT3LuxuryN);
                 swardNewGrowthN += swardNFastRemob2 + swardNFastRemob3;
 
                 // send delta N to the soil model
                 DoSoilNitrogenUptake();
 
                 // get the glfN for each species
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                 {
                     if (mySpecies.ActualGrowthN > 0.0)
                         mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
@@ -1889,7 +1889,7 @@ namespace Models.AgPasture
             }
             else
             { // N uptake is evaluated by the plant mySpecies or some other module
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.DoNitrogenCalculations();
             }
         }
@@ -1923,12 +1923,12 @@ namespace Models.AgPasture
 
                     facWtaken = swardWaterUptake[layer] / Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]);
 
-                    layerFraction = mySward.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
-                    nK = mySward.Max(mySpecies => mySpecies.kuNH4);
+                    layerFraction = mySpecies.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
+                    nK = mySpecies.Max(mySpecies => mySpecies.kuNH4);
                     swardSoilNH4Available[layer] = mySoil.NH4N[layer] * nK * layerFraction;
                     swardSoilNH4Available[layer] *= facWtaken;
 
-                    nK = mySward.Max(mySpecies => mySpecies.kuNO3);
+                    nK = mySpecies.Max(mySpecies => mySpecies.kuNO3);
                     swardSoilNO3Available[layer] = mySoil.NO3N[layer] * nK * layerFraction;
                     swardSoilNO3Available[layer] *= facWtaken;
                 }
@@ -1968,12 +1968,12 @@ namespace Models.AgPasture
 
                     facWtaken = swardWaterUptake[layer] / Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]);
 
-                    layerFraction = mySward.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
-                    nK = mySward.Max(mySpecies => mySpecies.kuNH4);
+                    layerFraction = mySpecies.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
+                    nK = mySpecies.Max(mySpecies => mySpecies.kuNH4);
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                         swardSoilNH4Available[layer] += zone.NH4N[layer] * nK * layerFraction;
 
-                    nK = mySward.Max(mySpecies => mySpecies.kuNO3);
+                    nK = mySpecies.Max(mySpecies => mySpecies.kuNO3);
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                         swardSoilNO3Available[layer] += zone.NO3N[layer] * nK * layerFraction;
 
@@ -1989,11 +1989,11 @@ namespace Models.AgPasture
         /// </summary>
         private void GetNDemand()
         {
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
                 mySpecies.CalcNDemand();
             // get N demand for optimum growth (discount minimum N fixation in legumes)
             swardNdemand = 0.0;
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
                 swardNdemand += mySpecies.RequiredOptimumN * (1 - mySpecies.MinimumNFixation);
         }
 
@@ -2001,9 +2001,9 @@ namespace Models.AgPasture
         /// <returns>The total amount of N fixed in the sward</returns>
         private double CalcNFixation()
         {
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
                 mySpecies.Nfixation = mySpecies.CalcNFixation();
-            return mySward.Sum(mySpecies => mySpecies.FixedN);
+            return mySpecies.Sum(mySpecies => mySpecies.FixedN);
         }
 
         /// <summary>Computes the amount of N to be taken up from the soil</summary>
@@ -2014,7 +2014,7 @@ namespace Models.AgPasture
             if (swardSoilNdemand == 0.0)
             { // No demand, no uptake
                 result = 0.0;
-                foreach (PastureSpecies mySpecies in mySward)
+                foreach (PastureSpecies mySpecies in mySpecies)
                     mySpecies.mySoilNuptake = 0.0;
             }
             else
@@ -2022,7 +2022,7 @@ namespace Models.AgPasture
                 if (swardSoilAvailableN >= swardSoilNdemand)
                 { // soil can supply all remaining N needed
                     result = swardSoilNdemand;
-                    foreach (PastureSpecies mySpecies in mySward)
+                    foreach (PastureSpecies mySpecies in mySpecies)
                         mySpecies.mySoilNuptake = mySpecies.DemandSoilN;
                 }
                 else
@@ -2030,7 +2030,7 @@ namespace Models.AgPasture
                     result = swardSoilAvailableN;
                     // for species, uptake is equal demand adjusted to total uptake
                     double uptakeFraction = result / swardSoilNdemand;
-                    foreach (PastureSpecies mySpecies in mySward)
+                    foreach (PastureSpecies mySpecies in mySpecies)
                         mySpecies.mySoilNuptake = mySpecies.DemandSoilN * uptakeFraction;
                 }
             }
@@ -2072,7 +2072,7 @@ namespace Models.AgPasture
                         }
 
                         // partition the amount taken up between species, considering amount actually taken up
-                        foreach (PastureSpecies mySpecies in mySward)
+                        foreach (PastureSpecies mySpecies in mySpecies)
                         {
                             mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
                             if (swardSoilNuptake > 0.0)
@@ -2095,10 +2095,10 @@ namespace Models.AgPasture
                         double[] sumNO3Available = new double[nLayers];
                         for (int layer = 0; layer < RootFrontier; layer++)
                         {
-                            sumNH4Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
-                            sumNO3Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
+                            sumNH4Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
+                            sumNO3Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
                         }
-                        foreach (PastureSpecies mySpecies in mySward)
+                        foreach (PastureSpecies mySpecies in mySpecies)
                         {
                             // get adjusted N available
                             adjustedNH4Available = new double[nLayers];
@@ -2122,7 +2122,7 @@ namespace Models.AgPasture
                             }
                         }
                     }
-                    double totalUptake = mySward.Sum(mySpecies => mySpecies.UptakeN.Sum());
+                    double totalUptake = mySpecies.Sum(mySpecies => mySpecies.UptakeN.Sum());
                     if ((Math.Abs(swardSoilNuptake - totalUptake) > 0.0001) || (Math.Abs(NTakenUp.DeltaNH4.Sum() + NTakenUp.DeltaNO3.Sum() + totalUptake) > 0.0001))
                         throw new Exception("Error on computing N uptake");
 
@@ -2132,7 +2132,7 @@ namespace Models.AgPasture
                 else
                 {
                     // No uptake, just zero out the arrays
-                    foreach (PastureSpecies mySpecies in mySward)
+                    foreach (PastureSpecies mySpecies in mySpecies)
                         mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
                 }
             }
@@ -2157,7 +2157,7 @@ namespace Models.AgPasture
         [EventSubscribe("KillCrop")]
         private void OnKillCrop(KillCropType KillData)
         {
-            foreach (PastureSpecies mySpecies in mySward)
+            foreach (PastureSpecies mySpecies in mySpecies)
                 mySpecies.OnKillCrop(KillData);
 
             swardIsAlive = false;
@@ -2183,7 +2183,7 @@ namespace Models.AgPasture
                 return;
 
             // Get the amount that can potentially be removed
-            double amountRemovable = mySward.Sum(mySpecies => mySpecies.HarvestableWt);
+            double amountRemovable = mySpecies.Sum(mySpecies => mySpecies.HarvestableWt);
 
             // get the amount required to remove
             double amountRequired = 0.0;
@@ -2209,13 +2209,13 @@ namespace Models.AgPasture
                 double[] tempWeights = new double[numSpecies];
                 double[] tempAmounts = new double[numSpecies];
                 double tempTotal = 0.0;
-                double totalPreference = mySward.Sum(mySpecies => mySpecies.RelativePreferenceForGreen + 1.0);
+                double totalPreference = mySpecies.Sum(mySpecies => mySpecies.RelativePreferenceForGreen + 1.0);
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    tempWeights[s] = mySward[s].RelativePreferenceForGreen + 1.0;
+                    tempWeights[s] = mySpecies[s].RelativePreferenceForGreen + 1.0;
                     tempWeights[s] += (totalPreference - tempWeights[s]) * (amountToRemove / amountRemovable);
-                    tempAmounts[s] = Math.Max(0.0, mySward[s].StandingLiveWt - mySward[s].MinimumGreenWt)
-                                   + mySward[s].StandingDeadWt;
+                    tempAmounts[s] = Math.Max(0.0, mySpecies[s].StandingLiveWt - mySpecies[s].MinimumGreenWt)
+                                   + mySpecies[s].StandingDeadWt;
                     tempTotal += tempAmounts[s] * tempWeights[s];
                 }
 
@@ -2224,12 +2224,12 @@ namespace Models.AgPasture
                 {
                     // get the actual fractions to remove for each mySpecies
                     if (tempTotal > 0.0)
-                        mySward[s].fractionHarvested = Math.Max(0.0, Math.Min(1.0, tempWeights[s] * tempAmounts[s] / tempTotal));
+                        mySpecies[s].fractionHarvested = Math.Max(0.0, Math.Min(1.0, tempWeights[s] * tempAmounts[s] / tempTotal));
                     else
-                        mySward[s].fractionHarvested = 0.0;
+                        mySpecies[s].fractionHarvested = 0.0;
 
                     // remove DM and N for each mySpecies (digestibility is also evaluated)
-                    mySward[s].RemoveDM(amountToRemove * mySward[s].HarvestedFraction);
+                    mySpecies[s].RemoveDM(amountToRemove * mySpecies[s].HarvestedFraction);
                 }
             }
         }
@@ -2262,7 +2262,7 @@ namespace Models.AgPasture
                             if (LeafLiveWt - amountToRemove > 0.0)
                             {
                                 fractionToRemove = amountToRemove / LeafLiveWt;
-                                mySward[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
+                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
                             }
                         }
                     }
@@ -2273,7 +2273,7 @@ namespace Models.AgPasture
                             if (StemLiveWt - amountToRemove > 0.0)
                             {
                                 fractionToRemove = amountToRemove / StemLiveWt;
-                                mySward[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
+                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
                             }
                         }
                     }
@@ -2284,7 +2284,7 @@ namespace Models.AgPasture
                             if (LeafDeadWt - amountToRemove > 0.0)
                             {
                                 fractionToRemove = amountToRemove / LeafDeadWt;
-                                mySward[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
+                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
                             }
                         }
                     }
@@ -2295,7 +2295,7 @@ namespace Models.AgPasture
                             if (StemDeadWt - amountToRemove > 0.0)
                             {
                                 fractionToRemove = amountToRemove / StemDeadWt;
-                                mySward[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
+                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
                             }
                         }
                     }
@@ -2304,7 +2304,7 @@ namespace Models.AgPasture
 
             // update digestibility and fractionToHarvest
             for (int s = 0; s < numSpecies; s++)
-                mySward[s].RefreshAfterRemove();
+                mySpecies[s].RefreshAfterRemove();
         }
 
         /// <summary>Return a given amount of DM (and N) to surface organic matter</summary>
@@ -2418,7 +2418,7 @@ namespace Models.AgPasture
             else
             {
                 double depthAtTopThisLayer = 0;   // depth till the top of the layer being considered
-                double swardRootDepth = mySward.Max(mySpecies => mySpecies.RootDepth);
+                double swardRootDepth = mySpecies.Max(mySpecies => mySpecies.RootDepth);
                 for (int z = 0; z < layer; z++)
                     depthAtTopThisLayer += mySoil.Thickness[z];
                 double result = (swardRootDepth - depthAtTopThisLayer) / mySoil.Thickness[layer];
