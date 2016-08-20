@@ -2089,7 +2089,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootDepth
         {
-            get { return myRootDepth; }
+            get { return roots.Depth; }
         }
 
         /// <summary>Gets the root frontier.</summary>
@@ -2098,7 +2098,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootFrontier
         {
-            get { return myRootFrontier; }
+            get { return roots.BottomLayer; }
         }
 
         /// <summary>Gets the fraction of root dry matter for each soil layer.</summary>
@@ -2566,18 +2566,9 @@ namespace Models.AgPasture
 
         // root variables  --------------------------------------------------------------------------------------------
 
-        /// <summary>The plant's root depth</summary>
-        private double myRootDepth = 0.0;
-
-        /// <summary>The layer at the bottom of the root zone</summary>
-        private int myRootFrontier = 1;
-
         /// <summary>The fraction of roots DM in each layer</summary>
         private double[] rootFraction;
         private double[] rootFraction1;
-
-        /// <summary>The ideal fraction of roots DM in each layer</summary>
-        private double[] targetRootAllocation;
 
         /// <summary>The maximum shoot-root ratio</summary>
         private double maxSRratio;
@@ -2927,9 +2918,9 @@ namespace Models.AgPasture
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
 
             // 3. Initialise root DM, N, depth, and distribution
-            myRootDepth = InitialState.RootDepth;
-            myRootFrontier = RootZoneBottomLayer();
-            targetRootAllocation = RootDistributionTarget();
+            roots.Depth = InitialState.RootDepth;
+            roots.BottomLayer = RootZoneBottomLayer();
+            roots.TargetDistribution = RootDistributionTarget();
 
             rootFraction1 = CurrentRootDistributionTarget();
             rootFraction = RootProfileDistribution();
@@ -2972,8 +2963,8 @@ namespace Models.AgPasture
             stolons.Tissue[2].DM = MinimumGreenWt * EmergenceDMFractions[10];
 
             // 2. Set root depth and DM (root DM equals shoot)
-            myRootDepth = MinimumRootDepth;
-            myRootFrontier = RootZoneBottomLayer();
+            roots.Depth = MinimumRootDepth;
+            roots.BottomLayer = RootZoneBottomLayer();
             double[] rootFractions = CurrentRootDistributionTarget();            
             for (int layer = 0; layer < nLayers; layer++)
                 roots.Tissue[0].DMLayer[layer] = MinimumGreenWt * rootFractions[layer];
@@ -3022,7 +3013,7 @@ namespace Models.AgPasture
             // TODO: is this used at all?
             SoilCrop soilCrop = this.mySoil.Crop(Name) as SoilCrop;
 
-            myRootProperties.RootDepth = myRootDepth;
+            myRootProperties.RootDepth = roots.Depth;
             myRootProperties.KL = soilCrop.KL;
             myRootProperties.MinNO3ConcForUptake = new double[mySoil.Thickness.Length];
             myRootProperties.MinNH4ConcForUptake = new double[mySoil.Thickness.Length];
@@ -3238,7 +3229,8 @@ namespace Models.AgPasture
             myPreviousState.stolons.Tissue[1].DM = stolons.Tissue[1].DM;
             myPreviousState.stolons.Tissue[2].DM = stolons.Tissue[2].DM;
 
-            myPreviousState.roots.Tissue[0].DM = roots.Tissue[0].DM;
+            for (int layer = 0; layer < nLayers; layer++)
+                myPreviousState.roots.Tissue[0].DMLayer[layer] = roots.Tissue[0].DMLayer[layer];
 
             myPreviousState.leaves.Tissue[0].Namount = leaves.Tissue[0].Namount;
             myPreviousState.leaves.Tissue[1].Namount = leaves.Tissue[1].Namount;
@@ -3430,31 +3422,17 @@ namespace Models.AgPasture
             if (isAnnual)
             {
                 //considering root distribution change, here?
-                myRootDepth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmgToAnth;
-
-                // get new layer for root frontier
-                double cumDepth = 0.0;
-                for (int layer = 0; layer < mySoil.Thickness.Length; layer++)
-                {
-                    cumDepth += mySoil.Thickness[layer];
-                    if (cumDepth <= myRootDepth)
-                    {
-                        myRootFrontier = layer; // TODO: need to update this, it is offset by one
-                    }
-                    else
-                    {
-                        layer = mySoil.Thickness.Length;
-                    }
-                }
+                roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmgToAnth;
+                roots.BottomLayer = RootZoneBottomLayer();
             }
             else
             {
-                if ((phenologicStage > 0) && (myRootDepth < MaximumRootDepth))
+                if ((phenologicStage > 0) && (roots.Depth < MaximumRootDepth))
                 {
                     double tempFactor = TemperatureLimitingFactor(Tmean);
                     dRootDepth = RootElongationRate * tempFactor;
-                    myRootDepth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, myRootDepth + dRootDepth));
-                    myRootFrontier = RootZoneBottomLayer();
+                    roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
+                    roots.BottomLayer = RootZoneBottomLayer();
                 }
                 else
                 {
@@ -4032,7 +4010,7 @@ namespace Models.AgPasture
         private void GetWaterUptake()
         {
             Array.Clear(mySoilWaterTakenUp, 0, mySoilWaterTakenUp.Length);
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
                 mySoilWaterTakenUp[layer] = uptakeWater[layer];
         }
 
@@ -4108,7 +4086,7 @@ namespace Models.AgPasture
             SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
             if (useAltWUptake == "no")
             {
-                for (int layer = 0; layer < myRootFrontier; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                 {
                     result[layer] = Math.Max(0.0, mySoil.Water[layer] - soilCropData.LL[layer] * mySoil.Thickness[layer])
                                     * FractionLayerWithRoots(layer);
@@ -4127,7 +4105,7 @@ namespace Models.AgPasture
                 double facRLD = 0.0;
                 double facCond = 0.0;
                 double facWcontent = 0.0;
-                for (int layer = 0; layer < myRootFrontier; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                 {
                     facRLD = 1 - Math.Pow(10, -myRLD[layer] / ReferenceRLD);
                     facCond = 1 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
@@ -4159,7 +4137,7 @@ namespace Models.AgPasture
 
             if (useAltWUptake == "no")
             {
-                for (int layer = 0; layer < myRootFrontier; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                 {
                     result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
                     WaterTakenUp.DeltaWater[layer] = -result[layer];
@@ -4171,7 +4149,7 @@ namespace Models.AgPasture
                 // Uptake is distributed over the profile according to water availability,
                 //  this means that water status and root distribution have been taken into account
 
-                for (int layer = 0; layer < myRootFrontier; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                 {
                     result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
                     WaterTakenUp.DeltaWater[layer] = -result[layer];
@@ -4192,7 +4170,7 @@ namespace Models.AgPasture
             WaterChangedType WaterTakenUp = new WaterChangedType();
             WaterTakenUp.DeltaWater = new double[nLayers];
 
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
                 WaterTakenUp.DeltaWater[layer] = -mySoilWaterTakenUp[layer];
 
             // send the delta water taken up
@@ -4211,7 +4189,7 @@ namespace Models.AgPasture
             // get the amount of N taken up from soil
             Array.Clear(mySoilNitrogenTakenUp, 0, mySoilNitrogenTakenUp.Length);
             mySoilNuptake = 0.0;
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 mySoilNitrogenTakenUp[layer] = uptakeNH4[layer] + uptakeNO3[layer];
                 mySoilNuptake += mySoilNitrogenTakenUp[layer];
@@ -4410,7 +4388,7 @@ namespace Models.AgPasture
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 if (useAltNUptake == "no")
                 {
@@ -4450,7 +4428,7 @@ namespace Models.AgPasture
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 if (useAltNUptake == "no")
                 {
@@ -4511,7 +4489,7 @@ namespace Models.AgPasture
                 }
 
                 double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(result, mySoilAvailableN.Sum(), 0.0));
-                for (int layer = 0; layer < myRootFrontier; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                 {
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                     {
@@ -4630,7 +4608,7 @@ namespace Models.AgPasture
                             uptakeFraction = Math.Min(1.0,
                                 MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
 
-                        for (int layer = 0; layer < myRootFrontier; layer++)
+                        for (int layer = 0; layer < roots.BottomLayer; layer++)
                         {
                             NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
                             NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
@@ -4706,7 +4684,7 @@ namespace Models.AgPasture
             NUptake.DeltaNO3 = new double[nLayers];
             NUptake.DeltaNH4 = new double[nLayers];
 
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 NUptake.DeltaNH4[layer] = -uptakeNH4[layer];
                 NUptake.DeltaNO3[layer] = -uptakeNO3[layer];
@@ -5431,7 +5409,7 @@ namespace Models.AgPasture
             double mySaturation = 0.0;
             double myDUL = 0.0;
             double fractionLayer = 0.0;
-            for (int layer = 0; layer < myRootFrontier; layer++)
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 // fraction of layer with roots 
                 fractionLayer = FractionLayerWithRoots(layer);
@@ -5495,12 +5473,12 @@ namespace Models.AgPasture
                         double DepthTop = 0;
                         for (int layer = 0; layer < nLayers; layer++)
                         {
-                            if (DepthTop >= myRootDepth)
+                            if (DepthTop >= roots.Depth)
                                 result[layer] = 0.0;
-                            else if (DepthTop + mySoil.Thickness[layer] <= myRootDepth)
+                            else if (DepthTop + mySoil.Thickness[layer] <= roots.Depth)
                                 result[layer] = 1.0;
                             else
-                                result[layer] = (myRootDepth - DepthTop) / mySoil.Thickness[layer];
+                                result[layer] = (roots.Depth - DepthTop) / mySoil.Thickness[layer];
                             sumProportion += result[layer] * mySoil.Thickness[layer];
                             DepthTop += mySoil.Thickness[layer];
                         }
@@ -5519,11 +5497,11 @@ namespace Models.AgPasture
                         //   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
                         //   if exponent is one than the proportion decreases linearly.
                         double DepthTop = 0;
-                        double DepthFirstStage = myRootDepth * expoLinearDepthParam;
-                        double DepthSecondStage = myRootDepth - DepthFirstStage;
+                        double DepthFirstStage = roots.Depth * expoLinearDepthParam;
+                        double DepthSecondStage = roots.Depth - DepthFirstStage;
                         for (int layer = 0; layer < nLayers; layer++)
                         {
-                            if (DepthTop >= myRootDepth)
+                            if (DepthTop >= roots.Depth)
                                 result[layer] = 0.0;
                             else if (DepthTop + mySoil.Thickness[layer] <= DepthFirstStage)
                                 result[layer] = 1.0;
@@ -5539,8 +5517,8 @@ namespace Models.AgPasture
                                     double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
                                     result[layer] += Math.Max(0.0, Fbottom - Ftop) / mySoil.Thickness[layer];
                                 }
-                                else if (DepthTop + mySoil.Thickness[layer] <= myRootDepth)
-                                    result[layer] += Math.Min(DepthTop + mySoil.Thickness[layer], myRootDepth) - Math.Max(DepthTop, DepthFirstStage) / mySoil.Thickness[layer];
+                                else if (DepthTop + mySoil.Thickness[layer] <= roots.Depth)
+                                    result[layer] += Math.Min(DepthTop + mySoil.Thickness[layer], roots.Depth) - Math.Max(DepthTop, DepthFirstStage) / mySoil.Thickness[layer];
                             }
                             sumProportion += result[layer];
                             DepthTop += mySoil.Thickness[layer];
@@ -5572,21 +5550,21 @@ namespace Models.AgPasture
             double cumAllocation = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                if (currentDepth < myRootDepth)
+                if (currentDepth < roots.Depth)
                 {
                     // layer is within the root zone
                     currentDepth += mySoil.Thickness[layer];
-                    if (currentDepth <= myRootDepth)
+                    if (currentDepth <= roots.Depth)
                     {
                         // layer is fully in the root zone
-                        cumAllocation += targetRootAllocation[layer];
+                        cumAllocation += roots.TargetDistribution[layer];
                     }
                     else
                     {
                         // layer is partially in the root zone
-                        double layerFrac = (myRootDepth - (currentDepth - mySoil.Thickness[layer]))
+                        double layerFrac = (roots.Depth - (currentDepth - mySoil.Thickness[layer]))
                                          / (MaximumRootDepth - (currentDepth - mySoil.Thickness[layer]));
-                        cumAllocation += targetRootAllocation[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
+                        cumAllocation += roots.TargetDistribution[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
                     }
                 }
                 else
@@ -5595,7 +5573,7 @@ namespace Models.AgPasture
 
             double[] result = new double[nLayers];
             for (int layer = 0; layer < nLayers; layer++)
-                result[layer] = targetRootAllocation[layer] / cumAllocation;
+                result[layer] = roots.TargetDistribution[layer] / cumAllocation;
 
             return result;
         }
@@ -5663,12 +5641,12 @@ namespace Models.AgPasture
         internal double FractionLayerWithRoots(int layer)
         {
             double fractionInLayer = 0.0;
-            if (layer < myRootFrontier)
+            if (layer < roots.BottomLayer)
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
                     depthTillTopThisLayer += mySoil.Thickness[z];
-                fractionInLayer = (myRootDepth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer = (roots.Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
                 fractionInLayer= Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
 
@@ -5685,7 +5663,7 @@ namespace Models.AgPasture
             double currentDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                if (myRootDepth > currentDepth)
+                if (roots.Depth > currentDepth)
                 {
                     result = layer;
                     currentDepth += mySoil.Thickness[layer];
@@ -6089,40 +6067,6 @@ namespace Models.AgPasture
     }
 
     /// <summary>
-    /// Defines a generic above-ground organ of a pasture species
-    /// </summary>
-    /// <remarks>
-    /// Contains the same properties of a BaseOrgan, extended by adding N thresholds
-    /// </remarks>
-    [Serializable]
-    internal class GenericAboveGroundOrganOld
-    {
-        /// <summary>The total luxury N amount in this organ (kg/ha)</summary>
-        internal double NLuxuryTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < 2; t++)
-                {
-                    result += 0;//Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>The N amount in mature tissues taht can be reallocated (kg/ha)</summary>
-        internal double NReallocatable
-        {
-            get
-            {
-                return 0;//Tissue[2].DM * Math.Max(0.0, Tissue[2].Nconc - NConcMinimum); 
-            }
-        }
-    }
-
-    /// <summary>
     /// Defines a generic root organ of a pasture species
     /// </summary>
     /// <remarks>
@@ -6163,6 +6107,7 @@ namespace Models.AgPasture
 
         /// <summary>Minimum N concentration, structural N [g/g]</summary>
         internal double NConcMinimum = 1.0;
+
         /// <summary>The total dry matter in this organ [g/m^2]</summary>
         internal double DMTotal
         {
@@ -6280,6 +6225,15 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>The rooting depth [mm]</summary>
+        internal double Depth;
+
+        /// <summary>The layer at the bottom of the root zone</summary>
+        internal int BottomLayer;
+
+        /// <summary>The target (ideal) dry matter fraction by layer [0-1]</summary>
+        internal double[] TargetDistribution;
+
         #endregion
 
         /// <summary>Defines a generic root tissue</summary>
@@ -6362,9 +6316,37 @@ namespace Models.AgPasture
                 {
                     double[] result = new double[nlayers];
                     for (int layer = 0; layer < nlayers; layer++)
-                        result[layer] = DMLayer[layer] / DM;
+                        result[layer] = MathUtilities.Divide(DMLayer[layer], DM, 0.0);
                     return result;
                 }
+            }
+        }
+    }
+
+    /// <summary>Defines a generic above-ground organ of a pasture species</summary>
+    internal class GenericAboveGroundOrganOld
+    {
+        /// <summary>The total luxury N amount in this organ (kg/ha)</summary>
+        internal double NLuxuryTotal
+        {
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < 2; t++)
+                {
+                    result += 0;//Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>The N amount in mature tissues taht can be reallocated (kg/ha)</summary>
+        internal double NReallocatable
+        {
+            get
+            {
+                return 0;//Tissue[2].DM * Math.Max(0.0, Tissue[2].Nconc - NConcMinimum); 
             }
         }
     }
