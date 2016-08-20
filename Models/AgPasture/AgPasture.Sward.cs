@@ -1788,22 +1788,22 @@ namespace Models.AgPasture
                 for (int layer = 0; layer < RootFrontier; layer++)
                     sumWaterAvailable[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
                     // get adjusted water available
                     adjustedWAvailable = new double[nLayers];
-                    for (int layer = 0; layer < mySpecies.RootFrontier; layer++)
-                        adjustedWAvailable[layer] = swardSoilAvailableWater[layer] * mySpecies.SoilAvailableWater[layer] / sumWaterAvailable[layer];
+                    for (int layer = 0; layer < species.RootFrontier; layer++)
+                        adjustedWAvailable[layer] = swardSoilAvailableWater[layer] * species.SoilAvailableWater[layer] / sumWaterAvailable[layer];
 
                     // get fraction of demand supplied by the soil
-                    uptakeFraction = Math.Min(1.0, mySpecies.WaterDemand / adjustedWAvailable.Sum());
+                    uptakeFraction = Math.Min(1.0, species.WaterDemand / adjustedWAvailable.Sum());
 
                     // get the actual amounts taken up from each layer
-                    mySpecies.mySoilWaterTakenUp = new double[nLayers];
-                    for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
+                    species.mySoilWaterTakenUp = new double[nLayers];
+                    for (int layer = 0; layer <= species.RootFrontier; layer++)
                     {
-                        mySpecies.mySoilWaterTakenUp[layer] = adjustedWAvailable[layer] * uptakeFraction;
-                        WaterTakenUp.DeltaWater[layer] -= mySpecies.mySoilWaterTakenUp[layer];
+                        species.mySoilWaterTakenUp[layer] = adjustedWAvailable[layer] * uptakeFraction;
+                        WaterTakenUp.DeltaWater[layer] -= species.mySoilWaterTakenUp[layer];
                     }
                 }
                 if (Math.Abs(WaterTakenUp.DeltaWater.Sum() + swardWaterDemand) > 0.0001)
