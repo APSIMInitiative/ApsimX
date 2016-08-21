@@ -2882,7 +2882,19 @@ namespace Models.AgPasture
             stolons.Tissue[1].DM = InitialState.DMWeight[9];
             stolons.Tissue[2].DM = InitialState.DMWeight[10];
 
-            // 2. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
+            // 2. Initialise root DM, N, depth, and distribution
+            roots.Depth = InitialState.RootDepth;
+            roots.BottomLayer = RootZoneBottomLayer();
+            roots.TargetDistribution = RootDistributionTarget();
+            // TODO: Replace rootFraction with new method
+            rootFraction1 = CurrentRootDistributionTarget();
+            rootFraction = RootProfileDistribution();
+            for (int layer = 0; layer < nLayers; layer++)
+                roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFraction[layer];
+
+            InitialiseRootsProperties();
+
+            // 3. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
             leaves.Tissue[0].Namount = InitialState.NAmount[0];
             leaves.Tissue[1].Namount = InitialState.NAmount[1];
             leaves.Tissue[2].Namount = InitialState.NAmount[2];
@@ -2894,19 +2906,7 @@ namespace Models.AgPasture
             stolons.Tissue[0].Namount = InitialState.NAmount[8];
             stolons.Tissue[1].Namount = InitialState.NAmount[9];
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
-
-            // 3. Initialise root DM, N, depth, and distribution
-            roots.Depth = InitialState.RootDepth;
-            roots.BottomLayer = RootZoneBottomLayer();
-            roots.TargetDistribution = RootDistributionTarget();
-
-            rootFraction1 = CurrentRootDistributionTarget();
-            rootFraction = RootProfileDistribution();
-            for (int layer = 0; layer < nLayers; layer++)
-                roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFraction[layer];
-
             roots.Tissue[0].Namount = InitialState.NAmount[11];
-            InitialiseRootsProperties();
 
             // maximum shoot:root ratio
             maxSRratio = (1 - MaxRootAllocation) / MaxRootAllocation;
@@ -3175,33 +3175,11 @@ namespace Models.AgPasture
             // Update LAI
             EvaluateLAI();
 
+            // update root depth
+            EvaluateRootGrowth();
+
             // Update digestibility
             EvaluateDigestibility();
-        }
-
-        /// <summary>Computes the variations in root depth</summary>
-        private void EvaluateRootGrowth()
-        {
-            if (isAnnual)
-            {
-                //considering root distribution change, here?
-                roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmgToAnth;
-                roots.BottomLayer = RootZoneBottomLayer();
-            }
-            else
-            {
-                if ((phenologicStage > 0) && (roots.Depth < MaximumRootDepth))
-                {
-                    double tempFactor = TemperatureLimitingFactor(Tmean);
-                    dRootDepth = RootElongationRate * tempFactor;
-                    roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
-                    roots.BottomLayer = RootZoneBottomLayer();
-                }
-                else
-                {
-                    dRootDepth = 0.0;
-                }
-            }
         }
 
         /// <summary>Computes the plant's gross potential growth rate</summary>
@@ -4628,9 +4606,36 @@ namespace Models.AgPasture
             return rFactor;
         }
 
-        /// <summary>
-        /// Computes the values of LAI (leaf area index) for green, dead, and total plant material
-        /// </summary>
+        /// <summary>Computes the variations in root depth</summary>
+        private void EvaluateRootGrowth()
+        {
+            dRootDepth = 0.0;
+            if (phenologicStage > 0)
+            {
+                if (isAnnual)
+                {
+                    //TODO: update this, especilly dRootDepth
+                    roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmgToAnth;
+                    roots.BottomLayer = RootZoneBottomLayer();
+                }
+                else
+                {
+                    if ((dGrowthRoot > myEpsilon) && (roots.Depth < MaximumRootDepth))
+                    {
+                        double tempFactor = TemperatureLimitingFactor(Tmean);
+                        dRootDepth = RootElongationRate * tempFactor;
+                        roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
+                        roots.BottomLayer = RootZoneBottomLayer();
+                    }
+                    else
+                    {
+                        dRootDepth = 0.0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material</summary>
         private void EvaluateLAI()
         {
             double greenTissue = leaves.DMGreen + (stolons.DMGreen * 0.3); // assuming stolons have 0.3*SLA
