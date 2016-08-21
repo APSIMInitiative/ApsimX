@@ -1,4 +1,4 @@
-<folder version="36" creator="Apsim 7.8-r3922" name="Simulations">
+<folder version="36" creator="Apsim 7.8-r3936" name="Simulations">
   <simulation name="OneSpecies">
     <clock>
       <start_date type="date" description="Enter the start date of the simulation">01/07/2000</start_date>
@@ -1578,6 +1578,7 @@ End Class
           <variable>SpeciesGrowthWt(1) as Ryegrass.ActualGrowthWt</variable>
           <variable>SpeciesNetGrowthWt(1) as Ryegrass.EffectiveGrowthWt</variable>
           <variable>SpeciesHerbageGrowth(1) as Ryegrass.HerbageGrowthWt</variable>
+          <variable>speciesFShoot as Ryegrass.ShootDMAllocation</variable>
           <variable>SpeciesLitterWt(1) as Ryegrass.LitterWt</variable>
           <variable>SpeciesRootSenescedWt(1) as Ryegrass.RootSenescedWt</variable>
           <variable>SpeciesTotalN(1) as Ryegrass.TotalN</variable>
@@ -1634,7 +1635,11 @@ End Class
           <variable>SpeciesTotalLAI(1) as Ryegrass.TotalLAI</variable>
           <variable>SpeciesGreenLAI(1) as Ryegrass.GreenLAI</variable>
           <variable>SpeciesDeadLAI(1) as Ryegrass.DeadLAI</variable>
+          <variable>SpeciesRadnFactor as Ryegrass.GlfRadnIntercept</variable>
+          <variable>SpeciesCO2Factor as Ryegrass.GlfCO2</variable>
+          <variable>SpeciesNconcFactor as Ryegrass.GlfNConcentration</variable>
           <variable>SpeciesGLFT(1) as Ryegrass.GlfTemperature</variable>
+          <variable>SpeciesGLFA(1)  as Ryegrass.GlfWaterLogging</variable>
           <variable>SpeciesGLFW(1) as Ryegrass.GlfWater</variable>
           <variable>SpeciesGLFN(1) as Ryegrass.GlfN</variable>
           <variable>SpeciesIrradianceTopCanopy(1) as Ryegrass.IrradianceTopCanopy</variable>
@@ -1642,7 +1647,9 @@ End Class
           <variable>SpeciesHarvestWt(1) as Ryegrass.HarvestedWt</variable>
           <variable>SpeciesHarvestPct(1) as Ryegrass.HarvestedFraction</variable>
           <variable>SpeciesHarvestN(1) as Ryegrass.HarvestedN</variable>
-          <variable>HerbageDigestibility as Ryegrass.HerbageDigestibility</variable>
+          <variable>SpeciesHerbageDigestibility as Ryegrass.HerbageDigestibility</variable>
+          <variable>SpeciesDefoliatedDigestibility as Ryegrass.HarvestedDigestibility</variable>
+          <variable>SpeciesTempFactor</variable>
         </variables>
         <events name="Reporting Frequency">
           <event>end_day</event>
@@ -1650,7 +1657,10 @@ End Class
         <Graph name="XY">
           <Format>AAEAAAD/////AQAAAAAAAAAMAgAAAFJUZWVDaGFydCwgVmVyc2lvbj0yLjAuMjMwNi4yNjIzMiwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj05YzgxMjYyNzZjNzdiZGI3DAMAAABXU3lzdGVtLldpbmRvd3MuRm9ybXMsIFZlcnNpb249Mi4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAQAAABRU3lzdGVtLkRyYXdpbmcsIFZlcnNpb249Mi4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3ZjExZDUwYTNhBQEAAAAVU3RlZW1hLlRlZUNoYXJ0LkNoYXJ0wAAAAAYuV2lkdGgHLkhlaWdodA4uWm9vbS5BbmltYXRlZBMuWm9vbS5BbmltYXRlZFN0ZXBzFC5QYW5uaW5nLk1vdXNlQnV0dG9uFy5QYW5lbC5JbWFnZUJldmVsLldpZHRoEi5QYW5lbC5CZXZlbC5PdXRlchUuUGFuZWwuU2hhZG93LlZpc2libGUSLlBhbmVsLkJydXNoLkNvbG9yEi5MZWdlbmQuQ2hlY2tCb3hlcxEuTGVnZW5kLkFsaWdubWVudBcuTGVnZW5kLlRpdGxlLkZvbnQuQm9sZCEuTGVnZW5kLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUcLkxlZ2VuZC5UaXRsZS5TaGFkb3cuVmlzaWJsZRkuTGVnZW5kLlRpdGxlLlBlbi5WaXNpYmxlGy5MZWdlbmQuRm9udC5TaGFkb3cuVmlzaWJsZRYuTGVnZW5kLlNoYWRvdy5WaXNpYmxlEy5MZWdlbmQuVHJhbnNwYXJlbnQNLkhlYWRlci5MaW5lcxEuSGVhZGVyLkZvbnQuTmFtZREuSGVhZGVyLkZvbnQuU2l6ZRsuSGVhZGVyLkZvbnQuU2hhZG93LlZpc2libGUWLkhlYWRlci5TaGFkb3cuVmlzaWJsZR4uU3ViSGVhZGVyLkZvbnQuU2hhZG93LlZpc2libGUZLlN1YkhlYWRlci5TaGFkb3cuVmlzaWJsZRsuRm9vdGVyLkZvbnQuU2hhZG93LlZpc2libGUWLkZvb3Rlci5TaGFkb3cuVmlzaWJsZR4uU3ViRm9vdGVyLkZvbnQuU2hhZG93LlZpc2libGUZLlN1YkZvb3Rlci5TaGFkb3cuVmlzaWJsZRUuQXNwZWN0LlJvdGF0aW9uRmxvYXQWLkFzcGVjdC5FbGV2YXRpb25GbG9hdBkuQXNwZWN0LkNvbG9yUGFsZXR0ZUluZGV4Di5Bc3BlY3QuVmlldzNEFy5HcmFwaGljczNELkJydXNoLkNvbG9yHy5HcmFwaGljczNELkZvbnQuU2hhZG93LlZpc2libGUTLkdyYXBoaWNzM0QuWENlbnRlchMuR3JhcGhpY3MzRC5ZQ2VudGVyGS5HcmFwaGljczNELlNtb290aGluZ01vZGUdLkdyYXBoaWNzM0QuVGV4dFJlbmRlcmluZ0hpbnQaLkdyYXBoaWNzM0QuU3VwcG9ydHMzRFRleHQVLkdyYXBoaWNzM0QuQmFja0NvbG9yFS5HcmFwaGljczNELlVzZUJ1ZmZlchwuR3JhcGhpY3MzRC5Sb3RhdGlvbkNlbnRlci5YHC5HcmFwaGljczNELlJvdGF0aW9uQ2VudGVyLlkcLkdyYXBoaWNzM0QuUm90YXRpb25DZW50ZXIuWghTZXJpZXMuMBUuU2VyaWVzLjAuQnJ1c2guQ29sb3IZLlNlcmllcy4wLlBvaW50ZXIuVmlzaWJsZRcuU2VyaWVzLjAuUG9pbnRlci5TdHlsZRsuU2VyaWVzLjAuUG9pbnRlci5QZW4uQ29sb3IdLlNlcmllcy4wLlBvaW50ZXIuQnJ1c2guQ29sb3IXLlNlcmllcy4wLkxpbmVQZW4uQ29sb3IXLlNlcmllcy4wLkxpbmVQZW4uV2lkdGgPLlNlcmllcy4wLlRpdGxlHi5TZXJpZXMuMC5NYXJrcy5DYWxsb3V0Lkxlbmd0aCEuU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5BcnJvd0hlYWQlLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuQXJyb3dIZWFkU2l6ZSAuU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5EaXN0YW5jZR4uU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5EcmF3M0QdLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuU3R5bGUjLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuQnJ1c2guQ29sb3IeLlNlcmllcy4wLk1hcmtzLkl0ZW1zLkNhcGFjaXR5Iy5TZXJpZXMuMC5NYXJrcy5Gb250LlNoYWRvdy5WaXNpYmxlCFNlcmllcy4xFS5TZXJpZXMuMS5CcnVzaC5Db2xvchkuU2VyaWVzLjEuUG9pbnRlci5WaXNpYmxlFy5TZXJpZXMuMS5Qb2ludGVyLlN0eWxlGy5TZXJpZXMuMS5Qb2ludGVyLlBlbi5Db2xvch0uU2VyaWVzLjEuUG9pbnRlci5CcnVzaC5Db2xvchcuU2VyaWVzLjEuTGluZVBlbi5Db2xvchcuU2VyaWVzLjEuTGluZVBlbi5XaWR0aA8uU2VyaWVzLjEuVGl0bGUeLlNlcmllcy4xLk1hcmtzLkNhbGxvdXQuTGVuZ3RoIS5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkFycm93SGVhZCUuU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5BcnJvd0hlYWRTaXplIC5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkRpc3RhbmNlHi5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkRyYXczRB0uU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5TdHlsZSMuU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5CcnVzaC5Db2xvch4uU2VyaWVzLjEuTWFya3MuSXRlbXMuQ2FwYWNpdHkjLlNlcmllcy4xLk1hcmtzLkZvbnQuU2hhZG93LlZpc2libGUULldhbGxzLkxlZnQuQXV0b0hpZGUaLldhbGxzLkxlZnQuU2hhZG93LlZpc2libGUVLldhbGxzLlJpZ2h0LkF1dG9IaWRlGy5XYWxscy5SaWdodC5TaGFkb3cuVmlzaWJsZRQuV2FsbHMuQmFjay5BdXRvSGlkZRouV2FsbHMuQmFjay5TaGFkb3cuVmlzaWJsZRYuV2FsbHMuQm90dG9tLkF1dG9IaWRlHC5XYWxscy5Cb3R0b20uU2hhZG93LlZpc2libGUOLldhbGxzLlZpc2libGUcLkF4ZXMuTGVmdC5MYWJlbHMuU2VwYXJhdGlvbh0uQXhlcy5MZWZ0LkxhYmVscy5WYWx1ZUZvcm1hdBsuQXhlcy5MZWZ0LkxhYmVscy5Gb250Lk5hbWUbLkF4ZXMuTGVmdC5MYWJlbHMuRm9udC5TaXplJS5BeGVzLkxlZnQuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUgLkF4ZXMuTGVmdC5MYWJlbHMuU2hhZG93LlZpc2libGUULkF4ZXMuTGVmdC5BdXRvbWF0aWMYLkF4ZXMuTGVmdC5BeGlzUGVuLldpZHRoGS5BeGVzLkxlZnQuQXhpc1Blbi5FbmRDYXAVLkF4ZXMuTGVmdC5HcmlkLlN0eWxlGS5BeGVzLkxlZnQuR3JpZC5aUG9zaXRpb24XLkF4ZXMuTGVmdC5HcmlkLlZpc2libGUYLkF4ZXMuTGVmdC5NYXhpbXVtT2Zmc2V0HS5BeGVzLkxlZnQuTWlub3JUaWNrcy5WaXNpYmxlFi5BeGVzLkxlZnQuVGlja3MuQ29sb3IWLkF4ZXMuTGVmdC5UaXRsZS5MaW5lcxouQXhlcy5MZWZ0LlRpdGxlLkZvbnQuTmFtZRouQXhlcy5MZWZ0LlRpdGxlLkZvbnQuU2l6ZSguQXhlcy5MZWZ0LlRpdGxlLkZvbnQuU2hhZG93LkJydXNoLkNvbG9yJC5BeGVzLkxlZnQuVGl0bGUuRm9udC5TaGFkb3cuVmlzaWJsZSEuQXhlcy5MZWZ0LlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IfLkF4ZXMuTGVmdC5UaXRsZS5TaGFkb3cuVmlzaWJsZRsuQXhlcy5Ub3AuTGFiZWxzLlNlcGFyYXRpb24cLkF4ZXMuVG9wLkxhYmVscy5WYWx1ZUZvcm1hdBouQXhlcy5Ub3AuTGFiZWxzLkZvbnQuTmFtZRouQXhlcy5Ub3AuTGFiZWxzLkZvbnQuU2l6ZSQuQXhlcy5Ub3AuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUfLkF4ZXMuVG9wLkxhYmVscy5TaGFkb3cuVmlzaWJsZRMuQXhlcy5Ub3AuQXV0b21hdGljFy5BeGVzLlRvcC5BeGlzUGVuLldpZHRoGC5BeGVzLlRvcC5BeGlzUGVuLkVuZENhcBQuQXhlcy5Ub3AuR3JpZC5TdHlsZRguQXhlcy5Ub3AuR3JpZC5aUG9zaXRpb24WLkF4ZXMuVG9wLkdyaWQuVmlzaWJsZRwuQXhlcy5Ub3AuTWlub3JUaWNrcy5WaXNpYmxlFS5BeGVzLlRvcC5UaWNrcy5Db2xvchkuQXhlcy5Ub3AuVGl0bGUuRm9udC5OYW1lGS5BeGVzLlRvcC5UaXRsZS5Gb250LlNpemUjLkF4ZXMuVG9wLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUgLkF4ZXMuVG9wLlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IeLkF4ZXMuVG9wLlRpdGxlLlNoYWRvdy5WaXNpYmxlES5BeGVzLlRvcC5WaXNpYmxlHS5BeGVzLlJpZ2h0LkxhYmVscy5TZXBhcmF0aW9uHi5BeGVzLlJpZ2h0LkxhYmVscy5WYWx1ZUZvcm1hdBwuQXhlcy5SaWdodC5MYWJlbHMuRm9udC5OYW1lHC5BeGVzLlJpZ2h0LkxhYmVscy5Gb250LlNpemUmLkF4ZXMuUmlnaHQuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUhLkF4ZXMuUmlnaHQuTGFiZWxzLlNoYWRvdy5WaXNpYmxlFS5BeGVzLlJpZ2h0LkF1dG9tYXRpYxkuQXhlcy5SaWdodC5BeGlzUGVuLldpZHRoGi5BeGVzLlJpZ2h0LkF4aXNQZW4uRW5kQ2FwFi5BeGVzLlJpZ2h0LkdyaWQuU3R5bGUaLkF4ZXMuUmlnaHQuR3JpZC5aUG9zaXRpb24YLkF4ZXMuUmlnaHQuR3JpZC5WaXNpYmxlHi5BeGVzLlJpZ2h0Lk1pbm9yVGlja3MuVmlzaWJsZRcuQXhlcy5SaWdodC5UaWNrcy5Db2xvchsuQXhlcy5SaWdodC5UaXRsZS5Gb250Lk5hbWUbLkF4ZXMuUmlnaHQuVGl0bGUuRm9udC5TaXplJS5BeGVzLlJpZ2h0LlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUiLkF4ZXMuUmlnaHQuVGl0bGUuRm9udC5CcnVzaC5Db2xvciAuQXhlcy5SaWdodC5UaXRsZS5TaGFkb3cuVmlzaWJsZRMuQXhlcy5SaWdodC5WaXNpYmxlHi5BeGVzLkJvdHRvbS5MYWJlbHMuU2VwYXJhdGlvbiIuQXhlcy5Cb3R0b20uTGFiZWxzLkRhdGVUaW1lRm9ybWF0Hy5BeGVzLkJvdHRvbS5MYWJlbHMuVmFsdWVGb3JtYXQdLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250Lk5hbWUdLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250LlNpemUnLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlIi5BeGVzLkJvdHRvbS5MYWJlbHMuU2hhZG93LlZpc2libGUdLkF4ZXMuQm90dG9tLkF1dG9tYXRpY01heGltdW0dLkF4ZXMuQm90dG9tLkF1dG9tYXRpY01pbmltdW0aLkF4ZXMuQm90dG9tLkF4aXNQZW4uV2lkdGgbLkF4ZXMuQm90dG9tLkF4aXNQZW4uRW5kQ2FwFy5BeGVzLkJvdHRvbS5HcmlkLlN0eWxlGy5BeGVzLkJvdHRvbS5HcmlkLlpQb3NpdGlvbhkuQXhlcy5Cb3R0b20uR3JpZC5WaXNpYmxlGi5BeGVzLkJvdHRvbS5NYXhpbXVtT2Zmc2V0FC5BeGVzLkJvdHRvbS5NYXhpbXVtFC5BeGVzLkJvdHRvbS5NaW5pbXVtGi5BeGVzLkJvdHRvbS5NaW5pbXVtT2Zmc2V0Hy5BeGVzLkJvdHRvbS5NaW5vclRpY2tzLlZpc2libGUYLkF4ZXMuQm90dG9tLlRpY2tzLkNvbG9yGC5BeGVzLkJvdHRvbS5UaXRsZS5MaW5lcxwuQXhlcy5Cb3R0b20uVGl0bGUuRm9udC5OYW1lHC5BeGVzLkJvdHRvbS5UaXRsZS5Gb250LlNpemUmLkF4ZXMuQm90dG9tLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUjLkF4ZXMuQm90dG9tLlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IhLkF4ZXMuQm90dG9tLlRpdGxlLlNoYWRvdy5WaXNpYmxlKS5BeGVzLkRlcHRoVG9wLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlJC5BeGVzLkRlcHRoVG9wLkxhYmVscy5TaGFkb3cuVmlzaWJsZRguQXhlcy5EZXB0aFRvcC5BdXRvbWF0aWMZLkF4ZXMuRGVwdGhUb3AuR3JpZC5TdHlsZR0uQXhlcy5EZXB0aFRvcC5HcmlkLlpQb3NpdGlvbiguQXhlcy5EZXB0aFRvcC5UaXRsZS5Gb250LlNoYWRvdy5WaXNpYmxlIy5BeGVzLkRlcHRoVG9wLlRpdGxlLlNoYWRvdy5WaXNpYmxlJi5BeGVzLkRlcHRoLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlIS5BeGVzLkRlcHRoLkxhYmVscy5TaGFkb3cuVmlzaWJsZRUuQXhlcy5EZXB0aC5BdXRvbWF0aWMWLkF4ZXMuRGVwdGguR3JpZC5TdHlsZRouQXhlcy5EZXB0aC5HcmlkLlpQb3NpdGlvbiUuQXhlcy5EZXB0aC5UaXRsZS5Gb250LlNoYWRvdy5WaXNpYmxlIC5BeGVzLkRlcHRoLlRpdGxlLlNoYWRvdy5WaXNpYmxlAAAAAAQABAAEAAQAAAAAAAAABgEAAAAAAAAAAAAAAAAABAAAAAQEAAQAAAAAAQQABAQEBAABAAQAAAAEBAAAAQQABAQEBAABAAQAAAAEBAAAAAAAAAAAAAAAAAEBAAAAAAAEBAAAAAAEBgEABAAEAAABAQAAAAAABAQAAAAEAQAABAAAAAEBAAAAAAAEBAAAAAQBAAAEAAAAAQEBAAAAAAAABAQAAAAAAAAABAYBAAAEAAAAAAQAAAAAAAAEAAAACAgBCCFTeXN0ZW0uV2luZG93cy5Gb3Jtcy5Nb3VzZUJ1dHRvbnMDAAAACCNTdGVlbWEuVGVlQ2hhcnQuRHJhd2luZy5CZXZlbFN0eWxlcwIAAAABFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAAAEgU3RlZW1hLlRlZUNoYXJ0LkxlZ2VuZEFsaWdubWVudHMCAAAAAQEBAQEBAQgBAQEBAQEBAQYGCAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQgIJlN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5TbW9vdGhpbmdNb2RlBAAAACVTeXN0ZW0uRHJhd2luZy5UZXh0LlRleHRSZW5kZXJpbmdIaW50BAAAAAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQgICBRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABJFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwIAAAAUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAICCZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwIAAAAICAEkU3RlZW1hLlRlZUNoYXJ0LlN0eWxlcy5Qb2ludGVyU3R5bGVzAgAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABJFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwIAAAAUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAICCZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwIAAAAICAEkU3RlZW1hLlRlZUNoYXJ0LlN0eWxlcy5Qb2ludGVyU3R5bGVzAgAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIAQEBAQEBAQEBAQgIAQEBCCBTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuTGluZUNhcAQAAAAiU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELkRhc2hTdHlsZQQAAAAGAQgBFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAAAgUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABCAgBAQEIIFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwBAAAACJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABAQgIAQEBCCBTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuTGluZUNhcAQAAAAiU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELkRhc2hTdHlsZQQAAAAGAQEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAACAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQEICAEBAQEIIFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwBAAAACJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBCAYGCAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAACAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQEBASJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBAQEBASJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBAQIAAACLBQAAdAIAAAEEAAAABfv///8hU3lzdGVtLldpbmRvd3MuRm9ybXMuTW91c2VCdXR0b25zAQAAAAd2YWx1ZV9fAAgDAAAAAABAAAEAAAAF+v///yNTdGVlbWEuVGVlQ2hhcnQuRHJhd2luZy5CZXZlbFN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAAAAAAABfn///8UU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAABG5hbWUFdmFsdWUKa25vd25Db2xvcgVzdGF0ZQEAAAAJBwcEAAAACv////8AAAAAAAACAAEF+P///yBTdGVlbWEuVGVlQ2hhcnQuTGVnZW5kQWxpZ25tZW50cwEAAAAHdmFsdWVfXwAIAgAAAAMAAAABAAAAAAABCQkAAAAGCgAAAAZUYWhvbWEMAAAAAAAAAAAAAAAAAAAAAJB1QAAAAAAAkHVAAwAAAAAB9f////n///8KAAAAAAAAAACNAAEAANUCAAAmAQAABfT///8mU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELlNtb290aGluZ01vZGUBAAAAB3ZhbHVlX18ACAQAAAABAAAABfP///8lU3lzdGVtLkRyYXdpbmcuVGV4dC5UZXh0UmVuZGVyaW5nSGludAEAAAAHdmFsdWVfXwAIBAAAAAAAAAAAAfL////5////CgAAAAAAAAAAjQABAAEAAAAAAAAAAAAAAAAGDwAAABtTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkxpbmUB8P////n///8KAAAAAAAAAAAlAAEAAQXv////JFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAEAAAAB7v////n///8KAAAAAAAAAACkAAEAAe3////5////CgAAAAAAAAAAJQABAAHs////+f///wqZAAD/AAAAAAAAAgACAAAABhUAAAAKIGdyZWVuX2xhaQoAAAAF6v///yZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAAAAAAIAAAAAAAAAAAB6f///+////8AAAAAAej////5////CgAAAAAAAAAAIwABAAAAAAAACQ8AAAAB5v////n///8KAAAAAAAAAACNAAEAAQHl////7////wEAAAAB5P////n///8KAAAAAAAAAACkAAEAAeP////5////CgAAAAAAAAAAjQABAAHi////+f///woAAJn/AAAAAAAAAgACAAAABh8AAAAJIGRlYWRfbGFpCgAAAAHg////6v///wAAAAAIAAAAAAAAAAAB3////+////8AAAAAAd7////5////CgAAAAAAAAAAIwABAAAAAAAAAAAAAAAAAAAAUAAAAAYjAAAACCMjIzAuIyMjCQoAAAAJAAAAAAABAQAAAAXb////IFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwAQAAAAd2YWx1ZV9fAAgEAAAAAgAAAAXa////IlN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5EYXNoU3R5bGUBAAAAB3ZhbHVlX18ACAQAAAABAAAAAAAAAAAAAAAACgAAAAAB2f////n///8KAAAA/wAAAAAAAAIACSgAAAAJCgAAAAsAAAAB1v////n///8KwAAA/wAAAAAAAAIAAAHV////+f///wr/AAD/AAAAAAAAAgAAUAAAAAkjAAAACQoAAAAJAAAAAAABAQAAAAHS////2////wIAAAAB0f///9r///8BAAAAAAAAAAAAAAAAAAHQ////+f///woAAAD/AAAAAAAAAgAJCgAAAAsAAAAAAc/////5////Cv8AAP8AAAAAAAACAAAAUAAAAAkjAAAACQoAAAAJAAAAAAABAQAAAAHM////2////wIAAAABy////9r///8BAAAAAAAAAAAAAAAAAAHK////+f///woAAAD/AAAAAAAAAgAJCgAAAAsAAAAAAcn////5////Cv8AAP8AAAAAAAACAAAAUAAAAAY4AAAACWQvTU0veXl5eQkjAAAACQoAAAAJAAAAAAAAAAEAAAABxf///9v///8CAAAAAcT////a////AQAAAAAAAAAAAAAAAAoAAAAAAAAAwOfiQAAAAACA8eBACgAAAAABw/////n///8KAAAA/wAAAAAAAAIACT4AAAAJCgAAAAsAAAAAAcD////5////Cv8AAP8AAAAAAAACAAAAAAEBv////9r///8BAAAAAAAAAAAAAAAAAAAAAQG+////2v///wEAAAAAAAAAAAAAAAAAEQkAAAABAAAABkMAAAAAESgAAAABAAAACUMAAAARPgAAAAEAAAAJQwAAAAs=</Format>
           <Legend>
-            <CheckedTitles> OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> HerbageDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HerbageDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> SpeciesHerbageDigestibility1, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -1658,7 +1668,10 @@ End Class
             <colour>
             </colour>
             <X>Date</X>
-            <Y>Ryegrass.TotalWt</Y>
+            <Y>HerbageDigestibility</Y>
+            <Y>Ryegrass.HerbageDigestibility</Y>
+            <Y>Ryegrass.HarvestedDigestibility</Y>
+            <Y>SpeciesHerbageDigestibility1</Y>
             <GDApsimFileReader name="ApsimFileReader" />
           </Plot>
         </Graph>
@@ -1726,10 +1739,35 @@ End Class
           <variable>NReturnedInDung as NReturnedInDung</variable>
           <variable>NReturnedInUrine as NReturnedInUrine</variable>
           <variable>DaysAfterCut as DaysAfterCut</variable>
+          <variable>HerbageDigestibility</variable>
+          <variable>DefoliatedDigestibility</variable>
+          <variable>SwardDefoliatedDigestibility</variable>
+          <variable>SpeciesDeadDigestibility</variable>
         </variables>
         <events name="Reporting Frequency">
           <event>end_day</event>
         </events>
+        <Graph name="XY">
+          <Format>AAEAAAD/////AQAAAAAAAAAMAgAAAFJUZWVDaGFydCwgVmVyc2lvbj0yLjAuMjMwNi4yNjIzMiwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj05YzgxMjYyNzZjNzdiZGI3DAMAAABXU3lzdGVtLldpbmRvd3MuRm9ybXMsIFZlcnNpb249Mi4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5DAQAAABRU3lzdGVtLkRyYXdpbmcsIFZlcnNpb249Mi4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iMDNmNWY3ZjExZDUwYTNhBQEAAAAVU3RlZW1hLlRlZUNoYXJ0LkNoYXJ0wAAAAAYuV2lkdGgHLkhlaWdodA4uWm9vbS5BbmltYXRlZBMuWm9vbS5BbmltYXRlZFN0ZXBzFC5QYW5uaW5nLk1vdXNlQnV0dG9uFy5QYW5lbC5JbWFnZUJldmVsLldpZHRoEi5QYW5lbC5CZXZlbC5PdXRlchUuUGFuZWwuU2hhZG93LlZpc2libGUSLlBhbmVsLkJydXNoLkNvbG9yEi5MZWdlbmQuQ2hlY2tCb3hlcxEuTGVnZW5kLkFsaWdubWVudBcuTGVnZW5kLlRpdGxlLkZvbnQuQm9sZCEuTGVnZW5kLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUcLkxlZ2VuZC5UaXRsZS5TaGFkb3cuVmlzaWJsZRkuTGVnZW5kLlRpdGxlLlBlbi5WaXNpYmxlGy5MZWdlbmQuRm9udC5TaGFkb3cuVmlzaWJsZRYuTGVnZW5kLlNoYWRvdy5WaXNpYmxlEy5MZWdlbmQuVHJhbnNwYXJlbnQNLkhlYWRlci5MaW5lcxEuSGVhZGVyLkZvbnQuTmFtZREuSGVhZGVyLkZvbnQuU2l6ZRsuSGVhZGVyLkZvbnQuU2hhZG93LlZpc2libGUWLkhlYWRlci5TaGFkb3cuVmlzaWJsZR4uU3ViSGVhZGVyLkZvbnQuU2hhZG93LlZpc2libGUZLlN1YkhlYWRlci5TaGFkb3cuVmlzaWJsZRsuRm9vdGVyLkZvbnQuU2hhZG93LlZpc2libGUWLkZvb3Rlci5TaGFkb3cuVmlzaWJsZR4uU3ViRm9vdGVyLkZvbnQuU2hhZG93LlZpc2libGUZLlN1YkZvb3Rlci5TaGFkb3cuVmlzaWJsZRUuQXNwZWN0LlJvdGF0aW9uRmxvYXQWLkFzcGVjdC5FbGV2YXRpb25GbG9hdBkuQXNwZWN0LkNvbG9yUGFsZXR0ZUluZGV4Di5Bc3BlY3QuVmlldzNEFy5HcmFwaGljczNELkJydXNoLkNvbG9yHy5HcmFwaGljczNELkZvbnQuU2hhZG93LlZpc2libGUTLkdyYXBoaWNzM0QuWENlbnRlchMuR3JhcGhpY3MzRC5ZQ2VudGVyGS5HcmFwaGljczNELlNtb290aGluZ01vZGUdLkdyYXBoaWNzM0QuVGV4dFJlbmRlcmluZ0hpbnQaLkdyYXBoaWNzM0QuU3VwcG9ydHMzRFRleHQVLkdyYXBoaWNzM0QuQmFja0NvbG9yFS5HcmFwaGljczNELlVzZUJ1ZmZlchwuR3JhcGhpY3MzRC5Sb3RhdGlvbkNlbnRlci5YHC5HcmFwaGljczNELlJvdGF0aW9uQ2VudGVyLlkcLkdyYXBoaWNzM0QuUm90YXRpb25DZW50ZXIuWghTZXJpZXMuMBUuU2VyaWVzLjAuQnJ1c2guQ29sb3IZLlNlcmllcy4wLlBvaW50ZXIuVmlzaWJsZRcuU2VyaWVzLjAuUG9pbnRlci5TdHlsZRsuU2VyaWVzLjAuUG9pbnRlci5QZW4uQ29sb3IdLlNlcmllcy4wLlBvaW50ZXIuQnJ1c2guQ29sb3IXLlNlcmllcy4wLkxpbmVQZW4uQ29sb3IXLlNlcmllcy4wLkxpbmVQZW4uV2lkdGgPLlNlcmllcy4wLlRpdGxlHi5TZXJpZXMuMC5NYXJrcy5DYWxsb3V0Lkxlbmd0aCEuU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5BcnJvd0hlYWQlLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuQXJyb3dIZWFkU2l6ZSAuU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5EaXN0YW5jZR4uU2VyaWVzLjAuTWFya3MuQ2FsbG91dC5EcmF3M0QdLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuU3R5bGUjLlNlcmllcy4wLk1hcmtzLkNhbGxvdXQuQnJ1c2guQ29sb3IeLlNlcmllcy4wLk1hcmtzLkl0ZW1zLkNhcGFjaXR5Iy5TZXJpZXMuMC5NYXJrcy5Gb250LlNoYWRvdy5WaXNpYmxlCFNlcmllcy4xFS5TZXJpZXMuMS5CcnVzaC5Db2xvchkuU2VyaWVzLjEuUG9pbnRlci5WaXNpYmxlFy5TZXJpZXMuMS5Qb2ludGVyLlN0eWxlGy5TZXJpZXMuMS5Qb2ludGVyLlBlbi5Db2xvch0uU2VyaWVzLjEuUG9pbnRlci5CcnVzaC5Db2xvchcuU2VyaWVzLjEuTGluZVBlbi5Db2xvchcuU2VyaWVzLjEuTGluZVBlbi5XaWR0aA8uU2VyaWVzLjEuVGl0bGUeLlNlcmllcy4xLk1hcmtzLkNhbGxvdXQuTGVuZ3RoIS5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkFycm93SGVhZCUuU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5BcnJvd0hlYWRTaXplIC5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkRpc3RhbmNlHi5TZXJpZXMuMS5NYXJrcy5DYWxsb3V0LkRyYXczRB0uU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5TdHlsZSMuU2VyaWVzLjEuTWFya3MuQ2FsbG91dC5CcnVzaC5Db2xvch4uU2VyaWVzLjEuTWFya3MuSXRlbXMuQ2FwYWNpdHkjLlNlcmllcy4xLk1hcmtzLkZvbnQuU2hhZG93LlZpc2libGUULldhbGxzLkxlZnQuQXV0b0hpZGUaLldhbGxzLkxlZnQuU2hhZG93LlZpc2libGUVLldhbGxzLlJpZ2h0LkF1dG9IaWRlGy5XYWxscy5SaWdodC5TaGFkb3cuVmlzaWJsZRQuV2FsbHMuQmFjay5BdXRvSGlkZRouV2FsbHMuQmFjay5TaGFkb3cuVmlzaWJsZRYuV2FsbHMuQm90dG9tLkF1dG9IaWRlHC5XYWxscy5Cb3R0b20uU2hhZG93LlZpc2libGUOLldhbGxzLlZpc2libGUcLkF4ZXMuTGVmdC5MYWJlbHMuU2VwYXJhdGlvbh0uQXhlcy5MZWZ0LkxhYmVscy5WYWx1ZUZvcm1hdBsuQXhlcy5MZWZ0LkxhYmVscy5Gb250Lk5hbWUbLkF4ZXMuTGVmdC5MYWJlbHMuRm9udC5TaXplJS5BeGVzLkxlZnQuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUgLkF4ZXMuTGVmdC5MYWJlbHMuU2hhZG93LlZpc2libGUULkF4ZXMuTGVmdC5BdXRvbWF0aWMYLkF4ZXMuTGVmdC5BeGlzUGVuLldpZHRoGS5BeGVzLkxlZnQuQXhpc1Blbi5FbmRDYXAVLkF4ZXMuTGVmdC5HcmlkLlN0eWxlGS5BeGVzLkxlZnQuR3JpZC5aUG9zaXRpb24XLkF4ZXMuTGVmdC5HcmlkLlZpc2libGUYLkF4ZXMuTGVmdC5NYXhpbXVtT2Zmc2V0HS5BeGVzLkxlZnQuTWlub3JUaWNrcy5WaXNpYmxlFi5BeGVzLkxlZnQuVGlja3MuQ29sb3IWLkF4ZXMuTGVmdC5UaXRsZS5MaW5lcxouQXhlcy5MZWZ0LlRpdGxlLkZvbnQuTmFtZRouQXhlcy5MZWZ0LlRpdGxlLkZvbnQuU2l6ZSguQXhlcy5MZWZ0LlRpdGxlLkZvbnQuU2hhZG93LkJydXNoLkNvbG9yJC5BeGVzLkxlZnQuVGl0bGUuRm9udC5TaGFkb3cuVmlzaWJsZSEuQXhlcy5MZWZ0LlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IfLkF4ZXMuTGVmdC5UaXRsZS5TaGFkb3cuVmlzaWJsZRsuQXhlcy5Ub3AuTGFiZWxzLlNlcGFyYXRpb24cLkF4ZXMuVG9wLkxhYmVscy5WYWx1ZUZvcm1hdBouQXhlcy5Ub3AuTGFiZWxzLkZvbnQuTmFtZRouQXhlcy5Ub3AuTGFiZWxzLkZvbnQuU2l6ZSQuQXhlcy5Ub3AuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUfLkF4ZXMuVG9wLkxhYmVscy5TaGFkb3cuVmlzaWJsZRMuQXhlcy5Ub3AuQXV0b21hdGljFy5BeGVzLlRvcC5BeGlzUGVuLldpZHRoGC5BeGVzLlRvcC5BeGlzUGVuLkVuZENhcBQuQXhlcy5Ub3AuR3JpZC5TdHlsZRguQXhlcy5Ub3AuR3JpZC5aUG9zaXRpb24WLkF4ZXMuVG9wLkdyaWQuVmlzaWJsZRwuQXhlcy5Ub3AuTWlub3JUaWNrcy5WaXNpYmxlFS5BeGVzLlRvcC5UaWNrcy5Db2xvchkuQXhlcy5Ub3AuVGl0bGUuRm9udC5OYW1lGS5BeGVzLlRvcC5UaXRsZS5Gb250LlNpemUjLkF4ZXMuVG9wLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUgLkF4ZXMuVG9wLlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IeLkF4ZXMuVG9wLlRpdGxlLlNoYWRvdy5WaXNpYmxlES5BeGVzLlRvcC5WaXNpYmxlHS5BeGVzLlJpZ2h0LkxhYmVscy5TZXBhcmF0aW9uHi5BeGVzLlJpZ2h0LkxhYmVscy5WYWx1ZUZvcm1hdBwuQXhlcy5SaWdodC5MYWJlbHMuRm9udC5OYW1lHC5BeGVzLlJpZ2h0LkxhYmVscy5Gb250LlNpemUmLkF4ZXMuUmlnaHQuTGFiZWxzLkZvbnQuU2hhZG93LlZpc2libGUhLkF4ZXMuUmlnaHQuTGFiZWxzLlNoYWRvdy5WaXNpYmxlFS5BeGVzLlJpZ2h0LkF1dG9tYXRpYxkuQXhlcy5SaWdodC5BeGlzUGVuLldpZHRoGi5BeGVzLlJpZ2h0LkF4aXNQZW4uRW5kQ2FwFi5BeGVzLlJpZ2h0LkdyaWQuU3R5bGUaLkF4ZXMuUmlnaHQuR3JpZC5aUG9zaXRpb24YLkF4ZXMuUmlnaHQuR3JpZC5WaXNpYmxlHi5BeGVzLlJpZ2h0Lk1pbm9yVGlja3MuVmlzaWJsZRcuQXhlcy5SaWdodC5UaWNrcy5Db2xvchsuQXhlcy5SaWdodC5UaXRsZS5Gb250Lk5hbWUbLkF4ZXMuUmlnaHQuVGl0bGUuRm9udC5TaXplJS5BeGVzLlJpZ2h0LlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUiLkF4ZXMuUmlnaHQuVGl0bGUuRm9udC5CcnVzaC5Db2xvciAuQXhlcy5SaWdodC5UaXRsZS5TaGFkb3cuVmlzaWJsZRMuQXhlcy5SaWdodC5WaXNpYmxlHi5BeGVzLkJvdHRvbS5MYWJlbHMuU2VwYXJhdGlvbiIuQXhlcy5Cb3R0b20uTGFiZWxzLkRhdGVUaW1lRm9ybWF0Hy5BeGVzLkJvdHRvbS5MYWJlbHMuVmFsdWVGb3JtYXQdLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250Lk5hbWUdLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250LlNpemUnLkF4ZXMuQm90dG9tLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlIi5BeGVzLkJvdHRvbS5MYWJlbHMuU2hhZG93LlZpc2libGUdLkF4ZXMuQm90dG9tLkF1dG9tYXRpY01heGltdW0dLkF4ZXMuQm90dG9tLkF1dG9tYXRpY01pbmltdW0aLkF4ZXMuQm90dG9tLkF4aXNQZW4uV2lkdGgbLkF4ZXMuQm90dG9tLkF4aXNQZW4uRW5kQ2FwFy5BeGVzLkJvdHRvbS5HcmlkLlN0eWxlGy5BeGVzLkJvdHRvbS5HcmlkLlpQb3NpdGlvbhkuQXhlcy5Cb3R0b20uR3JpZC5WaXNpYmxlGi5BeGVzLkJvdHRvbS5NYXhpbXVtT2Zmc2V0FC5BeGVzLkJvdHRvbS5NYXhpbXVtFC5BeGVzLkJvdHRvbS5NaW5pbXVtGi5BeGVzLkJvdHRvbS5NaW5pbXVtT2Zmc2V0Hy5BeGVzLkJvdHRvbS5NaW5vclRpY2tzLlZpc2libGUYLkF4ZXMuQm90dG9tLlRpY2tzLkNvbG9yGC5BeGVzLkJvdHRvbS5UaXRsZS5MaW5lcxwuQXhlcy5Cb3R0b20uVGl0bGUuRm9udC5OYW1lHC5BeGVzLkJvdHRvbS5UaXRsZS5Gb250LlNpemUmLkF4ZXMuQm90dG9tLlRpdGxlLkZvbnQuU2hhZG93LlZpc2libGUjLkF4ZXMuQm90dG9tLlRpdGxlLkZvbnQuQnJ1c2guQ29sb3IhLkF4ZXMuQm90dG9tLlRpdGxlLlNoYWRvdy5WaXNpYmxlKS5BeGVzLkRlcHRoVG9wLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlJC5BeGVzLkRlcHRoVG9wLkxhYmVscy5TaGFkb3cuVmlzaWJsZRguQXhlcy5EZXB0aFRvcC5BdXRvbWF0aWMZLkF4ZXMuRGVwdGhUb3AuR3JpZC5TdHlsZR0uQXhlcy5EZXB0aFRvcC5HcmlkLlpQb3NpdGlvbiguQXhlcy5EZXB0aFRvcC5UaXRsZS5Gb250LlNoYWRvdy5WaXNpYmxlIy5BeGVzLkRlcHRoVG9wLlRpdGxlLlNoYWRvdy5WaXNpYmxlJi5BeGVzLkRlcHRoLkxhYmVscy5Gb250LlNoYWRvdy5WaXNpYmxlIS5BeGVzLkRlcHRoLkxhYmVscy5TaGFkb3cuVmlzaWJsZRUuQXhlcy5EZXB0aC5BdXRvbWF0aWMWLkF4ZXMuRGVwdGguR3JpZC5TdHlsZRouQXhlcy5EZXB0aC5HcmlkLlpQb3NpdGlvbiUuQXhlcy5EZXB0aC5UaXRsZS5Gb250LlNoYWRvdy5WaXNpYmxlIC5BeGVzLkRlcHRoLlRpdGxlLlNoYWRvdy5WaXNpYmxlAAAAAAQABAAEAAQAAAAAAAAABgEAAAAAAAAAAAAAAAAABAAAAAQEAAQAAAAAAQQABAQEBAABAAQAAAAEBAAAAQQABAQEBAABAAQAAAAEBAAAAAAAAAAAAAAAAAEBAAAAAAAEBAAAAAAEBgEABAAEAAABAQAAAAAABAQAAAAEAQAABAAAAAEBAAAAAAAEBAAAAAQBAAAEAAAAAQEBAAAAAAAABAQAAAAAAAAABAYBAAAEAAAAAAQAAAAAAAAEAAAACAgBCCFTeXN0ZW0uV2luZG93cy5Gb3Jtcy5Nb3VzZUJ1dHRvbnMDAAAACCNTdGVlbWEuVGVlQ2hhcnQuRHJhd2luZy5CZXZlbFN0eWxlcwIAAAABFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAAAEgU3RlZW1hLlRlZUNoYXJ0LkxlZ2VuZEFsaWdubWVudHMCAAAAAQEBAQEBAQgBAQEBAQEBAQYGCAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQgIJlN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5TbW9vdGhpbmdNb2RlBAAAACVTeXN0ZW0uRHJhd2luZy5UZXh0LlRleHRSZW5kZXJpbmdIaW50BAAAAAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQgICBRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABJFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwIAAAAUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAICCZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwIAAAAICAEkU3RlZW1hLlRlZUNoYXJ0LlN0eWxlcy5Qb2ludGVyU3R5bGVzAgAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABJFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwIAAAAUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAICCZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwIAAAAICAEkU3RlZW1hLlRlZUNoYXJ0LlN0eWxlcy5Qb2ludGVyU3R5bGVzAgAAABRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIAQEBAQEBAQEBAQgIAQEBCCBTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuTGluZUNhcAQAAAAiU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELkRhc2hTdHlsZQQAAAAGAQgBFFN5c3RlbS5EcmF3aW5nLkNvbG9yBAAAAAgUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABCAgBAQEIIFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwBAAAACJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAAIARRTeXN0ZW0uRHJhd2luZy5Db2xvcgQAAAABAQgIAQEBCCBTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuTGluZUNhcAQAAAAiU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELkRhc2hTdHlsZQQAAAAGAQEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAACAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQEICAEBAQEIIFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwBAAAACJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBCAYGCAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAACAEUU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAAAQEBASJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBAQEBASJTeXN0ZW0uRHJhd2luZy5EcmF3aW5nMkQuRGFzaFN0eWxlBAAAAAYBAQIAAACLBQAAdAIAAAEEAAAABfv///8hU3lzdGVtLldpbmRvd3MuRm9ybXMuTW91c2VCdXR0b25zAQAAAAd2YWx1ZV9fAAgDAAAAAABAAAEAAAAF+v///yNTdGVlbWEuVGVlQ2hhcnQuRHJhd2luZy5CZXZlbFN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAAAAAAABfn///8UU3lzdGVtLkRyYXdpbmcuQ29sb3IEAAAABG5hbWUFdmFsdWUKa25vd25Db2xvcgVzdGF0ZQEAAAAJBwcEAAAACv////8AAAAAAAACAAEF+P///yBTdGVlbWEuVGVlQ2hhcnQuTGVnZW5kQWxpZ25tZW50cwEAAAAHdmFsdWVfXwAIAgAAAAMAAAABAAAAAAABCQkAAAAGCgAAAAZUYWhvbWEMAAAAAAAAAAAAAAAAAAAAAJB1QAAAAAAAkHVAAwAAAAAB9f////n///8KAAAAAAAAAACNAAEAANUCAAAmAQAABfT///8mU3lzdGVtLkRyYXdpbmcuRHJhd2luZzJELlNtb290aGluZ01vZGUBAAAAB3ZhbHVlX18ACAQAAAABAAAABfP///8lU3lzdGVtLkRyYXdpbmcuVGV4dC5UZXh0UmVuZGVyaW5nSGludAEAAAAHdmFsdWVfXwAIBAAAAAAAAAAAAfL////5////CgAAAAAAAAAAjQABAAEAAAAAAAAAAAAAAAAGDwAAABtTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkxpbmUB8P////n///8KAAAAAAAAAAAlAAEAAQXv////JFN0ZWVtYS5UZWVDaGFydC5TdHlsZXMuUG9pbnRlclN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAEAAAAB7v////n///8KAAAAAAAAAACkAAEAAe3////5////CgAAAAAAAAAAJQABAAHs////+f///wqZAAD/AAAAAAAAAgACAAAABhUAAAAKIGdyZWVuX2xhaQoAAAAF6v///yZTdGVlbWEuVGVlQ2hhcnQuU3R5bGVzLkFycm93SGVhZFN0eWxlcwEAAAAHdmFsdWVfXwAIAgAAAAAAAAAIAAAAAAAAAAAB6f///+////8AAAAAAej////5////CgAAAAAAAAAAIwABAAAAAAAACQ8AAAAB5v////n///8KAAAAAAAAAACNAAEAAQHl////7////wEAAAAB5P////n///8KAAAAAAAAAACkAAEAAeP////5////CgAAAAAAAAAAjQABAAHi////+f///woAAJn/AAAAAAAAAgACAAAABh8AAAAJIGRlYWRfbGFpCgAAAAHg////6v///wAAAAAIAAAAAAAAAAAB3////+////8AAAAAAd7////5////CgAAAAAAAAAAIwABAAAAAAAAAAAAAAAAAAAAUAAAAAYjAAAACCMjIzAuIyMjCQoAAAAJAAAAAAABAQAAAAXb////IFN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5MaW5lQ2FwAQAAAAd2YWx1ZV9fAAgEAAAAAgAAAAXa////IlN5c3RlbS5EcmF3aW5nLkRyYXdpbmcyRC5EYXNoU3R5bGUBAAAAB3ZhbHVlX18ACAQAAAABAAAAAAAAAAAAAAAACgAAAAAB2f////n///8KAAAA/wAAAAAAAAIACSgAAAAJCgAAAAsAAAAB1v////n///8KwAAA/wAAAAAAAAIAAAHV////+f///wr/AAD/AAAAAAAAAgAAUAAAAAkjAAAACQoAAAAJAAAAAAABAQAAAAHS////2////wIAAAAB0f///9r///8BAAAAAAAAAAAAAAAAAAHQ////+f///woAAAD/AAAAAAAAAgAJCgAAAAsAAAAAAc/////5////Cv8AAP8AAAAAAAACAAAAUAAAAAkjAAAACQoAAAAJAAAAAAABAQAAAAHM////2////wIAAAABy////9r///8BAAAAAAAAAAAAAAAAAAHK////+f///woAAAD/AAAAAAAAAgAJCgAAAAsAAAAAAcn////5////Cv8AAP8AAAAAAAACAAAAUAAAAAY4AAAACWQvTU0veXl5eQkjAAAACQoAAAAJAAAAAAAAAAEAAAABxf///9v///8CAAAAAcT////a////AQAAAAAAAAAAAAAAAAoAAAAAAAAAwOfiQAAAAACA8eBACgAAAAABw/////n///8KAAAA/wAAAAAAAAIACT4AAAAJCgAAAAsAAAAAAcD////5////Cv8AAP8AAAAAAAACAAAAAAEBv////9r///8BAAAAAAAAAAAAAAAAAAAAAQG+////2v///wEAAAAAAAAAAAAAAAAAEQkAAAABAAAABkMAAAAAESgAAAABAAAACUMAAAARPgAAAAEAAAAJQwAAAAs=</Format>
+          <Legend>
+            <CheckedTitles> HerbageDigestibility, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> DefoliatedDigestibility, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> SwardDefoliatedDigestibility, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> SpeciesDeadDigestibility, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>HerbageDigestibility</Y>
+            <Y>DefoliatedDigestibility</Y>
+            <Y>SwardDefoliatedDigestibility</Y>
+            <Y>SpeciesDeadDigestibility</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
       </outputfile>
       <GraphReport name="Plant">
         <Graph name="PlantWt">
@@ -1750,36 +1788,6 @@ End Class
             <Y>Ryegrass.TotalWt</Y>
             <Y>Ryegrass.AboveGroundWt</Y>
             <Y>Ryegrass.BelowGroundWt</Y>
-            <GDApsimFileReader name="ApsimFileReader" />
-          </Plot>
-        </Graph>
-        <Graph name="GrowthRate">
-          <Legend>
-            <CheckedTitles> Ryegrass.GrossPotentialGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.GrossPotentialGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.NetPotentialGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.NetPotentialGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.ActualGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.ActualGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.EffectiveGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.EffectiveGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.HerbageGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-            <CheckedTitles> Ryegrass.HerbageGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
-          </Legend>
-          <Plot>
-            <SeriesType>Solid line</SeriesType>
-            <PointType>None</PointType>
-            <colour>
-            </colour>
-            <X>Date</X>
-            <Y>Ryegrass.GrossPotentialGrowthWt</Y>
-            <Y>Ryegrass.NetPotentialGrowthWt</Y>
-            <Y>Ryegrass.PotGrowthWt_Wstress</Y>
-            <Y>Ryegrass.ActualGrowthWt</Y>
-            <Y>Ryegrass.EffectiveGrowthWt</Y>
-            <Y>Ryegrass.HerbageGrowthWt</Y>
             <GDApsimFileReader name="ApsimFileReader" />
           </Plot>
         </Graph>
@@ -1804,6 +1812,24 @@ End Class
             <Y>Ryegrass.LeafN</Y>
             <Y>Ryegrass.StemN</Y>
             <Y>Ryegrass.RootN</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="StandingWt">
+          <Legend>
+            <CheckedTitles> Ryegrass.StandingLiveWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.StandingLiveWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.StandingDeadWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.StandingDeadWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.StandingLiveWt</Y>
+            <Y>Ryegrass.StandingDeadWt</Y>
             <GDApsimFileReader name="ApsimFileReader" />
           </Plot>
         </Graph>
@@ -1832,9 +1858,12 @@ End Class
       <GraphReport name="Harvest">
         <Graph name="PlantDM">
           <Legend>
-            <CheckedTitles> Pasture.StandingWt</CheckedTitles>
-            <CheckedTitles> PreHarvestDM</CheckedTitles>
-            <CheckedTitles> PostHarvestDM</CheckedTitles>
+            <CheckedTitles> Pasture.StandingWt, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> Pasture.StandingWt, {Checkpoint} OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> PreHarvestDM, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> PreHarvestDM, {Checkpoint} OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> PostHarvestDM, OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
+            <CheckedTitles> PostHarvestDM, {Checkpoint} OneSpecies AgPastureClassic Results_MassBalance</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -1850,9 +1879,12 @@ End Class
         </Graph>
         <Graph name="DMHarvestable">
           <Legend>
-            <CheckedTitles> Ryegrass.HarvestableWt</CheckedTitles>
-            <CheckedTitles> Ryegrass.HarvestedWt</CheckedTitles>
-            <CheckedTitles> Ryegrass.HerbageDigestibility</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestableWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestableWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HerbageDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HerbageDigestibility, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -1868,8 +1900,10 @@ End Class
         </Graph>
         <Graph name="DMYield">
           <Legend>
-            <CheckedTitles> Ryegrass.HarvestedWt</CheckedTitles>
-            <CheckedTitles> Cumulative Ryegrass.HarvestedWt</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Cumulative Ryegrass.HarvestedWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Cumulative Ryegrass.HarvestedWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -1900,6 +1934,104 @@ End Class
             <YRight>Cumulative HarvestedWt</YRight>
             <YRight>Cumulative RemovedWt</YRight>
             <YRight>Cumulative ReturnedWt</YRight>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="Digestibility">
+          <Legend>
+            <CheckedTitles> Ryegrass.HerbageDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HarvestedDigestibility, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.HerbageDigestibility</Y>
+            <Y>Ryegrass.HarvestedDigestibility</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+      </GraphReport>
+      <GraphReport name="Growth">
+        <Graph name="Potential">
+          <Legend>
+            <CheckedTitles> Ryegrass.GrossPotentialGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.GrossPotentialGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.NetPotentialGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.NetPotentialGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.GrossPotentialGrowthWt</Y>
+            <Y>Ryegrass.NetPotentialGrowthWt</Y>
+            <Y>Ryegrass.PotGrowthWt_Wstress</Y>
+            <Y>Ryegrass.ActualGrowthWt</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="Actual">
+          <Legend>
+            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.PotGrowthWt_Wstress, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.EffectiveGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.EffectiveGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.PotGrowthWt_Wstress</Y>
+            <Y>Ryegrass.ActualGrowthWt</Y>
+            <Y>Ryegrass.EffectiveGrowthWt</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="Herbage">
+          <Legend>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.ActualGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.EffectiveGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.EffectiveGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HerbageGrowthWt, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.HerbageGrowthWt, {Checkpoint} OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.ActualGrowthWt</Y>
+            <Y>Ryegrass.EffectiveGrowthWt</Y>
+            <Y>Ryegrass.HerbageGrowthWt</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="Allocation">
+          <Legend>
+            <CheckedTitles> OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot>
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.ShootDMAllocation</Y>
             <GDApsimFileReader name="ApsimFileReader" />
           </Plot>
         </Graph>

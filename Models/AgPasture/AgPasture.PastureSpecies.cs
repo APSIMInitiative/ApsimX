@@ -755,7 +755,7 @@ namespace Models.AgPasture
         public double[] DigestibilitiesProtein { get; set; } = { 1.0, 1.0, 1.0, 1.0 };
 
         /// <summary>Soluble fraction of carbohydrates in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
-        [Description("Soluble fraction of carbohydrates in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
+        [Description("Fraction of new growth that is soluble carbohydrates in each plant organ (leaf, stem, stolon, root) [0-1]:")]
         [Units("0-1")]
         public double[] SugarFraction { get; set; } = { 0.5, 0.5, 0.5, 0.0 };
 
@@ -1236,12 +1236,6 @@ namespace Models.AgPasture
 
         /// <summary>The digestibility of herbage</summary>
         private double digestHerbage = 0.0;
-
-        /// <summary>The digestibility of herbage</summary>
-        private double digestHerbAB = 0.0;
-
-        /// <summary>The digestibility of herbage</summary>
-        private double digestHerbStand = 0.0;
 
         /// <summary>The digestibility of defoliated material</summary>
         private double digestDefoliated = 0.0;
@@ -2704,25 +2698,6 @@ namespace Models.AgPasture
             get { return digestHerbage; }
         }
 
-        /// <summary>Gets the average herbage digestibility.</summary>
-        /// <value>The herbage digestibility.</value>
-        [Description("Average digestibility of herbage")]
-        [Units("0-1")]
-        public double AboveGroundDigestibility
-        {
-            get { return digestHerbAB; }
-        }
-
-        /// <summary>Gets the average herbage digestibility.</summary>
-        /// <value>The herbage digestibility.</value>
-        [Description("Average digestibility of herbage")]
-        [Units("0-1")]
-        public double StandingDigestibility
-        {
-            get { return digestHerbStand; }
-        }
-
-        // TODO: Digestibility of harvested material should be better calculated (consider fraction actually removed)
         /// <summary>Gets the average digestibility of harvested DM.</summary>
         /// <value>The harvested digestibility.</value>
         [Description("Average digestibility of harvested meterial")]
@@ -2738,7 +2713,7 @@ namespace Models.AgPasture
         [Units("(MJ/ha)")]
         public double HerbageME
         {
-            get { return 16 * digestHerbage * StandingWt; }
+            get { return 16 * digestHerbage * AboveGroundWt; }
         }
 
         /// <summary>Gets the average ME (metabolisable energy) of harvested DM.</summary>
@@ -2768,8 +2743,8 @@ namespace Models.AgPasture
             // set up the organs
             leaves = new GenericAboveGroundOrgan(4);
             stems = new GenericAboveGroundOrgan(4);
-            stolons = new GenericAboveGroundOrgan(3);
-            roots = new GenericBelowGroundOrgan(1, nLayers);
+            stolons = new GenericAboveGroundOrgan(4);
+            roots = new GenericBelowGroundOrgan(2, nLayers);
 
             // initialise soil water and N variables
             InitiliaseSoilArrays();
@@ -2872,19 +2847,21 @@ namespace Models.AgPasture
             {
                 leaves.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
                 leaves.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
-                leaves.Tissue[tissue].SugarFraction = SugarFraction[tissue];
 
                 stems.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
                 stems.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
-                stems.Tissue[tissue].SugarFraction = SugarFraction[tissue];
 
                 if (tissue < 3)
                 {
                     stolons.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
                     stolons.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
-                    stolons.Tissue[tissue].SugarFraction = SugarFraction[tissue];
                 }
             }
+
+            leaves.SugarFraction = SugarFraction[0];
+            stems.SugarFraction = SugarFraction[0];
+            stolons.SugarFraction = SugarFraction[0];
+            //roots are not considered for digestibility
         }
 
         /// <summary>
@@ -2994,7 +2971,7 @@ namespace Models.AgPasture
         /// <summary>Initialise the variables in canopy properties</summary>
         private void InitialiseCanopy()
         {
-            // TODO: is this used at all?
+            // Used in Val's Arbitrator (via ICrop2)
             myCanopyProperties.Name = Name;
             myCanopyProperties.CoverGreen = CoverGreen;
             myCanopyProperties.CoverTot = CoverTotal;
@@ -3011,7 +2988,7 @@ namespace Models.AgPasture
         /// <summary>Initialise the variables in root properties</summary>
         private void InitialiseRootsProperties()
         {
-            // TODO: is this used at all?
+            // Used in Val's Arbitrator (via ICrop2)
             SoilCrop soilCrop = this.mySoil.Crop(Name) as SoilCrop;
 
             myRootProperties.RootDepth = roots.Depth;
@@ -3198,10 +3175,8 @@ namespace Models.AgPasture
             // Update LAI
             EvaluateLAI();
 
-            digestHerbage = calcDigestibility();
-
-            digestHerbAB = calcDigestibility1();
-            digestHerbStand = calcDigestibility2();
+            // Update digestibility
+            EvaluateDigestibility();
         }
 
         /// <summary>Computes the variations in root depth</summary>
@@ -3409,6 +3384,11 @@ namespace Models.AgPasture
                 dGrowthShoot = (toLeaf + toStem + toStolon) * dGrowthActual;
                 dGrowthRoot = toRoot * dGrowthActual;
 
+                // Set the amount of sugar in each organ (all in tissue1)
+                leaves.Tissue[0].DMSugar = leaves.SugarFraction * toLeaf * dGrowthActual;
+                stems.Tissue[0].DMSugar = stems.SugarFraction * toStem * dGrowthActual;
+                stolons.Tissue[0].DMSugar = stolons.SugarFraction * toStolon * dGrowthActual;
+
                 // Partitioning N based on DM fractions and on max [N] in plant parts
                 double Nsum = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
                             + (toStolon * stolons.NConcMaximum) + (toRoot * roots.NConcMaximum);
@@ -3584,10 +3564,11 @@ namespace Models.AgPasture
             // Turnover rate for stolon
             gamaS = gama;
 
-            //double gamad = gftt * gfwt * rateDead2Litter;
+            // Turnover rate for dead to litter
+            double digestDead = (leaves.DigestibilityDead * leaves.DMDead) + (stems.DigestibilityDead * stems.DMDead);
+            digestDead = MathUtilities.Divide(digestDead, leaves.DMDead + stems.DMDead, 0.0);
+            gamaD = DetachmentRate * WaterFac2Litter * digestDead / 0.4;
 
-            // Turnover rate for dead to litter (TODO: check the use of digestibility here)
-            gamaD = DetachmentRate * WaterFac2Litter * DigestibilitiesCellWall[3] / 0.4;
             gamaD += StockFac2Litter;
 
             // Turnover rate for roots
@@ -4677,90 +4658,41 @@ namespace Models.AgPasture
 
         /// <summary>Compute the average digestibility of aboveground plant material</summary>
         /// <returns>The digestibility of plant material (0-1)</returns>
-        private double calcDigestibility()
+        private void EvaluateDigestibility()
         {
-            if ((leaves.DMTotal + stems.DMTotal) <= 0.0)
+            double result = 0.0;
+            if (AboveGroundWt > 0.0)
             {
-                return 0.0;
+                result = (leaves.DigestibilityTotal * leaves.DMTotal)
+                       + (stems.DigestibilityTotal * stems.DMTotal)
+                       + (stolons.DigestibilityTotal * stolons.DMTotal);
+                result /= AboveGroundWt;
             }
 
-            // fraction of sugar (soluble carbohydrates)  - RCichota: this ignores any stored reserves (TODO: revise this approach)
-            double fSugar = 0.5 * MathUtilities.Divide(dGrowthActual, AboveGroundLivedWt, 0.0);
+            digestHerbage = result;
+        }
 
-            //Live
-            double digestLive = 0.0;
-            if (AboveGroundLivedWt > 0.0 & AboveGroundLiveN > 0.0)
+        /// <summary>Compute the average digestibility of harvested plant material</summary>
+        /// <param name="leafLiveWt">removed DM of live leaves</param>
+        /// <param name="leafDeadWt">removed DM of dead leaves</param>
+        /// <param name="stemLiveWt">removed DM of live stems</param>
+        /// <param name="stemDeadWt">removed DM of dead stems</param>
+        /// <param name="stolonLiveWt">removed DM of live stolons</param>
+        /// <param name="stolonDeadWt">removed DM of dead stolons</param>
+        /// <returns>The digestibility of plant material (0-1)</returns>
+        private double calcHarvestDigestibility(double leafLiveWt, double leafDeadWt, double stemLiveWt, double stemDeadWt, double stolonLiveWt, double stolonDeadWt)
+        {
+            double result = 0.0;
+            double removedWt = leafLiveWt + leafDeadWt + stemLiveWt + stemDeadWt + stolonLiveWt + stolonDeadWt;
+            if (removedWt > 0.0)
             {
-                double CNlive = MathUtilities.Divide(AboveGroundLivedWt * CarbonFractionInDM, AboveGroundLiveN, 0.0);
-                //CN ratio of live shoot tissue
-                double ratio1 = CNratioCellWall / CNlive;
-                double ratio2 = CNratioCellWall / CNratioProtein;
-                double fProteinLive = (ratio1 - (1 - fSugar)) / (ratio2 - 1); //Fraction of protein in living shoot
-                double fWallLive = 1 - fSugar - fProteinLive; //Fraction of cell wall in living shoot
-                digestLive = fSugar + fProteinLive + (DigestibilitiesCellWall[0] * fWallLive);
+                result = (leaves.DigestibilityLive * leafLiveWt) + (leaves.DigestibilityDead * leafDeadWt)
+                       + (stems.DigestibilityLive * stemLiveWt) + (stems.DigestibilityDead * stemDeadWt)
+                       + (stolons.DigestibilityLive * stolonLiveWt) + (stolons.DigestibilityDead * stolonDeadWt);
+                result /= removedWt;
             }
-
-            //Dead
-            double digestDead = 0.0;
-            if (StandingDeadWt > 0.0)
-            {
-                double CNdead = MathUtilities.Divide(StandingDeadWt * CarbonFractionInDM, StandingDeadN, 0.0);
-                //CN ratio of standing dead;
-                double ratio1 = CNratioCellWall / CNdead;
-                double ratio2 = CNratioCellWall / CNratioProtein;
-                double fProteinDead = (ratio1 - 1) / (ratio2 - 1); //Fraction of protein in standing dead
-                double fWallDead = 1 - fProteinDead; //Fraction of cell wall in standing dead
-                digestDead = fProteinDead + DigestibilitiesCellWall[3] * fWallDead;
-            }
-
-            double deadFrac = MathUtilities.Divide(StandingDeadWt, StandingWt, 1.0);
-            double result = (1 - deadFrac) * digestLive + deadFrac * digestDead;
 
             return result;
-        }
-
-        /// <summary>Compute the average digestibility of aboveground plant material</summary>
-        /// <returns>The digestibility of plant material (0-1)</returns>
-        private double calcDigestibility1()
-        {
-            if (AboveGroundWt <= 0.0)
-            {
-                return 0.0;
-            }
-            else
-            {
-                double cumDigest = 0.0;
-                for (int tissue = 0; tissue < 4; tissue++)
-                {
-                    cumDigest += (leaves.Tissue[tissue].Digestibility * leaves.Tissue[tissue].DM)
-                                  + (stems.Tissue[tissue].Digestibility * stems.Tissue[tissue].DM);
-                    if (tissue < 3)
-                        cumDigest += stolons.Tissue[tissue].Digestibility * stolons.Tissue[tissue].DM;
-                }
-
-                return cumDigest / AboveGroundWt;
-            }
-        }
-
-        /// <summary>Compute the average digestibility of aboveground plant material</summary>
-        /// <returns>The digestibility of plant material (0-1)</returns>
-        private double calcDigestibility2()
-        {
-            if (StandingWt <= 0.0)
-            {
-                return 0.0;
-            }
-            else
-            {
-                double cumDigest = 0.0;
-                for (int tissue = 0; tissue < 4; tissue++)
-                {
-                    cumDigest += (leaves.Tissue[tissue].Digestibility * leaves.Tissue[tissue].DM)
-                                  + (stems.Tissue[tissue].Digestibility * stems.Tissue[tissue].DM);
-                }
-
-                return cumDigest / StandingWt;
-            }
         }
 
         #endregion
@@ -4820,7 +4752,7 @@ namespace Models.AgPasture
         public void RemoveDM(double AmountToRemove)
         {
             // check existing amount and what is harvestable
-            double PreRemovalDM = AboveGroundWt; // TODO: should be standingWt only
+            double PreRemovalDM = AboveGroundWt; // TODO: enable removal of stolons
             double PreRemovalN = AboveGroundN;
 
             if (HarvestableWt > 0.0)
@@ -4854,7 +4786,9 @@ namespace Models.AgPasture
                     fractionRemainingDead = Math.Max(0.0, Math.Min(1.0, 1.0 - RemovingDeadDM / StandingDeadWt));
 
                 // get digestibility of DM being harvested
-                digestDefoliated = calcDigestibility();
+                digestDefoliated = calcHarvestDigestibility(leaves.DMGreen * fractionToHarvestGreen, leaves.DMDead * fractionToHarvestDead,
+                                                            stems.DMGreen * fractionToHarvestGreen, stems.DMDead * fractionToHarvestDead,
+                                                            stolons.DMGreen * fractionToHarvestGreen, stolons.DMDead * fractionToHarvestDead);
 
                 // update the various pools
                 leaves.Tissue[0].DM *= fractionRemainingGreen;
@@ -4878,8 +4812,6 @@ namespace Models.AgPasture
                 stems.Tissue[3].Namount *= fractionRemainingDead;
 
                 //C and N remobilised are also removed proportionally
-                double PreRemovalNRemob = NRemobilisable;
-                double PreRemovalCRemob = CRemobilisable;
                 NRemobilisable *= fractionRemainingGreen;
                 CRemobilisable *= fractionRemainingGreen;
 
@@ -4888,7 +4820,7 @@ namespace Models.AgPasture
                 NLuxury3 *= fractionRemainingGreen;
 
                 // check mass balance and set outputs
-                dmDefoliated = PreRemovalDM - AboveGroundWt; // TODO: replace with StandingWt
+                dmDefoliated = PreRemovalDM - AboveGroundWt;
                 Ndefoliated = PreRemovalN - AboveGroundN;
                 if (Math.Abs(dmDefoliated - AmountToRemove) > 0.00001)
                     throw new Exception("  " + Name + " - removal of DM resulted in loss of mass balance");
@@ -4911,7 +4843,9 @@ namespace Models.AgPasture
 
 
             // get digestibility of DM being removed
-            digestDefoliated = calcDigestibility();
+            digestDefoliated = calcHarvestDigestibility(leaves.DMGreen * fractionToRemove, leaves.DMDead * fractionToRemove,
+                                                        stems.DMGreen * fractionToRemove, stems.DMDead * fractionToRemove,
+                                                        stolons.DMGreen * fractionToRemove, stolons.DMDead * fractionToRemove);
 
             for (int i = 0; i < RemovalData.dm.Length; i++) // for each pool (green or dead)
             {
@@ -5023,8 +4957,11 @@ namespace Models.AgPasture
             // set values for fractionHarvest (in fact fraction harvested)
             fractionHarvested = MathUtilities.Divide(dmDefoliated, StandingWt + dmDefoliated, 0.0);
 
-            // recalc the digestibility
-            calcDigestibility();
+            // Update LAI
+            EvaluateLAI();
+
+            // Update digestibility
+            EvaluateDigestibility();
         }
 
         /// <summary>Reset this plant state to its initial values</summary>
@@ -5848,6 +5785,7 @@ namespace Models.AgPasture
         /// <summary>Actuallly initialise the tissues</summary>
         internal void DoInitialisation(int numTissues)
         {
+            // generally 4 tisues, three live, last is dead material
             TissueCount = numTissues;
             Tissue = new GenericTissue[TissueCount];
             for (int t = 0; t < TissueCount; t++)
@@ -5871,6 +5809,9 @@ namespace Models.AgPasture
         /// <summary>Minimum N concentration, structural N [g/g]</summary>
         internal double NConcMinimum = 1.2;
 
+        /// <summary>Fraction of new growth that is soluble carbohydrate, i.e. sugars [0-1]</summary>
+        internal double SugarFraction { get; set; } = 0.0;
+
         /// <summary>The total dry matter in this organ [g/m^2]</summary>
         internal double DMTotal
         {
@@ -5892,7 +5833,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                for (int t = 0; t < TissueCount - 1; t++)
                 {
                     result += Tissue[t].DM;
                 }
@@ -5902,18 +5843,10 @@ namespace Models.AgPasture
         }
 
         /// <summary>The dry matter in the dead tissues [g/m^2]</summary>
+        /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double DMDead
         {
-            get
-            {
-                double result = 0.0;
-                if (TissueCount > 3)
-                {
-                    result += Tissue[3].DM;
-                }
-
-                return result;
-            }
+            get { return Tissue[TissueCount - 1].DM; }
         }
 
         /// <summary>The total N amount in this tissue [g/m^2]</summary>
@@ -5937,7 +5870,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                for (int t = 0; t < TissueCount - 1; t++)
                 {
                     result += Tissue[t].Namount;
                 }
@@ -5947,18 +5880,10 @@ namespace Models.AgPasture
         }
 
         /// <summary>The N amount in the dead tissues [g/m^2]</summary>
+        /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double NDead
         {
-            get
-            {
-                double result = 0.0;
-                if (TissueCount > 3)
-                {
-                    result += Tissue[3].Namount;
-                }
-
-                return result;
-            }
+            get { return Tissue[TissueCount - 1].Namount; }
         }
 
         /// <summary>The average N concentration in this organ [g/g]</summary>
@@ -5986,6 +5911,43 @@ namespace Models.AgPasture
             {
                 return MathUtilities.Divide(NDead, DMDead, 0.0);
             }
+        }
+
+        /// <summary>The average digestibility of all biomass for this organ [g/g]</summary>
+        internal double DigestibilityTotal
+        {
+            get
+            {
+                double digestableDM = 0.0;
+                for (int t = 0; t < TissueCount; t++)
+                {
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
+                }
+
+                return MathUtilities.Divide(digestableDM, DMTotal, 0.0);
+            }
+        }
+
+        /// <summary>The average digestibility of live biomass for this organ [g/g]</summary>
+        internal double DigestibilityLive
+        {
+            get
+            {
+                double digestableDM = 0.0;
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
+                }
+
+                return MathUtilities.Divide(digestableDM, DMGreen, 0.0);
+            }
+        }
+
+        /// <summary>The average digestibility of dead biomass for this organ [g/g]</summary>
+        /// <remarks>Last tissues is assumed to represent dead material</remarks>
+        internal double DigestibilityDead
+        {
+            get { return Tissue[TissueCount - 1].Digestibility; }
         }
 
         #endregion
@@ -6019,13 +5981,14 @@ namespace Models.AgPasture
             /// <summary>The digestibility of cell walls [0-1]</summary>
             internal double DigestibilityCellWall { get; set; } = 0.5;
 
-            /// <summary>The digestibility of protein [0-1]</summary>
-            internal double DigestibilityProtein { get; set; } = 0.5;
+            /// <summary>The digestibility of proteins [0-1]</summary>
+            internal double DigestibilityProtein { get; set; } = 1.0;
 
-            /// <summary>The digestibility of cell wall [0-1]</summary>
-            internal double SugarFraction { get; set; } = 0.5;
+            /// <summary>The amount of soluble carbohydrate, i.e. sugars [g/m^2]</summary>
+            internal double DMSugar { get; set; } = 0.0;
 
             /// <summary>The dry matter amount [g/g]</summary>
+            /// <remarks>Digestibility of sugars is assumed to be 100%</remarks>
             internal double Digestibility
             {
                 get
@@ -6033,14 +5996,15 @@ namespace Models.AgPasture
                     double tissueDigestibility = 0.0;
                     if (DM > 0.0)
                     {
+                        double fractionSugar = DMSugar / DM;
                         double cnTissue = DM * CarbonFractionInDM / Namount;
                         double ratio1 = CNratioCellWall / cnTissue;
                         double ratio2 = CNratioCellWall / CNratioProtein;
-                        double proteinFraction = (ratio1 - (1.0 - SugarFraction)) / (ratio2 - 1.0);
-                        double cellWallFraction = 1.0 - SugarFraction - proteinFraction;
-                        tissueDigestibility = SugarFraction
-                                            + (proteinFraction * DigestibilityProtein)
-                                            + (cellWallFraction * DigestibilityCellWall);
+                        double fractionProtein = (ratio1 - (1.0 - fractionSugar)) / (ratio2 - 1.0);
+                        double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
+                        tissueDigestibility = fractionSugar
+                                            + (fractionProtein * DigestibilityProtein)
+                                            + (fractionCellWall * DigestibilityCellWall);
                     }
 
                     return tissueDigestibility;
@@ -6081,6 +6045,7 @@ namespace Models.AgPasture
         /// <summary>Actuallly initialise the tissues</summary>
         internal void DoInitialisation(int numTissues, int numLayers)
         {
+            // Two tisses for root, live and dead
             TissueCount = numTissues;
             Tissue = new RootTissue[TissueCount];
             for (int t = 0; t < TissueCount; t++)
@@ -6125,7 +6090,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                for (int t = 0; t < TissueCount - 1; t++)
                 {
                     result += Tissue[t].DM;
                 }
@@ -6135,18 +6100,10 @@ namespace Models.AgPasture
         }
 
         /// <summary>The dry matter in the dead tissues [g/m^2]</summary>
+        /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double DMDead
         {
-            get
-            {
-                double result = 0.0;
-                if (TissueCount > 3)
-                {
-                    result += Tissue[3].DM;
-                }
-
-                return result;
-            }
+            get { return Tissue[TissueCount - 1].DM; }
         }
 
         /// <summary>The total N amount in this tissue [g/m^2]</summary>
@@ -6170,7 +6127,7 @@ namespace Models.AgPasture
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Math.Min(3, TissueCount); t++)
+                for (int t = 0; t < TissueCount - 1; t++)
                 {
                     result += Tissue[t].Namount;
                 }
@@ -6180,20 +6137,12 @@ namespace Models.AgPasture
         }
 
         /// <summary>The N amount in the dead tissues [g/m^2]</summary>
+        /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double NDead
         {
-            get
-            {
-                double result = 0.0;
-                if (TissueCount > 3)
-                {
-                    result += Tissue[3].Namount;
-                }
-
-                return result;
-            }
+            get { return Tissue[TissueCount - 1].Namount; }
         }
-        
+
         /// <summary>The average N concentration in this organ [g/g]</summary>
         internal double NconcTotal
         {
