@@ -281,6 +281,18 @@ namespace Models.Soils
         /// Number of times water deltas have occured
         /// </summary>
         public int TimeStep { get; set; }
+        /// <summary>
+        /// Hydraulic concutivitiy into each pore
+        /// </summary>
+        [Summary]
+        [Description("The hydraulic conducitivity of water into the pore")]
+        public double[][] HydraulicConductivityIn { get; set; }
+        /// <summary>
+        /// Hydraulic concutivitiy out of each pore
+        /// </summary>
+        [Summary]
+        [Description("The hydraulic conducitivity of water out of the pore")]
+        public double[][] HydraulicConductivityOut { get; set; }
         #endregion
 
         #region Properties
@@ -376,6 +388,24 @@ namespace Models.Soils
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
+
+            HydraulicConductivityIn = new double[ProfileLayers][];
+            HydraulicConductivityOut = new double[ProfileLayers][];
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                HydraulicConductivityIn[l] = new double[PoreCompartments];
+                HydraulicConductivityOut[l] = new double[PoreCompartments];
+                for (int c = 0; c < PoreCompartments; c++)
+                {
+                    HydraulicConductivityIn[l][c] = new double();
+                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
+                    HydraulicConductivityOut[l][c] = new double();
+                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
+                }
+            }
+
+            
+
             if (ReportDetail)
             {
                 PoreWater = new double[ProfileLayers][];
