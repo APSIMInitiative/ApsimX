@@ -303,7 +303,21 @@ namespace Models.Core
                             stringValue += ",";
                         }
 
-                        stringValue += arr.GetValue(j).ToString();
+                        Array arr2d = arr.GetValue(j) as Array;
+                        if (arr2d == null)
+                            stringValue += arr.GetValue(j).ToString();
+                        else
+                        {
+                            for (int k = 0; k < arr2d.Length; k++)
+                            {
+                                if (k > 0)
+                                {
+                                    stringValue += " | ";
+                                }
+                                
+                                stringValue += arr2d.GetValue(k).ToString();
+                            }
+                        }
                     }
 
                     value = stringValue;
