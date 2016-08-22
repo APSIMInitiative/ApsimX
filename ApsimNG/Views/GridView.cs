@@ -101,10 +101,7 @@ namespace UserInterface.Views
             AddContextAction("Paste", OnPasteFromClipboard);
             AddContextAction("Delete", OnDeleteClick);
             gridview.ButtonReleaseEvent += OnButtonUp;
-            gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
-            fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
-            gridview.Selection.Changed += Gridview_CursorChanged;
-            fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
+            fixedcolview.ButtonReleaseEvent += OnButtonUp;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -145,9 +142,15 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-            fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+            if (numberLockedCols > 0)
+            {
+                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
+                gridview.Selection.Changed -= Gridview_CursorChanged;
+                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
+            }
             gridview.ButtonReleaseEvent -= OnButtonUp;
+            fixedcolview.ButtonReleaseEvent -= OnButtonUp;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -203,6 +206,8 @@ namespace UserInterface.Views
             }
         }
 
+        private int numberLockedCols = 0;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
@@ -216,6 +221,7 @@ namespace UserInterface.Views
             set
             {
                 this.table = value;
+                LockLeftMostColumns(0);
                 this.PopulateGrid();
             }
         }
@@ -256,22 +262,22 @@ namespace UserInterface.Views
                 textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
-                gridview.AppendColumn(column);
                 column.Sizing = TreeViewColumnSizing.Autosize;
-                column.FixedWidth = 100;
+                //column.FixedWidth = 100;
                 column.Resizable = true;
                 column.SetCellDataFunc(textRender, OnSetCellData);
                 column.Alignment = 0.5f; // For centered alignment of the column header
+                gridview.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
                 // the columns we want frozen
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
-                fixedcolview.AppendColumn(fixedColumn);
                 fixedColumn.Sizing = TreeViewColumnSizing.Autosize;
                 fixedColumn.Resizable = true;
                 fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.5f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
+                fixedcolview.AppendColumn(fixedColumn);
             }
             // Add an empty column at the end; auto-sizing will give this any "leftover" space
             TreeViewColumn fillColumn = new TreeViewColumn();
@@ -300,7 +306,6 @@ namespace UserInterface.Views
             gridview.FixedHeightMode = true;
             fixedcolview.FixedHeightMode = true;
             gridview.Model = gridmodel;
-            fixedcolview.Model = gridmodel;
 
             gridview.Show();
             while (Gtk.Application.EventsPending())
@@ -324,15 +329,18 @@ namespace UserInterface.Views
             TreePath endPath;
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
-            if (gridview.GetVisibleRange(out startPath, out endPath) &&  (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
+            // This gets called a lot, even when it seemingly isn't necessary.
+            if (numberLockedCols == 0 && gridview.GetVisibleRange(out startPath, out endPath) &&  (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
                 return;
             int colNo;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
-                Type dataType = dataVal.GetType(); //  DataSource.Columns[colNo].DataType;
+                Type dataType = dataVal.GetType();
                 string text;
-                if ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
+                if (dataType == typeof(DBNull))
+                    text = String.Empty;
+                else if ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
                     (dataType == typeof(double) && !Double.IsNaN((double)dataVal)))
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
@@ -597,24 +605,45 @@ namespace UserInterface.Views
         /// <param name="number"></param>
         public void LockLeftMostColumns(int number)
         {
+            if (number == numberLockedCols)
+                return;
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
                 fixedcolview.Columns[i].Visible = i < number;
                 gridview.Columns[i].Visible = i >= number;
             }
-            //scrolledwindow2.SetPolicy(PolicyType.Never, number > 0 ? PolicyType.Always : PolicyType.Never);
-            //scrolledwindow2.VScrollbar.WidthRequest = 1;
-            fixedcolview.Visible = number > 0;
+            if (number > 0)
+            {
+                if (numberLockedCols == 0)
+                {
+                    gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
+                    gridview.Selection.Changed += Gridview_CursorChanged;
+                    fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
+                    fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
+                    Gridview_CursorChanged(this, EventArgs.Empty);
+                    Gridview_Vadjustment_Changed(this, EventArgs.Empty);
+                }
+                fixedcolview.Model = gridmodel;
+                fixedcolview.Visible = true;
+            }
+            else
+            {
+                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
+                gridview.Selection.Changed -= Gridview_CursorChanged;
+                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
+                fixedcolview.Visible = false;
+            }
+            numberLockedCols = number;
         }
 
         /// <summary>Get screenshot of grid.</summary>
-        /// THIS CODE HAS NOT BEEN TESTED.
         public System.Drawing.Image GetScreenshot()
         {
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
-            Gdk.Window gridWindow = gridview.GdkWindow;
+            Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
             gridWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
