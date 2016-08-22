@@ -1562,11 +1562,11 @@ namespace Models.AgPasture
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (PastureSpecies mySpecies in mySpecies)
+            foreach (PastureSpecies species in mySpecies)
             {
-                mySpecies.isSwardControlled = isSwardControlled;
-                mySpecies.myWaterUptakeSource = myWaterUptakeSource;
-                mySpecies.myNitrogenUptakeSource = myNUptakeSource;
+                species.isSwardControlled = isSwardControlled;
+                species.myWaterUptakeSource = myWaterUptakeSource;
+                species.myNitrogenUptakeSource = myNUptakeSource;
             }
 
             // get the number of layers in the soil profile
@@ -1597,41 +1597,46 @@ namespace Models.AgPasture
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
-            if (swardIsAlive)
+            if (swardIsAlive && isSwardControlled)
             {
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
                     // stores the current state for this mySpecies
-                    mySpecies.SaveState();
+                    species.SaveState();
 
                     // step 01 - preparation and potential growth
-                    mySpecies.DailyPotentialGrowth();
+                    species.CalcDailyPotentialGrowth();
                 }
 
                 // Water demand, supply, and uptake
                 DoWaterCalculations();
 
                 // step 02 - Potential growth after water limitations
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.CalcGrowthWithWaterLimitations();
+                foreach (PastureSpecies species in mySpecies)
+                    species.CalcGrowthAfterWaterLimitations();
 
                 // Nitrogen demand, supply, and uptake
                 DoNitrogenCalculations();
 
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
                     // step 03 - Actual growth after nutrient limitations, but before senescence
-                    mySpecies.CalcActualGrowthAndPartition();
+                    species.CalcGrowthAfterNutrientLimitations();
+
+                    // Partition new growth into various tissues
+                    species.DoNewGrowthAllocations();
+
+                    // Compute tissue turnover and remobilisation (C and N)
+                    species.DoTissueTurnoverAndRemobilisation();
 
                     // step 04 - Effective growth after all limitations and senescence
-                    mySpecies.CalcTurnoverAndEffectiveGrowth();
-                    swardRemobilisedN += mySpecies.RemobilisableN;
+                    species.CalcEffectiveGrowth();
+                    swardRemobilisedN += species.RemobilisableN;
                 }
 
                 // step 05 - Send amounts of litter and senesced roots to other modules
                 DoSurfaceOMReturn(LitterDepositionWt, LitterDepositionN);
                 DoIncorpFomEvent(RootSenescenceWt, RootSenescenceN);
-
             }
         }
 
@@ -1680,14 +1685,14 @@ namespace Models.AgPasture
                 }
                 double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
                 double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.glfWater = waterLimitingFactor;
+                foreach (PastureSpecies species in mySpecies)
+                    species.glfWater = waterLimitingFactor;
                 //mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
             }
             else
             { //Water uptake is done by each species or by another apsim module
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.DoWaterCalculations();
+                foreach (PastureSpecies species in mySpecies)
+                    species.DoWaterCalculations();
             }
         }
 
@@ -1769,12 +1774,12 @@ namespace Models.AgPasture
                 }
 
                 // partition uptake between species, as function of their demand only
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
-                    mySpecies.mySoilWaterTakenUp = new double[nLayers];
-                    speciesFraction = mySpecies.WaterDemand / swardWaterDemand;
+                    species.mySoilWaterTakenUp = new double[nLayers];
+                    speciesFraction = species.WaterDemand / swardWaterDemand;
                     for (int layer = 0; layer <= RootFrontier; layer++)
-                        mySpecies.mySoilWaterTakenUp[layer] = swardWaterUptake[layer] * speciesFraction;
+                        species.mySoilWaterTakenUp[layer] = swardWaterUptake[layer] * speciesFraction;
                 }
             }
             else
@@ -1811,8 +1816,8 @@ namespace Models.AgPasture
             }
 
             // aggregate all water taken up
-            foreach (PastureSpecies mySpecies in mySpecies)
-                swardWaterUptake.Zip(mySpecies.WaterUptake, (x, y) => x + y);
+            foreach (PastureSpecies species in mySpecies)
+                swardWaterUptake.Zip(species.WaterUptake, (x, y) => x + y);
 
             // send the delta water taken up
             WaterChanged.Invoke(WaterTakenUp);
@@ -1836,14 +1841,14 @@ namespace Models.AgPasture
                 // partition N available between species, based on their relative demand (luxury minus minimum fixation)
                 double sumDemand = mySpecies.Sum(mySpecies => mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation));
                 double speciesFraction = 0.0;
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
-                    speciesFraction = mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation) / sumDemand;
+                    speciesFraction = species.RequiredLuxuryN * (1 - species.MinimumNFixation) / sumDemand;
                     for (int layer = 0; layer < nLayers; layer++)
                     {
                         //mySpecies.mySoilAvailableN = swardSoilAvailableN[layer] * speciesFraction;
-                        mySpecies.mySoilNH4available[layer] = swardSoilNH4Available[layer] * speciesFraction;
-                        mySpecies.mySoilNO3available[layer] = swardSoilNO3Available[layer] * speciesFraction;
+                        species.mySoilNH4available[layer] = swardSoilNH4Available[layer] * speciesFraction;
+                        species.mySoilNO3available[layer] = swardSoilNO3Available[layer] * speciesFraction;
                     }
                 }
 
@@ -1851,8 +1856,8 @@ namespace Models.AgPasture
                 swardNFixation = CalcNFixation();
 
                 // evaluate the use of N remobilised and any soil demand
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.CalcSoilNDemand();
+                foreach (PastureSpecies species in mySpecies)
+                    species.CalcSoilNDemand();
                 swardRemobilisedN = mySpecies.Sum(mySpecies => mySpecies.RemobilisableN);
                 swardNRemobNewGrowth = mySpecies.Sum(mySpecies => mySpecies.RemobilisedN);
                 swardSoilNdemand = mySpecies.Sum(mySpecies => mySpecies.DemandSoilN);
@@ -1861,15 +1866,15 @@ namespace Models.AgPasture
                 swardSoilNuptake = CalcSoilNUptake();
 
                 // preliminary N budget
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.newGrowthN = mySpecies.FixedN + mySpecies.RemobilisedN + mySpecies.mySoilNuptake;
+                foreach (PastureSpecies species in mySpecies)
+                    species.newGrowthN = species.FixedN + species.RemobilisedN + species.mySoilNuptake;
                 swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNuptake;
 
                 // evaluate whether further remobilisation (from luxury N) is needed
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
-                    mySpecies.CalcNLuxuryRemob();
-                    mySpecies.newGrowthN += mySpecies.RemobT2LuxuryN + mySpecies.RemobT3LuxuryN;
+                    species.CalcNLuxuryRemob();
+                    species.newGrowthN += species.RemobT2LuxuryN + species.RemobT3LuxuryN;
                 }
                 swardNFastRemob2 = mySpecies.Sum(mySpecies => mySpecies.RemobT2LuxuryN);
                 swardNFastRemob3 = mySpecies.Sum(mySpecies => mySpecies.RemobT3LuxuryN);
@@ -1879,18 +1884,18 @@ namespace Models.AgPasture
                 DoSoilNitrogenUptake();
 
                 // get the glfN for each species
-                foreach (PastureSpecies mySpecies in mySpecies)
+                foreach (PastureSpecies species in mySpecies)
                 {
-                    if (mySpecies.ActualGrowthN > 0.0)
-                        mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
+                    if (species.ActualGrowthN > 0.0)
+                        species.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(species.ActualGrowthN, species.RequiredOptimumN, 1.0)));
                     else
-                        mySpecies.glfN = 1.0;
+                        species.glfN = 1.0;
                 }
             }
             else
             { // N uptake is evaluated by the plant mySpecies or some other module
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.DoNitrogenCalculations();
+                foreach (PastureSpecies species in mySpecies)
+                    species.DoNitrogenCalculations();
             }
         }
 
@@ -1989,20 +1994,20 @@ namespace Models.AgPasture
         /// </summary>
         private void GetNDemand()
         {
-            foreach (PastureSpecies mySpecies in mySpecies)
-                mySpecies.CalcNDemand();
+            foreach (PastureSpecies species in mySpecies)
+                species.CalcNDemand();
             // get N demand for optimum growth (discount minimum N fixation in legumes)
             swardNdemand = 0.0;
-            foreach (PastureSpecies mySpecies in mySpecies)
-                swardNdemand += mySpecies.RequiredOptimumN * (1 - mySpecies.MinimumNFixation);
+            foreach (PastureSpecies species in mySpecies)
+                swardNdemand += species.RequiredOptimumN * (1 - species.MinimumNFixation);
         }
 
         /// <summary>Computes the amount of N fixed for each mySpecies</summary>
         /// <returns>The total amount of N fixed in the sward</returns>
         private double CalcNFixation()
         {
-            foreach (PastureSpecies mySpecies in mySpecies)
-                mySpecies.Nfixation = mySpecies.CalcNFixation();
+            foreach (PastureSpecies species in mySpecies)
+                species.Nfixation = species.CalcNFixation();
             return mySpecies.Sum(mySpecies => mySpecies.FixedN);
         }
 
@@ -2014,24 +2019,24 @@ namespace Models.AgPasture
             if (swardSoilNdemand == 0.0)
             { // No demand, no uptake
                 result = 0.0;
-                foreach (PastureSpecies mySpecies in mySpecies)
-                    mySpecies.mySoilNuptake = 0.0;
+                foreach (PastureSpecies species in mySpecies)
+                    species.mySoilNuptake = 0.0;
             }
             else
             {
                 if (swardSoilAvailableN >= swardSoilNdemand)
                 { // soil can supply all remaining N needed
                     result = swardSoilNdemand;
-                    foreach (PastureSpecies mySpecies in mySpecies)
-                        mySpecies.mySoilNuptake = mySpecies.DemandSoilN;
+                    foreach (PastureSpecies species in mySpecies)
+                        species.mySoilNuptake = species.DemandSoilN;
                 }
                 else
                 { // soil cannot supply all N needed. Get the available N
                     result = swardSoilAvailableN;
                     // for species, uptake is equal demand adjusted to total uptake
                     double uptakeFraction = result / swardSoilNdemand;
-                    foreach (PastureSpecies mySpecies in mySpecies)
-                        mySpecies.mySoilNuptake = mySpecies.DemandSoilN * uptakeFraction;
+                    foreach (PastureSpecies species in mySpecies)
+                        species.mySoilNuptake = species.DemandSoilN * uptakeFraction;
                 }
             }
 
@@ -2072,14 +2077,14 @@ namespace Models.AgPasture
                         }
 
                         // partition the amount taken up between species, considering amount actually taken up
-                        foreach (PastureSpecies mySpecies in mySpecies)
+                        foreach (PastureSpecies species in mySpecies)
                         {
-                            mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
+                            species.mySoilNitrogenTakenUp = new double[nLayers];
                             if (swardSoilNuptake > 0.0)
                             {
-                                speciesFraction = mySpecies.mySoilNuptake / swardSoilNuptake;
+                                speciesFraction = species.mySoilNuptake / swardSoilNuptake;
                                 for (int layer = 0; layer <= RootFrontier; layer++)
-                                    mySpecies.mySoilNitrogenTakenUp[layer] = -(NTakenUp.DeltaNH4[layer] + NTakenUp.DeltaNO3[layer]) * speciesFraction;
+                                    species.mySoilNitrogenTakenUp[layer] = -(NTakenUp.DeltaNH4[layer] + NTakenUp.DeltaNO3[layer]) * speciesFraction;
                             }
                         }
                     }
@@ -2098,25 +2103,25 @@ namespace Models.AgPasture
                             sumNH4Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
                             sumNO3Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
                         }
-                        foreach (PastureSpecies mySpecies in mySpecies)
+                        foreach (PastureSpecies species in mySpecies)
                         {
                             // get adjusted N available
                             adjustedNH4Available = new double[nLayers];
                             adjustedNO3Available = new double[nLayers];
-                            for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
+                            for (int layer = 0; layer <= species.RootFrontier; layer++)
                             {
-                                adjustedNH4Available[layer] = swardSoilNH4Available[layer] * mySpecies.mySoilNH4available[layer] / sumNH4Available[layer];
-                                adjustedNO3Available[layer] = swardSoilNO3Available[layer] * mySpecies.mySoilNO3available[layer] / sumNO3Available[layer];
+                                adjustedNH4Available[layer] = swardSoilNH4Available[layer] * species.mySoilNH4available[layer] / sumNH4Available[layer];
+                                adjustedNO3Available[layer] = swardSoilNO3Available[layer] * species.mySoilNO3available[layer] / sumNO3Available[layer];
                             }
 
                             // get fraction of demand supplied by the soil
-                            uptakeFraction = Math.Min(1.0, mySpecies.mySoilNuptake / (adjustedNH4Available.Sum() + adjustedNO3Available.Sum()));
+                            uptakeFraction = Math.Min(1.0, species.mySoilNuptake / (adjustedNH4Available.Sum() + adjustedNO3Available.Sum()));
 
                             // get the actual amounts taken up from each layer
-                            mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
-                            for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
+                            species.mySoilNitrogenTakenUp = new double[nLayers];
+                            for (int layer = 0; layer <= species.RootFrontier; layer++)
                             {
-                                mySpecies.mySoilNitrogenTakenUp[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
+                                species.mySoilNitrogenTakenUp[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
                                 NTakenUp.DeltaNH4[layer] -= mySoil.NH4N[layer] * uptakeFraction;
                                 NTakenUp.DeltaNO3[layer] -= mySoil.NO3N[layer] * uptakeFraction;
                             }
@@ -2132,8 +2137,8 @@ namespace Models.AgPasture
                 else
                 {
                     // No uptake, just zero out the arrays
-                    foreach (PastureSpecies mySpecies in mySpecies)
-                        mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
+                    foreach (PastureSpecies species in mySpecies)
+                        species.mySoilNitrogenTakenUp = new double[nLayers];
                 }
             }
             else
@@ -2157,8 +2162,8 @@ namespace Models.AgPasture
         [EventSubscribe("KillCrop")]
         private void OnKillCrop(KillCropType KillData)
         {
-            foreach (PastureSpecies mySpecies in mySpecies)
-                mySpecies.OnKillCrop(KillData);
+            foreach (PastureSpecies species in mySpecies)
+                species.OnKillCrop(KillData);
 
             swardIsAlive = false;
         }

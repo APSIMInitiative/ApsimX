@@ -1382,7 +1382,7 @@ namespace Models
             <string>[AgPasture].SpeciesDeadLAI[1] as Ryegrass.DeadLAI</string>
             <string>[AgPasture].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[AgPasture].GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[AgPasture].GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[AgPasture].GLFnConcentration as Ryegrass.GlfNConcentration</string>
             <string>[AgPasture].SpeciesGLFT[1] as Ryegrass.GlfTemperature</string>
             <string>[AgPasture].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[AgPasture].SpeciesGLFW[1] as Ryegrass.GlfWater</string>
@@ -4676,7 +4676,7 @@ namespace Models
             <string>[Sward].Ryegrass.DeadLAI as Ryegrass.DeadLAI</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Sward].Ryegrass.GlfNConcentration as Ryegrass.GlfNConcentration</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWater as Ryegrass.GlfWater</string>
@@ -20539,48 +20539,6 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>GLFTemp</Name>
-      <Series>
-        <Name>Demand</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.GlfTemperature</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Water demand, uptake (mm/day)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
       <Name>GLFW</Name>
       <Series>
         <Name>Demand</Name>
@@ -20665,9 +20623,9 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Radn</Name>
+      <Name>Digestibility</Name>
       <Series>
-        <Name>Demand</Name>
+        <Name>Harvested</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -20681,57 +20639,15 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Results_Species</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.IrradianceTopCanopy</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Water demand, uptake (mm/day)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Digestibility</Name>
-      <Series>
-        <Name>Harvested</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16747854</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledTriangle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
         <YFieldName>Ryegrass.HarvestedDigestibility</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
-        <Filter />
       </Series>
       <Axis>
         <Type>Bottom</Type>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -20739,12 +20655,56 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
+        <Title />
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Allocation</Name>
+      <Series>
+        <Name>Shoot</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>

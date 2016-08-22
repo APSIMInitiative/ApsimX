@@ -234,6 +234,7 @@ namespace Models.AgPasture
             {
                 ResetZero();
                 isAlive = true;
+                phenologicStage = 0;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today");
             }
         }
@@ -887,6 +888,21 @@ namespace Models.AgPasture
 
         // - Annual species  ------------------------------------------------------------------------------------------
 
+        /// <summary>The day of year when seeds are allowed to germinate</summary>
+        private int doyGermination = 200;
+
+        /// <summary>The number of days from emergence to anthesis</summary>
+        private int daysEmergenceToAnthesis = 0;
+
+        /// <summary>The number of days from anthesis to maturity</summary>
+        private int daysAnthesisToMaturity = 0;
+
+        /// <summary>The cumulative degrees-day from emergence to anthesis</summary>
+        private double degreesDayForAnthesis = 0.0;
+
+        /// <summary>The cumulative degrees-day from anthesis to maturity</summary>
+        private double degreesDayForMaturity = 0.0;
+
         /// <summary>The day of year for emergence</summary>
         private int dayEmerg = 0;
 
@@ -898,12 +914,6 @@ namespace Models.AgPasture
 
         /// <summary>The month of anthesis</summary>
         private int monAnth = 0;
-
-        /// <summary>The number of days to mature</summary>
-        private int daysToMature = 0;
-
-        /// <summary>The number of days between emergence and anthesis</summary>
-        private int daysEmgToAnth = 0;
 
         // - Other parameters  ----------------------------------------------------------------------------------------
 
@@ -1008,8 +1018,11 @@ namespace Models.AgPasture
         // Annual species adn phenology  ------------------------------------------------------------------------------
 
         /// <summary>The phenologic stage</summary>
-        /// <remarks>0 = germinating, 1 = vegetative, 2 = reproductive</remarks>
-        private int phenologicStage = 0;
+        /// <remarks>0 = germinating, 1 = vegetative, 2 = reproductive, negative for dormant/not sown</remarks>
+        private int phenologicStage = -1;
+
+        /// <summary>The number of days since emergence</summary>
+        private int daysSinceEmergence = 0;
 
         /// <summary>The number of days from emergence</summary>
         private int daysfromEmergence = 0;
@@ -1019,6 +1032,9 @@ namespace Models.AgPasture
 
         /// <summary>The cumulatve degrees day during vegetative phase</summary>
         private double growingGDD = 0.0;
+
+        /// <summary>The factor for biomass senescence according to phase</summary>
+        private double phenoFactor = 0.0;
 
         // Photosynthesis, growth, and turnover  ----------------------------------------------------------------------
 
@@ -1337,13 +1353,13 @@ namespace Models.AgPasture
             {
                 if (isAlive)
                 {
-                    if (phenologicStage == 0)
-                        return 1; //"sowing & germination";
+                    if(phenologicStage < myEpsilon)
+                        return 1; //"germination";
                     else
-                        return 3; //"emergence" & "reproductive";
+                        return 3; //"vegetative" & "reproductive";
                 }
                 else
-                    return 0;
+                    return 0; //"out"
             }
         }
 
@@ -1358,9 +1374,9 @@ namespace Models.AgPasture
                 if (isAlive)
                 {
                     if (phenologicStage == 0)
-                        return "sowing";
+                        return "germination";
                     else
-                        return "emergence";
+                        return "vegetative";
                 }
                 else
                     return "out";
@@ -2734,7 +2750,7 @@ namespace Models.AgPasture
             // get the number of layers in the soil profile
             nLayers = mySoil.Thickness.Length;
 
-            // set up the organs
+            // set up the organs (use 4 or 2 tissues, the last is dead)
             leaves = new GenericAboveGroundOrgan(4);
             stems = new GenericAboveGroundOrgan(4);
             stolons = new GenericAboveGroundOrgan(4);
@@ -2813,9 +2829,10 @@ namespace Models.AgPasture
 
             // 3. Save initial state (may be used later for reset)
             InitialState = new SpeciesBasicStateSettings();
-            if (InitialShootDM > -myEpsilon)
+            if (InitialShootDM > myEpsilon)
             {
-                // DM is zero (not sown yet) or positive (plant is on the ground and able to grow straightaway)
+                // DM is positive, plant is on the ground and able to grow straightaway
+                InitialState.PhenoStage = 1;
                 for (int pool = 0; pool < 11; pool++)
                     InitialState.DMWeight[pool] = initialDMFractions[pool] * InitialShootDM;
                 InitialState.DMWeight[11] = InitialRootDM;
@@ -2834,7 +2851,16 @@ namespace Models.AgPasture
                 InitialState.NAmount[10] = InitialState.DMWeight[10] * stolons.NConcOptimum;
                 InitialState.NAmount[11] = InitialState.DMWeight[11] * roots.NConcOptimum;
             }
-            //else  { DM is negative, so the plant is not yet in the ground, needs to be sown }
+            else if (InitialShootDM > -myEpsilon)
+            {
+                // DM is zero, plant is just sown and able to germinate
+                InitialState.PhenoStage = 0;
+            }
+            else
+            {
+                //DM is negative, plant is not yet in the ground, needs to be sown 
+                InitialState.PhenoStage = -1;
+            }
 
             // 3. Set the digestibility parameters for each tissue
             for (int tissue = 0; tissue < 4; tissue++)
@@ -2909,10 +2935,7 @@ namespace Models.AgPasture
             InitialiseCanopy();
 
             // 5. Set initial phenological stage
-            if (TotalWt < myEpsilon)
-                phenologicStage = 0;
-            else
-                phenologicStage = 1;
+            phenologicStage = InitialState.PhenoStage;
 
             // 6. Calculate the values for LAI
             EvaluateLAI();
@@ -3014,9 +3037,9 @@ namespace Models.AgPasture
             if (monEmerg >= monAnth) //...across the calendar year
                 numbMonths += 12;
 
-            daysEmgToAnth = (int) (30.5 * numbMonths + (dayAnth - dayEmerg));
+            daysEmergenceToAnthesis = (int) (30.5 * numbMonths + (dayAnth - dayEmerg));
 
-            return daysEmgToAnth;
+            return daysEmergenceToAnthesis;
         }
 
         #endregion
@@ -3047,44 +3070,111 @@ namespace Models.AgPasture
                 // stores the current state for this species
                 SaveState();
 
-                // step 01 - preparation and potential growth
+                // check phenology of annuals
+                if (isAnnual)
+                    phenologicStage = annualsPhenology();
+
                 if (phenologicStage == 0)
                 {
-                    // not germinated yet, check germination progress
+                    // plant has not emerged yet, check germination progress
                     if (DailyGerminationProgress() >= 1.0)
                     {
                         // germination completed
                         SetEmergenceState();
                     }
                 }
-                //TODO: verify whether the previous test should skip all calculations
+                else
+                {
+                    //Plant has emerged, compute growth and uptake
 
-                DailyPotentialGrowth();
+                    // step 01 - Potential growth
+                    CalcDailyPotentialGrowth();
 
-                // Water demand, supply, and uptake
-                DoWaterCalculations();
+                    // Water demand, supply, and uptake
+                    DoWaterCalculations();
 
-                // step 02 - Potential growth after water limitations
-                CalcGrowthWithWaterLimitations();
+                    // step 02 - Potential growth after water limitations
+                    CalcGrowthAfterWaterLimitations();
 
-                // Nitrogen demand, supply, and uptake
-                DoNitrogenCalculations();
+                    // Nitrogen demand, supply, and uptake
+                    DoNitrogenCalculations();
 
-                // step 03 - Actual growth after nutrient limitations, but before senescence
-                CalcActualGrowthAndPartition();
+                    // step 03 - Growth after nutrient limitations, but before senescence
+                    CalcGrowthAfterNutrientLimitations();
 
-                // step 04 - Effective growth after all limitations and senescence
-                CalcTurnoverAndEffectiveGrowth();
+                    // Partition new growth into various tissues
+                    DoNewGrowthAllocations();
 
-                // Send amounts of litter and senesced roots to other modules
-                DoSurfaceOMReturn(dLitter, dNlitter);
-                DoIncorpFomEvent(dRootSen, dNrootSen);
+                    // Compute tissue turnover and remobilisation (C and N)
+                    DoTissueTurnoverAndRemobilisation();
+
+                    // step 04 - Effective growth, after all limitations and senescence
+                    CalcEffectiveGrowth();
+
+                    // Send amounts of litter and senesced roots to other modules
+                    DoSurfaceOMReturn(dLitter, dNlitter);
+                    DoIncorpFomEvent(dRootSen, dNrootSen);
+                }
             }
             //else
             //    Growth is controlled by Sward (all species)
         }
 
         #region - Plant growth processes  ----------------------------------------------------------------------------------
+
+
+        /// <summary>Evaluates the phenologic stage of annual plants</summary>
+        /// <returns>An integer representing the plant's phenologic stage</returns>
+        private int annualsPhenology()
+        {
+            int result = -1;
+            double phenoFactor1;
+            double phenoFactor2;
+
+            // check whether germination started
+            if (myClock.Today.DayOfYear == doyGermination)
+            {
+                // just allowed to germinate
+                result = 0;
+            }
+
+            if (phenologicStage > 0)
+            {
+                // accumulate days count and degrees-day
+                daysSinceEmergence += 1;
+                growingGDD += Math.Max(0.0, Tmean(0.5) - GrowthTmin);
+
+                // Note, germination is considered together with perennials in DailyGerminationProgress
+
+                // check development over vegetative growth
+                if ((daysSinceEmergence == daysEmergenceToAnthesis) || (growingGDD >= degreesDayForAnthesis))
+                {
+                    phenologicStage = 2;
+                    growingGDD = Math.Max(growingGDD, degreesDayForAnthesis);
+                }
+
+                phenoFactor1 = MathUtilities.Divide(daysSinceEmergence, daysEmergenceToAnthesis, 1.0);
+                phenoFactor2 = MathUtilities.Divide(growingGDD, degreesDayForAnthesis, 1.0);
+
+                // check development over reproductive growth
+                if (phenologicStage > 1)
+                {
+                    if ((daysSinceEmergence == daysEmergenceToAnthesis + daysAnthesisToMaturity) || (growingGDD >= degreesDayForMaturity))
+                    {
+                        growingGDD = Math.Max(growingGDD, degreesDayForMaturity);
+                        EndCrop();
+                    }
+
+                    phenoFactor1 = MathUtilities.Divide(daysSinceEmergence- daysEmergenceToAnthesis, daysAnthesisToMaturity, 1.0);
+                    phenoFactor2 = MathUtilities.Divide(growingGDD - degreesDayForAnthesis, degreesDayForMaturity, 1.0);
+                }
+
+                // get the phenologic factor (fraction of phase)
+                phenoFactor = Math.Max(phenoFactor1, phenoFactor2);
+            }
+
+            return result;
+        }
 
         /// <summary>Computation of daily progress through germination</summary>
         /// <returns>Fraction of germination phase completed</returns>
@@ -3095,45 +3185,24 @@ namespace Models.AgPasture
         }
 
         /// <summary>Calculates the potential growth.</summary>
-        internal void DailyPotentialGrowth()
+        internal void CalcDailyPotentialGrowth()
         {
-            // update root depth (for annuals only) TODO: this need to be in a better place
-            EvaluateRootGrowth();
+            // Gross potential growth (kgC/ha/day)
+            Pgross = DailyGrossPotentialGrowth();
 
-            // Evaluate the phenologic stage, for annuals
-            if (isAnnual)
-                phenologicStage = annualsPhenology();
+            // Respiration (kgC/ha/day)
+            Resp_m = DailyMaintenanceRespiration();
+            Resp_g = DailyGrowthRespiration();
 
-            // Compute the potential growth
-            if (phenologicStage == 0)
-            {
-                //TODO: verif whether this is actually needed
-                // Growth before germination is null
-                Pgross = 0.0;
-                Resp_m = 0.0;
-                Resp_g = 0.0;
-                CRemobilisable = 0.0;
-                dGrowthPot = 0.0;
-            }
-            else
-            {
-                // Gross potential growth (kgC/ha/day)
-                Pgross = DailyGrossPotentialGrowth();
+            // Remobilisation (kgC/ha/day) (got from previous day turnover)
+            CRemobilisable = 0.0;
 
-                // Respiration (kgC/ha/day)
-                Resp_m = DailyMaintenanceRespiration();
-                Resp_g = DailyGrowthRespiration();
-
-                // Remobilisation (kgC/ha/day) (got from previous day turnover)
-                CRemobilisable = 0.0;
-
-                // Net potential growth (kgDM/ha/day)
-                dGrowthPot = DailyNetPotentialGrowth();
-            }
+            // Net potential growth (kgDM/ha/day)
+            dGrowthPot = DailyNetPotentialGrowth();
         }
 
         /// <summary>Calculates the growth with water limitations.</summary>
-        internal void CalcGrowthWithWaterLimitations()
+        internal void CalcGrowthAfterWaterLimitations()
         {
             // Potential growth after water limitations
             dGrowthWstress = dGrowthPot * Math.Pow(glfWater, WaterStressExponent);
@@ -3143,22 +3212,23 @@ namespace Models.AgPasture
             //   FL = UpdatefLeaf();
         }
 
-        /// <summary>Calculates the actual growth and partition.</summary>
-        internal void CalcActualGrowthAndPartition()
+        /// <summary>Calculates the actual plant growth (after limitations, before senescence).</summary>
+        internal void CalcGrowthAfterNutrientLimitations()
         {
-            // Actual daily growth
-            dGrowthActual = DailyActualGrowth();
+            // Adjust GLF due to N deficiency: Many plants, especially grasses, can keep growth even when N supply is
+            //  insuficient, this is done by reducing the N concentration in the plant tissues. This is represented here
+            //  by adjusting the effect of N deficiency using a power function. When the exponent is 1.0, the reduction
+            //  in growth is linearly proportional to N deficiency, a greater value results in less reduction in growth.
+            //  For many plants the value should be smaller than 1.0. For grasses, the exponent is typically around 0.5.
+            double glfNit = Math.Pow(glfN, DillutionCoefN);
 
-            // Partition growth into various tissues
-            PartitionNewGrowth();
+            // The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
+            dGrowthActual = dGrowthWstress * Math.Min(glfNit, GlfSFertility);
         }
 
-        /// <summary>Calculates the turnover and effective growth.</summary>
-        internal void CalcTurnoverAndEffectiveGrowth()
+        /// <summary>Calculates the plant effective growth (include LAI and root depth).</summary>
+        internal void CalcEffectiveGrowth()
         {
-            // Compute tissue turnover and remobilisation (C and N)
-            TissueTurnoverAndRemobilisation();
-
             // Effective, or net, growth
             dGrowthEff = dGrowthShoot + dGrowthRoot;
 
@@ -3300,29 +3370,13 @@ namespace Models.AgPasture
             return NetPotGrowth;
         }
 
-        /// <summary>Computes the plant's potential growth rate</summary>
-        /// <returns></returns>
-        private double DailyActualGrowth()
-        {
-            // Adjust GLF due to N deficiency. Many plants (grasses) can grow more by reducing the N concentration
-            //  in its tissues. This is represented here by reducing the effect of N deficiency using a power function,
-            //  when exponent is 1.0, the reduction in growth is proportional to N deficiency; for many plants the value
-            //  should be smaller than that. For grasses, the exponent is typically around 0.5.
-            double glfNit = Math.Pow(glfN, DillutionCoefN);
-
-            // The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
-            dGrowthActual = dGrowthWstress * Math.Min(glfNit, GlfSFertility); // TODO: uptade the use of GLFGeneric
-
-            return dGrowthActual;
-        }
-
         /// <summary>Update DM and N amounts of all tissues accounting for the new growth (plus leftover remobilisation)</summary>
         /// <exception cref="System.Exception">
         /// Mass balance lost on partition of new growth DM
         /// or
         /// Mass balance lost on partition of new growth N
         /// </exception>
-        private void PartitionNewGrowth()
+        internal void DoNewGrowthAllocations()
         {
             // TODO: implement fLeaf
             // Leaf appearance rate, as modified by temp & water stress  -  Not really used, should it??
@@ -3514,7 +3568,7 @@ namespace Models.AgPasture
         /// Loss of mass balance on C remobilisation - root
         /// </exception>
         /// <remarks>The C and N amounts for remobilisation are also computed in here</remarks>
-        private void TissueTurnoverAndRemobilisation()
+        internal void DoTissueTurnoverAndRemobilisation()
         {
             // The turnover rates are affected by temperature and soil moisture
             double TempFac = TempFactorForTissueTurnover(Tmean(0.5));
@@ -3542,23 +3596,27 @@ namespace Models.AgPasture
             // Turnover rate for roots
             gamaR = TissueTurnoverRateRoot * TempFac * WaterFac2Root;
 
-
+            // Check whether any adjust on turnover rates are needed
             if (gama > 0.0)
             {
-                // there is some tissue turnover
-                if (isAnnual)
+                // Check phenology effect for annuals
+                if (isAnnual && phenologicStage > 0)
                 {
                     if (phenologicStage == 1)
                     {
-                        //vegetative
-                        gama *= MathUtilities.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
-                        gamaR *= MathUtilities.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
+                        //vegetative, turnover is zero at emergence and increases with age
+                        gama *= phenoFactor;
+                        gamaS *= phenoFactor;
+                        gamaR *= Math.Pow(phenoFactor, 2.0);
+                        gamaD *= phenoFactor;
                     }
                     else if (phenologicStage == 2)
                     {
-                        //reproductive
-                        gama = 1 -
-                               (1 - gama) * (1 - Math.Pow(MathUtilities.Divide(daysfromAnthesis, daysToMature, 1.0), 2));
+                        //reproductive, turnover increases with age and reach one at maturity
+                        gama += (1.0 - gama) * Math.Pow(phenoFactor, 2.0);
+                        gamaS = gama;
+                        gamaR = (1.0 - gamaR) * Math.Pow(phenoFactor, 3.0);
+                        gamaD = (1.0 - gamaD) * Math.Pow(phenoFactor, 3.0);
                     }
                 }
 
@@ -3567,37 +3625,39 @@ namespace Models.AgPasture
                     dmDefoliated + myPreviousState.leaves.DMTotal + myPreviousState.stems.DMTotal + myPreviousState.stolons.DMTotal, 0.0);
 
                 // Adjust stolon turnover due to defoliation (increase stolon senescence)
-                gamaS += FracDefoliated * (1 - gama);
+                gamaS += FracDefoliated * (1.0 - gamaS);
 
-                // Check whether todays senescence will result in dmGreen < dmGreenmin
-                //   if that is the case then adjust (reduce) the turnover rates
-                // TODO: possibly should skip this for annuals to allow them to die - phenololgy-related?
-
-                // TODO: here it should be dGrowthShoot, not total (will fix after tests)
-                //double dmGreenToBe = dmGreen + dGrowthShoot - gama * (prevState.dmLeaf3 + prevState.dmStem3 + prevState.dmStolon3);
-                double prevAbvGrndLivedWt = myPreviousState.leaves.DMGreen + myPreviousState.stems.DMGreen + myPreviousState.stolons.DMGreen;
-                double dmGreenToBe = prevAbvGrndLivedWt + dGrowthActual -
-                                     gama * (myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM + myPreviousState.stolons.Tissue[2].DM);
-                if (dmGreenToBe < MinimumGreenWt)
+                // Adjust turnover if senescence will result in dmGreen < dmGreenmin
+                if (!isAnnual)
                 {
-                    if (prevAbvGrndLivedWt + dGrowthShoot < MinimumGreenWt)
+                    double potSenescence = gama * (myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM
+                                                   + myPreviousState.stolons.Tissue[2].DM);
+                    double dmGreenToBe = myPreviousState.AboveGroundLiveWt + dGrowthActual - potSenescence;
+                    // TODO: here it should be dGrowthShoot, not dGrowthActual
+                    //double dmGreenToBe = myPreviousState.AboveGroundLiveWt + dGrowthShoot - potSenescence;
+                    if (dmGreenToBe < MinimumGreenWt)
                     {
-                        // this should not happen anyway
-                        gama = 0.0;
-                        gamaS = 0.0;
+                        if (myPreviousState.AboveGroundLiveWt + dGrowthShoot <= MinimumGreenWt)
+                        {
+                            // this should not happen anyway
+                            gama = 0.0;
+                            gamaS = 0.0;
+                            gamaR = 0.0;
+                        }
+                        else
+                        {
+                            double gama_adj = MathUtilities.Divide(myPreviousState.AboveGroundLiveWt + dGrowthShoot - MinimumGreenWt,
+                                myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM + myPreviousState.stolons.Tissue[2].DM, gama);
+                            gamaR *= gama_adj / gama;
+                            gamaD *= gama_adj / gama;
+                            gama = gama_adj;
+                        }
+                    }
+
+                    // set a minimum root too
+                    if (roots.DMGreen < 0.5 * MinimumGreenWt)
                         gamaR = 0.0;
-                    }
-                    else
-                    {
-                        double gama_adj = MathUtilities.Divide(prevAbvGrndLivedWt + dGrowthShoot - MinimumGreenWt,
-                            myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM + myPreviousState.stolons.Tissue[2].DM, gama);
-                        gamaR *= gama_adj / gama;
-                        gamaD *= gama_adj / gama;
-                        gama = gama_adj;
-                    }
                 }
-                if (roots.DMTotal < 0.5 * MinimumGreenWt) // set a minimum root too, probably not really needed
-                    gamaR = 0; // TODO: check this
 
                 // Do the actual DM turnover for all tissues
                 double dDM_in = 0.0; // growth has been accounted for in PartitionNewGrowth
@@ -4554,36 +4614,6 @@ namespace Models.AgPasture
             myPreviousState.roots.Tissue[0].Namount = roots.Tissue[0].Namount;
         }
 
-        /// <summary>
-        /// Evaluates the phenologic stage of annual plants, plus days from emergence or from anthesis
-        /// </summary>
-        /// <returns>An integer representing the plant's phenologic stage</returns>
-        private int annualsPhenology()
-        {
-            int result = 0;
-            if (myClock.Today.Month == monEmerg && myClock.Today.Day == dayEmerg)
-            {
-                result = 1; //vegetative stage
-                daysfromEmergence++;
-            }
-            else if (myClock.Today.Month == monAnth && myClock.Today.Day == dayAnth)
-            {
-                result = 2; //reproductive stage
-                daysfromAnthesis++;
-                if (daysfromAnthesis >= daysToMature)
-                {
-                    phenologicStage = 0;
-                    daysfromEmergence = 0;
-                    daysfromAnthesis = 0;
-                }
-            }
-
-            if (growingGDD > 200.0)
-                phenologicStage = 1;
-
-            return result;
-        }
-
         /// <summary>Reduction factor for potential growth due to phenology of annual species</summary>
         /// <returns>A factor to reduce plant growth (0-1)</returns>
         private double annualSpeciesReduction()
@@ -4592,7 +4622,7 @@ namespace Models.AgPasture
             if (phenologicStage == 1 && daysfromEmergence < 60) //decline at the begining due to seed bank effects ???
                 rFactor = 0.5 + 0.5 * daysfromEmergence / 60;
             else if (phenologicStage == 2) //decline of photosynthesis when approaching maturity
-                rFactor = 1.0 - (double) daysfromAnthesis / daysToMature;
+                rFactor = 1.0 - (double) daysfromAnthesis / daysAnthesisToMaturity;
             return rFactor;
         }
 
@@ -4605,7 +4635,7 @@ namespace Models.AgPasture
                 if (isAnnual)
                 {
                     //TODO: update this, especilly dRootDepth
-                    roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmgToAnth;
+                    roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmergenceToAnthesis;
                     roots.BottomLayer = RootZoneBottomLayer();
                 }
                 else
@@ -4980,12 +5010,12 @@ namespace Models.AgPasture
             ResetZero();
 
             isAlive = false;
+            phenologicStage = -1;
         }
 
         /// <summary>Reset this plant to zero (kill crop)</summary>
         public void ResetZero()
         {
-
             // Zero out the DM pools
             leaves.Tissue[0].DM = leaves.Tissue[1].DM = leaves.Tissue[2].DM = leaves.Tissue[3].DM = 0.0;
             stems.Tissue[0].DM = stems.Tissue[1].DM = stems.Tissue[2].DM = stems.Tissue[3].DM = 0.0;
@@ -5001,8 +5031,6 @@ namespace Models.AgPasture
             Ndefoliated = 0.0;
 
             digestDefoliated = 0.0;
-
-            phenologicStage = 0;
 
             myPreviousState = new SpeciesStateParameters(nLayers);
         }
@@ -5691,6 +5719,12 @@ namespace Models.AgPasture
                 get { return leaves.DMTotal + stems.DMTotal + stolons.DMGreen; }
             }
 
+            /// <summary>The live DM weight above-ground [g/m^2]</summary>
+            internal double AboveGroundLiveWt
+            {
+                get { return leaves.DMGreen + stems.DMGreen + stolons.DMGreen; }
+            }
+
             /// <summary>The DM weight below-ground [g/m^2]</summary>
             internal double BelowGroundWt
             {
@@ -5723,6 +5757,9 @@ namespace Models.AgPasture
         [Serializable]
         internal class SpeciesBasicStateSettings
         {
+            /// <summary>Plant phenologic stage</summary>
+            internal int PhenoStage;
+
             /// <summary>DM weight for each biomass pool</summary>
             internal double[] DMWeight;
 
