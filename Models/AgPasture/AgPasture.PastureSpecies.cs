@@ -1248,12 +1248,6 @@ namespace Models.AgPasture
         /// <summary>Number of layers in the soil</summary>
         private int nLayers = 0;
 
-        /// <summary>Today's average temperature</summary>
-        private double Tmean;
-
-        /// <summary>Today's weighted mean temperature</summary>
-        private double TmeanW;
-
         #endregion
 
         #region Constants and auxiliary  -----------------------------------------------------------------------------------
@@ -3038,10 +3032,6 @@ namespace Models.AgPasture
             // 1. Zero out several variables
             RefreshVariables();
 
-            // mean air temperature for today
-            Tmean = (myMetData.MaxT + myMetData.MinT) * 0.5;
-            TmeanW = (myMetData.MaxT * 0.75) + (myMetData.MinT * 0.25);
-
             // N remobilisable today is what was computed yesterday
             NRemobilisable = NRemobilised;
         }
@@ -3100,7 +3090,7 @@ namespace Models.AgPasture
         /// <returns>Fraction of germination phase completed</returns>
         internal double DailyGerminationProgress()
         {
-            germinationGDD += Math.Max(0.0, Tmean - GrowthTmin);
+            germinationGDD += Math.Max(0.0, Tmean(0.5) - GrowthTmin);
             return MathUtilities.Divide(germinationGDD, DegreesDayForGermination, 1.0);
         }
 
@@ -3193,8 +3183,8 @@ namespace Models.AgPasture
             glfNc = PmxNeffect();
 
             // Temperature effects to Pmax
-            double tempGlf1 = TemperatureLimitingFactor(Tmean);
-            double tempGlf2 = TemperatureLimitingFactor(TmeanW);
+            double tempGlf1 = TemperatureLimitingFactor(Tmean(0.5));
+            double tempGlf2 = TemperatureLimitingFactor(Tmean(0.75));
 
             //Temperature growth factor (for reporting purposes only)
             glfTemp = (0.25 * tempGlf1) + (0.75 * tempGlf2);
@@ -3262,15 +3252,15 @@ namespace Models.AgPasture
         {
             // Temperature effects on respiration
             double Teffect = 0;
-            if (Tmean > GrowthTmin)
+            if (Tmean(0.5) > GrowthTmin)
             {
-                if (Tmean < GrowthTopt)
+                if (Tmean(0.5) < GrowthTopt)
                 {
-                    Teffect = TemperatureLimitingFactor(Tmean);
+                    Teffect = TemperatureLimitingFactor(Tmean(0.5));
                 }
                 else
                 {
-                    Teffect = Math.Min(1.25, Tmean / GrowthTopt);
+                    Teffect = Math.Min(1.25, Tmean(0.5) / GrowthTopt);
                     // Using growthTopt as reference temperature, and maximum of 1.25
                     Teffect *= TemperatureLimitingFactor(GrowthTopt);
                 }
@@ -3527,7 +3517,7 @@ namespace Models.AgPasture
         private void TissueTurnoverAndRemobilisation()
         {
             // The turnover rates are affected by temperature and soil moisture
-            double TempFac = TempFactorForTissueTurnover(Tmean);
+            double TempFac = TempFactorForTissueTurnover(Tmean(0.5));
             double WaterFac = WaterFactorForTissueTurnover();
             double WaterFac2Litter = Math.Pow(glfWater, 3);
             double WaterFac2Root = 2 - glfWater;
@@ -4622,7 +4612,7 @@ namespace Models.AgPasture
                 {
                     if ((dGrowthRoot > myEpsilon) && (roots.Depth < MaximumRootDepth))
                     {
-                        double tempFactor = TemperatureLimitingFactor(Tmean);
+                        double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
                         dRootDepth = RootElongationRate * tempFactor;
                         roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
                         roots.BottomLayer = RootZoneBottomLayer();
@@ -5021,6 +5011,15 @@ namespace Models.AgPasture
 
         #region Functions  -------------------------------------------------------------------------------------------------
 
+        /// <summary>Today's weighted average temperature</summary>
+        /// <param name="wTmax">Weight to Tmax</param>
+        /// <returns>Mean Temperature</returns>
+        private double Tmean(double wTmax)
+        {
+            wTmax = MathUtilities.Bound(wTmax, 0.0, 1.0);
+            return (myMetData.MaxT * wTmax) + (myMetData.MinT * (1.0 - wTmax));
+        }
+
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="soilstate">soilstate</param>
         /// <returns></returns>
@@ -5189,8 +5188,8 @@ namespace Models.AgPasture
 
             if (highTempEffect < 1.0)
             {
-                if (HeatRecoverT > Tmean)
-                    accumT4Heat += (HeatRecoverT - Tmean);
+                if (HeatRecoverT > Tmean(0.5))
+                    accumT4Heat += (HeatRecoverT - Tmean(0.5));
 
                 if (accumT4Heat < HeatSumT)
                     recoverF = highTempEffect + (1 - highTempEffect) * accumT4Heat / HeatSumT;
@@ -5223,8 +5222,8 @@ namespace Models.AgPasture
             double recoverF = 1.0;
             if (lowTempEffect < 1.0)
             {
-                if (Tmean > ColdRecoverT)
-                    accumT4Cold += (Tmean - ColdRecoverT);
+                if (Tmean(0.5) > ColdRecoverT)
+                    accumT4Cold += (Tmean(0.5) - ColdRecoverT);
 
                 if (accumT4Cold < ColdSumT)
                     recoverF = lowTempEffect + (1 - lowTempEffect) * accumT4Cold / ColdSumT;
