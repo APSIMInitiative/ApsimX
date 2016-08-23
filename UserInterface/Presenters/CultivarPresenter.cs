@@ -69,22 +69,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (e.ObjectName == string.Empty)
-            {
-                e.ObjectName = ".";
-            }
-
-            object o = Apsim.Get(this.cultivar, e.ObjectName);
-
-            if (o != null)
-            {
-                foreach (IVariable property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                {
-                    e.Items.Add(property.Name);
-                }
-
-                e.Items.Sort();
-            }
+            e.AllItems.AddRange(NeedContextItemsArgs.ExamineModelForNames(this.cultivar, e.ObjectName, true, true, false));
         }
 
         /// <summary>The cultivar model has changed probably because of an undo.</summary>

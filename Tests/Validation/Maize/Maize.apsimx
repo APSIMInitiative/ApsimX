@@ -18,16 +18,16 @@
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.1264828379941554</Slope>
-            <Intercept>-22.191694738570732</Intercept>
-            <SEslope>0.043778492799404684</SEslope>
-            <SEintercept>60.002918437435142</SEintercept>
-            <R2>0.885043034391994</R2>
-            <RMSE>283.45317881787054</RMSE>
-            <NSE>0.76666043005776374</NSE>
-            <ME>134.47465318024032</ME>
-            <MAE>213.61434970501173</MAE>
-            <RSR>0.48029988956917885</RSR>
+            <Slope>1.1302704369215508</Slope>
+            <Intercept>-25.197610366246408</Intercept>
+            <SEslope>0.0437088859893132</SEslope>
+            <SEintercept>59.907515158757946</SEintercept>
+            <R2>0.88604602677827016</R2>
+            <RMSE>284.52837142163776</RMSE>
+            <NSE>0.76488686866475686</NSE>
+            <ME>136.16019847126756</ME>
+            <MAE>215.29989499603897</MAE>
+            <RSR>0.48212175973132937</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -88,30 +88,30 @@
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.91018973139485315</Slope>
-            <Intercept>97.3842745190957</Intercept>
-            <SEslope>0.041071575553927896</SEslope>
-            <SEintercept>28.599718136953733</SEintercept>
-            <R2>0.82942435543472015</R2>
-            <RMSE>151.31637466193146</RMSE>
-            <NSE>0.805898187617853</NSE>
-            <ME>42.982284998929877</ME>
-            <MAE>119.86127808266097</MAE>
-            <RSR>0.43842596725876792</RSR>
+            <Slope>0.914354681712213</Slope>
+            <Intercept>95.75619598455</Intercept>
+            <SEslope>0.041314875267857584</SEslope>
+            <SEintercept>28.769137087830213</SEintercept>
+            <R2>0.82904461593462175</R2>
+            <RMSE>152.07557483682686</RMSE>
+            <NSE>0.80394556602613787</NSE>
+            <ME>43.877098189752409</ME>
+            <MAE>120.75609127348352</MAE>
+            <RSR>0.44062568339501024</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1725080424433487</Slope>
-            <Intercept>0.30993278261417379</Intercept>
-            <SEslope>0.053327576747814028</SEslope>
-            <SEintercept>0.16055100618198129</SEintercept>
-            <R2>0.870369239609538</R2>
-            <RMSE>1.012063959450914</RMSE>
-            <NSE>0.43387758590520076</NSE>
-            <ME>0.774577755493331</ME>
-            <MAE>0.78736893709099232</MAE>
-            <RSR>0.7473099164346918</RSR>
+            <Slope>1.1772771828021083</Slope>
+            <Intercept>0.3011610930854709</Intercept>
+            <SEslope>0.052598561164264576</SEslope>
+            <SEintercept>0.15835619080503832</SEintercept>
+            <R2>0.87433846617545052</R2>
+            <RMSE>1.0117112837547935</RMSE>
+            <NSE>0.434272072492925</NSE>
+            <ME>0.77865159514266857</ME>
+            <MAE>0.78602361814650268</MAE>
+            <RSR>0.74704950004249138</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>

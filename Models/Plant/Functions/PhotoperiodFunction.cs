@@ -33,18 +33,31 @@ namespace Models.PMF.Functions
         [Units("degrees")]
         public double Twilight { get; set; }
 
+        /// <summary>
+        /// The value to return
+        /// </summary>
+        public double DayLength { get; set; }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value
         {
             get
             {
-                if (MetData != null)
-                    return MetData.CalculateDayLength(Twilight);
-                return 0;                    
+                return DayLength;                    
             }
         }
 
+        [EventSubscribe("DoWeather")]
+        private void OnDoWeather(object sender, EventArgs e)
+        {
+            if (MetData != null)
+                DayLength = MetData.CalculateDayLength(Twilight);
+            else
+                DayLength = 0;
+        }
+
+        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

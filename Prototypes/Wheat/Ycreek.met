@@ -1,6 +1,7 @@
 [weather.met.weather]
 
-latitude =        -31.52 (degrees) ! from hudson - Better get correct value
+latitude =        -31.716 (degrees) ! 
+longitude= 150.583 (degrees)
 
 amp =  15.0   ! temperature amplitude (oC) - difference between highest and
              ! lowest mean monthly air temperatures

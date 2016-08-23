@@ -459,7 +459,9 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -681,6 +683,7 @@
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Nodule>
@@ -868,6 +871,8 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </Nodule>
       <GenericAboveGroundOrgan>
         <Name>Shell</Name>
@@ -1026,6 +1031,8 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1059,11 +1066,13 @@
           <Name>InitialLeaf1</Name>
           <Rank>1</Rank>
           <Area>100</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
@@ -1509,6 +1518,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1522,6 +1532,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1629,6 +1641,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1856,86 +1870,86 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <RegrStats>
             <Name>FieldPea.AboveGround.Wt</Name>
             <n>138</n>
-            <Slope>0.73838883958026724</Slope>
-            <Intercept>88.4568056260843</Intercept>
-            <SEslope>0.025975539855908978</SEslope>
-            <SEintercept>13.714078934625626</SEintercept>
-            <R2>0.85594064243989543</R2>
-            <RMSE>149.09362667691681</RMSE>
-            <NSE>0.83912572583041745</NSE>
-            <ME>-9.6272984232571375</ME>
-            <MAE>83.850994030720983</MAE>
-            <RSR>0.39963548210795552</RSR>
+            <Slope>0.73078307285738953</Slope>
+            <Intercept>93.754761730171879</Intercept>
+            <SEslope>0.02585202562475674</SEslope>
+            <SEintercept>13.648868204647821</SEintercept>
+            <R2>0.854557195360531</R2>
+            <RMSE>150.41728366112176</RMSE>
+            <NSE>0.8362565540869783</NSE>
+            <ME>-7.1809210263809726</ME>
+            <MAE>86.817933277866643</MAE>
+            <RSR>0.40318345601414129</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Grain.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.67666526200903987</Slope>
-            <Intercept>23.7546539502953</Intercept>
-            <SEslope>0.020144177064483425</SEslope>
-            <SEintercept>3.70637925979067</SEintercept>
-            <R2>0.89243592433307006</R2>
-            <RMSE>65.829069085263569</RMSE>
-            <NSE>0.83996563583100614</NSE>
-            <ME>-2.85900340322008</ME>
-            <MAE>35.487682889336007</MAE>
-            <RSR>0.39859088657848341</RSR>
+            <Slope>0.6668576637799507</Slope>
+            <Intercept>23.477777869444189</Intercept>
+            <SEslope>0.019659687777169928</SEslope>
+            <SEintercept>3.6172368222345814</SEintercept>
+            <R2>0.89429257953727337</R2>
+            <RMSE>66.664573988203685</RMSE>
+            <NSE>0.83587753248615526</NSE>
+            <ME>-3.9431421380988461</ME>
+            <MAE>35.423991512938734</MAE>
+            <RSR>0.40364981638914543</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Leaf.Live.Wt</Name>
             <n>138</n>
-            <Slope>1.1583160836377906</Slope>
-            <Intercept>20.019373389577652</Intercept>
-            <SEslope>0.083628270375901578</SEslope>
-            <SEintercept>6.5232577784412067</SEintercept>
-            <R2>0.585168400998177</R2>
-            <RMSE>53.563121255457936</RMSE>
-            <NSE>-0.42790072049279204</NSE>
-            <ME>30.125871498150076</ME>
-            <MAE>41.711220488202251</MAE>
-            <RSR>1.1906106054552657</RSR>
+            <Slope>1.1521665775748771</Slope>
+            <Intercept>21.855350884580375</Intercept>
+            <SEslope>0.083322479997665289</SEslope>
+            <SEintercept>6.4994052049701052</SEintercept>
+            <R2>0.58436230287257063</R2>
+            <RMSE>54.224280906719322</RMSE>
+            <NSE>-0.46336903955385877</NSE>
+            <ME>31.569280089441975</ME>
+            <MAE>41.707122118635723</MAE>
+            <RSR>1.2053069800174687</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Pod.Wt</Name>
             <n>138</n>
-            <Slope>0.75345038391103258</Slope>
-            <Intercept>29.020492637662741</Intercept>
-            <SEslope>0.021636537400427775</SEslope>
-            <SEintercept>5.2928474634236036</SEintercept>
-            <R2>0.89915806826033351</R2>
-            <RMSE>74.587280773580687</RMSE>
-            <NSE>0.87550666512481534</NSE>
-            <ME>-1.3305303426630506</ME>
-            <MAE>37.763357386693912</MAE>
-            <RSR>0.3515554142096905</RSR>
+            <Slope>0.748550283956398</Slope>
+            <Intercept>28.688484279518363</Intercept>
+            <SEslope>0.021229847355611588</SEslope>
+            <SEintercept>5.1933607326095306</SEintercept>
+            <R2>0.90139358786611279</R2>
+            <RMSE>74.630578288228321</RMSE>
+            <NSE>0.87536208775343272</NSE>
+            <ME>-2.2657562141348397</ME>
+            <MAE>37.355393916236295</MAE>
+            <RSR>0.35175949023362291</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Shell.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.696356243864724</Slope>
-            <Intercept>13.915067733926449</Intercept>
-            <SEslope>0.040011739781863</SEslope>
-            <SEintercept>3.0050355256520311</SEintercept>
-            <R2>0.69012891366990237</R2>
-            <RMSE>35.139198839032545</RMSE>
-            <NSE>0.6894852132921343</NSE>
-            <ME>1.5284730605569694</ME>
-            <MAE>17.7362098575299</MAE>
-            <RSR>0.55521588554165913</RSR>
+            <Slope>0.70626958350731162</Slope>
+            <Intercept>13.659583939964151</Intercept>
+            <SEslope>0.039828959403207367</SEslope>
+            <SEintercept>2.9913080163198504</SEintercept>
+            <R2>0.69807556688864669</R2>
+            <RMSE>34.695818320112267</RMSE>
+            <NSE>0.69727182335348392</NSE>
+            <ME>1.6773859239640003</ME>
+            <MAE>17.580701333346649</MAE>
+            <RSR>0.54821026459475253</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FieldPea.Stem.Live.Wt</Name>
             <n>138</n>
-            <Slope>0.3629488756157041</Slope>
-            <Intercept>64.53252658078263</Intercept>
-            <SEslope>0.020190713399877918</SEslope>
-            <SEintercept>5.1999327772516137</SEintercept>
-            <R2>0.70379254330293861</R2>
-            <RMSE>131.69790004841167</RMSE>
-            <NSE>0.44032089048452561</NSE>
-            <ME>-55.222043217757765</ME>
-            <MAE>75.557587651159935</MAE>
-            <RSR>0.745401545339388</RSR>
+            <Slope>0.36106345478263435</Slope>
+            <Intercept>65.778829425029159</Intercept>
+            <SEslope>0.020046690133197372</SEslope>
+            <SEintercept>5.16284090782299</SEintercept>
+            <R2>0.70460510672229637</R2>
+            <RMSE>131.51714746151384</RMSE>
+            <NSE>0.44185613173731852</NSE>
+            <ME>-54.330166811376451</ME>
+            <MAE>76.137878303302315</MAE>
+            <RSR>0.74437849745822815</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

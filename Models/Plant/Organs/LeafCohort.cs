@@ -259,7 +259,9 @@ namespace Models.PMF.Organs
         /// <summary>The delta potential area</summary>
         private double DeltaPotentialArea = 0;
         /// <summary>The delta water constrained area</summary>
-        private double DeltaWaterConstrainedArea = 0;
+        public double DeltaWaterConstrainedArea = 0;
+        /// <summary>The delta carbon constrained area</summary>
+        public double DeltaCarbonConstrainedArea = 0;
         //private double StructuralDMDemand = 0;
         //private double MetabolicDMDemand = 0;
         /// <summary>The potential structural dm allocation</summary>
@@ -460,6 +462,10 @@ namespace Models.PMF.Organs
                     return 0;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double MaintenanceRespiration { get; set; }
         #endregion
 
         #region Arbitration methods
@@ -985,7 +991,7 @@ namespace Models.PMF.Organs
                 else _ThermalTime = TT;
 
                 //Growing leaf area after DM allocated
-                double DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
+                DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
                 double DeltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
                 LiveArea += DeltaActualArea; // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
@@ -998,17 +1004,6 @@ namespace Models.PMF.Organs
                 double LeafAreaLoss = Math.Max(AreaSenescing, AreaSenescingN);
                 if (LeafAreaLoss > 0)
                     SenescedFrac = Math.Min(1.0, LeafAreaLoss / LeafStartArea);
-
-
-                /* RFZ why variation between using LiveStart and Live
-                double StructuralWtSenescing = SenescedFrac * Live.StructuralWt;
-                double StructuralNSenescing = SenescedFrac * Live.StructuralN;
-                double MetabolicWtSenescing = SenescedFrac * Live.MetabolicWt;
-                double MetabolicNSenescing = SenescedFrac * LiveStart.MetabolicN;
-                double NonStructuralWtSenescing = SenescedFrac * Live.NonStructuralWt;
-                double NonStructuralNSenescing = SenescedFrac * LiveStart.NonStructuralN;
-                */
-
 
                 double StructuralWtSenescing = SenescedFrac * LiveStart.StructuralWt;
                 double StructuralNSenescing = SenescedFrac * LiveStart.StructuralN;
@@ -1039,11 +1034,17 @@ namespace Models.PMF.Organs
                 Live.NonStructuralWt -= Math.Max(0.0, NonStructuralWtSenescing - DMRetranslocated);
                 Live.NonStructuralWt = Math.Max(0.0, Live.NonStructuralWt);
 
-                //RFZ
-                //Reallocated gos to to reallocation pool but not into dead pool. 
                 Dead.NonStructuralWt += Math.Max(0.0, NonStructuralWtSenescing - DMRetranslocated - NonStructuralWtReallocated);
 
-
+                MaintenanceRespiration = 0;
+                //Do Maintenance respiration
+                if (LeafCohortParameters.MaintenanceRespirationFunction != null)
+                {
+                    MaintenanceRespiration += Live.MetabolicWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
+                    Live.MetabolicWt *= (1 - LeafCohortParameters.MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.NonStructuralWt * LeafCohortParameters.MaintenanceRespirationFunction.Value;
+                    Live.NonStructuralWt *= (1- LeafCohortParameters.MaintenanceRespirationFunction.Value);
+                }
 
                 Age = Age + _ThermalTime;
 

@@ -945,7 +945,9 @@ A function is used to provide flowering date as days after sowing(DAS).
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1177,6 +1179,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <Leaf>
@@ -1185,11 +1188,13 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>InitialLeaves[1]</Name>
           <Rank>1</Rank>
           <Area>380</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1747,6 +1752,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1757,9 +1763,13 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>50</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericAboveGroundOrgan>
@@ -1860,6 +1870,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2014,6 +2026,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2275,6 +2289,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
       </Cultivar>
       <CropType>Teff</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -2907,6 +2922,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -3694,6 +3710,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -5237,6 +5254,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -6978,6 +6996,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -7895,6 +7914,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -9338,6 +9358,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -10036,6 +10057,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -10761,6 +10783,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -11550,6 +11573,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -12992,6 +13016,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -14587,6 +14612,7 @@ namespace Models
           <Plant>
             <Name>Teff</Name>
             <CropType>Chickpea</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Report>
             <Name>HarvestReport</Name>

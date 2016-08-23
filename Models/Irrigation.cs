@@ -7,10 +7,37 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    /// <summary>Interface for an irrigation class.</summary>
+    public interface IIrrigation
+    {
+        /// <summary>The amount of irrigation applied.</summary>
+        double IrrigationApplied { get; }
+
+        /// <summary>Indicates whether the irrigation should runoff.</summary>
+        bool WillRunoff { get; }
+
+        /// <summary>Indicates the depth of irrigation.</summary>
+        double Depth { get; }
+        /// <summary>the duration, h, that irrigation is applied for</summary>
+        double Duration { get; }
+
+        /// <summary>Invoked when an irrigation occurs.</summary>
+        event EventHandler<Models.Soils.IrrigationApplicationType> Irrigated;
+
+        /// <summary>Called to apply irrigation.</summary>
+        /// <param name="amount">Amount of irrigation (mm)</param>
+        /// <param name="depth">Depth of irrigation (mm)</param>
+        /// <param name="efficiency">Efficiency of irrigation (%)</param>
+        /// <param name="willRunoff">Irrigation will runoff if true.</param>
+        /// <param name="duration">The duration that irrigation is applied for, hour</param>
+        void Apply(double amount, double depth = 0, double efficiency = 1, bool willRunoff = false, double duration = 1);
+    }
+
+
     /// <summary>Irrigation class.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Irrigation : Model
+    public class Irrigation : Model, IIrrigation
     {
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
@@ -19,6 +46,18 @@ namespace Models
         /// <value>The irrigation applied.</value>
         [XmlIgnore]
         public double IrrigationApplied { get; set; }
+
+        /// <summary>Indicates whether the irrigation should runoff.</summary>
+        [XmlIgnore]
+        public bool WillRunoff { get; set; }
+
+        /// <summary>Indicates the depth of irrigation.</summary>
+        [XmlIgnore]
+        public double Depth { get; set; }
+
+        /// <summary>the duration, h, that irrigation is applied for</summary>
+        [XmlIgnore]
+        public double Duration { get; set; }
 
         // Events we're going to send.
         /// <summary>Occurs when [irrigated].</summary>
@@ -29,8 +68,9 @@ namespace Models
         /// <param name="depth">The depth.</param>
         /// <param name="efficiency">The efficiency.</param>
         /// <param name="willRunoff">if set to <c>true</c> [will runoff].</param>
-        /// <exception cref="ApsimXException">Efficiency value for irrigation event must bet between 0 and 1 </exception>
-        public void Apply(double amount, double depth = 0.0, double efficiency = 1.0, bool willRunoff = false)
+        /// <param name="duration">The duration of irrigation event</param>
+        /// <exception cref="ApsimXException">Efficiency value for irrigation event must be between 0 and 1 </exception>
+        public void Apply(double amount, double depth = 0.0, double efficiency = 1.0, bool willRunoff = false, double duration = 1)
         {
             if (Irrigated != null && amount > 0)
             {
@@ -41,7 +81,11 @@ namespace Models
                 water.Amount = amount * efficiency;
                 water.Depth = depth;
                 water.will_runoff = willRunoff;
-                IrrigationApplied += amount;
+                water.Duration = duration;
+                IrrigationApplied = amount;
+                WillRunoff = willRunoff;
+                Depth = depth;
+                Duration = duration;
                 Irrigated.Invoke(this, water);
                 Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
             }
@@ -54,6 +98,7 @@ namespace Models
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             IrrigationApplied = 0;
+            WillRunoff = false;
         }
 
     }

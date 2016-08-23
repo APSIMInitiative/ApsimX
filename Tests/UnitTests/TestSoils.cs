@@ -1,27 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using APSIM.Shared.Soils;
-using APSIM.Shared.Utilities;
-
-namespace Tests
+﻿// -----------------------------------------------------------------------
+// <copyright file="TestSoils.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+namespace UnitTests
 {
+    using APSIM.Shared.Soils;
+    using APSIM.Shared.Utilities;
+    using Models;
+    using Models.Core;
+    using Models.Interfaces;
+    using Models.WaterModel;
+    using NUnit.Framework;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     [TestFixture]
-    public class Soils
+    public class TestSoils
     {
-        /// <summary>Test setup routine.</summary>
-        /// <returns>A soil that can be used for testing.</returns>
-        private static Soil Setup()
+        /// <summary>Set a link field.</summary>
+        /// <param name="obj"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        private static void SetLink(object obj, string fieldName, object value)
         {
-            Soil soil = new Soil();
+            ReflectionUtilities.SetValueOfFieldOrProperty(fieldName, obj, value);
+        }
+
+        /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
+        public static APSIM.Shared.Soils.Soil Setup()
+        {
+            APSIM.Shared.Soils.Soil soil = new APSIM.Shared.Soils.Soil();
             soil.Water = new Water();
             soil.Water.Thickness = new double[] { 100, 300, 300, 300, 300, 300 };
             soil.Water.BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 };
             soil.Water.AirDry = new double[] { 0.135, 0.214, 0.261, 0.261, 0.261, 0.261 };
             soil.Water.LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 };
             soil.Water.DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 };
+            soil.Water.SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 };
 
             // Add a wheat crop.
             SoilCrop crop = new SoilCrop();
@@ -58,7 +76,7 @@ namespace Tests
         [Test]
         public void TestLayerStructure()
         {
-            Soil soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
 
             // convert sw from gravimetric to volumetric.
             APSIMReadySoil.Create(soil); 
@@ -87,7 +105,7 @@ namespace Tests
         [Test]
         public void TestPredictedCrops()
         {
-            Soil soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.SoilType = "Black vertosol";
 
             APSIMReadySoil.Create(soil);
@@ -117,7 +135,7 @@ namespace Tests
         [Test]
         public void TestInitialWater()
         {
-            Soil soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.Samples[0].SW = null;
             soil.InitialWater = new InitialWater();
             soil.InitialWater.PercentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
@@ -145,7 +163,7 @@ namespace Tests
         [Test]
         public void CheckUserLayerStructure()
         {
-            Soil soil = Setup();
+            APSIM.Shared.Soils.Soil soil = Setup();
             soil.LayerStructure = new LayerStructure();
             soil.LayerStructure.Thickness = new double[]  { 200, 200, 200, 200 };
 
@@ -153,5 +171,284 @@ namespace Tests
 
             MathUtilities.AreEqual(soil.Water.Thickness, new double[] { 200, 200, 200, 200 });
         }
+
+        /// <summary>Test that lateral flow works.</summary>
+        [Test]
+        public void TestLateralFlow()
+        {
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            soilProperties.Samples.Clear();
+
+            // Setup our objects with links.
+            SoilModel soil = new SoilModel();
+            LateralFlowModel lateralFlow = new LateralFlowModel();
+
+            SetLink(soil, "properties", soilProperties);
+            SetLink(soil, "lateralFlowModel", lateralFlow);
+            SetLink(lateralFlow, "soil", soil);
+
+            // Set initial water to full.
+            soilProperties.InitialWater = new InitialWater();
+            soilProperties.InitialWater.FractionFull = 1.0;
+            APSIMReadySoil.Create(soilProperties);
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.SW, soilProperties.Water.Thickness);
+            
+            // No inflow, so there should be no outflow.
+            lateralFlow.InFlow = null;
+            Assert.AreEqual(lateralFlow.Values.Length, 0);
+
+            // Profile is full so adding in flow will produce out flow.
+            lateralFlow.InFlow = new double[] { 9, 9, 9, 9, 9, 9 };
+            lateralFlow.KLAT = MathUtilities.CreateArrayOfValues(8.0, soilProperties.Water.Thickness.Length);
+            Assert.IsTrue(MathUtilities.AreEqual(lateralFlow.Values, new double[] { 0.45999, 0.80498, 0.80498, 0.80498, 0.80498, 0.80498 }));
+
+            // Set initial water to empty. Out flow should be zeros.
+            soilProperties.InitialWater = new InitialWater();
+            soilProperties.InitialWater.FractionFull = 0.0;
+            APSIMReadySoil.Create(soilProperties);
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.SW, soilProperties.Water.Thickness);
+            Assert.IsTrue(MathUtilities.AreEqual(lateralFlow.Values, new double[] { 0, 0, 0, 0, 0, 0 }));
+        }
+
+        /// <summary>Test that runoff is working.</summary>
+        [Test]
+        public void TestRunoff()
+        {
+            SoilModel soil = new SoilModel();
+
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            APSIMReadySoil.Create(soilProperties);
+
+            MockWeather weather = new MockWeather();
+            weather.Rain = 100;
+
+            MockIrrigation irrigation = new MockIrrigation();
+            irrigation.IrrigationApplied = 0;
+
+            MockSurfaceOrganicMatter surfaceOrganicMatter = new MockSurfaceOrganicMatter();
+            surfaceOrganicMatter.Cover = 0.1;
+
+            CNReductionForCover reductionForCover = new CNReductionForCover();
+            List<ICanopy> canopies = new List<ICanopy>();
+
+            CNReductionForTillage reductionForTillage = new CNReductionForTillage();
+
+            RunoffModel runoff = new RunoffModel();
+            runoff.CN2Bare = 70;
+
+            // setup links
+            SetLink(soil, "properties", soilProperties);
+            SetLink(soil, "runoffModel", runoff);
+            SetLink(soil, "weather", weather);
+            SetLink(soil, "irrigation", irrigation);
+            SetLink(runoff, "soil", soil);
+            SetLink(runoff, "reductionForCover", reductionForCover);
+            SetLink(runoff, "reductionForTillage", reductionForTillage);
+            SetLink(reductionForCover, "surfaceOrganicMatter", surfaceOrganicMatter);
+            SetLink(reductionForCover, "canopies", canopies);
+            SetLink(reductionForTillage, "weather", weather);
+
+            // Empty profile.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.LL15, soilProperties.Water.Thickness);
+            
+            // Profile is empty - should be small amount of runoff.
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 5.60815));
+
+            // Full profile - should be a lot more runoff.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.DUL, soilProperties.Water.Thickness);
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 58.23552));
+
+            // Test CN reduction due to canopy. Tests the Curve Number vs Cover graph.
+            // Cover is 10%, reduction is 2.5
+            surfaceOrganicMatter.Cover = 0.1;
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value, 2.49999));
+
+            // Cover is 80%, reduction is 20
+            surfaceOrganicMatter.Cover = 0.8;
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value, 20.0));
+
+            // Test Runoff vs Rainfall graph i.e. effect of different curve numbers.
+            surfaceOrganicMatter.Cover = 0.0;
+            runoff.CN2Bare = 60;
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 48.18584));
+
+            runoff.CN2Bare = 75;
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 68.16430));
+
+            runoff.CN2Bare = 85;
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 81.15006));
+        }
+
+        /// <summary>Ensure saturated flow is working.</summary>
+        [Test]
+        public void TestSaturatedFlow()
+        {
+            SoilModel soil = new SoilModel();
+
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            APSIMReadySoil.Create(soilProperties);
+
+            SaturatedFlowModel saturatedFlow = new SaturatedFlowModel();
+            SetLink(soil, "properties", soilProperties);
+            SetLink(saturatedFlow, "soil", soil);
+
+            saturatedFlow.SWCON = new double[] { 0.3, 0.3, 0.3, 0.3, 0.3, 0.3 };
+
+            // Profile at DUL.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.DUL, soilProperties.Water.Thickness);
+            double[] flux = saturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flux, new double[] { 0, 0, 0, 0, 0, 0 }));
+
+            // Profile at SAT.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.SAT, soilProperties.Water.Thickness);
+            flux = saturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flux, new double[] { 1.05, 2.85, 4.64999, 6.45, 8.25, 10.05 }));
+
+            // Use the KS method
+            soilProperties.Water.KS = new double[] {1000, 300, 20, 100, 100, 100 };
+            flux = saturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flux, new double[] { 1.05, 1.8000, 1.8000, 1.8000, 1.8000, 1.8000 }));
+            Assert.AreEqual(saturatedFlow.backedUpSurface, 0);
+
+            // Use the KS method, water above SAT.
+            soilProperties.Water.KS = new double[] { 1000, 300, 20, 100, 100, 100 };
+            MathUtilities.AddValue(soil.Water, 10); // add 5 mm of water into each layer.
+            flux = saturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flux, new double[] { 1.05, 1.8000, 1.8000, 1.8000, 1.8000, 1.8000 }));
+
+        }
+
+        /// <summary>Ensure evaporation is working.</summary>
+        [Test]
+        public void TestEvaporation()
+        {
+            MockSoil soil = new MockSoil();
+
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            APSIMReadySoil.Create(soilProperties);
+
+            MockClock clock = new MockClock();
+            clock.Today = new DateTime(2015, 6, 1);
+
+            MockWeather weather = new MockWeather();
+            weather.MaxT = 30;
+            weather.MinT = 10;
+            weather.Rain = 100;
+            weather.Radn = 25;
+
+            MockSurfaceOrganicMatter surfaceOrganicMatter = new MockSurfaceOrganicMatter();
+            surfaceOrganicMatter.Cover = 0.8;
+
+            List<ICanopy> canopies = new List<ICanopy>();
+            
+            EvaporationModel evaporation = new EvaporationModel();
+            SetLink(soil, "properties", soilProperties);
+            SetLink(evaporation, "soil", soil);
+            SetLink(evaporation, "clock", clock);
+            SetLink(evaporation, "weather", weather);
+            SetLink(evaporation, "canopies", canopies);
+            SetLink(evaporation, "surfaceOrganicMatter", surfaceOrganicMatter);
+
+            // Empty profile.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.LL15, soilProperties.Water.Thickness);
+
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 3.00359));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 2.20072));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 1.57064));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 0.96006));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 0.75946));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 0.64851));
+
+            soil.Infiltration = 100;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 3.00359));
+
+            soil.Infiltration = 0;
+            evaporation.Calculate();
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(evaporation.Es, 2.20072));
+
+        }
+
+        /// <summary>Ensure unsaturated flow is working.</summary>
+        [Test]
+        public void TestUnsaturatedFlow()
+        {
+            SoilModel soil = new SoilModel();
+
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            APSIMReadySoil.Create(soilProperties);
+
+            UnsaturatedFlowModel unsaturatedFlow = new UnsaturatedFlowModel();
+            SetLink(soil, "properties", soilProperties);
+            SetLink(unsaturatedFlow, "soil", soil);
+
+            unsaturatedFlow.DiffusConst = 88;
+            unsaturatedFlow.DiffusSlope = 35.4;
+
+            // Profile at DUL.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.DUL, soilProperties.Water.Thickness);
+            double[] flow = unsaturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flow, new double[] { 0, 0, 0, 0, 0, 0 }));
+
+            // Profile at SAT.
+            soil.Water = MathUtilities.Multiply(soilProperties.Water.SAT, soilProperties.Water.Thickness);
+            flow = unsaturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flow, new double[] { 0, 0, 0, 0, 0, 0 }));
+
+            // Force some unsaturated flow by reducing the water to 0.8 of SAT.
+            soil.Water = MathUtilities.Multiply_Value(soil.Water, 0.8);
+            flow = unsaturatedFlow.Values;
+            Assert.IsTrue(MathUtilities.AreEqual(flow, new double[] { 0.52148, -0.38359, -0.16771, -0.07481, 0, 0 }));
+
+        }
+
+        /// <summary>Ensure water table is working.</summary>
+        [Test]
+        public void TestWaterTable()
+        {
+            SoilModel soil = new SoilModel();
+
+            APSIM.Shared.Soils.Soil soilProperties = Setup();
+            APSIMReadySoil.Create(soilProperties);
+
+            WaterTableModel waterTable = new WaterTableModel();
+            SetLink(soil, "properties", soilProperties);
+            SetLink(waterTable, "soil", soil);
+
+            double[] DUL = MathUtilities.Multiply(soilProperties.Water.DUL, soilProperties.Water.Thickness);
+            double[] SAT = MathUtilities.Multiply(soilProperties.Water.SAT, soilProperties.Water.Thickness);
+
+            // Profile at DUL. Essentially water table is below profile.
+            soil.Water = DUL;
+            Assert.AreEqual(waterTable.Value, 1600);
+
+            // Put a saturated layer at index 3.
+            soil.Water[3] = SAT[3];
+            Assert.AreEqual(waterTable.Value, 700);
+
+            // Put a saturated layer at index 3 and a drainable layer at index 2.
+            soil.Water[2] = (DUL[2] + SAT[2]) / 2;
+            soil.Water[3] = SAT[3];
+            Assert.AreEqual(waterTable.Value, 250);
+
+
+        }
+
     }
 }

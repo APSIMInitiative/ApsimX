@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Phen
 {
@@ -17,11 +18,22 @@ namespace Models.PMF.Phen
     public class LeafAppearancePhase : Phase
     {
         /// <summary>The leaf</summary>
-        [Link]
+        [Link(IsOptional = true)]
         Leaf Leaf = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction FinalLeafNumber = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Link(IsOptional = true)]
+        public IFunction HaunStage = null;
 
         /// <summary>The structure</summary>
-        [Link]
+        [Link(IsOptional = true)]
         Structure Structure = null;
         /// <summary>
         /// The number of leaves appeared at the start of this phase
@@ -56,18 +68,36 @@ namespace Models.PMF.Phen
 
             if (First)
             {
-                LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                if (Leaf != null)
+                {
+                    LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
+                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                }
+                else
+                {
+                    LeafNoAtStart = HaunStage.Value;
+                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                }
                 
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
-                return 0.00001;
+            if (Leaf != null)
+            {
+                if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
+                    return 0.00001;
+                else
+                    return 0;
+            }
             else
-                return 0;
+            {
+                if (HaunStage.Value >= FinalLeafNumber.Value)
+                    return 0.00001;
+                else
+                    return 0;
+            }
         }
 
         // Return proportion of TT unused
@@ -79,17 +109,35 @@ namespace Models.PMF.Phen
             base.AddTT(PropOfDayToUse);
             if (First)
             {
-                LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                if (Leaf != null)
+                {
+                    LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
+                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                }
+                else
+                {
+                    LeafNoAtStart = HaunStage.Value;
+                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                }
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
-                return 0.00001;
+            if (Leaf != null)
+            {
+                if (Leaf.ExpandedCohortNo >= (Leaf.InitialisedCohortNo - RemainingLeaves))
+                    return 0.00001;
+                else
+                    return 0;
+            }
             else
-                return 0;
+            {
+                if (HaunStage.Value >= FinalLeafNumber.Value)
+                    return 0.00001;
+                else
+                    return 0;
+            }
         }
 
         /// <summary>Return a fraction of phase complete.</summary>
@@ -99,7 +147,12 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
+
+                double F = 0;
+                if (Leaf != null)
+                    F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
+                else
+                    F = (HaunStage.Value - LeafNoAtStart) / TargetLeafForCompletion;
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.

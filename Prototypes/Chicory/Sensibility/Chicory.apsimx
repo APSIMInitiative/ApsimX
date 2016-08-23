@@ -816,6 +816,8 @@ DM demand is based on ...
           </Memo>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1063,6 +1065,8 @@ DM demand is based on ...
           </Memo>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Inflorescence</Name>
@@ -1240,6 +1244,8 @@ DM demand is based on ...
           </Memo>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
@@ -1514,6 +1520,7 @@ No effect of soil water content on root growth is currently captured in the mode
           </Memo>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericBelowGroundOrgan>
@@ -1679,6 +1686,8 @@ No effect of soil water content on root growth is currently captured in the mode
           </Memo>
           <Value>0</Value>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericBelowGroundOrgan>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>

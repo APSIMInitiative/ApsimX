@@ -109,32 +109,25 @@ namespace UserInterface.Presenters
         /// <summary>Execute the specified script, returning any error messages or NULL if all OK.</summary>
         public string ProcessStartupScript(string code)
         {
-            try
-            {
-                Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
 
-                // Get the script 'Type' from the compiled assembly.
-                Type scriptType = compiledAssembly.GetType("Script");
-                if (scriptType == null)
-                    throw new Exception("Cannot find a public class called 'Script'");
+            // Get the script 'Type' from the compiled assembly.
+            Type scriptType = compiledAssembly.GetType("Script");
+            if (scriptType == null)
+                throw new Exception("Cannot find a public class called 'Script'");
 
-                // Look for a method called Execute
-                MethodInfo executeMethod = scriptType.GetMethod("Execute");
-                if (executeMethod == null)
-                    throw new Exception("Cannot find a method Script.Execute");
+            // Look for a method called Execute
+            MethodInfo executeMethod = scriptType.GetMethod("Execute");
+            if (executeMethod == null)
+                throw new Exception("Cannot find a method Script.Execute");
 
-                // Create a new script model.
-                object script = compiledAssembly.CreateInstance("Script");
+            // Create a new script model.
+            object script = compiledAssembly.CreateInstance("Script");
 
-                // Call Execute on our newly created script instance.
-                object[] arguments = new object[] { this };
-                executeMethod.Invoke(script, arguments);
-                return null;
-            }
-            catch (Exception err)
-            {
-                return err.ToString();
-            }
+            // Call Execute on our newly created script instance.
+            object[] arguments = new object[] { this };
+            executeMethod.Invoke(script, arguments);
+            return null;
         }
 
         /// <summary>

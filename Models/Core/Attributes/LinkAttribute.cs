@@ -30,6 +30,9 @@ namespace Models.Core
         /// </summary>
         private bool isOptional = false;
 
+        /// <summary>The property to get the link name from.</summary>
+        private string associatedProperty = null;
+
         /// <summary>
         /// Gets or sets the NamePath of a field. When specified, the infrastructure will locate 
         /// the object using this name and store a reference to it in the field. NamePath 
@@ -49,6 +52,15 @@ namespace Models.Core
         {
             get { return this.isOptional; }
             set { this.isOptional = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string AssociatedProperty
+        {
+            get { return associatedProperty; }
+            set { associatedProperty = value; }
         }
     }
 }

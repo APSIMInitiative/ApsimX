@@ -25,4 +25,9 @@ namespace Models.Soils
         /// <value>The cn_rain.</value>
         public int cn_rain { get; set; }
     }
+
+    /// <summary>A deletegate for publishing a tillage event.</summary>
+    /// <param name="sender"></param>
+    /// <param name="tillageType"></param>
+    public delegate void TillageTypeDelegate(object sender, TillageType tillageType);
 }

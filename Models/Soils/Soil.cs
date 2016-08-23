@@ -12,6 +12,7 @@ namespace Models.Soils
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Interfaces;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -120,7 +121,7 @@ namespace Models.Soils
         public string Comments { get; set; }
 
         /// <summary>Gets the soil water.</summary>
-        [XmlIgnore] public SoilWater SoilWater { get; private set; }
+        [XmlIgnore] public ISoilWater SoilWater { get; private set; }
 
         /// <summary>Gets the soil organic matter.</summary>
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
@@ -149,7 +150,7 @@ namespace Models.Soils
         {
             waterNode = Apsim.Child(this, typeof(Water)) as Water;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
-            SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
+            SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
             }
@@ -710,7 +711,6 @@ namespace Models.Soils
         /// <returns></returns>
         private double[] PredictedLL(double[] A, double B)
         {
-            double[] DepthCentre = ToMidPoints(PredictedThickness);
             double[] LL15 = LL15Mapped(PredictedThickness);
             double[] DUL = DULMapped(PredictedThickness);
             double[] LL = new double[PredictedThickness.Length];
@@ -1405,9 +1405,13 @@ namespace Models.Soils
                     if (PosDash == -1)
                         throw new Exception("Invalid layer string: " + DepthStrings[i] +
                                   ". String must be of the form: 10-30");
+                    double TopOfLayer;
+                    double BottomOfLayer;
 
-                    double TopOfLayer = Convert.ToDouble(DepthStrings[i].Substring(0, PosDash));
-                    double BottomOfLayer = Convert.ToDouble(DepthStrings[i].Substring(PosDash + 1));
+                    if (!Double.TryParse(DepthStrings[i].Substring(0, PosDash), out TopOfLayer))
+                        throw new Exception("Invalid string for layer top: '" + DepthStrings[i].Substring(0, PosDash) + "'");
+                    if (!Double.TryParse(DepthStrings[i].Substring(PosDash + 1), out BottomOfLayer))
+                        throw new Exception("Invalid string for layer bottom: '" + DepthStrings[i].Substring(PosDash + 1) + "'");
                     Thickness[i] = (BottomOfLayer - TopOfLayer) * 10;
                 }
             }
@@ -1490,7 +1494,7 @@ namespace Models.Soils
         public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
         {
             double[] PAWC = new double[Thickness.Length];
-            if (LL == null)
+            if (LL == null || DUL == null)
                 return PAWC;
             if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
                 throw new ApsimXException(null, "Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");

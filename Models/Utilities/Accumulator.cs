@@ -10,6 +10,7 @@ namespace Models.Utilities
     /// <summary>
     /// This class accumulats values of variables
     /// </summary>
+    [Serializable]
     public class Accumulator
     {
         private IModel parentModel;

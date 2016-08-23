@@ -1034,6 +1034,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </HIReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1340,6 +1341,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
       <GenericAboveGroundOrgan>
@@ -1471,6 +1473,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1504,16 +1508,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>InitialLeaf1</Name>
           <Rank>1</Rank>
           <Area>224</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
           <Rank>2</Rank>
           <Area>224</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
           <Rank>3</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
@@ -2100,6 +2107,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -2113,6 +2121,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
+        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2259,6 +2269,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </GenericAboveGroundOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -2446,6 +2458,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <NFixationOption>Majic</NFixationOption>
       </Nodule>
       <CompositeBiomass>
@@ -2574,16 +2588,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.9208069833855268</Slope>
-            <Intercept>255.85219279514888</Intercept>
-            <SEslope>0.11450421128089244</SEslope>
-            <SEintercept>90.596149803459909</SEintercept>
-            <R2>0.47666641141394905</R2>
-            <RMSE>335.26293456044874</RMSE>
-            <NSE>-0.43330688748166835</NSE>
-            <ME>197.25030756213042</ME>
-            <MAE>266.6567770935381</MAE>
-            <RSR>1.1889796241135766</RSR>
+            <Slope>0.91287932221741563</Slope>
+            <Intercept>308.827921547124</Intercept>
+            <SEslope>0.1114079374080907</SEslope>
+            <SEintercept>88.146366616667237</SEintercept>
+            <R2>0.48603622192452223</R2>
+            <RMSE>359.7414839048385</RMSE>
+            <NSE>-0.65024774184940459</NSE>
+            <ME>244.35966185584331</ME>
+            <MAE>290.60070221553008</MAE>
+            <RSR>1.2757905817176316</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
@@ -2630,16 +2644,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.64079889142418689</Slope>
-            <Intercept>206.31163804271375</Intercept>
-            <SEslope>0.089849387773752</SEslope>
-            <SEintercept>19.4462218612399</SEintercept>
-            <R2>0.14095137373298561</R2>
-            <RMSE>227.43208708693621</RMSE>
-            <NSE>-3.2193132989110511</NSE>
-            <ME>139.51246731757109</ME>
-            <MAE>177.63236970907619</MAE>
-            <RSR>2.0508022476217542</RSR>
+            <Slope>0.68798781349375138</Slope>
+            <Intercept>202.96533952706017</Intercept>
+            <SEslope>0.091318983996129727</SEslope>
+            <SEintercept>19.764288515837027</SEintercept>
+            <R2>0.15475969146794977</R2>
+            <RMSE>232.14919377369446</RMSE>
+            <NSE>-3.3961515987613184</NSE>
+            <ME>144.94170091026282</ME>
+            <MAE>179.94071726962997</MAE>
+            <RSR>2.0933373758852416</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>

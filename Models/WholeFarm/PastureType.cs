@@ -18,8 +18,10 @@ namespace Models.WholeFarm
     [ValidParent(ParentType = typeof(Pasture))]
     public class PastureType : Model
     {
+        [Link]
+        ISummary Summary = null;
 
-
+        event EventHandler PastureChanged;
 
         /// <summary>
         /// Dry Matter (%)
@@ -29,9 +31,9 @@ namespace Models.WholeFarm
 
 
         /// <summary>
-        /// Dry Matter (%)
+        /// Dry Matter Digestibility (%)
         /// </summary>
-        [Description("DMD (%)")]
+        [Description("Dry Matter Digestibility (%)")]
         public double DMD { get; set; }
 
 
@@ -54,62 +56,89 @@ namespace Models.WholeFarm
 
 
 
+        /// <summary>
+        /// Amount (kg)
+        /// </summary>
+        [XmlIgnore]
+        public double Amount { get { return _Amount; } }
+
+        private double _Amount;
 
 
 
         /// <summary>
-        ///  Creates a Fodder Item   
+        /// Add Pasture
         /// </summary>
-        /// <returns></returns>
-        public PastureItem CreateListItem()
+        /// <param name="AddAmount"></param>
+        public void Add(double AddAmount)
         {
-            PastureItem pasture = new PastureItem();
+            this._Amount = this._Amount + AddAmount;
 
-            pasture.DryMatter  = this.DryMatter;
-            pasture.DMD = this.DMD;
-            pasture.Nitrogen = this.Nitrogen;
-            pasture.Amount = this.StartingAmount;
+            if (PastureChanged != null)
+                PastureChanged.Invoke(this, new EventArgs());
+        }
 
-            return pasture;
+        /// <summary>
+        /// Remove Pasture
+        /// </summary>
+        /// <param name="RemoveAmount"></param>
+        public void Remove(double RemoveAmount)
+        {
+            if (this._Amount - RemoveAmount < 0)
+            {
+                string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+                    + "Current Amount: " + this._Amount + Environment.NewLine
+                    + "Tried to Remove: " + RemoveAmount;
+                Summary.WriteWarning(this, message);
+                this._Amount = 0;
+
+                if (PastureChanged != null)
+                    PastureChanged.Invoke(this, new EventArgs());
+            }
+            else
+            {
+                this._Amount = this._Amount - RemoveAmount;
+
+                if (PastureChanged != null)
+                    PastureChanged.Invoke(this, new EventArgs());
+            }
+
+        }
+
+        /// <summary>
+        /// Set Amount of Pasture
+        /// </summary>
+        /// <param name="NewValue"></param>
+        public void Set(double NewValue)
+        {
+            this._Amount = NewValue;
+
+            if (PastureChanged != null)
+                PastureChanged.Invoke(this, new EventArgs());
+        }
+
+
+
+
+        /// <summary>
+        /// Initialise the current state to the starting amount of fodder
+        /// </summary>
+        public void Initialise()
+        {
+            this._Amount = this.StartingAmount;
+        }
+
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
         }
 
     }
 
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class PastureItem
-    {
-
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DryMatter;
-
-
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        public double DMD;
-
-
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        public double Nitrogen;
-
-
-
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
-        public double Amount { get; set; }
-
-
-    }
 }

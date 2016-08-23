@@ -20,16 +20,28 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(DropAnywhere = true)]
+    [ValidParent(ParentType = typeof(Resources))]
     public class Fodder: Model
     {
 
 
         /// <summary>
-        /// Current state of this resource.
+        /// List of all the Fodder Types in this Resource Group.
         /// </summary>
         [XmlIgnore]
-        public List<FodderItem> FodderList;
+        public List<FodderType> Items;
+
+
+        /// <summary>
+        /// Returns the Fodder with the given name.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public FodderType GetByName(string Name)
+        {
+            return Items.Find(x => x.Name == Name);
+        }
+
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -38,16 +50,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            FodderList = new List<FodderItem>();
+            Items = new List<FodderType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                FodderType fodderInit = childModel as FodderType;
-                FodderItem fodder = fodderInit.CreateListItem();
-                FodderList.Add(fodder);
+                FodderType fodder = childModel as FodderType;
+                Items.Add(fodder);
             }
         }
 

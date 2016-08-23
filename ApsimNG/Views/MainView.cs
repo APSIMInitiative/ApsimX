@@ -102,6 +102,10 @@ namespace UserInterface.Views
         /// <param name="askToSave">If true, will ask user whether they want to save.</param>
         void Close(bool askToSave = true);
 
+        /// <summary>Close a tab.</summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void CloseTabContaining(object o);
+
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
 
@@ -312,7 +316,15 @@ namespace UserInterface.Views
             notebook = IsControlOnLeft(o) ? notebook1 : notebook2;
             for (int i = 0; i < notebook.NPages; i++)
             {
+                // First check the tab labels
                 Widget testParent = notebook.GetTabLabel(notebook.GetNthPage(i));
+                if (testParent == widg || widg.IsAncestor(testParent))
+                {
+                    tabName = notebook.GetTabLabelText(notebook.GetNthPage(i));
+                    return i;
+                }
+                // If not found, check the tab contents
+                testParent = notebook.GetNthPage(i);
                 if (testParent == widg || widg.IsAncestor(testParent))
                 {
                     tabName = notebook.GetTabLabelText(notebook.GetNthPage(i));
@@ -323,6 +335,13 @@ namespace UserInterface.Views
         }
 
         public void OnCloseBtnClick(object o, EventArgs e)
+        {
+            CloseTabContaining(o);
+        }
+
+        /// <summary>Close a tab.</summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        public void CloseTabContaining(object o)
         {
             Notebook notebook = null;
             string tabText = null;

@@ -91,7 +91,20 @@ namespace Models.Core
                     }
                     else
                         line = line.Remove(0, numSpacesStartOfLine);
-                    paragraphSoFar += line + "\r\n";
+
+                    string heading;
+                    int headingLevel;
+                    if (GetHeadingFromLine(line, out heading, out headingLevel))
+                    {
+                        if (paragraphSoFar != string.Empty)
+                        {
+                            tags.Add(new Paragraph(paragraphSoFar, indent));
+                            paragraphSoFar = string.Empty;
+                        }
+                        tags.Add(new Heading(heading, headingLevel));
+                    }
+                    else
+                        paragraphSoFar += line + "\r\n";
 
                     line = reader.ReadLine();
                 }
@@ -102,6 +115,39 @@ namespace Models.Core
                     paragraphSoFar = string.Empty;
                 }
             }
+        }
+
+        /// <summary>Look at a string and return true if it is a heading.</summary>
+        /// <param name="st">The string to look at.</param>
+        /// <param name="heading">The returned heading.</param>
+        /// <param name="headingLevel">The returned heading level.</param>
+        /// <returns></returns>
+        private static bool GetHeadingFromLine(string st, out string heading, out int headingLevel)
+        {
+            st = st.Trim();
+            heading = st.Replace("#", string.Empty);
+            headingLevel = 0;
+            if (st.StartsWith("####"))
+            {
+                headingLevel = 4;
+                return true;
+            }
+            if (st.StartsWith("###"))
+            {
+                headingLevel = 3;
+                return true;
+            }
+            if (st.StartsWith("#"))
+            {
+                headingLevel = 2;
+                return true;
+            }
+            if (st.StartsWith("#"))
+            {
+                headingLevel = 1;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

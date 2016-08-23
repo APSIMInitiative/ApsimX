@@ -15,13 +15,13 @@ namespace Models.WholeFarm
 {
 
     ///<summary>
-    /// Parent model of Land Types.
+    /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(DropAnywhere = true)]
-    public class Ruminant: Model
+    [ValidParent(ParentType = typeof(Resources))]
+    public class RuminantHerd: Model
     {
 
 
@@ -29,7 +29,7 @@ namespace Models.WholeFarm
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<RuminantItem> Ruminants;
+        public List<Ruminant> Herd;
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -38,16 +38,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Ruminants = new List<RuminantItem>();
+            Herd = new List<Ruminant>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                RuminantType ruminantInit = childModel as RuminantType;
-                RuminantItem ruminant = ruminantInit.CreateListItem();
-                Ruminants.Add(ruminant);
+                RuminantType ruminantType = childModel as RuminantType;
+                Herd.AddRange(ruminantType.CreateIndividuals());
             }
         }
 
