@@ -65949,5 +65949,5 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Folder>
-  <ExplorerWidth>314</ExplorerWidth>
+  <ExplorerWidth>310</ExplorerWidth>
 </Simulations>
