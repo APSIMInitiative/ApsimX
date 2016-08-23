@@ -375,7 +375,7 @@ namespace Models.Soils
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
                     Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
-                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.5);//arbitary function to give a range of hydraulic conductivity over pores
+                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.15);//arbitary function to give a range of hydraulic conductivity over pores
                 }
                 if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
@@ -642,7 +642,7 @@ namespace Models.Soils
                 //Discharge water from current layer
                 for (int c = 0; c < PoreCompartments && OutFluxCurrentLayer > 0; c++)
                 {//Step through each pore compartment and remove the water that drains starting with the largest pores
-                    double drain = Math.Min(OutFluxCurrentLayer, Pores[l][c].HydraulicConductivityOut);
+                    double drain = Math.Min(OutFluxCurrentLayer, Math.Min(Pores[l][c].WaterDepth,Pores[l][c].HydraulicConductivityOut));
                     Pores[l][c].WaterDepth -= drain;
                     OutFluxCurrentLayer -= drain;
                     DoDetailReport("Drain", l, h);

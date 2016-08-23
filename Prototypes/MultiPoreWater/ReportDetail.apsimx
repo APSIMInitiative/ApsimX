@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -39,6 +39,7 @@
           <string>[Soil].MultiPoreWater.Drainage as Drainage</string>
           <string>[Soil].MultiPoreWater.Infiltration as Infiltration</string>
           <string>[Soil].MultiPoreWater.pond as Pond</string>
+          <string>[Soil].Water.Thickness as Thickness</string>
           <string>[Irrigation].IrrigationApplied as Irrigation</string>
         </VariableNames>
         <EventNames>
@@ -479,13 +480,13 @@
             <double>300</double>
           </Thickness>
           <SW>
-            <double>0.6</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.56</double>
-            <double>0.55</double>
-            <double>0.54</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
           </SW>
           <NO3Units>ppm</NO3Units>
           <NH4Units>ppm</NH4Units>
@@ -621,6 +622,18 @@ namespace Models
 }
 ]]></Code>
       </Manager>
+      <Report>
+        <Name>Initial</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>[Soil].Water.Thickness as Thickness</string>
+          <string>[Soil].Water.Depth as Depth</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoInitialSummary</string>
+        </EventNames>
+      </Report>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
