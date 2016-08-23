@@ -481,7 +481,7 @@ namespace SWIMFrame
                             again = true;
                             iok = 0;
                         }
-                    }
+                    } //end while
 
                     //-----end get and solve eqns
                     //-----update unknowns
@@ -767,6 +767,7 @@ namespace SWIMFrame
             r = 1.0 / (tf - ti);
             qw[0] = r * win;
 
+            // Compounding errors due to float/double issues start here. May or may not be a problem.
             for (int x =1; x < thf.Length; x++)
                 tht[x] = r * (thf[x] - thi[x]);
             for (i = 1; i <= n; i++)
@@ -873,16 +874,18 @@ namespace SWIMFrame
                     for (int x = 1; x <= n - 1; x++)
                         q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[j, x] + qyb[x] * tht[x + 1] * c[j, x]);
                     q[n] = q[n] - sigdt * qya[n] * tht[n] * c[j, n];
+
                     //get and solve eqns
+                    for (int x = 2; x <= n; x++)
+                        aa[x] = qya[x - 1];
+
                     for (int x = 1; x <= n - 1; x++)
-                    {
-                        aa[x + 1] = qya[x];
                         cc[x] = -qyb[x];
-                    }
+
                     Matrix<double> qsexsM = Matrix<double>.Build.DenseOfArray(qsexs);
                     Matrix<double> qsexsdM = Matrix<double>.Build.DenseOfArray(qsexsd);
 
-                    if (extraction)  //get extraction
+                    if (sex.GetLength(0) > 1)  //get extraction
                     {
                         double[] ctemp = new double[n + 1];
                         for (int x = 1; x <= n; x++)
@@ -916,7 +919,7 @@ namespace SWIMFrame
                     sdrn[j] = sdrn[j] + (q[n] + sig * qya[n] * dy[n]) * dt;
                     smM.SetRow(j, smM.Row(j) + Vector<double>.Build.DenseOfArray(dy.Slice(1, n)));
                     sm = smM.ToArray();
-                    if (extraction)
+                    if (sex.GetLength(0) > 1) // need to test, this will need to be transposed.
                     {
                         Matrix<double> sexM = Matrix<double>.Build.Dense(sex.GetLength(0), sex.GetLength(1));
                         for (int x = 0; x < sex.GetLength(0); x++)
