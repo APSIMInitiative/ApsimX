@@ -79,6 +79,11 @@ namespace UserInterface.Interfaces
         IGridColumn GetColumn(int columnIndex);
 
         /// <summary>
+        /// Add a separator line to the context menu
+        /// </summary>
+        void AddContextSeparator();
+
+        /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
         /// <param name="menuItemText">The text of the menu item</param>

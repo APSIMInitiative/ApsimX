@@ -100,8 +100,8 @@ namespace UserInterface.Views
             AddContextAction("Copy", OnCopyToClipboard);
             AddContextAction("Paste", OnPasteFromClipboard);
             AddContextAction("Delete", OnDeleteClick);
-            gridview.ButtonReleaseEvent += OnButtonUp;
-            fixedcolview.ButtonReleaseEvent += OnButtonUp;
+            gridview.ButtonPressEvent += OnButtonDown;
+            fixedcolview.ButtonPressEvent += OnButtonDown;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -149,8 +149,8 @@ namespace UserInterface.Views
                 fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
                 fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
             }
-            gridview.ButtonReleaseEvent -= OnButtonUp;
-            fixedcolview.ButtonReleaseEvent -= OnButtonUp;
+            gridview.ButtonPressEvent -= OnButtonDown;
+            fixedcolview.ButtonPressEvent -= OnButtonDown;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -312,7 +312,6 @@ namespace UserInterface.Views
                 Gtk.Application.RunIteration();
             WaitCursor = false;
         }
-
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -507,6 +506,16 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextSeparator()
+        {
+            Popup.Append(new SeparatorMenuItem());
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
         public void AddContextAction(string menuItemText, System.EventHandler onClick)
         {
             ImageMenuItem item = new ImageMenuItem(menuItemText);
@@ -609,8 +618,10 @@ namespace UserInterface.Views
                 return;
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
-                fixedcolview.Columns[i].Visible = i < number;
-                gridview.Columns[i].Visible = i >= number;
+                if (fixedcolview.Columns.Length > i)
+                   fixedcolview.Columns[i].Visible = i < number;
+                if (gridview.Columns.Length > i)
+                    gridview.Columns[i].Visible = i >= number;
             }
             if (number > 0)
             {
@@ -1060,12 +1071,39 @@ namespace UserInterface.Views
             */
         }
 
-        private void OnButtonUp(object sender, ButtonReleaseEventArgs e)
+        /// <summary>
+        /// This prevents the selection changing when the right mouse button is pressed.
+        /// Normally, all we want is to display the popup menu, not change the selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore] 
+        private void OnButtonDown(object sender, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 3)
+            {
+                if (this.ColumnHeaderClicked != null)
+                {
+                    GridHeaderClickedArgs args = new GridHeaderClickedArgs();
+                    if (sender is TreeView)
+                    {
+                        int i = 0;
+                        int xpos = (int)e.Event.X;
+                        foreach (Widget child in (sender as TreeView).AllChildren)
+                        {
+                            if (xpos >= child.Allocation.Left && xpos <= child.Allocation.Right)
+                                break;
+                            i++;
+                        }
+                        args.Column = this.GetColumn(i);
+                    }
+                    args.RightClick = true;
+                    this.ColumnHeaderClicked.Invoke(this, args);
+                }
                 Popup.Popup();
+                e.RetVal = true;
+            }
         }
-
         /// <summary>
         /// Gets the Label widget rendering the text in the Gtk Button which displays a column header
         /// This is pretty much a hack, but it works. However, it may break in future versions of Gtk.
