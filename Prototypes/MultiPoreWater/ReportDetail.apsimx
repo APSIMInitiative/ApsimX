@@ -480,9 +480,9 @@
             <double>300</double>
           </Thickness>
           <SW>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
+            <double>0.6</double>
+            <double>0.59</double>
+            <double>0.58</double>
             <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
