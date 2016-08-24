@@ -3370,7 +3370,7 @@ namespace Models.AgPasture
             return NetPotGrowth;
         }
 
-        /// <summary>Update DM and N amounts of all tissues accounting for the new growth (plus leftover remobilisation)</summary>
+        /// <summary>Update DM and N amounts allocating new growth to each organ</summary>
         /// <exception cref="System.Exception">
         /// Mass balance lost on partition of new growth DM
         /// or
@@ -3493,24 +3493,18 @@ namespace Models.AgPasture
                 if (doy > doyIniHighShoot)
                 {
                     if (doy < doyIncrease)
-                        fac = 1 +
-                              ShootSeasonalAllocationIncrease *
-                              MathUtilities.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
+                        fac = 1 + ShootSeasonalAllocationIncrease * MathUtilities.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
                     else if (doy <= doyPlateau)
                         fac = 1.0 + ShootSeasonalAllocationIncrease;
                     else if (doy <= doyDecrease)
-                        fac = 1 +
-                              ShootSeasonalAllocationIncrease *
-                              (1 - MathUtilities.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+                        fac = 1 + ShootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
                     else
                         fac = 1;
                 }
                 else
                 {
                     if (doyDecrease > 365 && doy <= doyDecrease - 365)
-                        fac = 1 +
-                              ShootSeasonalAllocationIncrease *
-                              (1 - MathUtilities.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+                        fac = 1 + ShootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
                 }
 
                 double presentSRratio = previousAbvGrdLivedWt / myPreviousState.roots.DMTotal;
@@ -3533,28 +3527,29 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Tentative - correction for the fraction of DM allocated to leaves</summary>
-        /// <returns></returns>
-        private double UpdatefLeaf()
+        /// <summary>Calculates the target (ideal) ratio of leaf to stems/stolons</summary>
+        /// <returns>The target leaf to stem ratio</returns>
+        private double CalcLeafRatio()
         {
-            double result;
-            if (isLegume)
+            double leafRatio;
+            double fLeaf = FracToLeaf;
+            double dmMaxFLeaf = 500;
+            double dmReferenceFLeaf = 2000;
+            double minFLeaf = 0.0;
+            double exponentFLeaf = 3.0;
+
+            if (AboveGroundLivedWt > dmMaxFLeaf)
             {
-                if (AboveGroundLivedWt > 0.0 && (stolons.DMGreen / AboveGroundLivedWt) > FracToStolon)
-                    result = 1.0;
-                else if (AboveGroundLivedWt + stolons.DMGreen < 2000)
-                    result = FracToLeaf + (1 - FracToLeaf) * (AboveGroundLivedWt + stolons.DMGreen) / 2000;
-                else
-                    result = FracToLeaf;
+                double dmAux = Math.Pow((AboveGroundLivedWt - dmMaxFLeaf) / (dmReferenceFLeaf - dmMaxFLeaf), exponentFLeaf);
+                fLeaf = minFLeaf + (FracToLeaf - minFLeaf) / (1 + dmAux);
             }
+
+            if (fLeaf < 1.0)
+                leafRatio = fLeaf / (1 - fLeaf);
             else
-            {
-                if (AboveGroundLivedWt < 2000)
-                    result = FracToLeaf + (1 - FracToLeaf) * AboveGroundLivedWt / 2000;
-                else
-                    result = FracToLeaf;
-            }
-            return result;
+                leafRatio = fLeaf / myEpsilon;
+
+            return leafRatio;
         }
 
         /// <summary>Computes the turnover rate and update each tissue pool of all plant parts</summary>

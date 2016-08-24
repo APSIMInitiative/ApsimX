@@ -387,10 +387,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

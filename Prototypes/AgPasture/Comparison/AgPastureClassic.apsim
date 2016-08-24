@@ -2,7 +2,7 @@
   <simulation name="OneSpecies">
     <clock>
       <start_date type="date" description="Enter the start date of the simulation">01/07/2000</start_date>
-      <end_date type="date" description="Enter the end date of the simulation">30/06/2003</end_date>
+      <end_date type="date" description="Enter the end date of the simulation">30/06/2002</end_date>
     </clock>
     <metfile name="met">
       <filename name="filename" input="yes">%apsim%X\Tests\WeatherFiles\Ruakura.met</filename>
@@ -628,11 +628,11 @@ public class Script
             <category type="category" description="Fertiliser application based on Soil N amount" />
             <FertAllowed type="yesno" description="Turn ferliser applications on?">yes</FertAllowed>
             <FertDepth2SoilN type="text" description="Depth to calculate available soil N (mm):">500</FertDepth2SoilN>
-            <FertCriticalSoilN type="text" description="Minimum available N, triggers an application (kgN/ha):">10</FertCriticalSoilN>
+            <FertCriticalSoilN type="text" description="Minimum available N, triggers an application (kgN/ha):">5</FertCriticalSoilN>
             <FertNAmount type="text" description="Amount of N fertiliser for each application (kgN/ha):">25</FertNAmount>
             <FertType type="list" listvalues="no3_n,nh4_n,nh4no3,urea_n,urea_no3,urea,nh4so4_n,rock_p,banded_p,broadcast_p" description="Type of N fertiliser to apply:">urea_n</FertType>
             <FertApplicationDepth type="text" description="Depth at which to apply the fertiliser (mm):">1</FertApplicationDepth>
-            <FertMinimumDays type="text" description="Minimum period between applications (days):">30</FertMinimumDays>
+            <FertMinimumDays type="text" description="Minimum period between applications (days):">15</FertMinimumDays>
           </ui>
           <text>Imports System
 Imports ModelFramework
@@ -1578,7 +1578,7 @@ End Class
           <variable>SpeciesGrowthWt(1) as Ryegrass.ActualGrowthWt</variable>
           <variable>SpeciesNetGrowthWt(1) as Ryegrass.EffectiveGrowthWt</variable>
           <variable>SpeciesHerbageGrowth(1) as Ryegrass.HerbageGrowthWt</variable>
-          <variable>speciesFShoot as Ryegrass.ShootDMAllocation</variable>
+          <variable>speciesFShoot(1) as Ryegrass.ShootDMAllocation</variable>
           <variable>SpeciesLitterWt(1) as Ryegrass.LitterWt</variable>
           <variable>SpeciesRootSenescedWt(1) as Ryegrass.RootSenescedWt</variable>
           <variable>SpeciesTotalN(1) as Ryegrass.TotalN</variable>
@@ -1635,9 +1635,9 @@ End Class
           <variable>SpeciesTotalLAI(1) as Ryegrass.TotalLAI</variable>
           <variable>SpeciesGreenLAI(1) as Ryegrass.GreenLAI</variable>
           <variable>SpeciesDeadLAI(1) as Ryegrass.DeadLAI</variable>
-          <variable>SpeciesRadnFactor as Ryegrass.GlfRadnIntercept</variable>
-          <variable>SpeciesCO2Factor as Ryegrass.GlfCO2</variable>
-          <variable>SpeciesNconcFactor as Ryegrass.GlfNConcentration</variable>
+          <variable>SpeciesRadnFactor(1) as Ryegrass.GlfRadnIntercept</variable>
+          <variable>SpeciesCO2Factor(1) as Ryegrass.GlfCO2</variable>
+          <variable>SpeciesNconcFactor(1) as Ryegrass.GlfNConcentration</variable>
           <variable>SpeciesGLFT(1) as Ryegrass.GlfTemperature</variable>
           <variable>SpeciesGLFA(1)  as Ryegrass.GlfWaterLogging</variable>
           <variable>SpeciesGLFW(1) as Ryegrass.GlfWater</variable>
@@ -1647,8 +1647,8 @@ End Class
           <variable>SpeciesHarvestWt(1) as Ryegrass.HarvestedWt</variable>
           <variable>SpeciesHarvestPct(1) as Ryegrass.HarvestedFraction</variable>
           <variable>SpeciesHarvestN(1) as Ryegrass.HarvestedN</variable>
-          <variable>SpeciesHerbageDigestibility as Ryegrass.HerbageDigestibility</variable>
-          <variable>SpeciesDefoliatedDigestibility as Ryegrass.HarvestedDigestibility</variable>
+          <variable>SpeciesHerbageDigestibility(1) as Ryegrass.HerbageDigestibility</variable>
+          <variable>SpeciesDefoliatedDigestibility(1) as Ryegrass.HarvestedDigestibility</variable>
           <variable>SpeciesTempFactor</variable>
         </variables>
         <events name="Reporting Frequency">
