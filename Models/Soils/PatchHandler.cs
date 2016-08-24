@@ -235,7 +235,6 @@ namespace Models.Soils
         private void MergePatches(int recipient, int disappearing)
         {
             // get the weighted average for each variable and assign to the recipient patch
-            double[] newValue = new double[dlayer.Length];
             for (int layer = 0; layer < dlayer.Length; layer++)
             {
                 Patch[recipient].urea[layer] = (Patch[recipient].urea[layer] * Patch[recipient].RelativeArea
