@@ -44,9 +44,6 @@ namespace UserInterface.Presenters
             /// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();
-            dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
-
             Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
             if (simulation != null)
             {
@@ -54,9 +51,9 @@ namespace UserInterface.Presenters
                     dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
                 else
                     dataStorePresenter.SimulationFilter = simulation;
-                dataStorePresenter.PopulateGrid();
             }
-
+            dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
+            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
         }
 
         /// <summary>Detach the model from the view.</summary>
