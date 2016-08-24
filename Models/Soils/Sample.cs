@@ -189,25 +189,109 @@ namespace Models.Soils
         /// </summary>
         public NUnitsEnum NO3Units { get; set; }
 
+        /// <summary>Change the units used for NO3.</summary>
+        /// <param name="ToUnits">To units.</param>
+        public void NO3UnitsSet(NUnitsEnum ToUnits)
+        {
+            if (ToUnits != NO3Units)
+            {
+                // convert the numbers
+                if (ToUnits == NUnitsEnum.ppm)
+                    NO3 = NO3ppm;
+                else
+                    NO3 = NO3kgha;
+                NO3Units = ToUnits;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the units of NH4
         /// </summary>
         public NUnitsEnum NH4Units { get; set; }
+
+        /// <summary>Change the units used for NH4.</summary>
+        /// <param name="ToUnits">To units.</param>
+        public void NH4UnitsSet(NUnitsEnum ToUnits)
+        {
+            if (ToUnits != NH4Units)
+            {
+                // convert the numbers
+                if (ToUnits == NUnitsEnum.ppm)
+                    NH4 = NH4ppm;
+                else
+                    NH4 = NH4kgha;
+                NH4Units = ToUnits;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the units of SW
         /// </summary>
         public SWUnitsEnum SWUnits { get; set; }
 
+        /// <summary>Change the units used for SW.</summary>
+        /// <param name="ToUnits">To units.</param>
+        public void SWUnitsSet(SWUnitsEnum ToUnits)
+        {
+            if (ToUnits != SWUnits)
+            {
+                // convert the numbers
+                if (ToUnits == SWUnitsEnum.Gravimetric)
+                    SW = SWGravimetric;
+                else if (ToUnits == SWUnitsEnum.mm)
+                    SW = SWmm;
+                else if (ToUnits == SWUnitsEnum.Volumetric)
+                    SW = SWVolumetric;
+                SWUnits = ToUnits;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the units of organic carbon
         /// </summary>
         public OCSampleUnitsEnum OCUnits { get; set; }
 
+        /// <summary>Ocs the units set.</summary>
+        /// <param name="ToUnits">To units.</param>
+        public void OCUnitsSet(OCSampleUnitsEnum ToUnits)
+        {
+            if (ToUnits != OCUnits)
+            {
+                // convert the numbers
+                if (ToUnits == OCSampleUnitsEnum.WalkleyBlack)
+                    OC = OCWalkleyBlack;
+                else
+                    OC = OCTotal;
+                OCUnits = ToUnits;
+            }
+        }
+
+
         /// <summary>
         /// Gets or sets the units of P
         /// </summary>
         public PHSampleUnitsEnum PHUnits { get; set; }
+
+        /// <summary>Phes the units set.</summary>
+        /// <param name="ToUnits">To units.</param>
+        public void PHUnitsSet(PHSampleUnitsEnum ToUnits)
+        {
+            if (ToUnits != PHUnits)
+            {
+                // convert the numbers
+                if (ToUnits == PHSampleUnitsEnum.Water)
+                {
+                    PH = PHWater;
+                }
+                else
+                {
+                    PH = PHCaCl2;
+                }
+                PHUnits = ToUnits;
+            }
+        }
+
+
         #endregion
 
         #region Properties for returning variables with particular units
@@ -362,6 +446,32 @@ namespace Models.Soils
         }
 
         /// <summary>
+        /// Gets SW. Units: kg/kg.
+        /// </summary>
+        public double[] SWGravimetric
+        {
+            get
+            {
+                if (this.Soil != null && this.SW != null)
+                {
+                    if (this.SWUnits == SWUnitsEnum.Volumetric)
+                    {
+                        return MathUtilities.Divide(this.SW, this.Soil.BDMapped(this.Thickness));
+                    }
+                    else if (this.SWUnits == SWUnitsEnum.Gravimetric)
+                    {
+                        return this.SW;
+                    }
+                    else
+                    {
+                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
+                    }
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Gets SW. Units: mm/mm.
         /// </summary>
         public double[] SWVolumetric
@@ -407,6 +517,24 @@ namespace Models.Soils
         }
 
         /// <summary>
+        /// Gets organic carbon. Units: WalkleyBlack %
+        /// </summary>
+        public double[] OCWalkleyBlack
+        {
+            get
+            {
+                if (this.OCUnits == OCSampleUnitsEnum.Total)
+                {
+                    return MathUtilities.Divide_Value(this.OC, 1.3);
+                }
+                else
+                {
+                    return this.OC;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets PH. Units: (1:5 water)
         /// </summary>
         public double[] PHWater
@@ -425,6 +553,24 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>
+        /// Gets PH. Units: (1:5 water)
+        /// </summary>
+        public double[] PHCaCl2
+        {
+            get
+            {
+                if (this.PHUnits == PHSampleUnitsEnum.Water)
+                {
+                    // pH in CaCl = (pH in water + 0.1375) / 1.1045
+                    return MathUtilities.Divide_Value(MathUtilities.AddValue(PH, 0.1375), 1.1045);
+                }
+                else
+                {
+                    return this.PH;
+                }
+            }
+        }
         #endregion
 
         /// <summary>
