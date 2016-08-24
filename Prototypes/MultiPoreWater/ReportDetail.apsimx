@@ -655,8 +655,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Infiltration</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Infiltration</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -676,8 +676,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Irrigation</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -697,7 +697,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>IWeather.Rain</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -718,8 +718,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.pond</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Pond</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -759,8 +759,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -780,8 +780,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -801,8 +801,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -822,8 +822,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(4)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -843,8 +843,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(5)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -864,8 +864,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(6)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -885,8 +885,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SWmm(7)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SWmm(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -926,8 +926,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -947,8 +947,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -968,8 +968,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -989,8 +989,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1010,8 +1010,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1031,8 +1031,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1052,8 +1052,8 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1093,7 +1093,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Soil.MultiPoreWater.Infiltration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1114,7 +1114,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Irrigation.IrrigationApplied</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1135,7 +1135,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>IWeather.Rain</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1156,7 +1156,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Soil.MultiPoreWater.pond</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1177,7 +1177,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
+          <XFieldName>Date</XFieldName>
           <YFieldName>Soil.MultiPoreWater.Drainage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1206,5 +1206,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>285</ExplorerWidth>
+  <ExplorerWidth>329</ExplorerWidth>
 </Simulations>
