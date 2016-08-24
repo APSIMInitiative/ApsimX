@@ -226,6 +226,7 @@ namespace SWIMFrame
 
             while (t < tfin)
             {
+                Extensions.Log("Solve", "d", t);
                 //-----take next time step
                 for (iflux = 1; iflux <= 2; iflux++) //sometimes need twice to adjust h at satn
                 {
@@ -300,6 +301,7 @@ namespace SWIMFrame
                             break;
                         default:
                             Console.Out.WriteLine("solve: illegal bottom boundary condn");
+                            Extensions.WriteLog();
                             Environment.Exit(1);
                             break;
                     }
@@ -399,6 +401,7 @@ namespace SWIMFrame
                         if (itmp > 20)
                         {
                             Console.Out.WriteLine("solve: too many iterations of equation solution");
+                            Extensions.WriteLog();
                             Environment.Exit(1);
                         }
                         if (ns < 1)
