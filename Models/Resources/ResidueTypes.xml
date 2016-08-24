@@ -535,6 +535,7 @@
     <fom_type>all_cell</fom_type>
     <pot_decomp_rate>0.0</pot_decomp_rate>
     <fraction_C description="fraction of Carbon in FOM (0-1)">1.0    </fraction_C>
+    
     <fr_c>
       <double>0.0</double>
       <double>1.0</double>
