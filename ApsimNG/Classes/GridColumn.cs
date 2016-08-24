@@ -190,25 +190,19 @@ namespace UserInterface.Classes
         {
             get
             {
-                if (this.gridView.RowCount > 0)
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
                 {
-                    return ""; /// TBI this.gridView.Grid.Rows[0].Cells[this.ColumnIndex].ToolTipText;
+                    return label.TooltipText;
                 }
-
                 return null;
             }
 
             set
             {
-                /* TBI
-                for (int row = 0; row < this.gridView.Grid.RowCount; row++)
-                {
-                    if (row < value.Length)
-                    {
-                        this.gridView.Grid.Rows[row].Cells[this.ColumnIndex].ToolTipText = value;
-                    }
-                }
-                */
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                    label.TooltipText = value;
             }
         }
 
@@ -219,15 +213,21 @@ namespace UserInterface.Classes
         {
             get
             {
-                return System.Drawing.Color.White; /// TBI this.gridView.Grid.Columns[this.ColumnIndex].HeaderCell.Style.BackColor;
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                {
+                    Gdk.Color bg = label.Style.Backgrounds[0];
+                    return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
+                }
+                else
+                    return System.Drawing.Color.White;
             }
 
             set
             {
-                /* TBI
-                this.gridView.Grid.EnableHeadersVisualStyles = false;
-                this.gridView.Grid.Columns[this.ColumnIndex].HeaderCell.Style.BackColor = value;
-                */
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                    label.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
             }
         }
 
@@ -238,17 +238,26 @@ namespace UserInterface.Classes
         {
             get
             {
-                return System.Drawing.Color.Black; /// TBI this.gridView.Grid.Columns[this.ColumnIndex].HeaderCell.Style.ForeColor;
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                {
+                    Gdk.Color fg = label.Style.Foregrounds[0];
+                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
+                }
+                else
+                   return System.Drawing.Color.Black;
             }
 
             set
             {
-                /* TBI
-                this.gridView.Grid.EnableHeadersVisualStyles = false;
-                this.gridView.Grid.Columns[this.ColumnIndex].HeaderCell.Style.ForeColor = value;
-                */
+                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (label != null)
+                {
+                    label.ModifyFg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+                }
             }
         }
+
 
         /// <summary>
         /// Gets or sets the text of the header

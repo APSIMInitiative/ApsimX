@@ -5177,7 +5177,6 @@ namespace Models.Soils
             }
 
             //   get fluxes between nodes
-            double absgf = Math.Abs(gf);
             double w1, w2;
             double deltap;
             double deltax;

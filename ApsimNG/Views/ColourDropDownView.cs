@@ -27,10 +27,9 @@ namespace UserInterface.Views
     public class ColourDropDownView : ViewBase, IColourDropDownView
     {
         public enum ColourDropTypeEnum { Text, Colour };
-        private ColourDropTypeEnum type = ColourDropTypeEnum.Colour;
 
         private ComboBox combobox1;
-        private ListStore comboModel = new ListStore(typeof(string), typeof(Gdk.Color));
+        private ListStore comboModel = new ListStore(typeof(string), typeof(Gdk.Color), typeof(int)); // 3 values: text string, color, and an int enumerating whether we want to display text or colour
         private CellRendererText comboRender = new CellRendererText();
 
         /// <summary>Constructor</summary>
@@ -65,13 +64,16 @@ namespace UserInterface.Views
                 int i = 0;
                 if (combobox1.GetActiveIter(out iter))
                     do
-                        if (type == ColourDropTypeEnum.Text)
-                          result[i++] = comboModel.GetValue(iter, 0);
+                    {
+                        ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
+                        if (typeEnum == ColourDropTypeEnum.Text)
+                            result[i++] = (string)comboModel.GetValue(iter, 0);
                         else
                         {
                             Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
                             result[i++] = Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
                         }
+                    }
                     while (comboModel.IterNext(ref iter) && i < nVals);
                 return result;
             }
@@ -82,19 +84,21 @@ namespace UserInterface.Views
                 {
                     string text;
                     Gdk.Color color = Gdk.Color.Zero;
-                    if (val.GetType() == typeof(Color))
+                    Type valType = val.GetType();
+                    ColourDropTypeEnum typeEnum;
+                    if (valType == typeof(Color))
                     {
-                        type = ColourDropTypeEnum.Colour;
+                        typeEnum = ColourDropTypeEnum.Colour;
                         text = "";
                         color = new Gdk.Color(((Color)val).R, ((Color)val).G, ((Color)val).B);
                     }
                     else
                     {
-                        type = ColourDropTypeEnum.Text;
+                        typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
-                        Gdk.Color.Parse(text, ref color);
+                        color = combobox1.Style.Base(StateType.Normal);
                     }
-                    comboModel.AppendValues(text, color);
+                    comboModel.AppendValues(text, color, (int)typeEnum);
                 }
                 if (comboModel.IterNChildren() > 0)
                     combobox1.Active = 0;
@@ -111,13 +115,16 @@ namespace UserInterface.Views
             {
                 TreeIter iter;
                 if (combobox1.GetActiveIter(out iter))
-                    if (type == ColourDropTypeEnum.Text)
-                        return comboModel.GetValue(iter, 0);
+                {
+                    ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
+                    if (typeEnum == ColourDropTypeEnum.Text)
+                        return (string)comboModel.GetValue(iter, 0);
                     else
                     {
                         Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
                         return Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
                     }
+                }
                 else
                     return null;
             }
@@ -127,7 +134,8 @@ namespace UserInterface.Views
                 TreeIter iter;
                 if (comboModel.GetIterFirst(out iter))
                 {
-                    if (type == ColourDropTypeEnum.Text)
+                    ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
+                    if (typeEnum == ColourDropTypeEnum.Text)
                     {
                         string entry = (string)comboModel.GetValue(iter, 0);
                         while (!entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matching be case-insensitive?
@@ -141,7 +149,7 @@ namespace UserInterface.Views
                     {
                         Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
                         Color rgb = Color.FromArgb(entry.Red, entry.Green, entry.Blue);
-                        while (!rgb.Equals((Color)value) && comboModel.IterNext(ref iter)) // Should the text matching be case-insensitive?
+                        while (!rgb.Equals((Color)value) && comboModel.IterNext(ref iter))
                         {
                             entry = (Gdk.Color)comboModel.GetValue(iter, 1);
                             rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
