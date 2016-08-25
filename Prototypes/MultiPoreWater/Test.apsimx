@@ -491,7 +491,7 @@
         </Sample>
         <HydraulicProperties>
           <Name>HydraulicProperties</Name>
-          <psidul>-3.3</psidul>
+          <psidul>-100</psidul>
           <kdul>1</kdul>
         </HydraulicProperties>
         <RecordNumber>0</RecordNumber>
