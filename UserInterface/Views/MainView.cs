@@ -31,8 +31,9 @@ namespace UserInterface.Views
         void AddTab(string text, Image image, UserControl control, bool onLeftTabControl);
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">A control (normally an ExplorerView) on the tab to be modified.</param>
         /// <param name="newTabName">New text of the tab.</param>
+        /// <param name="tooltip">Tooltip to apply to the tab.</param>
         void ChangeTabText(object ownerView, string newTabName, string tooltip);
 
         /// <summary>Gets or set the main window position.</summary>
@@ -186,8 +187,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">A control (normally an ExplorerView) on the tab to be modified.</param>
         /// <param name="newTabName">New text of the tab.</param>
+        /// <param name="tooltip">Tooltip to apply to the tab.</param>
         public void ChangeTabText(object ownerView, string newTabName, string tooltip)
         {
             TabPage page = null;
@@ -278,6 +280,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Returns true if the object is a control on the left side
         /// </summary>
+        /// <param name="control">The control that is to be tested</param>
         public bool IsControlOnLeft(object control)
         {
             Control test = (control as Control);

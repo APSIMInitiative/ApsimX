@@ -862,6 +862,10 @@ namespace UserInterface.Presenters
             return view.GetScreenshotOfRightHandPanel();
         }
 
+        /// <summary>
+        /// Return the view attached to this presenter
+        /// </summary>
+        /// <returns>The attached ExplorerView, or null if not attached</returns>
         public ExplorerView GetView()
         {
             return view as ExplorerView;
