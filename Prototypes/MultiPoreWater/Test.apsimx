@@ -1657,7 +1657,7 @@ namespace Models
               <double>0.0005</double>
             </PoreBounds>
             <BottomBoundryConductance>100</BottomBoundryConductance>
-            <CalculateInfiltration>false</CalculateInfiltration>
+            <CalculateInfiltration>true</CalculateInfiltration>
             <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <ResidueWater>0</ResidueWater>
@@ -2375,7 +2375,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2416,7 +2416,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2457,7 +2457,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2539,7 +2539,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2580,7 +2580,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>

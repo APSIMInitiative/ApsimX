@@ -14,7 +14,12 @@ namespace Models.Soils
     public class Pore: Model
     {
         private double FloatingPointTolerance = 0.0000000001;
-        /// <summary>The thickness of the layer that the pore is within</summary>
+        /// <summary>The layer that this pore compartment is located in</summary>
+        [XmlIgnore]
+        public double Layer { get; set; }
+        /// <summary>The size compartment that this pore represents</summary>
+        [XmlIgnore]
+        public double Compartment { get; set; }/// <summary>The thickness of the layer that the pore is within</summary>
         [XmlIgnore]
         [Units("mm")]
         public double Thickness { get; set; }
@@ -56,7 +61,7 @@ namespace Models.Soils
                 if (value < -0.000000000001) throw new Exception("Trying to set a negative pore water depth");
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
-                    throw new Exception("Trying to put more water into " + this + "than will fit");
+                    throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
 
             }
         }
@@ -67,11 +72,27 @@ namespace Models.Soils
         /// <summary>The conductivity of water moving into a pore, The net result of gravity driving it in, capilary forces drawing it in and repellency stopping it</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivityIn { get; set; }
+        public double HydraulicConductivity { get; set; }
+        /// <summary>The conductivity of pores at this size as measured for a wetting soil</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityIn
+        {
+            get
+            {
+                return HydraulicConductivity;
+            }
+        }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivityOut { get; set; }
+        public double HydraulicConductivityOut
+        {
+            get
+            {
+                return HydraulicConductivity;
+            }
+        }
 
     }
 }

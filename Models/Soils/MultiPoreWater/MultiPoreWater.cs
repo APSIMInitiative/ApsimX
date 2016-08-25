@@ -369,6 +369,8 @@ namespace Models.Soils
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
+                    Pores[l][c].Layer = l;
+                    Pores[l][c].Compartment = c;
                     Pores[l][c].MaxDiameter = PoreBounds[c];
                     Pores[l][c].MinDiameter = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water.Thickness[l];
@@ -378,8 +380,8 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(ThisPoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
-                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.15);//arbitary function to give a range of hydraulic conductivity over pores
+                    double ThisPoreK = PoreK(PoreBounds[c], PoreBounds[c + 1], l);
+                    Pores[l][c].HydraulicConductivity = ThisPoreK;
                 }
                 if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
@@ -702,6 +704,29 @@ namespace Models.Soils
         private void doUpwardDiffusion()
         {
             //Move water up into lower layers if they are dryer than below
+        }
+        /// <summary>
+        /// This function returns a hydraulic conductivity calculated at the mean diameter of the pore compartment
+        /// </summary>
+        /// <param name="MaxDiameter"></param>
+        /// <param name="MinDiameter"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        private double PoreK(double MaxDiameter, double MinDiameter, int layer)
+        {
+            return (PointK(layer,MaxDiameter) + PointK(layer,MinDiameter))/2;
+        }
+        /// <summary>
+        /// This function returns the hydraulic conductivity calculated for a pore of a single specified diameter
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="PoreDiameter"></param>
+        /// <returns></returns>
+        private double PointK(int layer, double PoreDiameter)
+        {
+            double psi = -3000 / PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
+            double k = HyProps.SimpleK(layer, psi);
+            return k;
         }
         /// <summary>
         /// Calculates the proportion of total porosity the resides between the two specified pore diameters
