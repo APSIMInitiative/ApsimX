@@ -204,6 +204,8 @@ namespace Models.Soils
         private SurfaceOrganicMatter SurfaceOM = null;
         [Link]
         private Weather Met = null;
+        [Link]
+        private HydraulicProperties HyProps = null;
         #endregion
 
         #region Class Events
@@ -354,6 +356,8 @@ namespace Models.Soils
 
             }
 
+            HyProps.SetHydraulicProperties();
+
             Pores = new Pore[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
@@ -368,10 +372,10 @@ namespace Models.Soils
                     Pores[l][c].MaxDiameter = PoreBounds[c];
                     Pores[l][c].MinDiameter = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water.Thickness[l];
-                    double PoreVolume = Water.SAT[l] * ProportionPoreVolume(PoreBounds[c], PoreBounds[c + 1]);
-                    AccumVolume += PoreVolume;
-                    Pores[l][c].Volume = PoreVolume;
-                    double PoreWaterFilledVolume = Math.Min(PoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    double ThisPoreVolume = PoreVolume(PoreBounds[c], PoreBounds[c + 1],l);
+                    AccumVolume += ThisPoreVolume;
+                    Pores[l][c].Volume = ThisPoreVolume;
+                    double PoreWaterFilledVolume = Math.Min(ThisPoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
                     Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
@@ -704,19 +708,22 @@ namespace Models.Soils
         /// </summary>
         /// <param name="MaxDiameter"></param>
         /// <param name="MinDiameter"></param>
+        /// <param name="layer"></param>
         /// <returns>proportion of totol porosity</returns>
-        private double ProportionPoreVolume(double MaxDiameter, double MinDiameter)
+        private double PoreVolume(double MaxDiameter, double MinDiameter, int layer)
         {
-            return CumPoreVolume(MaxDiameter) - CumPoreVolume(MinDiameter);
+            return CumPoreVolume(MaxDiameter,layer) - CumPoreVolume(MinDiameter,layer);
         }
         /// <summary>
         /// Calculates the proportion of total porosity below the specified pore diameter
         /// </summary>
         /// <param name="PoreDiameter"></param>
+        /// <param name="layer"></param>
         /// <returns>proportion of total porosity</returns>
-        private double CumPoreVolume(double PoreDiameter)
+        private double CumPoreVolume(double PoreDiameter, int layer)
         {
-            double PoreVolume = PoreDiameter * 0.0003;
+            double psi = -Math.Pow(10.0,(-Math.Log(PoreDiameter,10) + 3.4857)); //psi cm head, the units the Hyprops calculator works in 
+            double PoreVolume = HyProps.SimpleTheta(layer,psi);
             return Math.Min(1,PoreVolume);
         }
         /// <summary>

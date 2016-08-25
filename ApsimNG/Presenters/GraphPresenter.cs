@@ -265,7 +265,8 @@ namespace UserInterface.Presenters
             AxisPresenter AxisPresenter = new AxisPresenter();
             currentPresenter = AxisPresenter;
             AxisView A = new AxisView(graphView as GraphView);
-            graphView.ShowEditorPanel(A.MainWidget, "Axis options");
+            string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
+            graphView.ShowEditorPanel(A.MainWidget, dimension + "-Axis options");
             AxisPresenter.Attach(GetAxis(axisType), A, explorerPresenter);
         }
 

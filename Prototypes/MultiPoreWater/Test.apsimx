@@ -154,15 +154,15 @@
         <MultiPoreWater>
           <Name>MultiPoreWater</Name>
           <PoreBounds>
-            <double>10000</double>
-            <double>3000</double>
-            <double>1000</double>
-            <double>300</double>
-            <double>100</double>
-            <double>60</double>
+            <double>30598</double>
+            <double>3059</double>
+            <double>305</double>
+            <double>76</double>
             <double>30</double>
             <double>3</double>
-            <double>0</double>
+            <double>0.75</double>
+            <double>0.2</double>
+            <double>0.0005</double>
           </PoreBounds>
           <BottomBoundryConductance>100</BottomBoundryConductance>
           <CalculateInfiltration>true</CalculateInfiltration>
@@ -498,6 +498,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <HydraulicProperties>
+          <Name>HydraulicProperties</Name>
+          <psidul>-100</psidul>
+          <kdul>1</kdul>
+        </HydraulicProperties>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>

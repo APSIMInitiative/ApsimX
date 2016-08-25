@@ -514,5 +514,78 @@
     <specific_area description="specific area of residue (ha/kg">0.000005  </specific_area>
     <fraction_C description="fraction of Carbon in FOM (0-1)">0.44    </fraction_C>
   </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>all_carb</fom_type>
+    <pot_decomp_rate>0.0</pot_decomp_rate>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">1.0    </fraction_C>
+    <fr_c>
+      <double>1.0</double>
+      <double>0.0</double>
+      <double>0.0</double>
+    </fr_c>
+    <fr_n>
+      <double>1.0</double>
+      <double>0.0</double>
+      <double>0.0</double>
+    </fr_n>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>all_cell</fom_type>
+    <pot_decomp_rate>0.0</pot_decomp_rate>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">1.0    </fraction_C>
+    <fr_c>
+      <double>0.0</double>
+      <double>1.0</double>
+      <double>0.0</double>
+    </fr_c>
+    <fr_n>
+      <double>0.0</double>
+      <double>1.0</double>
+      <double>0.0</double>
+    </fr_n>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>all_lign</fom_type>
+    <pot_decomp_rate>0.0</pot_decomp_rate>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">1.0    </fraction_C>
+    <fr_c>
+      <double>0.0</double>
+      <double>0.0</double>
+      <double>1.0</double>
+    </fr_c>
+    <fr_n>
+      <double>0.0</double>
+      <double>0.0</double>
+      <double>1.0</double>
+    </fr_n>
+  </ResidueType>
+  <ResidueType>
+    <fom_type>fyn</fom_type>
+    <fraction_C description="fraction of Carbon in FOM (0-1)">0.08    </fraction_C>
+    <pot_decomp_rate>0.1</pot_decomp_rate>
+    <fr_c>
+      <double>0.3</double>
+      <double>0.3</double>
+      <double>0.4</double>
+    </fr_c>
+    <fr_n>
+      <double>0.3</double>
+      <double>0.3</double>
+      <double>0.4</double>
+    </fr_n>
+    <fr_p>
+      <double>0.3</double>
+      <double>0.3</double>
+      <double>0.4</double>
+    </fr_p>
+    <po4ppm description="labile P concentration(ppm)">40.0     </po4ppm>
+    <nh4ppm description="ammonium N concentration (ppm)">0.0     </nh4ppm>
+    <no3ppm description="nitrate N concentration (ppm)">0.0     </no3ppm>
+    <specific_area description="specific area of residue (ha/kg)">0.0001  </specific_area>
+    <cf_contrib>1</cf_contrib>
+  </ResidueType>
 </ResidueTypesList>
 
