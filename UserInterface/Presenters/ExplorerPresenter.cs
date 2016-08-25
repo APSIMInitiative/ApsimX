@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
                     Utility.Configuration.Settings.AddMruFile(newFileName);
-                    MainPresenter.ChangeTabText(this.ApsimXFile.FileName, newFileName);
+                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     this.ApsimXFile.Write(newFileName);
                     return true;
                 }
@@ -862,6 +862,10 @@ namespace UserInterface.Presenters
             return view.GetScreenshotOfRightHandPanel();
         }
 
+        public ExplorerView GetView()
+        {
+            return view as ExplorerView;
+        }
         #endregion
     }
 

@@ -33,11 +33,7 @@ namespace UserInterface.Views
         /// <summary>Change the text of a tab.</summary>
         /// <param name="currentTabName">Current tab text.</param>
         /// <param name="newTabName">New text of the tab.</param>
-        void ChangeTabText(string currentTabName, string newTabName);
-
-        /// <summary>Close the tab with the specified name.</summary>
-        /// <param name="tabName">the name of the tab to close.</param>
-        void CloseTab(string tabName);
+        void ChangeTabText(object ownerView, string newTabName, string tooltip);
 
         /// <summary>Gets or set the main window position.</summary>
         Point WindowLocation { get; set; }
@@ -53,6 +49,11 @@ namespace UserInterface.Views
 
         /// <summary>Turn split window on/off</summary>
         bool SplitWindowOn { get; set; }
+
+        /// <summary>
+        /// Returns true if the object is a control on the left side
+        /// </summary>
+        bool IsControlOnLeft(object control);
 
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
@@ -90,6 +91,10 @@ namespace UserInterface.Views
         /// <summary>Close the application.</summary>
         /// <param name="askToSave">If true, will ask user whether they want to save.</param>
         void Close(bool askToSave = true);
+
+        /// <summary>Close a tab.</summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void CloseTabContaining(object o);
 
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
@@ -158,10 +163,20 @@ namespace UserInterface.Views
                 tabControl = tabControl1;
             else
                 tabControl = tabControl2;
-            tabControl.TabPages.Add(text, text, imageIndex);
+            string tabLabel;
+            // If the tab text passed in is a filename then only show the filename (no path)
+            // on the tab. The ToolTipText will still have the full path and name.
+            if (text.Contains(Path.DirectorySeparatorChar.ToString()))
+                tabLabel = Path.GetFileNameWithoutExtension(text);
+            else
+                tabLabel= text;
+            TabPage page = new TabPage();
+            page.Text = tabLabel;
+            page.ToolTipText = text;
+            page.ImageIndex = imageIndex;
+            tabControl.TabPages.Add(page);
 
             // Insert the control on the page.
-            TabPage page = tabControl.TabPages[tabControl.TabPages.Count - 1];
             page.Controls.Clear();
             page.Controls.Add(control);
             control.Dock = DockStyle.Fill;
@@ -173,23 +188,27 @@ namespace UserInterface.Views
         /// <summary>Change the text of a tab.</summary>
         /// <param name="currentTabName">Current tab text.</param>
         /// <param name="newTabName">New text of the tab.</param>
-        public void ChangeTabText(string currentTabName, string newTabName)
+        public void ChangeTabText(object ownerView, string newTabName, string tooltip)
         {
             TabPage page = null;
-            int index = tabControl1.TabPages.IndexOfKey(currentTabName);
-            if (index == -1)
+            if (ownerView is Control)
             {
-                index = tabControl2.TabPages.IndexOfKey(currentTabName);
-                if (index == -1)
-                    ShowMessage("Cannot find tab: " + currentTabName + ". Cannot rename tab", Models.DataStore.ErrorLevel.Error);
-                else
-                    page = tabControl2.TabPages[index];
+                Control test = ownerView as Control;
+                while (page == null && test != null)
+                {
+                    if (test is TabPage)
+                        page = test as TabPage;
+                    test = test.Parent;
+                }
             }
+
+            if (page == null)
+                ShowMessage("Error finding tab to rename", Models.DataStore.ErrorLevel.Error);
             else
-                page = tabControl1.TabPages[index];
-            
-            if (page != null)
+            {
                 page.Text = newTabName;
+                page.ToolTipText = tooltip;
+            }
         }
 
         /// <summary>Set the wait cursor (or not)/</summary>
@@ -209,19 +228,32 @@ namespace UserInterface.Views
             Close();
         }
 
-        /// <summary>Close the tab with the specified name.</summary>
-        /// <param name="tabName">the name of the tab to close.</param>
-        public void CloseTab(string tabName)
+        /// <summary>Close a tab containg a control.</summary>
+        /// <param name="o">A control appearing on the tab</param>
+        public void CloseTabContaining(object o)
         {
-            int index1 = tabControl1.TabPages.IndexOfKey(tabName);
-            int index2 = tabControl2.TabPages.IndexOfKey(tabName);
-            tabControl1.TabPages.RemoveByKey(tabName);
-            tabControl2.TabPages.RemoveByKey(tabName);
+            TabPage page = null;
+            if (o is Control)
+            {
+                Control test = o as Control;
+                while (page == null && test != null)
+                {
+                    if (test is TabPage)
+                        page = test as TabPage;
+                    test = test.Parent;
+                }
+            }
 
-            if (index1 != -1)
-                tabControl1.SelectedIndex = index1 - 1;
-            if (index2 != -1)
-                tabControl2.SelectedIndex = index2 - 1;
+            if (page == null)
+                ShowMessage("Error finding tab to close", Models.DataStore.ErrorLevel.Error);
+            else
+            {
+                TabControl tabControl = IsControlOnLeft(page) ? tabControl1 : tabControl2;
+                int index = tabControl.TabPages.IndexOf(page);
+                tabControl.TabPages.Remove(page);
+                if (index != -1)
+                    tabControl.SelectedIndex = index - 1;
+            }
         }
 
         /// <summary>Gets or set the main window position.</summary>
@@ -241,6 +273,23 @@ namespace UserInterface.Views
         {
             get { return !splitContainer.Panel2Collapsed; }
             set { splitContainer.Panel2Collapsed = !value; }
+        }
+
+        /// <summary>
+        /// Returns true if the object is a control on the left side
+        /// </summary>
+        public bool IsControlOnLeft(object control)
+        {
+            Control test = (control as Control);
+            while (test != null)
+            {
+                if (test == tabControl1)
+                    return true;
+                else if (test == tabControl2)
+                    return false;
+                test = test.Parent;
+            }
+            return false;
         }
 
         /// <summary>Ask user for a filename to open.</summary>
