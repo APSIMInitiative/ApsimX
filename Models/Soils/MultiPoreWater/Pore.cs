@@ -13,6 +13,7 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
+        private double FloatingPointTolerance = 0.0000000001;
         /// <summary>The thickness of the layer that the pore is within</summary>
         [XmlIgnore]
         [Units("mm")]
@@ -25,10 +26,14 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("nm")]
         public double MinDiameter { get; set; }
-        /// <summary>The volume of the the pore</summary>
+        /// <summary>The volume of the the pore relative to the volume of soil</summary>
         [XmlIgnore]
         [Units("ml/ml")]
         public double Volume { get; set; }
+        /// <summary>The volume of the the pore in mm</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double VolumeDepth { get { return Volume * Thickness; } }
         /// <summary>The water filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -50,6 +55,9 @@ namespace Models.Soils
             {
                 if (value < -0.000000000001) throw new Exception("Trying to set a negative pore water depth");
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
+                if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
+                    throw new Exception("Trying to put more water into " + this + "than will fit");
+
             }
         }
         /// <summary>The depth of Air in the pore</summary>
