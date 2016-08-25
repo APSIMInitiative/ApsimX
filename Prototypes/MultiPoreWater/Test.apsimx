@@ -1657,7 +1657,7 @@ namespace Models
               <double>0.0005</double>
             </PoreBounds>
             <BottomBoundryConductance>100</BottomBoundryConductance>
-            <CalculateInfiltration>true</CalculateInfiltration>
+            <CalculateInfiltration>false</CalculateInfiltration>
             <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <ResidueWater>0</ResidueWater>
@@ -2209,7 +2209,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -2274,7 +2274,7 @@ namespace Models
           <YFieldName>ProfileWater</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
+          <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -2291,7 +2291,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -2317,7 +2317,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2334,7 +2334,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2358,7 +2358,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2399,7 +2399,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2440,7 +2440,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2481,7 +2481,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2498,7 +2498,7 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -2522,7 +2522,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2563,7 +2563,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2607,7 +2607,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2648,7 +2648,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2689,7 +2689,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2730,7 +2730,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2771,7 +2771,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2812,7 +2812,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
@@ -2853,7 +2853,7 @@ namespace Models
             <YFieldName>Soil.SoilWater.SWmm(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
+            <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
