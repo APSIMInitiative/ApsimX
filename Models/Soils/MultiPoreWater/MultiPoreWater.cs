@@ -722,7 +722,7 @@ namespace Models.Soils
         /// <returns>proportion of total porosity</returns>
         private double CumPoreVolume(double PoreDiameter, int layer)
         {
-            double psi = -Math.Pow(10.0,(-Math.Log(PoreDiameter,10) + 3.4857)); //psi cm head, the units the Hyprops calculator works in 
+            double psi = -3000/PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
             double PoreVolume = HyProps.SimpleTheta(layer,psi);
             return Math.Min(1,PoreVolume);
         }
