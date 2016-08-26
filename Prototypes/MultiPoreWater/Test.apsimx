@@ -145,7 +145,7 @@
             <double>10</double>
             <double>10</double>
             <double>20</double>
-            <double>1</double>
+            <double>20</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -484,13 +484,13 @@
             <double>300</double>
           </Thickness>
           <SW>
-            <double>0.6</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.56</double>
-            <double>0.55</double>
-            <double>0.54</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
           </SW>
           <NO3Units>ppm</NO3Units>
           <NH4Units>ppm</NH4Units>

@@ -13,13 +13,13 @@
       <StartDate>1999-01-01T00:00:00</StartDate>
       <EndDate>1999-02-20T00:00:00</EndDate>
     </Clock>
+    <Summary>
+      <Name>SummaryFile</Name>
+    </Summary>
     <Weather>
       <Name>Weather</Name>
       <FileName>lincoln.met</FileName>
     </Weather>
-    <Summary>
-      <Name>SummaryFile</Name>
-    </Summary>
     <Zone>
       <Name>Field</Name>
       <Report>
@@ -138,13 +138,13 @@
             <double>0.54</double>
           </SAT>
           <KS>
-            <double>10</double>
-            <double>10</double>
-            <double>20</double>
-            <double>1</double>
-            <double>20</double>
-            <double>20</double>
-            <double>20</double>
+            <double>30</double>
+            <double>30</double>
+            <double>30</double>
+            <double>30</double>
+            <double>30</double>
+            <double>30</double>
+            <double>30</double>
           </KS>
         </Water>
         <MultiPoreWater>
@@ -161,7 +161,7 @@
             <double>0.0005</double>
           </PoreBounds>
           <BottomBoundryConductance>100</BottomBoundryConductance>
-          <CalculateInfiltration>false</CalculateInfiltration>
+          <CalculateInfiltration>true</CalculateInfiltration>
           <CalculateDrainage>true</CalculateDrainage>
           <ReportDetail>true</ReportDetail>
           <ResidueWater>0</ResidueWater>
@@ -480,13 +480,13 @@
             <double>300</double>
           </Thickness>
           <SW>
-            <double>0.6</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.56</double>
-            <double>0.55</double>
-            <double>0.54</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
+            <double>0.25</double>
           </SW>
           <NO3Units>ppm</NO3Units>
           <NH4Units>ppm</NH4Units>
@@ -577,8 +577,8 @@
       <Manager>
         <Name>Irrigate on a fixed date</Name>
         <Script>
-          <IrrigateDate>1-feb</IrrigateDate>
-          <Amount>50</Amount>
+          <IrrigateDate>2-Jan</IrrigateDate>
+          <Amount>100</Amount>
           <Depth>0</Depth>
           <Efficiency>1</Efficiency>
           <WillRunoff>False</WillRunoff>
@@ -639,6 +639,49 @@ namespace Models
           <string>[Clock].DoInitialSummary</string>
         </EventNames>
       </Report>
+      <Manager>
+        <Name>ClimateControl</Name>
+        <Script>
+          <StartDate>1998-01-01</StartDate>
+          <EndDate>1998-02-20</EndDate>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Weather Met;
+		[Link] Clock Clock;
+    
+		[Description("Start Date")]
+		public DateTime StartDate { get; set; }
+        
+		[Description("End Date")]
+		public DateTime EndDate { get; set; }
+ 
+    
+		[EventSubscribe("PreparingNewWeatherData")]
+		private void OnPreparingNewWeatherData(object sender, EventArgs e)
+		{
+			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
+				Met.Rain = 0;		
+		}
+	}
+}]]></Code>
+      </Manager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -664,7 +707,7 @@ namespace Models
           <YFieldName>Infiltration</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -689,7 +732,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Rainfall</Name>
+          <Name>Drainage</Name>
           <Type>Bar</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -703,10 +746,10 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>IWeather.Rain</YFieldName>
+          <YFieldName>Drainage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
@@ -725,7 +768,7 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Pond</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -1099,7 +1142,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Infiltration</YFieldName>
+          <YFieldName>Infiltration</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -1120,10 +1163,10 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <YFieldName>Irrigation</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
+          <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
