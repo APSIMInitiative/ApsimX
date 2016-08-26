@@ -14,7 +14,7 @@ using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using Models.PMF.Functions;
 
 namespace Models.Soils
 {
@@ -28,6 +28,8 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class MultiPoreWater : Model, ISoilWater
     {
+        
+        
         #region IsoilInterface
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
@@ -206,6 +208,11 @@ namespace Models.Soils
         private HydraulicProperties HyProps = null;
         #endregion
 
+        #region Class Events
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler ReportDetails;
+        #endregion
+
         #region Structures
         /// <summary>
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
@@ -237,13 +244,18 @@ namespace Models.Soils
         /// <summary>
         /// Allow infiltration processes to be switched off from the UI
         /// </summary>
-        [Description("Do you want the soil water model to calculate infiltration processes.  Normally yes, this is for testing")]
+        [Description("Calculate infiltration processes?.  Normally yes, this is for testing")]
         public bool CalculateInfiltration { get; set; }
         /// <summary>
         /// Allow drainage processes to be switched off from the UI
         /// </summary>
-        [Description("Do you want the soil water model to calculate draiange processes.  Normally yes, this is for testing")]
+        [Description("Calculate draiange processes.  Normally yes, this is for testing")]
         public bool CalculateDrainage { get; set; }
+        /// <summary>
+        /// Allow output of soil water content of all pores at each time step
+        /// </summary>
+        [Description("Report SW at all timesteps.  lots of data")]
+        public bool ReportDetail { get; set; }
         #endregion
 
         #region Outputs
@@ -251,6 +263,38 @@ namespace Models.Soils
         /// The amount of water stored in the surface residue
         /// </summary>
         public double ResidueWater { get; set; }
+        /// <summary>
+        /// Data object to put the water content of each pore into
+        /// </summary>
+        public double[][] PoreWater { get; set; }
+        /// <summary>
+        /// Describes the process just completed
+        /// </summary>
+        public string Process { get; set; }
+        /// <summary>
+        /// the current hour in the process
+        /// </summary>
+        public int Hour { get; set; }
+        /// <summary>
+        /// The layer that is current encountering water flux
+        /// </summary>
+        public int ReportLayer { get; set; }
+        /// <summary>
+        /// Number of times water deltas have occured
+        /// </summary>
+        public int TimeStep { get; set; }
+        /// <summary>
+        /// Hydraulic concutivitiy into each pore
+        /// </summary>
+        [Summary]
+        [Description("The hydraulic conducitivity of water into the pore")]
+        public double[][] HydraulicConductivityIn { get; set; }
+        /// <summary>
+        /// Hydraulic concutivitiy out of each pore
+        /// </summary>
+        [Summary]
+        [Description("The hydraulic conducitivity of water out of the pore")]
+        public double[][] HydraulicConductivityOut { get; set; }
         #endregion
 
         #region Properties
@@ -325,6 +369,8 @@ namespace Models.Soils
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
+                    Pores[l][c].Layer = l;
+                    Pores[l][c].Compartment = c;
                     Pores[l][c].MaxDiameter = PoreBounds[c];
                     Pores[l][c].MinDiameter = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water.Thickness[l];
@@ -334,8 +380,8 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(ThisPoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    Pores[l][c].HydraulicConductivityIn = ProfileParams.Ksat[l] * (PoreCompartments / (c + 1)) / PoreCompartments; //Arbitary function to give different KS values for each pore
-                    Pores[l][c].HydraulicConductivityOut = Math.Max(0, Pores[l][c].HydraulicConductivityIn - ProfileParams.Ksat[l] * 0.5);//arbitary function to give a range of hydraulic conductivity over pores
+                    double ThisPoreK = PoreK(PoreBounds[c], PoreBounds[c + 1], l);
+                    Pores[l][c].HydraulicConductivity = ThisPoreK;
                 }
                 if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
@@ -348,6 +394,37 @@ namespace Models.Soils
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
+
+            HydraulicConductivityIn = new double[ProfileLayers][];
+            HydraulicConductivityOut = new double[ProfileLayers][];
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                HydraulicConductivityIn[l] = new double[PoreCompartments];
+                HydraulicConductivityOut[l] = new double[PoreCompartments];
+                for (int c = 0; c < PoreCompartments; c++)
+                {
+                    HydraulicConductivityIn[l][c] = new double();
+                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
+                    HydraulicConductivityOut[l][c] = new double();
+                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
+                }
+            }
+
+            
+
+            if (ReportDetail)
+            {
+                PoreWater = new double[ProfileLayers][];
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    PoreWater[l] = new double[PoreCompartments];
+                    for (int c = 0; c < PoreCompartments; c++)
+                    {
+                        PoreWater[l][c] = new double();
+                    }
+                }
+            }
+            DoDetailReport("Initialisation",0,0);
         }
         /// <summary>
         /// Called at the start of each daily timestep
@@ -375,9 +452,6 @@ namespace Models.Soils
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-            //
-            
-            
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
             for (int h = 0; h < 24; h++)
@@ -387,6 +461,7 @@ namespace Models.Soils
                 InitialResidueWater = ResidueWater;
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
+                DoDetailReport("UpdatePond",0,h);
                 //Then we work out how much of this may percolate into the profile each hour
                 doPercolationCapacity();
                 //Now we know how much water can infiltrate into the soil, lets put it there if we have some
@@ -543,6 +618,7 @@ namespace Models.Soils
             for (int l = 0; l < ProfileLayers && RemainingInfiltration > 0; l++)
             { //Start process in the top layer
                 DistributWaterInFlux(l, ref RemainingInfiltration);
+                DoDetailReport("Infiltrate",l,h);
             }
             //Add infiltration to daily sum for reporting
             Hourly.Infiltration[h] = WaterToInfiltrate;
@@ -572,11 +648,12 @@ namespace Models.Soils
                 //Discharge water from current layer
                 for (int c = 0; c < PoreCompartments && OutFluxCurrentLayer > 0; c++)
                 {//Step through each pore compartment and remove the water that drains starting with the largest pores
-                    double drain = Math.Min(OutFluxCurrentLayer, Pores[l][c].HydraulicConductivityOut);
+                    double drain = Math.Min(OutFluxCurrentLayer, Math.Min(Pores[l][c].WaterDepth,Pores[l][c].HydraulicConductivityOut));
                     Pores[l][c].WaterDepth -= drain;
                     OutFluxCurrentLayer -= drain;
+                    DoDetailReport("Drain", l, h);
                 }
-                if (OutFluxCurrentLayer != 0)
+                if (Math.Abs(OutFluxCurrentLayer) > FloatingPointTolerance)
                     throw new Exception("Error in drainage calculation");
 
                 //Distribute water from this layer into the profile below and record draiange out the bottom
@@ -585,7 +662,10 @@ namespace Models.Soils
                 {
                     //Any water not stored by this layer will flow to the layer below as saturated drainage
                     if (l1 < ProfileLayers)
+                    {
+                        DoDetailReport("Redistribute", l1, h);
                         DistributWaterInFlux(l1, ref InFluxLayerBelow);
+                    }
                     //If it is the bottom layer, any discharge recorded as drainage from the profile
                     else
                     {
@@ -626,6 +706,29 @@ namespace Models.Soils
             //Move water up into lower layers if they are dryer than below
         }
         /// <summary>
+        /// This function returns a hydraulic conductivity calculated at the mean diameter of the pore compartment
+        /// </summary>
+        /// <param name="MaxDiameter"></param>
+        /// <param name="MinDiameter"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        private double PoreK(double MaxDiameter, double MinDiameter, int layer)
+        {
+            return (PointK(layer,MaxDiameter) + PointK(layer,MinDiameter))/2;
+        }
+        /// <summary>
+        /// This function returns the hydraulic conductivity calculated for a pore of a single specified diameter
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="PoreDiameter"></param>
+        /// <returns></returns>
+        private double PointK(int layer, double PoreDiameter)
+        {
+            double psi = -3000 / PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
+            double k = HyProps.SimpleK(layer, psi);
+            return k * 10;  //HyProps returns K in cm/h, multiply by 10 to convert to mm/h
+        }
+        /// <summary>
         /// Calculates the proportion of total porosity the resides between the two specified pore diameters
         /// </summary>
         /// <param name="MaxDiameter"></param>
@@ -644,7 +747,7 @@ namespace Models.Soils
         /// <returns>proportion of total porosity</returns>
         private double CumPoreVolume(double PoreDiameter, int layer)
         {
-            double psi = -Math.Pow(10.0,(-Math.Log(PoreDiameter,10) + 3.4857)); //psi cm head, the units the Hyprops calculator works in 
+            double psi = -3000/PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
             double PoreVolume = HyProps.SimpleTheta(layer,psi);
             return Math.Min(1,PoreVolume);
         }
@@ -701,6 +804,28 @@ namespace Models.Soils
             {
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+            }
+        }
+
+        private void DoDetailReport(string CallingProcess,int Layer,int hour)
+        {
+            if (ReportDetail)
+            {
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    for (int c = 0; c < PoreCompartments; c++)
+                    {
+                        if (Pores[l][c].WaterFilledVolume == 0)
+                            PoreWater[l][c] = 0;
+                        else
+                            PoreWater[l][c] = Pores[l][c].RelativeWaterContent;
+                    }
+                }
+                Process = CallingProcess;
+                ReportLayer = Layer;
+                Hour = hour;
+                TimeStep += 1;
+                ReportDetails.Invoke(this, new EventArgs());
             }
         }
         #endregion
