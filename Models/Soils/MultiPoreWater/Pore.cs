@@ -31,6 +31,14 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("nm")]
         public double MinDiameter { get; set; }
+        /// <summary>The mean pore diameter</summary>
+        [XmlIgnore]
+        [Units("nm")]
+        public double Diameter { get { return (MaxDiameter + MinDiameter) / 2; } }
+        /// <summary>The water potential at mean diameter</summary>
+        [XmlIgnore]
+        [Units("cm")]
+        public double Psi { get { return -3000 / Diameter; } }
         /// <summary>The volume of the the pore relative to the volume of soil</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -43,6 +51,10 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double WaterFilledVolume { get { return WaterDepth / Thickness; } }
+        /// <summary>The water filled volume of the pore relative to the air space</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double RelativeWaterContent { get { return WaterFilledVolume / Volume; } }
         /// <summary>The air filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -73,14 +85,14 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm/h")]
         public double HydraulicConductivity { get; set; }
-        /// <summary>The conductivity of pores at this size as measured for a wetting soil</summary>
+        /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]
         public double HydraulicConductivityIn
         {
             get
             {
-                return HydraulicConductivity;
+                return HydraulicConductivity * AdsorptionFactor;
             }
         }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
@@ -90,9 +102,33 @@ namespace Models.Soils
         {
             get
             {
-                return HydraulicConductivity;
+                return HydraulicConductivity * CapillaryFactor;
             }
         }
-
+        /// <summary>
+        /// Factor describing the effects of Adsorption of water onto solid pore surfaces.  Has a value of 1 when soil is non-repellent and decreases as pore becomes more hydrophobic
+        /// </summary>
+        public double AdsorptionFactor
+        {
+            get
+            {
+                double AbsFac = 1;
+                if (RelativeWaterContent < 0.3)
+                    AbsFac = 0.3;
+                return AbsFac;
+            }
+        }
+        /// <summary>
+        /// Factor describing the effects of water surface tension holding water in pores.  Is zero where surface tension exceeds the forces of gravity and neglegable where suction is low in larger pores
+        /// equals 1
+        /// </summary>
+        public double CapillaryFactor
+        {
+            get
+            {
+                double GravityPotential = -100; //Fix me.  Make Gravity Potential a function of distance from water table
+                return Math.Max(0,Psi-GravityPotential)/-GravityPotential;
+            }
+        }
     }
 }
