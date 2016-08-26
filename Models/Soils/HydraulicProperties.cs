@@ -156,11 +156,11 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Simples the k.
+        /// Calcultates and returns hydraulic conductivity in cm/h
         /// </summary>
         /// <param name="layer">The layer.</param>
         /// <param name="psiValue">The psi value.</param>
-        /// <returns></returns>
+        /// <returns>Hydraulic Conductivity</returns>
         public double SimpleK(int layer, double psiValue)
         {
             //  Purpose

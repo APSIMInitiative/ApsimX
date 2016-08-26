@@ -14,7 +14,7 @@ using Models.Soils;
 using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using Models.PMF.Functions;
 
 namespace Models.Soils
 {
@@ -726,7 +726,7 @@ namespace Models.Soils
         {
             double psi = -3000 / PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
             double k = HyProps.SimpleK(layer, psi);
-            return k;
+            return k * 10;  //HyProps returns K in cm/h, multiply by 10 to convert to mm/h
         }
         /// <summary>
         /// Calculates the proportion of total porosity the resides between the two specified pore diameters
@@ -815,7 +815,10 @@ namespace Models.Soils
                 {
                     for (int c = 0; c < PoreCompartments; c++)
                     {
-                        PoreWater[l][c] = Pores[l][c].WaterFilledVolume / Pores[l][c].Volume;
+                        if (Pores[l][c].WaterFilledVolume == 0)
+                            PoreWater[l][c] = 0;
+                        else
+                            PoreWater[l][c] = Pores[l][c].RelativeWaterContent;
                     }
                 }
                 Process = CallingProcess;
