@@ -40,16 +40,16 @@
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.startPage1 = new System.Windows.Forms.TabPage();
+            this.listButtonView1 = new ListButtonView();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.startPage2 = new System.Windows.Forms.TabPage();
+            this.listButtonView2 = new ListButtonView();
             this.statusPanel = new System.Windows.Forms.Panel();
             this.StatusWindow = new System.Windows.Forms.TextBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.listButtonView1 = new ListButtonView();
-            this.listButtonView2 = new ListButtonView();
             this.tabPopupMenu1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -127,6 +127,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.ShowToolTips = true;
             this.tabControl1.Size = new System.Drawing.Size(769, 441);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseDown);
@@ -143,6 +144,15 @@
             this.startPage1.Text = "+";
             this.startPage1.UseVisualStyleBackColor = true;
             // 
+            // listButtonView1
+            // 
+            this.listButtonView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listButtonView1.Location = new System.Drawing.Point(4, 4);
+            this.listButtonView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.listButtonView1.Name = "listButtonView1";
+            this.listButtonView1.Size = new System.Drawing.Size(753, 404);
+            this.listButtonView1.TabIndex = 0;
+            // 
             // tabControl2
             // 
             this.tabControl2.ContextMenuStrip = this.tabPopupMenu2;
@@ -152,6 +162,7 @@
             this.tabControl2.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.ShowToolTips = true;
             this.tabControl2.Size = new System.Drawing.Size(96, 100);
             this.tabControl2.TabIndex = 1;
             this.tabControl2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseDown);
@@ -182,6 +193,15 @@
             this.startPage2.TabIndex = 0;
             this.startPage2.Text = "+";
             this.startPage2.UseVisualStyleBackColor = true;
+            // 
+            // listButtonView2
+            // 
+            this.listButtonView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listButtonView2.Location = new System.Drawing.Point(4, 4);
+            this.listButtonView2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.listButtonView2.Name = "listButtonView2";
+            this.listButtonView2.Size = new System.Drawing.Size(80, 63);
+            this.listButtonView2.TabIndex = 0;
             // 
             // statusPanel
             // 
@@ -225,24 +245,6 @@
             this.splitter1.Size = new System.Drawing.Size(769, 3);
             this.splitter1.TabIndex = 16;
             this.splitter1.TabStop = false;
-            // 
-            // listButtonView1
-            // 
-            this.listButtonView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listButtonView1.Location = new System.Drawing.Point(4, 4);
-            this.listButtonView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.listButtonView1.Name = "listButtonView1";
-            this.listButtonView1.Size = new System.Drawing.Size(753, 404);
-            this.listButtonView1.TabIndex = 0;
-            // 
-            // listButtonView2
-            // 
-            this.listButtonView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listButtonView2.Location = new System.Drawing.Point(4, 4);
-            this.listButtonView2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.listButtonView2.Name = "listButtonView2";
-            this.listButtonView2.Size = new System.Drawing.Size(80, 63);
-            this.listButtonView2.TabIndex = 0;
             // 
             // MainView
             // 
