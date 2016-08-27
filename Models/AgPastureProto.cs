@@ -2310,6 +2310,14 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the canopy  (mm)</summary>
+        [Description("Sward average root depth")]
+        [Units("mm")]
+        public double RootDepth
+        {
+            get { return p_rootFrontier; }
+        }
+
         /// <summary>Gets the RLV.</summary>
         /// <value>The RLV.</value>
         [Description("Root length density")]

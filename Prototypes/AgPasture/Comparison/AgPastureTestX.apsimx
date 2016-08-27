@@ -1372,6 +1372,8 @@ namespace Models
             <string>[AgPasture].SpeciesTotalLAI[1] as Ryegrass.TotalLAI</string>
             <string>[AgPasture].SpeciesGreenLAI[1] as Ryegrass.GreenLAI</string>
             <string>[AgPasture].SpeciesDeadLAI[1] as Ryegrass.DeadLAI</string>
+            <string>[AgPasture].Height as Ryegrass.Height</string>
+            <string>[AgPasture].RootDepth as Ryegrass.RootDepth</string>
             <string>[AgPasture].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[AgPasture].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[AgPasture].GLFnConcentration as Ryegrass.GlfNConcentration</string>
@@ -4764,6 +4766,8 @@ namespace Models
             <string>[Sward].Ryegrass.TotalLAI as Ryegrass.TotalLAI</string>
             <string>[Sward].Ryegrass.GreenLAI as Ryegrass.GreenLAI</string>
             <string>[Sward].Ryegrass.DeadLAI as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
+            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNConcentration as Ryegrass.GlfNConcentration</string>
@@ -8176,6 +8180,8 @@ namespace Models
             <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
             <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
+            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
@@ -11649,6 +11655,8 @@ namespace Models
             <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
             <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
             <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].Height as Ryegrass.Height</string>
+            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
@@ -11764,9 +11772,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Results_MassBalance</TableName>
+            <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDigestibility</YFieldName>
+            <YFieldName>Ryegrass.Height</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11785,9 +11793,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Results_MassBalance</TableName>
+            <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.HerbageDigestibility</YFieldName>
+            <YFieldName>Ryegrass.HeightNew</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13849,9 +13857,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Results_MassBalance</TableName>
+          <TableName>Results_Species</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>Ryegrass.HerbageDigestibilityOld</YFieldName>
+          <YFieldName>Ryegrass.Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13870,9 +13878,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Results_MassBalance</TableName>
+          <TableName>Results_Species</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>Ryegrass.HerbageDigestibility</YFieldName>
+          <YFieldName>Ryegrass.HeightNew</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -14430,7 +14438,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Results_Species</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+        <YFieldName>Ryegrass.Height</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -15965,6 +15973,8 @@ namespace Models
             <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
             <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
+            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
@@ -19441,6 +19451,8 @@ namespace Models
             <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
             <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
             <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].Height as Ryegrass.Height</string>
+            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>

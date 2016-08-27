@@ -785,6 +785,8 @@ public class Script
           <variable>LAI_total as Ryegrass.TotalLAI</variable>
           <variable>LAI_green as Ryegrass.GreenLAI</variable>
           <variable>LAI_dead as Ryegrass.DeadLAI</variable>
+          <variable>Height as Ryegrass.Height</variable>
+          <variable>rootDepth as Ryegrass.RootDepth</variable>
           <variable>SpeciesRadnFactor() as Ryegrass.GlfRadnIntercept</variable>
           <variable>SpeciesCO2Factor() as Ryegrass.GlfCO2</variable>
           <variable>GLFnConcentration as Ryegrass.GlfNConcentration</variable>
@@ -2706,6 +2708,8 @@ End Class
           <variable>SpeciesTotalLAI(1) as Ryegrass.TotalLAI</variable>
           <variable>SpeciesGreenLAI(1) as Ryegrass.GreenLAI</variable>
           <variable>SpeciesDeadLAI(1) as Ryegrass.DeadLAI</variable>
+          <variable>speciesHeight(1) as Ryegrass.Height</variable>
+          <variable>speciesRootDepth(1) as Ryegrass.RootDepth</variable>
           <variable>SpeciesRadnFactor(1) as Ryegrass.GlfRadnIntercept</variable>
           <variable>SpeciesCO2Factor(1) as Ryegrass.GlfCO2</variable>
           <variable>SpeciesNconcFactor(1) as Ryegrass.GlfNConcentration</variable>
@@ -3321,8 +3325,6 @@ End Class
     </Graph>
     <Graph name="DMYield">
       <Legend>
-        <CheckedTitles> Cumulative Ryegrass.HarvestedWt, Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
-        <CheckedTitles> Cumulative Ryegrass.HarvestedWt, {Checkpoint} Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
         <CheckedTitles> Cumulative Ryegrass.HarvestedWt, Ryegrass AgPastureClassic Results_Species</CheckedTitles>
         <CheckedTitles> Cumulative Ryegrass.HarvestedWt, {Checkpoint} Ryegrass AgPastureClassic Results_Species</CheckedTitles>
       </Legend>
@@ -3411,6 +3413,21 @@ End Class
         </colour>
         <X>Date</X>
         <YRight>Cumulative Ryegrass.GrossPotentialGrowthWt</YRight>
+        <GDApsimFileReader name="ApsimFileReader" />
+      </Plot>
+    </Graph>
+    <Graph name="PotGrowth1">
+      <Legend>
+        <CheckedTitles> Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+        <CheckedTitles> Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+      </Legend>
+      <Plot>
+        <SeriesType>Solid line</SeriesType>
+        <PointType>None</PointType>
+        <colour>
+        </colour>
+        <X>Date</X>
+        <Y>Ryegrass.Height</Y>
         <GDApsimFileReader name="ApsimFileReader" />
       </Plot>
     </Graph>

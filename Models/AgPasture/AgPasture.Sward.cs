@@ -1056,6 +1056,27 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Gets the sward's average height.</summary>
+        /// <value>The sward height.</value>
+        [Description("Average height of sward")]
+        [Units("mm")]
+        public double Height
+        {
+            get
+            {
+                double result = 0.0;
+                if (StandingWt > 0.0)
+                {
+                    for (int s = 0; s < NumSpecies; s++)
+                        result += mySpecies[s].Height * mySpecies[s].StandingWt;
+
+                    result /= StandingWt;
+                }
+
+                return result;
+            }
+        }
+
         #endregion
 
         #region - Root depth and distribution  -----------------------------------------------------------------------------

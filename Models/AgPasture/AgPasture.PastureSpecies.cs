@@ -149,11 +149,11 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the canopy height (mm)</summary>
-        [Description("Plants average height")]
+        [Description("The average height of plants (mm)")]
         [Units("mm")]
         public double Height
         {
-            get { return Math.Max(20.0, HeightFromMass.Value(StandingWt)); } // TODO: update this function
+            get { return HeightfromDM(); }
         }
 
         /// <summary>Gets the canopy depth (mm)</summary>
@@ -844,14 +844,6 @@ namespace Models.AgPasture
         private double degreesDayForMaturity = 0.0;
 
         // - Other parameters  ----------------------------------------------------------------------------------------
-
-        /// <summary>Broken stick type function describing how plant height varies with DM</summary>
-        [XmlIgnore]
-        public BrokenStick HeightFromMass = new BrokenStick
-        {
-            X = new double[5] {0, 1000, 2000, 3000, 4000},
-            Y = new double[5] {0, 25, 75, 150, 250}
-        };
 
         /// <summary>The FVPD function</summary>
         [XmlIgnore]
@@ -2906,7 +2898,7 @@ namespace Models.AgPasture
             myCanopyProperties.Name = Name;
             myCanopyProperties.CoverGreen = CoverGreen;
             myCanopyProperties.CoverTot = CoverTotal;
-            myCanopyProperties.CanopyDepth = Height;
+            myCanopyProperties.CanopyDepth = Depth;
             myCanopyProperties.CanopyHeight = Height;
             myCanopyProperties.LAIGreen = LAIGreen;
             myCanopyProperties.LAItot = LAITotal;
@@ -4577,6 +4569,24 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Calculates the plant height as function of DM</summary>
+        /// <returns>Plant height (mm)</returns>
+        internal double HeightfromDM()
+        {
+            double TodaysHeight = MaximumPlantHeight;
+
+            // TODO: remove the multiplier (0.1) when DM is given in g/m2
+            if (StandingWt * 0.1 <= MassForMaximumHeight)
+            {
+                double massRatio = StandingWt * 0.1 / MassForMaximumHeight;
+                double heightF = ExponentHeightFromMass - (ExponentHeightFromMass * massRatio) + massRatio;
+                heightF *= Math.Pow(massRatio, ExponentHeightFromMass - 1);
+                TodaysHeight *= heightF;
+            }
+
+            return Math.Max(TodaysHeight, MinimumPlantHeight);
+        }
+
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material</summary>
         private void EvaluateLAI()
         {
@@ -5479,26 +5489,6 @@ namespace Models.AgPasture
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Plant height calculation based on DM
-        /// </summary>
-        /// <returns>Plant height (mm)</returns>
-        private double HeightfromDM()
-        {
-            //double TodaysHeight = MaxPlantHeight[0] - MinimumHeight;
-            double TodaysHeight = MaximumPlantHeight;
-
-            if (0.1 * AboveGroundWt <= MassForMaximumHeight)
-            {
-                double myX = 0.1 * AboveGroundWt / MassForMaximumHeight;
-                double heightF = ExponentHeightFromMass - (ExponentHeightFromMass * myX) + myX;
-                heightF *= Math.Pow(myX, ExponentHeightFromMass - 1);
-                TodaysHeight *= heightF;
-            }
-            //return TodaysHeight + MinimumHeight;
-            return Math.Max(TodaysHeight, MinimumPlantHeight);
         }
 
         /// <summary>VPDs this instance.</summary>
