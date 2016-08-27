@@ -2600,9 +2600,18 @@ namespace Models.AgPasture
 			get { return NcFactor; }
 		}
 
-		/// <summary>Gets the growth limiting factor due to temperature.</summary>
-		/// <value>The growth limiting factor due to temperature.</value>
-		[Description("Growth limiting factor due to temperature")]
+        /// <summary>Gets the growth limiting factor due to N concentration in the plant.</summary>
+        /// <value>The growth limiting factor due to N concentration.</value>
+        [Description("Plant growth limiting factor due to extreme temperature stresses")]
+        [Units("0-1")]
+        public double GlfTstress
+        {
+            get { return ExtremeTemperatureFactor; }
+        }
+
+        /// <summary>Gets the growth limiting factor due to temperature.</summary>
+        /// <value>The growth limiting factor due to temperature.</value>
+        [Description("Growth limiting factor due to temperature")]
 		[Units("0-1")]
 		public double GlfTemperature
 		{
@@ -2997,10 +3006,12 @@ namespace Models.AgPasture
 		/// <summary>The growth factor for N concentration</summary>
 		private double NcFactor = 1.0;
 
-		// auxiliary variables for radiation and temperature stress  --------------------------------------------------
+	    private double ExtremeTemperatureFactor;
 
-		/// <summary>Growth rate reduction factor due to high temperatures</summary>
-		private double highTempEffect = 1.0;
+        // auxiliary variables for radiation and temperature stress  --------------------------------------------------
+
+        /// <summary>Growth rate reduction factor due to high temperatures</summary>
+        private double highTempEffect = 1.0;
 		/// <summary>Growth rate reduction factor due to low temperatures</summary>
 		private double lowTempEffect = 1.0;
 		/// <summary>Cumulative degress of temperature for recovery from heat damage</summary>
@@ -3154,16 +3165,13 @@ namespace Models.AgPasture
 			double cumDepth = 0.0;
 			for (int layer = 0; layer < nLayers; layer++)
 			{
-				cumDepth += Soil.Thickness[layer];
 				if (cumDepth <= myRootDepth)
 				{
 					myRootFrontier = layer;
 					myRootExplorationFactor[layer] = LayerFractionWithRoots(layer);
 				}
-				else
-				{
-					layer = Soil.Thickness.Length;
-				}
+
+				cumDepth += Soil.Thickness[layer];
 			}
 			rootFraction = RootProfileDistribution();
 			InitialiseRootsProperties();
@@ -3592,18 +3600,15 @@ namespace Models.AgPasture
 				double cumDepth = 0.0;
 				for (int layer = 0; layer < Soil.Thickness.Length; layer++)
 				{
-					cumDepth += Soil.Thickness[layer];
 					if (cumDepth <= myRootDepth)
 					{
 						myRootFrontier = layer;
 						myRootExplorationFactor[layer] = LayerFractionWithRoots(layer);
 					}
-					else
-					{
-						layer = Soil.Thickness.Length;
-					}
-				}
-			}
+
+                    cumDepth += Soil.Thickness[layer];
+                }
+            }
 			// else:  both myRootDepth and myRootFrontier have been set at initialisation and do not change
 		}
 
@@ -3665,7 +3670,7 @@ namespace Models.AgPasture
 			double BaseGrossPhotosynthesis = CarbonAssim * 10;             // convertion = 10000 / 1000
 
 			// Consider the extreme temperature effects (in practice only one temp stress factor is < 1)
-			double ExtremeTemperatureFactor = HeatStress() * ColdStress();
+			ExtremeTemperatureFactor = HeatStress() * ColdStress();
 
 			// Actual gross photosynthesis (gross potential growth - kg C/ha/day)
 			return BaseGrossPhotosynthesis * ExtremeTemperatureFactor;

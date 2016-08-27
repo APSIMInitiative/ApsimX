@@ -2922,7 +2922,7 @@ namespace Models
                     result[s] = SP[s].Ncstol1 * SP[s].dmstol1
                               + SP[s].Ncstol2 * SP[s].dmstol2
                               + SP[s].Ncstol3 * SP[s].dmstol3;
-                    result[s] = result[s] / SP[s].dmstol;
+                    result[s] = MathUtilities.Divide(result[s], SP[s].dmstol, 0.0);
                 }
                 return result;
             }
@@ -3632,6 +3632,24 @@ namespace Models
             }
         }
 
+
+        /// <summary>Gets the species remobilised n.</summary>
+        /// <value>The species remobilised n.</value>
+        [Description("Amount of N remobilised from senesced material, for each species")]
+        [Units("kgN/ha")]
+        public double[] SpeciesRemobilisableN
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                {
+                    result[s] = SP[s].Nremob;
+                }
+                return result;
+            }
+        }
+
         /// <summary>Gets the species luxury n remobilised.</summary>
         /// <value>The species luxury n remobilised.</value>
         [Description("Amount of luxury N remobilised, for each species")]
@@ -3833,6 +3851,35 @@ namespace Models
                 double[] result = new double[SP.Length];
                 for (int s = 0; s < numSpecies; s++)
                     result[s] = SP[s].Ndefoliated;
+                return result;
+            }
+        }
+
+        /// <summary>Gets the species GLFNconc.</summary>
+        [Description("species growth limiting factor due to plant N concentration")]
+        [Units("0-1")]
+        public double[] SpeciesGLFNconc
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Ncfactor;
+                return result;
+            }
+        }
+
+        /// <summary>Gets the species GLFN.</summary>
+        /// <value>The species GLFN.</value>
+        [Description("Growth limiting factor due to nitrogen, for each species")]
+        [Units("0-1")]
+        public double[] SpeciesGLFTstress
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].ExtremeFactor;
                 return result;
             }
         }
@@ -6109,6 +6156,8 @@ namespace Models
         internal double Ncfactor;
         //internal double fNavail2Max; //demand/Luxruy uptake
 
+        internal double ExtremeFactor;
+
         //calculated, species delta
         /// <summary>The d growth pot</summary>
         internal double dGrowthPot;	//daily growth potential
@@ -6701,6 +6750,8 @@ namespace Models
             //Add temp effects to Pm
             double Tday = Tmean + 0.5 * (Tmax - Tmean);
 
+            Ncfactor = PmxNeffect();
+
             double Pm_mean = Pm * GFTemperature(Tmean) * PCO2Effects() * PmxNeffect();  //Dec10: added CO2 & [N]effects
             double Pm_day = Pm * GFTemperature(Tday) * PCO2Effects() * PmxNeffect();	//Dec10: added CO2 & [N]effects
 
@@ -6731,7 +6782,7 @@ namespace Models
             Pgross = 10000 * carbon_m2;				 //10000: 'kg/m^2' =>'kg/ha'
 
             //Add extreme temperature effects;
-            double ExtremeFactor = HeatEffect() * ColdEffect();
+            ExtremeFactor = HeatEffect() * ColdEffect();
             Pgross *= ExtremeFactor;	  // in practice only one temp stress factor is < 1
 
             //Maintenance respiration

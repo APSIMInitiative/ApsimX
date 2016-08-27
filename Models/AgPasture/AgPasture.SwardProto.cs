@@ -971,22 +971,30 @@ namespace Models.AgPasture
 			get { return MathUtilities.Divide(ActualGrowthN, ActualGrowthWt, 0.0); }
 		}
 
-		# endregion
+        #endregion
 
-		#region - N flows  -------------------------------------------------------------------------------------------------
+        #region - N flows  -------------------------------------------------------------------------------------------------
 
-		/// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
-		/// <value>The remobilised N amount.</value>
-		[Description("Amount of N remobilised from senescing tissue")]
-		[Units("kgN/ha")]
-		public double RemobilisedN
-		{
-			get { return mySward.Sum(mySpecies => mySpecies.RemobilisedN); }
-		}
+        /// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
+        /// <value>The remobilised N amount.</value>
+        [Description("Amount of N remobilised from senescing tissue")]
+        [Units("kgN/ha")]
+        public double RemobilisedN
+        {
+            get { return mySward.Sum(mySpecies => mySpecies.RemobilisedN); }
+        }
+        /// <summary>Gets the amount of N remobilisable from senesced tissue.</summary>
+        /// <value>The remobilised N amount.</value>
+        [Description("Amount of N remobilised from senescing tissue")]
+        [Units("kgN/ha")]
+        public double RemobilisableN
+        {
+            get { return mySward.Sum(mySpecies => mySpecies.RemobilisableN); }
+        }
 
-		/// <summary>Gets the amount of luxury N potentially remobilisable.</summary>
-		/// <value>The potentially remobilisable luxury N amount.</value>
-		[Description("Amount of luxury N potentially remobilisable")]
+        /// <summary>Gets the amount of luxury N potentially remobilisable.</summary>
+        /// <value>The potentially remobilisable luxury N amount.</value>
+        [Description("Amount of luxury N potentially remobilisable")]
 		[Units("kgN/ha")]
 		public double LuxuryNRemobilisable
 		{
@@ -1801,7 +1809,7 @@ namespace Models.AgPasture
 				double sWater = 0.0;
 				double sSat = 0.0;
 				double sDUL = 0.0;
-				for (int layer = 0; layer < RootFrontier; layer++)  // TODO this should be <=
+				for (int layer = 0; layer <= RootFrontier; layer++)  // TODO this should be <=
 				{
 					sWater += Soil.Water[layer];
 					sSat += Soil.SoilWater.SATmm[layer];
@@ -1914,7 +1922,7 @@ namespace Models.AgPasture
 				double[] adjustedWAvailable;
 
 				double[] sumWaterAvailable = new double[nLayers];
-				for (int layer = 0; layer < RootFrontier; layer++)
+				for (int layer = 0; layer <= RootFrontier; layer++)
 					sumWaterAvailable[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 
 				foreach (PastureSpeciesSwd mySpecies in mySward)
@@ -2174,7 +2182,7 @@ namespace Models.AgPasture
 
 						double[] sumNH4Available = new double[nLayers];
 						double[] sumNO3Available = new double[nLayers];
-						for (int layer = 0; layer < RootFrontier; layer++)
+						for (int layer = 0; layer <= RootFrontier; layer++)
 						{
 							sumNH4Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
 							sumNO3Available[layer] = mySward.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);

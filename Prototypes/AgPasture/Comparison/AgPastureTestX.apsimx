@@ -7,7 +7,7 @@
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
-    <Name>OneSpecies</Name>
+    <Name>Ryegrass</Name>
     <Simulation>
       <Name>AgPproto</Name>
       <Clock>
@@ -1292,6 +1292,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[AgPasture].SwardName as Sward.Name</string>
             <string>[AgPasture].SpeciesName[1] as Ryegrass.Name</string>
             <string>[AgPasture].SpeciesNType[1] as Ryegrass.CropType</string>
             <string>[AgPasture].SpeciesTotalWt[1] as Ryegrass.TotalWt</string>
@@ -1347,31 +1348,22 @@ namespace Models
             <string>[AgPasture].SpeciesStemNConc[1] as Ryegrass.StemNConc</string>
             <string>[AgPasture].SpeciesStolonNConc[1] as Ryegrass.StolonNConc</string>
             <string>[AgPasture].SpeciesRootNConc[1] as Ryegrass.RootNConc</string>
-            <string>[AgPasture].SpeciesLeafStage1NConc[1] as Ryegrass.LeafStage1NConc</string>
-            <string>[AgPasture].SpeciesLeafStage2NConc[1] as Ryegrass.LeafStage2NConc</string>
-            <string>[AgPasture].SpeciesLeafStage3NConc[1] as Ryegrass.LeafStage3NConc</string>
-            <string>[AgPasture].SpeciesLeafStage4NConc[1] as Ryegrass.LeafStage4NConc</string>
-            <string>[AgPasture].SpeciesStemStage1NConc[1] as Ryegrass.StemStage1NConc</string>
-            <string>[AgPasture].SpeciesStemStage2NConc[1] as Ryegrass.StemStage2NConc</string>
-            <string>[AgPasture].SpeciesStemStage3NConc[1] as Ryegrass.StemStage3NConc</string>
-            <string>[AgPasture].SpeciesStemStage4NConc[1] as Ryegrass.StemStage4NConc</string>
-            <string>[AgPasture].SpeciesStolonStage1NConc[1] as Ryegrass.StolonStage1NConc</string>
-            <string>[AgPasture].SpeciesStolonStage2NConc[1] as Ryegrass.StolonStage2NConc</string>
-            <string>[AgPasture].SpeciesStolonStage3NConc[1] as Ryegrass.StolonStage3NConc</string>
-            <string>[AgPasture].SpeciesRemobilisableSenescedN[1] as Ryegrass.RemobilisableSenescedN</string>
-            <string>[AgPasture].SpeciesSenescedNRemobilised[1] as Ryegrass.RemobilisedSenescedN</string>
+            <string>[AgPasture].SpeciesRemobilisableN[1] as Ryegrass.RemobilisableSenescedN</string>
+            <string>[AgPasture].SpeciesRemobilisedN[1] as Ryegrass.RemobilisedSenescedN</string>
             <string>[AgPasture].SpeciesRemobilisableLuxuryN[1] as Ryegrass.RemobilisableLuxuryN</string>
             <string>[AgPasture].SpeciesLuxuryNRemobilised[1] as Ryegrass.RemobilisedLuxuryN</string>
             <string>[AgPasture].SpeciesFixedN[1] as Ryegrass.FixedN</string>
             <string>[AgPasture].SpeciesRequiredNLuxury[1] as Ryegrass.RequiredLuxuryN</string>
             <string>[AgPasture].SpeciesRequiredNOptimum[1] as Ryegrass.RequiredOptimumN</string>
             <string>[AgPasture].SpeciesDemandN[1] as Ryegrass.DemandSoilN</string>
+            <string>[AgPasture].NitrogenSupply as Ryegrass.AvailableSoilN</string>
             <string>[AgPasture].SpeciesUptakeN[1] as Ryegrass.UptakeN</string>
             <string>[AgPasture].SpeciesLitterN[1] as Ryegrass.LitterN</string>
             <string>[AgPasture].SpeciesSenescedN[1] as Ryegrass.SenescedRootN</string>
             <string>[AgPasture].SpeciesGrowthN[1] as Ryegrass.ActualGrowthN</string>
             <string>[AgPasture].SpeciesGrowthNconc[1] as Ryegrass.ActualGrowthNConc</string>
             <string>[AgPasture].WaterDemand as Ryegrass.WaterDemand</string>
+            <string>[AgPasture].WaterSupply as Ryegrass.WaterAvailable</string>
             <string>[AgPasture].WaterUptake as Ryegrass.WaterUptake</string>
             <string>[AgPasture].SpeciesLiveDMTurnoverRate[1] as Ryegrass.LiveDMTurnoverRate</string>
             <string>[AgPasture].SpeciesDeadDMTurnoverRate[1] as Ryegrass.DeadDMTurnoverRate</string>
@@ -1384,6 +1376,8 @@ namespace Models
             <string>[AgPasture].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[AgPasture].GLFnConcentration as Ryegrass.GlfNConcentration</string>
             <string>[AgPasture].SpeciesGLFT[1] as Ryegrass.GlfTemperature</string>
+            <string>[AgPasture].SpeciesGLFTstress[1] as Ryegrass.GlfHeat</string>
+            <string>[AgPasture].SpeciesGLFTstress[1] as Ryegrass.GlfCold</string>
             <string>[AgPasture].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[AgPasture].SpeciesGLFW[1] as Ryegrass.GlfWater</string>
             <string>[AgPasture].SpeciesGLFN[1] as Ryegrass.GlfN</string>
@@ -1405,8 +1399,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[AgPasture].SwardName as </string>
-            <string />
+            <string>[AgPasture].SwardName as Sward.Name</string>
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[AgPasture].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[AgPasture].Rlv as Ryegrass.RLD</string>
@@ -2534,7 +2527,49 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFColdHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -2550,7 +2585,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2635,6 +2670,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3139,7 +3216,28 @@ namespace Models
         <Graph>
           <Name>PlantNuptake</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>RequiredNLux</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RequiredLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>RequiredNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3160,7 +3258,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>SoilDemandN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3623,10 +3721,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4586,6 +4684,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[Sward].Name as Sward.Name</string>
             <string>[Sward].Ryegrass.Name as Ryegrass.Name</string>
             <string>[Sward].Ryegrass.CropType as Ryegrass.CropType</string>
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
@@ -4641,31 +4740,22 @@ namespace Models
             <string>[Sward].Ryegrass.StemNConc as Ryegrass.StemNConc</string>
             <string>[Sward].Ryegrass.StolonNConc as Ryegrass.StolonNConc</string>
             <string>[Sward].Ryegrass.RootNConc as Ryegrass.RootNConc</string>
-            <string>[Sward].Ryegrass.LeafStage1NConc as Ryegrass.LeafStage1NConc</string>
-            <string>[Sward].Ryegrass.LeafStage2NConc as Ryegrass.LeafStage2NConc</string>
-            <string>[Sward].Ryegrass.LeafStage3NConc as Ryegrass.LeafStage3NConc</string>
-            <string>[Sward].Ryegrass.LeafStage4NConc as Ryegrass.LeafStage4NConc</string>
-            <string>[Sward].Ryegrass.StemStage1NConc as Ryegrass.StemStage1NConc</string>
-            <string>[Sward].Ryegrass.StemStage2NConc as Ryegrass.StemStage2NConc</string>
-            <string>[Sward].Ryegrass.StemStage3NConc as Ryegrass.StemStage3NConc</string>
-            <string>[Sward].Ryegrass.StemStage4NConc as Ryegrass.StemStage4NConc</string>
-            <string>[Sward].Ryegrass.StolonStage1NConc as Ryegrass.StolonStage1NConc</string>
-            <string>[Sward].Ryegrass.StolonStage2NConc as Ryegrass.StolonStage2NConc</string>
-            <string>[Sward].Ryegrass.StolonStage3NConc as Ryegrass.StolonStage3NConc</string>
-            <string>[Sward].Ryegrass.RemobilisableSenescedN as Ryegrass.RemobilisableSenescedN</string>
-            <string>[Sward].Ryegrass.RemobilisedSenescedN as Ryegrass.RemobilisedSenescedN</string>
+            <string>[Sward].Ryegrass.RemobilisableN as Ryegrass.RemobilisableSenescedN</string>
+            <string>[Sward].Ryegrass.RemobilisedN as Ryegrass.RemobilisedSenescedN</string>
             <string>[Sward].Ryegrass.RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Sward].Ryegrass.RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Sward].Ryegrass.FixedN as Ryegrass.FixedN</string>
             <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableN) as Ryegrass.AvailableSoilN</string>
             <string>sum([Sward].Ryegrass.UptakeN) as Ryegrass.UptakeN</string>
             <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
             <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
             <string>[Sward].Ryegrass.ActualGrowthNConc as Ryegrass.ActualGrowthNConc</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Sward].Ryegrass.LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
             <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
@@ -4678,6 +4768,8 @@ namespace Models
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNConcentration as Ryegrass.GlfNConcentration</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
+            <string>[Sward].Ryegrass.GlfTstress as Ryegrass.GlfHeat</string>
+            <string>[Sward].Ryegrass.GlfTstress as Ryegrass.GlfCold</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWater as Ryegrass.GlfWater</string>
             <string>[Sward].Ryegrass.GlfN as Ryegrass.GlfN</string>
@@ -5827,7 +5919,49 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFColdHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -5843,7 +5977,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5928,6 +6062,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6917,10 +7093,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -7924,6 +8100,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[Sward].Name as Sward.Name</string>
             <string>[Sward].Ryegrass.Name as Ryegrass.Name</string>
             <string>[Sward].Ryegrass.CropType as Ryegrass.CropType</string>
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
@@ -7979,17 +8156,6 @@ namespace Models
             <string>[Sward].Ryegrass.StemNConc as Ryegrass.StemNConc</string>
             <string>[Sward].Ryegrass.StolonNConc as Ryegrass.StolonNConc</string>
             <string>[Sward].Ryegrass.RootNConc as Ryegrass.RootNConc</string>
-            <string>[Sward].Ryegrass.LeafStage1NConc as Ryegrass.LeafStage1NConc</string>
-            <string>[Sward].Ryegrass.LeafStage2NConc as Ryegrass.LeafStage2NConc</string>
-            <string>[Sward].Ryegrass.LeafStage3NConc as Ryegrass.LeafStage3NConc</string>
-            <string>[Sward].Ryegrass.LeafStage4NConc as Ryegrass.LeafStage4NConc</string>
-            <string>[Sward].Ryegrass.StemStage1NConc as Ryegrass.StemStage1NConc</string>
-            <string>[Sward].Ryegrass.StemStage2NConc as Ryegrass.StemStage2NConc</string>
-            <string>[Sward].Ryegrass.StemStage3NConc as Ryegrass.StemStage3NConc</string>
-            <string>[Sward].Ryegrass.StemStage4NConc as Ryegrass.StemStage4NConc</string>
-            <string>[Sward].Ryegrass.StolonStage1NConc as Ryegrass.StolonStage1NConc</string>
-            <string>[Sward].Ryegrass.StolonStage2NConc as Ryegrass.StolonStage2NConc</string>
-            <string>[Sward].Ryegrass.StolonStage3NConc as Ryegrass.StolonStage3NConc</string>
             <string>[Sward].Ryegrass.RemobilisableSenescedN as Ryegrass.RemobilisableSenescedN</string>
             <string>[Sward].Ryegrass.RemobilisedSenescedN as Ryegrass.RemobilisedSenescedN</string>
             <string>[Sward].Ryegrass.RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
@@ -7998,12 +8164,14 @@ namespace Models
             <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableN) as Ryegrass.AvailableSoilN</string>
             <string>sum([Sward].Ryegrass.UptakeN) as Ryegrass.UptakeN</string>
             <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
             <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
             <string>[Sward].Ryegrass.ActualGrowthNConc as Ryegrass.ActualGrowthNConc</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Sward].Ryegrass.LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
             <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
@@ -8016,6 +8184,8 @@ namespace Models
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
+            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeat</string>
+            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfCold</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
@@ -9165,7 +9335,70 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFCold</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>GLFHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -9181,7 +9414,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9229,6 +9462,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>GLFa</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfWaterLogging</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title />
@@ -9266,6 +9520,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10255,10 +10551,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -11278,8 +11574,8 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>Name as ZoneName</string>
             <string>[Clock].Today as Date</string>
+            <string>[Ryegrass].Name as Sward.Name</string>
             <string>[Ryegrass].Name as Ryegrass.Name</string>
             <string>[Ryegrass].CropType as Ryegrass.CropType</string>
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
@@ -11311,6 +11607,7 @@ namespace Models
             <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
             <string>[Ryegrass].EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
             <string>[Ryegrass].HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
+            <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
             <string>[Ryegrass].LitterWt as Ryegrass.LitterWt</string>
             <string>[Ryegrass].RootSenescedWt as Ryegrass.RootSenescedWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
@@ -11334,17 +11631,6 @@ namespace Models
             <string>[Ryegrass].StemNConc as Ryegrass.StemNConc</string>
             <string>[Ryegrass].StolonNConc as Ryegrass.StolonNConc</string>
             <string>[Ryegrass].RootNConc as Ryegrass.RootNConc</string>
-            <string>[Ryegrass].LeafStage1NConc as Ryegrass.LeafStage1NConc</string>
-            <string>[Ryegrass].LeafStage2NConc as Ryegrass.LeafStage2NConc</string>
-            <string>[Ryegrass].LeafStage3NConc as Ryegrass.LeafStage3NConc</string>
-            <string>[Ryegrass].LeafStage4NConc as Ryegrass.LeafStage4NConc</string>
-            <string>[Ryegrass].StemStage1NConc as Ryegrass.StemStage1NConc</string>
-            <string>[Ryegrass].StemStage2NConc as Ryegrass.StemStage2NConc</string>
-            <string>[Ryegrass].StemStage3NConc as Ryegrass.StemStage3NConc</string>
-            <string>[Ryegrass].StemStage4NConc as Ryegrass.StemStage4NConc</string>
-            <string>[Ryegrass].StolonStage1NConc as Ryegrass.StolonStage1NConc</string>
-            <string>[Ryegrass].StolonStage2NConc as Ryegrass.StolonStage2NConc</string>
-            <string>[Ryegrass].StolonStage3NConc as Ryegrass.StolonStage3NConc</string>
             <string>[Ryegrass].RemobilisableSenescedN as Ryegrass.RemobilisableSenescedN</string>
             <string>[Ryegrass].RemobilisedSenescedN as Ryegrass.RemobilisedSenescedN</string>
             <string>[Ryegrass].RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
@@ -11353,12 +11639,14 @@ namespace Models
             <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
+            <string>sum([Ryegrass].SoilAvailableN) as Ryegrass.AvailableSoilN</string>
             <string>sum([Ryegrass].UptakeN) as Ryegrass.UptakeN</string>
             <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
             <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
             <string>[Ryegrass].ActualGrowthNConc as Ryegrass.ActualGrowthNConc</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
+            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
             <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
@@ -11371,6 +11659,8 @@ namespace Models
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
+            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeat</string>
+            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfCold</string>
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
@@ -11381,7 +11671,6 @@ namespace Models
             <string>[Ryegrass].HarvestedN as Ryegrass.HarvestedN</string>
             <string>[Ryegrass].HerbageDigestibility as Ryegrass.HerbageDigestibility</string>
             <string>[Ryegrass].HarvestedDigestibility as Ryegrass.HarvestedDigestibility</string>
-            <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -11392,7 +11681,6 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>Name as ZoneName</string>
             <string>[Clock].Today as Date</string>
             <string>[Ryegrass].Name as Sward.Name</string>
             <string>[Soil].Thickness as Soil.Thickness</string>
@@ -11403,9 +11691,6 @@ namespace Models
             <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].RootWtFraction1</string>
-            <string>[Ryegrass].HerbageDigestibility</string>
-            <string>[Ryegrass].AboveGroundDigestibility</string>
-            <string>[Ryegrass].StandingDigestibility</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -12721,7 +13006,70 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFCold</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>GLFHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -12737,7 +13085,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12785,6 +13133,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>GLFa</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfWaterLogging</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title />
@@ -12822,6 +13191,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13642,6 +14053,459 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Graph>
+      <Name>PlantWt</Name>
+      <Series>
+        <Name>AboveGroundWt</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.AboveGroundWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>BelowGroundWt</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.BelowGroundWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>DM (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>DMHarvestable</Name>
+      <Series>
+        <Name>Harvestable</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744193</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Dash</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.HarvestableWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Harvested</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>DM (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>DMYield</Name>
+      <Series>
+        <Name>Harvested</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Harvested1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>true</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>DM (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>GLFW</Name>
+      <Series>
+        <Name>Demand</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.GlfWater</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water demand, uptake (mm/day)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>GLFN</Name>
+      <Series>
+        <Name>Demand</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.GlfN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water demand, uptake (mm/day)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Digestibility</Name>
+      <Series>
+        <Name>Harvested</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.HarvestedDigestibility</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Allocation</Name>
+      <Series>
+        <Name>Shoot</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Allocation1</Name>
+      <Series>
+        <Name>Shoot</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>PotGrossGrowth</Name>
+      <Series>
+        <Name>PotentialGross</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.GrossPotentialGrowthWt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>true</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+  </Folder>
+  <Folder>
+    <Name>OneSpecies</Name>
     <Simulation>
       <Name>SwardArbitrator</Name>
       <Clock>
@@ -15031,6 +15895,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[Sward].Name as Sward.Name</string>
             <string>[Sward].Ryegrass.Name as Ryegrass.Name</string>
             <string>[Sward].Ryegrass.CropType as Ryegrass.CropType</string>
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
@@ -15086,17 +15951,6 @@ namespace Models
             <string>[Sward].Ryegrass.StemNConc as Ryegrass.StemNConc</string>
             <string>[Sward].Ryegrass.StolonNConc as Ryegrass.StolonNConc</string>
             <string>[Sward].Ryegrass.RootNConc as Ryegrass.RootNConc</string>
-            <string>[Sward].Ryegrass.LeafStage1NConc as Ryegrass.LeafStage1NConc</string>
-            <string>[Sward].Ryegrass.LeafStage2NConc as Ryegrass.LeafStage2NConc</string>
-            <string>[Sward].Ryegrass.LeafStage3NConc as Ryegrass.LeafStage3NConc</string>
-            <string>[Sward].Ryegrass.LeafStage4NConc as Ryegrass.LeafStage4NConc</string>
-            <string>[Sward].Ryegrass.StemStage1NConc as Ryegrass.StemStage1NConc</string>
-            <string>[Sward].Ryegrass.StemStage2NConc as Ryegrass.StemStage2NConc</string>
-            <string>[Sward].Ryegrass.StemStage3NConc as Ryegrass.StemStage3NConc</string>
-            <string>[Sward].Ryegrass.StemStage4NConc as Ryegrass.StemStage4NConc</string>
-            <string>[Sward].Ryegrass.StolonStage1NConc as Ryegrass.StolonStage1NConc</string>
-            <string>[Sward].Ryegrass.StolonStage2NConc as Ryegrass.StolonStage2NConc</string>
-            <string>[Sward].Ryegrass.StolonStage3NConc as Ryegrass.StolonStage3NConc</string>
             <string>[Sward].Ryegrass.RemobilisableSenescedN as Ryegrass.RemobilisableSenescedN</string>
             <string>[Sward].Ryegrass.RemobilisedSenescedN as Ryegrass.RemobilisedSenescedN</string>
             <string>[Sward].Ryegrass.RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
@@ -15105,12 +15959,14 @@ namespace Models
             <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableN) as Ryegrass.AvailableSoilN</string>
             <string>sum([Sward].Ryegrass.UptakeN) as Ryegrass.UptakeN</string>
             <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
             <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
             <string>[Sward].Ryegrass.ActualGrowthNConc as Ryegrass.ActualGrowthNConc</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
+            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Sward].Ryegrass.LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
             <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
@@ -15123,6 +15979,8 @@ namespace Models
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
+            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeat</string>
+            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfCold</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
@@ -16272,7 +17130,70 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFCold</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>GLFHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -16288,7 +17209,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16336,6 +17257,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>GLFa</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfWaterLogging</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title />
@@ -16373,6 +17315,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -18388,8 +19372,8 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>Name as ZoneName</string>
             <string>[Clock].Today as Date</string>
+            <string>[Ryegrass].Name as Sward.Name</string>
             <string>[Ryegrass].Name as Ryegrass.Name</string>
             <string>[Ryegrass].CropType as Ryegrass.CropType</string>
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
@@ -18445,17 +19429,6 @@ namespace Models
             <string>[Ryegrass].StemNConc as Ryegrass.StemNConc</string>
             <string>[Ryegrass].StolonNConc as Ryegrass.StolonNConc</string>
             <string>[Ryegrass].RootNConc as Ryegrass.RootNConc</string>
-            <string>[Ryegrass].LeafStage1NConc as Ryegrass.LeafStage1NConc</string>
-            <string>[Ryegrass].LeafStage2NConc as Ryegrass.LeafStage2NConc</string>
-            <string>[Ryegrass].LeafStage3NConc as Ryegrass.LeafStage3NConc</string>
-            <string>[Ryegrass].LeafStage4NConc as Ryegrass.LeafStage4NConc</string>
-            <string>[Ryegrass].StemStage1NConc as Ryegrass.StemStage1NConc</string>
-            <string>[Ryegrass].StemStage2NConc as Ryegrass.StemStage2NConc</string>
-            <string>[Ryegrass].StemStage3NConc as Ryegrass.StemStage3NConc</string>
-            <string>[Ryegrass].StemStage4NConc as Ryegrass.StemStage4NConc</string>
-            <string>[Ryegrass].StolonStage1NConc as Ryegrass.StolonStage1NConc</string>
-            <string>[Ryegrass].StolonStage2NConc as Ryegrass.StolonStage2NConc</string>
-            <string>[Ryegrass].StolonStage3NConc as Ryegrass.StolonStage3NConc</string>
             <string>[Ryegrass].RemobilisableSenescedN as Ryegrass.RemobilisableSenescedN</string>
             <string>[Ryegrass].RemobilisedSenescedN as Ryegrass.RemobilisedSenescedN</string>
             <string>[Ryegrass].RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
@@ -18464,12 +19437,14 @@ namespace Models
             <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
+            <string>sum([Ryegrass].SoilAvailableN) as Ryegrass.AvailableSoilN</string>
             <string>sum([Ryegrass].UptakeN) as Ryegrass.UptakeN</string>
             <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
             <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
             <string>[Ryegrass].ActualGrowthNConc as Ryegrass.ActualGrowthNConc</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
+            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
             <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
@@ -18482,6 +19457,8 @@ namespace Models
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
+            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeat</string>
+            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfCold</string>
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
@@ -19631,7 +20608,70 @@ namespace Models
       <Folder>
         <Name>GLFs</Name>
         <Graph>
-          <Name>GLFTemp</Name>
+          <Name>GLFTdamage</Name>
+          <Series>
+            <Name>GLFCold</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>GLFHeat</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFNcon</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -19647,7 +20687,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
+            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -19695,6 +20735,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>GLFa</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfWaterLogging</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title />
@@ -19732,6 +20793,48 @@ namespace Models
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
             <YFieldName>Ryegrass.GlfN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>GLFTemp</Name>
+          <Series>
+            <Name>GLF</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.GlfTemperature</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20342,372 +21445,6 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
-    <Graph>
-      <Name>PlantWt</Name>
-      <Series>
-        <Name>AboveGroundWt</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.AboveGroundWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>BelowGroundWt</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Dash</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.BelowGroundWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>DM (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>DMHarvestable</Name>
-      <Series>
-        <Name>Harvestable</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744193</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Dash</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestableWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Harvested</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>DM (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>DMYield</Name>
-      <Series>
-        <Name>Harvested</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Harvested1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>true</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>DM (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>GLFW</Name>
-      <Series>
-        <Name>Demand</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.GlfWater</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Water demand, uptake (mm/day)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>GLFN</Name>
-      <Series>
-        <Name>Demand</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.GlfN</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Water demand, uptake (mm/day)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Digestibility</Name>
-      <Series>
-        <Name>Harvested</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestedDigestibility</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Allocation</Name>
-      <Series>
-        <Name>Shoot</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
   </Folder>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
