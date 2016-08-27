@@ -7,11 +7,8 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
-using Models;
 using Models.Core;
 using Models.Soils;
 using Models.PMF;
@@ -827,64 +824,7 @@ namespace Models.AgPasture
         public double ExponentRootDistribution { get; set; } = 3.2;
 
         /// <summary>Factor to compute root distribution (where below maxRootDepth the function is zero)</summary>
-        private double rootDistributionFactor = 1.05;
-
-        /// <summary>Root distribution method (Homogeneous, ExpoLinear, UserDefined)</summary>
-        private string rootDistributionMethod = "ExpoLinear";
-
-        /// <summary>Root distribution method (Homogeneous, ExpoLinear, UserDefined)</summary>
-        /// <exception cref="System.Exception">Root distribution method given ( + value +  is no valid</exception>
-        [XmlIgnore]
-        public string RootDistributionMethod
-        {
-            get { return rootDistributionMethod; }
-            set
-            {
-                switch (value.ToLower())
-                {
-                    case "homogenous":
-                    case "userdefined":
-                    case "expolinear":
-                        rootDistributionMethod = value;
-                        break;
-                    default:
-                        throw new Exception("Root distribution method given (" + value + " is no valid");
-                }
-            }
-        }
-
-        /// <summary>Fraction of root depth where its proportion starts to decrease</summary>
-        private double expoLinearDepthParam = 0.12;
-
-        /// <summary>Fraction of root depth where its proportion starts to decrease</summary>
-        [Description("Fraction of root depth where its proportion starts to decrease")]
-        public double ExpoLinearDepthParam
-        {
-            get { return expoLinearDepthParam; }
-            set
-            {
-                expoLinearDepthParam = value;
-                if (expoLinearDepthParam == 1.0)
-                    rootDistributionMethod = "Homogeneous";
-            }
-        }
-
-        /// <summary>Exponent to determine mass distribution in the soil profile</summary>
-        private double expoLinearCurveParam = 3.2;
-
-        /// <summary>Exponent to determine mass distribution in the soil profile</summary>
-        [Description("Exponent to determine mass distribution in the soil profile")]
-        public double ExpoLinearCurveParam
-        {
-            get { return expoLinearCurveParam; }
-            set
-            {
-                expoLinearCurveParam = value;
-                if (expoLinearCurveParam == 0.0)
-                    rootDistributionMethod = "Homogeneous";
-                        // It is impossible to solve, but its limit is a homogeneous distribution 
-            }
-        }
+        private double rootBottomDistributionFactor = 1.05;
 
         // - Annual species  ------------------------------------------------------------------------------------------
 
@@ -902,18 +842,6 @@ namespace Models.AgPasture
 
         /// <summary>The cumulative degrees-day from anthesis to maturity</summary>
         private double degreesDayForMaturity = 0.0;
-
-        /// <summary>The day of year for emergence</summary>
-        private int dayEmerg = 0;
-
-        /// <summary>The monthe of emergence</summary>
-        private int monEmerg = 0;
-
-        /// <summary>The day of anthesis</summary>
-        private int dayAnth = 0;
-
-        /// <summary>The month of anthesis</summary>
-        private int monAnth = 0;
 
         // - Other parameters  ----------------------------------------------------------------------------------------
 
@@ -1116,10 +1044,6 @@ namespace Models.AgPasture
 
         /// <summary>The daily variation in root depth</summary>
         private double dRootDepth = 50;
-
-        /// <summary>The fraction of roots DM in each layer</summary>
-        private double[] rootFraction;
-        private double[] rootFraction1;
 
         /// <summary>The maximum shoot-root ratio</summary>
         private double maxSRratio;
@@ -1755,7 +1679,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootGrowthWt
         {
-            get { return dGrowthRoot; }
+            get { return dGrowthRoot - dRootSen; }
         }
 
         /// <summary>Gets the litter DM weight deposited onto soil surface.</summary>
@@ -2481,15 +2405,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double[] RootWtFraction
         {
-            get { return rootFraction; }
-        }
-        /// <summary>Gets the fraction of root dry matter for each soil layer.</summary>
-        /// <value>The root fraction.</value>
-        [Description("Fraction of root dry matter for each soil layer")]
-        [Units("0-1")]
-        public double[] RootWtFraction1
-        {
-            get { return rootFraction1; }
+            get { return roots.Tissue[0].FractionWt; }
         }
 
         /// <summary>Gets the plant's root length density for each soil layer.</summary>
@@ -2501,11 +2417,11 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                double Total_Rlength = roots.Tissue[0].DM * SpecificRootLength; // m root/ha
-                Total_Rlength *= 0.0000001; // convert into mm root/mm2 soil)
+                double totalRootLength = roots.Tissue[0].DM * SpecificRootLength; // m root/m2 
+                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil) - TODO: fix this when using DM in g/m2
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = rootFraction[layer] * Total_Rlength / mySoil.Thickness[layer]; // mm root/mm3 soil
+                    result[layer] = roots.Tissue[0].FractionWt[layer] * totalRootLength / mySoil.Thickness[layer];
                 }
                 return result;
             }
@@ -2853,12 +2769,12 @@ namespace Models.AgPasture
             }
             else if (InitialShootDM > -myEpsilon)
             {
-                // DM is zero, plant is just sown and able to germinate
+                // DM is zero, plant has just sown and is able to germinate
                 InitialState.PhenoStage = 0;
             }
             else
             {
-                //DM is negative, plant is not yet in the ground, needs to be sown 
+                //DM is negative, plant is not yet in the ground 
                 InitialState.PhenoStage = -1;
             }
 
@@ -2879,8 +2795,8 @@ namespace Models.AgPasture
             }
 
             leaves.SugarFraction = SugarFraction[0];
-            stems.SugarFraction = SugarFraction[0];
-            stolons.SugarFraction = SugarFraction[0];
+            stems.SugarFraction = SugarFraction[1];
+            stolons.SugarFraction = SugarFraction[2];
             //roots are not considered for digestibility
         }
 
@@ -2906,11 +2822,9 @@ namespace Models.AgPasture
             roots.Depth = InitialState.RootDepth;
             roots.BottomLayer = RootZoneBottomLayer();
             roots.TargetDistribution = RootDistributionTarget();
-            // TODO: Replace rootFraction with new method
-            rootFraction1 = CurrentRootDistributionTarget();
-            rootFraction = RootProfileDistribution();
+            double[] iniRootFraction = CurrentRootDistributionTarget();
             for (int layer = 0; layer < nLayers; layer++)
-                roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFraction[layer];
+                roots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * iniRootFraction[layer];
 
             InitialiseRootsProperties();
 
@@ -3027,19 +2941,6 @@ namespace Models.AgPasture
                 myRootProperties.RootExplorationByLayer[layer] = FractionLayerWithRoots(layer);
             }
             myRootProperties.RootLengthDensityByVolume = RLD;
-        }
-
-        /// <summary>Calculates the days emg to anth.</summary>
-        /// <returns></returns>
-        private int CalcDaysEmgToAnth()
-        {
-            int numbMonths = monAnth - monEmerg; //emergence & anthesis in the same calendar year: monEmerg < monAnth
-            if (monEmerg >= monAnth) //...across the calendar year
-                numbMonths += 12;
-
-            daysEmergenceToAnthesis = (int) (30.5 * numbMonths + (dayAnth - dayEmerg));
-
-            return daysEmergenceToAnthesis;
         }
 
         #endregion
@@ -3226,17 +3127,17 @@ namespace Models.AgPasture
             dGrowthActual = dGrowthWstress * Math.Min(glfNit, GlfSFertility);
         }
 
-        /// <summary>Calculates the plant effective growth (include LAI and root depth).</summary>
+        /// <summary>Calculates the plant effective growth (include changes in LAI and root depth).</summary>
         internal void CalcEffectiveGrowth()
         {
             // Effective, or net, growth
-            dGrowthEff = dGrowthShoot + dGrowthRoot;
-
-            // Update LAI
-            EvaluateLAI();
+            dGrowthEff = dGrowthShoot + (dGrowthRoot - dRootSen);
 
             // update root depth
             EvaluateRootGrowth();
+
+            // Update LAI
+            EvaluateLAI();
 
             // Update digestibility
             EvaluateDigestibility();
@@ -3402,7 +3303,7 @@ namespace Models.AgPasture
                 leaves.Tissue[0].DM += toLeaf * dGrowthActual;
                 stems.Tissue[0].DM += toStem * dGrowthActual;
                 stolons.Tissue[0].DM += toStolon * dGrowthActual;
-                roots.Tissue[0].DM += toRoot * dGrowthActual;
+                //roots.Tissue[0].DM += Done later in EvaluateRootGrowth
                 dGrowthShoot = (toLeaf + toStem + toStolon) * dGrowthActual;
                 dGrowthRoot = toRoot * dGrowthActual;
 
@@ -3734,7 +3635,7 @@ namespace Models.AgPasture
                 ChRemobl += ChRemobSugar + ChRemobProtein;
 
                 dRootSen = gamaR * myPreviousState.roots.Tissue[0].DM;
-                roots.Tissue[0].DM -= dRootSen;
+                //roots.Tissue[0].DM -= Done later in EvaluateRootGrowth
                 ChRemobSugar = dRootSen * KappaCRemob;
                 ChRemobProtein = dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum) * CNratioProtein * FacCNRemob;
                 dRootSen -= ChRemobSugar + ChRemobProtein;
@@ -3742,7 +3643,6 @@ namespace Models.AgPasture
                     throw new Exception("Loss of mass balance on C remobilisation - root");
                 dNrootSen = gamaR * myPreviousState.roots.Tissue[0].Namount - 0.5 * dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum);
                 roots.Tissue[0].Namount -= gamaR * myPreviousState.roots.Tissue[0].Namount;
-                dGrowthRoot -= dRootSen;
                 NRemobilised += 0.5 * dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum);
                 ChRemobl += ChRemobSugar + ChRemobProtein;
 
@@ -4526,19 +4426,12 @@ namespace Models.AgPasture
             // ****  RCichota, Jun/2014
             // root senesced are returned to soil (as FOM) considering return is proportional to root mass
 
-            double dAmtLayer = 0.0; //amount of root litter in a layer
-            double dNLayer = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                dAmtLayer = amountDM * rootFraction[layer];
-                dNLayer = amountN * rootFraction[layer];
-
-                float amt = (float) dAmtLayer;
-
                 Soils.FOMType fomData = new Soils.FOMType();
-                fomData.amount = amountDM * rootFraction[layer];
-                fomData.N = amountN * rootFraction[layer];
-                fomData.C = amountDM * rootFraction[layer] * CarbonFractionInDM;
+                fomData.amount = amountDM * roots.Tissue[0].FractionWt[layer];
+                fomData.N = amountN * roots.Tissue[0].FractionWt[layer];
+                fomData.C = amountDM * CarbonFractionInDM * roots.Tissue[0].FractionWt[layer];
                 fomData.P = 0.0; // P not considered here
                 fomData.AshAlk = 0.0; // Ash not considered here
 
@@ -4621,30 +4514,64 @@ namespace Models.AgPasture
             return rFactor;
         }
 
-        /// <summary>Computes the variations in root depth</summary>
+        /// <summary>Computes the variations in root depth and distribution</summary>
+        /// <remarks>
+        /// Root depth will increase is smaller than maximumRootDepth and there is a positive net DM accumulation.
+        /// The increase is of zero-order, given by the RootElongationRate, but it is adjusted for temperature in
+        /// a similar fashion as plant DM growth. Note that root depth will never decrease.
+        /// The current changes whenever root depth changes, the new value is used to allocate new growth 
+        /// to each layer within the root zone
+        /// </remarks>
         private void EvaluateRootGrowth()
         {
             dRootDepth = 0.0;
             if (phenologicStage > 0)
             {
-                if (isAnnual)
+                if (((dGrowthRoot-dRootSen) > myEpsilon) && (roots.Depth < MaximumRootDepth))
                 {
-                    //TODO: update this, especilly dRootDepth
-                    roots.Depth = dRootDepth + (MaximumRootDepth - dRootDepth) * daysfromEmergence / daysEmergenceToAnthesis;
+                    double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
+                    dRootDepth = RootElongationRate * tempFactor;
+                    roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
                     roots.BottomLayer = RootZoneBottomLayer();
                 }
                 else
                 {
-                    if ((dGrowthRoot > myEpsilon) && (roots.Depth < MaximumRootDepth))
+                    // No net growth
+                    dRootDepth = 0.0;
+                }
+
+                // change root amount due to senescence (no changes in distribution)
+                if (dRootSen > myEpsilon)
+                    roots.Tissue[0].DM -= dRootSen;
+
+                // change root amount due to growth (distribution may change)
+                double[] currentRootTarget = CurrentRootDistributionTarget();
+                if (MathUtilities.AreEqual(roots.Tissue[0].FractionWt, currentRootTarget))
+                {
+                    // No need to change the distribution
+                    roots.Tissue[0].DM += dGrowthRoot;
+                }
+                else
+                {
+                    // 1. get preliminary distribution, based on average of current and target
+                    double[] newRootLayerWt = new double[roots.BottomLayer + 1];
+                    double newRootWt = roots.Tissue[0].DM + dGrowthRoot;
+                    for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                        newRootLayerWt[layer] = newRootWt * (roots.Tissue[0].FractionWt[layer] + currentRootTarget[layer]) / 2.0;
+
+                    // 2. check for excess allocation
+                    if (newRootLayerWt.Sum() > newRootWt)
                     {
-                        double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
-                        dRootDepth = RootElongationRate * tempFactor;
-                        roots.Depth = Math.Min(MaximumRootDepth, Math.Max(MinimumRootDepth, roots.Depth + dRootDepth));
-                        roots.BottomLayer = RootZoneBottomLayer();
+                        // 3a. adjsut distribution and update root DM
+                        double layersTotal = newRootLayerWt.Sum();
+                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                            roots.Tissue[0].DMLayer[layer] = newRootWt * (newRootLayerWt[layer] / layersTotal);
                     }
                     else
                     {
-                        dRootDepth = 0.0;
+                        // 3b. update root DM 
+                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                            roots.Tissue[0].DMLayer[layer] = newRootLayerWt[layer];
                     }
                 }
             }
@@ -5413,143 +5340,19 @@ namespace Models.AgPasture
             return (1.0 - Math.Exp(-LightExtentionCoefficient * givenLAI));
         }
 
-        /// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
-        /// <returns>The proportion of root mass in each soil layer</returns>
-        /// <exception cref="System.Exception">
-        /// No valid method for computing root distribution was selected
-        /// or
-        /// Could not calculate root distribution
-        /// </exception>
-        private double[] RootProfileDistribution()
-        {
-            double[] result = new double[nLayers];
-            double sumProportion = 0;
-
-            switch (rootDistributionMethod.ToLower())
-            {
-                case "homogeneous":
-                    {
-                        // homogenous distribution over soil profile (same root density throughout the profile)
-                        double DepthTop = 0;
-                        for (int layer = 0; layer < nLayers; layer++)
-                        {
-                            if (DepthTop >= roots.Depth)
-                                result[layer] = 0.0;
-                            else if (DepthTop + mySoil.Thickness[layer] <= roots.Depth)
-                                result[layer] = 1.0;
-                            else
-                                result[layer] = (roots.Depth - DepthTop) / mySoil.Thickness[layer];
-                            sumProportion += result[layer] * mySoil.Thickness[layer];
-                            DepthTop += mySoil.Thickness[layer];
-                        }
-                        break;
-                    }
-                case "userdefined":
-                    {
-                        // distribution given by the user
-                        // Option no longer available
-                        break;
-                    }
-                case "expolinear":
-                    {
-                        // distribution calculated using ExpoLinear method
-                        //  Considers homogeneous distribution from surface down to a fraction of root depth (p_ExpoLinearDepthParam)
-                        //   below this depth, the proportion of root decrease following a power function (exponent = p_ExpoLinearCurveParam)
-                        //   if exponent is one than the proportion decreases linearly.
-                        double DepthTop = 0;
-                        double DepthFirstStage = roots.Depth * expoLinearDepthParam;
-                        double DepthSecondStage = roots.Depth - DepthFirstStage;
-                        for (int layer = 0; layer < nLayers; layer++)
-                        {
-                            if (DepthTop >= roots.Depth)
-                                result[layer] = 0.0;
-                            else if (DepthTop + mySoil.Thickness[layer] <= DepthFirstStage)
-                                result[layer] = 1.0;
-                            else
-                            {
-                                if (DepthTop < DepthFirstStage)
-                                    result[layer] = (DepthFirstStage - DepthTop) / mySoil.Thickness[layer];
-                                if ((expoLinearDepthParam < 1.0) && (expoLinearCurveParam > 0.0))
-                                {
-                                    double thisDepth = Math.Max(0.0, DepthTop - DepthFirstStage);
-                                    double Ftop = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-                                    thisDepth = Math.Min(DepthTop + mySoil.Thickness[layer] - DepthFirstStage, DepthSecondStage);
-                                    double Fbottom = (thisDepth - DepthSecondStage) * Math.Pow(1 - thisDepth / DepthSecondStage, expoLinearCurveParam) / (expoLinearCurveParam + 1);
-                                    result[layer] += Math.Max(0.0, Fbottom - Ftop) / mySoil.Thickness[layer];
-                                }
-                                else if (DepthTop + mySoil.Thickness[layer] <= roots.Depth)
-                                    result[layer] += Math.Min(DepthTop + mySoil.Thickness[layer], roots.Depth) - Math.Max(DepthTop, DepthFirstStage) / mySoil.Thickness[layer];
-                            }
-                            sumProportion += result[layer];
-                            DepthTop += mySoil.Thickness[layer];
-                        }
-                        break;
-                    }
-                default:
-                    {
-                        throw new Exception("No valid method for computing root distribution was selected");
-                    }
-            }
-            if (sumProportion > 0)
-                for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = MathUtilities.Divide(result[layer], sumProportion, 0.0);
-            else
-                throw new Exception("Could not calculate root distribution");
-            return result;
-        }
-
-        /// <summary>Compute the current target distribution of roots in the soil profile</summary>
-        /// <remarks>
-        /// This distribution is a correction of the target distribution, taking into account the depth of soil
-        /// as well as the current rooting depth
-        /// </remarks>
-        /// <returns>The proportion of root mass in each soil layer</returns>
-        private double[] CurrentRootDistributionTarget()
-        {
-            double currentDepth = 0.0;
-            double cumAllocation = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (currentDepth < roots.Depth)
-                {
-                    // layer is within the root zone
-                    currentDepth += mySoil.Thickness[layer];
-                    if (currentDepth <= roots.Depth)
-                    {
-                        // layer is fully in the root zone
-                        cumAllocation += roots.TargetDistribution[layer];
-                    }
-                    else
-                    {
-                        // layer is partially in the root zone
-                        double layerFrac = (roots.Depth - (currentDepth - mySoil.Thickness[layer]))
-                                         / (MaximumRootDepth - (currentDepth - mySoil.Thickness[layer]));
-                        cumAllocation += roots.TargetDistribution[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
-                    }
-                }
-                else
-                    layer = nLayers;
-            }
-
-            double[] result = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-                result[layer] = roots.TargetDistribution[layer] / cumAllocation;
-
-            return result;
-        }
-
         /// <summary>Compute the target (or ideal) distribution of roots in the soil profile</summary>
         /// <remarks>
-        /// This distribution is solely based on root parameters (maximum depth and distribution function)
-        /// These values are used to allocate initial rootDM as well as any growth over the profile
+        /// This distribution is solely based on root parameters (maximum depth and distribution parameters)
+        /// These values will be used to allocate initial rootDM as well as any growth over the profile
         /// </remarks>
-        /// <returns>A weighting factor for each soil layer (mm of soil)</returns>
+        /// <returns>A weighting factor for each soil layer (mm equivalent)</returns>
         private double[] RootDistributionTarget()
         {
-            // 1. Base distribution calculated using and ExpoLinear function
-            //  Considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion)
-            //   below this depth, the proportion of root decrease following a power function, it reaches zero slightly
-            //   below the maxRootDepth (defined by rootDistributionFactor), function's exponent is given by ExponentRootDistribution
+            // 1. Base distribution calculated using a combination of linear and power functions:
+            //  It considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion),
+            //   below this depth the proportion of root decrease following a power function (with exponent ExponentRootDistribution),
+            //   it reaches zero slightly below the MaximumRootDepth (defined by rootBottomDistributionFactor), but the function is
+            //   truncated at MaximumRootDepth. The values are not normalised.
             //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
 
             double[] result = new double[nLayers];
@@ -5574,7 +5377,7 @@ namespace Models.AgPasture
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = MaximumRootDepth * rootDistributionFactor;
+                    double maxRootDepth = MaximumRootDepth * rootBottomDistributionFactor;
                     result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), ExponentRootDistribution + 1)
                                   - Math.Pow(maxRootDepth - Math.Min(depthBottom, MaximumRootDepth), ExponentRootDistribution + 1);
                     result[layer] /= (ExponentRootDistribution + 1) * Math.Pow(maxRootDepth - depthFirstStage, ExponentRootDistribution);
@@ -5588,6 +5391,49 @@ namespace Models.AgPasture
                 }
 
                 depthTop += mySoil.Thickness[layer];
+            }
+
+            return result;
+        }
+
+        /// <summary>Compute the current target distribution of roots in the soil profile</summary>
+        /// <remarks>
+        /// This distribution is a correction of the target distribution, taking into account the depth of soil
+        /// as well as the current rooting depth
+        /// </remarks>
+        /// <returns>The proportion of root mass expected in each soil layer</returns>
+        private double[] CurrentRootDistributionTarget()
+        {
+            double currentDepth = 0.0;
+            double cumProportion = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                if (currentDepth < roots.Depth)
+                {
+                    // layer is within the root zone
+                    currentDepth += mySoil.Thickness[layer];
+                    if (currentDepth <= roots.Depth)
+                    {
+                        // layer is fully in the root zone
+                        cumProportion += roots.TargetDistribution[layer];
+                    }
+                    else
+                    {
+                        // layer is partially in the root zone
+                        double layerFrac = (roots.Depth - (currentDepth - mySoil.Thickness[layer]))
+                                         / (MaximumRootDepth - (currentDepth - mySoil.Thickness[layer]));
+                        cumProportion += roots.TargetDistribution[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
+                    }
+                }
+                else
+                    layer = nLayers;
+            }
+
+            double[] result = new double[nLayers];
+            if (cumProportion > 0.0)
+            {
+                for (int layer = 0; layer < nLayers; layer++)
+                    result[layer] = roots.TargetDistribution[layer] / cumProportion;
             }
 
             return result;

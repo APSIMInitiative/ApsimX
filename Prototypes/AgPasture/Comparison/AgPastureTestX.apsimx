@@ -8080,8 +8080,6 @@ namespace Models
             <RootElongationRate>0</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
-            <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-            <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -8091,8 +8089,6 @@ namespace Models
           <UseAlternativeWaterUptake>no</UseAlternativeWaterUptake>
           <UseAlternativeNUptake>no</UseAlternativeNUptake>
           <ReferenceKSuptake>1000</ReferenceKSuptake>
-          <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-          <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
         </Sward>
         <Report>
           <Name>Results_Species</Name>
@@ -11564,8 +11560,6 @@ namespace Models
           <RootElongationRate>0</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
-          <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-          <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>
@@ -15875,8 +15869,6 @@ namespace Models
             <RootElongationRate>0</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
-            <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-            <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
             <KNO3>1</KNO3>
             <KNH4>1</KNH4>
           </PastureSpecies>
@@ -15886,8 +15878,6 @@ namespace Models
           <UseAlternativeWaterUptake>no</UseAlternativeWaterUptake>
           <UseAlternativeNUptake>no</UseAlternativeNUptake>
           <ReferenceKSuptake>1000</ReferenceKSuptake>
-          <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-          <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
         </Sward>
         <Report>
           <Name>Results_Species</Name>
@@ -19362,8 +19352,6 @@ namespace Models
           <RootElongationRate>0</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
-          <ExpoLinearDepthParam>0.12</ExpoLinearDepthParam>
-          <ExpoLinearCurveParam>3.2</ExpoLinearCurveParam>
           <KNO3>1</KNO3>
           <KNH4>1</KNH4>
         </PastureSpecies>
