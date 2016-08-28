@@ -7971,6 +7971,7 @@ namespace Models
           <PastureSpecies>
             <Name>Ryegrass</Name>
             <InterceptedRadn>0</InterceptedRadn>
+            <fractionToLeaf>0</fractionToLeaf>
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
@@ -8002,16 +8003,18 @@ namespace Models
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
             <DegreesDayForGermination>100</DegreesDayForGermination>
+            <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
-            <ShootSeasonalAllocationIncrease>0.8</ShootSeasonalAllocationIncrease>
-            <DayInitHigherShootAllocation>232</DayInitHigherShootAllocation>
-            <HigherShootAllocationPeriods>
-              <int>35</int>
-              <int>60</int>
-              <int>30</int>
-            </HigherShootAllocationPeriods>
-            <FracToLeaf>0.7</FracToLeaf>
-            <FracToStolon>0</FracToStolon>
+            <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
+            <UseReproSeasonFactor>yes</UseReproSeasonFactor>
+            <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
+            <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
+            <ReproSeasonDurationCoeff>2</ReproSeasonDurationCoeff>
+            <ReproSeasonShouldersLengthFactor>1</ReproSeasonShouldersLengthFactor>
+            <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
+            <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
+            <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+            <FractionToStolon>0</FractionToStolon>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
@@ -11453,6 +11456,7 @@ namespace Models
         <PastureSpecies>
           <Name>Ryegrass</Name>
           <InterceptedRadn>0</InterceptedRadn>
+          <fractionToLeaf>0</fractionToLeaf>
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
@@ -11484,16 +11488,18 @@ namespace Models
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
           <DegreesDayForGermination>100</DegreesDayForGermination>
+          <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
-          <ShootSeasonalAllocationIncrease>0.8</ShootSeasonalAllocationIncrease>
-          <DayInitHigherShootAllocation>232</DayInitHigherShootAllocation>
-          <HigherShootAllocationPeriods>
-            <int>35</int>
-            <int>60</int>
-            <int>30</int>
-          </HigherShootAllocationPeriods>
-          <FracToLeaf>0.7</FracToLeaf>
-          <FracToStolon>0</FracToStolon>
+          <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
+          <UseReproSeasonFactor>yes</UseReproSeasonFactor>
+          <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
+          <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
+          <ReproSeasonDurationCoeff>2</ReproSeasonDurationCoeff>
+          <ReproSeasonShouldersLengthFactor>1</ReproSeasonShouldersLengthFactor>
+          <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
+          <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
+          <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+          <FractionToStolon>0</FractionToStolon>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
@@ -15764,6 +15770,7 @@ namespace Models
           <PastureSpecies>
             <Name>Ryegrass</Name>
             <InterceptedRadn>0</InterceptedRadn>
+            <fractionToLeaf>0</fractionToLeaf>
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
@@ -15795,16 +15802,18 @@ namespace Models
             <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
             <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
             <DegreesDayForGermination>100</DegreesDayForGermination>
+            <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
-            <ShootSeasonalAllocationIncrease>0.8</ShootSeasonalAllocationIncrease>
-            <DayInitHigherShootAllocation>232</DayInitHigherShootAllocation>
-            <HigherShootAllocationPeriods>
-              <int>35</int>
-              <int>60</int>
-              <int>30</int>
-            </HigherShootAllocationPeriods>
-            <FracToLeaf>0.7</FracToLeaf>
-            <FracToStolon>0</FracToStolon>
+            <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
+            <UseReproSeasonFactor>yes</UseReproSeasonFactor>
+            <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
+            <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
+            <ReproSeasonDurationCoeff>2</ReproSeasonDurationCoeff>
+            <ReproSeasonShouldersLengthFactor>1</ReproSeasonShouldersLengthFactor>
+            <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
+            <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
+            <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+            <FractionToStolon>0</FractionToStolon>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
@@ -19249,6 +19258,7 @@ namespace Models
         <PastureSpecies>
           <Name>Ryegrass</Name>
           <InterceptedRadn>0</InterceptedRadn>
+          <fractionToLeaf>0</fractionToLeaf>
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
@@ -19280,16 +19290,18 @@ namespace Models
           <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
           <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
           <DegreesDayForGermination>100</DegreesDayForGermination>
+          <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
-          <ShootSeasonalAllocationIncrease>0.8</ShootSeasonalAllocationIncrease>
-          <DayInitHigherShootAllocation>232</DayInitHigherShootAllocation>
-          <HigherShootAllocationPeriods>
-            <int>35</int>
-            <int>60</int>
-            <int>30</int>
-          </HigherShootAllocationPeriods>
-          <FracToLeaf>0.7</FracToLeaf>
-          <FracToStolon>0</FracToStolon>
+          <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
+          <UseReproSeasonFactor>yes</UseReproSeasonFactor>
+          <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
+          <ReproSeasonTimingCoeff>0.14</ReproSeasonTimingCoeff>
+          <ReproSeasonDurationCoeff>2</ReproSeasonDurationCoeff>
+          <ReproSeasonShouldersLengthFactor>1</ReproSeasonShouldersLengthFactor>
+          <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
+          <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
+          <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+          <FractionToStolon>0</FractionToStolon>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>

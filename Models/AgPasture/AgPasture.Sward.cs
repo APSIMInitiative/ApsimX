@@ -341,7 +341,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double AboveGroundLiveWt
         {
-            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundLivedWt); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.AboveGroundLiveWt); }
         }
 
         /// <summary>Gets the DM weight of dead plant parts above ground.</summary>

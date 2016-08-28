@@ -520,67 +520,102 @@ namespace Models.AgPasture
 
         // - DM allocation  -------------------------------------------------------------------------------------------
 
+        /// <summary>Target, or ideal, shoot-root ratio</summary>
+        [Description("Target, or ideal, shoot-root ratio (for DM allocation) [>0.0]:")]
+        [Units("")]
+        public double TargetSRratio { get; set; } = 3.0;
+
         /// <summary>Maximum fraction of DM allocated to roots (from daily growth) [0-1]</summary>
         [Description("Maximum fraction of DM allocated to roots (from daily growth) [0-1]:")]
         [Units("0-1")]
         public double MaxRootAllocation { get; set; } = 0.25;
 
-        /// <summary>Factor by which DM allocation to shoot is increased due to reproductive growth [0-1]</summary>
-        /// <remarks>
-        /// Allocation to shoot is typically given by 1-maxRootFraction, but during a given period (spring) it can be increased
-        /// to simulate reproductive growth. Shoot allocation is adjsuted by multiplying its base value by 1 + SeasonShootAllocationIncrease
-        /// </remarks>
-        [Description("Factor by which DM allocation to shoot is increased during 'spring' [0-1]:")]
+        /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio [0-1]</summary>
+        [Description("Maximum effect that soil GLFs have on Shoot-Root ratio [0-1]:")]
         [Units("0-1")]
-        public double ShootSeasonalAllocationIncrease { get; set; } = 0.8;
-
-        /// <summary>Day for the beginning of the period with higher shoot allocation ('spring')</summary>
-        private int doyIniHighShoot = 232;
-
-        /// <summary>Day for the beginning of the period with higher shoot allocation ('spring')</summary>
-        /// <remarks>Care must be taken as this varies with north or south hemisphere</remarks>
-        [Description("Day for the beginning of the period with higher shoot allocation ('spring'):")]
-        [Units("-")]
-        public int DayInitHigherShootAllocation
-        {
-            get { return doyIniHighShoot; }
-            set { doyIniHighShoot = value; }
-        }
+        public double ShootRootGlfFactor { get; set; } = 0.50;
 
         /// <summary>
-        /// Number of days defining the duration of the three phases with higher DM allocation to shoot (onset, sill, return)
+        /// Flag whether Shoot:Root ratio should be adjusted to mimic DM allocation reproductive season (perennial species)
         /// </summary>
-        private int[] higherShootAllocationPeriods = {30, 60, 30};
-
-        /// <summary>
-        /// Number of days defining the duration of the three phases with higher DM allocation to shoot (onset, sill, return)
-        /// </summary>
-        /// <remarks>
-        /// Three numbers are needed, they define the duration of the phases for increase, plateau, and the deacrease in allocation
-        /// The allocation to shoot is maximum at the plateau phase, it is 1 + SeasonShootAllocationIncrease times the value of maxSRratio
-        /// </remarks>
-        [Description("Duration of the three phases of higher DM allocation to shoot [days]:")]
-        [Units("days")]
-        public int[] HigherShootAllocationPeriods
+        [Description("Adjust Shoot-Root ratio to mimic DM allocation during reproductive season (perennials)?")]
+        [Units("yes/no")]
+        public YesNoAnswer UseReproSeasonFactor
         {
-            get { return higherShootAllocationPeriods; }
-            set
+            get
             {
-                for (int i = 0; i < 3; i++)
-                    higherShootAllocationPeriods[i] = value[i];
-                // so, if 1 or 2 values are supplied the remainder are not changed, if more values are given, they are ignored
+                if (usingReproSeasonFactor)
+                    return YesNoAnswer.yes;
+                else
+                    return YesNoAnswer.no;
             }
+            set { usingReproSeasonFactor = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Fraction of new shoot growth allocated to leaves [0-1]</summary>
-        [Description("Fraction of new shoot growth allocated to leaves [0-1]:")]
+        /// <summary>Reference latitude determining timing for reproductive season [degress]</summary>
+        [Description("Reference latitude determining timing for reproductive season [degress]:")]
+        [Units("degrees")]
+        public double ReproSeasonReferenceLatitude { get; set; } = 41.0;
+
+        /// <summary>Coefficient controling the time to start the reproductive season as function of latitude [-]</summary>
+        [Description("Coefficient controling the time to start the reproductive season as function of latitude [-]:")]
+        [Units("-")]
+        public double ReproSeasonTimingCoeff { get; set; } = 0.14;
+
+        /// <summary>Coefficient controling the duration of the reproductive season as function of latitude [-]</summary>
+        [Description("Coefficient controling the duration of the reproductive season as function of latitude [-]:")]
+        [Units("-")]
+        public double ReproSeasonDurationCoeff { get; set; } = 2.0;
+
+        /// <summary>Ratio between the length of shoulders and the period with full reproductive growth effect [-]</summary>
+        [Description("Ratio between the length of shoulders and the period with full reproductive growth effect [-]:")]
+        [Units("-")]
+        public double ReproSeasonShouldersLengthFactor { get; set; } = 1.0;
+
+        /// <summary>Proportion of the shoulder length period prior to period with full reproductive growth effect [0-1]</summary>
+        [Description("Proportion of the shoulder length period prior to period with full reproductive growth effect [0-1]:")]
         [Units("0-1")]
-        public double FracToLeaf { get; set; } = 0.7;
+        public double ReproSeasonOnsetDurationFactor { get; set; } = 0.60;
+
+        /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth [>1.0]</summary>
+        [Description("Maximum increase in Shoot-Root ratio during reproductive growth [>1.0]:")]
+        [Units(">1.0")]
+        public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
+
+        /// <summary>Coefficient controling the increase in shoot allocation during reproductive growth as function of latitude [-]</summary>
+        [Description("Coefficient controling the increase in shoot allocation during reproductive growth as function of latitude [-]:")]
+        [Units("-")]
+        public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
+
+        /// <summary>Maximum target allocation of new growth to leaves [0-1]</summary>
+        [Description("Maximum target allocation of new growth to leaves [0-1]")]
+        [Units("0-1")]
+        private double FractionLeafMaximum { get; set; } = 0.7;
+
+        /// <summary>Minimum target allocation of new growth to leaves [0-1]</summary>
+        [Description("Minimum target allocation of new growth to leaves [0-1]")]
+        [Units("0-1")]
+        private double FractionLeafMinimum { get; set; } = 0.7;
+
+        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease [g/m^2]</summary>
+        [Description("Shoot DM at which allocation of new growth to leaves start to decrease [g/m^2]")]
+        [Units("g/m^2")]
+        private double FractionLeafDMThreshold { get; set; } = 100;
+
+        /// <summary>Shoot DM factor, when allocation to leaves is midway maximum and minimum [g/m^2]</summary>
+        [Description("Shoot DM factor, when allocation to leaves is midway maximum and minimum [g/m^2]")]
+        [Units("g/m^2")]
+        private double FractionLeafDMFactor { get; set; } = 500;
+
+        /// <summary>Exponent of function describing DM allocation to leaves [>0.0]</summary>
+        [Description("Exponent of function describing DM allocation to leaves [>0.0]")]
+        [Units(">0.0")]
+        private double FractionLeafExponent { get; set; } = 3.0;
 
         /// <summary>Fraction of new shoot growth allocated to stolons [0-1]</summary>
         [Description("Fraction of new shoot growth allocated to stolons [0-1]:")]
         [Units("0-1")]
-        public double FracToStolon { get; set; } = 0.0;
+        public double FractionToStolon { get; set; } = 0.0;
 
         /// <summary>Specific leaf area [m^2/kg DM]</summary>
         [Description("Specific leaf area [m^2/kg DM]:")]
@@ -591,7 +626,6 @@ namespace Models.AgPasture
         [Description("Specific root length [m/g DM]:")]
         [Units("m/g")]
         public double SpecificRootLength { get; set; } = 75.0;
-
 
         // Turnover and senescence  -----------------------------------------------------------------------------------
 
@@ -1006,8 +1040,23 @@ namespace Models.AgPasture
         /// <summary>N amount in senesced roots</summary>
         private double dNrootSen;
 
-        /// <summary>Fraction of growth allocated to shoot (0-1)</summary>
-        private double fShoot;
+        /// <summary>Fraction of new growth allocated to shoot (0-1)</summary>
+        private double fractionToShoot;
+
+        /// <summary>Fraction of new shoot growth allocated to leaves (0-1)</summary>
+        public double fractionToLeaf;
+
+        /// <summary>Flag whether the factor adjusting Shoot:Root ratio during reproductive season is being used</summary>
+        private bool usingReproSeasonFactor = true;
+
+        /// <summary>The three intervals defining the reproductive season (onset, main phase, and outset)</summary>
+        private double[] reproSeasonInterval;
+
+        /// <summary>The day of the year for the start of the reproductive season</summary>
+        private double doyIniReproSeason;
+
+        /// <summary>The relative increase in the shoot-root ratio during reproductive season</summary>
+        private double allocationIncreaseRepro;
 
         /// <summary>The daily DM turnover rate (from tissue 1 to 2, then to 3, then to 4)</summary>
         private double gama = 0.0;
@@ -1036,9 +1085,6 @@ namespace Models.AgPasture
 
         /// <summary>The daily variation in root depth</summary>
         private double dRootDepth = 50;
-
-        /// <summary>The maximum shoot-root ratio</summary>
-        private double maxSRratio;
 
         // Amounts and fluxes of N in the plant  ----------------------------------------------------------------------
 
@@ -1200,7 +1246,7 @@ namespace Models.AgPasture
         const double myEpsilon = 0.000000001;
 
         /// <summary>A yes or no answer</summary>
-        private enum YesNoAnswer
+        public enum YesNoAnswer
         {
             /// <summary>a positive answer</summary>
             yes,
@@ -1325,14 +1371,14 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double AboveGroundWt
         {
-            get { return AboveGroundLivedWt + AboveGroundDeadWt; }
+            get { return AboveGroundLiveWt + AboveGroundDeadWt; }
         }
 
         /// <summary>Gets the DM weight of live plant parts above ground.</summary>
         /// <value>The above ground DM weight of live plant parts.</value>
         [Description("Dry matter weight of alive plants above ground")]
         [Units("kgDM/ha")]
-        public double AboveGroundLivedWt
+        public double AboveGroundLiveWt
         {
             get { return leaves.DMGreen + stems.DMGreen + stolons.DMGreen; }
         }
@@ -1716,7 +1762,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NAPP
         {
-            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * fShoot / CarbonFractionInDM; }
+            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * fractionToShoot / CarbonFractionInDM; }
         }
 
         /// <summary>Gets the net below-ground primary productivity.</summary>
@@ -1725,7 +1771,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NBPP
         {
-            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * (1 - fShoot) / CarbonFractionInDM; }
+            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * (1 - fractionToShoot) / CarbonFractionInDM; }
         }
 
         #endregion
@@ -2317,7 +2363,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double ShootDMAllocation
         {
-            get { return fShoot; }
+            get { return fractionToShoot; }
         }
 
         /// <summary>Gets the DM allocation to roots.</summary>
@@ -2326,7 +2372,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double RootDMAllocation
         {
-            get { return 1 - fShoot; }
+            get { return 1 - fractionToShoot; }
         }
 
         #endregion
@@ -2673,6 +2719,9 @@ namespace Models.AgPasture
             // set initial plant state
             SetInitialState();
 
+            // initialise parameter for DM allocation during reproductive season
+            InitReproductiveGrowthFactor();
+
             // initialise the class which will hold yesterday's plant state
             myPreviousState = new SpeciesStateParameters(nLayers);
 
@@ -2691,9 +2740,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>
-        /// Initialise arrays to same length as soil layers
-        /// </summary>
+        /// <summary>Initialise arrays to same length as soil layers</summary>
         private void InitiliaseSoilArrays()
         {
             mySoilAvailableWater = new double[nLayers];
@@ -2704,9 +2751,7 @@ namespace Models.AgPasture
             mySoilNitrogenTakenUp = new double[nLayers];
         }
 
-        /// <summary>
-        /// Initialise, check, and save the varibles representing the initial plant state
-        /// </summary>
+        /// <summary>Initialise, check, and save the varibles representing the initial plant state</summary>
         private void CheckInitialState()
         {
             // 1. Choose the appropriate DM partition, based on species family
@@ -2834,9 +2879,6 @@ namespace Models.AgPasture
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
             roots.Tissue[0].Namount = InitialState.NAmount[11];
 
-            // maximum shoot:root ratio
-            maxSRratio = (1 - MaxRootAllocation) / MaxRootAllocation;
-
             // 4. Canopy height and related variables
             InitialiseCanopy();
 
@@ -2889,6 +2931,42 @@ namespace Models.AgPasture
 
             // 5. Calculate the values for LAI
             EvaluateLAI();
+        }
+
+        /// <summary>Initialise parameters to compute factor increasing shoot allocation during reproductive growth</summary>
+        /// <remarks>
+        /// Reproductive phase of perennial is not simulated by the model, the ReproductiveGrowthFactor attempts to mimic the main
+        ///  effect, which is a higher allocation of DM to shoot during this period. The beginning and length of the reproductive
+        ///  phase is computed as function of latitude (it occurs later in spring and is shorter the further the location is from
+        ///  the equator). The extent at which allocation to shoot increases is also a function of latitude, maximum allocation is
+        ///  greater for higher latitudes. Shoulder periods occur before and after the main phase, in these allocation transictions
+        ///  between default allocation and that of the main phase.
+        /// </remarks>
+        internal void InitReproductiveGrowthFactor()
+        {
+            reproSeasonInterval = new double[3];
+
+            // compute the day to start the main phase (period with maximum DM allocation to shoot)
+            double doyWinterSolstice = (myMetData.Latitude < 0.0) ? 172 : 355;
+            double reproAux = Math.Exp(-ReproSeasonTimingCoeff * (Math.Abs(myMetData.Latitude) - ReproSeasonReferenceLatitude));
+            double doyIniPlateau = doyWinterSolstice + 0.5 * 365.25 / (1.0 + reproAux);
+
+            // compute the duration of the main phase (minimum of about 15 days, maximum of six months)
+            reproSeasonInterval[1] = (365.25 / 24.0);
+            reproSeasonInterval[1] += (365.25 * 11.0 / 24.0) * Math.Pow(1.0 - (Math.Abs(myMetData.Latitude) / 90.0), ReproSeasonDurationCoeff);
+
+            // compute the duration of the onset and outset phases (shoulders - maximum of six months)
+            reproAux = Math.Min(365.25 / 2.0, reproSeasonInterval[1] * ReproSeasonShouldersLengthFactor);
+            reproSeasonInterval[0] = reproAux * ReproSeasonOnsetDurationFactor;
+            reproSeasonInterval[2] = reproAux * (1.0 - ReproSeasonOnsetDurationFactor);
+
+            // get the day for the start of reproductive season
+            doyIniReproSeason = doyIniPlateau - reproSeasonInterval[0];
+            if (doyIniReproSeason < 0.0) doyIniReproSeason += 365.25;
+
+            // compute the factor to augment shoot:root ratio at main phase
+            reproAux = Math.Exp(-ReproSeasonAllocationCoeff * (Math.Abs(myMetData.Latitude) - ReproSeasonReferenceLatitude));
+            allocationIncreaseRepro = ReproSeasonMaxAllocationIncrease / (1.0 + reproAux);
         }
 
         /// <summary>Initialise the variables in canopy properties</summary>
@@ -2982,6 +3060,10 @@ namespace Models.AgPasture
 
                     // step 01 - Potential growth
                     CalcDailyPotentialGrowth();
+
+                    // Potential allocation of todays growth
+                    //fShoot = ToShootFraction();
+                    //EvaluateAllocationToLeaf();
 
                     // Water demand, supply, and uptake
                     DoWaterCalculations();
@@ -3100,9 +3182,9 @@ namespace Models.AgPasture
             // Potential growth after water limitations
             dGrowthWstress = dGrowthPot * Math.Pow(glfWater, WaterStressExponent);
 
-            // allocation of todays growth
-            fShoot = ToShootFraction();
-            //   FL = UpdatefLeaf();
+            // Potential allocation of todays growth
+            EvaluateAllocationToShoot();
+            EvaluateAllocationToLeaf();
         }
 
         /// <summary>Calculates the actual plant growth (after limitations, before senescence).</summary>
@@ -3230,7 +3312,7 @@ namespace Models.AgPasture
             }
 
             // Total DM converted to C (kg/ha)
-            double liveBiomassC = (AboveGroundLivedWt + BelowGroundWt) * CarbonFractionInDM;
+            double liveBiomassC = (AboveGroundLiveWt + BelowGroundWt) * CarbonFractionInDM;
             double result = liveBiomassC * MaintenanceRespirationCoefficient * Teffect * glfNc;
             return Math.Max(0.0, result);
         }
@@ -3281,10 +3363,10 @@ namespace Models.AgPasture
             if (dGrowthActual > 0.0)
             {
                 // Fractions of new growth for each plant part (fShoot was calculated in DoPlantGrowth)
-                double toLeaf = fShoot * FracToLeaf;
-                double toStem = fShoot * (1.0 - FracToStolon - FracToLeaf);
-                double toStolon = fShoot * FracToStolon;
-                double toRoot = 1.0 - fShoot;
+                double toLeaf = fractionToShoot * fractionToLeaf;
+                double toStem = fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
+                double toStolon = fractionToShoot * FractionToStolon;
+                double toRoot = 1.0 - fractionToShoot;
 
                 // Checking mass balance
                 double ToAll = toLeaf + toStolon + toStem + toRoot;
@@ -3362,87 +3444,6 @@ namespace Models.AgPasture
                 dGrowthShoot = 0.0;
                 dGrowthRoot = 0.0;
             }
-        }
-
-        /// <summary>Computes the fraction of today's growth allocated to shoot</summary>
-        /// <returns>The fraction of DM growth allocated to shoot (0-1)</returns>
-        /// <remarks>
-        /// Takes into consideration any seasonal variations and defoliation, this is done by
-        /// targeting a given shoot:root ratio (that is the maxSRratio)
-        /// </remarks>
-        private double ToShootFraction()
-        {
-            double result = 1.0;
-            double previousAbvGrdLivedWt = myPreviousState.leaves.DMGreen + myPreviousState.stems.DMGreen +
-                                           myPreviousState.stolons.DMGreen;
-            if (myPreviousState.roots.DMTotal > 0.00001 || previousAbvGrdLivedWt < myPreviousState.roots.DMTotal)
-            {
-                double fac = 1.0;
-                int doyIncrease = doyIniHighShoot + higherShootAllocationPeriods[0]; //35;   //75
-                int doyPlateau = doyIncrease + higherShootAllocationPeriods[1]; // 95;   // 110;
-                int doyDecrease = doyPlateau + higherShootAllocationPeriods[2]; // 125;  // 140;
-                int doy = myClock.Today.DayOfYear;
-
-                if (doy > doyIniHighShoot)
-                {
-                    if (doy < doyIncrease)
-                        fac = 1 + ShootSeasonalAllocationIncrease * MathUtilities.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
-                    else if (doy <= doyPlateau)
-                        fac = 1.0 + ShootSeasonalAllocationIncrease;
-                    else if (doy <= doyDecrease)
-                        fac = 1 + ShootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
-                    else
-                        fac = 1;
-                }
-                else
-                {
-                    if (doyDecrease > 365 && doy <= doyDecrease - 365)
-                        fac = 1 + ShootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
-                }
-
-                double presentSRratio = previousAbvGrdLivedWt / myPreviousState.roots.DMTotal;
-                double targetedSRratio = fac * maxSRratio;
-                double newSRratio;
-
-                if (presentSRratio > targetedSRratio)
-                    newSRratio = targetedSRratio;
-                else
-                    newSRratio = targetedSRratio * (targetedSRratio / presentSRratio);
-
-                newSRratio *= Math.Min(glfWater, glfN);
-
-                result = newSRratio / (1.0 + newSRratio);
-
-                if (result / (1 - result) < targetedSRratio)
-                    result = targetedSRratio / (1 + targetedSRratio);
-            }
-
-            return result;
-        }
-
-        /// <summary>Calculates the target (ideal) ratio of leaf to stems/stolons</summary>
-        /// <returns>The target leaf to stem ratio</returns>
-        private double CalcLeafRatio()
-        {
-            double leafRatio;
-            double fLeaf = FracToLeaf;
-            double dmMaxFLeaf = 500;
-            double dmReferenceFLeaf = 2000;
-            double minFLeaf = 0.0;
-            double exponentFLeaf = 3.0;
-
-            if (AboveGroundLivedWt > dmMaxFLeaf)
-            {
-                double dmAux = Math.Pow((AboveGroundLivedWt - dmMaxFLeaf) / (dmReferenceFLeaf - dmMaxFLeaf), exponentFLeaf);
-                fLeaf = minFLeaf + (FracToLeaf - minFLeaf) / (1 + dmAux);
-            }
-
-            if (fLeaf < 1.0)
-                leafRatio = fLeaf / (1 - fLeaf);
-            else
-                leafRatio = fLeaf / myEpsilon;
-
-            return leafRatio;
         }
 
         /// <summary>Computes the turnover rate and update each tissue pool of all plant parts</summary>
@@ -3985,10 +3986,10 @@ namespace Models.AgPasture
         /// <summary>Computes the N demanded for optimum N content as well as luxury uptake</summary>
         internal void CalcNDemand()
         {
-            double toRoot = dGrowthWstress * (1.0 - fShoot);
-            double toStol = dGrowthWstress * fShoot * FracToStolon;
-            double toLeaf = dGrowthWstress * fShoot * FracToLeaf;
-            double toStem = dGrowthWstress * fShoot * (1.0 - FracToStolon - FracToLeaf);
+            double toRoot = dGrowthWstress * (1.0 - fractionToShoot);
+            double toStol = dGrowthWstress * fractionToShoot * FractionToStolon;
+            double toLeaf = dGrowthWstress * fractionToShoot * fractionToLeaf;
+            double toStem = dGrowthWstress * fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
 
             // N demand for new growth, with optimum N (kg/ha)
             NdemandOpt = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
@@ -4506,6 +4507,122 @@ namespace Models.AgPasture
             return rFactor;
         }
 
+        /// <summary>Calculates the fraction of new growth allocated to shoot</summary>
+        /// <remarks>
+        /// Allocation of new growth to shoot is a function of the current and a target (ideal) Shoot-Root ratio; it is further
+        ///  modified according to soil's growth limiting factors (plants favour root growth when water or N are limiting).
+        /// The target Shoot-Root ratio will be adjusted (increased) during spring for mimicking changes in DM allocation during
+        ///  the reproductive season if usingReproSeasonFactor.
+        /// The allocation to shoot may be further modified to ensure a minimum allocation (= 1.0 - MaxRootAllocation).
+        /// </remarks>
+        private void EvaluateAllocationToShoot()
+        {
+            if (roots.DMGreen > 0.00001)
+            {
+                // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
+                double glfMin = Math.Min(glfWater, glfN);
+
+                // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)
+                double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
+
+                // get the current shoot/root ratio (partiton will try to make this value closer to targetSR)
+                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, roots.DMGreen, 1000000.0);
+
+                // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
+                double reproFac = 1.0;
+                if (usingReproSeasonFactor && !isAnnual)
+                    reproFac = CalcReproductiveGrowthFactor();
+
+                // get today's target SR
+                double targetSR = TargetSRratio * reproFac;
+
+                // update todays shoot:root partition
+                double growthSR = targetSR * glfFactor * targetSR / currentSR;
+
+                // compute fraction to shoot
+                fractionToShoot = growthSR / (1.0 + growthSR);
+            }
+            else
+            {
+                // use default value, this should not happen (might happen if plant is dead)
+                fractionToShoot = 1.0;
+            }
+
+            // check for maximum root allocation (kept here mostly for backward compatibility)
+            if ((1 - fractionToShoot) > MaxRootAllocation)
+                fractionToShoot = 1 - MaxRootAllocation;
+        }
+
+        /// <summary>Calculate the factor increasing shoot allocation during reproductive growth</summary>
+        /// <remarks>
+        /// This mimics the changes in DM allocation during reproductive season; allocation to shoot increases up to a maximum
+        ///  value (defined by allocationIncreaseRepro). This value is used during the main phase, two shoulder periods are
+        ///  defined on either side of the main phase (duration is given by reproSeasonInterval, translated into days of year),
+        ///  Onset phase goes between doyA and doyB, main pahse between doyB and doyC, and outset between doyC and doyD.
+        /// Note: The days have to be set as doubles or the division operations will be rounded and be sligtly wrong.
+        /// </remarks>
+        /// <returns>A factor to correct shoot allocation</returns>
+        private double CalcReproductiveGrowthFactor()
+        {
+            double result = 1.0;
+            int yearLength = 365 + (DateTime.IsLeapYear(myClock.Today.Year) ? 1 : 0);
+            double doy = myClock.Today.DayOfYear;
+            double doyA = doyIniReproSeason;
+            double doyB = doyA + reproSeasonInterval[0];
+            double doyC = doyB + reproSeasonInterval[1];
+            double doyD = doyC + reproSeasonInterval[2];
+
+            if (doy > doyA)
+            {
+                if (doy <= doyB)
+                    result += allocationIncreaseRepro * (doy - doyA) / (doyB - doyA);
+                else if (doy <= doyC)
+                    result += allocationIncreaseRepro;
+                else if (doy <= doyD)
+                    result += allocationIncreaseRepro * (1 - (doy - doyC) / (doyD - doyC));
+            }
+            else
+            {
+                // check whether the high allocation period goes across the year (should only be needed for southern hemisphere)
+                if ((doyC > yearLength) && (doy <= doyC - yearLength))
+                    result += allocationIncreaseRepro;
+                else if ((doyD > yearLength) && (doy <= doyD - yearLength))
+                    result += allocationIncreaseRepro * (1 - (yearLength + doy - doyC) / (doyD - doyC));
+            }
+
+            return result;
+        }
+
+        /// <summary>Computes the fraction of new shoot DM that is allocated to leaves</summary>
+        /// <remarks>
+        /// This method is used to reduce the propotion of leaves as plants grow, this is used for species that 
+        ///  allocate proportionally more DM to stolon/stems when the whole plant's DM is high.
+        /// To avoid too little allocation to leaves in case of grazing the current leaf:stem ratio is evaluated
+        ///  and used to modify the targeted value in a similar way as shoot:root ratio.
+        /// </remarks>
+        private void EvaluateAllocationToLeaf()
+        {
+            // compute new target FractionLeaf
+            double targetFLeaf = FractionLeafMaximum;
+            if ((FractionLeafMinimum < FractionLeafMaximum) && (AboveGroundLiveWt > FractionLeafDMThreshold))
+            {
+                double fLeafAux = (AboveGroundLiveWt - FractionLeafDMThreshold) / (FractionLeafDMFactor - FractionLeafDMThreshold);
+                fLeafAux = Math.Pow(fLeafAux, FractionLeafExponent);
+                targetFLeaf = FractionLeafMinimum + (FractionLeafMaximum - FractionLeafMinimum) / (1.0 + fLeafAux);
+            }
+
+            // get current leaf:stem ratio
+            double currentLS = leaves.DMGreen / (stems.DMGreen + stolons.DMGreen);
+
+            // get today's target leaf:stem ratio
+            double targetLS = targetFLeaf / (1 - targetFLeaf);
+
+            // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
+            double newLS = targetLS * targetLS / currentLS;
+
+            fractionToLeaf = newLS / (1 + newLS);
+        }
+
         /// <summary>Computes the variations in root depth and distribution</summary>
         /// <remarks>
         /// Root depth will increase is smaller than maximumRootDepth and there is a positive net DM accumulation.
@@ -4595,12 +4712,12 @@ namespace Models.AgPasture
             greenLAI = greenTissue * SpecificLeafArea;
 
             // Adjust helping to account for resilience after unfavoured conditions
-            if (!isLegume && AboveGroundLivedWt < 1000)
+            if (!isLegume && AboveGroundLiveWt < 1000)
             {
                 double maxStemLAI = Math.Sqrt(0.1); //TODO make this a parameter
                 greenTissue = stems.DMGreen / 10000;
-                greenLAI += greenTissue * SpecificLeafArea * Math.Sqrt((1000 - AboveGroundLivedWt) / 10000);
-                //greenLAI += greenTissue * maxStemLAI * SpecificLeafArea * Math.Sqrt((1000 - AboveGroundLivedWt) / 1000);
+                greenLAI += greenTissue * SpecificLeafArea * Math.Sqrt((1000 - AboveGroundLiveWt) / 10000);
+                //greenLAI += greenTissue * maxStemLAI * SpecificLeafArea * Math.Sqrt((1000 - AboveGroundLiveWt) / 1000);
             }
             /* 
              This adjust assumes cover will be bigger for the same amount of DM when DM is low, due to:
