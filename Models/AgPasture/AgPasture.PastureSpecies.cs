@@ -659,6 +659,11 @@ namespace Models.AgPasture
         [Units("m^2/kg")]
         public double SpecificLeafArea { get; set; } = 20.0;
 
+        /// <summary>Number of live leaves per tiller [-]</summary>
+        [Description("Number of live leaves per tiller [-]:")]
+        [Units("-")]
+        public double LiveLeavesPerTiller { get; set; } = 3.0;
+
         /// <summary>Specific root length [m/g DM]</summary>
         [Description("Specific root length [m/g DM]:")]
         [Units("m/g")]
@@ -671,15 +676,19 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double TissueTurnoverRateShoot { get; set; } = 0.025;
 
-        /// <summary>Daily detachment rate for DM dead [0-1]</summary>
-        [Description("Daily detachment rate for DM dead [0-1]:")]
-        [Units("0-1")]
-        public double DetachmentRate { get; set; } = 0.11;
-
         /// <summary>Daily DM turnover rate for root tissue [0-1]</summary>
         [Description("Daily DM turnover rate for root tissue [0-1]")]
         [Units("0-1")]
         public double TissueTurnoverRateRoot { get; set; } = 0.02;
+
+        /// <summary>Relative turnover rate for growing tissue [-]</summary>
+        [XmlIgnore]
+        public double RelativeTurnoverGrowing { get; set; } = 2.0;
+
+        /// <summary>Daily detachment rate for DM dead [0-1]</summary>
+        [Description("Daily detachment rate for DM dead [0-1]:")]
+        [Units("0-1")]
+        public double DetachmentRate { get; set; } = 0.11;
 
         /// <summary>Minimum temperature for tissue turnover [oC]</summary>
         [Description("Minimum temperature for tissue turnover [oC]:")]
@@ -694,42 +703,37 @@ namespace Models.AgPasture
         /// <summary>Maximum increase in tissue turnover due to water stress</summary>
         [Description("Maximum increase in tissue turnover due to water stress:")]
         [Units("-")]
-        public double TissueTurnoverWFactorMax { get; set; } = 2.0;
+        public double TissueTurnoverDroughtMax { get; set; } = 1.0;
 
-        /// <summary>Optimum value GLFwater for tissue turnover [0-1], below this value tissue turnover increases</summary>
-        [Description("Optimum value GLFwater for tissue turnover [0-1]")]
+        /// <summary>Minimum GLFwater without effect on tissue turnover [0-1], below this value tissue turnover increases</summary>
+        [Description("Minimum GLFwater without effect on tissue turnover [0-1]")]
         [Units("0-1")]
-        public double TissueTurnoverGLFWopt { get; set; } = 0.5;
+        public double TissueTurnoverDroughtThreshold { get; set; } = 0.5;
 
         /// <summary>Stock factor for increasing tissue turnover rate</summary>
         [XmlIgnore]
         [Units("-")]
         public double StockParameter { get; set; } = 0.05;
 
-        /// <summary>Fraction of luxury N in tissue 2 available for remobilisation [0-1]</summary>
-        [Description("Fraction of luxury N in tissue 2 available for remobilisation [0-1]:")]
+        /// <summary>Fraction of luxury N remobilisable each day, for each tissue age (growing, developed, mature) [0-1]</summary>
+        [Description("Fraction of luxury N remobilisable each day, for each tissue age (growing, developed, mature) [0-1]:")]
         [Units("0-1")]
-        public double KappaNRemob2 { get; set; } = 0.0;
+        public double[] FractionNLuxuryRemobilisable { get; set; } = {0.0, 0.0, 0.0};
 
-        /// <summary>Fraction of luxury N in tissue 3 available for remobilisation [0-1]</summary>
-        [Description("Fraction of luxury N in tissue 3 available for remobilisation [0-1]:")]
-        [Units("0-1")]
-        public double KappaNRemob3 { get; set; } = 0.0;
-
-        /// <summary>Fraction of non-utilised remobilised N that is returned to dead material [0-1]</summary>
-        [Description("Fraction of non-utilised remobilised N that is returned to dead material [0-1]:")]
-        [Units("0-1")]
-        public double KappaNRemob4 { get; set; } = 0.0;
-
-        /// <summary>Fraction of senescent DM that is remobilised (as carbohydrate) [0-1]</summary>
+        /// <summary>Fraction of non-utilised remobilised N that is kept on dead material [0-1]</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double KappaCRemob { get; set; } = 0.0;
+        public double FractionNRemobKept { get; set; } = 1.0;
 
-        /// <summary>Fraction of senescent DM (protein) that is remobilised to new growth [0-1]</summary>
+        /// <summary>Fraction of C in senescent carbohydrate DM that is remobilised to new growth [0-1]</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double FacCNRemob { get; set; } = 0.0;
+        public double FractionSenescedCarbRemob { get; set; } = 0.0;
+
+        /// <summary>Fraction of C in senescent protein DM that is remobilised to new growth [0-1]</summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double FactionSenescedProteinRemob { get; set; } = 0.0;
 
         // - N concentration  -----------------------------------------------------------------------------------------
 
@@ -752,18 +756,6 @@ namespace Models.AgPasture
         [Description("N concentration thresholds for roots (optimum, minimum and maximum) [g/g:]")]
         [Units("g/g")]
         public double[] NThresholdsForRoots { get; set; } = { 0.020, 0.006, 0.025 };
-
-        /// <summary>Concentration of N in tissues at stage 2 relative to stage 1 [0-1]</summary>
-        /// <value>The relative n stage2.</value>
-        [Description("Concentration of N in tissues at stage 2 relative to stage 1 [0-1]:")]
-        [Units("0-1")]
-        public double RelativeNStage2 { get; set; } = 1.0;
-
-        /// <summary>Concentration of N in tissues at stage 3 relative to stage 1 [0-1]</summary>
-        /// <value>The relative n stage3.</value>
-        [Description("Concentration of N in tissues at stage 3 relative to stage 1 [0-1]:")]
-        [Units("0-1")]
-        public double RelativeNStage3 { get; set; } = 1.0;
 
         // - N fixation  ----------------------------------------------------------------------------------------------
 
@@ -1082,16 +1074,22 @@ namespace Models.AgPasture
         private double dGrowthEff;
 
         /// <summary>Daily litter production (dead to surface OM)</summary>
-        private double dLitter;
+        private double dDMLitter;
 
         /// <summary>N amount in litter procuded</summary>
         private double dNlitter;
 
-        /// <summary>Daily root sennesce (added to soil FOM)</summary>
-        private double dRootSen;
+        /// <summary>Daily shoot senescence</summary>
+        private double dSenescedShoot;
+
+        /// <summary>N amount in senesced shoot</summary>
+        private double dNSenescedShoot;
+
+        /// <summary>Daily root senescence (added to soil FOM)</summary>
+        private double dSenescedRoot;
 
         /// <summary>N amount in senesced roots</summary>
-        private double dNrootSen;
+        private double dNSenescedRoot;
 
         /// <summary>Fraction of new growth allocated to shoot (0-1)</summary>
         private double fractionToShoot;
@@ -1123,6 +1121,18 @@ namespace Models.AgPasture
         /// <summary>The daily DM turnover rate for roots</summary>
         private double gamaR = 0.0;
 
+        /// <summary>The tissue turnover factor due to variations in temperature</summary>
+        private double ttfTemperature = 0.0;
+
+        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        private double ttfMoistureShoot = 0.0;
+
+        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        private double ttfMoistureRoot = 0.0;
+
+        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        private double ttfLeafNumber = 0.0;
+
         /// <summary>The cumulative degrees-day during germination phase</summary>
         private double germinationGDD = 0.0;
 
@@ -1150,14 +1160,11 @@ namespace Models.AgPasture
         /// <summary>The amount of N fixation from atmosphere (for legumes)</summary>
         internal double Nfixation = 0.0;
 
-        /// <summary>The amount of N remobilised from senesced tissue</summary>
-        private double NRemobilised = 0.0;
-
         /// <summary>The amount of N remobilisable from senesced tissue</summary>
         private double NRemobilisable = 0.0;
 
-        /// <summary>The amount of N being remobilised from senesced tissue</summary>
-        private double NRemobilising = 0.0;
+        /// <summary>The amount of N remobilised from senesced tissue</summary>
+        private double NRemobilised = 0.0;
 
         /// <summary>The amount of N actually remobilised to new growth</summary>
         private double Nremob2NewGrowth = 0.0;
@@ -1165,17 +1172,11 @@ namespace Models.AgPasture
         /// <summary>The amount of N used in new growth</summary>
         internal double newGrowthN = 0.0;
 
-        /// <summary>The aount of luxury N (above Nopt) in tissue 2 potentially remobilisable</summary>
-        private double NLuxury2;
+        /// <summary>The amount of luxury N (above Nopt) available for remobilisation</summary>
+        private double NLuxuryRemobilisable;
 
-        /// <summary>The amount of luxury N (above Nopt) in tissue 3 potentially remobilisable</summary>
-        private double NLuxury3;
-
-        /// <summary>The amount of luxury N actually remobilised from tissue 2</summary>
-        private double NFastRemob2 = 0.0;
-
-        /// <summary>The amount of luxury N actually remobilised from tissue 3</summary>
-        private double NFastRemob3 = 0.0;
+        /// <summary>The amount of luxury N actually remobilised</summary>
+        private double NLuxuryRemobilised;
 
         // N uptake process  ------------------------------------------------------------------------------------------
 
@@ -1782,7 +1783,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootGrowthWt
         {
-            get { return dGrowthRoot - dRootSen; }
+            get { return dGrowthRoot - dSenescedRoot; }
         }
 
         /// <summary>Gets the litter DM weight deposited onto soil surface.</summary>
@@ -1791,7 +1792,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double LitterWt
         {
-            get { return dLitter; }
+            get { return dDMLitter; }
         }
 
         /// <summary>Gets the senesced root DM weight.</summary>
@@ -1800,7 +1801,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RootSenescedWt
         {
-            get { return dRootSen; }
+            get { return dSenescedRoot; }
         }
 
         /// <summary>Gets the gross primary productivity.</summary>
@@ -2251,16 +2252,16 @@ namespace Models.AgPasture
         /// <value>The remobilisable N amount.</value>
         [Description("Amount of N remobilisable from senesced material")]
         [Units("kgN/ha")]
-        public double RemobilisableN
+        public double RemobilisableSenescedN
         {
-            get { return NRemobilisable; }
+            get { return NRemobilised; }
         }
 
         /// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
         /// <value>The remobilised N amount.</value>
         [Description("Amount of N remobilised from senesced material")]
         [Units("kgN/ha")]
-        public double RemobilisedN
+        public double RemobilisedSenescedN
         {
             get { return Nremob2NewGrowth; }
         }
@@ -2271,7 +2272,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RemobilisableLuxuryN
         {
-            get { return NLuxury2 + NLuxury3; }
+            get { return NLuxuryRemobilisable; }
         }
 
         /// <summary>Gets the amount of luxury N remobilised.</summary>
@@ -2280,25 +2281,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RemobilisedLuxuryN
         {
-            get { return NFastRemob2 + NFastRemob3; }
-        }
-
-        /// <summary>Gets the amount of luxury N potentially remobilisable from tissue 2.</summary>
-        /// <value>The remobilisable luxury N amoount.</value>
-        [Description("Amount of luxury N potentially remobilisable from tissue 2")]
-        [Units("kgN/ha")]
-        public double RemobT2LuxuryN
-        {
-            get { return NLuxury2; }
-        }
-
-        /// <summary>Gets the amount of luxury N potentially remobilisable from tissue 3.</summary>
-        /// <value>The remobilisable luxury N amount.</value>
-        [Description("Amount of luxury N potentially remobilisable from tissue 3")]
-        [Units("kgN/ha")]
-        public double RemobT3LuxuryN
-        {
-            get { return NLuxury3; }
+            get { return NLuxuryRemobilised; }
         }
 
         /// <summary>Gets the amount of atmospheric N fixed.</summary>
@@ -2370,7 +2353,7 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double SenescedRootN
         {
-            get { return dNrootSen; }
+            get { return dNSenescedRoot; }
         }
 
         /// <summary>Gets the amount of N in new grown tissue.</summary>
@@ -2880,7 +2863,16 @@ namespace Models.AgPasture
                 InitialState.PhenoStage = -1;
             }
 
-            // 3. Set the digestibility parameters for each tissue
+            // 3. Set remobilisation rate for luxury N in each tissue
+            roots.Tissue[0].FractionNLuxuryRemobilisable = FractionNLuxuryRemobilisable[0];
+            for (int tissue = 0; tissue < 3; tissue++)
+            {
+                leaves.Tissue[tissue].FractionNLuxuryRemobilisable = FractionNLuxuryRemobilisable[tissue];
+                stems.Tissue[tissue].FractionNLuxuryRemobilisable = FractionNLuxuryRemobilisable[tissue];
+                stolons.Tissue[tissue].FractionNLuxuryRemobilisable = FractionNLuxuryRemobilisable[tissue];
+            }
+
+            // 4. Set the digestibility parameters for each tissue
             for (int tissue = 0; tissue < 4; tissue++)
             {
                 leaves.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
@@ -3091,8 +3083,9 @@ namespace Models.AgPasture
             // 1. Zero out several variables
             RefreshVariables();
 
-            // N remobilisable today is what was computed yesterday
+            // N remobilisable today is what was remobilised yesterday
             NRemobilisable = NRemobilised;
+            NRemobilised = 0.0;
         }
 
         /// <summary>Performs the plant growth calculations</summary>
@@ -3152,8 +3145,8 @@ namespace Models.AgPasture
                     CalcEffectiveGrowth();
 
                     // Send amounts of litter and senesced roots to other modules
-                    DoSurfaceOMReturn(dLitter, dNlitter);
-                    DoIncorpFomEvent(dRootSen, dNrootSen);
+                    DoSurfaceOMReturn(dDMLitter, dNlitter);
+                    DoIncorpFomEvent(dSenescedRoot, dNSenescedRoot);
                 }
             }
             //else
@@ -3270,7 +3263,7 @@ namespace Models.AgPasture
         internal void CalcEffectiveGrowth()
         {
             // Effective, or net, growth
-            dGrowthEff = dGrowthShoot + (dGrowthRoot - dRootSen);
+            dGrowthEff = (dGrowthShoot - dDMLitter) + (dGrowthRoot - dSenescedRoot);
 
             // update root depth
             EvaluateRootGrowth();
@@ -3418,13 +3411,6 @@ namespace Models.AgPasture
         /// </exception>
         internal void DoNewGrowthAllocations()
         {
-            // TODO: implement fLeaf
-            // Leaf appearance rate, as modified by temp & water stress  -  Not really used, should it??
-            //double effTemp = TemperatureLimitingFactor(Tmean);
-            //double effWater = Math.Pow(glfWater, 0.33333);
-            //double rateLeafGrowth = leafRate * effTemp * effWater;
-            //rateLeafGrowth = Math.Max(0.0, Math.Min(1.0, rateLeafGrowth));
-
             if (dGrowthActual > 0.0)
             {
                 // Fractions of new growth for each plant part (fShoot was calculated in DoPlantGrowth)
@@ -3471,36 +3457,15 @@ namespace Models.AgPasture
                 roots.Tissue[0].Namount += toRootN * newGrowthN;
 
                 // Fraction of Nremob not used in new growth that is returned (or kept) to dead tissue
-                double leftoverNremob = NRemobilising * KappaNRemob4;
+                double leftoverNremob = NRemobilisable * FractionNRemobKept;
                 Nsum = myPreviousState.leaves.Tissue[3].Namount + myPreviousState.stems.Tissue[3].Namount;
                 if ((leftoverNremob > 0.0) && (Nsum > 0.0))
                 {
                     leaves.Tissue[3].Namount += leftoverNremob * MathUtilities.Divide(myPreviousState.leaves.Tissue[3].Namount, Nsum, 0.0);
                     stems.Tissue[3].Namount += leftoverNremob * MathUtilities.Divide(myPreviousState.stems.Tissue[3].Namount, Nsum, 0.0);
-                    NRemobilising -= leftoverNremob;
+                    NRemobilisable -= leftoverNremob;
                     // Note: this is only valid for leaf and stems, the remaining (1-kappaNRemob4) and the amounts in roots
                     //  and stolon is disposed off (added to soil FOM or Surface OM via litter)
-                }
-
-                // Check whether luxury N was remobilised during N balance
-                if (NFastRemob2 + NFastRemob3 > 0.0)
-                {
-                    // If N was remobilised, update the N content in tissues accordingly
-                    //  partition between parts is assumed proportional to N content
-                    if (NFastRemob2 > 0.0)
-                    {
-                        Nsum = myPreviousState.leaves.Tissue[1].Namount + myPreviousState.stems.Tissue[1].Namount + myPreviousState.stolons.Tissue[1].Namount;
-                        leaves.Tissue[1].Namount += NFastRemob2 * MathUtilities.Divide(myPreviousState.leaves.Tissue[1].Namount, Nsum, 0.0);
-                        stems.Tissue[1].Namount += NFastRemob2 * MathUtilities.Divide(myPreviousState.stems.Tissue[1].Namount, Nsum, 0.0);
-                        stolons.Tissue[1].Namount += NFastRemob2 * MathUtilities.Divide(myPreviousState.stolons.Tissue[1].Namount, Nsum, 0.0);
-                    }
-                    if (NFastRemob3 > 0.0)
-                    {
-                        Nsum = myPreviousState.leaves.Tissue[2].Namount + myPreviousState.stems.Tissue[2].Namount + myPreviousState.stolons.Tissue[2].Namount;
-                        leaves.Tissue[2].Namount += NFastRemob3 * MathUtilities.Divide(myPreviousState.leaves.Tissue[2].Namount, Nsum, 0.0);
-                        stems.Tissue[2].Namount += NFastRemob3 * MathUtilities.Divide(myPreviousState.stems.Tissue[2].Namount, Nsum, 0.0);
-                        stolons.Tissue[2].Namount += NFastRemob3 * MathUtilities.Divide(myPreviousState.stolons.Tissue[2].Namount, Nsum, 0.0);
-                    }
                 }
             }
             else
@@ -3524,31 +3489,42 @@ namespace Models.AgPasture
         /// <remarks>The C and N amounts for remobilisation are also computed in here</remarks>
         internal void DoTissueTurnoverAndRemobilisation()
         {
-            // The turnover rates are affected by temperature and soil moisture
-            double TempFac = TempFactorForTissueTurnover(Tmean(0.5));
-            double WaterFac = WaterFactorForTissueTurnover();
-            double WaterFac2Litter = Math.Pow(glfWater, 3);
-            double WaterFac2Root = 2 - glfWater;
+            // The turnover rates are affected by soil water and air temperature
+            //  the number of leaves per tiller also influences the rate (3 stage pools are used to describe any number of leaves)
+
+            // Get the temperature factor for tissue turnover
+            ttfTemperature = TempFactorForTissueTurnover(Tmean(0.5));
+
+            // Get the moisture factor for tissue turnover
+            ttfMoistureShoot = WaterFactorForTissueTurnover();
+
+            // Get the moisture factor for littering rate (detachment)
+            double ttfMoistureLitter = Math.Pow(glfWater, 3);
+
+            // Consider the number of leaves
+            ttfLeafNumber = 3.0 / LiveLeavesPerTiller; // three refers to the number of stages used in the model
+
+
+            ttfMoistureRoot = 2 - glfWater;
 
             //stocking rate affecting transfer of dead to litter (default as 0 for now - should be read in)
             double SR = 0;
             double StockFac2Litter = StockParameter * SR;
 
             // Turnover rate for leaf and stem
-            gama = TissueTurnoverRateShoot * TempFac * WaterFac;
+            gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot;
 
             // Turnover rate for stolon
             gamaS = gama;
 
-            // Turnover rate for dead to litter
+            // Turnover rate for dead to litter (detachment)
             double digestDead = (leaves.DigestibilityDead * leaves.DMDead) + (stems.DigestibilityDead * stems.DMDead);
             digestDead = MathUtilities.Divide(digestDead, leaves.DMDead + stems.DMDead, 0.0);
-            gamaD = DetachmentRate * WaterFac2Litter * digestDead / 0.4;
-
+            gamaD = DetachmentRate * ttfMoistureLitter * digestDead / CarbonFractionInDM;
             gamaD += StockFac2Litter;
 
             // Turnover rate for roots
-            gamaR = TissueTurnoverRateRoot * TempFac * WaterFac2Root;
+            gamaR = TissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
 
             // Check whether any adjust on turnover rates are needed
             if (gama > 0.0)
@@ -3575,161 +3551,99 @@ namespace Models.AgPasture
                 }
 
                 // Fraction of DM defoliated today
-                double FracDefoliated = MathUtilities.Divide(dmDefoliated,
-                    dmDefoliated + myPreviousState.leaves.DMTotal + myPreviousState.stems.DMTotal + myPreviousState.stolons.DMTotal, 0.0);
+                double fractionDefoliated = MathUtilities.Divide(dmDefoliated, dmDefoliated + myPreviousState.AboveGroundWt, 0.0);
 
                 // Adjust stolon turnover due to defoliation (increase stolon senescence)
-                gamaS += FracDefoliated * (1.0 - gamaS);
+                gamaS += fractionDefoliated * (1.0 - gamaS);
 
-                // Adjust turnover if senescence will result in dmGreen < dmGreenmin
+                // Adjust turnover if senescence will result in dmGreen < dmGreenmin (perennials only)
                 if (!isAnnual)
                 {
-                    double potSenescence = gama * (myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM
-                                                   + myPreviousState.stolons.Tissue[2].DM);
-                    double dmGreenToBe = myPreviousState.AboveGroundLiveWt + dGrowthActual - potSenescence;
-                    // TODO: here it should be dGrowthShoot, not dGrowthActual
-                    //double dmGreenToBe = myPreviousState.AboveGroundLiveWt + dGrowthShoot - potSenescence;
+                    double potSenescenceable = myPreviousState.leaves.Tissue[2].DM
+                                             + myPreviousState.stems.Tissue[2].DM
+                                             + myPreviousState.stolons.Tissue[2].DM;
+                    double dmGreenToBe = myPreviousState.AboveGroundLiveWt + dGrowthShoot - (gama * potSenescenceable);
                     if (dmGreenToBe < MinimumGreenWt)
                     {
-                        if (myPreviousState.AboveGroundLiveWt + dGrowthShoot <= MinimumGreenWt)
-                        {
-                            // this should not happen anyway
-                            gama = 0.0;
-                            gamaS = 0.0;
-                            gamaR = 0.0;
-                        }
-                        else
-                        {
-                            double gama_adj = MathUtilities.Divide(myPreviousState.AboveGroundLiveWt + dGrowthShoot - MinimumGreenWt,
-                                myPreviousState.leaves.Tissue[2].DM + myPreviousState.stems.Tissue[2].DM + myPreviousState.stolons.Tissue[2].DM, gama);
-                            gamaR *= gama_adj / gama;
-                            gamaD *= gama_adj / gama;
-                            gama = gama_adj;
-                        }
+                        double gama_adj = MathUtilities.Divide(myPreviousState.AboveGroundLiveWt + dGrowthShoot - MinimumGreenWt, potSenescenceable, 0.0);
+                        gamaR *= gama_adj / gama;
+                        gamaD *= gama_adj / gama;
+                        gama = gama_adj;
                     }
 
-                    // set a minimum root too
+                    // set a minimum for roots too
                     if (roots.DMGreen < 0.5 * MinimumGreenWt)
                         gamaR = 0.0;
                 }
 
-                // Do the actual DM turnover for all tissues
-                double dDM_in = 0.0; // growth has been accounted for in PartitionNewGrowth
-                double dDM_out = 2 * gama * myPreviousState.leaves.Tissue[0].DM;
-                leaves.Tissue[0].DM += dDM_in - dDM_out;
-                leaves.Tissue[0].Namount += -dDM_out * myPreviousState.leaves.Tissue[0].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gama * myPreviousState.leaves.Tissue[1].DM;
-                leaves.Tissue[1].DM += dDM_in - dDM_out;
-                leaves.Tissue[1].Namount += dDM_in * myPreviousState.leaves.Tissue[0].Nconc - dDM_out * myPreviousState.leaves.Tissue[1].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gama * myPreviousState.leaves.Tissue[2].DM;
-                leaves.Tissue[2].DM += dDM_in - dDM_out;
-                leaves.Tissue[2].Namount += dDM_in * myPreviousState.leaves.Tissue[1].Nconc - dDM_out * myPreviousState.leaves.Tissue[2].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gamaD * myPreviousState.leaves.Tissue[3].DM;
-                double ChRemobSugar = dDM_in * KappaCRemob;
-                double ChRemobProtein = dDM_in * (myPreviousState.leaves.Tissue[2].Nconc - leaves.NConcMinimum) * CNratioProtein * FacCNRemob;
-                dDM_in -= ChRemobSugar + ChRemobProtein;
-                if (dDM_in < 0.0)
-                    throw new Exception("Loss of mass balance on C remobilisation - leaf");
-                leaves.Tissue[3].DM += dDM_in - dDM_out;
-                leaves.Tissue[3].Namount += dDM_in * leaves.NConcMinimum - dDM_out * myPreviousState.leaves.Tissue[3].Nconc;
-                dLitter = dDM_out;
-                dNlitter = dDM_out * myPreviousState.leaves.Tissue[3].Nconc;
-                dGrowthShoot -= dDM_out;
-                double NRemobilised = dDM_in * (myPreviousState.leaves.Tissue[2].Nconc - leaves.NConcMinimum);
-                double ChRemobl = ChRemobSugar + ChRemobProtein;
+                //// Do the actual turnover, update DM and N
+                double[] detachement;
+                double iniDM = 0.0;
+                double iniN = 0.0;
+                double ChRemobl = 0.0;
 
-                dDM_in = 0.0; // growth has been accounted for in PartitionNewGrowth
-                dDM_out = 2 * gama * myPreviousState.stems.Tissue[0].DM;
-                stems.Tissue[0].DM += dDM_in - dDM_out;
-                stems.Tissue[0].Namount += -dDM_out * myPreviousState.stems.Tissue[0].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gama * myPreviousState.stems.Tissue[1].DM;
-                stems.Tissue[1].DM += dDM_in - dDM_out;
-                stems.Tissue[1].Namount += dDM_in * myPreviousState.stems.Tissue[0].Nconc - dDM_out * myPreviousState.stems.Tissue[1].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gama * myPreviousState.stems.Tissue[2].DM;
-                stems.Tissue[2].DM += dDM_in - dDM_out;
-                stems.Tissue[2].Namount += dDM_in * myPreviousState.stems.Tissue[1].Nconc - dDM_out * myPreviousState.stems.Tissue[2].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gamaD * myPreviousState.stems.Tissue[3].DM;
-                ChRemobSugar = dDM_in * KappaCRemob;
-                ChRemobProtein = dDM_in * (myPreviousState.stems.Tissue[2].Nconc - stems.NConcMinimum) * CNratioProtein * FacCNRemob;
-                dDM_in -= ChRemobSugar + ChRemobProtein;
-                if (dDM_in < 0.0)
-                    throw new Exception("Loss of mass balance on C remobilisation - stem");
-                stems.Tissue[3].DM += dDM_in - dDM_out;
-                stems.Tissue[3].Namount += dDM_in * stems.NConcMinimum - dDM_out * myPreviousState.stems.Tissue[3].Nconc;
-                dLitter += dDM_out;
-                dNlitter += dDM_out * myPreviousState.stems.Tissue[3].Nconc;
-                dGrowthShoot -= dDM_out;
-                NRemobilised += dDM_in * (myPreviousState.stems.Tissue[2].Nconc - stems.NConcMinimum);
-                ChRemobl += ChRemobSugar + ChRemobProtein;
+                double[] turnoverRates = new double[] {gama * RelativeTurnoverGrowing, gama, gama, gamaD};
 
-                dDM_in = 0.0; // growth has been accounted for in PartitionNewGrowth
-                dDM_out = 2 * gamaS * myPreviousState.stolons.Tissue[0].DM;
-                stolons.Tissue[0].DM += dDM_in - dDM_out;
-                stolons.Tissue[0].Namount += -dDM_out * myPreviousState.stolons.Tissue[0].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gamaS * myPreviousState.stolons.Tissue[1].DM;
-                stolons.Tissue[1].DM += dDM_in - dDM_out;
-                stolons.Tissue[1].Namount += dDM_in * myPreviousState.stolons.Tissue[0].Nconc - dDM_out * myPreviousState.stolons.Tissue[1].Nconc;
-                dDM_in = dDM_out;
-                dDM_out = gamaS * myPreviousState.stolons.Tissue[2].DM;
-                stolons.Tissue[2].DM += dDM_in - dDM_out;
-                stolons.Tissue[2].Namount += dDM_in * myPreviousState.stolons.Tissue[1].Nconc - dDM_out * myPreviousState.stolons.Tissue[2].Nconc;
-                dDM_in = dDM_out;
-                ChRemobSugar = dDM_in * KappaCRemob;
-                ChRemobProtein = dDM_in * (myPreviousState.stolons.Tissue[2].Nconc - stolons.NConcMinimum) * CNratioProtein * FacCNRemob;
-                dDM_in -= ChRemobSugar + ChRemobProtein;
-                if (dDM_in < 0.0)
-                    throw new Exception("Loss of mass balance on C remobilisation - stolon");
-                dLitter += dDM_in;
-                dNlitter += dDM_in * stolons.NConcMinimum + 0.5 * dDM_in * (myPreviousState.stolons.Tissue[2].Nconc - stolons.NConcMinimum);
-                dGrowthShoot -= dDM_in;
-                NRemobilised += 0.5 * dDM_in * (myPreviousState.stolons.Tissue[2].Nconc - stolons.NConcMinimum);
-                ChRemobl += ChRemobSugar + ChRemobProtein;
+                // Leaves
+                iniDM += leaves.DMGreen;
+                iniN += leaves.NGreen;
+                detachement = leaves.DoTissueTurnover(turnoverRates);
+                dDMLitter += detachement[0];
+                dNlitter += detachement[1];
+                dSenescedShoot += leaves.DMGreen - iniDM;
+                dNSenescedShoot += leaves.NGreen - iniN;
+                NRemobilised += leaves.NRemobilisable;
+                 ChRemobl += 0.0;
 
-                dRootSen = gamaR * myPreviousState.roots.Tissue[0].DM;
-                //roots.Tissue[0].DM -= Done later in EvaluateRootGrowth
-                ChRemobSugar = dRootSen * KappaCRemob;
-                ChRemobProtein = dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum) * CNratioProtein * FacCNRemob;
-                dRootSen -= ChRemobSugar + ChRemobProtein;
-                if (dRootSen < 0.0)
-                    throw new Exception("Loss of mass balance on C remobilisation - root");
-                dNrootSen = gamaR * myPreviousState.roots.Tissue[0].Namount - 0.5 * dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum);
-                roots.Tissue[0].Namount -= gamaR * myPreviousState.roots.Tissue[0].Namount;
-                NRemobilised += 0.5 * dRootSen * (myPreviousState.roots.Tissue[0].Nconc - roots.NConcMinimum);
-                ChRemobl += ChRemobSugar + ChRemobProtein;
+                // Stems
+                iniDM = stems.DMGreen;
+                iniN += stems.NGreen;
+                detachement = stems.DoTissueTurnover(turnoverRates);
+                dDMLitter += detachement[0];
+                dNlitter += detachement[1];
+                dSenescedShoot = stems.DMGreen - iniDM;
+                dNSenescedShoot += stems.NGreen - iniN;
+                NRemobilised += stems.NRemobilisable;
+                ChRemobl += 0.0;
+
+                // Stolons
+                turnoverRates = new double[] { gamaS * RelativeTurnoverGrowing, gamaS, gamaS, 1.0 };
+                iniDM = stolons.DMGreen;
+                iniN += stolons.NGreen;
+                detachement = stolons.DoTissueTurnover(turnoverRates);
+                dDMLitter += detachement[0];
+                dNlitter += detachement[1];
+                dSenescedShoot = stolons.DMGreen - iniDM;
+                dNSenescedShoot += stolons.NGreen - iniN;
+                NRemobilised += stolons.NRemobilisable;
+                ChRemobl += 0.0;
+
+                // Roots (only 2 tissues)
+                turnoverRates = new double[] { gamaR, 1.0 };
+                detachement = roots.DoTissueTurnover(turnoverRates);
+                dSenescedRoot = detachement[0];
+                dNSenescedRoot = detachement[1];
+                NRemobilised += roots.NRemobilisable;
+                ChRemobl += 0.0;
+
+
+                // TODO: consider C remobilisation
+                // ChRemobSugar = dSenescedRoot * KappaCRemob;
+                // ChRemobProtein = dSenescedRoot * (roots.Tissue[0].Nconc - roots.NConcMinimum) * CNratioProtein * FacCNRemob;
+                // dSenescedRoot -= ChRemobSugar + ChRemobProtein;
+                // ChRemobl += ChRemobSugar + ChRemobProtein;
 
                 // Remobilised C to be used in tomorrow's growth (converted from carbohydrate to C)
                 CRemobilisable = ChRemobl * CarbonFractionInDM;
 
                 // Fraction of N remobilised yesterday that was not used in new growth is added to today's litter
-                dNlitter += NRemobilising;
+                dNlitter += NRemobilisable;
+                NRemobilisable = 0.0;
             }
-            else
-            {
-                // No turnover, just zero out some variables
-                dLitter = 0.0;
-                dNlitter = 0.0;
-                dRootSen = 0.0;
-                dNrootSen = 0.0;
-                CRemobilisable = 0.0;
-                NRemobilised = 0.0;
-            }
+
             // N remobilisable from luxury N to be potentially used for growth tomorrow
-            NLuxury2 = Math.Max(0.0, leaves.Tissue[1].Namount - (leaves.Tissue[1].DM * leaves.NConcOptimum * RelativeNStage2))
-                     + Math.Max(0.0, stems.Tissue[1].Namount - (stems.Tissue[1].DM * stems.NConcOptimum * RelativeNStage2))
-                     + Math.Max(0.0, stolons.Tissue[1].Namount - (stolons.Tissue[1].DM * stolons.NConcOptimum * RelativeNStage2));
-            NLuxury3 = Math.Max(0.0, leaves.Tissue[2].Namount - (leaves.Tissue[2].DM * leaves.NConcOptimum * RelativeNStage3))
-                     + Math.Max(0.0, stems.Tissue[2].Namount - (stems.Tissue[2].DM * stems.NConcOptimum * RelativeNStage3))
-                     + Math.Max(0.0, stolons.Tissue[2].Namount - (stolons.Tissue[2].DM * stolons.NConcOptimum * RelativeNStage3));
-            // only a fraction of luxury N is actually available for remobilisation:
-            NLuxury2 *= KappaNRemob2;
-            NLuxury3 *= KappaNRemob3;
+            NLuxuryRemobilisable = leaves.NRemobilisableLuxury + stems.NRemobilisableLuxury
+                                 + stolons.NRemobilisableLuxury + roots.NRemobilisableLuxury;
         }
 
         #endregion
@@ -3947,8 +3861,8 @@ namespace Models.AgPasture
             newGrowthN = Nfixation + Nremob2NewGrowth + mySoilNuptake;
 
             // evaluate whether further remobilisation (from luxury N) is needed
-            CalcNLuxuryRemob();
-            newGrowthN += NFastRemob3 + NFastRemob2;
+            EvaluateNLuxuryRemobilisation();
+            newGrowthN += NLuxuryRemobilised;
         }
 
         /// <summary>
@@ -3977,7 +3891,6 @@ namespace Models.AgPasture
         /// </summary>
         internal void DoNitrogenCalculations()
         {
-            NRemobilising = NRemobilisable;
             if (myNitrogenUptakeSource == "species")
             {
                 // this module will compute the N uptake
@@ -4037,8 +3950,8 @@ namespace Models.AgPasture
                 newGrowthN = Nfixation + Nremob2NewGrowth + mySoilNuptake;
 
                 // evaluate whether further remobilisation (from luxury N) is needed
-                CalcNLuxuryRemob();
-                newGrowthN += NFastRemob3 + NFastRemob2;
+                EvaluateNLuxuryRemobilisation();
+                newGrowthN += NLuxuryRemobilised;
 
                 // send delta N to the soil model
                 DoSoilNitrogenUptake();
@@ -4109,18 +4022,18 @@ namespace Models.AgPasture
                 Nremob2NewGrowth = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if ((Nfixation + NRemobilising) - NdemandLux > -0.0001)
+            else if ((Nfixation + NRemobilisable) - NdemandLux > -0.0001)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senescent material
                 Nremob2NewGrowth = Math.Max(0.0, NdemandLux - Nfixation);
-                NRemobilising -= Nremob2NewGrowth;
+                NRemobilisable -= Nremob2NewGrowth;
                 mySoilNDemand = 0.0;
             }
             else
             {
                 // N demand is greater than fixation and remobilisation of senescent, N uptake is needed
-                Nremob2NewGrowth = NRemobilising;
-                NRemobilising = 0.0;
+                Nremob2NewGrowth = NRemobilisable;
+                NRemobilisable = 0.0;
                 mySoilNDemand = NdemandLux - (Nfixation + Nremob2NewGrowth);
             }
 
@@ -4279,52 +4192,70 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the remobilisation of luxury N (from tissues 2 and 3)</summary>
-        internal void CalcNLuxuryRemob()
+        internal void EvaluateNLuxuryRemobilisation()
         {
-            // check whether N demand for optimum growth has been matched
-            if (newGrowthN - NdemandOpt > -0.0001)
+            NLuxuryRemobilised = 0.0;
+
+            // check whether there is still demand for N (only match demand for growth at optimum N conc.)
+            // check whether there is any luxury N remobilisable
+            double Nmissing = NdemandOpt - newGrowthN;
+            if ((Nmissing > myEpsilon) && (NLuxuryRemobilisable > myEpsilon))
             {
-                // N demand has been matched, no further remobilisation is needed
-                NFastRemob3 = 0.0;
-                NFastRemob2 = 0.0;
-            }
-            else
-            {
-                // all N already considered is not enough for optimum growth, check remobilisation of luxury N
-                //  check whether luxury N in plants can be used (luxury uptake is ignored)
-                double Nmissing = NdemandOpt - newGrowthN;
-                if (Nmissing > NLuxury2 + NLuxury3)
+                // all N already considered is not enough to match demand for growth, check remobilisation of luxury N
+                if (Nmissing > NLuxuryRemobilisable)
                 {
                     // N luxury is still not enough for optimum growth, use up all there is
-                    if (NLuxury2 + NLuxury3 > 0)
+                    if (NLuxuryRemobilisable > 0.0)
                     {
-                        NFastRemob3 = NLuxury3;
-                        NFastRemob2 = NLuxury2;
-                        Nmissing -= (NLuxury3 + NLuxury2);
+                        NLuxuryRemobilised = NLuxuryRemobilisable;
+                        Nmissing -= NLuxuryRemobilised;
+
+                        // remove the luxury N
+                        double Nluxury;
+                        for (int tissue = 0; tissue < 3; tissue++)
+                        {
+                            Nluxury = leaves.Tissue[tissue].NLuxury + stems.Tissue[tissue].NLuxury + stolons.Tissue[tissue].NLuxury;
+                            if (tissue == 0) Nluxury += roots.Tissue[tissue].NLuxury;
+                            RemoveTissueN(Nluxury, tissue);
+                        }
                     }
                 }
                 else
                 {
-                    // There is luxury N that can be used for optimum growth, get first from tissue 3
-                    if (Nmissing <= NLuxury3)
+                    // Luxury N available is enough for optimum growth, go through tissues and get what is needed, start on mature
+                    double Nluxury;
+                    double Nusedup;
+                    for (int tissue = 2; tissue >= 0; tissue--)
                     {
-                        // tissue 3 is enough
-                        NFastRemob3 = Nmissing;
-                        NFastRemob2 = 0.0;
-                        Nmissing = 0.0;
-                    }
-                    else
-                    {
-                        // get first from tissue 3
-                        NFastRemob3 = NLuxury3;
-                        Nmissing -= NLuxury3;
-
-                        // remaining from tissue 2
-                        NFastRemob2 = Nmissing;
-                        Nmissing = 0.0;
+                        Nluxury = leaves.Tissue[tissue].NLuxury + stems.Tissue[tissue].NLuxury + stolons.Tissue[tissue].NLuxury;
+                        if (tissue == 0) Nluxury += roots.Tissue[tissue].NLuxury;
+                        Nusedup = Math.Min(Nluxury, Nmissing);
+                        RemoveTissueN(Nusedup, tissue);
+                        NLuxuryRemobilised += Nusedup;
+                        Nmissing -= Nusedup;
+                        if (Nmissing <= myEpsilon) tissue = 0;
                     }
                 }
             }
+        }
+
+        /// <summary>Remove an amount of luxury N from a given tissue age from all organs</summary>
+        /// <remarks>Removing proportionally to existing amount</remarks>
+        /// <param name="Namount">N amount to remove</param>
+        /// <param name="tissue">Tissue age to remove from</param>
+        private void RemoveTissueN(double Namount, int tissue)
+        {
+            double Nsum = leaves.Tissue[tissue].NLuxury + stems.Tissue[tissue].NLuxury + stolons.Tissue[tissue].NLuxury;
+            if (tissue > 0)
+                Nsum += roots.Tissue[tissue].NLuxury;
+
+            double fracRemaining = 1.0 - (Namount / Nsum);
+
+            leaves.Tissue[tissue].Namount *= fracRemaining;
+            stems.Tissue[tissue].Namount *= fracRemaining;
+            stolons.Tissue[tissue].Namount *= fracRemaining;
+            if (tissue == 0)
+                roots.Tissue[tissue].Namount *= fracRemaining;
         }
 
         /// <summary>
@@ -4521,6 +4452,13 @@ namespace Models.AgPasture
             dmDefoliated = 0.0;
             Ndefoliated = 0.0;
             digestDefoliated = 0.0;
+            dDMLitter = 0.0;
+            dNlitter = 0.0;
+            dSenescedShoot = 0.0;
+            dNSenescedShoot = 0.0;
+            dSenescedRoot = 0.0;
+            dNSenescedRoot = 0.0;
+            NRemobilised = 0.0;
         }
 
         /// <summary>Stores the current state for this species</summary>
@@ -4701,7 +4639,7 @@ namespace Models.AgPasture
             dRootDepth = 0.0;
             if (phenologicStage > 0)
             {
-                if (((dGrowthRoot-dRootSen) > myEpsilon) && (roots.Depth < MaximumRootDepth))
+                if (((dGrowthRoot-dSenescedRoot) > myEpsilon) && (roots.Depth < MaximumRootDepth))
                 {
                     double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = RootElongationRate * tempFactor;
@@ -4715,8 +4653,8 @@ namespace Models.AgPasture
                 }
 
                 // change root amount due to senescence (no changes in distribution)
-                if (dRootSen > myEpsilon)
-                    roots.Tissue[0].DM -= dRootSen;
+                if (dSenescedRoot > myEpsilon)
+                    roots.Tissue[0].DM -= dSenescedRoot;
 
                 // change root amount due to growth (distribution may change)
                 double[] currentRootTarget = CurrentRootDistributionTarget();
@@ -4955,8 +4893,7 @@ namespace Models.AgPasture
                 CRemobilisable *= fractionRemainingGreen;
 
                 // update Luxury N pools
-                NLuxury2 *= fractionRemainingGreen;
-                NLuxury3 *= fractionRemainingGreen;
+                NLuxuryRemobilisable *= fractionRemainingGreen;
 
                 // check mass balance and set outputs
                 dmDefoliated = PreRemovalDM - AboveGroundWt;
@@ -5503,7 +5440,7 @@ namespace Models.AgPasture
         {
             double effect = 0.0;
             double mySWater = 0.0;
-            double mySaturation = 0.0;
+            double mySAT = 0.0;
             double myDUL = 0.0;
             double fractionLayer = 0.0;
 
@@ -5515,7 +5452,7 @@ namespace Models.AgPasture
                 // actual soil water content
                 mySWater += mySoil.Water[layer] * fractionLayer;
                 // water content at saturation
-                mySaturation += mySoil.SoilWater.SATmm[layer] * fractionLayer;
+                mySAT += mySoil.SoilWater.SATmm[layer] * fractionLayer;
                 // water content at low threshold for limitation (correspond to minimum water-free pore space)
                 if (MinimumWaterFreePorosity <= -myEpsilon)
                     myDUL += mySoil.SoilWater.DULmm[layer] * fractionLayer;
@@ -5524,7 +5461,7 @@ namespace Models.AgPasture
             }
 
             if (mySWater > myDUL)
-                effect = SoilWaterSaturationFactor * (mySWater - myDUL) / (mySaturation - myDUL);
+                effect = SoilWaterSaturationFactor * (mySWater - myDUL) / (mySAT - myDUL);
             else
                 effect = -SoilWaterSaturationRecoveryFactor;
 
@@ -5539,18 +5476,18 @@ namespace Models.AgPasture
         }
 
         /// <summary>Effect of water stress on tissue turnover</summary>
-        /// <returns>Water stress factor (0-1)</returns>
+        /// <remarks>Tissue turnover is higher under water stress, GLFwater to mimic that effect</remarks>
+        /// <returns>Water stress factor for tissue turnover (0-1)</returns>
         private double WaterFactorForTissueTurnover()
         {
-            double result = 1.0;
-            if (glfWater < TissueTurnoverGLFWopt)
+            double effect = 1.0;
+            if (glfWater < TissueTurnoverDroughtThreshold)
             {
-                result = (TissueTurnoverGLFWopt - glfWater) / TissueTurnoverGLFWopt;
-                result = (TissueTurnoverWFactorMax - 1.0) * result;
-                result = Math.Min(TissueTurnoverWFactorMax, Math.Max(1.0, 1 + result));
+                effect = (TissueTurnoverDroughtThreshold - glfWater) / TissueTurnoverDroughtThreshold;
+                effect = 1.0 + TissueTurnoverDroughtMax * effect;
             }
 
-            return result;
+            return effect;
         }
 
         /// <summary>Computes the ground cover for the plant, or plant part</summary>
@@ -5885,13 +5822,21 @@ namespace Models.AgPasture
         internal int TissueCount;
 
         /// <summary>N concentration for optimal growth [g/g]</summary>
-        internal double NConcOptimum = 4.0;
+        internal double NConcOptimum
+        {
+            get { return Tissue[0].NConcOptimum; }
+            set
+            {
+                foreach (GenericTissue tissue in Tissue)
+                    tissue.NConcOptimum = value;
+            }
+        }
 
         /// <summary>Maximum N concentration, for luxury uptake [g/g]</summary>
-        internal double NConcMaximum = 6.0;
+        internal double NConcMaximum = 0.06;
 
         /// <summary>Minimum N concentration, structural N [g/g]</summary>
-        internal double NConcMinimum = 1.2;
+        internal double NConcMinimum = 0.012;
 
         /// <summary>Fraction of new growth that is soluble carbohydrate, i.e. sugars [0-1]</summary>
         internal double SugarFraction { get; set; } = 0.0;
@@ -5997,6 +5942,24 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>The amount of N available for remobilisation from senescence [g/g]</summary>
+        internal double NRemobilisable = 0.0;
+
+        /// <summary>The amount of luxury N available for remobilisation [g/g]</summary>
+        internal double NRemobilisableLuxury
+        {
+            get
+            {
+                double luxNAmount = 0.0;
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    luxNAmount += Tissue[t].NLuxury;
+                }
+
+                return luxNAmount;
+            }
+        }
+
         /// <summary>The average digestibility of all biomass for this organ [g/g]</summary>
         internal double DigestibilityTotal
         {
@@ -6061,9 +6024,44 @@ namespace Models.AgPasture
             }
         }
 
+        internal double[] DoTissueTurnover(double[] turnoverRate)
+        {
+            double[] fromToDM = new double[TissueCount];
+            double[] fromToN = new double[TissueCount];
+            double[] detachment = new double[2];
+
+            // get amounts turned over
+            for (int t = 0; t < TissueCount; t++)
+            {
+                fromToDM[t] = Tissue[t].DM * turnoverRate[t];
+                fromToN[t] = fromToDM[t] * Tissue[t].Nconc;
+                if (t == TissueCount - 2)
+                {
+                    // turnover from live to dead only uses minimum conc (remaining is remobilisable)
+                    NRemobilisable = fromToDM[t] * (Tissue[t].Nconc - NConcMinimum);
+                    fromToN[t] -= NRemobilisable;
+                }
+            }
+
+            // update tissue pools (note that growth goes into tissue 0 and it has been considered already)
+            Tissue[0].DM -= fromToDM[0];
+            Tissue[0].Namount -= fromToN[0];
+            for (int t = 1; t < TissueCount; t++)
+            {
+                Tissue[t].DM += fromToDM[t - 1] - fromToDM[t];
+                Tissue[t].Namount += fromToN[t - 1] - fromToN[t];
+            }
+
+            // get the amount detached today
+            detachment[0] = fromToDM[TissueCount - 1];
+            detachment[1] = fromToN[TissueCount - 1];
+
+            return detachment;
+        }
+
         #endregion
 
-            /// <summary>Defines a generic plant tissue</summary>
+        /// <summary>Defines a generic plant tissue</summary>
         internal class GenericTissue
         {
             /// <summary>The dry matter amount [g/m^2]</summary>
@@ -6071,6 +6069,12 @@ namespace Models.AgPasture
 
             /// <summary>The N content [g/m^2]</summary>
             internal double Namount { get; set; } = 0.0;
+
+            /// <summary>The N content [g/m^2]</summary>
+            internal double NConcOptimum { get; set; } = 0.04;
+
+            /// <summary>Minimum N concentration, structural N [g/g]</summary>
+            internal double FractionNLuxuryRemobilisable = 0.0;
 
             /// <summary>The P content [g/m^2]</summary>
             internal double Pamount { get; set; } = 0.0;
@@ -6080,6 +6084,12 @@ namespace Models.AgPasture
             {
                 get { return MathUtilities.Divide(Namount, DM, 0.0); }
                 set { Namount = value * DM; }
+            }
+
+            /// <summary>The nitrogen amount above optimum concentration [g/g]</summary>
+            internal double NLuxury
+            {
+                get { return Math.Max(0.0, FractionNLuxuryRemobilisable * ((DM * NConcOptimum) - Namount)); }
             }
 
             /// <summary>The phosphorus concentration [g/g]</summary>
@@ -6172,13 +6182,21 @@ namespace Models.AgPasture
         internal int TissueCount;
 
         /// <summary>N concentration for optimal growth [g/g]</summary>
-        internal double NConcOptimum = 1.5;
+        internal double NConcOptimum
+        {
+            get { return Tissue[0].NConcOptimum; }
+            set
+            {
+                foreach (RootTissue tissue in Tissue)
+                    tissue.NConcOptimum = value;
+            }
+        }
 
         /// <summary>Maximum N concentration, for luxury uptake [g/g]</summary>
-        internal double NConcMaximum = 2.0;
+        internal double NConcMaximum = 0.02;
 
         /// <summary>Minimum N concentration, structural N [g/g]</summary>
-        internal double NConcMinimum = 1.0;
+        internal double NConcMinimum = 0.01;
 
         /// <summary>The total dry matter in this organ [g/m^2]</summary>
         internal double DMTotal
@@ -6281,6 +6299,24 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>The amount of N available for remobilisation from senescence [g/g]</summary>
+        internal double NRemobilisable = 0.0;
+
+        /// <summary>The amount of luxury N available for remobilisation [g/g]</summary>
+        internal double NRemobilisableLuxury
+        {
+            get
+            {
+                double luxNAmount = 0.0;
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    luxNAmount += Tissue[t].NLuxury;
+                }
+
+                return luxNAmount;
+            }
+        }
+
         /// <summary>The rooting depth [mm]</summary>
         internal double Depth;
 
@@ -6315,6 +6351,37 @@ namespace Models.AgPasture
                     Tissue[t].Namount = 0.0;
                 }
             }
+        }
+
+        internal double[] DoTissueTurnover(double[] turnoverRate)
+        {
+            double[] fromToDM = new double[TissueCount];
+            double[] fromToN = new double[TissueCount];
+            double[] detachment = new double[2];
+
+            // get amounts turned over
+            for (int t = 0; t < TissueCount; t++)
+            {
+                fromToDM[t] = Tissue[t].DM * turnoverRate[t];
+                // turnover from live to dead only uses minimum conc (remaining is remobilisable)
+                NRemobilisable = fromToDM[t] * (Tissue[t].Nconc - NConcMinimum);
+                fromToN[t] -= NRemobilisable;
+            }
+
+            // update tissue pools (note that growth goes into tissue 0 and it has been considered already)
+            Tissue[0].DM -= fromToDM[0];
+            Tissue[0].Namount -= fromToN[0];
+            for (int t = 1; t < TissueCount; t++)
+            {
+                Tissue[t].DM += fromToDM[t - 1] - fromToDM[t];
+                Tissue[t].Namount += fromToN[t - 1] - fromToN[t];
+            }
+
+            // get the amount detached today
+            detachment[0] = fromToDM[TissueCount - 1];
+            detachment[1] = fromToN[TissueCount - 1];
+
+            return detachment;
         }
 
         #endregion
@@ -6364,6 +6431,12 @@ namespace Models.AgPasture
             /// <summary>The N content by layer [g/m^2]</summary>
             internal double[] NamountLayer;
 
+            /// <summary>The N content [g/m^2]</summary>
+            internal double NConcOptimum { get; set; } = 0.015;
+
+            /// <summary>Minimum N concentration, structural N [g/g]</summary>
+            internal double FractionNLuxuryRemobilisable = 0.0;
+
             /// <summary>The P content amount [g/m^2]</summary>
             internal double Pamount
             {
@@ -6385,6 +6458,12 @@ namespace Models.AgPasture
                 set { Namount = value * DM; }
             }
 
+            /// <summary>The nitrogen amount above optimum concentration [g/g]</summary>
+            internal double NLuxury
+            {
+                get { return Math.Max(0.0, FractionNLuxuryRemobilisable * ((DM * NConcOptimum) - Namount)); }
+            }
+
             /// <summary>The phosphorus concentration [g/g]</summary>
             internal double Pconc
             {
@@ -6402,34 +6481,6 @@ namespace Models.AgPasture
                         result[layer] = MathUtilities.Divide(DMLayer[layer], DM, 0.0);
                     return result;
                 }
-            }
-        }
-    }
-
-    /// <summary>Defines a generic above-ground organ of a pasture species</summary>
-    internal class GenericAboveGroundOrganOld
-    {
-        /// <summary>The total luxury N amount in this organ (kg/ha)</summary>
-        internal double NLuxuryTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < 2; t++)
-                {
-                    result += 0;//Tissue[t].DM * Math.Max(0.0, Tissue[t].Nconc - NConcOptimum);
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>The N amount in mature tissues taht can be reallocated (kg/ha)</summary>
-        internal double NReallocatable
-        {
-            get
-            {
-                return 0;//Tissue[2].DM * Math.Max(0.0, Tissue[2].Nconc - NConcMinimum); 
             }
         }
     }

@@ -790,9 +790,18 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(ActualGrowthN, ActualGrowthWt, 0.0); }
         }
 
-        # endregion
+        #endregion
 
         #region - N flows  -------------------------------------------------------------------------------------------------
+
+        /// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
+        /// <value>The remobilised N amount.</value>
+        [Description("Amount of N potentially remobilisable from senescing tissue")]
+        [Units("kgN/ha")]
+        public double RemobilisableN
+        {
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisableSenescedN); }
+        }
 
         /// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
         /// <value>The remobilised N amount.</value>
@@ -800,14 +809,14 @@ namespace Models.AgPasture
         [Units("kgN/ha")]
         public double RemobilisedN
         {
-            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisedN); }
+            get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisedSenescedN); }
         }
 
         /// <summary>Gets the amount of luxury N potentially remobilisable.</summary>
         /// <value>The potentially remobilisable luxury N amount.</value>
         [Description("Amount of luxury N potentially remobilisable")]
         [Units("kgN/ha")]
-        public double LuxuryNRemobilisable
+        public double RemobilisableLuxuryN
         {
             get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisableLuxuryN); }
         }
@@ -816,7 +825,7 @@ namespace Models.AgPasture
         /// <value>The remobilised luxury N amount.</value>
         [Description("Amount of luxury N remobilised")]
         [Units("kgN/ha")]
-        public double LuxuryNRemobilised
+        public double RemobilisedLuxuryN
         {
             get { return mySpecies.Sum(mySpecies => mySpecies.RemobilisedLuxuryN); }
         }
@@ -1452,7 +1461,7 @@ namespace Models.AgPasture
         private double swardSoilNuptake = 0.0;
 
         /// <summary>The remobilised N in the whole sward</summary>
-        private double swardRemobilisedN = 0.0;
+        private double swardNRemobilised = 0.0;
 
         /// <summary>The remobilised N to new growth</summary>
         private double swardNRemobNewGrowth = 0.0;
@@ -1461,10 +1470,7 @@ namespace Models.AgPasture
         private double swardNewGrowthN = 0.0;
 
         /// <summary>The N remobilised from tissue 2, for the whole sward</summary>
-        private double swardNFastRemob2 = 0.0;
-
-        /// <summary>The N remobilised from tissue 3, for the whole sward</summary>
-        private double swardNFastRemob3 = 0.0;
+        private double swardNLuxuryRemobilised = 0.0;
 
         // - General variables  ---------------------------------------------------------------------------------------
 
@@ -1578,7 +1584,7 @@ namespace Models.AgPasture
 
                     // step 04 - Effective growth after all limitations and senescence
                     species.CalcEffectiveGrowth();
-                    swardRemobilisedN += species.RemobilisableN;
+                    swardNRemobilised += species.RemobilisedSenescedN;
                 }
 
                 // step 05 - Send amounts of litter and senesced roots to other modules
@@ -1805,8 +1811,8 @@ namespace Models.AgPasture
                 // evaluate the use of N remobilised and any soil demand
                 foreach (PastureSpecies species in mySpecies)
                     species.CalcSoilNDemand();
-                swardRemobilisedN = mySpecies.Sum(mySpecies => mySpecies.RemobilisableN);
-                swardNRemobNewGrowth = mySpecies.Sum(mySpecies => mySpecies.RemobilisedN);
+                swardNRemobilised = mySpecies.Sum(mySpecies => mySpecies.RemobilisableSenescedN);
+                swardNRemobNewGrowth = mySpecies.Sum(mySpecies => mySpecies.RemobilisedSenescedN);
                 swardSoilNdemand = mySpecies.Sum(mySpecies => mySpecies.DemandSoilN);
 
                 // get the amount of N taken up from soil
@@ -1814,18 +1820,18 @@ namespace Models.AgPasture
 
                 // preliminary N budget
                 foreach (PastureSpecies species in mySpecies)
-                    species.newGrowthN = species.FixedN + species.RemobilisedN + species.mySoilNuptake;
+                    species.newGrowthN = species.FixedN + species.RemobilisedSenescedN + species.mySoilNuptake;
                 swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNuptake;
 
                 // evaluate whether further remobilisation (from luxury N) is needed
+                swardNLuxuryRemobilised = 0.0;
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    species.CalcNLuxuryRemob();
-                    species.newGrowthN += species.RemobT2LuxuryN + species.RemobT3LuxuryN;
+                    species.EvaluateNLuxuryRemobilisation();
+                    species.newGrowthN += species.RemobilisedLuxuryN;
+                    swardNLuxuryRemobilised += species.RemobilisedLuxuryN;
                 }
-                swardNFastRemob2 = mySpecies.Sum(mySpecies => mySpecies.RemobT2LuxuryN);
-                swardNFastRemob3 = mySpecies.Sum(mySpecies => mySpecies.RemobT3LuxuryN);
-                swardNewGrowthN += swardNFastRemob2 + swardNFastRemob3;
+                swardNewGrowthN += swardNLuxuryRemobilised;
 
                 // send delta N to the soil model
                 DoSoilNitrogenUptake();

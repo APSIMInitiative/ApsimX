@@ -8016,17 +8016,20 @@ namespace Models
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
             <FractionToStolon>0</FractionToStolon>
             <SpecificLeafArea>20</SpecificLeafArea>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificRootLength>75</SpecificRootLength>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
-            <DetachmentRate>0.11</DetachmentRate>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
+            <DetachmentRate>0.11</DetachmentRate>
             <TissueTurnoverTmin>2</TissueTurnoverTmin>
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
-            <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
-            <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-            <KappaNRemob2>0</KappaNRemob2>
-            <KappaNRemob3>0</KappaNRemob3>
-            <KappaNRemob4>0</KappaNRemob4>
+            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
+            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <FractionNLuxuryRemobilisable>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </FractionNLuxuryRemobilisable>
             <NThresholdsForLeaves>
               <double>0.04</double>
               <double>0.012</double>
@@ -8047,8 +8050,6 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <RelativeNStage2>1</RelativeNStage2>
-            <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
@@ -11501,17 +11502,20 @@ namespace Models
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
           <FractionToStolon>0</FractionToStolon>
           <SpecificLeafArea>20</SpecificLeafArea>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificRootLength>75</SpecificRootLength>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
-          <DetachmentRate>0.11</DetachmentRate>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
+          <DetachmentRate>0.11</DetachmentRate>
           <TissueTurnoverTmin>2</TissueTurnoverTmin>
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
-          <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
-          <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-          <KappaNRemob2>0</KappaNRemob2>
-          <KappaNRemob3>0</KappaNRemob3>
-          <KappaNRemob4>0</KappaNRemob4>
+          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
+          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <FractionNLuxuryRemobilisable>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </FractionNLuxuryRemobilisable>
           <NThresholdsForLeaves>
             <double>0.04</double>
             <double>0.012</double>
@@ -11532,8 +11536,6 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <RelativeNStage2>1</RelativeNStage2>
-          <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
@@ -15815,17 +15817,20 @@ namespace Models
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
             <FractionToStolon>0</FractionToStolon>
             <SpecificLeafArea>20</SpecificLeafArea>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificRootLength>75</SpecificRootLength>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
-            <DetachmentRate>0.11</DetachmentRate>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
+            <DetachmentRate>0.11</DetachmentRate>
             <TissueTurnoverTmin>2</TissueTurnoverTmin>
             <TissueTurnoverTopt>20</TissueTurnoverTopt>
-            <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
-            <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-            <KappaNRemob2>0</KappaNRemob2>
-            <KappaNRemob3>0</KappaNRemob3>
-            <KappaNRemob4>0</KappaNRemob4>
+            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
+            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <FractionNLuxuryRemobilisable>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </FractionNLuxuryRemobilisable>
             <NThresholdsForLeaves>
               <double>0.04</double>
               <double>0.012</double>
@@ -15846,8 +15851,6 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <RelativeNStage2>1</RelativeNStage2>
-            <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
@@ -19303,17 +19306,20 @@ namespace Models
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
           <FractionToStolon>0</FractionToStolon>
           <SpecificLeafArea>20</SpecificLeafArea>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificRootLength>75</SpecificRootLength>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
-          <DetachmentRate>0.11</DetachmentRate>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
+          <DetachmentRate>0.11</DetachmentRate>
           <TissueTurnoverTmin>2</TissueTurnoverTmin>
           <TissueTurnoverTopt>20</TissueTurnoverTopt>
-          <TissueTurnoverWFactorMax>2</TissueTurnoverWFactorMax>
-          <TissueTurnoverGLFWopt>0.5</TissueTurnoverGLFWopt>
-          <KappaNRemob2>0</KappaNRemob2>
-          <KappaNRemob3>0</KappaNRemob3>
-          <KappaNRemob4>0</KappaNRemob4>
+          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
+          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <FractionNLuxuryRemobilisable>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </FractionNLuxuryRemobilisable>
           <NThresholdsForLeaves>
             <double>0.04</double>
             <double>0.012</double>
@@ -19334,8 +19340,6 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <RelativeNStage2>1</RelativeNStage2>
-          <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
