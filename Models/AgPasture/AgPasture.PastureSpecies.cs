@@ -250,6 +250,16 @@ namespace Models.AgPasture
         /// <summary>End the crop</summary>
         public void EndCrop()
         {
+            // Return all above ground parts to surface OM
+            DoSurfaceOMReturn(AboveGroundWt, AboveGroundN);
+
+            // Incorporate all root mass to soil fresh organic matter
+            DoIncorpFomEvent(BelowGroundWt, BelowGroundN);
+
+            // zero all variables
+            ResetZero();
+            isAlive = false;
+            phenologicStage = -1;
         }
 
         #endregion
@@ -5045,21 +5055,25 @@ namespace Models.AgPasture
             myPreviousState = new SpeciesStateParameters(nLayers);
         }
 
-        /// <summary>Kills this plant (zero all variables and set to not alive)</summary>
-        /// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
+        /// <summary>Kill parts of this plant</summary>
+        /// <param name="KillData">Fraction of crop to be killed</param>
         [EventSubscribe("KillCrop")]
         public void OnKillCrop(KillCropType KillData)
         {
-            // Return all above ground parts to surface OM
-            DoSurfaceOMReturn(AboveGroundWt, AboveGroundN);
-
-            // Incorporate all root mass to soil fresh organic matter
-            DoIncorpFomEvent(BelowGroundWt, BelowGroundN);
-
-            ResetZero();
-
-            isAlive = false;
-            phenologicStage = -1;
+            double fractioToKill = MathUtilities.Bound(KillData.KillFraction, 0.0, 1.0);
+            if (fractioToKill < 1.0)
+            {
+                // transfer fracton of live tissues into dead, will be detached later
+                leaves.KillOrgan(fractioToKill);
+                stems.KillOrgan(fractioToKill);
+                stolons.KillOrgan(fractioToKill);
+                roots.KillOrgan(fractioToKill);
+            }
+            else
+            {
+                // kill off the plant
+                EndCrop();
+            }
         }
 
         /// <summary>Reset this plant to zero (kill crop)</summary>
@@ -5939,9 +5953,36 @@ namespace Models.AgPasture
             get { return Tissue[TissueCount - 1].Digestibility; }
         }
 
+        /// <summary>Kills part of the organ (transfer DM and N to dead tiisue)</summary>
+        /// <param name="fraction">Fraction of organ tissues to kill</param>
+        internal void KillOrgan(double fraction = 1.0)
+        {
+            if (fraction < 1.0)
+            {
+                double fractionRemaining = 1.0 - fraction;
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    Tissue[TissueCount - 1].DM += Tissue[t].DM * fraction;
+                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount * fraction;
+                    Tissue[t].DM *= fractionRemaining;
+                    Tissue[t].Namount *= fractionRemaining;
+                }
+            }
+            else
+            {
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    Tissue[TissueCount - 1].DM += Tissue[t].DM;
+                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount;
+                    Tissue[t].DM = 0.0;
+                    Tissue[t].Namount = 0.0;
+                }
+            }
+        }
+
         #endregion
 
-        /// <summary>Defines a generic plant tissue</summary>
+            /// <summary>Defines a generic plant tissue</summary>
         internal class GenericTissue
         {
             /// <summary>The dry matter amount [g/m^2]</summary>
@@ -6167,6 +6208,33 @@ namespace Models.AgPasture
 
         /// <summary>The target (ideal) dry matter fraction by layer [0-1]</summary>
         internal double[] TargetDistribution;
+
+        /// <summary>Kills part of the organ (transfer DM and N to dead tiisue)</summary>
+        /// <param name="fraction">Fraction of organ tissues to kill</param>
+        internal void KillOrgan(double fraction = 1.0)
+        {
+            if (fraction < 1.0)
+            {
+                double fractionRemaining = 1.0 - fraction;
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    Tissue[TissueCount - 1].DM += Tissue[t].DM * fraction;
+                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount * fraction;
+                    Tissue[t].DM *= fractionRemaining;
+                    Tissue[t].Namount *= fractionRemaining;
+                }
+            }
+            else
+            {
+                for (int t = 0; t < TissueCount - 1; t++)
+                {
+                    Tissue[TissueCount - 1].DM += Tissue[t].DM;
+                    Tissue[TissueCount - 1].Namount += Tissue[t].Namount;
+                    Tissue[t].DM = 0.0;
+                    Tissue[t].Namount = 0.0;
+                }
+            }
+        }
 
         #endregion
 

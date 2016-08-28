@@ -98,7 +98,11 @@ namespace Models.AgPasture
         public void Harvest() { }
 
         /// <summary>End the crop</summary>
-        public void EndCrop() { }
+        public void EndCrop()
+        {
+            foreach (PastureSpecies species in mySpecies)
+                species.EndCrop();
+        }
 
         #endregion
 
@@ -2100,15 +2104,13 @@ namespace Models.AgPasture
 
         //--- Not supported yet  -----------------------------------------        
 
-        /// <summary>Kills all the plant mySpecies in the sward (zero variables and set to not alive)</summary>
-        /// <param name="KillData">Fraction of crop to kill (here always 100%)</param>
+        /// <summary>Kill parts of all plants in the sward</summary>
+        /// <param name="KillData">Fraction of crop to kill</param>
         [EventSubscribe("KillCrop")]
         private void OnKillCrop(KillCropType KillData)
         {
             foreach (PastureSpecies species in mySpecies)
                 species.OnKillCrop(KillData);
-
-            swardIsAlive = false;
         }
 
         /// <summary>Harvest (remove DM) the sward</summary>
