@@ -714,7 +714,7 @@ namespace Models.Soils
         /// <returns></returns>
         private double PoreK(double MaxDiameter, double MinDiameter, int layer)
         {
-            return (PointK(layer,MaxDiameter) + PointK(layer,MinDiameter))/2;
+            return PointK(layer,MaxDiameter) - PointK(layer,MinDiameter);
         }
         /// <summary>
         /// This function returns the hydraulic conductivity calculated for a pore of a single specified diameter
