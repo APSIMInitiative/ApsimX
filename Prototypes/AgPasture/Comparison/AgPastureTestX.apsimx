@@ -7981,27 +7981,27 @@ namespace Models
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <PhotosyntheticEfficiency>0.01</PhotosyntheticEfficiency>
-            <PhotosynthesisCurveFactor>0.8</PhotosynthesisCurveFactor>
-            <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
             <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
             <GrowthTmin>2</GrowthTmin>
             <GrowthTopt>20</GrowthTopt>
             <GrowthTq>1.75</GrowthTq>
-            <HeatOnsetT>28</HeatOnsetT>
-            <HeatFullT>35</HeatFullT>
-            <HeatSumT>30</HeatSumT>
-            <HeatRecoverT>25</HeatRecoverT>
-            <ColdOnsetT>0</ColdOnsetT>
-            <ColdFullT>-3</ColdFullT>
-            <ColdSumT>20</ColdSumT>
-            <ColdRecoverT>0</ColdRecoverT>
             <ReferenceCO2>380</ReferenceCO2>
-            <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
-            <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
-            <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
-            <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+            <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
+            <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
+            <CO2EffectMinimum>0.7</CO2EffectMinimum>
+            <CO2EffectExponent>2</CO2EffectExponent>
+            <UseHeatStressFactor>yes</UseHeatStressFactor>
+            <HeatOnsetTemp>28</HeatOnsetTemp>
+            <HeatFullTemp>35</HeatFullTemp>
+            <HeatSumDD>30</HeatSumDD>
+            <HeatRecoverTemp>25</HeatRecoverTemp>
+            <UseColdStressFactor>yes</UseColdStressFactor>
+            <ColdOnsetTemp>0</ColdOnsetTemp>
+            <ColdFullTemp>-3</ColdFullTemp>
+            <ColdSumDD>20</ColdSumDD>
+            <ColdRecoverTemp>0</ColdRecoverTemp>
+            <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
+            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
             <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
@@ -8051,10 +8051,10 @@ namespace Models
             <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <DillutionCoefN>0.5</DillutionCoefN>
-            <WaterStressExponent>1</WaterStressExponent>
-            <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
+            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
             <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+            <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
             <GlfGeneric>1</GlfGeneric>
             <GlfSFertility>1</GlfSFertility>
             <DigestibilitiesCellWall>
@@ -11466,27 +11466,27 @@ namespace Models
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <PhotosyntheticEfficiency>0.01</PhotosyntheticEfficiency>
-          <PhotosynthesisCurveFactor>0.8</PhotosynthesisCurveFactor>
-          <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
           <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
           <GrowthTmin>2</GrowthTmin>
           <GrowthTopt>20</GrowthTopt>
           <GrowthTq>1.75</GrowthTq>
-          <HeatOnsetT>28</HeatOnsetT>
-          <HeatFullT>35</HeatFullT>
-          <HeatSumT>30</HeatSumT>
-          <HeatRecoverT>25</HeatRecoverT>
-          <ColdOnsetT>0</ColdOnsetT>
-          <ColdFullT>-3</ColdFullT>
-          <ColdSumT>20</ColdSumT>
-          <ColdRecoverT>0</ColdRecoverT>
           <ReferenceCO2>380</ReferenceCO2>
-          <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
-          <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
-          <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
-          <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+          <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
+          <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
+          <CO2EffectMinimum>0.7</CO2EffectMinimum>
+          <CO2EffectExponent>2</CO2EffectExponent>
+          <UseHeatStressFactor>yes</UseHeatStressFactor>
+          <HeatOnsetTemp>28</HeatOnsetTemp>
+          <HeatFullTemp>35</HeatFullTemp>
+          <HeatSumDD>30</HeatSumDD>
+          <HeatRecoverTemp>25</HeatRecoverTemp>
+          <UseColdStressFactor>yes</UseColdStressFactor>
+          <ColdOnsetTemp>0</ColdOnsetTemp>
+          <ColdFullTemp>-3</ColdFullTemp>
+          <ColdSumDD>20</ColdSumDD>
+          <ColdRecoverTemp>0</ColdRecoverTemp>
+          <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
+          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
           <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
@@ -11536,10 +11536,10 @@ namespace Models
           <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <DillutionCoefN>0.5</DillutionCoefN>
-          <WaterStressExponent>1</WaterStressExponent>
-          <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
+          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
           <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+          <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <GlfGeneric>1</GlfGeneric>
           <GlfSFertility>1</GlfSFertility>
           <DigestibilitiesCellWall>
@@ -15780,27 +15780,27 @@ namespace Models
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <PhotosyntheticEfficiency>0.01</PhotosyntheticEfficiency>
-            <PhotosynthesisCurveFactor>0.8</PhotosynthesisCurveFactor>
-            <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
             <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
             <GrowthTmin>2</GrowthTmin>
             <GrowthTopt>20</GrowthTopt>
             <GrowthTq>1.75</GrowthTq>
-            <HeatOnsetT>28</HeatOnsetT>
-            <HeatFullT>35</HeatFullT>
-            <HeatSumT>30</HeatSumT>
-            <HeatRecoverT>25</HeatRecoverT>
-            <ColdOnsetT>0</ColdOnsetT>
-            <ColdFullT>-3</ColdFullT>
-            <ColdSumT>20</ColdSumT>
-            <ColdRecoverT>0</ColdRecoverT>
             <ReferenceCO2>380</ReferenceCO2>
-            <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
-            <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
-            <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
-            <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+            <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
+            <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
+            <CO2EffectMinimum>0.7</CO2EffectMinimum>
+            <CO2EffectExponent>2</CO2EffectExponent>
+            <UseHeatStressFactor>yes</UseHeatStressFactor>
+            <HeatOnsetTemp>28</HeatOnsetTemp>
+            <HeatFullTemp>35</HeatFullTemp>
+            <HeatSumDD>30</HeatSumDD>
+            <HeatRecoverTemp>25</HeatRecoverTemp>
+            <UseColdStressFactor>yes</UseColdStressFactor>
+            <ColdOnsetTemp>0</ColdOnsetTemp>
+            <ColdFullTemp>-3</ColdFullTemp>
+            <ColdSumDD>20</ColdSumDD>
+            <ColdRecoverTemp>0</ColdRecoverTemp>
+            <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
+            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
             <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
@@ -15850,10 +15850,10 @@ namespace Models
             <RelativeNStage3>1</RelativeNStage3>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <DillutionCoefN>0.5</DillutionCoefN>
-            <WaterStressExponent>1</WaterStressExponent>
-            <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
+            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
             <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+            <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
             <GlfGeneric>1</GlfGeneric>
             <GlfSFertility>1</GlfSFertility>
             <DigestibilitiesCellWall>
@@ -19268,27 +19268,27 @@ namespace Models
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <PhotosyntheticEfficiency>0.01</PhotosyntheticEfficiency>
-          <PhotosynthesisCurveFactor>0.8</PhotosynthesisCurveFactor>
-          <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
           <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
           <GrowthTmin>2</GrowthTmin>
           <GrowthTopt>20</GrowthTopt>
           <GrowthTq>1.75</GrowthTq>
-          <HeatOnsetT>28</HeatOnsetT>
-          <HeatFullT>35</HeatFullT>
-          <HeatSumT>30</HeatSumT>
-          <HeatRecoverT>25</HeatRecoverT>
-          <ColdOnsetT>0</ColdOnsetT>
-          <ColdFullT>-3</ColdFullT>
-          <ColdSumT>20</ColdSumT>
-          <ColdRecoverT>0</ColdRecoverT>
           <ReferenceCO2>380</ReferenceCO2>
-          <CoefficientCO2EffectOnPhotosynthesis>700</CoefficientCO2EffectOnPhotosynthesis>
-          <OffsetCO2EffectOnNuptake>600</OffsetCO2EffectOnNuptake>
-          <MinimumCO2EffectOnNuptake>0.7</MinimumCO2EffectOnNuptake>
-          <ExponentCO2EffectOnNuptake>2</ExponentCO2EffectOnNuptake>
+          <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
+          <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
+          <CO2EffectMinimum>0.7</CO2EffectMinimum>
+          <CO2EffectExponent>2</CO2EffectExponent>
+          <UseHeatStressFactor>yes</UseHeatStressFactor>
+          <HeatOnsetTemp>28</HeatOnsetTemp>
+          <HeatFullTemp>35</HeatFullTemp>
+          <HeatSumDD>30</HeatSumDD>
+          <HeatRecoverTemp>25</HeatRecoverTemp>
+          <UseColdStressFactor>yes</UseColdStressFactor>
+          <ColdOnsetTemp>0</ColdOnsetTemp>
+          <ColdFullTemp>-3</ColdFullTemp>
+          <ColdSumDD>20</ColdSumDD>
+          <ColdRecoverTemp>0</ColdRecoverTemp>
+          <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
+          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
           <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
@@ -19338,10 +19338,10 @@ namespace Models
           <RelativeNStage3>1</RelativeNStage3>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <DillutionCoefN>0.5</DillutionCoefN>
-          <WaterStressExponent>1</WaterStressExponent>
-          <WaterLoggingCoefficient>0.1</WaterLoggingCoefficient>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
+          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
           <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+          <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <GlfGeneric>1</GlfGeneric>
           <GlfSFertility>1</GlfSFertility>
           <DigestibilitiesCellWall>

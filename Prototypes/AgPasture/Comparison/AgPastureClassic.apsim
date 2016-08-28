@@ -648,38 +648,38 @@ public class Script
         <isLegume type="text" description="Legume species? no=0, yes=1">0</isLegume>
         <photoPath type="text" description="C3 or C4 species? C3=3, C4=4">3</photoPath>
         <rootDepth type="text" description="Root depth">750</rootDepth>
+        <Pm type="text" description="Reference CO2 assimilation rate (mg CO2/m2.s)">1</Pm>
+        <lightExtCoeff type="text" description="Light extinction coefficient">0.5</lightExtCoeff>
         <growthTmin type="text" description="Minimum temperature for growth">2</growthTmin>
         <growthTmax type="text" description="Maximum temperature for growth">30.28571429</growthTmax>
         <growthTopt type="text" description="Optimum temperature for growth">20</growthTopt>
         <growthTq type="text" description="Curvature of growth response to temperature">1.75</growthTq>
-        <massFluxTmin type="text" description="Minimum temperature for mass flux">2</massFluxTmin>
-        <massFluxTopt type="text" description="Optimum temperature for mass flux">20</massFluxTopt>
-        <massFluxW0 type="text" description="Scale factor for response of mass flux to soil moisture">2</massFluxW0>
-        <massFluxWopt type="text" description="Optimum soil moisture for mass flux">0.5</massFluxWopt>
+        <CO2PmaxScale type="text" description="CO2 - Scale factor for CO2 effect on photosynthesis">700</CO2PmaxScale>
+        <CO2NScale type="text" description="CO2 - Scale factor for CO2 effects on plant N concentration">600</CO2NScale>
+        <CO2NMin type="text" description="CO2 - Minimum fraction that plant N concentration may reduce to uder elevated CO2">0.7</CO2NMin>
+        <CO2NCurvature type="text" description="CO2 - Curvature factor of CO2 effect on plant N concentration">2</CO2NCurvature>
         <heatOnsetT type="text" description="Heat effects- Onset temperature">28</heatOnsetT>
         <heatFullT type="text" description="Heat effects- Full temperature">35</heatFullT>
         <heatSumT type="text" description="Heat effects- Temperature sum for recovery">30</heatSumT>
         <coldOnsetT type="text" description="Cold effects- Onset temperature">0</coldOnsetT>
         <coldFullT type="text" description="Cold effects- Full temperature">-3</coldFullT>
         <coldSumT type="text" description="Cold effects- Temperature sum for recovery">20</coldSumT>
-        <Pm type="text" description="Reference CO2 assimilation rate (mg CO2/m2.s)">1</Pm>
         <maintRespiration type="text" description="Maintenance respiration coefficient (%)">3</maintRespiration>
         <growthEfficiency type="text" description="Growth efficiency">0.75</growthEfficiency>
-        <SLA type="text" description="Specific leaf area">20</SLA>
-        <lightExtCoeff type="text" description="Light extinction coefficient">0.5</lightExtCoeff>
-        <CO2PmaxScale type="text" description="CO2 - Scale factor for CO2 effect on photosynthesis">700</CO2PmaxScale>
-        <CO2NScale type="text" description="CO2 - Scale factor for CO2 effects on plant N concentration">600</CO2NScale>
-        <CO2NMin type="text" description="CO2 - Minimum fraction that plant N concentration may reduce to uder elevated CO2">0.7</CO2NMin>
-        <CO2NCurvature type="text" description="CO2 - Curvature factor of CO2 effect on plant N concentration">2</CO2NCurvature>
         <rateLive2Dead type="text" description="Live to dead turnover rate:">0.05</rateLive2Dead>
         <rateDead2Litter type="text" description="Dead to litter turnover rate:">0.11</rateDead2Litter>
         <rateRootSen type="text" description="Root senescence rate:">0.02</rateRootSen>
+        <massFluxTmin type="text" description="Minimum temperature for mass flux">2</massFluxTmin>
+        <massFluxTopt type="text" description="Optimum temperature for mass flux">20</massFluxTopt>
+        <massFluxW0 type="text" description="Scale factor for response of mass flux to soil moisture">2</massFluxW0>
+        <massFluxWopt type="text" description="Optimum soil moisture for mass flux">0.5</massFluxWopt>
         <stockParameter type="text" description="Stock influence parameter">0.05</stockParameter>
         <maxRootFraction type="text" description="Maximum biomass fraction allocated to root">0.25</maxRootFraction>
         <allocationSeasonF type="text" description="Factor for seasonal variation in DM allocation:">0.8</allocationSeasonF>
         <leafRate type="text" description="Reference leaf appearance rate without stress">3</leafRate>
         <fLeaf type="text" description="Reference growth partition to leaves">0.7</fLeaf>
         <fStolon type="text" description="Reference growth partition to stolon">0</fStolon>
+        <SLA type="text" description="Specific leaf area">20</SLA>
         <digestLive type="text" description="Digestibility of live plant material">0.6</digestLive>
         <digestDead type="text" description="Digestibility of dead plant material">0.2</digestDead>
         <dmtotal type="text" description="Initial shoot dry matter (kg/ha)">2000</dmtotal>
@@ -2523,8 +2523,6 @@ End Class
         <photoPath type="text" description=" Photosynthesis pathway (C3=3, C4=4):">3</photoPath>
         <isLegume type="yesno" description=" Is this a legume species? (no=0, yes=1):">0</isLegume>
         <Pm type="text" description=" Reference photosynthesis rate - CO2 assimilation (mg CO2/m2.s):">1</Pm>
-        <growthEfficiency type="text" description=" Growth efficiency factor - photosynthesis minus growth respiration (0-1):">0.75</growthEfficiency>
-        <maintRespiration type="text" description=" Maintenance respiration coefficient (%):">3</maintRespiration>
         <alphaPhoto type="text" description=" Leaf gross photosynthesis rate (mg CO2/J):">0.01</alphaPhoto>
         <thetaPhoto type="text" description=" Photosynthesis curve parameter (J/kg.s):">0.8</thetaPhoto>
         <fractionPAR type="text" description=" Fraction of radiation that is photosynthetic active (0-1):">0.5</fractionPAR>
@@ -2532,6 +2530,11 @@ End Class
         <growthTmin type="text" description=" Minimum temperature for growth (oC):">2</growthTmin>
         <growthTopt type="text" description=" Optimum temperature for growth (oC):">20</growthTopt>
         <growthTq type="text" description=" Curve parameter for growth response to temperature:">1.75</growthTq>
+        <referenceCO2 type="text" description=" Reference atmospheric CO2 content for photosynthesis (ppm):">380</referenceCO2>
+        <CO2PmaxScale type="text" description=" Scale factor for CO2 effect on photosynthesis (ppm):">700</CO2PmaxScale>
+        <CO2NScale type="text" description=" Scale factor for CO2 effects on plant N concentration (ppm):">600</CO2NScale>
+        <CO2NMin type="text" description=" Minimum reduction of plant N concentration under elevated CO2 (0-1):">0.7</CO2NMin>
+        <CO2NCurvature type="text" description=" Curvature factor of CO2 effect on plant N concentration (&gt;1.0):">2</CO2NCurvature>
         <useHeatStress type="yesno" description=" Consider effects of high temperatures on photosynthesis? (yes/no):">yes</useHeatStress>
         <heatOnsetT type="text" description=" Onset temperature for heat effects on growth (oC):">28</heatOnsetT>
         <heatFullT type="text" description=" Temperature for full heat effects on growth (oC):">35</heatFullT>
@@ -2544,13 +2547,10 @@ End Class
         <coldSumT type="text" description=" Temperature sum for recovery from cold effects (oC):">20</coldSumT>
         <coldTq type="text" description=" Exponent for computing recovery from cold stress:">1</coldTq>
         <coldRecoverT type="text" description=" Base temperature for recovery from cold effects (oC):">0</coldRecoverT>
+        <growthEfficiency type="text" description=" Growth efficiency factor - photosynthesis minus growth respiration (0-1):">0.75</growthEfficiency>
+        <maintRespiration type="text" description=" Maintenance respiration coefficient (%):">3</maintRespiration>
         <respTref type="text" description=" Reference temperature for maintenance respiration (oC):">28</respTref>
         <maxTeffectResp type="text" description=" Maximum effect of temperature on respiration (&gt;1.0):">1.25</maxTeffectResp>
-        <referenceCO2 type="text" description=" Reference atmospheric CO2 content for photosynthesis (ppm):">380</referenceCO2>
-        <CO2PmaxScale type="text" description=" Scale factor for CO2 effect on photosynthesis (ppm):">700</CO2PmaxScale>
-        <CO2NScale type="text" description=" Scale factor for CO2 effects on plant N concentration (ppm):">600</CO2NScale>
-        <CO2NMin type="text" description=" Minimum reduction of plant N concentration under elevated CO2 (0-1):">0.7</CO2NMin>
-        <CO2NCurvature type="text" description=" Curvature factor of CO2 effect on plant N concentration (&gt;1.0):">2</CO2NCurvature>
         <MaxRootAllocation type="text" description=" Maximum biomass fraction that can be allocated to roots (0-1):">0.25</MaxRootAllocation>
         <TargetSRratio type="text" description=" Target or ideal shoot:root ratio:">4</TargetSRratio>
         <GlfEffectsOnSR type="text" description=" Coefficient controlling the maximum effect that soil GLFs have on Shoot:Root ratio (0-1):">0.5</GlfEffectsOnSR>

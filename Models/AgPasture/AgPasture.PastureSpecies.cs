@@ -387,7 +387,6 @@ namespace Models.AgPasture
         [Units("mm")]
         public double InitialRootDepth { get; set; } = 750.0;
 
-        // TODO: temporary?? initial DM fractions for grass or legume species
         /// <summary>The initial fractions of DM for each plant part in grass</summary>
         private double[] initialDMFractions_grass = new double[]
         {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00};
@@ -408,28 +407,16 @@ namespace Models.AgPasture
         public double ReferencePhotosynthesisRate { get; set; } = 1.0;
 
         /// <summary>Leaf photosynthetic efficiency [mg CO2/J]</summary>
-        [Description("Leaf photosynthetic efficiency [mg CO2/J]:")]
-        [Units("mg CO2/J")]
+        [XmlIgnore]
         public double PhotosyntheticEfficiency { get; set; } = 0.01;
 
         /// <summary>Photosynthesis curvature parameter [J/kg/s]</summary>
-        [Description("Photosynthesis curvature parameter [J/kg/s]:")]
-        [Units("J/kg/s")]
+        [XmlIgnore]
         public double PhotosynthesisCurveFactor { get; set; } = 0.8;
 
         /// <summary>Fraction of total radiation that is photosynthetically active [0-1]</summary>
         [XmlIgnore]
         private double fractionPAR { get; set; } = 0.5;
-
-        /// <summary> Maintenance respiration coefficient - Fraction of DM consumed by respiration [0-1]</summary>
-        [Description("Maintenance respiration coefficient [0-1]:")]
-        [Units("0-1")]
-        public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
-
-        /// <summary>Growth respiration coefficient - fraction of photosynthesis CO2 not assimilated (0-1)</summary>
-        [Description("Growth respiration coefficient [0-1]:")]
-        [Units("0-1")]
-        public double GrowthRespirationCoefficient { get; set; } = 0.25;
 
         /// <summary>Light extinction coefficient (0-1)</summary>
         [Description("Light extinction coefficient [0-1]:")]
@@ -452,46 +439,6 @@ namespace Models.AgPasture
         [Units("-")]
         public double GrowthTq { get; set; } = 1.75;
 
-        /// <summary>Onset temperature for heat effects on growth [oC]</summary>
-        [Description("Onset temperature for heat effects on growth [oC]:")]
-        [Units("oC")]
-        public double HeatOnsetT { get; set; } = 28.0;
-
-        /// <summary>Temperature for full heat effect on growth (no growth) [oC]</summary>
-        [Description("Temperature for full heat effect on growth [oC]:")]
-        [Units("oC")]
-        public double HeatFullT { get; set; } = 35.0;
-
-        /// <summary>Cumulative degrees-day for recovery from heat stress [oCd]</summary>
-        [Description("Cumulative degrees-day for recovery from heat stress [oCd]:")]
-        [Units("oCd")]
-        public double HeatSumT { get; set; } = 30.0;
-
-        /// <summary>Reference temperature for recovery from heat stress [oC]</summary>
-        [Description("Reference temperature for recovery from heat stress [oC]:")]
-        [Units("oC")]
-        public double HeatRecoverT { get; set; } = 25.0;
-
-        /// <summary>Onset temperature for cold effects on growth [oC]</summary>
-        [Description("Onset temperature for cold effects on growth [oC]:")]
-        [Units("oC")]
-        public double ColdOnsetT { get; set; } = 0.0;
-
-        /// <summary>Temperature for full cold effect on growth (no growth) [oC]</summary>
-        [Description("Temperature for full cold effect on growth [oC]:")]
-        [Units("oC")]
-        public double ColdFullT { get; set; } = -3.0;
-
-        /// <summary>Cumulative degrees for recovery from cold stress [oCd]</summary>
-        [Description("Cumulative degrees for recovery from cold stress [oCd]:")]
-        [Units("oCd")]
-        public double ColdSumT { get; set; } = 20.0;
-
-        /// <summary>Reference temperature for recovery from cold stress [oC]</summary>
-        [Description("Reference temperature for recovery from cold stress [oC]:")]
-        [Units("oC")]
-        public double ColdRecoverT { get; set; } = 00.0;
-
         /// <summary>Reference CO2 concentration for photosynthesis [ppm]</summary>
         [Description("Reference CO2 concentration for photosynthesis [ppm]:")]
         [Units("ppm")]
@@ -500,22 +447,102 @@ namespace Models.AgPasture
         /// <summary> Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]</summary>
         [Description("Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]:")]
         [Units("ppm")]
-        public double CoefficientCO2EffectOnPhotosynthesis { get; set; } = 700.0;
+        public double CO2EffectScaleFactor { get; set; } = 700.0;
 
         /// <summary>Scalling paramenter for the CO2 effects on N uptake [ppm Co2]</summary>
         [Description("Scalling paramenter for the CO2 effects on N requirement [ppm Co2]:")]
         [Units("ppm")]
-        public double OffsetCO2EffectOnNuptake { get; set; } = 600.0;
+        public double CO2EffectOffsetFactor { get; set; } = 600.0;
 
         /// <summary>Minimum value for the effect of CO2 on N requirement [0-1]</summary>
         [Description("Minimum value for the effect of CO2 on N requirement [0-1]:")]
         [Units("0-1")]
-        public double MinimumCO2EffectOnNuptake { get; set; } = 0.7;
+        public double CO2EffectMinimum { get; set; } = 0.7;
 
         /// <summary>Exponent of the function describing the effect of CO2 on N requirement</summary>
         [Description("Exponent of the function describing the effect of CO2 on N requirement:")]
         [Units("-")]
-        public double ExponentCO2EffectOnNuptake { get; set; } = 2.0;
+        public double CO2EffectExponent { get; set; } = 2.0;
+
+        /// <summary>Flag whether photosynthesis reduction due to heat damage is enabled [yes/no]</summary>
+        [Description("Enable photosynthesis reduction due to heat damage [yes/no]:")]
+        [Units("oC")]
+        public YesNoAnswer UseHeatStressFactor
+        {
+            get
+            {
+                if (usingHeatStressFactor)
+                    return YesNoAnswer.yes;
+                else
+                    return YesNoAnswer.no;
+            }
+            set { usingHeatStressFactor = (value == YesNoAnswer.yes); }
+        }
+
+        /// <summary>Onset temperature for heat effects on photosynthesis [oC]</summary>
+        [Description("Onset temperature for heat effects on photosynthesis [oC]:")]
+        [Units("oC")]
+        public double HeatOnsetTemp { get; set; } = 28.0;
+
+        /// <summary>Temperature for full heat effect on photosynthesis (growth stops) [oC]</summary>
+        [Description("Temperature for full heat effect on photosynthesis [oC]:")]
+        [Units("oC")]
+        public double HeatFullTemp { get; set; } = 35.0;
+
+        /// <summary>Cumulative degrees-day for recovery from heat stress [oCd]</summary>
+        [Description("Cumulative degrees-day for recovery from heat stress [oCd]:")]
+        [Units("oCd")]
+        public double HeatSumDD { get; set; } = 30.0;
+
+        /// <summary>Reference temperature for recovery from heat stress [oC]</summary>
+        [Description("Reference temperature for recovery from heat stress [oC]:")]
+        [Units("oC")]
+        public double HeatRecoverTemp { get; set; } = 25.0;
+
+        /// <summary>Flag whether photosynthesis reduction due to cold damage is enabled [yes/no]</summary>
+        [Description("Enable photosynthesis reduction due to cold damage [yes/no]:")]
+        [Units("oC")]
+        public YesNoAnswer UseColdStressFactor
+        {
+            get
+            {
+                if (usingColdStressFactor)
+                    return YesNoAnswer.yes;
+                else
+                    return YesNoAnswer.no;
+            }
+            set { usingColdStressFactor = (value == YesNoAnswer.yes); }
+        }
+
+        /// <summary>Onset temperature for cold effects on photosynthesis [oC]</summary>
+        [Description("Onset temperature for cold effects on photosynthesis [oC]:")]
+        [Units("oC")]
+        public double ColdOnsetTemp { get; set; } = 0.0;
+
+        /// <summary>Temperature for full cold effect on photosynthesis (growth stops) [oC]</summary>
+        [Description("Temperature for full cold effect on photosynthesis [oC]:")]
+        [Units("oC")]
+        public double ColdFullTemp { get; set; } = -3.0;
+
+        /// <summary>Cumulative degrees for recovery from cold stress [oCd]</summary>
+        [Description("Cumulative degrees for recovery from cold stress [oCd]:")]
+        [Units("oCd")]
+        public double ColdSumDD { get; set; } = 20.0;
+
+        /// <summary>Reference temperature for recovery from cold stress [oC]</summary>
+        [Description("Reference temperature for recovery from cold stress [oC]:")]
+        [Units("oC")]
+        public double ColdRecoverTemp { get; set; } = 0.0;
+
+        /// <summary> Maintenance respiration coefficient - Fraction of DM consumed by respiration [0-1]</summary>
+        [Description("Maintenance respiration coefficient [0-1]:")]
+        [Units("0-1")]
+        public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
+
+        /// <summary>Growth respiration coefficient - fraction of photosynthesis CO2 not assimilated (0-1)</summary>
+        [Description("Growth respiration coefficient [0-1]:")]
+        [Units("0-1")]
+        public double GrowthRespirationCoefficient { get; set; } = 0.25;
 
         // - Germination and emergence  -------------------------------------------------------------------------------
 
@@ -752,25 +779,41 @@ namespace Models.AgPasture
 
         // - Growth limiting factors  ---------------------------------------------------------------------------------
 
-        /// <summary>Curve parameter for the effect of N deficiency on plant growth.</summary>
-        [Description("Curve parameter for the effect of N deficiency on plant growth:")]
+        /// <summary>Exponent for modifying the effect of N deficiency on plant growth.</summary>
+        [Description("Exponent for modifying the effect of N deficiency on plant growth:")]
         [Units("-")]
-        public double DillutionCoefN { get; set; } = 0.5;
-
-        /// <summary>Exponent factor for the water stress function</summary>
-        [Description("Exponent factor for the water stress function:")]
-        [Units("-")]
-        public double WaterStressExponent { get; set; } = 1.0;
+        public double NDillutionCoefficient { get; set; } = 0.5;
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) [0-1]</summary>
         [Description("Maximum reduction in plant growth due to water logging (saturated soil) [0-1]:")]
         [Units("0-1")]
-        public double WaterLoggingCoefficient { get; set; } = 0.1;
+        public double SoilWaterSaturationFactor { get; set; } = 0.1;
 
-        /// <summary>Minimum water-free pore space for growth with no limitations [%]</summary>
-        [Description("Minimum water-free pore space for growth with no limitations [%]:")]
-        [Units("%")]
-        public double MinimumWaterFreePorosity { get; set; } = 10.0;
+        /// <summary>Minimum water-free pore space for growth with no limitations [0-1]</summary>
+        [Description("Minimum water-free pore space for growth with no limitations [0-1]:")]
+        [Units("0-1")]
+        public double MinimumWaterFreePorosity { get; set; } = 0.1;
+
+        /// <summary>
+        /// Flag whether water logging effect is considered as a cumulative effect (instead of only daily effect)
+        /// </summary>
+        [Description("Use cumulative effects on plant growth due to water logging?")]
+        [Units("yes/no")]
+        public YesNoAnswer UseCumulativeWaterLoggingEffect
+        {
+            get
+            {
+                if (usingCumulativeWaterLogging)
+                    return YesNoAnswer.yes;
+                else
+                    return YesNoAnswer.no;
+            }
+            set { usingCumulativeWaterLogging = (value == YesNoAnswer.yes); }
+        }
+
+        /// <summary>Daily recovery rate from water logging [0-1]</summary>
+        [XmlIgnore]
+        public double SoilWaterSaturationRecoveryFactor { get; set; } = 1.0;
 
         /// <summary>Gets or sets a generic growth factor, represents any arbitrary limitation to potential growth.</summary>
         /// <remarks> This factor can be used to describe the effects of conditions such as disease, etc.</remarks>
@@ -1185,6 +1228,12 @@ namespace Models.AgPasture
         /// <summary>The growth factor due to variations in air temperature</summary>
         private double glfTemp = 1.0;
 
+        /// <summary>Flag whether the factor reducing photosynthesis due to heat damage is being used</summary>
+        private bool usingHeatStressFactor = true;
+
+        /// <summary>Flag whether the factor reducing photosynthesis due to cold damage is being used</summary>
+        private bool usingColdStressFactor = true;
+
         /// <summary>The growth factor due to heat stress</summary>
         private double glfHeat = 1.0;
         
@@ -1193,6 +1242,12 @@ namespace Models.AgPasture
 
         /// <summary>The growth limiting factor due to water stress</summary>
         internal double glfWater = 1.0;
+
+        /// <summary>Flag whether the factor reducing growth due to logging is used on a cumulative basis</summary>
+        private bool usingCumulativeWaterLogging = false;
+
+        /// <summary>The cumulative water logging factor</summary>
+        private double cumWaterLogging = 0.0;
 
         /// <summary>The growth limiting factor due to water logging</summary>
         internal double glfAeration = 1.0;
@@ -1203,16 +1258,16 @@ namespace Models.AgPasture
         // Auxiliary variables for temperature stress  ----------------------------------------------------------------
 
         /// <summary>Growth rate reduction factor due to high temperatures</summary>
-        private double highTempEffect = 1.0;
-
-        /// <summary>Growth rate reduction factor due to low temperatures</summary>
-        private double lowTempEffect = 1.0;
+        private double highTempStress = 1.0;
 
         /// <summary>Cumulative degress of temperature for recovery from heat damage</summary>
-        private double accumT4Heat = 0.0;
+        private double accumDDHeat = 0.0;
 
-        /// <summary>Cumulative degress of temperature for recovry from cold damage</summary>
-        private double accumT4Cold = 0.0;
+        /// <summary>Growth rate reduction factor due to low temperatures</summary>
+        private double lowTempStress = 1.0;
+
+        /// <summary>Cumulative degress of temperature for recovery from cold damage</summary>
+        private double accumDDCold = 0.0;
 
         // Harvest and digestibility  ---------------------------------------------------------------------------------
 
@@ -3190,7 +3245,7 @@ namespace Models.AgPasture
         internal void CalcGrowthAfterWaterLimitations()
         {
             // Potential growth after water limitations
-            dGrowthWstress = dGrowthPot * Math.Pow(glfWater, WaterStressExponent);
+            dGrowthWstress = dGrowthPot * glfWater;
 
             // Potential allocation of todays growth
             EvaluateAllocationToShoot();
@@ -3205,7 +3260,7 @@ namespace Models.AgPasture
             //  by adjusting the effect of N deficiency using a power function. When the exponent is 1.0, the reduction
             //  in growth is linearly proportional to N deficiency, a greater value results in less reduction in growth.
             //  For many plants the value should be smaller than 1.0. For grasses, the exponent is typically around 0.5.
-            double glfNit = Math.Pow(glfN, DillutionCoefN);
+            double glfNit = Math.Pow(glfN, NDillutionCoefficient);
 
             // The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
             dGrowthActual = dGrowthWstress * Math.Min(glfNit, GlfSFertility);
@@ -3232,10 +3287,10 @@ namespace Models.AgPasture
         private double DailyGrossPotentialGrowth()
         {
             // CO2 effects on Pmax
-            glfCO2 = PCO2Effects();
+            glfCO2 = CO2EffectOnPhotosynthesis();
 
             // N concentration effects on Pmax
-            glfNc = PmxNeffect();
+            glfNc = NConcentrationEffect();
 
             // Temperature effects to Pmax
             double tempGlf1 = TemperatureLimitingFactor(Tmean(0.5));
@@ -4006,7 +4061,7 @@ namespace Models.AgPasture
                        + (toStol * stolons.NConcOptimum) + (toRoot * roots.NConcOptimum);
 
             // get the factor to reduce the demand under elevated CO2
-            double fN = NCO2Effects();
+            double fN = NFactorDueToCO2();
             NdemandOpt *= fN;
 
             // N demand for new growth, with luxury uptake (maximum [N])
@@ -5270,133 +5325,143 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Photosynthesis reduction factor due to high temperatures (heat stress)</summary>
+        /// <summary>Computes the reduction factor for photosynthesis due to heat damage</summary>
+        /// <remarks>Stress computed as function of daily maximum temperature, recovery based on average temp.</remarks>
         /// <returns>The reduction in photosynthesis rate (0-1)</returns>
         private double HeatStress()
         {
-            // evaluate recovery from the previous high temperature effects
-            double recoverF = 1.0;
-
-            if (highTempEffect < 1.0)
+            if (usingHeatStressFactor)
             {
-                if (HeatRecoverT > Tmean(0.5))
-                    accumT4Heat += (HeatRecoverT - Tmean(0.5));
-
-                if (accumT4Heat < HeatSumT)
-                    recoverF = highTempEffect + (1 - highTempEffect) * accumT4Heat / HeatSumT;
-            }
-
-            // Evaluate the high temperature factor for today
-            double newHeatF = 1.0;
-            if (myMetData.MaxT > HeatFullT)
-                newHeatF = 0;
-            else if (myMetData.MaxT > HeatOnsetT)
-                newHeatF = (myMetData.MaxT - HeatOnsetT) / (HeatFullT - HeatOnsetT);
-
-            // If this new high temp. factor is smaller than 1.0, then it is compounded with the old one
-            // also, the cumulative heat for recovery is re-started
-            if (newHeatF < 1.0)
-            {
-                highTempEffect = recoverF * newHeatF;
-                accumT4Heat = 0;
-                recoverF = highTempEffect;
-            }
-
-            return recoverF; // TODO: revise this function
-        }
-
-        /// <summary>Photosynthesis reduction factor due to low temperatures (cold stress)</summary>
-        /// <returns>The reduction in potosynthesis rate (0-1)</returns>
-        private double ColdStress()
-        {
-            //recover from the previous high temp. effect
-            double recoverF = 1.0;
-            if (lowTempEffect < 1.0)
-            {
-                if (Tmean(0.5) > ColdRecoverT)
-                    accumT4Cold += (Tmean(0.5) - ColdRecoverT);
-
-                if (accumT4Cold < ColdSumT)
-                    recoverF = lowTempEffect + (1 - lowTempEffect) * accumT4Cold / ColdSumT;
-            }
-
-            //possible new low temp. effect
-            double newColdF = 1.0;
-            if (myMetData.MinT < ColdFullT)
-                newColdF = 0;
-            else if (myMetData.MinT < ColdOnsetT)
-                newColdF = (myMetData.MinT - ColdFullT) / (ColdOnsetT - ColdFullT);
-
-            // If this new cold temp. effect happens when serious cold effect is still on,
-            // compound & then re-start of the recovery from the new effect
-            if (newColdF < 1.0)
-            {
-                lowTempEffect = newColdF * recoverF;
-                accumT4Cold = 0;
-                recoverF = lowTempEffect;
-            }
-
-            return recoverF; // TODO: revise this function
-        }
-
-        /// <summary>Photosynthesis factor (reduction or increase) to eleveated [CO2]</summary>
-        /// <returns>A factor to adjust photosynthesis due to CO2</returns>
-        private double PCO2Effects()
-        {
-            if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
-                return 1.0;
-
-            double Fp1 = myMetData.CO2 / (CoefficientCO2EffectOnPhotosynthesis + myMetData.CO2);
-            double Fp2 = (ReferenceCO2 + CoefficientCO2EffectOnPhotosynthesis) / ReferenceCO2;
-
-            return Fp1 * Fp2;
-        }
-
-        /// <summary>Effect on photosynthesis due to variations in optimum N concentration as affected by CO2</summary>
-        /// <returns>A factor to adjust photosynthesis</returns>
-        private double PmxNeffect()
-        {
-            if (isAnnual)
-                return 0.0;
-            else
-            {
-                double fN = NCO2Effects();
-
-                double result = 1.0;
-                if (leaves.NconcGreen < leaves.NConcOptimum * fN)
+                double heatFactor;
+                if (myMetData.MaxT > HeatFullTemp)
                 {
-                    if (leaves.NconcGreen > leaves.NConcMinimum)
-                    {
-                        result = MathUtilities.Divide(leaves.NconcGreen - leaves.NConcMinimum, (leaves.NConcOptimum * fN) - leaves.NConcMinimum, 1.0);
-                        result = Math.Min(1.0, Math.Max(0.0, result));
-                    }
-                    else
-                    {
-                        result = 0.0;
-                    }
+                    // very high temperature, full stress
+                    heatFactor = 0.0;
+                    accumDDHeat = 0.0;
+                }
+                else if (myMetData.MaxT > HeatOnsetTemp)
+                {
+                    // high temperature, add some stress
+                    heatFactor = highTempStress * (HeatFullTemp - myMetData.MaxT) / (HeatFullTemp - HeatOnsetTemp);
+                    accumDDHeat = 0.0;
+                }
+                else
+                {
+                    // cool temperature, same stress as yesterday
+                    heatFactor = highTempStress;
                 }
 
-                return result;
+                // check recovery factor
+                double recoveryFactor = 0.0;
+                if (myMetData.MaxT <= HeatOnsetTemp)
+                    recoveryFactor = (1.0 - heatFactor) *(accumDDHeat / HeatSumDD);
+
+                // accumulate temperature
+                accumDDHeat += Math.Max(0.0, HeatRecoverTemp - Tmean(0.5));
+
+                // heat stress
+                highTempStress = Math.Min(1.0, heatFactor + recoveryFactor);
+
+                return highTempStress;
             }
+            return 1.0;
         }
 
-        /// <summary>Plant nitrogen [N] decline to elevated [CO2]</summary>
-        /// <returns>A factor to adjust N demand</returns>
-        private double NCO2Effects()
+        /// <summary>Computes the reduction factor for photosynthesis due to cold damage (frost)</summary>
+        /// <remarks>Stress computed as function of daily minimum temperature, recovery based on average temp.</remarks>
+        /// <returns>The reduction in photosynthesis rate (0-1)</returns>
+        private double ColdStress()
+        {
+            if (usingColdStressFactor)
+            {
+                double coldFactor;
+                if (myMetData.MinT < ColdFullTemp)
+                {
+                    // very low temperature, full stress
+                    coldFactor = 0.0;
+                    accumDDCold = 0.0;
+                }
+                else if (myMetData.MinT < ColdOnsetTemp)
+                {
+                    // low temperature, add some stress
+                    coldFactor = lowTempStress * (myMetData.MinT - ColdFullTemp) / (ColdOnsetTemp - ColdFullTemp);
+                    accumDDCold = 0.0;
+                }
+                else
+                {
+                    // warm temperature, same stress as yesterday
+                    coldFactor = lowTempStress;
+                }
+
+                // check recovery factor
+                double recoveryFactor = 0.0;
+                if (myMetData.MinT >= ColdOnsetTemp)
+                    recoveryFactor = (1.0 - coldFactor) * (accumDDCold / ColdSumDD);
+
+                // accumulate temperature
+                accumDDCold += Math.Max(0.0, Tmean(0.5) - ColdRecoverTemp);
+                
+                // cold stress
+                lowTempStress = Math.Min(1.0, coldFactor + recoveryFactor);
+
+                return lowTempStress;
+            }
+            else
+                return 1.0;
+        }
+
+        /// <summary>Computes the relative effect of atmospheric CO2 on photosynthesis.</summary>
+        /// <returns>A factor to adjust photosynthesis due to CO2</returns>
+        private double CO2EffectOnPhotosynthesis()
         {
             if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
                 return 1.0;
 
-            double termK = Math.Pow(OffsetCO2EffectOnNuptake - ReferenceCO2, ExponentCO2EffectOnNuptake);
-            double termC = Math.Pow(myMetData.CO2 - ReferenceCO2, ExponentCO2EffectOnNuptake);
-            double result = (1 - MinimumCO2EffectOnNuptake) * termK / (termK + termC);
-
-            return MinimumCO2EffectOnNuptake + result;
+            double termActual = myMetData.CO2 / (myMetData.CO2 + CO2EffectScaleFactor);
+            double termReference = (ReferenceCO2 + CO2EffectScaleFactor) / ReferenceCO2;
+            return termActual * termReference;
         }
 
-        //Canopy conductance decline to elevated [CO2]
-        /// <summary>Conductances the c o2 effects.</summary>
-        /// <returns></returns>
+        /// <summary>Computes the relative effect of leaf N concentration on photosynthesis.</summary>
+        /// <remarks>
+        /// This mimics the effect that N concentration have on the amount of chlorophyll (assumed directly proportional to N conc).
+        /// The effect is adjusted by a function of atmospheric CO2 (plants need less N at high CO2).
+        /// </remarks>
+        /// <returns>A factor to adjust photosynthesis due to N concentration</returns>
+        private double NConcentrationEffect()
+        {
+            // get variation in N optimum due to CO2
+            double fN = NFactorDueToCO2();
+
+            // get chlorophyll effect
+            double effect = 0.0;
+            if (leaves.NconcGreen > leaves.NConcMinimum)
+            {
+                if (leaves.NconcGreen < leaves.NConcOptimum * fN)
+                    effect = MathUtilities.Divide(leaves.NconcGreen - leaves.NConcMinimum, (leaves.NConcOptimum * fN) - leaves.NConcMinimum, 1.0);
+                else
+                    effect = 1.0;
+            }
+
+            effect = MathUtilities.Bound(effect, 0.0, 1.0);
+            return effect;
+        }
+
+        /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2</summary>
+        /// <returns>A factor to adjust optimum N in leaves</returns>
+        private double NFactorDueToCO2()
+        {
+            if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
+                return 1.0;
+
+            double factorCO2 = Math.Pow((CO2EffectOffsetFactor - ReferenceCO2) / (myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
+            double effect = (CO2EffectMinimum + factorCO2) / (1 + factorCO2);
+
+            return effect;
+        }
+
+        /// <summary>Computes the variation in stomata conductances due to variation in atmospheric CO2.</summary>
+        /// <returns>Stomata conductuctance</returns>
         private double ConductanceCO2Effects()
         {
             if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.5)
@@ -5426,17 +5491,23 @@ namespace Models.AgPasture
             return Math.Max(0.0, Math.Min(1.0, result));
         }
 
-        /// <summary>Growth limiting factor due to excess of water in soil (logging/lack of aeration)</summary>
-        /// <returns>The limiting factor due to excess of soil water</returns>
+        /// <summary>Growth limiting factor due to excess of water in the soil (logging/lack of aeration)</summary>
+        /// <remarks>
+        /// Growth is limited if soil water content is above a given threshold (defined by MinimumWaterFreePorosity), which
+        ///  will be the soil DUL is MinimumWaterFreePorosity is set to a negative value. If usingCumulativeWaterLogging, 
+        ///  growth is limited by the cumulative value of the logging effect, with maximum increment in one day equal to 
+        ///  SoilWaterSaturationFactor. Recovery happens if water content is below the threshold set by MinimumWaterFreePorosity
+        /// </remarks>
+        /// <returns>The limiting factor due to excess in soil water</returns>
         internal double WaterLoggingFactor()
         {
-            double result = 1.0;
-
-            // calculate soil moisture thresholds in the root zone
+            double effect = 0.0;
             double mySWater = 0.0;
             double mySaturation = 0.0;
             double myDUL = 0.0;
             double fractionLayer = 0.0;
+
+            // gather water status over the root zone
             for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
                 // fraction of layer with roots 
@@ -5449,12 +5520,22 @@ namespace Models.AgPasture
                 if (MinimumWaterFreePorosity <= -myEpsilon)
                     myDUL += mySoil.SoilWater.DULmm[layer] * fractionLayer;
                 else
-                    myDUL = mySoil.SoilWater.SATmm[layer] * (1.0 - 0.01 * MinimumWaterFreePorosity) * fractionLayer;
+                    myDUL = mySoil.SoilWater.SATmm[layer] * (1.0 - MinimumWaterFreePorosity) * fractionLayer;
             }
 
-            result = 1.0 - WaterLoggingCoefficient * Math.Max(0.0, mySWater - myDUL) / (mySaturation - myDUL);
+            if (mySWater > myDUL)
+                effect = SoilWaterSaturationFactor * (mySWater - myDUL) / (mySaturation - myDUL);
+            else
+                effect = -SoilWaterSaturationRecoveryFactor;
 
-            return result;
+            cumWaterLogging = MathUtilities.Bound(cumWaterLogging + effect, 0.0, 1.0);
+
+            if (usingCumulativeWaterLogging)
+                effect = 1.0 - cumWaterLogging;
+            else
+                effect = MathUtilities.Bound(1.0 - effect, 0.0, 1.0);
+
+            return effect;
         }
 
         /// <summary>Effect of water stress on tissue turnover</summary>
