@@ -8004,7 +8004,7 @@ namespace Models
             <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
             <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
-            <MaxRootAllocation>0.25</MaxRootAllocation>
+            <MaxRootAllocation>0.2</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
             <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
@@ -11487,7 +11487,7 @@ namespace Models
           <ColdSumDD>20</ColdSumDD>
           <ColdRecoverTemp>0</ColdRecoverTemp>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
+          <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
           <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>

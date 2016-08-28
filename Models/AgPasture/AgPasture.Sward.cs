@@ -1637,10 +1637,11 @@ namespace Models.AgPasture
                     sDUL += mySoil.SoilWater.DULmm[layer];
                 }
                 double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
-                double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
                 foreach (PastureSpecies species in mySpecies)
-                    species.glfWater = waterLimitingFactor;
-                //mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
+                {
+                    species.glfWater = waterDeficitFactor;
+                    species.glfAeration = waterLoggingFactor;
+                }
             }
             else
             { //Water uptake is done by each species or by another apsim module

@@ -542,7 +542,7 @@ namespace Models.AgPasture
         /// <summary>Growth respiration coefficient - fraction of photosynthesis CO2 not assimilated (0-1)</summary>
         [Description("Growth respiration coefficient [0-1]:")]
         [Units("0-1")]
-        public double GrowthRespirationCoefficient { get; set; } = 0.25;
+        public double GrowthRespirationCoefficient { get; set; } = 0.20;
 
         // - Germination and emergence  -------------------------------------------------------------------------------
 
@@ -908,19 +908,22 @@ namespace Models.AgPasture
         // - Annual species  ------------------------------------------------------------------------------------------
 
         /// <summary>The day of year when seeds are allowed to germinate</summary>
-        private int doyGermination = 200;
+        private int doyGermination = 240;
 
         /// <summary>The number of days from emergence to anthesis</summary>
-        private int daysEmergenceToAnthesis = 0;
+        private int daysEmergenceToAnthesis = 100;
 
         /// <summary>The number of days from anthesis to maturity</summary>
-        private int daysAnthesisToMaturity = 0;
+        private int daysAnthesisToMaturity = 100;
 
         /// <summary>The cumulative degrees-day from emergence to anthesis</summary>
         private double degreesDayForAnthesis = 0.0;
 
         /// <summary>The cumulative degrees-day from anthesis to maturity</summary>
         private double degreesDayForMaturity = 0.0;
+
+        /// <summary>The number of days from emergence with reduced growth</summary>
+        private int daysAnnualsFactor = 60;
 
         // - Other parameters  ----------------------------------------------------------------------------------------
 
@@ -1021,13 +1024,7 @@ namespace Models.AgPasture
         private int phenologicStage = -1;
 
         /// <summary>The number of days since emergence</summary>
-        private int daysSinceEmergence = 0;
-
-        /// <summary>The number of days from emergence</summary>
-        private int daysfromEmergence = 0;
-
-        /// <summary>The number of days from anthesis</summary>
-        private int daysfromAnthesis = 0;
+        private double daysSinceEmergence = 0;
 
         /// <summary>The cumulatve degrees day during vegetative phase</summary>
         private double growingGDD = 0.0;
@@ -1047,10 +1044,10 @@ namespace Models.AgPasture
         private double Pgross = 0.0;
 
         /// <summary>The growth respiration rate (C loss)</summary>
-        private double Resp_g = 0.0;
+        private double RespirationGrowth = 0.0;
 
         /// <summary>The maintenance respiration rate (C loss)</summary>
-        private double Resp_m = 0.0;
+        private double RespirationMaintenance = 0.0;
 
         /// <summary>The amount of C remobilised from senesced tissue</summary>
         private double CRemobilisable = 0.0;
@@ -1693,7 +1690,7 @@ namespace Models.AgPasture
         [Units("kgC/ha")]
         public double CarbonLossRespiration
         {
-            get { return Resp_m; }
+            get { return RespirationMaintenance; }
         }
 
         /// <summary>Gets the carbon remobilised from senescent tissue.</summary>
@@ -1720,7 +1717,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double RespirationWt
         {
-            get { return Resp_m / CarbonFractionInDM; }
+            get { return RespirationMaintenance / CarbonFractionInDM; }
         }
 
         /// <summary>Gets the remobilisation rate.</summary>
@@ -1819,7 +1816,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NPP
         {
-            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) / CarbonFractionInDM; }
+            get { return (Pgross - RespirationGrowth - RespirationMaintenance) / CarbonFractionInDM; }
         }
 
         /// <summary>Gets the net above-ground primary productivity.</summary>
@@ -1828,7 +1825,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NAPP
         {
-            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * fractionToShoot / CarbonFractionInDM; }
+            get { return (Pgross - RespirationGrowth - RespirationMaintenance) * fractionToShoot / CarbonFractionInDM; }
         }
 
         /// <summary>Gets the net below-ground primary productivity.</summary>
@@ -1837,7 +1834,7 @@ namespace Models.AgPasture
         [Units("kgDM/ha")]
         public double NBPP
         {
-            get { return (Pgross * (1 - GrowthRespirationCoefficient) - Resp_m) * (1 - fractionToShoot) / CarbonFractionInDM; }
+            get { return (Pgross - RespirationGrowth - RespirationMaintenance) * (1 - fractionToShoot) / CarbonFractionInDM; }
         }
 
         #endregion
@@ -3119,10 +3116,6 @@ namespace Models.AgPasture
                     // step 01 - Potential growth
                     CalcDailyPotentialGrowth();
 
-                    // Potential allocation of todays growth
-                    //fShoot = ToShootFraction();
-                    //EvaluateAllocationToLeaf();
-
                     // Water demand, supply, and uptake
                     DoWaterCalculations();
 
@@ -3224,35 +3217,40 @@ namespace Models.AgPasture
             Pgross = DailyGrossPotentialGrowth();
 
             // Respiration (kgC/ha/day)
-            Resp_m = DailyMaintenanceRespiration();
-            Resp_g = DailyGrowthRespiration();
+            RespirationMaintenance = DailyMaintenanceRespiration();
+            RespirationGrowth = DailyGrowthRespiration();
 
             // Remobilisation (kgC/ha/day) (got from previous day turnover)
             CRemobilisable = 0.0;
 
             // Net potential growth (kgDM/ha/day)
-            dGrowthPot = DailyNetPotentialGrowth();
-        }
-
-        /// <summary>Calculates the growth with water limitations.</summary>
-        internal void CalcGrowthAfterWaterLimitations()
-        {
-            // Potential growth after water limitations
-            dGrowthWstress = dGrowthPot * glfWater;
+            dGrowthPot = Math.Max(0.0, Pgross - RespirationGrowth + CRemobilisable - RespirationMaintenance);
+            dGrowthPot /= CarbonFractionInDM;
 
             // Potential allocation of todays growth
             EvaluateAllocationToShoot();
             EvaluateAllocationToLeaf();
         }
 
-        /// <summary>Calculates the actual plant growth (after limitations, before senescence).</summary>
+        /// <summary>Calculates the growth with water limitations.</summary>
+        internal void CalcGrowthAfterWaterLimitations()
+        {
+            // Potential growth after water limitations
+            dGrowthWstress = dGrowthPot * Math.Min(glfWater, glfAeration);
+        }
+
+        /// <summary>Calculates the actual plant growth (after all growth limitations, before senescence).</summary>
+        /// <remarks>
+        /// Here the limitiation due to soil fertility are considered, the base is N defieciency and a generic user-set limitiation
+        /// The GLF due to N stress is modified here to aacount for N dillution.
+        /// Many plants, especially grasses, can keep growth even when N supply is insuficient, this is done by reducing the N concentration
+        ///  in the plant tissues. This is represented hereby adjusting the effect of N deficiency using a power function. When the exponent
+        ///  is 1.0, the reductionin growth is linearly proportional to N deficiency, a greater value results in less reduction in growth.
+        /// For many plants the value should be smaller than 1.0. For grasses, the exponent is typically around 0.5.
+        /// </remarks>
         internal void CalcGrowthAfterNutrientLimitations()
         {
-            // Adjust GLF due to N deficiency: Many plants, especially grasses, can keep growth even when N supply is
-            //  insuficient, this is done by reducing the N concentration in the plant tissues. This is represented here
-            //  by adjusting the effect of N deficiency using a power function. When the exponent is 1.0, the reduction
-            //  in growth is linearly proportional to N deficiency, a greater value results in less reduction in growth.
-            //  For many plants the value should be smaller than 1.0. For grasses, the exponent is typically around 0.5.
+            // adjust the glfN
             double glfNit = Math.Pow(glfN, NDillutionCoefficient);
 
             // The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
@@ -3331,6 +3329,10 @@ namespace Models.AgPasture
             glfHeat = HeatStress();
             glfCold = ColdStress();
 
+            // phenologically related reduction in growth of annual species (from IJ)
+            if (isAnnual)
+                BaseGrossPhotosynthesis *= AnnualSpeciesGrowthFactor();
+
             // Actual gross photosynthesis (gross potential growth - kg C/ha/day)
             return BaseGrossPhotosynthesis * Math.Min(glfHeat, glfCold) * GlfGeneric;
         }
@@ -3382,47 +3384,16 @@ namespace Models.AgPasture
             return Pgross * GrowthRespirationCoefficient;
         }
 
-        /// <summary>Compute the plant's net potential growth</summary>
-        /// <returns>The net potential growth (kg DM/ha)</returns>
-        private double DailyNetPotentialGrowth()
-        {
-            // Net potential growth (C assimilation) for the day (excluding respiration)
-            double NetPotGrowth = 0.0;
-            NetPotGrowth = (1 - GrowthRespirationCoefficient) * (Pgross + CRemobilisable - Resp_m);
-            // TODO: the respCoeff should only multiply Pgross
-            //NetPotGrowth = Pgross + CRemobilised - Resp_g - Resp_m;
-            NetPotGrowth = Math.Max(0.0, NetPotGrowth);
-
-            // Net daily potential growth (kg DM/ha)
-            NetPotGrowth /= CarbonFractionInDM;
-
-            // phenologically related reduction in growth of annual species (from IJ)
-            if (isAnnual)
-                NetPotGrowth *= annualSpeciesReduction();
-
-            return NetPotGrowth;
-        }
-
         /// <summary>Update DM and N amounts allocating new growth to each organ</summary>
-        /// <exception cref="System.Exception">
-        /// Mass balance lost on partition of new growth DM
-        /// or
-        /// Mass balance lost on partition of new growth N
-        /// </exception>
         internal void DoNewGrowthAllocations()
         {
             if (dGrowthActual > 0.0)
             {
-                // Fractions of new growth for each plant part (fShoot was calculated in DoPlantGrowth)
+                // Fractions of new growth for each plant part
                 double toLeaf = fractionToShoot * fractionToLeaf;
                 double toStem = fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
                 double toStolon = fractionToShoot * FractionToStolon;
                 double toRoot = 1.0 - fractionToShoot;
-
-                // Checking mass balance
-                double ToAll = toLeaf + toStolon + toStem + toRoot;
-                if (Math.Abs(ToAll - 1.0) > 0.0001)
-                    throw new Exception("Mass balance lost on partition of new growth DM");
 
                 // New growth is allocated to the first tissue pools
                 leaves.Tissue[0].DM += toLeaf * dGrowthActual;
@@ -3444,11 +3415,6 @@ namespace Models.AgPasture
                 double toStemN = toStem * MathUtilities.Divide(stems.NConcMaximum, Nsum, 0.0);
                 double toStolonN = toStolon * MathUtilities.Divide(stolons.NConcMaximum, Nsum, 0.0);
                 double toRootN = toRoot * MathUtilities.Divide(roots.NConcMaximum, Nsum, 0.0);
-
-                // Checking mass balance
-                ToAll = toRootN + toLeafN + toStolonN + toStemN;
-                if (Math.Abs(ToAll - 1.0) > 0.0001)
-                    throw new Exception("Mass balance lost on partition of new growth N");
 
                 // Allocate N from new growth to the first tissue pools
                 leaves.Tissue[0].Namount += toLeafN * newGrowthN;
@@ -3477,15 +3443,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the turnover rate and update each tissue pool of all plant parts</summary>
-        /// <exception cref="System.Exception">
-        /// Loss of mass balance on C remobilisation - leaf
-        /// or
-        /// Loss of mass balance on C remobilisation - stem
-        /// or
-        /// Loss of mass balance on C remobilisation - stolon
-        /// or
-        /// Loss of mass balance on C remobilisation - root
-        /// </exception>
         /// <remarks>The C and N amounts for remobilisation are also computed in here</remarks>
         internal void DoTissueTurnoverAndRemobilisation()
         {
@@ -3495,7 +3452,7 @@ namespace Models.AgPasture
             // Get the temperature factor for tissue turnover
             ttfTemperature = TempFactorForTissueTurnover(Tmean(0.5));
 
-            // Get the moisture factor for tissue turnover
+            // Get the moisture factor for shoot tissue turnover
             ttfMoistureShoot = WaterFactorForTissueTurnover();
 
             // Get the moisture factor for littering rate (detachment)
@@ -3504,8 +3461,8 @@ namespace Models.AgPasture
             // Consider the number of leaves
             ttfLeafNumber = 3.0 / LiveLeavesPerTiller; // three refers to the number of stages used in the model
 
-
-            ttfMoistureRoot = 2 - glfWater;
+            // Get the moisture factor for root tissue turnover
+            ttfMoistureRoot = 2.0 - Math.Min(glfWater, glfAeration);
 
             //stocking rate affecting transfer of dead to litter (default as 0 for now - should be read in)
             double SR = 0;
@@ -3581,7 +3538,6 @@ namespace Models.AgPasture
                 double iniDM = 0.0;
                 double iniN = 0.0;
                 double ChRemobl = 0.0;
-
                 double[] turnoverRates = new double[] {gama * RelativeTurnoverGrowing, gama, gama, gamaD};
 
                 // Leaves
@@ -3693,8 +3649,6 @@ namespace Models.AgPasture
 
                 // get the water logging effects (only if there is no drought effect)
                 glfAeration = WaterLoggingFactor();
-                if (glfWater > 0.999)
-                    glfWater = glfAeration;
             }
             //else if myWaterUptakeSource == "AgPasture"
             //      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
@@ -3714,8 +3668,6 @@ namespace Models.AgPasture
 
                 // get the water logging effects (only if there is no drought effect)
                 glfAeration = WaterLoggingFactor();
-                if (glfWater > 0.999)
-                    glfWater = glfAeration;
             }
             //else
             //      water uptake be calculated by other modules (e.g. SWIM) and supplied as
@@ -4498,15 +4450,22 @@ namespace Models.AgPasture
             myPreviousState.roots.Tissue[0].Namount = roots.Tissue[0].Namount;
         }
 
-        /// <summary>Reduction factor for potential growth due to phenology of annual species</summary>
-        /// <returns>A factor to reduce plant growth (0-1)</returns>
-        private double annualSpeciesReduction()
+        /// <summary>Computes a growth factor for annual species, related to phenology/population</summary>
+        /// <returns>A growth factor (0-1)</returns>
+        private double AnnualSpeciesGrowthFactor()
         {
             double rFactor = 1.0;
-            if (phenologicStage == 1 && daysfromEmergence < 60) //decline at the begining due to seed bank effects ???
-                rFactor = 0.5 + 0.5 * daysfromEmergence / 60;
-            else if (phenologicStage == 2) //decline of photosynthesis when approaching maturity
-                rFactor = 1.0 - (double) daysfromAnthesis / daysAnthesisToMaturity;
+            if (phenologicStage == 1 && daysSinceEmergence < daysAnnualsFactor)
+            {
+                // reduction at the begining due to population effects ???
+                rFactor -= 0.5 * (1.0 - (daysSinceEmergence / daysAnnualsFactor));
+            }
+            else if (phenologicStage == 2)
+            {
+                // decline of photosynthesis when approaching maturity
+                rFactor -= (daysSinceEmergence - daysEmergenceToAnthesis) / daysAnthesisToMaturity;
+            }
+
             return rFactor;
         }
 
@@ -4523,7 +4482,7 @@ namespace Models.AgPasture
             if (roots.DMGreen > 0.00001)
             {
                 // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
-                double glfMin = Math.Min(glfWater, glfN);
+                double glfMin = Math.Min(Math.Min(glfWater, glfAeration), glfN);
 
                 // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)
                 double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
@@ -5481,9 +5440,9 @@ namespace Models.AgPasture
         private double WaterFactorForTissueTurnover()
         {
             double effect = 1.0;
-            if (glfWater < TissueTurnoverDroughtThreshold)
+            if (Math.Min(glfWater, glfAeration) < TissueTurnoverDroughtThreshold)
             {
-                effect = (TissueTurnoverDroughtThreshold - glfWater) / TissueTurnoverDroughtThreshold;
+                effect = (TissueTurnoverDroughtThreshold - Math.Min(glfWater, glfAeration)) / TissueTurnoverDroughtThreshold;
                 effect = 1.0 + TissueTurnoverDroughtMax * effect;
             }
 
