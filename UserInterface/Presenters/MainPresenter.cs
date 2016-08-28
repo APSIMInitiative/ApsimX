@@ -156,26 +156,18 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">View (normally an ExplorerView) being displayed on the tab</param>
         /// <param name="newTabName">New text of the tab.</param>
-        public void ChangeTabText(string currentTabName, string newTabName)
+        /// <param name="tooltip">Tooltip text to use for the tab</param>
+        public void ChangeTabText(object ownerView, string newTabName, string tooltip)
         {
-            view.ChangeTabText(currentTabName, newTabName);
+            view.ChangeTabText(ownerView, newTabName, tooltip);
         }
 
         /// <summary>Close the application</summary>
         public void Close(bool askToSave)
         {
             view.Close();
-        }
-
-        /// <summary>Close the tab with the specified name.</summary>
-        /// <param name="tabName">the name of the tab to close.</param>
-        public void CloseTab(string tabName)
-        {
-            presenters1.RemoveAll(p => p.ApsimXFile.FileName == tabName);
-            presenters2.RemoveAll(p => p.ApsimXFile.FileName == tabName);
-            view.CloseTab(tabName);
         }
 
         /// <summary>Ask the user a question</summary>
@@ -332,7 +324,7 @@ namespace UserInterface.Presenters
             string fileName = view.AskUserForOpenFileName("*.apsimx|*.apsimx");
             if (fileName != null)
             {
-                bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
                 this.OpenApsimXFileInTab(fileName, onLeftTabControl);
                 Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
@@ -379,13 +371,19 @@ namespace UserInterface.Presenters
             {
                 e.AllowClose = this.presenters1[e.Index - 1].SaveIfChanged();
                 if (e.AllowClose)
-                   this.presenters1.RemoveAt(e.Index - 1);
+                {
+                    this.presenters1[e.Index - 1].Detach();
+                    this.presenters1.RemoveAt(e.Index - 1);
+                }
             }
             else
             {
                 e.AllowClose = this.presenters2[e.Index - 1].SaveIfChanged();
                 if (e.AllowClose)
+                {
+                    this.presenters2[e.Index - 1].Detach();
                     this.presenters2.RemoveAt(e.Index - 1);
+                }
             }
         }
 
@@ -398,7 +396,7 @@ namespace UserInterface.Presenters
             StreamReader streamReader = new StreamReader(s);
             bool onLeftTabControl = true;
             if (sender != null)
-                onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+                onLeftTabControl = this.view.IsControlOnLeft(sender);
 
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
         }
@@ -412,7 +410,7 @@ namespace UserInterface.Presenters
         {
             Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.ManagementToolbox.apsimx");
             StreamReader streamReader = new StreamReader(s);
-            bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+            bool onLeftTabControl = this.view.IsControlOnLeft(sender);
             this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd(), onLeftTabControl);
         }
 
@@ -427,7 +425,7 @@ namespace UserInterface.Presenters
             {
                 Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.TrainingToolbox.apsimx");
                 StreamReader streamReader = new StreamReader(s);
-                bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
                 this.OpenApsimXFromMemoryInTab("Training toolbox", streamReader.ReadToEnd(), onLeftTabControl);
             }
             catch (Exception err)
@@ -458,7 +456,7 @@ namespace UserInterface.Presenters
                     importer.ProcessFile(fileName);
 
                     string newFileName = Path.ChangeExtension(fileName, ".apsimx");
-                    bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+                    bool onLeftTabControl = this.view.IsControlOnLeft(sender);
                     this.OpenApsimXFileInTab(newFileName, onLeftTabControl);
                 }
                 finally
@@ -501,7 +499,7 @@ namespace UserInterface.Presenters
 
                 // ensure that they are saved in another file before running by opening them in memory
                 StreamReader reader = new StreamReader(fileName);
-                bool onLeftTabControl = (sender as Control).Parent.Parent.Name.Contains("1");
+                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
                 this.OpenApsimXFromMemoryInTab(string.Empty, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
             }
@@ -526,7 +524,6 @@ namespace UserInterface.Presenters
                     form.Show();
                 }
             }
-
         }
 
         /// <summary>Application is closing - allow this to happen?</summary>
@@ -541,6 +538,31 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormSize = view.WindowSize;
                 Utility.Configuration.Settings.MainFormWindowState = view.WindowMinimisedOrMaximised;
             }
+        }
+
+        /// <summary>Close the tab containing the specified control.</summary>
+        /// <param name="control">a control located on the tab to close.</param>
+        public void CloseTabContaining(object o)
+        {
+            if (o is ExplorerView)
+            {
+                List<ExplorerPresenter> presenterList = null;
+                if (view.IsControlOnLeft(o))
+                    presenterList = this.presenters1;
+                else
+                    presenterList = this.presenters2;
+
+                foreach (ExplorerPresenter presenter in presenterList)
+                {
+                    if (presenter.GetView() == (o as ExplorerView))
+                    {
+                        presenter.Detach();
+                        this.presenters1.Remove(presenter);
+                        break;
+                    }
+                }
+            }
+            view.CloseTabContaining(o);
         }
     }
 }

@@ -610,6 +610,11 @@ namespace UserInterface.Views
 
         #endregion
 
+        /// <summary>
+        /// Intercept right mouse clicks, and cause them to change the selection
+        /// </summary>
+        /// <param name="sender">Object sending the event</param>
+        /// <param name="e">Event arguments</param>
         private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
