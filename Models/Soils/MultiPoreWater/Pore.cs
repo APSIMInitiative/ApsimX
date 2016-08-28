@@ -47,10 +47,18 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("nm")]
         public double PsiUpper { get { return -3000 / DiameterUpper; } }
+        /// <summary>The water content of the soil when this pore is full and larger pores are empty</summary>
+        [XmlIgnore]
+        [Units("nm")]
+        public double ThetaUpper { get; set; }
+        /// <summary>The water content of the soil when this pore is empty and smaller pores are full</summary>
+        [XmlIgnore]
+        [Units("nm")]
+        public double ThetaLower { get; set; }
         /// <summary>The volume of the the pore relative to the volume of soil</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double Volume { get; set; }
+        public double Volume { get { return ThetaUpper - ThetaLower; } }
         /// <summary>The volume of the the pore in mm</summary>
         [XmlIgnore]
         [Units("mm")]

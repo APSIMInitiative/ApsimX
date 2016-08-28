@@ -369,7 +369,6 @@ namespace Models.Soils
             {
                 ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
                 ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
-                double AccumVolume = 0;
                 double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
                 for (int c = PoreCompartments - 1; c >= 0; c--)
@@ -380,17 +379,14 @@ namespace Models.Soils
                     Pores[l][c].DiameterUpper = PoreBounds[c];
                     Pores[l][c].DiameterLower = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water.Thickness[l];
-                    double ThisPoreVolume = PoreVolume(PoreBounds[c], PoreBounds[c + 1],l);
-                    AccumVolume += ThisPoreVolume;
-                    Pores[l][c].Volume = ThisPoreVolume;
-                    double PoreWaterFilledVolume = Math.Min(ThisPoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    Pores[l][c].ThetaUpper = HyProps.SimpleTheta(l, Pores[l][c].PsiUpper);
+                    Pores[l][c].ThetaLower = HyProps.SimpleTheta(l, Pores[l][c].PsiLower);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
                     Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
                     Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
                 }
-                if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
-                    throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
@@ -716,29 +712,6 @@ namespace Models.Soils
         private void doUpwardDiffusion()
         {
             //Move water up into lower layers if they are dryer than below
-        }
-        /// <summary>
-        /// Calculates the proportion of total porosity the resides between the two specified pore diameters
-        /// </summary>
-        /// <param name="MaxDiameter"></param>
-        /// <param name="MinDiameter"></param>
-        /// <param name="layer"></param>
-        /// <returns>proportion of totol porosity</returns>
-        private double PoreVolume(double MaxDiameter, double MinDiameter, int layer)
-        {
-            return CumPoreVolume(MaxDiameter,layer) - CumPoreVolume(MinDiameter,layer);
-        }
-        /// <summary>
-        /// Calculates the proportion of total porosity below the specified pore diameter
-        /// </summary>
-        /// <param name="PoreDiameter"></param>
-        /// <param name="layer"></param>
-        /// <returns>proportion of total porosity</returns>
-        private double CumPoreVolume(double PoreDiameter, int layer)
-        {
-            double psi = -3000/PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
-            double PoreVolume = HyProps.SimpleTheta(layer,psi);
-            return Math.Min(1,PoreVolume);
         }
         /// <summary>
         /// Utility to sum the specified propertie from all pore compartments in the pore layer input 
