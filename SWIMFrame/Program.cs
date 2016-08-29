@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SWIMFrame
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main_(string[] args)
         {
+
+            MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);
+            SoilProps sp = Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true);
+            Fluxes.FluxTable(5.0, sp);
+            FluxTable ft = Fluxes.ft;
+
             string output = string.Empty;
             //define test soils
             SoilParam[] soils = new SoilParam[2];
@@ -24,12 +32,12 @@ namespace SWIMFrame
             double dzmin;
             double[] x;
             double[,] dz = new double[2, 10]; //only for testing? if not will need to change hardcoded dimensions.
-            bool Kgiven = false;
+            bool Kgiven = true;
             SoilProps sp1, sp2;
             FluxTable ft1, ft2;
 
             //define soil profile
-            x = new double[] {10,20,30,40,60,80,100,120,160,200}; //length = num soil layers
+            x = new double[] { 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 }; //length = num soil layers
             sidx = new int[] { 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }; //soil ident of layers
             dzmin = 1.0; // smallest likely path length
             ndz = new int[] { 2, 4 }; // for the two soil types - gives six flux tables
@@ -45,64 +53,27 @@ namespace SWIMFrame
                 BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
                 soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven);
-                b.Write(soils[i].sid);
                 WriteProps(b, soils[i].sp);
                 b.Close();
-                for (j = 0; j < ndz[i]; j++)
+                for (j = 0; j <= ndz[i]; j++)
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
-                    b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + dz[i, j] * 10));
-                    b.Write(soils[i].sid);
-                    WriteFluxes(b, Fluxes.ft);
+                    b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + (dz[i, j] * 10) + ".dat"));
+                    Fluxes.WriteFluxTable(b, Fluxes.ft);
                     b.Close();
                 }
             }
+            Fluxes.WriteDiags();
 
             //generate and write composite flux table for path with two soil types
-            sp1 = ReadProps("soil103.dat");
-            sp2 = ReadProps("soil109.dat");
+            sp1 = Soil.ReadProps("soil103.dat");
+            sp2 = Soil.ReadProps("soil109.dat");
+            ft1 = Fluxes.ReadFluxTable("soil103dz50.dat");
+            ft2 = Fluxes.ReadFluxTable("soil109dz100.dat");
 
-            ft1 = ReadFluxes("soil103dz50.dat");
-            ft2 = ReadFluxes("soil103dz100.dat");
-
-            FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2); 
+            FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite("soil0103dz0050_soil0109dz0100.dat"));
-            WriteFluxes(bw, ftwo);
-
-        }
-
-        private static FluxTable ReadFluxes(string file)
-        {
-            FluxTable ft;
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                ft = (FluxTable)formatter.Deserialize(stream);
-            }
-            return ft;
-        }
-
-        private static SoilProps ReadProps(string file)
-        {
-            SoilProps sp;
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                sp = (SoilProps)formatter.Deserialize(stream);
-            }
-            return sp;
-        }
-
-        private static void WriteFluxes(BinaryWriter b, FluxTable fluxTable)
-        {
-            byte[] bytes;
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, fluxTable);
-                bytes = stream.ToArray();
-            }
-            b.Write(bytes);
+            Fluxes.WriteFluxTable(bw, ftwo);
         }
 
         private static void WriteProps(BinaryWriter b, SoilProps soilProps)
