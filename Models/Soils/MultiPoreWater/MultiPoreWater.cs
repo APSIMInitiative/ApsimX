@@ -309,7 +309,7 @@ namespace Models.Soils
         /// </summary>
         [Summary]
         [Description("The relative water water filled porosity when this pore space if full and larger pores are empty")]
-        public double[][] ThetaUpper { get; set; }
+        public double[][] RelativePoreVolume { get; set; }
         #endregion
 
         #region Properties
@@ -370,7 +370,7 @@ namespace Models.Soils
             HydraulicConductivityIn = new double[ProfileLayers][];
             HydraulicConductivityOut = new double[ProfileLayers][];
             PsiUpper = new double[ProfileLayers][];
-            ThetaUpper = new double[ProfileLayers][];
+            RelativePoreVolume = new double[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
                 Pores[l] = new Pore[PoreCompartments];
@@ -378,7 +378,7 @@ namespace Models.Soils
                 HydraulicConductivityIn[l] = new double[PoreCompartments];
                 HydraulicConductivityOut[l] = new double[PoreCompartments];
                 PsiUpper[l] = new double[PoreCompartments];
-                ThetaUpper[l] = new double[PoreCompartments];
+                RelativePoreVolume[l] = new double[PoreCompartments];
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
@@ -386,7 +386,7 @@ namespace Models.Soils
                     HydraulicConductivityIn[l][c] = new double();
                     HydraulicConductivityOut[l][c] = new double();
                     PsiUpper[l][c] = new double();
-                    ThetaUpper[l][c] = new double();
+                    RelativePoreVolume[l][c] = new double();
                 }
             }
 
@@ -537,13 +537,19 @@ namespace Models.Soils
                     HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
-                    ThetaUpper[l][c] = Pores[l][c].ThetaUpper;
-                }
+                 }
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
                 ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
+            }
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
+                }
             }
         }
         private double ResidueInterception(double Precipitation)
