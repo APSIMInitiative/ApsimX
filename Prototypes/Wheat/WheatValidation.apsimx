@@ -2202,7 +2202,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>DMRetranslocationFactor</Name>
               <Value>0.7</Value>
             </Constant>
-            <Start>Emergence</Start>
+            <Start>Sowing</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
@@ -2212,7 +2212,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Value>0.7</Value>
             </Constant>
             <Start>FlagLeaf</Start>
-            <End>EndGrainFill</End>
+            <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <LinearInterpolationFunction>
@@ -6215,16 +6215,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>170</n>
-            <Slope>1.0131871375857833</Slope>
-            <Intercept>-1.7824538423387821</Intercept>
-            <SEslope>0.026679179807587952</SEslope>
-            <SEintercept>40.956802821242569</SEintercept>
-            <R2>0.89566704900527982</R2>
-            <RMSE>224.93481380744754</RMSE>
-            <NSE>0.87959400139696264</NSE>
-            <ME>16.568558304120419</ME>
-            <MAE>162.71491988117117</MAE>
-            <RSR>0.34597359440139286</RSR>
+            <Slope>1.0124857359728674</Slope>
+            <Intercept>-1.3981666823863179</Intercept>
+            <SEslope>0.026638035838717822</SEslope>
+            <SEintercept>40.893640256559159</SEintercept>
+            <R2>0.89582596234408507</R2>
+            <RMSE>224.53057956051396</RMSE>
+            <NSE>0.88002637993807542</NSE>
+            <ME>15.976786070255479</ME>
+            <MAE>162.73496942682991</MAE>
+            <RSR>0.34535183926698543</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
