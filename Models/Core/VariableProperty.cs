@@ -129,22 +129,28 @@ namespace Models.Core
                 {
                     unitString = unitsAttribute.ToString();
                 }
-                else if (unitsToStringInfo != null)
-                {
-                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
-                }
                 else if (unitsInfo != null)
                 {
-                    return unitsInfo.GetValue(this.Object, null).ToString();
+                    object val = unitsInfo.GetValue(this.Object, null);
+                    if (unitsToStringInfo != null)
+                        unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { val });
+                    else
+                        unitString = val.ToString();
                 }
-
+                else if (unitsToStringInfo != null)
+                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 return unitString;
             }
 
             set
             {
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsInfo != null)
+                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
+                if (unitsSet != null)
+                {
+                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
+                }
+                else if (unitsInfo != null)
                 {
                     unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
                 }

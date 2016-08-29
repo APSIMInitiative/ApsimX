@@ -413,16 +413,6 @@ namespace UserInterface.Views
         #region Event Handlers
 
         /// <summary>
-        /// User has clicked a link.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnLinkClicked(object sender, /* TBI LinkClicked */ EventArgs e)
-        {
-            /// TBI Process.Start(e.LinkText);
-        }
-
-        /// <summary>
         /// User has clicked 'edit'
         /// </summary>
         /// <param name="sender"></param>
