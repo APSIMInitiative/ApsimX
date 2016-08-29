@@ -31,29 +31,21 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("nm")]
         public double DiameterLower { get; set; }
-        /// <summary>The mean pore diameter</summary>
-        [XmlIgnore]
-        [Units("nm")]
-        public double MeanDiameter { get { return (DiameterUpper + DiameterLower) / 2; } }
-        /// <summary>The water potential at mean diameter</summary>
-        [XmlIgnore]
-        [Units("cm")]
-        public double Psi { get { return -3000 / MeanDiameter; } }
         /// <summary>The diameter of the lower boundry of the pore</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("cm")]
         public double PsiLower { get { return -3000 / DiameterLower; } }
         /// <summary>The mean pore diameter</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("cm")]
         public double PsiUpper { get { return -3000 / DiameterUpper; } }
         /// <summary>The water content of the soil when this pore is full and larger pores are empty</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("ml/ml")]
         public double ThetaUpper { get; set; }
         /// <summary>The water content of the soil when this pore is empty and smaller pores are full</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("ml/ml")]
         public double ThetaLower { get; set; }
         /// <summary>The volume of the the pore relative to the volume of soil</summary>
         [XmlIgnore]
@@ -90,7 +82,6 @@ namespace Models.Soils
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
-
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -116,7 +107,7 @@ namespace Models.Soils
         {
             get
             {
-                return HydraulicConductivity * AdsorptionFactor;
+                return HydraulicConductivity + Adsorption;
             }
         }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
@@ -126,13 +117,15 @@ namespace Models.Soils
         {
             get
             {
-                return HydraulicConductivity * CapillaryFactor;
+                return HydraulicConductivity * TensionFactor;
             }
         }
         /// <summary>
-        /// Factor describing the effects of Adsorption of water onto solid pore surfaces.  Has a value of 1 when soil is non-repellent and decreases as pore becomes more hydrophobic
+        /// The rate of water movement into a pore space due to the chemical attraction from the matris
         /// </summary>
-        public double AdsorptionFactor
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double Adsorption
         {
             get
             {
@@ -146,13 +139,19 @@ namespace Models.Soils
         /// Factor describing the effects of water surface tension holding water in pores.  Is zero where surface tension exceeds the forces of gravity and neglegable where suction is low in larger pores
         /// equals 1
         /// </summary>
-        public double CapillaryFactor
+        public double TensionFactor
         {
             get
             {
-                double GravityPotential = -100; //Fix me.  Make Gravity Potential a function of distance from water table
-                return Math.Max(0,Psi-GravityPotential)/-GravityPotential;
+                double factor = 0;
+                if (GravitationalPotential < PsiUpper)
+                    factor = 1;
+                return factor;
             }
         }
+        /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double GravitationalPotential { get; set; }
     }
 }

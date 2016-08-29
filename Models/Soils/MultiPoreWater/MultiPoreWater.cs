@@ -240,6 +240,12 @@ namespace Models.Soils
         [Description("The amount of water that will pass the bottom of the profile")]
         public double BottomBoundryConductance { get; set; }
         /// <summary>
+        /// The depth of the water table below the surface, important for gravitational water potential
+        /// </summary>
+        [Units("m")]
+        [Description("The depth of the water table below the surface")]
+        public double WaterTableDepth { get; set; }
+        /// <summary>
         /// Allow infiltration processes to be switched off from the UI
         /// </summary>
         [Description("Calculate infiltration processes?.  Normally yes, this is for testing")]
@@ -340,6 +346,16 @@ namespace Models.Soils
         /// The amount of water that may enter the surface of the soil each hour
         /// </summary>
         private double PotentialInfiltration { get; set; }
+        /// <summary>
+        /// The distance down to the nearest zero potential body of water, for calculating gravitational potential
+        /// </summary>
+        [Units("m")]
+        private double[] LayerHeight { get; set; }
+        /// <summary>
+        /// The depth of the specificed soil profile
+        /// </summary>
+        [Units("m")]
+        private double ProfileDepth { get; set; }
 
         #endregion
 
@@ -361,6 +377,7 @@ namespace Models.Soils
             AbsorptionCapacity = new double[ProfileLayers];
             AbsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
+            LayerHeight = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
             ProfileParams = new ProfileParameters(ProfileLayers);
@@ -390,7 +407,7 @@ namespace Models.Soils
                 }
             }
 
-            SetSoilHydraulicProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
+            SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
@@ -431,6 +448,7 @@ namespace Models.Soils
                 InitialProfileWater = MathUtilities.Sum(SWmm);
                 InitialPondDepth = pond;
                 InitialResidueWater = ResidueWater;
+                doGravitionalPotential();
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
                 DoDetailReport("UpdatePond",0,h);
@@ -510,7 +528,7 @@ namespace Models.Soils
         /// Goes through all profile and pore properties and updates their values using soil parameters.  
         /// Must be called after any soil parameters are chagned if the effect of the changes is to work correctly.
         /// </summary>
-        private void SetSoilHydraulicProperties()
+        private void SetSoilProperties()
         {
             HyProps.SetHydraulicProperties();
             pond = 0;
@@ -518,7 +536,7 @@ namespace Models.Soils
             {
                 ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
                 ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
-
+                ProfileDepth += Water.Thickness[l]/1000;
                 double AccumWaterVolume = 0;
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
@@ -628,6 +646,33 @@ namespace Models.Soils
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
             PotentialInfiltration = AbsorptionCapacity[0] + PercolationCapacityBelow[0];
+        }
+        /// <summary>
+        /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
+        /// </summary>
+        private void doGravitionalPotential()
+        {
+            for (int l = ProfileLayers - 1; l >= 0; l--)
+            {//Step through each layer from the bottom up and calculate the height
+                if (l == ProfileLayers - 1)
+                {//For the bottom layer height is equal to the depth of the water table below the bottom of the profile
+                    if (BottomBoundryConductance == 0)
+                        LayerHeight[l] = 0;
+                    else
+                        LayerHeight[l] = Math.Max(0,WaterTableDepth - ProfileDepth);
+                }
+                else
+                {
+                    if ((ProfileParams.Ksat[l + 1] < 0.001) || (SW[l + 1] == Water.SAT[l + 1]))
+                        LayerHeight[l] = 0;
+                    else
+                        LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1]/1000;
+                }
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {//Step through each pore and assign the gravitational potential for the layer
+                    Pores[l][c].GravitationalPotential = LayerHeight[l] / -0.1022;
+                }
+            }
         }
         private void doInfiltration(double WaterToInfiltrate, int h)
         {
