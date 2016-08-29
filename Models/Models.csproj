@@ -230,6 +230,7 @@
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
+    <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />

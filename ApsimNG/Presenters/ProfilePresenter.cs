@@ -97,6 +97,7 @@ namespace UserInterface.Presenters
             this.view = view as IProfileView;
             this.explorerPresenter = explorerPresenter;
 
+            this.view.ShowView(false);
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
             this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
@@ -142,6 +143,7 @@ namespace UserInterface.Presenters
             
             this.view.ProfileGrid.ResizeControls();
             this.view.PropertyGrid.ResizeControls();
+            this.view.ShowView(true);
         }
 
         /// <summary>
@@ -539,8 +541,12 @@ namespace UserInterface.Presenters
                 this.view.ProfileGrid.ClearContextActions();
                 this.indexOfClickedVariable = e.Column.ColumnIndex;
                 VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-                foreach (string unit in property.AllowableUnits)
-                    this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);                     
+                if (property.AllowableUnits.Length > 0)
+                {
+                    this.view.ProfileGrid.AddContextSeparator();
+                    foreach (string unit in property.AllowableUnits)
+                        this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);
+                }
             }
         }
 
@@ -552,8 +558,11 @@ namespace UserInterface.Presenters
         private void OnUnitClick(object sender, EventArgs e)
         {
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-            /// TBI property.Units = (sender as System.Windows.Forms.ToolStripDropDownItem).Text;
-            this.OnModelChanged(this.model);
+            if (sender is Gtk.ImageMenuItem)
+            {
+                property.Units = ((sender as Gtk.ImageMenuItem).Child as Gtk.AccelLabel).Text;
+                this.OnModelChanged(this.model);
+            }
         }
     }
 }
