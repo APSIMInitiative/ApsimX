@@ -106,7 +106,7 @@ namespace SWIMFrame
                           ref double h0, ref double[] S, ref double evap, ref double runoff, ref double infil, ref double drn, ref int nsteps, int[] jt, double[] cin,
                           ref double[] c0, ref double[,] sm, ref double[] soff, ref double[] sinfil, ref double[] sdrn, ref int[] nssteps, ref double[,] wex, ref double[,,] sex)
         {
-            // Since S.Length is one greater in Fortran to account for the 0 based index, this is included
+            // Since S.Length is one greater in Fortran to account for the 0 based index, this line is included
             // so that the +1 nomenclature can be kept below to avoid confusion.
             int sLength = S.Length - 1; 
 
@@ -223,10 +223,11 @@ namespace SWIMFrame
             }
             //-----end initialise
             //-----solve until tfin
+            Extensions.Log("Solve tfin", "d", tfin);
 
             while (t < tfin)
             {
-                Extensions.Log("Solve", "d", t);
+                Extensions.Log("Solve t", "d", t);
                 //-----take next time step
                 for (iflux = 1; iflux <= 2; iflux++) //sometimes need twice to adjust h at satn
                 {
@@ -261,7 +262,7 @@ namespace SWIMFrame
                     else //ponding
                     {
                         ns = 0;
-                        sd.GetQ(0, new int[] { 1, isat[1] }, new double[] { h0 - sd.he[1], xtbl[1] }, out q[0], out qya[0], out qyb[0]);
+                        sd.GetQ(0, new int[] {0, 1, isat[1] }, new double[] {0, h0 - sd.he[1], xtbl[1] }, out q[0], out qya[0], out qyb[0]);
                         if (h0 >= h0max && qpme > q[0])
                         {
                             maxpond = true;
@@ -310,15 +311,15 @@ namespace SWIMFrame
                     {
                         sink.Wsinks(t, isat, xtbl, sd.he, ref qwexs, ref qwexsd);
 
-                        for (int x = 1; x < qwex.Length; x += 2)
+                        for (int x = 1; x < qwexs.GetLength(1); x++)
                         {
-                            //  qwex = sum(qwexs, 2)  //will need to see what the fortran throws out
-                            //qwexd = sum(qwexsd, 2)
+                            qwex[x] = Matrix<double>.Build.DenseOfArray(qwexs).Column(x).Sum();
+                            qwexd[x] = Matrix<double>.Build.DenseOfArray(qwexsd).Column(x).Sum();
                         }
                     }
                     again = false; //flag for recalcn of fluxes
-                                   //-----end get fluxes and derivs
-                                   //----estimate time step dt
+                //-----end get fluxes and derivs
+                //----estimate time step dt
                     dmax = 0;
                     dSdt = MathUtilities.CreateArrayOfValues(0, dSdt.Length);
                     for (int x = 1; x <= sd.n; x++)
@@ -371,7 +372,7 @@ namespace SWIMFrame
                     }
                     else
                         t = t + dt; //tentative update
-
+                    Extensions.Log("Solve dt", "d", dt);
                     //-----end estimate time step dt
                     //-----get and solve eqns
                     rsigdt = 1.0 / (sig * dt);
@@ -428,6 +429,7 @@ namespace SWIMFrame
                             //check if time step ok, if not then set fac to make it less
                             iok = 1;
                             for (i = 1; i <= sd.n; i++)
+                            {
                                 if (isat[i] == 0) //check change in S
                                 {
                                     if (Math.Abs(dy[i]) > dSfac * dSmax)
@@ -454,35 +456,36 @@ namespace SWIMFrame
                                         break;
                                     }
                                 }
-                        }
-                        if (iok == 1 && ns < 1 && h0 < h0max && h0 + dy[0] > h0max + dh0max)
-                        {
-                            //start of runoff
-                            fac = (h0max + 0.5 * dh0max - h0) / dy[0];
-                            iok = 0;
-                        }
-                        if (iok == 1 && ns < 1 && h0 > 0.0 && h0 + dy[0] < h0min)
-                        {
-                            //pond going
-                            fac = -(h0 - 0.5 * h0min) / dy[0];
-                            iok = 0;
-                        }
-                        if (iok == 0) //reduce time step
-                        {
-                            t = t - dt;
-                            dt = fac * dt;
-                            t = t + dt;
-                            rsigdt = 1.0 / (sig * dt);
-                            nless = nless + 1; //count step size reductions
-                        }
-                        if (isat[1] != 0 && iflux == 1 && h[1] < 0.0 && h[1] + dy[1] > 0.0)
-                        {
-                            //incipient ponding - adjust state of saturated regions
-                            t = t - dt;
-                            dt = 1.0e-20 * (tfin - ts);
-                            rsigdt = 1.0 / (sig * dt);
-                            again = true;
-                            iok = 0;
+                            }
+                            if (iok == 1 && ns < 1 && h0 < h0max && h0 + dy[0] > h0max + dh0max)
+                            {
+                                //start of runoff
+                                fac = (h0max + 0.5 * dh0max - h0) / dy[0];
+                                iok = 0;
+                            }
+                            if (iok == 1 && ns < 1 && h0 > 0.0 && h0 + dy[0] < h0min)
+                            {
+                                //pond going
+                                fac = -(h0 - 0.5 * h0min) / dy[0];
+                                iok = 0;
+                            }
+                            if (iok == 0) //reduce time step
+                            {
+                                t = t - dt;
+                                dt = fac * dt;
+                                t = t + dt;
+                                rsigdt = 1.0 / (sig * dt);
+                                nless = nless + 1; //count step size reductions
+                            }
+                            if (isat[1] != 0 && iflux == 1 && h[1] < 0.0 && h[1] + dy[1] > 0.0)
+                            {
+                                //incipient ponding - adjust state of saturated regions
+                                t = t - dt;
+                                dt = 1.0e-20 * (tfin - ts);
+                                rsigdt = 1.0 / (sig * dt);
+                                again = true;
+                                iok = 0;
+                            }
                         }
                     } //end while
 
@@ -490,75 +493,77 @@ namespace SWIMFrame
                     //-----update unknowns
                     ih0 = 0;
                     if (!again)
+                    {
                         dwoff = 0.0;
-                    if (ns < 1)
-                    {
-                        h0 = h0 + dy[0];
-                        if (h0 < 0.0 && dy[0] < 0.0)
-                            ih0 = 1; //pond g1.0
-
-                        evap = evap + qevap * dt;
-                        //note that fluxes required are q at sigma of time step
-                        dwinfil = (q[0] + sig * (qya[0] * dy[0] + qyb[0] * dy[1])) * dt;
-                    }
-                    else
-                    {
-                        dwinfil = (q[0] + sig * qyb[0] * dy[1]) * dt;
-                        if (maxpond)
+                        if (ns < 1)
                         {
+                            h0 = h0 + dy[0];
+                            if (h0 < 0.0 && dy[0] < 0.0)
+                                ih0 = 1; //pond g1.0
+
                             evap = evap + qevap * dt;
-                            if (qprec > qprecmax) // set input to maintain pond
-                            {
-                                qpme = q[0] + sig * qyb[0] * dy[1];
-                                qprec1 = qpme + qevap;
-                                dwoff = 0.0;
-                            }
-                            else
-                                dwoff = qpme * dt - dwinfil;
-
-                            runoff = runoff + dwoff;
-                        }
-                        else
-                            evap = evap + qprec1 * dt - dwinfil;
-                    }
-                    infil = infil + dwinfil;
-                    if (nsol > 0) //get surface solute balance
-                    {
-                        if (initpond) //pond concn != cin
-                        {
-                            if (h0 > 0.0)
-                            {
-                                if (ns == 1) // if max pond depth
-                                {
-                                    dy[0] = 0.0;
-                                }
-                                for (int x = 1; x < cav.Length; x++)
-                                {
-                                    cav[x] = ((2.0 * h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
-                                }
-                                for (int x = 1; x < c0.Length; x++)
-                                {
-                                    c0[x] = 2.0 * cav[x] - c0[x]; //This needs to be tested from FORTRAN; no example in original code.
-                                }
-                            }
-                            else
-                            {
-                                for (int x = 1; x < cav.Length; x++)
-                                {
-                                    cav[x] = ((h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
-                                }
-                                initpond = false; //pond gone
-                                c0 = cin; // for output if any pond at end
-                            }
-                            soff = MathUtilities.Add(soff, MathUtilities.Multiply_Value(cav, dwoff));
-                            sinfil = MathUtilities.Add(sinfil, MathUtilities.Multiply_Value(cav, dwinfil));
+                            //note that fluxes required are q at sigma of time step
+                            dwinfil = (q[0] + sig * (qya[0] * dy[0] + qyb[0] * dy[1])) * dt;
                         }
                         else
                         {
-                            soff = MathUtilities.Add(soff, MathUtilities.Multiply_Value(cav, dwoff));
-                            sinfil = MathUtilities.Add(sinfil, MathUtilities.Multiply_Value(cin, qprec1 * dt - dwoff));
+                            dwinfil = (q[0] + sig * qyb[0] * dy[1]) * dt;
+                            if (maxpond)
+                            {
+                                evap = evap + qevap * dt;
+                                if (qprec > qprecmax) // set input to maintain pond
+                                {
+                                    qpme = q[0] + sig * qyb[0] * dy[1];
+                                    qprec1 = qpme + qevap;
+                                    dwoff = 0.0;
+                                }
+                                else
+                                {
+                                    dwoff = qpme * dt - dwinfil;
+                                }
+                                runoff = runoff + dwoff;
+                            }
+                            else
+                                evap = evap + qprec1 * dt - dwinfil;
                         }
-                    }
+                        infil = infil + dwinfil;
+                        if (nsol > 0) //get surface solute balance
+                        {
+                            if (initpond) //pond concn != cin
+                            {
+                                if (h0 > 0.0)
+                                {
+                                    if (ns == 1) // if max pond depth
+                                    {
+                                        dy[0] = 0.0;
+                                    }
+                                    for (int x = 1; x < cav.Length; x++)
+                                    {
+                                        cav[x] = ((2.0 * h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
+                                    }
+                                    for (int x = 1; x < c0.Length; x++)
+                                    {
+                                        c0[x] = 2.0 * cav[x] - c0[x]; //This needs to be tested from FORTRAN; no example in original code.
+                                    }
+                                }
+                                else
+                                {
+                                    for (int x = 1; x < cav.Length; x++)
+                                    {
+                                        cav[x] = ((h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
+                                    }
+                                    initpond = false; //pond gone
+                                    c0 = cin; // for output if any pond at end
+                                }
+                                soff = MathUtilities.Add(soff, MathUtilities.Multiply_Value(cav, dwoff));
+                                sinfil = MathUtilities.Add(sinfil, MathUtilities.Multiply_Value(cav, dwinfil));
+                            }
+                            else
+                            {
+                                soff = MathUtilities.Add(soff, MathUtilities.Multiply_Value(cav, dwoff));
+                                sinfil = MathUtilities.Add(sinfil, MathUtilities.Multiply_Value(cin, qprec1 * dt - dwoff));
+                            }
+                        }
 
                         if (botbc == "constant head")
                         {
@@ -569,42 +574,43 @@ namespace SWIMFrame
                             drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
                         }
 
-                    if (extraction)
-                    {
-
-                        Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
-                        Matrix<double> qwexsM = Matrix<double>.Build.DenseOfArray(qwexs);
-                        Matrix<double> qwexsdM = Matrix<double>.Build.DenseOfArray(qwexsd);
-                        Matrix<double> wexM = Matrix<double>.Build.DenseOfArray(wex);
-                        Vector<double> wexV;
-                        Vector<double> dwexsV;
-                        Vector<double> qwexsV;
-                        Vector<double> qwexsdV;
-                        if (nsol > 0)
+                        if (extraction)
                         {
-                            //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                            for (i = 1; i <= nex; i++)
-                            {
-                                dwexsV = dwexsM.Column(i);
-                                qwexsV = qwexsM.Column(i);
-                                qwexsdV = qwexsdM.Column(i);
-                                dwexsV = dwexsV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1,sd.n))) * dt;
-                                dwexsM.Column(i, dwexsV);
-                            }
-                            dwexs = dwexsM.ToArray();
-                        }
 
-                        //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
-                        if (wex.GetLength(0) > 1) // analog for if (present(wex))
-                        {
-                            for (i = 1; i <= nex; i++)
+                            Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
+                            Matrix<double> qwexsM = Matrix<double>.Build.DenseOfArray(qwexs);
+                            Matrix<double> qwexsdM = Matrix<double>.Build.DenseOfArray(qwexsd);
+                            Matrix<double> wexM = Matrix<double>.Build.DenseOfArray(wex);
+                            Vector<double> wexV;
+                            Vector<double> dwexsV;
+                            Vector<double> qwexsV;
+                            Vector<double> qwexsdV;
+                            if (nsol > 0)
                             {
-                                qwexsV = qwexsM.Column(i);
-                                qwexsdV = qwexsdM.Column(i);
-                                wexV = wexM.Column(i);
-                                wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                                //dwexs = dwexs + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                                for (i = 1; i <= nex; i++)
+                                {
+                                    dwexsV = dwexsM.Column(i);
+                                    qwexsV = qwexsM.Column(i);
+                                    qwexsdV = qwexsdM.Column(i);
+                                    dwexsV = dwexsV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                                    dwexsM.Column(i, dwexsV);
+                                }
+                                dwexs = dwexsM.ToArray();
                             }
-                            wex = wexM.ToArray();
+
+                            //wex = wex + (qwexs + sig * qwexsd * spread(dy(1:n), 2, nex)) * dt
+                            if (wex.GetLength(0) > 1) // analog for if (present(wex))
+                            {
+                                for (i = 1; i <= nex; i++)
+                                {
+                                    qwexsV = qwexsM.Column(i);
+                                    qwexsdV = qwexsdM.Column(i);
+                                    wexV = wexM.Column(i);
+                                    wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                                }
+                                wex = wexM.ToArray();
+                            }
                         }
                     }
                     
@@ -625,17 +631,19 @@ namespace SWIMFrame
                         else
                         {
                             h[i] = h[i] + dy[i];
-                            if (i == 1 && ih0 != 0 && h[i] >= sd.he[i]) h[i] = sd.he[i] - 1.0; //pond g1.0
+                            if (i == 1 && ih0 != 0 && h[i] >= sd.he[i]) h[i] = sd.he[i] - 1.0; //pond gone
                             if (h[i] < sd.he[i])  //desaturation of layer
                             {
                                 isat[i] = 0;
                                 h[i] = sd.he[i];
                             }
                         }
-                    } //-----end update unknowns
+                    } 
+                    //-----end update unknowns
                     if (!again)
                         break;
                 }
+
                 if (dt <= dtmin)
                 {
                     Console.WriteLine("solve: time step = " + dt);
@@ -653,6 +661,7 @@ namespace SWIMFrame
                 //solve for solute transport if required
                 if (nwsteps * (nsteps / nwsteps) == nsteps)
                 {
+                    // This is function getsolute() in FORTRAN. Inline here as it uses a huge number of vars and is only used once.
                     if (nsol > 0 && t > ti)
                     {
                         thf = MathUtilities.Multiply(sd.ths, S); //final th before call
@@ -669,18 +678,6 @@ namespace SWIMFrame
             }
             //-----end solve until tfin
             //finalise solute transport if required
-            if (nsol > 0 && t > ti)
-            {
-                thf = MathUtilities.Multiply(sd.ths, S); //final th before call
-                win = infil - infili; //water in at top over time interval
-                cav = MathUtilities.Divide_Value(MathUtilities.Subtract(sinfil, sinfili), win); //average concn in win
-                Solute(ti, t, thi, thf, dwexs, win, cav, sd.n, nsol, nex, sd.dx, jt, dsmmax, ref sm, ref sdrn, ref nssteps, ref c, ref sex, extraction, sol);
-                ti = t;
-                thi = thf;
-                dwexs.Populate2D(0);
-                infili = infil;
-                sinfili = sinfil; // for next interval
-            }
         }
 
         public static List<object> TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,

@@ -363,7 +363,7 @@ namespace SWIMFrame
                             Console.WriteLine("GetQ: phi < phif[1] in table.");
                             Environment.Exit(1);
                         }
-                        if (phii > phif[i]) //found
+                        if (phii >= phif[i]) //found
                             break;
                     }
                 }
