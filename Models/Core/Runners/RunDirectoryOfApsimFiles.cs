@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System;
 
     /// <summary>
     /// This runnable class finds .apsimx files on the 'fileSpec' passed into
@@ -55,17 +57,87 @@
             files.RemoveAll(s => s.Contains("UserInterface"));
             files.RemoveAll(s => s.Contains("ApsimNG"));
 
+            // Sort the files from longest running at index 0 and shortest running at bottom of list.
+            files.Sort(new FileRunTimeComparer());
+
             // For each .apsimx file - read it in and create a job for each simulation it contains.
             string workingDirectory = Directory.GetCurrentDirectory();
             string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimExe = Path.Combine(binDirectory, "Models.exe");
+            List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
             foreach (string apsimxFileName in files)
             {
                 string arguments = StringUtilities.DQuote(apsimxFileName);
                 if (runTests)
                     arguments += " /RunTests";
-                jobManager.AddChildJob(this, new RunExternal(apsimExe, arguments, workingDirectory));
+                JobManager.IRunnable job = new RunExternal(apsimExe, arguments, workingDirectory);
+                jobManager.AddChildJob(this, job);
+                jobs.Add(job);
             }
+
+            // Wait for all jobs to complete.
+            do
+            {
+                Thread.Sleep(500);
+            }
+            while (!jobManager.AreChildJobsComplete(this));
+
+            // Write all job elapsed times so that next time this gets called we can do the long running
+            // jobs first.
+            WriteElapsedTimes(files, jobManager, jobs);
+        }
+
+        
+        /// <summary>
+        /// Write all job elapsed times so that next time this gets called we can do the long running
+        /// jobs first.
+        /// </summary>
+        /// <param name="files">The file names of the .apsim files.</param>
+        /// <param name="jobManager">Job manager.</param>
+        /// <param name="jobs">The jobs for each file name that have been run.</param>
+        private void WriteElapsedTimes(List<string> files, JobManager jobManager, List<JobManager.IRunnable> jobs)
+        {
+            if (files.Count != jobs.Count)
+                throw new Exception("The number of files doesn't match the number of jobs.");
+
+            List<Configuration.FileRunTime> runtimes = new List<Core.Configuration.FileRunTime>();
+            for (int i = 0; i < files.Count; i++)
+            {
+                runtimes.Add(new Configuration.FileRunTime()
+                {
+                    fileName = files[i],
+                    elapsedTime = jobManager.ElapsedTime(jobs[i])
+                });
+            }
+            Configuration.Settings.RunTimes = runtimes;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class FileRunTimeComparer : IComparer<string>
+        {
+            /// <summary>
+            /// Compares two file names and returns a value indicating whether one is less than, equal to, or greater than the other
+            /// in terms of how long they take to run.
+            /// </summary>
+            /// <param name="fileName1">The first filename</param>
+            /// <param name="fileName2">The second filename.</param>
+            public int Compare(string fileName1, string fileName2)
+            {
+                Configuration.FileRunTime runtime1 = Configuration.Settings.RunTimes.Find(r => r.fileName == fileName1);
+                Configuration.FileRunTime runtime2 = Configuration.Settings.RunTimes.Find(r => r.fileName == fileName2);
+                if (runtime1 == null && runtime2 == null)
+                    return 0;
+                else if (runtime1 != null && runtime2 != null)
+                    return runtime2.elapsedTime.CompareTo(runtime1.elapsedTime);
+                else if (runtime1 != null && runtime2 == null)
+                    return 1;
+                else
+                    return -1;
+            }
+
         }
     }
 }

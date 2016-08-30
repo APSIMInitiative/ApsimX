@@ -20,6 +20,7 @@ namespace UserInterface.Forms
     using System.Reflection;
     using System.Text;
     using System.Windows.Forms;
+    using Models.Core;
 
     /// <summary>
     /// An upgrade form.
@@ -87,16 +88,16 @@ namespace UserInterface.Forms
                     label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
             }
 
-            firstNameBox.Text = Utility.Configuration.Settings.FirstName;
-            lastNameBox.Text = Utility.Configuration.Settings.LastName;
-            organisationBox.Text = Utility.Configuration.Settings.Organisation;
-            address1Box.Text = Utility.Configuration.Settings.Address1;
-            address2Box.Text = Utility.Configuration.Settings.Address2;
-            cityBox.Text = Utility.Configuration.Settings.City;
-            stateBox.Text = Utility.Configuration.Settings.State;
-            postcodeBox.Text = Utility.Configuration.Settings.Postcode;
-            countryBox.Text = Utility.Configuration.Settings.Country;
-            emailBox.Text = Utility.Configuration.Settings.Email;
+            firstNameBox.Text = Configuration.Settings.FirstName;
+            lastNameBox.Text = Configuration.Settings.LastName;
+            organisationBox.Text = Configuration.Settings.Organisation;
+            address1Box.Text = Configuration.Settings.Address1;
+            address2Box.Text = Configuration.Settings.Address2;
+            cityBox.Text = Configuration.Settings.City;
+            stateBox.Text = Configuration.Settings.State;
+            postcodeBox.Text = Configuration.Settings.Postcode;
+            countryBox.Text = Configuration.Settings.Country;
+            emailBox.Text = Configuration.Settings.Email;
 
             WebClient web = new WebClient();
 
@@ -268,16 +269,16 @@ namespace UserInterface.Forms
         /// <param name="e"></param>
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            Utility.Configuration.Settings.FirstName = firstNameBox.Text;
-            Utility.Configuration.Settings.LastName = lastNameBox.Text;
-            Utility.Configuration.Settings.Organisation = organisationBox.Text;
-            Utility.Configuration.Settings.Address1 = address1Box.Text;
-            Utility.Configuration.Settings.Address2 = address2Box.Text;
-            Utility.Configuration.Settings.City = cityBox.Text;
-            Utility.Configuration.Settings.State = stateBox.Text;
-            Utility.Configuration.Settings.Postcode = postcodeBox.Text;
-            Utility.Configuration.Settings.Country = countryBox.Text;
-            Utility.Configuration.Settings.Email = emailBox.Text;
+            Configuration.Settings.FirstName = firstNameBox.Text;
+            Configuration.Settings.LastName = lastNameBox.Text;
+            Configuration.Settings.Organisation = organisationBox.Text;
+            Configuration.Settings.Address1 = address1Box.Text;
+            Configuration.Settings.Address2 = address2Box.Text;
+            Configuration.Settings.City = cityBox.Text;
+            Configuration.Settings.State = stateBox.Text;
+            Configuration.Settings.Postcode = postcodeBox.Text;
+            Configuration.Settings.Country = countryBox.Text;
+            Configuration.Settings.Email = emailBox.Text;
         }
     }
 }
