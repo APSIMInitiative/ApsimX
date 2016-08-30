@@ -28,8 +28,6 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class MultiPoreWater : Model, ISoilWater
     {
-        
-        
         #region IsoilInterface
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
@@ -242,6 +240,12 @@ namespace Models.Soils
         [Description("The amount of water that will pass the bottom of the profile")]
         public double BottomBoundryConductance { get; set; }
         /// <summary>
+        /// The depth of the water table below the surface, important for gravitational water potential
+        /// </summary>
+        [Units("m")]
+        [Description("The depth of the water table below the surface")]
+        public double WaterTableDepth { get; set; }
+        /// <summary>
         /// Allow infiltration processes to be switched off from the UI
         /// </summary>
         [Description("Calculate infiltration processes?.  Normally yes, this is for testing")]
@@ -256,6 +260,11 @@ namespace Models.Soils
         /// </summary>
         [Description("Report SW at all timesteps.  lots of data")]
         public bool ReportDetail { get; set; }
+        /// <summary>
+        /// The number of time steps to run calculations for each day
+        /// </summary>
+        [Description("Number of time steps each day.  Not implemented yet")]
+        public int TimeSteps { get; set; }
         #endregion
 
         #region Outputs
@@ -295,6 +304,18 @@ namespace Models.Soils
         [Summary]
         [Description("The hydraulic conducitivity of water out of the pore")]
         public double[][] HydraulicConductivityOut { get; set; }
+        /// <summary>
+        /// The water potential when this pore space is full and larger pores are empty
+        /// </summary>
+        [Summary]
+        [Description("The water potential when this pore space is full and larger pores are empty")]
+        public double[][] PsiUpper { get; set; }
+        /// <summary>
+        /// The relative water water filled porosity when this pore space if full and larger pores are empty
+        /// </summary>
+        [Summary]
+        [Description("The relative water water filled porosity when this pore space if full and larger pores are empty")]
+        public double[][] RelativePoreVolume { get; set; }
         #endregion
 
         #region Properties
@@ -325,12 +346,23 @@ namespace Models.Soils
         /// The amount of water that may enter the surface of the soil each hour
         /// </summary>
         private double PotentialInfiltration { get; set; }
-         
+        /// <summary>
+        /// The distance down to the nearest zero potential body of water, for calculating gravitational potential
+        /// </summary>
+        [Units("m")]
+        private double[] LayerHeight { get; set; }
+        /// <summary>
+        /// The depth of the specificed soil profile
+        /// </summary>
+        [Units("m")]
+        private double ProfileDepth { get; set; }
+
         #endregion
 
         #region Event Handlers
         /// <summary>
         /// Called when [simulation commencing].
+        /// Goes through and creates instances of all the properties of MultiPoreWater model
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -345,87 +377,44 @@ namespace Models.Soils
             AbsorptionCapacity = new double[ProfileLayers];
             AbsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
-            pond = 0;
+            LayerHeight = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
             ProfileParams = new ProfileParameters(ProfileLayers);
 
-            double[] InitialWater = new double[Water.Thickness.Length];
-            for (int L = 0; L < ProfileLayers; L++)
-            {
-
-            }
-
-            HyProps.SetHydraulicProperties();
-
             Pores = new Pore[ProfileLayers][];
+            PoreWater = new double[ProfileLayers][];
+            HydraulicConductivityIn = new double[ProfileLayers][];
+            HydraulicConductivityOut = new double[ProfileLayers][];
+            PsiUpper = new double[ProfileLayers][];
+            RelativePoreVolume = new double[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
-                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
-                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
-                double AccumVolume = 0;
-                double AccumWaterVolume = 0;
                 Pores[l] = new Pore[PoreCompartments];
+                PoreWater[l] = new double[PoreCompartments];
+                HydraulicConductivityIn[l] = new double[PoreCompartments];
+                HydraulicConductivityOut[l] = new double[PoreCompartments];
+                PsiUpper[l] = new double[PoreCompartments];
+                RelativePoreVolume[l] = new double[PoreCompartments];
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
-                    Pores[l][c].Layer = l;
-                    Pores[l][c].Compartment = c;
-                    Pores[l][c].MaxDiameter = PoreBounds[c];
-                    Pores[l][c].MinDiameter = PoreBounds[c + 1];
-                    Pores[l][c].Thickness = Water.Thickness[l];
-                    double ThisPoreVolume = PoreVolume(PoreBounds[c], PoreBounds[c + 1],l);
-                    AccumVolume += ThisPoreVolume;
-                    Pores[l][c].Volume = ThisPoreVolume;
-                    double PoreWaterFilledVolume = Math.Min(ThisPoreVolume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
-                    AccumWaterVolume += PoreWaterFilledVolume;
-                    Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    double ThisPoreK = PoreK(PoreBounds[c], PoreBounds[c + 1], l);
-                    Pores[l][c].HydraulicConductivity = ThisPoreK;
+                    PoreWater[l][c] = new double();
+                    HydraulicConductivityIn[l][c] = new double();
+                    HydraulicConductivityOut[l][c] = new double();
+                    PsiUpper[l][c] = new double();
+                    RelativePoreVolume[l][c] = new double();
                 }
-                if (Math.Abs(AccumVolume - Water.SAT[l]) > FloatingPointTolerance)
-                    throw new Exception(this + " Pore volume has not been correctly partitioned between pore compartments in layer " + l);
-                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
-                    throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
-                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
-                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
-                ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
             }
+
+            SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
-
-            HydraulicConductivityIn = new double[ProfileLayers][];
-            HydraulicConductivityOut = new double[ProfileLayers][];
-            for (int l = 0; l < ProfileLayers; l++)
-            {
-                HydraulicConductivityIn[l] = new double[PoreCompartments];
-                HydraulicConductivityOut[l] = new double[PoreCompartments];
-                for (int c = 0; c < PoreCompartments; c++)
-                {
-                    HydraulicConductivityIn[l][c] = new double();
-                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
-                    HydraulicConductivityOut[l][c] = new double();
-                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
-                }
-            }
-
             
-
-            if (ReportDetail)
-            {
-                PoreWater = new double[ProfileLayers][];
-                for (int l = 0; l < ProfileLayers; l++)
-                {
-                    PoreWater[l] = new double[PoreCompartments];
-                    for (int c = 0; c < PoreCompartments; c++)
-                    {
-                        PoreWater[l][c] = new double();
-                    }
-                }
-            }
-            DoDetailReport("Initialisation",0,0);
+            if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
         }
+
         /// <summary>
         /// Called at the start of each daily timestep
         /// </summary>
@@ -459,6 +448,7 @@ namespace Models.Soils
                 InitialProfileWater = MathUtilities.Sum(SWmm);
                 InitialPondDepth = pond;
                 InitialResidueWater = ResidueWater;
+                doGravitionalPotential();
                 //Update the depth of Surface water that may infiltrate this hour
                 pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
                 DoDetailReport("UpdatePond",0,h);
@@ -534,6 +524,52 @@ namespace Models.Soils
         #endregion
 
         #region Internal Properties and Methods
+        /// <summary>
+        /// Goes through all profile and pore properties and updates their values using soil parameters.  
+        /// Must be called after any soil parameters are chagned if the effect of the changes is to work correctly.
+        /// </summary>
+        private void SetSoilProperties()
+        {
+            HyProps.SetHydraulicProperties();
+            pond = 0;
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
+                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
+                ProfileDepth += Water.Thickness[l]/1000;
+                double AccumWaterVolume = 0;
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    Pores[l][c].Layer = l;
+                    Pores[l][c].Compartment = c;
+                    Pores[l][c].DiameterUpper = PoreBounds[c];
+                    Pores[l][c].DiameterLower = PoreBounds[c + 1];
+                    Pores[l][c].Thickness = Water.Thickness[l];
+                    Pores[l][c].ThetaUpper = HyProps.SimpleTheta(l, Pores[l][c].PsiUpper);
+                    Pores[l][c].ThetaLower = HyProps.SimpleTheta(l, Pores[l][c].PsiLower);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    AccumWaterVolume += PoreWaterFilledVolume;
+                    Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
+                    Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
+                    Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
+                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
+                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
+                    PsiUpper[l][c] = Pores[l][c].PsiUpper;
+                 }
+                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
+                    throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
+                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+                ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
+            }
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
+                }
+            }
+        }
         private double ResidueInterception(double Precipitation)
         {
             double ResidueWaterCapacity = 0.0002 * SurfaceOM.Wt; //Fixme coefficient should be obtained from surface OM
@@ -610,6 +646,33 @@ namespace Models.Soils
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
             PotentialInfiltration = AbsorptionCapacity[0] + PercolationCapacityBelow[0];
+        }
+        /// <summary>
+        /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
+        /// </summary>
+        private void doGravitionalPotential()
+        {
+            for (int l = ProfileLayers - 1; l >= 0; l--)
+            {//Step through each layer from the bottom up and calculate the height
+                if (l == ProfileLayers - 1)
+                {//For the bottom layer height is equal to the depth of the water table below the bottom of the profile
+                    if (BottomBoundryConductance == 0)
+                        LayerHeight[l] = 0;
+                    else
+                        LayerHeight[l] = Math.Max(0,WaterTableDepth - ProfileDepth);
+                }
+                else
+                {
+                    if ((ProfileParams.Ksat[l + 1] < 0.001) || (SW[l + 1] == Water.SAT[l + 1]))
+                        LayerHeight[l] = 0;
+                    else
+                        LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1]/1000;
+                }
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {//Step through each pore and assign the gravitational potential for the layer
+                    Pores[l][c].GravitationalPotential = LayerHeight[l] / -0.1022;
+                }
+            }
         }
         private void doInfiltration(double WaterToInfiltrate, int h)
         {
@@ -704,52 +767,6 @@ namespace Models.Soils
         private void doUpwardDiffusion()
         {
             //Move water up into lower layers if they are dryer than below
-        }
-        /// <summary>
-        /// This function returns a hydraulic conductivity calculated at the mean diameter of the pore compartment
-        /// </summary>
-        /// <param name="MaxDiameter"></param>
-        /// <param name="MinDiameter"></param>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        private double PoreK(double MaxDiameter, double MinDiameter, int layer)
-        {
-            return (PointK(layer,MaxDiameter) + PointK(layer,MinDiameter))/2;
-        }
-        /// <summary>
-        /// This function returns the hydraulic conductivity calculated for a pore of a single specified diameter
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="PoreDiameter"></param>
-        /// <returns></returns>
-        private double PointK(int layer, double PoreDiameter)
-        {
-            double psi = -3000 / PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
-            double k = HyProps.SimpleK(layer, psi);
-            return k * 10;  //HyProps returns K in cm/h, multiply by 10 to convert to mm/h
-        }
-        /// <summary>
-        /// Calculates the proportion of total porosity the resides between the two specified pore diameters
-        /// </summary>
-        /// <param name="MaxDiameter"></param>
-        /// <param name="MinDiameter"></param>
-        /// <param name="layer"></param>
-        /// <returns>proportion of totol porosity</returns>
-        private double PoreVolume(double MaxDiameter, double MinDiameter, int layer)
-        {
-            return CumPoreVolume(MaxDiameter,layer) - CumPoreVolume(MinDiameter,layer);
-        }
-        /// <summary>
-        /// Calculates the proportion of total porosity below the specified pore diameter
-        /// </summary>
-        /// <param name="PoreDiameter"></param>
-        /// <param name="layer"></param>
-        /// <returns>proportion of total porosity</returns>
-        private double CumPoreVolume(double PoreDiameter, int layer)
-        {
-            double psi = -3000/PoreDiameter; //psi cm head, the units the Hyprops calculator works in 
-            double PoreVolume = HyProps.SimpleTheta(layer,psi);
-            return Math.Min(1,PoreVolume);
         }
         /// <summary>
         /// Utility to sum the specified propertie from all pore compartments in the pore layer input 
