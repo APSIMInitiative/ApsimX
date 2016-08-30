@@ -169,6 +169,25 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
         public double Nconc { get { return N / Wt; } }
 
+        /// <summary>Gets the live structural dm (g/m2)</summary>
+        public double StructuralWt { get { return Live.StructuralWt; } }
+
+        /// <summary>Gets the live structural n (g/m2)</summary>
+        public double StructuralN { get { return Live.StructuralN; } }
+
+        /// <summary>Gets the live structural n conc (g/g)</summary>
+        public double StructuralNconc { get { return StructuralN / StructuralWt; } }
+
+        /// <summary>Gets the live NonStructural dm (g/m2)</summary>
+        public double NonStructuralWt { get { return Live.NonStructuralWt; } }
+
+        /// <summary>Gets the live NonStructural n (g/m2)</summary>
+        public double NonStructuralN { get { return Live.NonStructuralN; } }
+
+        /// <summary>Gets the live NonStructural n conc (g/g)</summary>
+        public double NonStructuralNconc { get { return NonStructuralN / NonStructuralWt; } }
+
+
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public double DetachedWt { get; set; }
