@@ -298,6 +298,25 @@ namespace UserInterface.Presenters
             }
         }
 
+
+        /// <summary>
+        /// Export the data store to text files
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to text files",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportDataStoreToTextFiles(object sender, EventArgs e)
+        {
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                dataStore.WriteToTextFiles();
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
         /// <summary>
         /// Event handler for a User interface "Create documentation" action
         /// </summary>
