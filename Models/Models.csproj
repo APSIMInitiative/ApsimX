@@ -138,6 +138,7 @@
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
+    <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
