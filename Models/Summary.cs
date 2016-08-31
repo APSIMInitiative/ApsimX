@@ -522,8 +522,7 @@ namespace Models
             }
             else
             {
-                string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
-                writer.WriteLine(line);
+                DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
             }
         }
 

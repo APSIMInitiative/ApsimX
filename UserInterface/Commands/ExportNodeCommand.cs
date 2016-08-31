@@ -78,7 +78,8 @@ namespace UserInterface.Commands
             citations = new List<BibTeX.Citation>();
 
             // Get the model we are to export.
-            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", ""));
+            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
+            modelName = modelName.Replace("validation", string.Empty);  
             DoExportPDF(modelName);
         }
 
@@ -261,37 +262,42 @@ namespace UserInterface.Commands
                 // Open the related example .apsimx file and get its presenter.
                 ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl:true);
 
-                Memo instructionsMemo = userDocumentation.Children[0] as Memo;
-                string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                foreach (string instruction in instructions)
+                try
                 {
-                    IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
-                    if (model != null)
+                    Memo instructionsMemo = userDocumentation.Children[0] as Memo;
+                    string[] instructions = instructionsMemo.MemoText.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string instruction in instructions)
                     {
-                        examplePresenter.SelectNode(Apsim.FullPath(model));
-                        Application.DoEvents();
-                        if (model is Memo)
-                            model.Document(tags, 1, 0);
-                        else
+                        IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
+                        if (model != null)
                         {
-                            System.Drawing.Image image;
-
-                            if (model is Manager)
-                                image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
+                            examplePresenter.SelectNode(Apsim.FullPath(model));
+                            Application.DoEvents();
+                            if (model is Memo)
+                                model.Document(tags, 1, 0);
                             else
-                                image = examplePresenter.GetScreenhotOfRightHandPanel();
-
-                            if (image != null)
                             {
-                                string name = "Example" + instruction;
-                                tags.Add(new AutoDocumentation.Image() { name = name, image = image });
+                                System.Drawing.Image image;
+
+                                if (model is Manager)
+                                    image = (examplePresenter.CurrentPresenter as ManagerPresenter).GetScreenshot();
+                                else
+                                    image = examplePresenter.GetScreenhotOfRightHandPanel();
+
+                                if (image != null)
+                                {
+                                    string name = "Example" + instruction;
+                                    tags.Add(new AutoDocumentation.Image() { name = name, image = image });
+                                }
                             }
                         }
                     }
                 }
-
-                // Close the tab
-                examplePresenter.MainPresenter.CloseTab(exampleFileName);
+                finally
+                {
+                    // Close the tab
+                    examplePresenter.MainPresenter.CloseTabContaining(examplePresenter.GetView());
+                }
             }
         }
 

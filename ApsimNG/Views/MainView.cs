@@ -102,6 +102,10 @@ namespace UserInterface.Views
         /// <param name="askToSave">If true, will ask user whether they want to save.</param>
         void Close(bool askToSave = true);
 
+        /// <summary>Close a tab.</summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void CloseTabContaining(object o);
+
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
 
@@ -116,7 +120,6 @@ namespace UserInterface.Views
     public class MainView : ViewBase, IMainView
     {
         private static string indexTabText = "Home";
-        Point tabControlRightClickLocation;
 
         /// <summary>Get the list and button view</summary>
         public IListButtonView StartPage1 { get { return listButtonView1; } }
@@ -134,25 +137,23 @@ namespace UserInterface.Views
         private Views.ListButtonView listButtonView2;
 
         [Widget]
-        private Window window1;
+        private Window window1 = null;
         [Widget]
-        private ProgressBar progressBar;
+        private ProgressBar progressBar = null;
         [Widget]
-        private TextView StatusWindow;
+        private TextView StatusWindow = null;
         [Widget]
-        private Notebook notebook1;
+        private Notebook notebook1 = null;
         [Widget]
-        private Notebook notebook2;
+        private Notebook notebook2 = null;
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
-        private VBox vbox2;
+        private VBox vbox2 = null;
         [Widget]
-        private HPaned hpaned1;
+        private HPaned hpaned1 = null;
         [Widget]
-        private VPaned vpaned1;
-        [Widget]
-        private HBox hbox1;
+        private HBox hbox1 = null;
 
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
@@ -312,7 +313,15 @@ namespace UserInterface.Views
             notebook = IsControlOnLeft(o) ? notebook1 : notebook2;
             for (int i = 0; i < notebook.NPages; i++)
             {
+                // First check the tab labels
                 Widget testParent = notebook.GetTabLabel(notebook.GetNthPage(i));
+                if (testParent == widg || widg.IsAncestor(testParent))
+                {
+                    tabName = notebook.GetTabLabelText(notebook.GetNthPage(i));
+                    return i;
+                }
+                // If not found, check the tab contents
+                testParent = notebook.GetNthPage(i);
                 if (testParent == widg || widg.IsAncestor(testParent))
                 {
                     tabName = notebook.GetTabLabelText(notebook.GetNthPage(i));
@@ -323,6 +332,13 @@ namespace UserInterface.Views
         }
 
         public void OnCloseBtnClick(object o, EventArgs e)
+        {
+            CloseTabContaining(o);
+        }
+
+        /// <summary>Close a tab.</summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        public void CloseTabContaining(object o)
         {
             Notebook notebook = null;
             string tabText = null;

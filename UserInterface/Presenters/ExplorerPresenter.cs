@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
                         Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
                     Utility.Configuration.Settings.AddMruFile(newFileName);
-                    MainPresenter.ChangeTabText(this.ApsimXFile.FileName, newFileName);
+                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     this.ApsimXFile.Write(newFileName);
                     return true;
                 }
@@ -848,6 +848,8 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
+                if (err is System.Reflection.TargetInvocationException)
+                    err = (err as System.Reflection.TargetInvocationException).InnerException;
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
                 MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
@@ -860,6 +862,14 @@ namespace UserInterface.Presenters
             return view.GetScreenshotOfRightHandPanel();
         }
 
+        /// <summary>
+        /// Return the view attached to this presenter
+        /// </summary>
+        /// <returns>The attached ExplorerView, or null if not attached</returns>
+        public ExplorerView GetView()
+        {
+            return view as ExplorerView;
+        }
         #endregion
     }
 

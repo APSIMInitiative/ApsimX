@@ -377,13 +377,19 @@ namespace UserInterface.Presenters
             {
                 e.AllowClose = this.presenters1[e.Index - 1].SaveIfChanged();
                 if (e.AllowClose)
+                {
+                    this.presenters1[e.Index - 1].Detach();
                     this.presenters1.RemoveAt(e.Index - 1);
+                }
             }
             else
             {
                 e.AllowClose = this.presenters2[e.Index - 1].SaveIfChanged();
                 if (e.AllowClose)
+                {
+                    this.presenters2[e.Index - 1].Detach();
                     this.presenters2.RemoveAt(e.Index - 1);
+                }
             }
         }
 
@@ -539,6 +545,11 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormSize = view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = view.WindowMaximised;
             }
+        }
+
+        public void CloseTabContaining(object o)
+        {
+            view.CloseTabContaining(o);
         }
     }
 }

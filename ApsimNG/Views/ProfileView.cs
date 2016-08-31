@@ -38,6 +38,11 @@ namespace UserInterface.Views
         /// Show the graph if Show = true;
         /// </summary>
         void ShowGraph(bool show);
+
+        /// <summary>
+        /// Show or hide the entire view
+        /// </summary>
+        void ShowView(bool show);
     }
 
     public class ProfileView : ViewBase, IProfileView
@@ -63,7 +68,7 @@ namespace UserInterface.Views
             ProfileGrid = new GridView(this);
             vpaned2.Pack1(ProfileGrid.MainWidget, true, true);
             Graph = new GraphView(this);
-            vpaned2.Pack2(Graph.MainWidget, true, true);
+            vpaned2.Pack2(Graph.MainWidget, true, false);
         }
 
         /// <summary>
@@ -104,6 +109,14 @@ namespace UserInterface.Views
         public void ShowGraph(bool Show)
         {
             Graph.MainWidget.Visible = Show;
+        }
+
+        /// <summary>
+        /// Show or hide the entire view
+        /// </summary>
+        public void ShowView(bool show)
+        {
+            MainWidget.Visible = show;
         }
     }
 }

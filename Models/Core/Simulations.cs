@@ -26,9 +26,9 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
-        /// <summary>Gets or sets the version.</summary>
-        [XmlAttribute("Version")]
-        public int Version { get; set; }
+    //    /// <summary>Gets or sets the version.</summary>
+    //    [XmlAttribute("Version")]
+    //    public int Version { get; set; }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
@@ -216,7 +216,7 @@ namespace Models.Core
         }
 
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
-        private Simulations()
+        public Simulations()
         {
         }
 

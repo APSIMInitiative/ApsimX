@@ -129,22 +129,28 @@ namespace Models.Core
                 {
                     unitString = unitsAttribute.ToString();
                 }
-                else if (unitsToStringInfo != null)
-                {
-                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
-                }
                 else if (unitsInfo != null)
                 {
-                    return unitsInfo.GetValue(this.Object, null).ToString();
+                    object val = unitsInfo.GetValue(this.Object, null);
+                    if (unitsToStringInfo != null)
+                        unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { val });
+                    else
+                        unitString = val.ToString();
                 }
-
+                else if (unitsToStringInfo != null)
+                    unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 return unitString;
             }
 
             set
             {
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                if (unitsInfo != null)
+                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
+                if (unitsSet != null)
+                {
+                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
+                }
+                else if (unitsInfo != null)
                 {
                     unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
                 }
@@ -303,7 +309,21 @@ namespace Models.Core
                             stringValue += ",";
                         }
 
-                        stringValue += arr.GetValue(j).ToString();
+                        Array arr2d = arr.GetValue(j) as Array;
+                        if (arr2d == null)
+                            stringValue += arr.GetValue(j).ToString();
+                        else
+                        {
+                            for (int k = 0; k < arr2d.Length; k++)
+                            {
+                                if (k > 0)
+                                {
+                                    stringValue += " | ";
+                                }
+                                
+                                stringValue += arr2d.GetValue(k).ToString();
+                            }
+                        }
                     }
 
                     value = stringValue;
@@ -369,20 +389,27 @@ namespace Models.Core
         {
             get
             {
-                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
-                bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
+                try
                 {
-                    double sum = 0.0;
-                    foreach (double doubleValue in this.Value as IEnumerable<double>)
+                    DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                    bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
+                    if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                     {
-                        if (doubleValue != MathUtilities.MissingValue)
+                        double sum = 0.0;
+                        foreach (double doubleValue in this.Value as IEnumerable<double>)
                         {
-                            sum += doubleValue;
+                            if (doubleValue != MathUtilities.MissingValue)
+                            {
+                                sum += doubleValue;
+                            }
                         }
-                    }
 
-                    return sum;
+                        return sum;
+                    }
+                }
+                catch (Exception)
+                {
+                    return Double.NaN;
                 }
 
                 return double.NaN;

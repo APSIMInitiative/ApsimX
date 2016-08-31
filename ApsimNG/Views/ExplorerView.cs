@@ -58,7 +58,7 @@ namespace UserInterface.Views
         private string nodePathBeforeRename;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
         private Toolbar toolStrip = null;
         [Widget]
@@ -442,6 +442,21 @@ namespace UserInterface.Views
                 RightHandView.Add(view.MainWidget);
                 RightHandView.ShowAll();
             }
+        }
+
+        /// <summary>Get screenshot of right hand panel.</summary>
+        public System.Drawing.Image GetScreenshotOfRightHandPanel()
+        {
+            // Create a Bitmap and draw the panel
+            int width;
+            int height;
+            Gdk.Window panelWindow = RightHandView.Child.GdkWindow;
+            panelWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
+            return bitmap;
         }
 
         /// <summary>Ask the user if they wish to save the simulation.</summary>

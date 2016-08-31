@@ -147,7 +147,7 @@ namespace Models.Graph
             for (int i = 0; i < stats.Count; i++)
             {
                 // Add an equation annotation.
-                Annotation equation = new Annotation();
+                TextAnnotation equation = new TextAnnotation();
                 equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
                                                     "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
                                                     "RSR = {7:F2}, RMSD = {8:F2}",
@@ -155,6 +155,10 @@ namespace Models.Graph
                                                                   stats[i].n,   stats[i].NSE, stats[i].ME,
                                                                   stats[i].MAE, stats[i].RSR, stats[i].RMSE});
                 equation.colour = equationColours[i];
+                equation.leftAlign = true;
+                equation.textRotation = 0;
+                equation.x = double.MinValue;
+                equation.y = double.MinValue;
                 annotations.Add(equation);
             }
         }

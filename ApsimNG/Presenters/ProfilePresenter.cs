@@ -97,6 +97,7 @@ namespace UserInterface.Presenters
             this.view = view as IProfileView;
             this.explorerPresenter = explorerPresenter;
 
+            this.view.ShowView(false);
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
             this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
@@ -142,6 +143,7 @@ namespace UserInterface.Presenters
             
             this.view.ProfileGrid.ResizeControls();
             this.view.PropertyGrid.ResizeControls();
+            this.view.ShowView(true);
         }
 
         /// <summary>
@@ -334,7 +336,14 @@ namespace UserInterface.Presenters
                     columnName = columnName + "\r\n" + total.ToString("N1");
                 }
 
-                Array values = property.Value as Array;
+                Array values = null;
+                try
+                {
+                    values = property.Value as Array;
+                }
+                catch (Exception)
+                {
+                }
 
                 if (table.Columns.IndexOf(columnName) == -1)
                 {
@@ -375,68 +384,77 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SaveGrid()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-       
-            // Get the data source of the profile grid.
-            DataTable data = this.view.ProfileGrid.DataSource;
-
-            // Maintain a list of all property changes that we need to make.
-            List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
-
-            // Loop through all non-readonly properties, get an array of values from the data table
-            // for the property and then set the property value.
-            for (int i = 0; i < this.propertiesInGrid.Count; i++)
+            try
             {
-                // If this property is NOT readonly then set its value.
-                if (!this.propertiesInGrid[i].IsReadOnly)
+                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+
+                // Get the data source of the profile grid.
+                DataTable data = this.view.ProfileGrid.DataSource;
+
+                // Maintain a list of all property changes that we need to make.
+                List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
+
+                // Loop through all non-readonly properties, get an array of values from the data table
+                // for the property and then set the property value.
+                for (int i = 0; i < this.propertiesInGrid.Count; i++)
                 {
-                    // Get an array of values for this property.
-                    Array values;
-                    if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
+                    // If this property is NOT readonly then set its value.
+                    if (!this.propertiesInGrid[i].IsReadOnly)
                     {
-                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
-                        if (!MathUtilities.ValuesInArray((double[])values))
-                            values = null;
+                        // Get an array of values for this property.
+                        Array values;
+                        if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
+                        {
+                            values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                            if (!MathUtilities.ValuesInArray((double[])values))
+                                values = null;
+                            else
+                                values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
+                        }
                         else
-                            values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
-                    }
-                    else
-                    {
-                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
-                        values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
-                    }
+                        {
+                            values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                            values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
+                        }
 
-                    // Is the value any different to the former property value?
-                    bool changedValues;
-                    if (this.propertiesInGrid[i].DataType == typeof(double[]))
-                    {
-                        changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
-                    }
-                    else
-                    {
-                        changedValues = !MathUtilities.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
-                    }
+                        // Is the value any different to the former property value?
+                        bool changedValues;
+                        if (this.propertiesInGrid[i].DataType == typeof(double[]))
+                        {
+                            changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
+                        }
+                        else
+                        {
+                            changedValues = !MathUtilities.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
+                        }
 
-                    if (changedValues)
-                    {
-                        // Store the property change.
-                        Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
-                        property.Name = this.propertiesInGrid[i].Name;
-                        property.Obj = this.propertiesInGrid[i].Object;
-                        property.NewValue = values;
-                        properties.Add(property);
+                        if (changedValues)
+                        {
+                            // Store the property change.
+                            Commands.ChangeProperty.Property property = new Commands.ChangeProperty.Property();
+                            property.Name = this.propertiesInGrid[i].Name;
+                            property.Obj = this.propertiesInGrid[i].Object;
+                            property.NewValue = values;
+                            properties.Add(property);
+                        }
                     }
                 }
-            }
 
-            // If there are property changes pending, then commit the changes in a block.
-            if (properties.Count > 0)
+                // If there are property changes pending, then commit the changes in a block.
+                if (properties.Count > 0)
+                {
+                    Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
+                    this.explorerPresenter.CommandHistory.Add(command);
+                }
+
+                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            }
+            catch (Exception e)
             {
-                Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
-                this.explorerPresenter.CommandHistory.Add(command);
+                if (e is System.Reflection.TargetInvocationException)
+                    e = (e as System.Reflection.TargetInvocationException).InnerException;
+                this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
             }
-
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -450,39 +468,48 @@ namespace UserInterface.Presenters
             {
                 if (this.propertiesInGrid[i].IsReadOnly && i > 0)
                 {
-                    VariableProperty property = this.propertiesInGrid[i];
-                    int col = i;
-                    int row = 0;
-                    foreach (object value in property.Value as IEnumerable<double>)
+                    try
                     {
-                        object valueForCell = value;
-                        bool missingValue = (double)value == MathUtilities.MissingValue || double.IsNaN((double)value);
-
-                        if (missingValue)
+                        VariableProperty property = this.propertiesInGrid[i];
+                        int col = i;
+                        int row = 0;
+                        foreach (object value in property.Value as IEnumerable<double>)
                         {
-                            valueForCell = null;
+                            object valueForCell = value;
+                            bool missingValue = (double)value == MathUtilities.MissingValue || double.IsNaN((double)value);
+
+                            if (missingValue)
+                            {
+                                valueForCell = null;
+                            }
+
+                            IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
+                            cell.Value = valueForCell;
+
+                            row++;
                         }
 
-                        IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
-                        cell.Value = valueForCell;
+                        // add a total to the column header if necessary.
+                        double total = property.Total;
+                        if (!double.IsNaN(total))
+                        {
+                            string columnName = property.Description;
+                            if (property.Units != null)
+                            {
+                                columnName += "\r\n(" + property.Units + ")";
+                            }
 
-                        row++;
+                            columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
+
+                            IGridColumn column = this.view.ProfileGrid.GetColumn(col);
+                            column.HeaderText = columnName;
+                        }
                     }
-
-                    // add a total to the column header if necessary.
-                    double total = property.Total;
-                    if (!double.IsNaN(total))
+                    catch (Exception e)
                     {
-                        string columnName = property.Description;
-                        if (property.Units != null)
-                        {
-                            columnName += "\r\n(" + property.Units + ")";
-                        }
-
-                        columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
-
-                        IGridColumn column = this.view.ProfileGrid.GetColumn(col);
-                        column.HeaderText = columnName;
+                        if (e is System.Reflection.TargetInvocationException)
+                            e = (e as System.Reflection.TargetInvocationException).InnerException;
+                        this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
                     }
                 }
             }
@@ -514,8 +541,12 @@ namespace UserInterface.Presenters
                 this.view.ProfileGrid.ClearContextActions();
                 this.indexOfClickedVariable = e.Column.ColumnIndex;
                 VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-                foreach (string unit in property.AllowableUnits)
-                    this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);                     
+                if (property.AllowableUnits.Length > 0)
+                {
+                    this.view.ProfileGrid.AddContextSeparator();
+                    foreach (string unit in property.AllowableUnits)
+                        this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);
+                }
             }
         }
 
@@ -527,8 +558,11 @@ namespace UserInterface.Presenters
         private void OnUnitClick(object sender, EventArgs e)
         {
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-            /// TBI property.Units = (sender as System.Windows.Forms.ToolStripDropDownItem).Text;
-            this.OnModelChanged(this.model);
+            if (sender is Gtk.ImageMenuItem)
+            {
+                property.Units = ((sender as Gtk.ImageMenuItem).Child as Gtk.AccelLabel).Text;
+                this.OnModelChanged(this.model);
+            }
         }
     }
 }

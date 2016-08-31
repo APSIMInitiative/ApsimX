@@ -70,8 +70,9 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the water demand.</summary>
         double WaterDemand { get; set; }
 
-        /// <summary>Gets the water supply for the given water state.</summary>
-        double[] WaterSupply(List<ZoneWaterAndN> zones);
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <param name="zone">The zone.</param>
+        double[] WaterSupply(ZoneWaterAndN zone);
 
         /// <summary>Gets or sets the water allocation.</summary>
         double WaterAllocation { get; set; }
@@ -83,21 +84,23 @@ namespace Models.PMF.Interfaces
         double NUptake { get; set; }
 
         /// <summary>Does the water uptake.</summary>
-        /// <param name="uptake">The uptake.</param>
-        void DoWaterUptake(double[] uptake);
+        /// <param name="Amount">The amount.</param>
+        /// <param name="zoneName">Zone name to do water uptake in</param>
+        void DoWaterUptake(double[] Amount, string zoneName);
 
-        /// <summary>Does the water uptake.</summary>
-        /// <param name="NO3NUptake">The NO3NUptake.</param>
-        /// <param name="NH4Uptake">The NH4Uptake.</param>
-        void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake);
+        /// <summary>Does the Nitrogen uptake.</summary>
+        /// <param name="NO3NAmount">The NO3NAmount.</param>
+        /// <param name="NH4NAmount">The NH4NAmount.</param>
+        /// <param name="zoneName">zone name</param>
+        void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName);
 
-        /// <summary>Gets the Nitrate uptake supply for the given nitrogen state.</summary>
-        /// <param name="zones">water zones</param>
-        double[] NO3NSupply(List<ZoneWaterAndN> zones);
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
+        /// <param name="zone">The zone.</param>
+        double[] NO3NSupply(ZoneWaterAndN zone);
 
-        /// <summary>Gets the Ammonium uptake supply for the given nitrogen state.</summary>
-        /// <param name="zones">water zones</param>
-        double[] NH4NSupply(List<ZoneWaterAndN> zones);
+        /// <summary>Gets the ammonium uptake supply for the given nitrogen state.</summary>
+        /// <param name="zone">The zone</param>
+        double[] NH4NSupply(ZoneWaterAndN zone);
     }
 
 

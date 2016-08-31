@@ -872,7 +872,7 @@ namespace Models
                         if (data != null && data.Rows.Count > 0)
                         {
                             StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                            report.Write(DataTableUtilities.DataTableToText(data, 0, ",", true));
+                            DataTableUtilities.DataTableToText(data, 0, ",", true, report);
                             report.Close();
                         }
                     }

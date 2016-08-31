@@ -148,11 +148,34 @@ namespace UserInterface.Presenters
             
             for (int i = 0; i < annotations.Count; i++)
             {
-                int numLines = StringUtilities.CountSubStrings(annotations[i].text, "\r\n") + 1;
-                double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+                if (annotations[i] is TextAnnotation)
+                {
+                    TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
+                    if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
+                    {
+                        int numLines = StringUtilities.CountSubStrings(textAnnotation.text, "\r\n") + 1;
+                        double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
-                double yPosition = largestAxisScale - i * interval;
-                graphView.DrawText(annotations[i].text, minimumX, yPosition, Axis.AxisType.Bottom, Axis.AxisType.Left, annotations[i].colour);
+                        double yPosition = largestAxisScale - i * interval;
+                        graphView.DrawText(textAnnotation.text, minimumX, yPosition,
+                                           textAnnotation.leftAlign, textAnnotation.textRotation,
+                                           Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
+                    }
+                    else
+                    {
+                        graphView.DrawText(textAnnotation.text, textAnnotation.x, textAnnotation.y,
+                                           textAnnotation.leftAlign, textAnnotation.textRotation,
+                                           Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
+                    }
+                }
+                else
+                {
+                    LineAnnotation lineAnnotation = annotations[i] as LineAnnotation;
+
+                    graphView.DrawLine(lineAnnotation.x1, lineAnnotation.y1,
+                                       lineAnnotation.x2, lineAnnotation.y2,
+                                       lineAnnotation.type, lineAnnotation.thickness, lineAnnotation.colour);
+                }
             }
         }
 

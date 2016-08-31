@@ -855,12 +855,24 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
+                if (err is System.Reflection.TargetInvocationException)
+                    err = (err as System.Reflection.TargetInvocationException).InnerException;
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
                 MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
             }
         }
 
+        /// <summary>Get a screen shot of the right hand panel.</summary>
+        public System.Drawing.Image GetScreenhotOfRightHandPanel()
+        {
+            return view.GetScreenshotOfRightHandPanel();
+        }
+
+        public ViewBase GetView()
+        {
+            return view as ExplorerView;
+        }
         #endregion
     }
 

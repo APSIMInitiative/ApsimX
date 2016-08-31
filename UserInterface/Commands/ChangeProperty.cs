@@ -149,9 +149,12 @@ namespace UserInterface.Commands
                         this.wasModified = ReflectionUtilities.SetValueOfProperty(this.Name, this.Obj, this.NewValue);
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     this.wasModified = false;
+                    if (e is System.Reflection.TargetInvocationException)
+                        e = (e as System.Reflection.TargetInvocationException).InnerException;
+                    throw e; // Pass the exception on for further handling
                 }
 
                 return this.wasModified;

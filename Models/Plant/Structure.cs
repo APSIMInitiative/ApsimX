@@ -495,7 +495,7 @@ namespace Models.PMF
             //Set PlantTotalNodeNo    
             if (Plant.IsAlive)
             {
-                PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+                PlantTotalNodeNo = Leaf.PlantAppearedLeafNo;
             }
         }
         #endregion

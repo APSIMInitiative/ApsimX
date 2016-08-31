@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Fodder))]
-    public class FodderType : Model, IResource
+    public class FodderType : Model, IResourceType
     {
         [Link]
         ISummary Summary = null;

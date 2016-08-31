@@ -711,7 +711,6 @@ namespace Models.Soils
         /// <returns></returns>
         private double[] PredictedLL(double[] A, double B)
         {
-            double[] DepthCentre = ToMidPoints(PredictedThickness);
             double[] LL15 = LL15Mapped(PredictedThickness);
             double[] DUL = DULMapped(PredictedThickness);
             double[] LL = new double[PredictedThickness.Length];
@@ -1406,9 +1405,13 @@ namespace Models.Soils
                     if (PosDash == -1)
                         throw new Exception("Invalid layer string: " + DepthStrings[i] +
                                   ". String must be of the form: 10-30");
+                    double TopOfLayer;
+                    double BottomOfLayer;
 
-                    double TopOfLayer = Convert.ToDouble(DepthStrings[i].Substring(0, PosDash));
-                    double BottomOfLayer = Convert.ToDouble(DepthStrings[i].Substring(PosDash + 1));
+                    if (!Double.TryParse(DepthStrings[i].Substring(0, PosDash), out TopOfLayer))
+                        throw new Exception("Invalid string for layer top: '" + DepthStrings[i].Substring(0, PosDash) + "'");
+                    if (!Double.TryParse(DepthStrings[i].Substring(PosDash + 1), out BottomOfLayer))
+                        throw new Exception("Invalid string for layer bottom: '" + DepthStrings[i].Substring(PosDash + 1) + "'");
                     Thickness[i] = (BottomOfLayer - TopOfLayer) * 10;
                 }
             }
@@ -1491,7 +1494,7 @@ namespace Models.Soils
         public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
         {
             double[] PAWC = new double[Thickness.Length];
-            if (LL == null)
+            if (LL == null || DUL == null)
                 return PAWC;
             if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
                 throw new ApsimXException(null, "Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");

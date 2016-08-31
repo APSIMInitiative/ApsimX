@@ -132,7 +132,6 @@ namespace Models
                 AcceptedStatsName = StringUtilities.Build(statNames, " ");
             }
 
-            IEnumerable<string> acc = AcceptedStats[0].GetType().GetFields().Select(f => f.Name).ToList();
             //then make sure the names and order of the accepted stats are the same as the new ones.
             if (StringUtilities.Build(statNames, " ") != AcceptedStatsName)
                 throw new ApsimXException(this, "Names, number or order of accepted stats do not match class MathUtilities.RegrStats. The class has probably changed.");

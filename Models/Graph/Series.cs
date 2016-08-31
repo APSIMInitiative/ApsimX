@@ -626,6 +626,7 @@ namespace Models.Graph
                             data.Columns.Contains(YFieldName) &&
                             dataView.Count > 0)
                         {
+                            definition.dataView = dataView;
                             definition.x = GetDataFromTable(dataView, XFieldName);
                             definition.y = GetDataFromTable(dataView, YFieldName);
                             if (Cumulative)
@@ -680,7 +681,13 @@ namespace Models.Graph
                     // Try by assuming the name is a type.
                     Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
                     if (t != null)
-                        modelWithData = Apsim.Find(this.Parent.Parent, t) as IModel;
+                    {
+                        IModel parentOfGraph = this.Parent.Parent;
+                        if (t.IsAssignableFrom(parentOfGraph.GetType()))
+                            modelWithData = parentOfGraph;
+                        else
+                            modelWithData = Apsim.Find(parentOfGraph, t);
+                    }
                 }
 
                 if (modelWithData != null)
