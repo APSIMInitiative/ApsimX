@@ -136,6 +136,7 @@
     <Compile Include="Core\APSIMFileWriter.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
+    <Compile Include="Core\Configuration.cs" />
     <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\FileFormat.cs" />

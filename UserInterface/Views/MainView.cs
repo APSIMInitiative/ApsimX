@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -305,14 +306,14 @@ namespace UserInterface.Views
             if (initialDirectory.Length > 0)
                 OpenFileDialog.InitialDirectory = initialDirectory;
             else
-                OpenFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+                OpenFileDialog.InitialDirectory = Configuration.Settings.PreviousFolder;
 
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 fileName = OpenFileDialog.FileName;
                 string dir = Path.GetDirectoryName(fileName);
                 if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
+                    Configuration.Settings.PreviousFolder = dir;
             }
 
             return fileName;
@@ -327,14 +328,14 @@ namespace UserInterface.Views
         public string AskUserForSaveFileName(string fileSpec, string OldFilename)
         {
             SaveFileDialog.FileName = Path.GetFileName(OldFilename);
-            SaveFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+            SaveFileDialog.InitialDirectory = Configuration.Settings.PreviousFolder;
             SaveFileDialog.Filter = fileSpec + "|" + fileSpec;
 
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string dir = Path.GetDirectoryName(SaveFileDialog.FileName);
                 if (!dir.Contains(@"ApsimX\Examples"))
-                    Utility.Configuration.Settings.PreviousFolder = dir;
+                    Configuration.Settings.PreviousFolder = dir;
                 return SaveFileDialog.FileName;
             }
             else

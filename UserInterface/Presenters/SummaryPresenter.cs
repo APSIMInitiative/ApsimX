@@ -11,6 +11,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Views;
     using Models.Factorial;
+    using System.Drawing;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -78,7 +79,7 @@ namespace UserInterface.Presenters
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype:Summary.OutputType.rtf);
+            Summary.WriteReport(dataStore, this.view.SimulationName, writer, SummaryPngFileName, outtype:Summary.OutputType.rtf);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }
@@ -90,6 +91,30 @@ namespace UserInterface.Presenters
         {
             SetHtmlInView();
         }
+
+        /// <summary>Return the name of the summary file JPG.</summary>
+        private string SummaryPngFileName
+        {
+            get
+            {
+                // Make sure the summary JPG exists in the configuration folder.
+                string summaryJpg = Path.Combine(Path.GetTempPath(), "ApsimSummary.png");
+                if (!File.Exists(summaryJpg))
+                {
+                    try
+                    {
+                        Bitmap b = Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
+                        b.Save(summaryJpg);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                return summaryJpg;
+            }
+        }
+
 
     }
 }

@@ -47,9 +47,9 @@ namespace UserInterface.Presenters
             this.view = view as IMainView;
 
             // Set the main window location and size.
-            this.view.WindowLocation = Utility.Configuration.Settings.MainFormLocation;
-            this.view.WindowSize = Utility.Configuration.Settings.MainFormSize;
-            this.view.WindowMinimisedOrMaximised = Utility.Configuration.Settings.MainFormWindowState;
+            this.view.WindowLocation = Configuration.Settings.MainFormLocation;
+            this.view.WindowSize = Configuration.Settings.MainFormSize;
+            this.view.WindowMinimisedOrMaximised = Configuration.Settings.MainFormWindowState;
 
             // Set the main window caption with version information.
             Version version = new Version(Application.ProductVersion);
@@ -59,7 +59,7 @@ namespace UserInterface.Presenters
                 this.view.WindowCaption = "APSIM " + version;
 
             // Cleanup the recent file list
-            Utility.Configuration.Settings.CleanMruList();
+            Configuration.Settings.CleanMruList();
 
             // Populate the 2 start pages.
             PopulateStartPage(this.view.StartPage1);
@@ -230,7 +230,7 @@ namespace UserInterface.Presenters
                               OnUpgrade);
 
             // Populate the view's listview.
-            startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+            startPage.List.Values = Configuration.Settings.MruList.ToArray();
         }
 
         /// <summary>Process the specified command line arguments. Will throw if there are errors during startup.</summary>
@@ -261,7 +261,7 @@ namespace UserInterface.Presenters
                 {
                     Simulations simulations = Simulations.Read(fileName);
                     presenter = CreateNewTab(fileName, simulations, onLeftTabControl);
-                    Utility.Configuration.Settings.AddMruFile(fileName);
+                    Configuration.Settings.AddMruFile(fileName);
                 }
 
                 catch (Exception err)
@@ -326,7 +326,7 @@ namespace UserInterface.Presenters
             {
                 bool onLeftTabControl = this.view.IsControlOnLeft(sender);
                 this.OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -341,7 +341,7 @@ namespace UserInterface.Presenters
             if (fileName != null)
             {
                 this.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -356,7 +356,7 @@ namespace UserInterface.Presenters
             if (fileName != null)
             {
                 this.OpenApsimXFileInTab(fileName, onLeftTabControl: false);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }
 
@@ -534,9 +534,9 @@ namespace UserInterface.Presenters
             e.AllowClose = AllowClose();
             if (e.AllowClose)
             {
-                Utility.Configuration.Settings.MainFormLocation = view.WindowLocation;
-                Utility.Configuration.Settings.MainFormSize = view.WindowSize;
-                Utility.Configuration.Settings.MainFormWindowState = view.WindowMinimisedOrMaximised;
+                Configuration.Settings.MainFormLocation = view.WindowLocation;
+                Configuration.Settings.MainFormSize = view.WindowSize;
+                Configuration.Settings.MainFormWindowState = view.WindowMinimisedOrMaximised;
             }
         }
 
