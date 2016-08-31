@@ -153,7 +153,10 @@ namespace UserInterface.Presenters
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
             this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-       
+
+            this.propertyPresenter.Detach();
+            if (this.graphPresenter != null)
+                this.graphPresenter.Detach();
             if (this.parentForGraph != null && this.graph != null)
             {
                 this.parentForGraph.Children.Remove(this.graph);
