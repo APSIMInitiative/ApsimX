@@ -30,12 +30,12 @@ namespace APSIM.Shared.Utilities
         /// <param name="model">
         /// The model.
         /// </param>
-        public override void Render(IRenderContext rc, PlotModel model)
+        public override void Render(IRenderContext rc)
         {
             this.MovePointsToItems();
 
             // Let the base class draw the rectanges.
-            base.Render(rc, model);
+            base.Render(rc);
         }
 
         /// <summary>
