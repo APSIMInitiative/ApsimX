@@ -164,7 +164,7 @@
             <double>0.2</double>
             <double>0.0005</double>
           </PoreBounds>
-          <BottomBoundryConductance>100</BottomBoundryConductance>
+          <SubProfileConductance>100</SubProfileConductance>
           <WaterTableDepth>3</WaterTableDepth>
           <CalculateInfiltration>true</CalculateInfiltration>
           <CalculateDrainage>true</CalculateDrainage>
@@ -1658,10 +1658,10 @@ namespace Models
               <double>0.2</double>
               <double>0.0005</double>
             </PoreBounds>
-            <BottomBoundryConductance>100</BottomBoundryConductance>
+            <SubProfileConductance>100</SubProfileConductance>
             <WaterTableDepth>3</WaterTableDepth>
             <CalculateInfiltration>true</CalculateInfiltration>
-            <CalculateDrainage>false</CalculateDrainage>
+            <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <TimeSteps>0</TimeSteps>
             <ResidueWater>0</ResidueWater>
@@ -2214,7 +2214,11 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>InitSatKsatMid</string>
+          <string>InitMidKsatMid</string>
+          <string>InitLLKsatMid</string>
+        </DisabledSeries>
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
