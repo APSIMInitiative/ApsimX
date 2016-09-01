@@ -1294,7 +1294,7 @@ namespace Models.AgPasture
         internal double glfAeration = 1.0;
 
         /// <summary>The growth limiting factor due to N stress</summary>
-        internal double glfN = 0.0;
+        internal double glfN = 1.0;
 
         // Auxiliary variables for temperature stress  ----------------------------------------------------------------
 
@@ -2995,7 +2995,7 @@ namespace Models.AgPasture
             leaves.SugarFraction = SugarFractionNewGrowth[0];
             stems.SugarFraction = SugarFractionNewGrowth[1];
             stolons.SugarFraction = SugarFractionNewGrowth[2];
-            //roots are not considered for digestibility
+            //NOTE: roots are not considered for digestibility
         }
 
         /// <summary>
@@ -3235,10 +3235,10 @@ namespace Models.AgPasture
                     CalcGrowthAfterNutrientLimitations();
 
                     // Partition new growth into various tissues
-                    DoNewGrowthAllocations();
+                    EvaluateNewGrowthAllocation();
 
                     // Compute tissue turnover and remobilisation (C and N)
-                    DoTissueTurnoverAndRemobilisation();
+                    EvaluateTissueTurnoverRates();
 
                     // step 04 - Effective growth, after all limitations and senescence
                     CalcEffectiveGrowth();
@@ -3367,9 +3367,6 @@ namespace Models.AgPasture
             // Effective, or net, growth
             dGrowthEff = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
-            // update root depth
-            EvaluateRootGrowth();
-
             // Update LAI
             EvaluateLAI();
 
@@ -3488,30 +3485,33 @@ namespace Models.AgPasture
             return Pgross * GrowthRespirationCoefficient;
         }
 
-        /// <summary>Update DM and N amounts allocating new growth to each organ</summary>
-        internal void DoNewGrowthAllocations()
+        /// <summary>Computes the allocation of new growth to all tissues in each organ</summary>
+        internal void EvaluateNewGrowthAllocation()
         {
             if (dGrowthActual > Epsilon)
             {
-                // Fractions of new growth for each plant part
+                // Get the actual growth above and below ground
+                dGrowthShootDM = dGrowthActual * fractionToShoot;
+                dGrowthRootDM = Math.Max(0.0, dGrowthActual - dGrowthShootDM);
+
+                // Get the fractions of new growth to allocate to each plant organ
                 double toLeaf = fractionToShoot * fractionToLeaf;
                 double toStem = fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
                 double toStolon = fractionToShoot * FractionToStolon;
                 double toRoot = 1.0 - fractionToShoot;
 
-                // New growth is allocated to the first tissue pools
+                // Allocate new DM growth to the growing tissues
                 leaves.Tissue[0].DM += toLeaf * dGrowthActual;
                 stems.Tissue[0].DM += toStem * dGrowthActual;
                 stolons.Tissue[0].DM += toStolon * dGrowthActual;
                 //roots.Tissue[0].DM += Done later in EvaluateRootGrowth
-                dGrowthShootDM = (toLeaf + toStem + toStolon) * dGrowthActual;
-                dGrowthRootDM = toRoot * dGrowthActual;
 
                 // Set the amount of sugar in each organ (all in tissue1)
                 leaves.Tissue[0].DMSugar = leaves.SugarFraction * toLeaf * dGrowthActual;
                 stems.Tissue[0].DMSugar = stems.SugarFraction * toStem * dGrowthActual;
                 stolons.Tissue[0].DMSugar = stolons.SugarFraction * toStolon * dGrowthActual;
 
+                // Evaluate allocation of N
                 // Partitioning N based on DM fractions and on max [N] in plant parts
                 double Nsum = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
                             + (toStolon * stolons.NConcMaximum) + (toRoot * roots.NConcMaximum);
@@ -3524,8 +3524,9 @@ namespace Models.AgPasture
                 leaves.Tissue[0].Namount += toLeafN * newGrowthN;
                 stems.Tissue[0].Namount += toStemN * newGrowthN;
                 stolons.Tissue[0].Namount += toStolonN * newGrowthN;
-                roots.Tissue[0].Namount += toRootN * newGrowthN;
+                //roots.Tissue[0].Namount += toRootN * newGrowthN;
 
+                // Update N variables
                 dGrowthShootN = newGrowthN * (toLeafN + toStemN + toStolonN);
                 dGrowthRootN = newGrowthN * toRootN;
 
@@ -3540,6 +3541,10 @@ namespace Models.AgPasture
                     // Note: this is only valid for leaf and stems, the remaining (1-kappaNRemob4) and the amounts in roots
                     //  and stolon is disposed off (added to soil FOM or Surface OM via litter)
                 }
+
+                // Evaluate root elongation and allocate new growth in each layer
+                EvaluateRootElongation();
+                DoRootGrowthAllocation();
             }
             else
             {
@@ -3549,18 +3554,22 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the turnover rate and update each tissue pool of all plant parts</summary>
-        /// <remarks>The C and N amounts for remobilisation are also computed in here</remarks>
-        internal void DoTissueTurnoverAndRemobilisation()
+        /// <summary>Computes the turnover rates for each tissue pool of all plant organs</summary>
+        /// <remarks>
+        /// The rate are passe on to each organ and the amounts potentially turned over are computed for each tissue.
+        /// The turnover rates are affected by variations in soil water and air temperature. For leaves the number of leaves
+        ///  per tiller (LiveLeavesPerTiller, a parameter specific for each species) also influences the turnover rate.
+        /// The C and N amounts potentially available for remobilisation are also computed in here.
+        /// </remarks>
+        internal void EvaluateTissueTurnoverRates()
         {
-            // The turnover rates are affected by soil water and air temperature
-            //  the number of leaves per tiller also influences the rate (3 stage pools are used to describe any number of leaves)
-
             // Get the temperature factor for tissue turnover
             ttfTemperature = TempFactorForTissueTurnover(Tmean(0.5));
 
             // Get the moisture factor for shoot tissue turnover
             ttfMoistureShoot = WaterFactorForTissueTurnover();
+
+            // TODO: find a way to use todays GLFwater, or to compute an alternative one
 
             // Get the moisture factor for littering rate (detachment)
             double ttfMoistureLitter = Math.Pow(glfWater, 3);
@@ -3575,7 +3584,7 @@ namespace Models.AgPasture
             double SR = 0;
             double StockFac2Litter = StockParameter * SR;
 
-            // Turnover rate for leaf and stem
+            // Turnover rate for leaf and stem tissues
             gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot;
 
             // Turnover rate for dead to litter (detachment)
@@ -3588,7 +3597,7 @@ namespace Models.AgPasture
             gamaR = TissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
 
             // Check whether any adjust on turnover rates are needed
-            if (gama > 0.0)
+            if ((gama + gamaD + gamaR) > Epsilon)
             {
                 // Check phenology effect for annuals
                 if (isAnnual && phenologicStage > 0)
@@ -3625,19 +3634,18 @@ namespace Models.AgPasture
                     }
 
                     // set a minimum for roots too
-                    if (roots.DMGreen < MinimumGreenWt * MinimumRootProp)
+                    if (roots.DMGreen * (1.0 - gamaR) < MinimumGreenWt * MinimumRootProp)
                         gamaR = 0.0;
                 }
 
                 // Turnover rate for stolon
                 if (isLegume)
                 {
+                    // base rate is the same as for the other above ground organs
                     gamaS = gama;
 
-                    // Fraction of DM defoliated today
+                    // Adjust stolon turnover due to defoliation (increases stolon senescence)
                     double fractionDefoliated = MathUtilities.Divide(dmDefoliated, dmDefoliated + myPreviousState.AboveGroundWt, 0.0);
-
-                    // Adjust stolon turnover due to defoliation (increase stolon senescence)
                     gamaS += fractionDefoliated * (1.0 - gamaS);
                 }
                 else
@@ -4086,7 +4094,7 @@ namespace Models.AgPasture
                 NSenescedRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if ((Nfixation + NSenescedRemobilisable) - NdemandLux > -Epsilon)
+            else if (NdemandLux-(Nfixation + NSenescedRemobilisable) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senescent material
                 NSenescedRemobilised = Math.Max(0.0, NdemandLux - Nfixation);
@@ -4722,13 +4730,13 @@ namespace Models.AgPasture
         /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
         ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
         /// </remarks>
-        private void EvaluateRootGrowth()
+        private void EvaluateRootElongation()
         {
             // Check changes in root depth
             dRootDepth = 0.0;
             if (phenologicStage > 0)
             {
-                if (((dGrowthRootDM-detachedRootDM) > Epsilon) && (roots.Depth < MaximumRootDepth))
+                if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (roots.Depth < MaximumRootDepth))
                 {
                     double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = RootElongationRate * tempFactor;
@@ -4740,11 +4748,19 @@ namespace Models.AgPasture
                     // No net growth
                     dRootDepth = 0.0;
                 }
+            }
+        }
 
-                // change root amount due to senescence (no changes in distribution)
-                if (detachedRootDM > Epsilon)
-                    roots.Tissue[0].DM -= detachedRootDM;
-
+        /// <summary>Computes the allocation of new growth to roots for each layer</summary>
+        /// <remarks>
+        /// The current target distribution for roots changes whenever then root depth changes, this is then used to allocate 
+        ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
+        ///  take some time for the actual distribution to evolve to be equal to the target.
+        /// </remarks>
+        private void DoRootGrowthAllocation()
+        {
+            if (dGrowthRootDM > Epsilon)
+            {
                 // change root amount due to growth (distribution may change)
                 double[] currentRootTarget = CurrentRootDistributionTarget();
                 if (MathUtilities.AreEqual(roots.Tissue[0].FractionWt, currentRootTarget))
@@ -4755,24 +4771,18 @@ namespace Models.AgPasture
                 else
                 {
                     // 1. get preliminary distribution, based on average of current and target
-                    double[] newRootLayerWt = new double[roots.BottomLayer + 1];
-                    double newRootWt = roots.Tissue[0].DM + dGrowthRootDM;
+                    double newRootDM = roots.Tissue[0].DM + dGrowthRootDM;
+                    double newRootN = roots.Tissue[0].Namount + dGrowthRootN;
+                    double[] newRootFraction = new double[nLayers];
                     for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                        newRootLayerWt[layer] = newRootWt * (roots.Tissue[0].FractionWt[layer] + currentRootTarget[layer]) / 2.0;
+                        newRootFraction[layer] = (roots.Tissue[0].FractionWt[layer] + currentRootTarget[layer]) / 2.0;
 
-                    // 2. check for excess allocation
-                    if (newRootLayerWt.Sum() > newRootWt)
+                    // 2. check for excess allocation and update root DM
+                    double layersTotal = newRootFraction.Sum();
+                    for (int layer = 0; layer <= roots.BottomLayer; layer++)
                     {
-                        // 3a. adjsut distribution and update root DM
-                        double layersTotal = newRootLayerWt.Sum();
-                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                            roots.Tissue[0].DMLayer[layer] = newRootWt * (newRootLayerWt[layer] / layersTotal);
-                    }
-                    else
-                    {
-                        // 3b. update root DM 
-                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                            roots.Tissue[0].DMLayer[layer] = newRootLayerWt[layer];
+                        roots.Tissue[0].DMLayer[layer] = newRootDM * (newRootFraction[layer] / layersTotal);
+                        roots.Tissue[0].NamountLayer[layer] = newRootN * (newRootFraction[layer] / layersTotal);
                     }
                 }
             }

@@ -1581,10 +1581,10 @@ namespace Models.AgPasture
                     species.CalcGrowthAfterNutrientLimitations();
 
                     // Partition new growth into various tissues
-                    species.DoNewGrowthAllocations();
+                    species.EvaluateNewGrowthAllocation();
 
                     // Compute tissue turnover and remobilisation (C and N)
-                    species.DoTissueTurnoverAndRemobilisation();
+                    species.EvaluateTissueTurnoverRates();
 
                     // step 04 - Effective growth after all limitations and senescence
                     species.CalcEffectiveGrowth();
