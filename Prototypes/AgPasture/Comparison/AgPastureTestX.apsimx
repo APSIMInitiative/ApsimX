@@ -3341,6 +3341,111 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -6714,6 +6819,111 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -8001,10 +8211,10 @@ namespace Models
             <ColdSumDD>20</ColdSumDD>
             <ColdRecoverTemp>0</ColdRecoverTemp>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
+            <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
             <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
-            <MaxRootAllocation>0.2</MaxRootAllocation>
+            <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
             <ReproSeasonReferenceLatitude>41</ReproSeasonReferenceLatitude>
@@ -8015,9 +8225,10 @@ namespace Models
             <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
             <FractionToStolon>0</FractionToStolon>
-            <SpecificLeafArea>20</SpecificLeafArea>
             <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
+            <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
+            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
             <DetachmentRate>0.11</DetachmentRate>
@@ -8064,19 +8275,8 @@ namespace Models
               <double>0.6</double>
               <double>0.2</double>
             </DigestibilitiesCellWall>
-            <DigestibilitiesProtein>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </DigestibilitiesProtein>
-            <SugarFraction>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0</double>
-            </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
+            <MinimumRootProp>0.5</MinimumRootProp>
             <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
             <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
             <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -10174,6 +10374,111 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -11501,9 +11806,10 @@ namespace Models
           <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
           <FractionToStolon>0</FractionToStolon>
-          <SpecificLeafArea>20</SpecificLeafArea>
           <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
+          <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
+          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
           <DetachmentRate>0.11</DetachmentRate>
@@ -11550,19 +11856,8 @@ namespace Models
             <double>0.6</double>
             <double>0.2</double>
           </DigestibilitiesCellWall>
-          <DigestibilitiesProtein>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </DigestibilitiesProtein>
-          <SugarFraction>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0</double>
-          </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
+          <MinimumRootProp>0.5</MinimumRootProp>
           <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
           <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
           <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -11616,6 +11911,7 @@ namespace Models
             <string>[Ryegrass].EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
             <string>[Ryegrass].HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
             <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
+            <string>[Ryegrass].LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
             <string>[Ryegrass].LitterWt as Ryegrass.LitterWt</string>
             <string>[Ryegrass].RootSenescedWt as Ryegrass.RootSenescedWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
@@ -11768,7 +12064,7 @@ namespace Models
         <Graph>
           <Name>Digest</Name>
           <Series>
-            <Name>Herbage1</Name>
+            <Name>SenescedRemble</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11782,14 +12078,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.Height</YFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Herbage</Name>
+            <Name>SenescedRemd</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11799,18 +12095,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.HeightNew</YFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>AboveGd</Name>
+            <Name>LuxuryRemble</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11820,18 +12116,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
+            <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Results_MassBalance</TableName>
+            <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.AboveGroundDigestibility</YFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Standing</Name>
+            <Name>LuxuryRmbd</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11841,11 +12137,11 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Dot</Line>
+            <Line>Dash</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Results_MassBalance</TableName>
+            <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDigestibilitySimp</YFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12993,6 +13289,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.LeafDMAllocation</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>DM (kg/ha)</Title>
@@ -13833,6 +14150,111 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -15816,9 +16238,10 @@ namespace Models
             <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
             <FractionToStolon>0</FractionToStolon>
-            <SpecificLeafArea>20</SpecificLeafArea>
             <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
+            <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
+            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
             <DetachmentRate>0.11</DetachmentRate>
@@ -15865,19 +16288,8 @@ namespace Models
               <double>0.6</double>
               <double>0.2</double>
             </DigestibilitiesCellWall>
-            <DigestibilitiesProtein>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </DigestibilitiesProtein>
-            <SugarFraction>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0</double>
-            </SugarFraction>
             <MinimumGreenWt>300</MinimumGreenWt>
+            <MinimumRootProp>0.5</MinimumRootProp>
             <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
             <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
             <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -17975,6 +18387,111 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
       </Folder>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -19305,9 +19822,10 @@ namespace Models
           <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
           <FractionToStolon>0</FractionToStolon>
-          <SpecificLeafArea>20</SpecificLeafArea>
           <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
+          <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
+          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
           <DetachmentRate>0.11</DetachmentRate>
@@ -19354,19 +19872,8 @@ namespace Models
             <double>0.6</double>
             <double>0.2</double>
           </DigestibilitiesCellWall>
-          <DigestibilitiesProtein>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </DigestibilitiesProtein>
-          <SugarFraction>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0</double>
-          </SugarFraction>
           <MinimumGreenWt>300</MinimumGreenWt>
+          <MinimumRootProp>0.5</MinimumRootProp>
           <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
           <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
           <MinimumPlantHeight>25</MinimumPlantHeight>
@@ -21441,6 +21948,111 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Remobilisation</Name>
+          <Series>
+            <Name>SenescedRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>SenescedRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-990142</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedSenescedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemble</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisableLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LuxuryRemobd</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.RemobilisedLuxuryN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>DM (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>

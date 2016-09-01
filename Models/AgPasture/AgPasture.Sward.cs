@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="AgPasture.Sward.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
-//     Copyright (c) ASPIM initiative. All rights reserved.
+//     Copyright (c) APSIM initiative. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -1482,13 +1482,13 @@ namespace Models.AgPasture
         #region Constants  -------------------------------------------------------------------------------------------------
 
         /// <summary>Average carbon content in plant dry matter</summary>
-        const double CinDM = 0.4;
+        public const double CinDM = 0.4;
 
         /// <summary>Nitrogen to protein conversion factor</summary>
-        const double N2Protein = 6.25;
+        public const double N2Protein = 6.25;
 
-        /// <summary>Maximum difference between two values of double precision in this model</summary>
-        const double myEpsilon = 0.000000001;
+        /// <summary>Minimum significant difference between two values</summary>
+        public const double Epsilon = 0.000000001;
 
         #endregion
 
@@ -1559,6 +1559,10 @@ namespace Models.AgPasture
 
                     // step 01 - preparation and potential growth
                     species.CalcDailyPotentialGrowth();
+
+                    // step 01.5 - Get potential allocation of today's growth
+                    species.EvaluateGrowthAllocation();
+
                 }
 
                 // Water demand, supply, and uptake
