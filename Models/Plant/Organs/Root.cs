@@ -101,7 +101,7 @@ namespace Models.PMF.Organs
         [Link]
         IFunction NitrogenDemandSwitch = null;
         /// <summary>The senescence rate</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
@@ -513,37 +513,8 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                plantZone.mySenescenceRate = 0;
-                if (SenescenceRate != null) //Default of zero means no senescence
-                    plantZone.mySenescenceRate = SenescenceRate.Value;
-
-                /*  if (Live.Wt == 0)
-                  {
-                      //determine how many layers to put initial DM into.
-                      Depth = Plant.SowingData.Depth;
-                      double AccumulatedDepth = 0;
-                      double InitialLayers = 0;
-                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                      {
-                          if (AccumulatedDepth < Depth)
-                              InitialLayers += 1;
-                          AccumulatedDepth += Soil.SoilWater.Thickness[layer];
-                      }
-                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                      {
-                          if (layer <= InitialLayers - 1)
-                          {
-                              //dirstibute root biomass evently through root depth
-                              LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
-                              LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
-                          }
-                      }
-               
-                  }
-                  */
-                plantZone.Length = 0;
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
-                    plantZone.Length += LengthDensity[layer];
+                plantZone.mySenescenceRate = SenescenceRate.Value;
+                plantZone.Length = MathUtilities.Sum(LengthDensity);
             }
         }
 
