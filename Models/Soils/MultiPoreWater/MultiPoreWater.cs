@@ -238,7 +238,7 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Description("The amount of water that will pass the bottom of the profile")]
-        public double BottomBoundryConductance { get; set; }
+        public double SubProfileConductance { get; set; }
         /// <summary>
         /// The depth of the water table below the surface, important for gravitational water potential
         /// </summary>
@@ -331,12 +331,17 @@ namespace Models.Soils
         /// How much of the current air filled volume of a layer may be water filled in the comming hour
         /// </summary>
         [Units("mm")]
-        private double[] AbsorptionCapacity { get; set; }
+        private double[] AdsorptionCapacity { get; set; }
+        /// <summary>
+        /// How much water may pass through the current pore in the comming hour
+        /// </summary>
+        [Units("mm/h")]
+        private double[] TransmissionCapacity { get; set; }
         /// <summary>
         /// How much water can the profile below this layer absorb in the comming hour
         /// </summary>
         [Units("mm")]
-        private double[] AbsorptionCapacityBelow { get; set; }
+        private double[] AdsorptionCapacityBelow { get; set; }
         /// <summary>
         /// The amount of water that may flow into and through the profile below this layer in the comming hour
         /// </summary>
@@ -374,8 +379,9 @@ namespace Models.Soils
         {
             ProfileLayers = Water.Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
-            AbsorptionCapacity = new double[ProfileLayers];
-            AbsorptionCapacityBelow = new double[ProfileLayers];
+            AdsorptionCapacity = new double[ProfileLayers];
+            TransmissionCapacity = new double[ProfileLayers];
+            AdsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
@@ -408,6 +414,7 @@ namespace Models.Soils
             }
 
             SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
+           
 
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
@@ -530,13 +537,18 @@ namespace Models.Soils
         /// </summary>
         private void SetSoilProperties()
         {
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                ProfileDepth += Water.Thickness[l] / 1000;
+                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
+                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
+            }
+
             HyProps.SetHydraulicProperties();
+            doGravitionalPotential();
             pond = 0;
             for (int l = 0; l < ProfileLayers; l++)
             {
-                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
-                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
-                ProfileDepth += Water.Thickness[l]/1000;
                 double AccumWaterVolume = 0;
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
@@ -619,33 +631,36 @@ namespace Models.Soils
             for (int l = 0; l < ProfileLayers; l++)
             {//Step through each layer
                 double PotentialAbsorption = 0;
+                double PotentialTransmission = 0;
                 for (int c = PoreCompartments - 1; c >= 0; c--)
-                {//Workout how much water may be adsorbed into each pore
+                {//Workout how much water may be adsorbed into and transmitted from each pore
                     PotentialAbsorption += Math.Min(Pores[l][c].HydraulicConductivityIn, Pores[l][c].AirDepth);
+                    PotentialTransmission += Pores[l][c].HydraulicConductivityOut; 
                 }
-                AbsorptionCapacity[l] = PotentialAbsorption;
+                AdsorptionCapacity[l] = PotentialAbsorption;
+                TransmissionCapacity[l] = PotentialTransmission;
             }
             for (int l = ProfileLayers-1; l >=0; l--)
             {//Then step through each layer and work out how much water the profile below can take
                 if (l == ProfileLayers - 1)
                 {
                     //In the bottom layer of the profile absorption capaicity below is the amount of water this layer can absorb
-                    AbsorptionCapacityBelow[l] = AbsorptionCapacity[l];
+                    AdsorptionCapacityBelow[l] = AdsorptionCapacity[l];
                     //In the bottom layer of the profile percolation capacity below is the conductance of the bottom of the profile
-                    PercolationCapacityBelow[l] = BottomBoundryConductance;
+                    PercolationCapacityBelow[l] = SubProfileConductance;
                 }
                 else
                 {
                     //For subsequent layers up the profile absorpbion capacity below adds the current layer to the sum of the layers below
-                    AbsorptionCapacityBelow[l] = AbsorptionCapacityBelow[l + 1] + AbsorptionCapacity[l];
+                    AdsorptionCapacityBelow[l] = AdsorptionCapacityBelow[l + 1] + AdsorptionCapacity[l];
                     //For subsequent layers up the profile the percolation capacity below is the amount that the layer below may absorb
                     //plus the minimum of what may drain through the layer below (ksat of layer below) and what may potentially percolate
                     //Into the rest of the profile below that
-                    PercolationCapacityBelow[l] = AbsorptionCapacity[l + 1] + Math.Min(ProfileParams.Ksat[l + 1],PercolationCapacityBelow[l+1]);
+                    PercolationCapacityBelow[l] = AdsorptionCapacity[l + 1] + Math.Min(TransmissionCapacity[l + 1],PercolationCapacityBelow[l+1]);
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AbsorptionCapacity[0] + PercolationCapacityBelow[0];
+            PotentialInfiltration = AdsorptionCapacity[0] + PercolationCapacityBelow[0];
         }
         /// <summary>
         /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
@@ -656,7 +671,7 @@ namespace Models.Soils
             {//Step through each layer from the bottom up and calculate the height
                 if (l == ProfileLayers - 1)
                 {//For the bottom layer height is equal to the depth of the water table below the bottom of the profile
-                    if (BottomBoundryConductance == 0)
+                    if (SubProfileConductance == 0)
                         LayerHeight[l] = 0;
                     else
                         LayerHeight[l] = Math.Max(0,WaterTableDepth - ProfileDepth);
