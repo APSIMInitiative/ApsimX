@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("APSIM (next generation) User Interface")]
 [assembly: AssemblyCompany("APSIM Initiative")]
 [assembly: AssemblyProduct("APSIM UI")]
-[assembly: AssemblyCopyright("Copyright © APSIM Initiative")]
+[assembly: AssemblyCopyright("Copyright © APSIM Initiative 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyConfiguration("")]

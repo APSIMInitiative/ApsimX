@@ -333,6 +333,10 @@ namespace Models.PMF.OldPlant
         [Link]
         GenericArbitratorXY Arbitrator1 = null;
 
+        /// <summary>The Zadok stage</summary>
+        [Link]
+        Zadok Zadok = null;
+
         /// <summary>Gets or sets the eo crop factor.</summary>
         /// <value>The eo crop factor.</value>
         [XmlIgnore]
@@ -343,6 +347,13 @@ namespace Models.PMF.OldPlant
         [XmlIgnore]
         public string NSupplyPreference { get; set; }
 
+        /// <summary>Returns the Zadok stage.</summary>
+        [XmlIgnore]
+        public double ZadokStage
+        {
+            get { return Zadok.Stage; }
+        }
+        
         /// <summary>
         /// Gets or sets a value indicating whether [do retranslocation before n demand].
         /// </summary>
