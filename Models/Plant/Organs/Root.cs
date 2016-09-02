@@ -58,38 +58,47 @@ namespace Models.PMF.Organs
         /// <summary>The nitrogen demand switch</summary>
         [Link]
         IFunction NitrogenDemandSwitch = null;
+
         /// <summary>The senescence rate</summary>
         [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
+        
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
+        
         /// <summary>The partition fraction</summary>
         [Link]
         [Units("0-1")]
         IFunction PartitionFraction = null;
+        
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
+        
         /// <summary>The maximum daily n uptake</summary>
         [Link]
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
+        
         /// <summary>The minimum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
+        
         /// <summary>The Maximum Root Depth</summary>
         [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction MaximumRootDepth = null;
+        
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
@@ -145,8 +154,7 @@ namespace Models.PMF.Organs
             [XmlIgnore]
             [Units("g/m2")]
             public double[] NonStructuralNDemand { get; set; }
-            /// <summary>The _ senescence rate</summary>
-            public double mySenescenceRate = 0;
+
             /// <summary>The Nuptake</summary>
             public double[] NitUptake = null;
 
@@ -234,7 +242,7 @@ namespace Models.PMF.Organs
                 NitUptake = null;
                 DeltaNO3 = new double[soil.Thickness.Length];
                 DeltaNH4 = new double[soil.Thickness.Length];
-                mySenescenceRate = 0.0;
+
                 Length = 0.0;
                 Depth = 0.0;
 
@@ -430,10 +438,8 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
-            {
-                plantZone.mySenescenceRate = SenescenceRate.Value;
                 plantZone.Length = MathUtilities.Sum(LengthDensity);
-            }
+
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -462,8 +468,7 @@ namespace Models.PMF.Organs
                 plantZone.Depth = Math.Min(plantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
-                if (plantZone.mySenescenceRate > 0.0)
-                    DoRootBiomassRemoval(plantZone.mySenescenceRate);
+                DoRootBiomassRemoval(SenescenceRate.Value);
             }
         }
 
