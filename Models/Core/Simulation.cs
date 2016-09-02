@@ -23,6 +23,10 @@ namespace Models.Core
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
 
+        /// <summary></summary>
+        [NonSerialized]
+        private Events events = null;
+
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
         public bool IsCompleted { get; set; }
@@ -134,13 +138,11 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            Apsim.ConnectEvents(this);
+            events = new Events();
+            events.ConnectEvents(this);
             Apsim.ResolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
-            {
-                Apsim.ConnectEvents(child);
                 Apsim.ResolveLinks(child);
-            }
 
             _IsRunning = true;
             
@@ -169,13 +171,11 @@ namespace Models.Core
             if (Completed != null)
                 Completed.Invoke(this, null);
 
-            Apsim.DisconnectEvents(this);
+            events.DisconnectEvents(this);
+            events = null;
             Apsim.UnresolveLinks(this);
             foreach (Model child in Apsim.ChildrenRecursively(this))
-            {
-                Apsim.DisconnectEvents(child);
                 Apsim.UnresolveLinks(child);
-            }
 
             timer.Stop();
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));

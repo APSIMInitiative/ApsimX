@@ -281,6 +281,7 @@ namespace UserInterface.Presenters
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
+                Cursor.Current = Cursors.WaitCursor;
                 List<DataTable> tables = new List<DataTable>();
                 foreach (string tableName in dataStore.TableNames)
                 {
@@ -291,9 +292,9 @@ namespace UserInterface.Presenters
                         tables.Add(table);
                     }
                 }
-                Cursor.Current = Cursors.WaitCursor; 
                 string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
+                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, DataStore.ErrorLevel.Information);
                 Cursor.Current = Cursors.Default; 
             }
         }
@@ -313,6 +314,8 @@ namespace UserInterface.Presenters
             {
                 Cursor.Current = Cursors.WaitCursor;
                 dataStore.WriteToTextFiles();
+                string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
                 Cursor.Current = Cursors.Default;
             }
         }

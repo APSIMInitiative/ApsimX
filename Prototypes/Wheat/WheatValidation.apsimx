@@ -1196,7 +1196,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>ValueToHold</Name>
             <Constant>
               <Name>GrainsPerGramOfStem</Name>
-              <Value>25</Value>
+              <Value>22</Value>
               <Units>grains</Units>
             </Constant>
             <VariableReference>
@@ -2092,16 +2092,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <Constant>
             <Name>StartStage</Name>
-            <Value>5.2</Value>
+            <Value>5</Value>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
             <Value>0.5</Value>
           </Constant>
-          <Constant>
+          <AddFunction>
             <Name>GrowthDuration</Name>
-            <Value>453</Value>
-          </Constant>
+            <VariableReference>
+              <Name>EarlyReproductive</Name>
+              <VariableName>[Phenology].EarlyReproductive.Target.Value</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>GrainDevelopment</Name>
+              <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+            </VariableReference>
+          </AddFunction>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -2202,7 +2209,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>DMRetranslocationFactor</Name>
               <Value>0.9</Value>
             </Constant>
-            <Start>Emergence</Start>
+            <Start>Sowing</Start>
             <End>FlagLeaf</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
@@ -2212,7 +2219,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Value>0.7</Value>
             </Constant>
             <Start>FlagLeaf</Start>
-            <End>EndGrainFill</End>
+            <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <LinearInterpolationFunction>
@@ -2649,7 +2656,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
             <Command>[Leaf].ExtinctionCoeff.Value = 0.7</Command>
-            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
+            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 17</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.Value = 3000</Command>
           </Cultivar>
           <Cultivar>
@@ -2695,9 +2702,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Gamenya</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 8</Command>
+            <Command>[Phenology].MinimumLeafNumber.Value = 5</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].PpSensitivity.Value = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
+            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gladius</Name>
@@ -2870,7 +2879,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
             <Command>[Phenology].PpSensitivity.Value = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
-            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 20</Command>
+            <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 17</Command>
             <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
           </Cultivar>
         </CultivarFolder>
@@ -2929,9 +2938,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>HAR1685</Name>
             <Command>[Phenology].MinimumLeafNumber.Value = 7</Command>
             <Command>[Phenology].VrnSensitivity.Value = 0</Command>
-            <Command>[Phenology].PpSensitivity.Value = 4</Command>
+            <Command>[Phenology].PpSensitivity.Value = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 100</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.Value = 17</Command>
+            <Command>[Phenology].GrainFilling.Target.Value = 350</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -3068,2506 +3078,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
-    <Plant>
-      <Name>Maize</Name>
-      <Memo>
-        <Name>TitlePage</Name>
-        <MemoText><![CDATA[
-# The APSIM Maize Model
-
-_Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._
-
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-
-The model consists of:
-
-* a phenology model to simulate development between growth phases  
-* a structure model to simulate plant morphology  
-* a collection of organs to simulate the various plant parts  
-* an arbitrator to allocate resources (N, biomass) to the various plant organs  
-]]></MemoText>
-      </Memo>
-      <OrganArbitrator>
-        <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-      </OrganArbitrator>
-      <Phenology>
-        <Name>Phenology</Name>
-        <MultiplyFunction>
-          <Name>ThermalTime</Name>
-          <AirTemperatureFunction>
-            <Name>BaseThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>18</double>
-                <double>26</double>
-                <double>34</double>
-                <double>44</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>10</double>
-                <double>18</double>
-                <double>26</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
-        </MultiplyFunction>
-        <GerminatingPhase>
-          <Name>Germinating</Name>
-          <Start>Sowing</Start>
-          <End>Germination</End>
-        </GerminatingPhase>
-        <EmergingPhase>
-          <Name>Emerging</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>Germination</Start>
-          <End>Emergence</End>
-          <ShootLag>55</ShootLag>
-          <ShootRate>0.6</ShootRate>
-        </EmergingPhase>
-        <GenericPhase>
-          <Name>Juvenile</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>200</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>Emergence</Start>
-          <End>EndJuvenile</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Photosensitive</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>Target</Name>
-            <Memo>
-              <Name>memo</Name>
-              <MemoText><![CDATA[
-The photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.
-]]></MemoText>
-            </Memo>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>12.5</double>
-                <double>24</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>10</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
-          </LinearInterpolationFunction>
-          <Start>EndJuvenile</Start>
-          <End>FloralInitiation</End>
-        </GenericPhase>
-        <LeafAppearancePhase>
-          <Name>LeafAppearance</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>FloralInitiation</Start>
-          <End>FlagLeaf</End>
-        </LeafAppearancePhase>
-        <GenericPhase>
-          <Name>FlagLeafToFlowering</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>50</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>FlagLeaf</Start>
-          <End>Flowering</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>FloweringToGrainFilling</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>120</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>Flowering</Start>
-          <End>StartGrainFill</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>GrainFilling</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>550</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>StartGrainFill</Start>
-          <End>EndGrainFill</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>Maturing</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>10</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>EndGrainFill</Start>
-          <End>Maturity</End>
-        </GenericPhase>
-        <GenericPhase>
-          <Name>MaturityToHarvestRipe</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>10</Value>
-            <Units>deg day</Units>
-          </Constant>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>Maturity</Start>
-          <End>HarvestRipe</End>
-        </GenericPhase>
-        <EndPhase>
-          <Name>ReadyForHarvesting</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Start>HarvestRipe</Start>
-          <End>Unused</End>
-        </EndPhase>
-        <PhotoperiodFunction>
-          <Name>Photoperiod</Name>
-          <Twilight>-6</Twilight>
-          <DayLength>0</DayLength>
-        </PhotoperiodFunction>
-        <OnEventFunction>
-          <Name>FloweringDAS</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-A function is used to provide flowering date as days after sowing(DAS).
-]]></MemoText>
-          </Memo>
-          <Constant>
-            <Name>PreEventValue</Name>
-            <Value>0</Value>
-          </Constant>
-          <VariableReference>
-            <Name>PostEventValue</Name>
-            <VariableName>[Phenology].DaysAfterSowing</VariableName>
-          </VariableReference>
-          <SetEvent>Flowering</SetEvent>
-          <ReSetEvent>never</ReSetEvent>
-        </OnEventFunction>
-        <OnEventFunction>
-          <Name>MaturityDAS</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
-          </Memo>
-          <Constant>
-            <Name>PreEventValue</Name>
-            <Value>0</Value>
-          </Constant>
-          <VariableReference>
-            <Name>PostEventValue</Name>
-            <VariableName>[Phenology].DaysAfterSowing</VariableName>
-          </VariableReference>
-          <SetEvent>Maturity</SetEvent>
-          <ReSetEvent>never</ReSetEvent>
-        </OnEventFunction>
-        <DaysAfterSowing>0</DaysAfterSowing>
-      </Phenology>
-      <Structure>
-        <Name>Structure</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-Though tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.
-]]></MemoText>
-        </Memo>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
-        </VariableReference>
-        <PhaseLookup>
-          <Name>MainStemPrimordiaInitiationRate</Name>
-          <PhaseLookupValue>
-            <Name>Plastochron</Name>
-            <MultiplyFunction>
-              <Name>Plastochron</Name>
-              <VariableReference>
-                <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>LeafTipsPerPrimordia</Name>
-                <Value>0.5</Value>
-              </Constant>
-            </MultiplyFunction>
-            <Start>Emergence</Start>
-            <End>FloralInitiation</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
-          <PhaseLookupValue>
-            <Name>Phyllochron</Name>
-            <LinearInterpolationFunction>
-              <Name>Phyllochron</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>3.4</double>
-                  <double>4</double>
-                </X>
-                <Y>
-                  <double>30</double>
-                  <double>30</double>
-                  <double>42</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].LeafTipsAppeared</XProperty>
-            </LinearInterpolationFunction>
-            <Start>Emergence</Start>
-            <End>FlagLeaf</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <OnEventFunction>
-          <Name>MainStemFinalNodeNumber</Name>
-          <AddFunction>
-            <Name>PreEventValue</Name>
-            <Constant>
-              <Name>PrimordiaAtEmergence</Name>
-              <Value>6</Value>
-            </Constant>
-            <DivideFunction>
-              <Name>PrimordiaDuringJuvenilePhase</Name>
-              <VariableReference>
-                <Name>JuvenilePhaseDuration</Name>
-                <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>ApproximatePlastochron</Name>
-                <Value>15</Value>
-              </Constant>
-            </DivideFunction>
-          </AddFunction>
-          <VariableReference>
-            <Name>PostEventValue</Name>
-            <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
-          </VariableReference>
-          <SetEvent>FloralInitiation</SetEvent>
-          <ReSetEvent />
-        </OnEventFunction>
-        <HeightFunction>
-          <Name>HeightModel</Name>
-          <LinearInterpolationFunction>
-            <Name>PotentialHeight</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>3</double>
-                <double>4</double>
-                <double>5</double>
-                <double>6</double>
-              </X>
-              <Y>
-                <double>20</double>
-                <double>400</double>
-                <double>450</double>
-                <double>1700</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.6</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-        </HeightFunction>
-        <Constant>
-          <Name>BranchingRate</Name>
-          <Value>0</Value>
-        </Constant>
-        <AddFunction>
-          <Name>BranchMortality</Name>
-          <Constant>
-            <Name>ShadeInducedBranchMortality</Name>
-            <Value>0</Value>
-          </Constant>
-          <Constant>
-            <Name>DroughtInducedBranchMortality</Name>
-            <Value>0</Value>
-          </Constant>
-        </AddFunction>
-        <Initialised>false</Initialised>
-        <Germinated>false</Germinated>
-        <Emerged>false</Emerged>
-      </Structure>
-      <ReproductiveOrgan>
-        <Name>Grain</Name>
-        <Constant>
-          <Name>InitialGrainProportion</Name>
-          <Value>0.05</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.3</Value>
-          <Units>g</Units>
-        </Constant>
-        <Constant>
-          <Name>MaximumGrainsPerCob</Name>
-          <Value>700</Value>
-          <Units>number</Units>
-        </Constant>
-        <PhaseLookup>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookupValue>
-            <Name>InitialPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <VariableReference>
-                  <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>Flowering</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>LinearPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <SubtractFunction>
-                  <Name>ProportionLinearPhase</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                  <VariableReference>
-                    <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                  </VariableReference>
-                </SubtractFunction>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>StartGrainFill</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <PhaseLookup>
-          <Name>MaximumNConc</Name>
-          <PhaseLookupValue>
-            <Name>InitialPhase</Name>
-            <Constant>
-              <Name>InitialNconc</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Start>Flowering</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>LinearPhase</Name>
-            <Constant>
-              <Name>FinalNconc</Name>
-              <Value>0.013</Value>
-            </Constant>
-            <Start>StartGrainFill</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <Constant>
-          <Name>WaterContent</Name>
-          <Value>0.12</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <PhaseLookup>
-          <Name>NFillingRate</Name>
-          <PhaseLookupValue>
-            <Name>GrainFilling</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <AddFunction>
-                <Name>FillingDuration</Name>
-                <VariableReference>
-                  <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-                </VariableReference>
-              </AddFunction>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <Constant>
-                  <Name>MaximumFinalNConc</Name>
-                  <Value>0.013</Value>
-                </Constant>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>Flowering</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <MultiplyFunction>
-          <Name>NumberFunction</Name>
-          <VariableReference>
-            <Name>PotentialGrainNumber</Name>
-            <VariableName>[MaximumGrainsPerCob].Value</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>GrowthRateFactor</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.55</double>
-                <double>3.3</double>
-                <double>6.6</double>
-                <double>10</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0.6</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[GrowthRateGrainDevelopment].Value</XProperty>
-          </LinearInterpolationFunction>
-          <VariableReference>
-            <Name>Population</Name>
-            <VariableName>[Maize].Population</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <ExpressionFunction>
-          <Name>YieldBuPerAcre</Name>
-          <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
-        </ExpressionFunction>
-        <AccumulateFunction>
-          <Name>GrowthGrainDevelopment</Name>
-          <VariableReference>
-            <Name>DailyBiomassProduction</Name>
-            <VariableName>[Arbitrator].DMSupply</VariableName>
-          </VariableReference>
-          <StartStageName>FlagLeaf</StartStageName>
-          <EndStageName>StartGrainFill</EndStageName>
-        </AccumulateFunction>
-        <AccumulateFunction>
-          <Name>DaysGrainDevelopment</Name>
-          <Constant>
-            <Name>LenthOfADay</Name>
-            <Value>1</Value>
-            <Units>days/day</Units>
-          </Constant>
-          <StartStageName>FlagLeaf</StartStageName>
-          <EndStageName>StartGrainFill</EndStageName>
-        </AccumulateFunction>
-        <DivideFunction>
-          <Name>GrowthRateGrainDevelopment</Name>
-          <VariableReference>
-            <Name>AccumulatedGrowth</Name>
-            <VariableName>[GrowthGrainDevelopment].Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>GrowthDuration</Name>
-            <VariableName>[DaysGrainDevelopment].Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>Population</Name>
-            <VariableName>[Maize].Population</VariableName>
-          </VariableReference>
-        </DivideFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>1</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>1</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.8</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <RipeStage />
-        <GrowthRespiration>0</GrowthRespiration>
-      </ReproductiveOrgan>
-      <Root>
-        <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <LinearInterpolationFunction>
-          <Name>KLModifier</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
-]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>10</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Maize].Population</XProperty>
-        </LinearInterpolationFunction>
-        <Constant>
-          <Name>SoilWaterEffect</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-No effect of soil water content on root growth is currently captured in the model.
-]]></MemoText>
-          </Memo>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>TemperatureEffect</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-No effect of temperature on root growth is currently captured in the model.
-]]></MemoText>
-          </Memo>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaxDailyNUptake</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-Maximum daily N uptake is set to an arbitrarily high value.
-]]></MemoText>
-          </Memo>
-          <Value>20</Value>
-          <Units>g/m2/d</Units>
-        </Constant>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.
-]]></MemoText>
-          </Memo>
-          <Value>0.005</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>2.99</double>
-              <double>3</double>
-              <double>6</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-              <double>0.2</double>
-              <double>0.2</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <PhaseLookup>
-          <Name>RootFrontVelocity</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-[Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.
-]]></MemoText>
-          </Memo>
-          <PhaseLookupValue>
-            <Name>PreFlowering</Name>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Value>25</Value>
-              <Units>mm/d</Units>
-            </Constant>
-            <Start>Germination</Start>
-            <End>Flowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>PostFlowering</Name>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Value>0</Value>
-              <Units>mm/d</Units>
-            </Constant>
-            <Start>Flowering</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Germination</Start>
-          <End>Maturity</End>
-        </PhaseBasedSwitch>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.3</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.15</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <Constant>
-          <Name>InitialDM</Name>
-          <Value>0.2</Value>
-          <Units>g/plant</Units>
-        </Constant>
-        <Constant>
-          <Name>SpecificRootLength</Name>
-          <Value>40</Value>
-          <Units>m/g</Units>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>KNO3</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0.003</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0.03</double>
-              <double>0.03</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>KNH4</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0.0003</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>NUptakeSWFactor</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RWC</XProperty>
-        </LinearInterpolationFunction>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
-      </Root>
-      <Leaf>
-        <Name>Leaf</Name>
-        <LeafCohort>
-          <Name>InitialLeaves[1]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>1</Rank>
-          <Area>380</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[2]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>2</Rank>
-          <Area>0</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[3]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>3</Rank>
-          <Area>0</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[4]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>4</Rank>
-          <Area>0</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[5]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>5</Rank>
-          <Area>0</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <LeafCohort>
-          <Name>InitialLeaves[6]</Name>
-          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
-          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
-          <Rank>6</Rank>
-          <Area>0</Area>
-          <MaintenanceRespiration>0</MaintenanceRespiration>
-        </LeafCohort>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Propertys>
-            <string>[Leaf].CohortLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <Propertys>
-            <string>[Leaf].CohortDead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <ArrayBiomass>
-          <Name>CohortArrayLive</Name>
-          <Propertys>
-            <string>[Leaf].Live</string>
-          </Propertys>
-          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-        </ArrayBiomass>
-        <ArrayBiomass>
-          <Name>CohortArrayDead</Name>
-          <Propertys>
-            <string>[Leaf].Dead</string>
-          </Propertys>
-          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
-        </ArrayBiomass>
-        <LeafCohortParameters>
-          <Name>CohortParameters</Name>
-          <Constant>
-            <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
-            <Units>0-1</Units>
-          </Constant>
-          <BellCurveFunction>
-            <Name>MaxArea</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[
-Potential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).
-Individual leaf size is described using a bell-shaped curve, the parameters of which are derived from final leaf number.
-]]></MemoText>
-            </Memo>
-            <MultiplyFunction>
-              <Name>LargestLeafPosition</Name>
-              <VariableReference>
-                <Name>FinalLeafNumber</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>RelativePositionOfLargestLeaf</Name>
-                <Value>0.67</Value>
-              </Constant>
-            </MultiplyFunction>
-            <LinearInterpolationFunction>
-              <Name>AreaMax</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>1</double>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>32530</double>
-                  <double>39259</double>
-                  <double>49659</double>
-                  <double>60000</double>
-                  <double>75000</double>
-                  <double>90000</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>Breadth</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>5</double>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>20</double>
-                  <double>25</double>
-                </X>
-                <Y>
-                  <double>-0.377</double>
-                  <double>-0.144</double>
-                  <double>-0.059</double>
-                  <double>-0.027</double>
-                  <double>-0.016</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>Skewness</Name>
-              <Value>0.00025</Value>
-            </Constant>
-          </BellCurveFunction>
-          <Constant>
-            <Name>NReallocationFactor</Name>
-            <Value>1</Value>
-          </Constant>
-          <Constant>
-            <Name>NRetranslocationFactor</Name>
-            <Value>0.03</Value>
-          </Constant>
-          <Constant>
-            <Name>DMRetranslocationFactor</Name>
-            <Value>0.5</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>CellDivisionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.9</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>GrowthDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>200</double>
-                <double>250</double>
-                <double>100</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>LagDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.4</double>
-                <double>0.6</double>
-              </X>
-              <Y>
-                <double>300</double>
-                <double>300</double>
-                <double>650</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>SenescenceDuration</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.4</double>
-                <double>0.6</double>
-              </X>
-              <Y>
-                <double>150</double>
-                <double>150</double>
-                <double>350</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].RelativeNodeApperance</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
-          </Constant>
-          <Constant>
-            <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>MaximumNConc</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>10</double>
-              </X>
-              <Y>
-                <double>0.054</double>
-                <double>0.03</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>CriticalNConc</Name>
-            <Value>0.015</Value>
-            <Units>g/g</Units>
-          </Constant>
-          <Constant>
-            <Name>MinimumNConc</Name>
-            <Value>0.008</Value>
-            <Units>g/g</Units>
-          </Constant>
-          <AddFunction>
-            <Name>DroughtInducedSenAcceleration</Name>
-            <Constant>
-              <Name>One</Name>
-              <Value>1</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>Stress</Name>
-              <Constant>
-                <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>StressFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                  </X>
-                  <Y>
-                    <double>0.5</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-          </AddFunction>
-          <LinearInterpolationFunction>
-            <Name>SpecificLeafAreaMax</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>9</double>
-              </X>
-              <Y>
-                <double>50000</double>
-                <double>25000</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>SpecificLeafAreaMin</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>9</double>
-              </X>
-              <Y>
-                <double>8000</double>
-                <double>8000</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>0.7</Value>
-          </Constant>
-          <Constant>
-            <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>ShadeInducedSenescenceRate</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.7</double>
-                <double>0.8</double>
-                <double>0.96</double>
-                <double>0.99</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-          </LinearInterpolationFunction>
-          <Constant>
-            <Name>InitialNConc</Name>
-            <Value>0</Value>
-            <Units>g/g</Units>
-          </Constant>
-        </LeafCohortParameters>
-        <RUEModel>
-          <Name>Photosynthesis</Name>
-          <Constant>
-            <Name>RUE</Name>
-            <Value>2</Value>
-          </Constant>
-          <WeightedTemperatureFunction>
-            <Name>FT</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>8</double>
-                <double>15</double>
-                <double>35</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
-          </WeightedTemperatureFunction>
-          <LinearInterpolationFunction>
-            <Name>FVPD</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>10</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>FN</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.3</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Fn</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>FW</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.3</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Fw</XProperty>
-          </LinearInterpolationFunction>
-          <RUECO2Function>
-            <Name>FCO2</Name>
-            <PhotosyntheticPathway>C4</PhotosyntheticPathway>
-          </RUECO2Function>
-          <VariableReference>
-            <Name>RadnInt</Name>
-            <VariableName>[Leaf].RadIntTot</VariableName>
-          </VariableReference>
-        </RUEModel>
-        <MultiplyFunction>
-          <Name>ExtinctionCoeff</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[
-Extinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.
-]]></MemoText>
-          </Memo>
-          <LinearInterpolationFunction>
-            <Name>PotentialExtinctionCoeff</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.2</double>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.7</double>
-                <double>0.5</double>
-                <double>0.4</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].SowingData.RowSpacing</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStressImpact</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.7</double>
-              </X>
-              <Y>
-                <double>0.5</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
-        <LinearInterpolationFunction>
-          <Name>FrostFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>-2</double>
-              <double>2</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Weather].MinT</XProperty>
-        </LinearInterpolationFunction>
-        <VariableReference>
-          <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
-        </VariableReference>
-        <MinimumFunction>
-          <Name>FRGRFunction</Name>
-          <VariableReference>
-            <Name>FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>FN</Name>
-            <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>FVPD</Name>
-            <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
-          </VariableReference>
-        </MinimumFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.3</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
-        <StartFractionExpanded>0</StartFractionExpanded>
-        <FractionNextleafExpanded>0</FractionNextleafExpanded>
-        <DeadNodesYesterday>0</DeadNodesYesterday>
-        <MaxCover>1</MaxCover>
-        <Albedo>0.18</Albedo>
-        <Gsmax>0.009</Gsmax>
-        <R50>160</R50>
-        <FRGR>0</FRGR>
-        <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
-        <KDead>0.03</KDead>
-        <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
-        <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
-        <TipsAtEmergence>0</TipsAtEmergence>
-        <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
-      </Leaf>
-      <GenericAboveGroundOrgan>
-        <Name>Husk</Name>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.2</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>120</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>25</Value>
-          </Constant>
-          <VariableReference>
-            <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.3</double>
-                <double>0.8</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.3</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
-        <Name>Rachis</Name>
-        <MultiplyFunction>
-          <Name>CobNumber</Name>
-          <VariableReference>
-            <Name>StemNumber</Name>
-            <VariableName>[Structure].TotalStemPopn</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>CobsPerStem</Name>
-            <Value>1.1</Value>
-          </Constant>
-        </MultiplyFunction>
-        <DivideFunction>
-          <Name>CobSize</Name>
-          <VariableReference>
-            <Name>CobMass</Name>
-            <VariableName>[Rachis].Live.Wt</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-        </DivideFunction>
-        <PopulationBasedDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <Constant>
-            <Name>StartStage</Name>
-            <Value>5.5</Value>
-          </Constant>
-          <Constant>
-            <Name>GrowthDuration</Name>
-            <Value>300</Value>
-          </Constant>
-          <Constant>
-            <Name>MaximumOrganWt</Name>
-            <Value>23</Value>
-          </Constant>
-          <VariableReference>
-            <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
-        </PopulationBasedDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.008</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.003</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>ExpansionStress</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0.1</double>
-              <double>0.7</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
-        </LinearInterpolationFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
-        <Name>Stem</Name>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>MaximumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>10</double>
-              <double>11</double>
-            </X>
-            <Y>
-              <double>0.03</double>
-              <double>0.03</double>
-              <double>0.005</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Structure].LeafTipsAppeared</XProperty>
-        </LinearInterpolationFunction>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Emergence</Start>
-          <End>StartGrainFill</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.5</Value>
-        </Constant>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0.1</Value>
-        </Constant>
-        <MinimumFunction>
-          <Name>DMDemandFunctionX</Name>
-          <MultiplyFunction>
-            <Name>PotentialDMAccumulation</Name>
-            <VariableReference>
-              <Name>NodesAppearing</Name>
-              <VariableName>[Structure].DeltaTipNumber</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>Branches</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-            <LinearInterpolationFunction>
-              <Name>PotentialInternodeWt</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>0.2</double>
-                  <double>0.8</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>16</double>
-                  <double>16</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Structure].RelativeNodeApperance</XProperty>
-            </LinearInterpolationFunction>
-          </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>HightLimitedDMAccumulation</Name>
-            <Constant>
-              <Name>SpecificStemLengthMax</Name>
-              <Constant>
-                <Name>SpecificStemLengthMax</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Value>0.1</Value>
-            </Constant>
-            <VariableReference>
-              <Name>Branches</Name>
-              <VariableName>[Structure].TotalStemPopn</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>DeltaHeight</Name>
-              <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-        </MinimumFunction>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <Memo>
-              <Name>memo</Name>
-              <MemoText><![CDATA[]]></MemoText>
-            </Memo>
-            <PhaseLookupValue>
-              <Name>PreStemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <Value>0.6</Value>
-              </Constant>
-              <Start>Emergence</Start>
-              <End>FloralInitiation</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>StemElongation</Name>
-              <Constant>
-                <Name>StemFraction</Name>
-                <Value>0.82</Value>
-              </Constant>
-              <Start>FloralInitiation</Start>
-              <End>Flowering</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
-        </PartitionFractionDemandFunction>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <CompositeBiomass>
-        <Name>AboveGround</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Leaf].Dead</string>
-          <string>[Stem].Live</string>
-          <string>[Stem].Dead</string>
-          <string>[Husk].Live</string>
-          <string>[Husk].Dead</string>
-          <string>[Grain].Live</string>
-          <string>[Grain].Dead</string>
-          <string>[Rachis].Live</string>
-          <string>[Rachis].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>BelowGround</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Root].Live</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>Total</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Leaf].Dead</string>
-          <string>[Stem].Live</string>
-          <string>[Stem].Dead</string>
-          <string>[Husk].Live</string>
-          <string>[Husk].Dead</string>
-          <string>[Grain].Live</string>
-          <string>[Grain].Dead</string>
-          <string>[Rachis].Live</string>
-          <string>[Rachis].Dead</string>
-          <string>[Root].Live</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>TotalLive</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Stem].Live</string>
-          <string>[Husk].Live</string>
-          <string>[Grain].Live</string>
-          <string>[Rachis].Live</string>
-          <string>[Root].Live</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>TotalDead</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Dead</string>
-          <string>[Stem].Dead</string>
-          <string>[Husk].Dead</string>
-          <string>[Grain].Dead</string>
-          <string>[Rachis].Dead</string>
-          <string>[Root].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>EarLive</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Husk].Live</string>
-          <string>[Grain].Live</string>
-          <string>[Rachis].Live</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>AboveGroundLive</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Live</string>
-          <string>[Stem].Live</string>
-          <string>[Husk].Live</string>
-          <string>[Grain].Live</string>
-          <string>[Rachis].Live</string>
-        </Propertys>
-      </CompositeBiomass>
-      <CompositeBiomass>
-        <Name>AboveGroundDead</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
-]]></MemoText>
-        </Memo>
-        <Propertys>
-          <string>[Leaf].Dead</string>
-          <string>[Stem].Dead</string>
-          <string>[Husk].Dead</string>
-          <string>[Grain].Dead</string>
-          <string>[Rachis].Dead</string>
-        </Propertys>
-      </CompositeBiomass>
-      <Memo>
-        <Name>Future Development Needs</Name>
-        <MemoText><![CDATA[##Future Development requirements
-
-* Phenology not responding to stress events.  Requires better data sets for quantifying the effects of water and nitrogen on leaf apperance and the timing of development stages.
-* Phosphorus response
-* Improved parameterisation of supply and demand for N and DM from organs and arbitration of these resources.
-* Heat Stress responses in grain number
-* More validation under a wider range of environments with more detailed datasets
-* Seedling mortality
-* Water demand (MicroClimate) needs validation
-
-
-
-
-]]></MemoText>
-      </Memo>
-      <Cultivar>
-        <Name>Pioneer_39G12</Name>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
-        <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10</Command>
-        <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.6,1,1</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Pioneer_3153</Name>
-      </Cultivar>
-      <Cultivar>
-        <Name>Katumani</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Makueni</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 432</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>NSCM_41</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sc401</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>r201</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sc501</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sr52</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Melkassa</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety Melkassa is a local early-medium maturing Ethiopian variety.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 160</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 387</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.33</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>r215</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>mh18</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 260</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 486</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>CG4141</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 233</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sc601</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 560</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 495</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sc625</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>sc623</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>mh12</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>mh16</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>mh17</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>mh19</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>malawi_local</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-The variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 600</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 360</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.217</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Dekalb_XL82</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 211</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 472</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 813</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>GH_5009</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Hycorn_40</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>GH_5019WX</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 255</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24.0</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Laila</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 211</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 1</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 812</Command>
-        <Command>[Phenology].Maturing.Target.Value = 1</Command>
-        <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 36</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  720</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Pioneer_39V43</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-VShort duration variety released in New Zealand by Pioneer
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 450</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 18</Command>
-        <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
-        <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Pioneer_34K77</Name>
-        <Memo>
-          <Name>memo</Name>
-          <MemoText><![CDATA[
-VShort duration variety released in New Zealand by Pioneer
-]]></MemoText>
-        </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Pioneer_38H20</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 210</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Pioneer_33M54</Name>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Phenology].Juvenile.Target.Value = 270</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>Hycorn_53</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 235</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
-        <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
-      </Cultivar>
-      <CropType>Maize</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
-    </Plant>
     <Manager>
       <Name>MaxLeafSize</Name>
       <Script />
@@ -5672,324 +3182,324 @@ namespace Models
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.0558066577064931</Slope>
-            <Intercept>-0.10398076119156841</Intercept>
-            <SEslope>0.052415289435445843</SEslope>
-            <SEintercept>0.2033219592932736</SEintercept>
-            <R2>0.77028718367414772</R2>
-            <RMSE>0.883465015059122</RMSE>
-            <NSE>0.66050655720098872</NSE>
-            <ME>0.095273613855810776</ME>
-            <MAE>0.64614115587440613</MAE>
-            <RSR>0.58028728532336682</RSR>
+            <Slope>1.0558031648129937</Slope>
+            <Intercept>-0.10398834755801989</Intercept>
+            <SEslope>0.052414764992365651</SEslope>
+            <SEintercept>0.20331992494803292</SEintercept>
+            <R2>0.77028955377474118</R2>
+            <RMSE>0.88345368934328949</RMSE>
+            <NSE>0.66051526152215312</NSE>
+            <ME>0.09525355631943426</ME>
+            <MAE>0.64614222706761626</MAE>
+            <RSR>0.58027984624113627</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>473</n>
-            <Slope>1.0379860793677465</Slope>
-            <Intercept>-9.6754186058587948</Intercept>
-            <SEslope>0.019556639707044472</SEslope>
-            <SEintercept>7.541421134534037</SEintercept>
-            <R2>0.85675401254405692</R2>
-            <RMSE>51.251242240001154</RMSE>
-            <NSE>0.81716174520498353</NSE>
-            <ME>4.2472016376717123</ME>
-            <MAE>29.861599788948531</MAE>
-            <RSR>0.42714365800449683</RSR>
+            <Slope>1.0379857788525175</Slope>
+            <Intercept>-9.674778454137936</Intercept>
+            <SEslope>0.019556379134586372</SEslope>
+            <SEintercept>7.5413206527195715</SEintercept>
+            <R2>0.85675721188820564</R2>
+            <RMSE>51.250610173058575</RMSE>
+            <NSE>0.8171662549611971</NSE>
+            <ME>4.2477316448478675</ME>
+            <MAE>29.861052814522367</MAE>
+            <RSR>0.42713839016367661</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>446</n>
-            <Slope>0.00033655564770156409</Slope>
-            <Intercept>0.19861805607590674</Intercept>
-            <SEslope>0.00014566844685327392</SEslope>
-            <SEintercept>0.0047352511928591872</SEintercept>
-            <R2>0.011879812553299174</R2>
-            <RMSE>32.402120343155275</RMSE>
-            <NSE>-0.28489351136593477</NSE>
-            <ME>-15.275179943426878</ME>
-            <MAE>15.315896374993502</MAE>
-            <RSR>1.1322599455118094</RSR>
+            <Slope>0.00033646172240226841</Slope>
+            <Intercept>0.19862455151265793</Intercept>
+            <SEslope>0.00014567032127806018</SEslope>
+            <SEintercept>0.0047353121248756725</SEintercept>
+            <R2>0.011872959475968559</R2>
+            <RMSE>32.402120337278305</RMSE>
+            <NSE>-0.28489351089983694</NSE>
+            <ME>-15.275174901860542</ME>
+            <MAE>15.315890926430892</MAE>
+            <RSR>1.1322599453064446</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(10)</Name>
             <n>8</n>
-            <Slope>-0.40725316729294581</Slope>
-            <Intercept>0.61061967812460227</Intercept>
-            <SEslope>0.19819691386070204</SEslope>
-            <SEintercept>0.084927292575628491</SEintercept>
-            <R2>0.41304017265644488</R2>
-            <RMSE>0.011303425440857065</RMSE>
-            <NSE>-3.1011627047697372</NSE>
-            <ME>0.0076634587220391279</ME>
-            <MAE>0.009131654364480872</MAE>
-            <RSR>1.8943382397749142</RSR>
+            <Slope>-0.40725316725820004</Slope>
+            <Intercept>0.61061967811055162</Intercept>
+            <SEslope>0.1981969139827314</SEslope>
+            <SEintercept>0.084927292627918025</SEintercept>
+            <R2>0.41304017231653956</R2>
+            <RMSE>0.011303425441689739</RMSE>
+            <NSE>-3.1011627053739668</NSE>
+            <ME>0.0076634587228757572</ME>
+            <MAE>0.0091316543653175014</MAE>
+            <RSR>1.8943382399144617</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>469</n>
-            <Slope>0.00012411805364217552</Slope>
-            <Intercept>0.22441590014675447</Intercept>
-            <SEslope>9.8444606994648034E-05</SEslope>
-            <SEintercept>0.0038856089434668095</SEintercept>
-            <R2>0.0033922934564512008</R2>
-            <RMSE>39.359040605227626</RMSE>
-            <NSE>-0.28432897139630975</NSE>
-            <ME>-18.526908454072885</ME>
-            <MAE>18.547305787733347</MAE>
-            <RSR>1.132073553305037</RSR>
+            <Slope>0.00012411395626416103</Slope>
+            <Intercept>0.22441624245507352</Intercept>
+            <SEslope>9.8444812738057648E-05</SEslope>
+            <SEintercept>0.0038856170641598251</SEintercept>
+            <R2>0.0033920561171604247</R2>
+            <RMSE>39.359040606108891</RMSE>
+            <NSE>-0.28432897145382263</NSE>
+            <ME>-18.526908188605368</ME>
+            <MAE>18.547306015920839</MAE>
+            <RSR>1.1320735533303845</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>469</n>
-            <Slope>0.00025072373981529014</Slope>
-            <Intercept>0.21407334729591926</Intercept>
-            <SEslope>7.95068257631347E-05</SEslope>
-            <SEintercept>0.0039026192245481118</SEintercept>
-            <R2>0.0208503935853942</R2>
-            <RMSE>48.971592521103794</RMSE>
-            <NSE>-0.28663716651459525</NSE>
-            <ME>-23.134477793282166</ME>
-            <MAE>23.15523968000241</MAE>
-            <RSR>1.133090377545501</RSR>
+            <Slope>0.00025072363808934054</Slope>
+            <Intercept>0.21407335782962722</Intercept>
+            <SEslope>7.9506829313797127E-05</SEslope>
+            <SEintercept>0.0039026193988335686</SEintercept>
+            <R2>0.020850375195474613</R2>
+            <RMSE>48.971592521125842</RMSE>
+            <NSE>-0.28663716651575388</NSE>
+            <ME>-23.134477785124204</ME>
+            <MAE>23.155239689751912</MAE>
+            <RSR>1.1330903775460111</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>469</n>
-            <Slope>0.00042526172726871912</Slope>
-            <Intercept>0.20437653925620719</Intercept>
-            <SEslope>7.5175717078253544E-05</SEslope>
-            <SEintercept>0.0040404450165837814</SEintercept>
-            <R2>0.064129287500408472</R2>
-            <RMSE>53.627237028934687</RMSE>
-            <NSE>-0.2845679557749683</NSE>
-            <ME>-25.278178615581655</ME>
-            <MAE>25.300505671266684</MAE>
-            <RSR>1.132178874961804</RSR>
+            <Slope>0.00042526239694199911</Slope>
+            <Intercept>0.20437646278670452</Intercept>
+            <SEslope>7.5175714383697513E-05</SEslope>
+            <SEintercept>0.0040404448717603486</SEintercept>
+            <R2>0.064129480823455931</R2>
+            <RMSE>53.627237028983558</RMSE>
+            <NSE>-0.28456795577730953</NSE>
+            <ME>-25.278178674978907</ME>
+            <MAE>25.300505723923319</MAE>
+            <RSR>1.1321788749628359</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>469</n>
-            <Slope>0.00055629009168852112</Slope>
-            <Intercept>0.20426645859206505</Intercept>
-            <SEslope>6.1510034838218165E-05</SEslope>
-            <SEintercept>0.0034266526980827536</SEintercept>
-            <R2>0.14904003708837799</R2>
-            <RMSE>55.580968291807253</RMSE>
-            <NSE>-0.28686214557135892</NSE>
-            <ME>-26.292732112662595</ME>
-            <MAE>26.306965699846806</MAE>
-            <RSR>1.1331894382862418</RSR>
+            <Slope>0.0005562902555313</Slope>
+            <Intercept>0.20426643928867036</Intercept>
+            <SEslope>6.1510028523870832E-05</SEslope>
+            <SEintercept>0.0034266523463177875</SEintercept>
+            <R2>0.14904013783557468</R2>
+            <RMSE>55.580968291803508</RMSE>
+            <NSE>-0.2868621455711855</NSE>
+            <ME>-26.29273212762223</ME>
+            <MAE>26.306965694085129</MAE>
+            <RSR>1.1331894382861654</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>364</n>
-            <Slope>0.87587116288452394</Slope>
-            <Intercept>0.022132158788814582</Intercept>
-            <SEslope>0.016157264103786304</SEslope>
-            <SEintercept>0.0037133290416627414</SEintercept>
-            <R2>0.89032394597007625</R2>
-            <RMSE>0.023638817197927559</RMSE>
-            <NSE>0.88482482552589359</NSE>
-            <ME>-0.0050538821618029287</ME>
-            <MAE>0.016594116047088041</MAE>
-            <RSR>0.33890818691736729</RSR>
+            <Slope>0.87587097015877258</Slope>
+            <Intercept>0.022132155856600055</Intercept>
+            <SEslope>0.016157236818950732</SEslope>
+            <SEintercept>0.0037133227709493536</SEintercept>
+            <R2>0.89032423279212436</R2>
+            <RMSE>0.023638799005123064</RMSE>
+            <NSE>0.884825002807067</NSE>
+            <ME>-0.00505392730379148</ME>
+            <MAE>0.016594079481096112</MAE>
+            <RSR>0.33890792608831077</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>340</n>
-            <Slope>0.7753258919724656</Slope>
-            <Intercept>0.032067683153224946</Intercept>
-            <SEslope>0.022938291887998296</SEslope>
-            <SEintercept>0.0052819568125367254</SEintercept>
-            <R2>0.77169478156263793</R2>
-            <RMSE>0.038238650896477433</RMSE>
-            <NSE>0.71456213192828633</NSE>
-            <ME>-0.017105036351758349</ME>
-            <MAE>0.026477085275674123</MAE>
-            <RSR>0.53347759552799057</RSR>
+            <Slope>0.7753258726046397</Slope>
+            <Intercept>0.0320676828395248</Intercept>
+            <SEslope>0.02293829646114796</SEslope>
+            <SEintercept>0.0052819578655871943</SEintercept>
+            <R2>0.77169470251059669</R2>
+            <RMSE>0.038238658265794853</RMSE>
+            <NSE>0.714562021909632</NSE>
+            <ME>-0.017105040904347807</ME>
+            <MAE>0.026477089828263575</MAE>
+            <RSR>0.53347769833929914</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>322</n>
-            <Slope>0.69412004655944337</Slope>
-            <Intercept>0.04760229962475418</Intercept>
-            <SEslope>0.03326407785600969</SEslope>
-            <SEintercept>0.0070214219361779276</SEintercept>
-            <R2>0.57640011160289006</R2>
-            <RMSE>0.044625223461038151</RMSE>
-            <NSE>0.50358229431009516</NSE>
-            <ME>-0.013988067666702325</ME>
-            <MAE>0.031823886512765652</MAE>
-            <RSR>0.70347426093387244</RSR>
+            <Slope>0.69412008119343471</Slope>
+            <Intercept>0.047602291244249723</Intercept>
+            <SEslope>0.033264078124730742</SEslope>
+            <SEintercept>0.0070214219928998942</SEintercept>
+            <R2>0.57640013202362961</R2>
+            <RMSE>0.044625223206811053</RMSE>
+            <NSE>0.50358229996621617</NSE>
+            <ME>-0.013988069073489698</ME>
+            <MAE>0.031823885996242633</MAE>
+            <RSR>0.70347425692622367</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(9)</Name>
             <n>8</n>
-            <Slope>0.079001302592073344</Slope>
-            <Intercept>0.4359857381024364</Intercept>
-            <SEslope>0.047468351602969229</SEslope>
-            <SEintercept>0.021735373942390734</SEintercept>
-            <R2>0.315839751660694</R2>
-            <RMSE>0.018849572399176812</RMSE>
-            <NSE>-1.085549578957989</NSE>
-            <ME>0.014439260836628616</ME>
-            <MAE>0.017042741575148117</MAE>
-            <RSR>1.3508722669402318</RSR>
+            <Slope>0.0790012968132265</Slope>
+            <Intercept>0.43598574081640407</Intercept>
+            <SEslope>0.047468347941605406</SEslope>
+            <SEintercept>0.021735372265881878</SEintercept>
+            <R2>0.31583975338245174</R2>
+            <RMSE>0.018849572490676973</RMSE>
+            <NSE>-1.0855495992054642</NSE>
+            <ME>0.014439260905584367</ME>
+            <MAE>0.017042741644103868</MAE>
+            <RSR>1.3508722734976766</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>364</n>
-            <Slope>0.98473874088907709</Slope>
-            <Intercept>0.82220445453651969</Intercept>
-            <SEslope>0.037595834986757386</SEslope>
-            <SEintercept>0.52646644733391668</SEintercept>
-            <R2>0.654600177077302</R2>
-            <RMSE>5.1570111461353756</RMSE>
-            <NSE>0.48013068100221745</NSE>
-            <ME>0.63847493454328785</ME>
-            <MAE>3.2847833004453517</MAE>
-            <RSR>0.72002854567229035</RSR>
+            <Slope>0.97862027371526317</Slope>
+            <Intercept>0.87750322443175044</Intercept>
+            <SEslope>0.03745746720172842</SEslope>
+            <SEintercept>0.5245288391856916</SEintercept>
+            <R2>0.65344821243438911</R2>
+            <RMSE>5.137198410771294</RMSE>
+            <NSE>0.48411758236303193</NSE>
+            <ME>0.620113790222484</ME>
+            <MAE>3.2584516325526036</MAE>
+            <RSR>0.71726226601422127</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>773</n>
-            <Slope>0.51220865671262683</Slope>
-            <Intercept>238.99518701983948</Intercept>
-            <SEslope>0.028960487365199628</SEslope>
-            <SEintercept>37.327354604218556</SEintercept>
-            <R2>0.28862139303143219</R2>
-            <RMSE>744.57112261184568</RMSE>
-            <NSE>-0.027427221140329472</NSE>
-            <ME>-277.62458981853649</ME>
-            <MAE>411.81263541045575</MAE>
-            <RSR>1.0129649937443703</RSR>
+            <Slope>0.51354401052472853</Slope>
+            <Intercept>240.67254957858995</Intercept>
+            <SEslope>0.029020306456636977</SEslope>
+            <SEintercept>37.404455808007938</SEintercept>
+            <R2>0.28884328960197647</R2>
+            <RMSE>743.922048715341</RMSE>
+            <NSE>-0.025636699059696344</NSE>
+            <ME>-274.53295413275805</ME>
+            <MAE>411.80429236913875</MAE>
+            <RSR>1.0120819496461704</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
             <n>230</n>
-            <Slope>0.54432301359025614</Slope>
-            <Intercept>1.7753968168049545</Intercept>
-            <SEslope>0.054701595494463691</SEslope>
-            <SEintercept>0.4958573787876151</SEintercept>
-            <R2>0.30279031008010426</R2>
-            <RMSE>5.4805929909760867</RMSE>
-            <NSE>0.040707561105134626</NSE>
-            <ME>-1.4742715019222132</ME>
-            <MAE>3.3253411963582695</MAE>
-            <RSR>0.9773032294042715</RSR>
+            <Slope>0.52187236805409853</Slope>
+            <Intercept>2.1110577974648437</Intercept>
+            <SEslope>0.053014066665666819</SEslope>
+            <SEintercept>0.48056031817883554</SEintercept>
+            <R2>0.29825649991364234</R2>
+            <RMSE>5.3766939076005658</RMSE>
+            <NSE>0.0767346316206261</NSE>
+            <ME>-1.298717688641239</ME>
+            <MAE>3.0950559952393446</MAE>
+            <RSR>0.95877587116361584</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Nconc</Name>
             <n>222</n>
-            <Slope>0.38517746214916027</Slope>
-            <Intercept>0.0040889333588166087</Intercept>
-            <SEslope>0.11304144146657602</SEslope>
-            <SEintercept>0.0019552902007084374</SEintercept>
-            <R2>0.050128919711285747</R2>
-            <RMSE>0.008273399773225552</RMSE>
-            <NSE>-6.9073092927415178</NSE>
-            <ME>-0.0063907444935598773</ME>
-            <MAE>0.006463921720120583</MAE>
-            <RSR>2.8056533610576082</RSR>
+            <Slope>0.43323758565143866</Slope>
+            <Intercept>0.003283525310839165</Intercept>
+            <SEslope>0.11584640063513248</SEslope>
+            <SEintercept>0.0020038078868287739</SEintercept>
+            <R2>0.059771983968802567</R2>
+            <RMSE>0.0083068838842819213</RMSE>
+            <NSE>-6.9714437518286747</NSE>
+            <ME>-0.0063769655715705514</ME>
+            <MAE>0.006461881655224308</MAE>
+            <RSR>2.8170084038818839</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Wt</Name>
             <n>303</n>
-            <Slope>0.32245257621090956</Slope>
-            <Intercept>206.00935649113572</Intercept>
-            <SEslope>0.053451057608506582</SEslope>
-            <SEintercept>33.026166525228064</SEintercept>
-            <R2>0.1078655829611358</R2>
-            <RMSE>445.66971749938205</RMSE>
-            <NSE>-0.43857247093567975</NSE>
-            <ME>-128.47078567833262</ME>
-            <MAE>268.15038267946278</MAE>
-            <RSR>1.1974241967678785</RSR>
+            <Slope>0.26337467957596072</Slope>
+            <Intercept>246.25221865536423</Intercept>
+            <SEslope>0.050101924096627351</SEslope>
+            <SEintercept>30.956814747594724</SEintercept>
+            <R2>0.08408666314501223</R2>
+            <RMSE>439.34020310448864</RMSE>
+            <NSE>-0.39800069437228047</NSE>
+            <ME>-117.39249941201456</ME>
+            <MAE>249.05491542614504</MAE>
+            <RSR>1.1804180745373583</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
             <n>62</n>
-            <Slope>-0.14149879361170423</Slope>
-            <Intercept>3.2320672321396611</Intercept>
-            <SEslope>0.133749178774556</SEslope>
-            <SEintercept>1.502617034481097</SEintercept>
-            <R2>0.01831240061834527</R2>
-            <RMSE>10.461145707085978</RMSE>
-            <NSE>-7.8563745928360174</NSE>
-            <ME>-8.9482804582138584</ME>
-            <MAE>9.2207300477757475</MAE>
-            <RSR>2.9518688726531637</RSR>
+            <Slope>-0.1846095966706624</Slope>
+            <Intercept>3.6986742605881551</Intercept>
+            <SEslope>0.12527992402883217</SEslope>
+            <SEintercept>1.4074684394251589</SEintercept>
+            <R2>0.034926473405164637</R2>
+            <RMSE>10.436966340749018</RMSE>
+            <NSE>-7.8154815484778783</NSE>
+            <ME>-8.9416866802454962</ME>
+            <MAE>9.125693646303219</MAE>
+            <RSR>2.9450460713225026</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>109</n>
-            <Slope>0.91131643385118943</Slope>
-            <Intercept>4252.7286920301358</Intercept>
-            <SEslope>0.03641090124035716</SEslope>
-            <SEintercept>601.65505310044011</SEintercept>
-            <R2>0.854111000354178</R2>
-            <RMSE>3906.943268471015</RMSE>
-            <NSE>0.66251528314591313</NSE>
-            <ME>2914.1812050642311</ME>
-            <MAE>3350.5112221958575</MAE>
-            <RSR>0.57826337147635887</RSR>
+            <Slope>0.78817766286076074</Slope>
+            <Intercept>3656.7505958980837</Intercept>
+            <SEslope>0.031567172726025342</SEslope>
+            <SEintercept>521.61710739685157</SEintercept>
+            <R2>0.85350782918198853</R2>
+            <RMSE>2657.6590239500465</RMSE>
+            <NSE>0.84383690011409773</NSE>
+            <ME>459.60517906624017</ME>
+            <MAE>2024.7895924440495</MAE>
+            <RSR>0.39335786619327118</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>423</n>
-            <Slope>0.20030261162366453</Slope>
-            <Intercept>36.669475108183491</Intercept>
-            <SEslope>0.027904204129517454</SEslope>
-            <SEintercept>12.102889209128133</SEintercept>
-            <R2>0.10904541605821028</R2>
-            <RMSE>371.76285452859929</RMSE>
-            <NSE>-0.34477883200031734</NSE>
-            <ME>-196.95740465267238</ME>
-            <MAE>221.42288614455597</MAE>
-            <RSR>1.1582744432237879</RSR>
+            <Slope>0.1839038527806183</Slope>
+            <Intercept>34.066223910621659</Intercept>
+            <SEslope>0.025573640586914293</SEslope>
+            <SEintercept>11.092053988025304</SEintercept>
+            <R2>0.10939547145326845</R2>
+            <RMSE>372.16328475864918</RMSE>
+            <NSE>-0.34767734699487662</NSE>
+            <ME>-204.35145661579639</ME>
+            <MAE>222.76216591086487</MAE>
+            <RSR>1.1595220345205277</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
             <n>331</n>
-            <Slope>0.81341480822754253</Slope>
-            <Intercept>0.24041382151181034</Intercept>
-            <SEslope>0.027221810705287282</SEslope>
-            <SEintercept>0.021299215545147646</SEintercept>
-            <R2>0.73074144626945892</R2>
-            <RMSE>0.17556780481596518</RMSE>
-            <NSE>0.57378881095605783</NSE>
-            <ME>0.10331766306918323</ME>
-            <MAE>0.125569760945187</MAE>
-            <RSR>0.65186159723298065</RSR>
+            <Slope>0.81341454482372233</Slope>
+            <Intercept>0.24041379776563576</Intercept>
+            <SEslope>0.027221793595604102</SEslope>
+            <SEintercept>0.021299202157984171</SEintercept>
+            <R2>0.73074156617553787</R2>
+            <RMSE>0.17556763407213905</RMSE>
+            <NSE>0.57378963995649856</NSE>
+            <ME>0.10331744578325602</ME>
+            <MAE>0.12556954365925979</MAE>
+            <RSR>0.651860963282221</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
             <n>82</n>
-            <Slope>-0.765753498802639</Slope>
-            <Intercept>2.3219834072016297</Intercept>
-            <SEslope>1.2605776514714102</SEslope>
-            <SEintercept>0.33491831881178841</SEintercept>
-            <R2>0.0045914530880617477</R2>
-            <RMSE>2.9765192448896838</RMSE>
-            <NSE>-236.42399315162351</NSE>
-            <ME>1.9998920961492475</ME>
-            <MAE>2.0535241383985325</MAE>
-            <RSR>15.3143259270852</RSR>
+            <Slope>-0.68535932119867926</Slope>
+            <Intercept>2.1200754946675979</Intercept>
+            <SEslope>1.2250159061926722</SEslope>
+            <SEintercept>0.32547004727622242</SEintercept>
+            <R2>0.0038973311491111717</R2>
+            <RMSE>2.8056314055705882</RMSE>
+            <NSE>-209.94461531352823</NSE>
+            <ME>1.8126488953561224</ME>
+            <MAE>1.8717638005138542</MAE>
+            <RSR>14.435100276923146</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>121</n>
-            <Slope>0.28864117513780591</Slope>
-            <Intercept>110.71619154877432</Intercept>
-            <SEslope>0.13898257610586287</SEslope>
-            <SEintercept>9.0297522065149813</SEintercept>
-            <R2>0.034977310831682318</R2>
-            <RMSE>119.19217553662884</RMSE>
-            <NSE>-4.3776445207494756</NSE>
-            <ME>82.446228725205913</ME>
-            <MAE>93.745283808220208</MAE>
-            <RSR>2.3093724640262745</RSR>
+            <Slope>0.28871931651797994</Slope>
+            <Intercept>110.71920278985165</Intercept>
+            <SEslope>0.13897871959186162</SEslope>
+            <SEintercept>9.0295016472953442</SEintercept>
+            <R2>0.034997463009827312</R2>
+            <RMSE>119.1937609586311</RMSE>
+            <NSE>-4.3777875820302663</NSE>
+            <ME>82.45234536658937</ME>
+            <MAE>93.751373016203743</MAE>
+            <RSR>2.3094031818976397</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
@@ -6022,128 +3532,128 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>638</n>
-            <Slope>0.84166669594136123</Slope>
-            <Intercept>0.99255533383943462</Intercept>
-            <SEslope>0.023999829386324688</SEslope>
-            <SEintercept>0.0983065272994498</SEintercept>
-            <R2>0.65914270737349567</R2>
-            <RMSE>1.5126617291030757</RMSE>
-            <NSE>0.56939099851909425</NSE>
-            <ME>0.45644862472761555</ME>
-            <MAE>1.0212536978341922</MAE>
-            <RSR>0.65569357610236467</RSR>
+            <Slope>0.84164108005714533</Slope>
+            <Intercept>0.99271494881231082</Intercept>
+            <SEslope>0.024001244303662409</SEslope>
+            <SEintercept>0.098312322991062781</SEintercept>
+            <R2>0.65910253964811782</R2>
+            <RMSE>1.5127738370618593</RMSE>
+            <NSE>0.5693271686698248</NSE>
+            <ME>0.45652150591147783</ME>
+            <MAE>1.0213564457231212</MAE>
+            <RSR>0.65574217154640224</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>257</n>
-            <Slope>0.87710140052920871</Slope>
-            <Intercept>1.4247091718792682</Intercept>
-            <SEslope>0.029542565117982988</SEslope>
-            <SEintercept>0.14014426662051385</SEintercept>
-            <R2>0.77561926669234527</R2>
-            <RMSE>1.7146447120900255</RMSE>
-            <NSE>0.65245619501811192</NSE>
-            <ME>0.96413720417991866</ME>
-            <MAE>1.2708873068669748</MAE>
-            <RSR>0.5883803994497665</RSR>
+            <Slope>0.87464480252368859</Slope>
+            <Intercept>1.4561800775148286</Intercept>
+            <SEslope>0.029985053790717385</SEslope>
+            <SEintercept>0.14224334807402309</SEintercept>
+            <R2>0.7694084628598421</R2>
+            <RMSE>1.7451112609261519</RMSE>
+            <NSE>0.63999585218090638</NSE>
+            <ME>0.9864018195719706</ME>
+            <MAE>1.2904303266995514</MAE>
+            <RSR>0.59883499686441433</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
             <n>370</n>
-            <Slope>0.76611417136681781</Slope>
-            <Intercept>78.746880260768279</Intercept>
-            <SEslope>0.02593266427188478</SEslope>
-            <SEintercept>5.0185951917753888</SEintercept>
-            <R2>0.70340657186407518</R2>
-            <RMSE>72.687557702900179</RMSE>
-            <NSE>0.55360999090039154</NSE>
-            <ME>41.313782157228715</ME>
-            <MAE>55.330088912808336</MAE>
-            <RSR>0.66722076527604812</RSR>
+            <Slope>0.76606874207511444</Slope>
+            <Intercept>78.760644130621145</Intercept>
+            <SEslope>0.0259340517451573</SEslope>
+            <SEintercept>5.0188637012744968</SEintercept>
+            <R2>0.70335950307282025</R2>
+            <RMSE>72.695134506433376</RMSE>
+            <NSE>0.55351692447245426</NSE>
+            <ME>41.320275132803609</ME>
+            <MAE>55.336552582116873</MAE>
+            <RSR>0.66729031501484148</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>171</n>
-            <Slope>0.0091894276486069858</Slope>
-            <Intercept>22438.646609388052</Intercept>
-            <SEslope>0.011430921683296047</SEslope>
-            <SEintercept>162.40904806605752</SEintercept>
-            <R2>0.0038095187025898314</R2>
-            <RMSE>16375.459664721173</RMSE>
-            <NSE>-1.5349153238342694</NSE>
-            <ME>12726.746830074215</ME>
-            <MAE>13248.726449455082</MAE>
-            <RSR>1.5874795298248785</RSR>
+            <Slope>0.00906830234113331</Slope>
+            <Intercept>22438.700290894758</Intercept>
+            <SEslope>0.011410687524429199</SEslope>
+            <SEintercept>162.12156376942514</SEintercept>
+            <R2>0.0037232453012158162</R2>
+            <RMSE>16375.101728150337</RMSE>
+            <NSE>-1.5348045081380271</NSE>
+            <ME>12725.613244428398</ME>
+            <MAE>13248.735020665208</MAE>
+            <RSR>1.5874448305253894</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
-            <n>799</n>
-            <Slope>0.31851966525236919</Slope>
-            <Intercept>23.013248650696351</Intercept>
-            <SEslope>0.030263955610071253</SEslope>
-            <SEintercept>1.839744853477943</SEintercept>
-            <R2>0.12202404549554113</R2>
-            <RMSE>33.289615782501635</RMSE>
-            <NSE>-0.44510447478069914</NSE>
-            <ME>-13.865833381340609</ME>
-            <MAE>17.593585778991038</MAE>
-            <RSR>1.201372479036156</RSR>
+            <n>800</n>
+            <Slope>0.3202773805073591</Slope>
+            <Intercept>22.911237388215554</Intercept>
+            <SEslope>0.030226954792352715</SEslope>
+            <SEintercept>1.8364832905354587</SEintercept>
+            <R2>0.12333703686137743</R2>
+            <RMSE>33.267004811690853</RMSE>
+            <NSE>-0.440344530029704</NSE>
+            <ME>-13.837789428152062</ME>
+            <MAE>17.56305090416561</MAE>
+            <RSR>1.1993932213278375</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.N</Name>
             <n>68</n>
-            <Slope>-0.0072642521839090049</Slope>
-            <Intercept>1.7557174481004541</Intercept>
-            <SEslope>0.01035888550534082</SEslope>
-            <SEintercept>0.12526869291965728</SEintercept>
-            <R2>0.007395846891605995</R2>
-            <RMSE>10.788694679102244</RMSE>
-            <NSE>-1.5216650740097069</NSE>
-            <ME>-8.32091446971744</ME>
-            <MAE>8.32091446971744</MAE>
-            <RSR>1.5762556150884284</RSR>
+            <Slope>-0.01086655300364321</Slope>
+            <Intercept>2.4170961457061342</Intercept>
+            <SEslope>0.014960494057190488</SEslope>
+            <SEintercept>0.18091536343463943</SEintercept>
+            <R2>0.0079303066419113</R2>
+            <RMSE>10.347495778115409</RMSE>
+            <NSE>-1.319637460543722</NSE>
+            <ME>-7.69557304767179</ME>
+            <MAE>7.69557304767179</MAE>
+            <RSR>1.5117953383138507</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Wt</Name>
             <n>157</n>
-            <Slope>0.3095900707430882</Slope>
-            <Intercept>66.14699341026666</Intercept>
-            <SEslope>0.081357151674560618</SEslope>
-            <SEintercept>19.982463227639169</SEintercept>
-            <R2>0.08544033120983241</R2>
-            <RMSE>165.16538912405633</RMSE>
-            <NSE>-1.013086959261857</NSE>
-            <ME>-83.171856158346372</ME>
-            <MAE>111.50905451479579</MAE>
-            <RSR>1.4143071622990011</RSR>
+            <Slope>0.33011029402345776</Slope>
+            <Intercept>80.7903195951885</Intercept>
+            <SEslope>0.08759611741608829</SEslope>
+            <SEintercept>21.514841155608835</SEintercept>
+            <R2>0.0839349855121535</R2>
+            <RMSE>162.18947095165817</RMSE>
+            <NSE>-0.94119766432633067</NSE>
+            <ME>-64.090505542904481</ME>
+            <MAE>108.06117752746972</MAE>
+            <RSR>1.388824448227004</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.N</Name>
             <n>301</n>
-            <Slope>1.2396411582997973</Slope>
-            <Intercept>-0.56478476793252863</Intercept>
-            <SEslope>0.036401990839164136</SEslope>
-            <SEintercept>0.17310190223243416</SEintercept>
-            <R2>0.79502148163808428</R2>
-            <RMSE>1.8242822809966042</RMSE>
-            <NSE>0.52560320334387278</NSE>
-            <ME>0.38164656894999993</ME>
-            <MAE>1.4101932755529352</MAE>
-            <RSR>0.68761960964202173</RSR>
+            <Slope>1.1809675456631745</Slope>
+            <Intercept>-0.46260743587590536</Intercept>
+            <SEslope>0.033870361289242826</SEslope>
+            <SEintercept>0.1610632779501672</SEintercept>
+            <R2>0.802604768673053</R2>
+            <RMSE>1.6430511653951836</RMSE>
+            <NSE>0.61517804326402592</NSE>
+            <ME>0.25210016022109305</ME>
+            <MAE>1.2632744310247135</MAE>
+            <RSR>0.61930887162577675</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Wt</Name>
             <n>430</n>
-            <Slope>0.69529331172700781</Slope>
-            <Intercept>57.033789524780673</Intercept>
-            <SEslope>0.028208240249917513</SEslope>
-            <SEintercept>21.129081368202723</SEintercept>
-            <R2>0.58669422893609524</R2>
-            <RMSE>285.78360143379723</RMSE>
-            <NSE>0.42994971648883928</NSE>
-            <ME>-139.91798781072376</ME>
-            <MAE>180.16325340922268</MAE>
-            <RSR>0.754138306398378</RSR>
+            <Slope>0.68130956418127286</Slope>
+            <Intercept>65.099421122816523</Intercept>
+            <SEslope>0.028618581434753779</SEslope>
+            <SEintercept>21.436443054231884</SEintercept>
+            <R2>0.56974183901259479</R2>
+            <RMSE>290.90263690807956</RMSE>
+            <NSE>0.409345017080311</NSE>
+            <ME>-140.89096297433545</ME>
+            <MAE>189.11459251065864</MAE>
+            <RSR>0.76764664180880837</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value</Name>
@@ -6176,16 +3686,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>453</n>
-            <Slope>0.34606027311147519</Slope>
-            <Intercept>325.0321227888254</Intercept>
-            <SEslope>0.03509923225373128</SEslope>
-            <SEintercept>22.982173311348436</SEintercept>
-            <R2>0.17732165707725234</R2>
-            <RMSE>250.84781754009282</RMSE>
-            <NSE>-0.0737154254228849</NSE>
-            <ME>-72.812938573487543</ME>
-            <MAE>174.65628949664568</MAE>
-            <RSR>1.0350580624755705</RSR>
+            <Slope>0.35325102098480005</Slope>
+            <Intercept>319.52673218701443</Intercept>
+            <SEslope>0.0352718791744681</SEslope>
+            <SEintercept>23.095218560468446</SEintercept>
+            <R2>0.18193660060823469</R2>
+            <RMSE>250.72605009843539</RMSE>
+            <NSE>-0.072673264891481626</NSE>
+            <ME>-73.943608675420819</ME>
+            <MAE>174.36121070933137</MAE>
+            <RSR>1.034555620901749</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -6203,100 +3713,100 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>40</n>
-            <Slope>1.204319713726757</Slope>
-            <Intercept>-1.0807433589914375</Intercept>
-            <SEslope>0.052844695938999209</SEslope>
-            <SEintercept>0.69712658277661577</SEintercept>
-            <R2>0.93182324117322257</R2>
-            <RMSE>2.7190834883429695</RMSE>
-            <NSE>0.80860558616985334</NSE>
-            <ME>1.2967457234226267</ME>
-            <MAE>1.8903635655328193</MAE>
-            <RSR>0.43198327917223023</RSR>
+            <Slope>1.1966406514747516</Slope>
+            <Intercept>-0.95647637794411189</Intercept>
+            <SEslope>0.051337618829033128</SEslope>
+            <SEintercept>0.67724523996665265</SEintercept>
+            <R2>0.93463158035343974</R2>
+            <RMSE>2.6712847268378459</RMSE>
+            <NSE>0.81527548504501168</NSE>
+            <ME>1.3316582005196591</ME>
+            <MAE>1.8290209709749499</MAE>
+            <RSR>0.4243894462414371</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>170</n>
-            <Slope>0.99513473724939661</Slope>
-            <Intercept>166.75411189714646</Intercept>
-            <SEslope>0.033493761529614176</SEslope>
-            <SEintercept>51.418274347398359</SEintercept>
-            <R2>0.84011364708155278</R2>
-            <RMSE>323.72915514363797</RMSE>
-            <NSE>0.75059888178613376</NSE>
-            <ME>159.98368918401013</ME>
-            <MAE>241.98629748366096</MAE>
-            <RSR>0.49792976694771751</RSR>
+            <n>181</n>
+            <Slope>1.0062591961251495</Slope>
+            <Intercept>128.37085423399867</Intercept>
+            <SEslope>0.03015878921176901</SEslope>
+            <SEintercept>45.087842610337127</SEintercept>
+            <R2>0.86148169630350746</R2>
+            <RMSE>299.31055785714295</RMSE>
+            <NSE>0.79417525163496061</NSE>
+            <ME>136.76800888746982</ME>
+            <MAE>220.77976371751518</MAE>
+            <RSR>0.45242413182671337</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
-            <n>98</n>
-            <Slope>1.5622265430038067</Slope>
-            <Intercept>-4.0436152195943666</Intercept>
-            <SEslope>0.075584973592762519</SEslope>
-            <SEintercept>0.73067424317704843</SEintercept>
-            <R2>0.81650887988307908</R2>
-            <RMSE>3.7760905899421067</RMSE>
-            <NSE>0.080915233832683953</NSE>
-            <ME>0.91977333982261589</ME>
-            <MAE>2.9794050743890268</MAE>
-            <RSR>0.95378527467455543</RSR>
+            <n>108</n>
+            <Slope>1.3262741014055501</Slope>
+            <Intercept>-2.7889735253742938</Intercept>
+            <SEslope>0.06050912624919446</SEslope>
+            <SEintercept>0.56641682302657059</SEintercept>
+            <R2>0.8192434551751413</R2>
+            <RMSE>2.7653098619181389</RMSE>
+            <NSE>0.50542230133131372</NSE>
+            <ME>-0.017295652247906766</ME>
+            <MAE>2.1960709058803207</MAE>
+            <RSR>0.69999876823667706</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Nconc</Name>
-            <n>94</n>
-            <Slope>0.71133979067202369</Slope>
-            <Intercept>0.0077419881803304259</Intercept>
-            <SEslope>0.1136975770529093</SEslope>
-            <SEintercept>0.00262073462112497</SEintercept>
-            <R2>0.29847459030903578</R2>
-            <RMSE>0.0046045661605457972</RMSE>
-            <NSE>-0.36312685275819034</NSE>
-            <ME>0.0011864725552015894</ME>
-            <MAE>0.003221054384168007</MAE>
-            <RSR>1.1613033640099226</RSR>
+            <n>104</n>
+            <Slope>0.67132056523994965</Slope>
+            <Intercept>0.0089387121002575953</Intercept>
+            <SEslope>0.10508313543978944</SEslope>
+            <SEintercept>0.0023907351199460554</SEintercept>
+            <R2>0.28577711506173142</R2>
+            <RMSE>0.0046394060232431891</RMSE>
+            <NSE>-0.39475415943154091</NSE>
+            <ME>0.0015732785015595307</ME>
+            <MAE>0.0033167733013910114</MAE>
+            <RSR>1.1753055184694317</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
-            <n>146</n>
-            <Slope>0.987713002223117</Slope>
-            <Intercept>2656.3756505112706</Intercept>
-            <SEslope>0.034076809028733154</SEslope>
-            <SEintercept>505.03674697404466</SEintercept>
-            <R2>0.85367706464911608</R2>
-            <RMSE>3761.9510523035638</RMSE>
-            <NSE>0.70118463045667689</NSE>
-            <ME>2495.0987222445656</ME>
-            <MAE>2997.2724976571894</MAE>
-            <RSR>0.54476480147859463</RSR>
+            <n>160</n>
+            <Slope>0.854556602386346</Slope>
+            <Intercept>2193.637023358242</Intercept>
+            <SEslope>0.028618928164250403</SEslope>
+            <SEintercept>411.86728723418884</SEintercept>
+            <R2>0.8494678999678088</R2>
+            <RMSE>2638.9982694768714</RMSE>
+            <NSE>0.84682765964193707</NSE>
+            <ME>344.46804399698613</ME>
+            <MAE>1955.5103473747658</MAE>
+            <RSR>0.39014742499576371</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
-            <n>91</n>
-            <Slope>0.56158801486394738</Slope>
-            <Intercept>6.6148783207660937</Intercept>
-            <SEslope>0.1082119961732184</SEslope>
-            <SEintercept>1.4157770744510099</SEintercept>
-            <R2>0.23231526310552575</R2>
-            <RMSE>2.927348855575163</RMSE>
-            <NSE>-0.39130144319157489</NSE>
-            <ME>0.98311504313432219</ME>
-            <MAE>1.9691820902183812</MAE>
-            <RSR>1.1730355562996868</RSR>
+            <n>101</n>
+            <Slope>0.55480578769107858</Slope>
+            <Intercept>6.8320409413327834</Intercept>
+            <SEslope>0.10005559641841334</SEslope>
+            <SEintercept>1.2915453376230455</SEintercept>
+            <R2>0.23697509857222621</R2>
+            <RMSE>2.9230752619253315</RMSE>
+            <NSE>-0.42540642324584343</NSE>
+            <ME>1.1896671259834668</ME>
+            <MAE>2.0265175138129172</MAE>
+            <RSR>1.1879787407029727</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
-            <n>189</n>
-            <Slope>1.07353218412872</Slope>
-            <Intercept>-12.094791274990598</Intercept>
-            <SEslope>0.057410478946902106</SEslope>
-            <SEintercept>32.14630100223976</SEintercept>
-            <R2>0.65154943079847871</R2>
-            <RMSE>199.10760561143155</RMSE>
-            <NSE>0.36850880295897526</NSE>
-            <ME>24.726575963595685</ME>
-            <MAE>164.17835816345823</MAE>
-            <RSR>0.79255912951416907</RSR>
+            <n>203</n>
+            <Slope>1.0195277079233822</Slope>
+            <Intercept>-25.217253777068379</Intercept>
+            <SEslope>0.047145737336651158</SEslope>
+            <SEintercept>25.714215018695224</SEintercept>
+            <R2>0.6993905565204952</R2>
+            <RMSE>167.33376722806594</RMSE>
+            <NSE>0.54885891998894576</NSE>
+            <ME>-15.742460496240266</ME>
+            <MAE>137.55724819173526</MAE>
+            <RSR>0.67001396265957247</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -9234,10 +6744,10 @@ namespace Models
                 </LL>
                 <KL>
                   <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.04</double>
+                  <double>0.04</double>
                   <double>0.06</double>
                   <double>0.06</double>
                 </KL>
@@ -10531,9 +8041,13 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>Spike</Name>
+          <Name>SpikeWt</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -24308,6 +21822,195 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
+      <Graph>
+        <Name>Harvest Yield</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
+          <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Caption />
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed Yield</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted Yield</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Harvest Biomass</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainNumber</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Wheat.Grain.Number</XFieldName>
+          <YFieldName>Predicted.Wheat.Grain.Number</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainN</Name>
+        <Series>
+          <Name>Series 0</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Wheat.Grain.N</XFieldName>
+          <YFieldName>Predicted.Wheat.Grain.N</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Graph>
       <Name>Harvest Yield</Name>
@@ -24497,49 +22200,6 @@ namespace Models
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LAI</Name>
-      <Series>
-        <Name>Series1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>DailyReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Folder>
   <Folder>
@@ -29368,7 +27028,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Above Ground Biomass (g/m2)</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -65342,8 +63002,8 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
           <Operations>
             <Name>Sowing</Name>
             <Operation>
-              <Date>2011-07-25T00:00:00</Date>
-              <Action> [Wheat].Sow(population:100., cultivar:"HAR1685", depth:50, rowSpacing:250);</Action>
+              <Date>2011-07-25</Date>
+              <Action> [Wheat].Sow(population:23, cultivar:"HAR1685", depth:50, rowSpacing:250);</Action>
             </Operation>
           </Operations>
           <Operations>
@@ -65367,17 +63027,17 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                   <double>0.35</double>
                   <double>0.35</double>
                   <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
+                  <double>0.4</double>
+                  <double>0.45</double>
+                  <double>0.5</double>
                 </LL>
                 <KL>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
                 </KL>
                 <XF>
                   <double>1</double>
@@ -65448,7 +63108,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>75</CN2Bare>
+              <CN2Bare>78</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -65542,10 +63202,10 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <string>130-150</string>
               </Depth>
               <OC>
-                <double>1.36</double>
-                <double>1.6</double>
-                <double>1.23</double>
-                <double>1.06</double>
+                <double>1.54</double>
+                <double>0.98</double>
+                <double>0.84</double>
+                <double>0.42</double>
               </OC>
               <FBiom>
                 <double>0.02</double>
@@ -65554,10 +63214,10 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <double>0.01</double>
               </FBiom>
               <FInert>
-                <double>0.3</double>
-                <double>0.6</double>
-                <double>0.9</double>
-                <double>0.9</double>
+                <double>0.54</double>
+                <double>0.84</double>
+                <double>0.99</double>
+                <double>0.99</double>
               </FInert>
               <OCUnits>Total</OCUnits>
             </SoilOrganicMatter>
@@ -65589,10 +63249,10 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <double>900</double>
               </Thickness>
               <NO3>
-                <double>14.4</double>
+                <double>20</double>
                 <double>10</double>
-                <double>2.45</double>
-                <double>1.08</double>
+                <double>5</double>
+                <double>0.5</double>
               </NO3>
               <NH4>
                 <double>0.6</double>
@@ -65618,8 +63278,8 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <SW>
                 <double>0.55</double>
                 <double>0.55</double>
-                <double>0.55</double>
-                <double>0.45</double>
+                <double>0.35</double>
+                <double>0.35</double>
                 <double>0.35</double>
               </SW>
               <NO3Units>ppm</NO3Units>
@@ -65702,6 +63362,10 @@ namespace Models
         <Name>Phenology</Name>
         <Series>
           <Name>Predicted</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -66148,6 +63812,70 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Stems</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Observed</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.Structure.TotalStemPopn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
