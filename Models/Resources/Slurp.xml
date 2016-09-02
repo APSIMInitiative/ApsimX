@@ -70,7 +70,7 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);
 			  </XYPairs>
 			</AirTemperatureFunction>
 			<Constant>
-			  <Name>PotentialRootFrontVelocity</Name>
+			  <Name>Potential</Name>
 			  <Value>0</Value>
 			  <Units>mm/d</Units>
 			</Constant>
@@ -378,7 +378,7 @@ This is important in SLURP as it is set for each species to represent their diff
 ]]></MemoText>
         </Memo>
         <Command>[Root].MaximumRootDepth.Value = 800</Command>
-        <Command>[Root].RootFrontVelocity.Value = 15</Command>
+        <Command>[Root].RootFrontVelocity.Potential.Value = 15</Command>
         <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.0</Command>

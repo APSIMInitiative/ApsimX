@@ -214,12 +214,6 @@ namespace Models.PMF.Organs
             [Units("mm")]
             public double Depth { get; set; }
 
-            /// <summary>Gets depth or the mid point of the cuttent layer under examination</summary>
-            /// <value>The depth.</value>
-            [XmlIgnore]
-            [Units("mm")]
-            public double LayerMidPointDepth { get; set; }
-
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
             /// <param name="plantName">The name of the parent plant.</param>
@@ -246,7 +240,7 @@ namespace Models.PMF.Organs
             /// <param name="initialDM">Initial dry matter</param>
             /// <param name="population">plant population</param>
             /// <param name="maxNConc">maximum n concentration</param>
-            private void Initialise(double depth, double initialDM, double population, double maxNConc)
+            public void Initialise(double depth, double initialDM, double population, double maxNConc)
             {
                 Depth = depth;
                 double AccumulatedDepth = 0;
@@ -354,15 +348,15 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNDemand { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total N Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNAllocated { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total DM Demanded by roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMDemand { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total DM Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMAllocated { get; set; }
@@ -371,71 +365,25 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double NTakenUp { get; set; }
 
-        /// <summary>Plant depth.</summary>
+        /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.Depth;
-            }
-        }
-        /// <summary>Layer mid point depth.</summary>
-        [XmlIgnore]
-        public double LayerMidPointDepth
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.LayerMidPointDepth;
-            }
-        }
+        public double Depth { get { return plantZone.Depth; } }
+
         /// <summary>Layer live</summary>
         [XmlIgnore]
-        public Biomass[] LayerLive
-        {
-            get
-            {
-                if (plantZone == null)
-                    return null;
-                else
-                    return plantZone.LayerLive;
-            }
-        }
+        public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
+
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead
-        {
-            get
-            {
-                if (plantZone == null)
-                    return null;
-                else
-                    return plantZone.LayerDead;
-            }
-        }
+        public Biomass[] LayerDead { get { return plantZone.LayerDead; } }
 
         /// <summary>Gets or sets the length.</summary>
         /// <value>The length.</value>
         [XmlIgnore]
-        public double Length
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.Length;
-            }
-        }
+        public double Length { get { return plantZone.Length; } }
 
         #endregion
-
+    
         #region Functions
 
         /// <summary>Constructor</summary>
@@ -469,11 +417,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
-                if (soil == null)
-                    throw new Exception("Cannot find soil");
-
-                plantZone = new ZoneState(soil, Plant.Name, Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
+                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
                 InitialiseZones();
             }
         }
@@ -1075,15 +1019,8 @@ namespace Models.PMF.Organs
                 double[] SW = zone.Water;
                 double[] supply = new double[myZone.soil.Thickness.Length];
 
-                double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-                double depth_to_layer_top = 0;      // depth to top of layer (mm)
-
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
-                    depth_to_layer_bottom += myZone.soil.Thickness[layer];
-                    depth_to_layer_top = depth_to_layer_bottom - myZone.soil.Thickness[layer];
-                    myZone.LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
-
                     if (layer <= LayerIndex(myZone.Depth))
                         supply[layer] = Math.Max(0.0, myZone.soilCrop.KL[layer] * KLModifier.Value *
                             (SW[layer] - myZone.soilCrop.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
