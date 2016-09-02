@@ -214,6 +214,13 @@ namespace Models.PMF.Organs
             [Units("mm")]
             public double Depth { get; set; }
 
+            /// <summary>Gets depth or the mid point of the cuttent layer under examination</summary>
+            /// <value>The depth.</value>
+            [XmlIgnore]
+            [Units("mm")]
+            public double LayerMidPointDepth { get; set; }
+
+
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
             /// <param name="plantName">The name of the parent plant.</param>
@@ -368,9 +375,12 @@ namespace Models.PMF.Organs
         /// <summary>Root depth.</summary>
         [XmlIgnore]
         public double Depth { get { return plantZone.Depth; } }
-
-        /// <summary>Layer live</summary>
+        /// <summary>Layer mid point depth.</summary>
         [XmlIgnore]
+        public double LayerMidPointDepth { get { return plantZone.LayerMidPointDepth; } }
+
+/// <summary>Layer live</summary>
+[XmlIgnore]
         public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
@@ -1018,9 +1028,16 @@ namespace Models.PMF.Organs
             {
                 double[] SW = zone.Water;
                 double[] supply = new double[myZone.soil.Thickness.Length];
+                double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+                double depth_to_layer_top = 0;      // depth to top of layer (mm)
+                
 
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
+                    depth_to_layer_bottom += myZone.soil.Thickness[layer];
+                    depth_to_layer_top = depth_to_layer_bottom - myZone.soil.Thickness[layer];
+                    myZone.LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
+
                     if (layer <= LayerIndex(myZone.Depth))
                         supply[layer] = Math.Max(0.0, myZone.soilCrop.KL[layer] * KLModifier.Value *
                             (SW[layer] - myZone.soilCrop.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
@@ -1097,14 +1114,6 @@ namespace Models.PMF.Organs
                     child.Document(tags, headingLevel + 5, indent + 1);
             }
 
-            tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity described above is influenced by temperature as:", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "TemperatureEffect")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-
             tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
 
             tags.Add(new AutoDocumentation.Heading("Drymatter Demands", headingLevel + 1));
@@ -1117,7 +1126,13 @@ namespace Models.PMF.Organs
                 if (child.Name == "PartitionFraction")
                     child.Document(tags, headingLevel + 5, indent + 1);
             }
-            
+            tags.Add(new AutoDocumentation.Paragraph("The daily loss of roots is calculated using:", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "SenescenceRate")
+                    child.Document(tags, headingLevel + 5, indent + 1);
+            }
+
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
             if (NitrogenDemandSwitch != null)
@@ -1157,8 +1172,7 @@ namespace Models.PMF.Organs
                     | (child.Name != "KLModifier")
                     | (child.Name != "SoilWaterEffect")
                     | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
-                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumNConc")
                     | (child.Name != "MaximumRootDepth")
                     | (child.Name != "KLModifier")
                     | (child.Name != "RootFrontVelocity")
@@ -1182,8 +1196,7 @@ namespace Models.PMF.Organs
                     | (child.Name != "KLModifier")
                     | (child.Name != "SoilWaterEffect")
                     | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
-                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumNConc")
                     | (child.Name != "MaximumRootDepth")
                     | (child.Name != "KLModifier")
                     | (child.Name != "RootFrontVelocity")
