@@ -1203,16 +1203,6 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Units>kgN/ha</Units>
         </Constant>
         <Constant>
-          <Name>TemperatureEffect</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-No effect of temperature on root growth is currently captured in the model.
-]]></MemoText>
-          </Memo>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SoilWaterEffect</Name>
           <Memo>
             <Name>memo</Name>

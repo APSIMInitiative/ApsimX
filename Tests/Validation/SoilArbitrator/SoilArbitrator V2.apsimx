@@ -671,22 +671,6 @@ Stuff regarding Root]]></MemoText>
                 <string>[Root].LayerDead</string>
               </Propertys>
             </CompositeBiomass>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
             <Constant>
               <Name>RootFrontVelocity</Name>
               <Value>0</Value>
@@ -1061,22 +1045,6 @@ Stuff regarding Root]]></MemoText>
                 <string>[Root].LayerDead</string>
               </Propertys>
             </CompositeBiomass>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
             <Constant>
               <Name>RootFrontVelocity</Name>
               <Value>0</Value>

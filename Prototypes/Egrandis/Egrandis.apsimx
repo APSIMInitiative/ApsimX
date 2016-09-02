@@ -319,26 +319,6 @@
           <Start>Emergence</Start>
           <End>Old</End>
         </PhaseBasedSwitch>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <Constant>
           <Name>RootFrontVelocity</Name>
           <Value>10</Value>

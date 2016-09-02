@@ -1247,22 +1247,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>15</double>
-              <double>25</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
           <Value>20</Value>

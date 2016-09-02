@@ -104,10 +104,6 @@ namespace Models.PMF.Organs
         [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
-        /// <summary>The temperature effect</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
@@ -529,9 +525,8 @@ namespace Models.PMF.Organs
             {
                 // Do Root Front Advance
                 int RootLayer = LayerIndex(plantZone.Depth);
-                double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
-                plantZone.Depth = plantZone.Depth + RootFrontVelocity.Value * plantZone.soilCrop.XF[RootLayer] * TEM;
+                plantZone.Depth = plantZone.Depth + RootFrontVelocity.Value * plantZone.soilCrop.XF[RootLayer];
 
                 //Limit root depth for impeded layers
                 double MaxDepth = 0;
@@ -1165,19 +1160,13 @@ namespace Models.PMF.Organs
                     child.Document(tags, headingLevel + 5, indent + 1);
             }
 
-            if (TemperatureEffect.GetType() == typeof(Constant))
+            tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity described above is influenced by temperature as:", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                //Temp having no effect so no need to document
+                if (child.Name == "TemperatureEffect")
+                    child.Document(tags, headingLevel + 5, indent + 1);
             }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity described above is influenced by temperature as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "TemperatureEffect")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-            }
+
 
             tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
 

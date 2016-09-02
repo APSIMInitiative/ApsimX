@@ -1107,22 +1107,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </XYPairs>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
           <Value>6</Value>
