@@ -88,6 +88,11 @@ namespace Models.Report
         private int maximumNumberArrayElements;
 
         /// <summary>
+        /// For jagged array variables, this will be the number of array elements in the second dimension to write to the data table.
+        /// </summary>
+        private int maximumNumberJaggedElements;
+
+        /// <summary>
         /// The data type of this column
         /// </summary>
         private Type valueType;
@@ -560,7 +565,7 @@ namespace Models.Report
             {
                 // Array
                 Array array = value as Array;
-                for (int columnIndex = 0; columnIndex < this.maximumNumberArrayElements; columnIndex++)
+                for (int columnIndex = 0; columnIndex < (name.Contains("(") ? this.maximumNumberJaggedElements : this.maximumNumberArrayElements); columnIndex++)
                 {
                     string heading = name;
                     heading += "(" + (columnIndex + 1).ToString() + ")";
@@ -569,6 +574,9 @@ namespace Models.Report
                     else
                     {
                         object arrayElement = array.GetValue(columnIndex);
+                        Array innerArray = value as Array;
+                        if (innerArray != null)
+                            this.maximumNumberJaggedElements = innerArray.Length;
                         flattenedValues.AddRange(this.FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
                     }
                 }
