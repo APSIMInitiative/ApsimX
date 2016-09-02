@@ -2766,6 +2766,11 @@ Stuff regarding Root]]></MemoText>
               <Units>mm/d</Units>
             </Constant>
             <Constant>
+              <Name>SenescenceRate</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>				
+            <Constant>
               <Name>MaxDailyNUptake</Name>
               <Value>6</Value>
             </Constant>
@@ -3139,6 +3144,11 @@ Stuff regarding Root]]></MemoText>
               <Value>0</Value>
               <Units>mm/d</Units>
             </Constant>
+            <Constant>
+              <Name>SenescenceRate</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>				
             <Constant>
               <Name>MaxDailyNUptake</Name>
               <Value>6</Value>

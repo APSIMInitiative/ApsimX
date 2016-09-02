@@ -686,6 +686,11 @@ Stuff regarding Root]]></MemoText>
               <Units>mm</Units>
             </Constant>
             <Constant>
+              <Name>SenescenceRate</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>			
+            <Constant>
               <Name>NitrogenDemandSwitch</Name>
               <Value>1</Value>
               <Units>mm</Units>
@@ -1048,8 +1053,13 @@ Stuff regarding Root]]></MemoText>
             <Constant>
               <Name>RootFrontVelocity</Name>
               <Value>0</Value>
-              <Units>mm/d</Units>
+              <Units>mm/d</Units>`
             </Constant>
+            <Constant>
+              <Name>SenescenceRate</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>	
             <Constant>
               <Name>MaxDailyNUptake</Name>
               <Value>6</Value>
