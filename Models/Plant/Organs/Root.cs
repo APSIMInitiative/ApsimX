@@ -335,7 +335,17 @@ namespace Models.PMF.Organs
         public double Depth { get { return plantZone.Depth; } }
         /// <summary>Layer mid point depth.</summary>
         [XmlIgnore]
-        public double LayerMidPointDepth { get { return plantZone.LayerMidPointDepth; } }
+          public double LayerMidPointDepth
+          {
+              get
+              {
+                  if (plantZone == null)
+                      return 0;
+                  else
+                      return plantZone.LayerMidPointDepth;
+              }
+          }
+
 
 /// <summary>Layer live</summary>
 [XmlIgnore]
