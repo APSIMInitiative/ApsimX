@@ -67,7 +67,7 @@ namespace Models.PMF.Organs
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
@@ -643,7 +643,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if ((isGrowing)&&(PartitionFraction != null))
+                if ((isGrowing))
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
