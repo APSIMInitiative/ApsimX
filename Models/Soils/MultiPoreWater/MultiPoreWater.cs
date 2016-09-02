@@ -231,7 +231,7 @@ namespace Models.Soils
         /// The maximum diameter of pore compartments
         /// </summary>
         [Units("nm")]
-        [Description("The pore diameters the seperate modeled pore compartemnts")]
+        [Description("The pore diameters that seperate modeled pore compartments")]
         public double[] PoreBounds { get; set; }
         /// <summary>
         /// The hydraulic conductance below the bottom of the specified profile
@@ -320,7 +320,7 @@ namespace Models.Soils
 
         #region Properties
         /// <summary>
-        /// The number of layers in the soil profiel
+        /// The number of layers in the soil profile
         /// </summary>
         private int ProfileLayers { get; set; }
         /// <summary>
