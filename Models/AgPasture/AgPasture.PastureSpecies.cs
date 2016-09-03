@@ -3380,13 +3380,13 @@ namespace Models.AgPasture
             bool testRoot = Math.Abs(BelowGroundWt - preBelowGroundWt - myDelta) > Epsilon;
             myDelta = dGrowthActual - detachedShootDM - detachedRootDM;
             bool testTotal = Math.Abs(TotalWt - preTotalWt - myDelta) > Epsilon;
-            //if (testLive || testRoot || testTotal)
-            //    throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for DM");
+            if (testLive || testRoot || testTotal)
+                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for DM");
 
-            //myDelta = newGrowthN - detachedShootN - detachedRootN;
-            //testTotal = Math.Abs(TotalN - preTotalN - myDelta) > Epsilon;
-            //if (testLive || testRoot || testTotal)
-            //    throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for N");
+            myDelta = newGrowthN - detachedShootN - detachedRootN;
+            testTotal = Math.Abs(TotalN - preTotalN - myDelta) > Epsilon;
+            if (testLive || testRoot || testTotal)
+                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for N");
 
             // Update LAI
             EvaluateLAI();
@@ -3585,16 +3585,6 @@ namespace Models.AgPasture
                 // Evaluate root elongation and allocate new growth in each layer
                 EvaluateRootElongation();
                 DoRootGrowthAllocation();
-
-                // update tissues (to be delete)
-                leaves.DoOrganUpdate();
-                stems.DoOrganUpdate();
-                stolons.DoOrganUpdate();
-                roots.DoOrganUpdate();
-                leaves.DoCleanTransferAmounts();
-                stems.DoCleanTransferAmounts();
-                stolons.DoCleanTransferAmounts();
-                roots.DoCleanTransferAmounts();
             }
             else
             {
