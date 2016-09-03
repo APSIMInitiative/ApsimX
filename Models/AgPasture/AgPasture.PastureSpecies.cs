@@ -3446,8 +3446,7 @@ namespace Models.AgPasture
             double interceptedPAR = fractionPAR * InterceptedRadn * 1000000.0 / myDayLength;
 
             // Irradiance at top of canopy in the middle of the day (J/m2 leaf/s)
-            //irradianceTopOfCanopy = interceptedPAR * LightExtentionCoefficient * (4.0 / 3.0); TODO: enable this
-            irradianceTopOfCanopy = interceptedPAR * LightExtentionCoefficient * 1.33333;
+            irradianceTopOfCanopy = interceptedPAR * LightExtentionCoefficient * (4.0 / 3.0);
 
             //Photosynthesis per leaf area under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
             double Pl1 = SingleLeafPhotosynthesis(0.5 * irradianceTopOfCanopy, Pmax1);
@@ -3515,7 +3514,7 @@ namespace Models.AgPasture
             }
 
             // Total DM converted to C (kg/ha)
-            double liveBiomassC = (AboveGroundLiveWt + BelowGroundWt) * CarbonFractionInDM;
+            double liveBiomassC = (AboveGroundLiveWt + roots.DMLive) * CarbonFractionInDM;
             double result = liveBiomassC * MaintenanceRespirationCoefficient * Teffect * glfNc;
             return Math.Max(0.0, result);
         }
