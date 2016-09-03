@@ -87,7 +87,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the dry matter in the live (green) tissues [g/m^2]</summary>
-        internal double DMGreen
+        internal double DMLive
         {
             get
             {
@@ -120,7 +120,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the N amount in the live (green) tissues [g/m^2]</summary>
-        internal double NGreen
+        internal double NLive
         {
             get
             {
@@ -146,9 +146,9 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the average N concentration in the live tissues [g/g]</summary>
-        internal double NconcGreen
+        internal double NconcLive
         {
-            get { return MathUtilities.Divide(NGreen, DMGreen, 0.0); }
+            get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
         /// <summary>Gets the average N concentration in dead tissues [g/g]</summary>
@@ -170,7 +170,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the amount of luxury N available for remobilisation [g/m^2]</summary>
-        internal double NRemobilisableLuxury
+        internal double NLuxuryRemobilisable
         {
             get
             {
@@ -197,25 +197,25 @@ namespace Models.AgPasture
 
 
         /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
-        internal double SenescedWt
+        internal double DMSenesced
         {
             get { return Tissue[TissueCount - 2].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N senescing from this organ [g/m^2]</summary>
-        internal double SenescedN
+        internal double NSenesced
         {
             get { return Tissue[TissueCount - 2].NTransferedOut; }
         }
 
         /// <summary>Gets the DM amount detached from this organ [g/m^2]</summary>
-        internal double DetachedWt
+        internal double DMDetached
         {
             get { return Tissue[TissueCount - 1].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N detached from this organ [g/m^2]</summary>
-        internal double DetachedN
+        internal double NDetached
         {
             get { return Tissue[TissueCount - 1].NTransferedOut; }
         }
@@ -242,7 +242,7 @@ namespace Models.AgPasture
                 for (int t = 0; t < TissueCount - 1; t++)
                     digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
 
-                return MathUtilities.Divide(digestableDM, DMGreen, 0.0);
+                return MathUtilities.Divide(digestableDM, DMLive, 0.0);
             }
         }
 
@@ -437,7 +437,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the dry matter in the live (green) tissues [g/m^2]</summary>
-        internal double DMGreen
+        internal double DMLive
         {
             get
             {
@@ -470,7 +470,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the N amount in the live (green) tissues [g/m^2]</summary>
-        internal double NGreen
+        internal double NLive
         {
             get
             {
@@ -496,9 +496,9 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the average N concentration in the live tissues [g/g]</summary>
-        internal double NconcGreen
+        internal double NconcLive
         {
-            get { return MathUtilities.Divide(NGreen, DMGreen, 0.0); }
+            get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
         /// <summary>Gets the average N concentration in dead tissues [g/g]</summary>
@@ -546,25 +546,25 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
-        internal double SenescedWt
+        internal double DMSenesced
         {
             get { return Tissue[TissueCount - 2].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N senescing from this organ [g/m^2]</summary>
-        internal double SenescedN
+        internal double NSenesced
         {
             get { return Tissue[TissueCount - 2].NTransferedOut; }
         }
 
         /// <summary>Gets the DM amount detached from this organ [g/m^2]</summary>
-        internal double DetachedWt
+        internal double DMDetached
         {
             get { return Tissue[TissueCount - 1].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N detached from this organ [g/m^2]</summary>
-        internal double DetachedN
+        internal double NDetached
         {
             get { return Tissue[TissueCount - 1].NTransferedOut; }
         }
