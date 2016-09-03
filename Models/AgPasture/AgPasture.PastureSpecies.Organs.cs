@@ -195,6 +195,17 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Gets the DM amount added to this organ via growth [g/m^2]</summary>
+        internal double DMGrowth
+        {
+            get { return Tissue[0].DMTransferedIn; }
+        }
+
+        /// <summary>Gets the amount of N added to this organ via growth [g/m^2]</summary>
+        internal double NGrowth
+        {
+            get { return Tissue[0].NTransferedIn; }
+        }
 
         /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
         internal double DMSenesced
@@ -287,7 +298,7 @@ namespace Models.AgPasture
         /// <param name="fraction">Fraction of tissues to kill</param>
         internal void DoKillOrgan(double fraction = 1.0)
         {
-            if (1.0 - fraction > MyPrecision)
+            if (1.0 - fraction > Epsilon)
             {
                 double fractionRemaining = 1.0 - fraction;
                 for (int t = 0; t < TissueCount - 1; t++)
@@ -342,16 +353,27 @@ namespace Models.AgPasture
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective</summary>
-        internal void DoOrganUpdate()
+        /// <returns>A flag whether mass balance was maintained or not</returns>
+        internal bool DoOrganUpdate()
         {
+            // save current state
+            double previousDM = DMTotal;
+            double previousN = NTotal;
+
+            // update all tissues
             for (int t = 0; t < TissueCount; t++)
                 Tissue[t].DoUpdateTissue();
+
+            // check mass balance
+            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
+            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
+            return (dmIsOk || nIsOk);
         }
 
         #endregion ----------------------------------------------------------------------------------------------------
 
         /// <summary>Minimum significant difference between two values</summary>
-        const double MyPrecision = 0.000000001;
+        const double Epsilon = 0.000000001;
     }
 
     /// <summary>Describes a generic below ground organ of a pasture species</summary>
@@ -545,6 +567,18 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>Gets the DM amount added to this organ via growth [g/m^2]</summary>
+        internal double DMGrowth
+        {
+            get { return Tissue[0].DMTransferedIn; }
+        }
+
+        /// <summary>Gets the amount of N added to this organ via growth [g/m^2]</summary>
+        internal double NGrowth
+        {
+            get { return Tissue[0].NTransferedIn; }
+        }
+
         /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
         internal double DMSenesced
         {
@@ -605,7 +639,7 @@ namespace Models.AgPasture
         /// <param name="fraction">Fraction of tissues to kill</param>
         internal void DoKillOrgan(double fraction = 1.0)
         {
-            if (1.0 - fraction > MyPrecision)
+            if (1.0 - fraction > Epsilon)
             {
                 double fractionRemaining = 1.0 - fraction;
                 for (int t = 0; t < TissueCount - 1; t++)
@@ -673,16 +707,26 @@ namespace Models.AgPasture
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective</summary>
-        internal void DoOrganUpdate()
+        internal bool DoOrganUpdate()
         {
+            // save current state
+            double previousDM = DMTotal;
+            double previousN = NTotal;
+
+            // update all tissues
             for (int t = 0; t < TissueCount; t++)
                 Tissue[t].DoUpdateTissue();
+
+            // check mass balance
+            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
+            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
+            return (dmIsOk || nIsOk);
         }
 
         #endregion ----------------------------------------------------------------------------------------------------
 
         /// <summary>Minimum significant difference between two values</summary>
-        const double MyPrecision = 0.000000001;
+        const double Epsilon = 0.000000001;
     }
 
 

@@ -3208,36 +3208,36 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    //Plant has emerged, compute growth and uptake
+                    //// Plant has emerged, compute growth and uptake
 
-                    // step 01 - Get potential growth
-                    CalcDailyPotentialGrowth();
-
-                    // step 01.5 - Get potential allocation of today's growth
-                    EvaluateGrowthAllocation();
-
-                    // Water demand, supply, and uptake
-                    DoWaterCalculations();
-
-                    // step 02 - Potential growth after water limitations
-                    CalcGrowthAfterWaterLimitations();
-
-                    // Nitrogen demand, supply, and uptake
-                    DoNitrogenCalculations();
-
-                    // step 03 - Growth after nutrient limitations, but before senescence
-                    CalcGrowthAfterNutrientLimitations();
-
-                    // Partition new growth into various tissues
-                    EvaluateNewGrowthAllocation();
-
-                    // Compute tissue turnover and remobilisation (C and N)
+                    // Evaluate tissue turnover and get remobilisation (C and N)
                     EvaluateTissueTurnoverRates();
 
-                    // step 04 - Effective growth, after all limitations and senescence
-                    CalcEffectiveGrowth();
+                    // Get the potential gross growth
+                    CalcDailyPotentialGrowth();
 
-                    // Send amounts of litter and senesced roots to other modules
+                    // Evaluate potential allocation of today's growth
+                    EvaluateGrowthAllocation();
+
+                    // Get the water demand, supply, and uptake
+                    DoWaterCalculations();
+
+                    // Get the potential growth after water limitations
+                    CalcGrowthAfterWaterLimitations();
+
+                    // Get the nitrogen demand, supply, and uptake
+                    DoNitrogenCalculations();
+
+                    // Get the actual growth, after nutrient limitations but before senescence
+                    CalcGrowthAfterNutrientLimitations();
+
+                    // Evaluate actual allocation of today's growth
+                    EvaluateNewGrowthAllocation();
+
+                    // Get the effective growth, after all limitations and senescence
+                    DoEffectiveGrowth();
+
+                    // Send detached tissues (litter and roots) to other modules
                     DoSurfaceOMReturn(detachedShootDM, detachedShootN);
                     DoIncorpFomEvent(detachedRootDM, detachedRootN);
                 }
@@ -3329,10 +3329,19 @@ namespace Models.AgPasture
             dGrowthPot /= CarbonFractionInDM;
         }
 
-        /// <summary>Calculates the growth with water limitations.</summary>
+        /// <summary>Calculates the growth after water limitations.</summary>
         internal void CalcGrowthAfterWaterLimitations()
         {
-            // Adjust today's growth for limitations related to soil water
+            if (!isSwardControlled)
+            {
+                // get the limitation factor due to water deficiency (drought)
+                glfWater = WaterDeficitFactor();
+
+                // get the limitation factor due to water logging (lack of aeration)
+                glfAeration = WaterLoggingFactor();
+            }
+
+            // adjust today's growth for limitations related to soil water
             dGrowthWstress = dGrowthPot * Math.Min(glfWater, glfAeration);
         }
 
@@ -3348,45 +3357,57 @@ namespace Models.AgPasture
         /// </remarks>
         internal void CalcGrowthAfterNutrientLimitations()
         {
-            // Adjust the glfN
-            double glfNit = Math.Pow(glfN, NDillutionCoefficient);
+            // get the limitation factor due to soil N deficiency
+            double glfNit = 1.0;
+            if (!isSwardControlled)
+            {
+                if (newGrowthN > Epsilon)
+                {
+                    glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(newGrowthN, NdemandOpt, 1.0)));
 
-            // Adjust todays growth for any soil nutrient limitation
+                    //// adjust the glfN
+                    //glfNit = Math.Pow(glfN, NDillutionCoefficient);
+                }
+                else
+                    glfN = 1.0;
+            }
+
+            // adjust the glfN
+            glfNit = Math.Pow(glfN, NDillutionCoefficient);
+
+            // adjust today's growth for limitations related to soil nutrient supply
             dGrowthActual = dGrowthWstress * Math.Min(glfNit, GlfSFertility);
         }
 
-        /// <summary>Calculates the plant effective growth (include changes in LAI and root depth).</summary>
-        internal void CalcEffectiveGrowth()
+        /// <summary>Calculates the plant effective growth and update DM, N, LAI and digestibility.</summary>
+        internal void DoEffectiveGrowth()
         {
             // Effective, or net, growth
             dGrowthEff = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preAboveGroundLiveWt = AboveGroundLiveWt;
-            double preBelowGroundWt = BelowGroundWt;
             double preTotalWt = TotalWt;
             double preTotalN = TotalN;
 
-            // Update each organ
-            leaves.DoOrganUpdate();
-            stems.DoOrganUpdate();
-            stolons.DoOrganUpdate();
-            roots.DoOrganUpdate();
+            // Update each organ, returns test for mass balance
+            if (leaves.DoOrganUpdate() == false)
+                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for leaves");
 
-            // Check for loss of mass balance
-            double myDelta = dGrowthShootDM - senescedShootDM;
-            bool testLive = Math.Abs(AboveGroundLiveWt - preAboveGroundLiveWt - myDelta) > Epsilon;
-            myDelta = dGrowthRootDM - detachedRootDM;
-            bool testRoot = Math.Abs(BelowGroundWt - preBelowGroundWt - myDelta) > Epsilon;
-            myDelta = dGrowthActual - detachedShootDM - detachedRootDM;
-            bool testTotal = Math.Abs(TotalWt - preTotalWt - myDelta) > Epsilon;
-            if (testLive || testRoot || testTotal)
-                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for DM");
+            if (stems.DoOrganUpdate() == false)
+                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for stems");
 
-            myDelta = newGrowthN - detachedShootN - detachedRootN;
-            testTotal = Math.Abs(TotalN - preTotalN - myDelta) > Epsilon;
-            if (testLive || testRoot || testTotal)
-                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance for N");
+            if (stolons.DoOrganUpdate() == false)
+                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for stolons");
+
+            if (roots.DoOrganUpdate() == false)
+                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for roots");
+
+            // Check for loss of mass balance of total plant
+            if(Math.Abs(preTotalWt + dGrowthActual - detachedShootDM - detachedRootDM - TotalWt) > Epsilon)
+                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
+
+            if (Math.Abs(preTotalN + newGrowthN - NSenescedRemobilised -NLuxuryRemobilised - detachedShootN - detachedRootN - TotalN) > Epsilon)
+                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
             EvaluateLAI();
@@ -3776,12 +3797,6 @@ namespace Models.AgPasture
             {
                 // this module will compute water uptake
                 MyWaterCalculations();
-
-                // get the drought effects
-                glfWater = WaterDeficitFactor();
-
-                // get the water logging effects (only if there is no drought effect)
-                glfAeration = WaterLoggingFactor();
             }
             //else if myWaterUptakeSource == "AgPasture"
             //      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
@@ -3795,12 +3810,6 @@ namespace Models.AgPasture
                 // get the array with the amount of water taken up
                 GetWaterUptake();
                 DoSoilWaterUptake1();
-
-                // get the drought effects
-                glfWater = WaterDeficitFactor();
-
-                // get the water logging effects (only if there is no drought effect)
-                glfAeration = WaterLoggingFactor();
             }
             //else
             //      water uptake be calculated by other modules (e.g. SWIM) and supplied as
@@ -3980,10 +3989,6 @@ namespace Models.AgPasture
             {
                 // this module will compute the N uptake
                 MyNitrogenCalculations();
-                if (newGrowthN > Epsilon)
-                    glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(newGrowthN, NdemandOpt, 1.0)));
-                else
-                    glfN = 1.0;
             }
             //else if (myNitrogenUptakeSource == "AgPasture")
             //{
@@ -4003,11 +4008,6 @@ namespace Models.AgPasture
                 GetNitrogenUptake();
 
                 DoSoilNitrogenUptake1();
-
-                if (newGrowthN > Epsilon)
-                    glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(newGrowthN, NdemandOpt, 1.0)));
-                else
-                    glfN = 1.0;
             }
             //else
             //   N uptake is computed by another module (not implemented yet)

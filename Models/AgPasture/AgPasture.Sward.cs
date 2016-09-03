@@ -1554,41 +1554,41 @@ namespace Models.AgPasture
             {
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    // step 01 - preparation and potential growth
+                    // Evaluate tissue turnover and get remobilisation (C and N)
+                    species.EvaluateTissueTurnoverRates();
+
+                    // Get the potential gross growth
                     species.CalcDailyPotentialGrowth();
 
-                    // step 01.5 - Get potential allocation of today's growth
+                    // Evaluate potential allocation of today's growth
                     species.EvaluateGrowthAllocation();
 
                 }
 
-                // Water demand, supply, and uptake
+                // Get the water demand, supply, and uptake
                 DoWaterCalculations();
 
-                // step 02 - Potential growth after water limitations
+                // Get the potential growth after water limitations
                 foreach (PastureSpecies species in mySpecies)
                     species.CalcGrowthAfterWaterLimitations();
 
-                // Nitrogen demand, supply, and uptake
+                // Get the nitrogen demand, supply, and uptake
                 DoNitrogenCalculations();
 
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    // step 03 - Actual growth after nutrient limitations, but before senescence
+                    // Get the actual growth, after nutrient limitations but before senescence
                     species.CalcGrowthAfterNutrientLimitations();
 
-                    // Partition new growth into various tissues
+                    // Evaluate actual allocation of today's growth
                     species.EvaluateNewGrowthAllocation();
 
-                    // Compute tissue turnover and remobilisation (C and N)
-                    species.EvaluateTissueTurnoverRates();
-
-                    // step 04 - Effective growth after all limitations and senescence
-                    species.CalcEffectiveGrowth();
+                    // Get the effective growth, after all limitations and senescence
+                    species.DoEffectiveGrowth();
                     swardNRemobilised += species.RemobilisedSenescedN;
                 }
 
-                // step 05 - Send amounts of litter and senesced roots to other modules
+                // Send detached tissues (litter and roots) to other modules
                 DoSurfaceOMReturn(LitterDepositionWt, LitterDepositionN);
                 DoIncorpFomEvent(RootSenescenceWt, RootSenescenceN);
             }
