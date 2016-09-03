@@ -9518,6 +9518,27 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.LeafDMAllocation</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>DM (kg/ha)</Title>
@@ -16224,7 +16245,7 @@ namespace Models
             <ColdSumDD>20</ColdSumDD>
             <ColdRecoverTemp>0</ColdRecoverTemp>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-            <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
+            <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
             <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
@@ -19808,7 +19829,7 @@ namespace Models
           <ColdSumDD>20</ColdSumDD>
           <ColdRecoverTemp>0</ColdRecoverTemp>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
+          <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
           <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>

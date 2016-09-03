@@ -1042,6 +1042,14 @@ public class Script
             <GDApsimFileReader name="ApsimFileReader" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/PlantNUptake/Plot/ApsimFileReader" />
           </Plot>
         </Graph>
+        <Graph name="Remobilisation" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/Remobilisation">
+          <Plot name="Plot1" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/Remobilisation/Plot1">
+            <GDApsimFileReader name="ApsimFileReader" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/Remobilisation/Plot1/ApsimFileReader" />
+          </Plot>
+          <Plot name="Plot2" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/Remobilisation/Plot2">
+            <GDApsimFileReader name="ApsimFileReader" shortcut="/Simulations/Ryegrass/AgPastureClassic/Uptake/Remobilisation/Plot2/ApsimFileReader" />
+          </Plot>
+        </Graph>
       </GraphReport>
       <GraphReport name="WBalance" shortcut="/Simulations/Ryegrass/AgPastureClassic/WBalance">
         <Graph name="SWC" shortcut="/Simulations/Ryegrass/AgPastureClassic/WBalance/SWC">
@@ -3230,8 +3238,10 @@ End Class
       <GraphReport name="Uptake">
         <Graph name="PlantWater">
           <Legend>
-            <CheckedTitles> Ryegrass.WaterDemand</CheckedTitles>
-            <CheckedTitles> Ryegrass.WaterUptake</CheckedTitles>
+            <CheckedTitles> Ryegrass.WaterDemand, Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.WaterDemand, {Checkpoint} Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.WaterUptake, Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.WaterUptake, {Checkpoint} Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -3246,7 +3256,10 @@ End Class
         </Graph>
         <Graph name="PlantNUptake">
           <Legend>
-            <CheckedTitles> Ryegrass.RequiredLuxuryN, OneSpecies AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.UptakeN, Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.UptakeN, {Checkpoint} Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.FixedN, Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
+            <CheckedTitles> Ryegrass.FixedN, {Checkpoint} Ryegrass AgPastureLiFY Results_Species</CheckedTitles>
           </Legend>
           <Plot>
             <SeriesType>Solid line</SeriesType>
@@ -3259,6 +3272,38 @@ End Class
             <Y>Ryegrass.DemandSoilN</Y>
             <Y>Ryegrass.UptakeN</Y>
             <Y>Ryegrass.FixedN</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+        </Graph>
+        <Graph name="Remobilisation">
+          <Legend>
+            <CheckedTitles>Plot1, Ryegrass.RemobilisableSenescedN,Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot1, Ryegrass.RemobilisableSenescedN,{Checkpoint} Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot1, Ryegrass.RemobilisableLuxuryN,Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot1, Ryegrass.RemobilisableLuxuryN,{Checkpoint} Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot2, Ryegrass.RemobilisedSenescedN,Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot2, Ryegrass.RemobilisedSenescedN,{Checkpoint} Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot2, Ryegrass.RemobilisedLuxuryN,Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+            <CheckedTitles>Plot2, Ryegrass.RemobilisedLuxuryN,{Checkpoint} Ryegrass AgPastureClassic Results_Species</CheckedTitles>
+          </Legend>
+          <Plot name="Plot1">
+            <SeriesType>Solid line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.RemobilisableSenescedN</Y>
+            <Y>Ryegrass.RemobilisableLuxuryN</Y>
+            <GDApsimFileReader name="ApsimFileReader" />
+          </Plot>
+          <Plot name="Plot2">
+            <SeriesType>Dash line</SeriesType>
+            <PointType>None</PointType>
+            <colour>
+            </colour>
+            <X>Date</X>
+            <Y>Ryegrass.RemobilisedSenescedN</Y>
+            <Y>Ryegrass.RemobilisedLuxuryN</Y>
             <GDApsimFileReader name="ApsimFileReader" />
           </Plot>
         </Graph>

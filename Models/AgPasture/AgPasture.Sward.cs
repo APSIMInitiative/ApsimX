@@ -1554,9 +1554,6 @@ namespace Models.AgPasture
             {
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    // stores the current state for this mySpecies
-                    species.SaveState();
-
                     // step 01 - preparation and potential growth
                     species.CalcDailyPotentialGrowth();
 
