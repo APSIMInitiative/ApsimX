@@ -3528,19 +3528,55 @@ namespace Models.AgPasture
                 roots.Tissue[0].DMTransferedIn += toRoot * dGrowthActual;
 
                 // Evaluate allocation of N
-                // Partitioning N based on DM fractions and on max [N] in plant parts
-                double Nsum = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
-                            + (toStolon * stolons.NConcMaximum) + (toRoot * roots.NConcMaximum);
-                double toLeafN = toLeaf * MathUtilities.Divide(leaves.NConcMaximum, Nsum, 0.0);
-                double toStemN = toStem * MathUtilities.Divide(stems.NConcMaximum, Nsum, 0.0);
-                double toStolonN = toStolon * MathUtilities.Divide(stolons.NConcMaximum, Nsum, 0.0);
-                double toRootN = toRoot * MathUtilities.Divide(roots.NConcMaximum, Nsum, 0.0);
+                if (newGrowthN > NdemandOpt)
+                {
+                    // There is more N than needed for basic demand (i.e. there is luxury uptake)
+                    // 1. Allocate optimum N
+                    leaves.Tissue[0].NTransferedIn = leaves.Tissue[0].DMTransferedIn * leaves.NConcOptimum;
+                    stems.Tissue[0].NTransferedIn = stems.Tissue[0].DMTransferedIn * stems.NConcOptimum;
+                    stolons.Tissue[0].NTransferedIn = stolons.Tissue[0].DMTransferedIn * stolons.NConcOptimum;
+                    roots.Tissue[0].NTransferedIn = roots.Tissue[0].DMTransferedIn * roots.NConcOptimum;
 
-                // Allocate N from new growth to the first tissue pools
-                leaves.Tissue[0].NTransferedIn += toLeafN * newGrowthN;
-                stems.Tissue[0].NTransferedIn += toStemN * newGrowthN;
-                stolons.Tissue[0].NTransferedIn += toStolonN * newGrowthN;
-                roots.Tissue[0].NTransferedIn += toRootN * newGrowthN;
+                    double NAllocated = leaves.Tissue[0].NTransferedIn + stems.Tissue[0].NTransferedIn
+                                      + stolons.Tissue[0].NTransferedIn + roots.Tissue[0].NTransferedIn;
+                    double NtoAllocate = Math.Max(0.0, newGrowthN - NAllocated);
+
+                    // Allocate remaining as luxury N (based on relative luxury demand)
+                    double Nsum = Math.Max(0.0, (toLeaf * (leaves.NConcMaximum - leaves.NConcOptimum))
+                                              + (toStem * (stems.NConcMaximum - stems.NConcOptimum))
+                                              + (toStolon * (stolons.NConcMaximum - stolons.NConcOptimum))
+                                              + (toRoot * (roots.NConcMaximum - roots.NConcOptimum)));
+                    if (Nsum > Epsilon)
+                    {
+                        leaves.Tissue[0].NTransferedIn += NtoAllocate * toLeaf * (leaves.NConcMaximum - leaves.NConcOptimum) / Nsum;
+                        stems.Tissue[0].NTransferedIn += NtoAllocate * toStem * (stems.NConcMaximum - stems.NConcOptimum) / Nsum;
+                        stolons.Tissue[0].NTransferedIn += NtoAllocate * toStolon * (stolons.NConcMaximum - stolons.NConcOptimum) / Nsum;
+                        roots.Tissue[0].NTransferedIn += NtoAllocate * toRoot * (roots.NConcMaximum - roots.NConcOptimum) / Nsum;
+                    }
+                    else
+                    {
+                        // something went horribly wrong to get here
+                        throw new Exception("Allocation of new growth could not be completed");
+                    }
+                }
+                else
+                {
+                    // Available N was not enough to meet basic demand, allocate N taken up (based on optimum N content)
+                    double Nsum = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
+                                + (toStolon * stolons.NConcOptimum) + (toRoot * roots.NConcOptimum);
+                    if (Nsum > Epsilon)
+                    {
+                        leaves.Tissue[0].NTransferedIn += newGrowthN * toLeaf * leaves.NConcOptimum / Nsum;
+                        stems.Tissue[0].NTransferedIn += newGrowthN * toStem * stems.NConcOptimum / Nsum;
+                        stolons.Tissue[0].NTransferedIn += newGrowthN * toStolon * stolons.NConcOptimum / Nsum;
+                        roots.Tissue[0].NTransferedIn += newGrowthN * toRoot * roots.NConcOptimum / Nsum;
+                    }
+                    else
+                    {
+                        // something went horribly wrong to get here
+                        throw new Exception("Allocation of new growth could not be completed");
+                    }
+                }
 
                 // Update N variables
                 dGrowthShootN = leaves.Tissue[0].NTransferedIn + stems.Tissue[0].NTransferedIn + stolons.Tissue[0].NTransferedIn;
