@@ -503,7 +503,24 @@
         <HydraulicProperties>
           <Name>HydraulicProperties</Name>
           <psidul>-100</psidul>
-          <kdul>1</kdul>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <kdul>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </kdul>
         </HydraulicProperties>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
@@ -1997,7 +2014,24 @@ namespace Models
           <HydraulicProperties>
             <Name>HydraulicProperties</Name>
             <psidul>-100</psidul>
-            <kdul>1</kdul>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <kdul>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </kdul>
           </HydraulicProperties>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>

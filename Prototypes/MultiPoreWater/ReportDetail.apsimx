@@ -184,7 +184,26 @@
         <HydraulicProperties>
           <Name>HydraulicProperties</Name>
           <psidul>-100</psidul>
-          <kdul>1</kdul>
+          <Thickness>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>400</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
+          <kdul>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </kdul>
         </HydraulicProperties>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
