@@ -279,6 +279,9 @@ namespace Models.Core
                 child.Document(tags, headingLevel + 1, indent);
         }
 
+        /// <summary>
+        /// returns the version number of APSIM running
+        /// </summary>
         public string ApsimVersion
         {
             get
