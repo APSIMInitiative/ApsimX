@@ -279,5 +279,15 @@ namespace Models.Core
                 child.Document(tags, headingLevel + 1, indent);
         }
 
+        public string ApsimVersion
+        {
+            get
+            {
+                string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
+                string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
+                return "Version " + version + ", built " + buildDate;
+            }
+        }
     }
 }
