@@ -967,7 +967,7 @@ namespace Models.AgPasture
         internal string myWaterUptakeSource = "species";
 
         /// <summary>Flag whether the alternative water uptake process will be used</summary>
-        internal string useAltWUptake = "no";
+        internal string myWaterAvailableMethod = "default";
 
         /// <summary>Reference value of Ksat for water availability function</summary>
         internal double ReferenceKSuptake = 1000.0;
@@ -984,8 +984,11 @@ namespace Models.AgPasture
         /// <summary>Availability factor for NO3</summary>
         internal double kuNO3 = 0.95;
 
-        /// <summary>Reference value for root length density fot the Water and N availability</summary>
+        /// <summary>Reference value for root length density for the Water and N availability</summary>
         internal double ReferenceRLD = 2.0;
+
+        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability</summary>
+        internal double ExponentSoilMoisture = 1.50;
 
         /// <summary>the local value for KNO3</summary>
         private double myKNO3 = 1.0;
@@ -1247,7 +1250,7 @@ namespace Models.AgPasture
         internal double myWaterDemand = 0.0;
 
         /// <summary>The amount of soil available water</summary>
-        private double[] mySoilAvailableWater;
+        internal double[] mySoilAvailableWater;
 
         /// <summary>The amount of soil water taken up</summary>
         internal double[] mySoilWaterTakenUp;
@@ -3434,7 +3437,7 @@ namespace Models.AgPasture
             glfTemp = (0.25 * tempGlf1) + (0.75 * tempGlf2);
 
             // Potential photosynthetic rate (mg CO2/m^2 leaf/s)
-            //   at dawn and dusk (first and last quarter of the day)
+            //   at dawn and dusk (first and last quarters of the day)
             double Pmax1 = ReferencePhotosynthesisRate * tempGlf1 * glfCO2 * glfNc;
             //   at bright light (half of sunlight length, middle of day)
             double Pmax2 = ReferencePhotosynthesisRate * tempGlf2 * glfCO2 * glfNc;
@@ -3825,7 +3828,7 @@ namespace Models.AgPasture
         /// </remarks>
         private void MyWaterCalculations()
         {
-            mySoilAvailableWater = GetSoilAvailableWater();
+            GetSoilAvailableWater();
             // myWaterDemand given by MicroClimate
             if (myWaterUptakeSource.ToLower() == "species")
                 mySoilWaterTakenUp = DoSoilWaterUptake();
@@ -3833,54 +3836,101 @@ namespace Models.AgPasture
             //    uptake is controlled by the sward or by another apsim module
         }
 
-        /// <summary>
-        /// Finds out the amount soil water available for this plant (ignoring any other species)
-        /// </summary>
-        /// <returns>The amount of water available to plants in each layer</returns>
-        internal double[] GetSoilAvailableWater()
+        /// <summary>Finds out the amount soil water available for this plant in each layer</summary>
+        /// <remarks>Different approaches are available</remarks>
+        internal void GetSoilAvailableWater()
+        {
+            mySoilAvailableWater = new double[nLayers];
+            if (myWaterAvailableMethod == "default")
+                mySoilAvailableWater = PlantAvailableSoilWaterDefault();
+            else if(myWaterAvailableMethod == "alternativeKL")
+                mySoilAvailableWater = PlantAvailableSoilWaterAlternativeKL();
+            else if (myWaterAvailableMethod == "alternativeKS")
+                mySoilAvailableWater = PlantAvailableSoilWaterAlternativeKS();
+        }
+
+        /// <summary>Estimate the amount of plant available soil water in each layer of root zone</summary>
+        /// <remarks>This is the default APSIM method, with kl representing the daily rate for water extraction</remarks>
+        /// <returns>Amount of available water</returns>
+        private double[] PlantAvailableSoilWaterDefault()
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
-            if (useAltWUptake == "no")
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
-                for (int layer = 0; layer < roots.BottomLayer; layer++)
-                {
-                    result[layer] = Math.Max(0.0, mySoil.Water[layer] - soilCropData.LL[layer] * mySoil.Thickness[layer])
-                                    * FractionLayerWithRoots(layer);
-                    result[layer] *= soilCropData.KL[layer];
-                }
-            }
-            else
-            {
-                // Method implemented by RCichota
-                // Available Water is function of root density, soil water content, and soil hydraulic conductivity
-                // Assumptions: all factors are exponential functions and vary between 0 and 1;
-                //   - If root density is equal to ReferenceRLD then plant can explore 90% of the water;
-                //   - If soil Ksat is equal to ReferenceKSuptake then soil can supply 90% of its available water;
-                //   - If soil water content is at DUL then 90% of its water is available;
-                double[] myRLD = RLD;
-                double facRLD = 0.0;
-                double facCond = 0.0;
-                double facWcontent = 0.0;
-                for (int layer = 0; layer < roots.BottomLayer; layer++)
-                {
-                    facRLD = 1 - Math.Pow(10, -myRLD[layer] / ReferenceRLD);
-                    facCond = 1 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
-                    facWcontent = 1 - Math.Pow(10,
-                        -(Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]))
-                        / (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]));
-
-                    // Theoretical total available water
-                    result[layer] = Math.Max(0.0, mySoil.Water[layer] - soilCropData.LL[layer] * mySoil.Thickness[layer])
-                                    * FractionLayerWithRoots(layer);
-                    // Actual available water
-                    result[layer] *= facRLD * facCond * facWcontent;
-                }
+                result[layer] = Math.Max(0.0, mySoil.SoilWater.SW[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
             }
 
             return result;
         }
 
+        /// <summary>Estimate the amount of plant available soil water in each layer of root zone</summary>
+        /// <remarks>
+        /// This is an alternative method, kl representing a soil limiting factor for water extraction (clayey soils have lower values)
+        ///  this is further modiied by soil water content (a reduction for dry soil). A plant related factor is defined based on root
+        ///  length density (limiting conditions when RLD is below ReferenceRLD)
+        /// </remarks>
+        /// <returns>Amount of available water</returns>
+        private double[] PlantAvailableSoilWaterAlternativeKL()
+        {
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
+            double swFac;
+            double rldFac;
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            {
+                if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
+                    swFac = 1.0;
+                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.SoilWater.LL15mm[layer])
+                    swFac = 0.0;
+                else
+                {
+                    double waterRatio = (mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer]) /
+                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                }
+
+                rldFac = Math.Min(1.0, RLD[layer] / ReferenceRLD);
+                result[layer] = Math.Max(0.0, mySoil.SoilWater.SW[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] * swFac * rldFac);
+            }
+
+            return result;
+        }
+
+        /// <summary>Estimate the amount of plant available soil water in each layer of root zone</summary>
+        /// <remarks>
+        /// This is an alternative method, which does not use kl. A factor based on Ksat is used instead. This is further modified
+        ///  by soil water content and a plant related factor, defined based on root length density. All three factors are normalised 
+        ///  (using ReferenceKSat and ReferenceRLD for KSat and root and DUL for soil water content). The effect of all factors are
+        ///  assumed to vary between zero and one following exponential functions, such that the effect is 90% at the reference value.
+        /// </remarks>
+        /// <returns>Amount of available water</returns>
+        private double[] PlantAvailableSoilWaterAlternativeKS()
+        {                 
+            double condFac = 0.0;
+            double swFac = 0.0;
+            double rldFac = 0.0;
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            {
+                condFac = 1.0 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
+                swFac = 1.0 - Math.Pow(10, -Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer])
+                                           / (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]));
+                rldFac = 1.0 - Math.Pow(10, -RLD[layer] / ReferenceRLD);
+
+                // Theoretical total available water
+                result[layer] = Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+
+                // Actual available water
+                result[layer] *= FractionLayerWithRoots(layer) * rldFac * condFac * swFac;
+            }
+
+            return result;
+        }
+        
         /// <summary>Computes the actual water uptake and send the deltas to soil module</summary>
         /// <returns>The amount of water taken up for each soil layer</returns>
         /// <exception cref="System.Exception">Error on computing water uptake</exception>
@@ -3892,34 +3942,19 @@ namespace Models.AgPasture
             double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(myWaterDemand, mySoilAvailableWater.Sum(), 0.0));
             double[] result = new double[nLayers];
 
-            if (useAltWUptake == "no")
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
             {
-                for (int layer = 0; layer < roots.BottomLayer; layer++)
-                {
-                    result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
-                    WaterTakenUp.DeltaWater[layer] = -result[layer];
-                }
-            }
-            else
-            {
-                // Method implemented by RCichota
-                // Uptake is distributed over the profile according to water availability,
-                //  this means that water status and root distribution have been taken into account
-
-                for (int layer = 0; layer < roots.BottomLayer; layer++)
-                {
-                    result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
-                    WaterTakenUp.DeltaWater[layer] = -result[layer];
-                }
-                if (Math.Abs(WaterTakenUp.DeltaWater.Sum() + myWaterDemand) > Epsilon)
-                    throw new Exception("Error on computing water uptake");
+                result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
+                WaterTakenUp.DeltaWater[layer] = -result[layer];
             }
 
             // send the delta water taken up
-            WaterChanged.Invoke(WaterTakenUp);
+            if (WaterChanged != null)
+                WaterChanged.Invoke(WaterTakenUp);
 
             return result;
         }
+
 
         /// <summary>Send the delta water taken up to  the soil module</summary>
         private void DoSoilWaterUptake1()
@@ -5226,8 +5261,8 @@ namespace Models.AgPasture
                     if (Z.Name == ParentZone.Name)
                         MyZone = Z;
 
-                double[] supply = GetSoilAvailableWater();
-                double Supply = supply.Sum();
+                GetSoilAvailableWater();
+                double Supply = mySoilAvailableWater.Sum();
                 double Demand = myWaterDemand;
                 double FractionUsed = 0.0;
                 if (Supply > Epsilon)
@@ -5236,7 +5271,7 @@ namespace Models.AgPasture
                 // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN();
                 uptake.Name = MyZone.Name;
-                uptake.Water = MathUtilities.Multiply_Value(supply, FractionUsed);
+                uptake.Water = MathUtilities.Multiply_Value(mySoilAvailableWater, FractionUsed);
                 uptake.NO3N = new double[nLayers];
                 uptake.NH4N = new double[nLayers];
 

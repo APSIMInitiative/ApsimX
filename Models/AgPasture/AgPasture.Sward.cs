@@ -1683,8 +1683,9 @@ namespace Models.AgPasture
 
                 // get sum water available for all mySpecies
                 double[] sumWaterAvailable = new double[nLayers];
-                foreach (PastureSpecies plant in mySpecies)
-                    sumWaterAvailable.Zip(plant.GetSoilAvailableWater(), (x, y) => x + y);
+                foreach (PastureSpecies species in mySpecies)
+                    species.GetSoilAvailableWater();
+                    //sumWaterAvailable.Zip(plant.GetSoilAvailableWater(), (x, y) => x + y);
 
                 for (int layer = 0; layer <= RootFrontier; layer++)
                 {
@@ -1699,6 +1700,7 @@ namespace Models.AgPasture
                     result[layer] = Math.Max(0.0, mySoil.Water[layer] - layerLL) * layerFraction;
 
                     // actual available water
+                    sumWaterAvailable[layer] = mySpecies.Sum(x => x.mySoilAvailableWater[layer]);
                     result[layer] = Math.Min(result[layer] * facCond * facWcontent, sumWaterAvailable[layer]);
                 }
             }
