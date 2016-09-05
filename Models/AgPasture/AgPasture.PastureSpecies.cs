@@ -1227,10 +1227,16 @@ namespace Models.AgPasture
         internal double[] mySoilAvailableN;
 
         /// <summary>The amount of NH4 in the soil available to the plant</summary>
-        internal double[] mySoilNH4available;
+        internal double[] mySoilNH4Available;
 
         /// <summary>The amount of NO3 in the soil available to the plant</summary>
-        internal double[] mySoilNO3available;
+        internal double[] mySoilNO3Available;
+
+        /// <summary>The amount of soil NH4 taken up by the plant</summary>
+        internal double[] mySoilNH4Uptake;
+
+        /// <summary>The amount of soil NO3 taken up by the plant</summary>
+        internal double[] mySoilNO3Uptake;
 
         /// <summary>The amount of N actually taken up</summary>
         internal double mySoilNuptake;
@@ -1250,10 +1256,10 @@ namespace Models.AgPasture
         internal double myWaterDemand = 0.0;
 
         /// <summary>The amount of soil available water</summary>
-        internal double[] mySoilAvailableWater;
+        internal double[] mySoilWaterAvailable;
 
         /// <summary>The amount of soil water taken up</summary>
-        internal double[] mySoilWaterTakenUp;
+        internal double[] mySoilWaterUptake;
 
         // growth limiting factors ------------------------------------------------------------------------------------
 
@@ -2652,7 +2658,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double[] SoilAvailableWater
         {
-            get { return mySoilAvailableWater; }
+            get { return mySoilWaterAvailable; }
         }
 
         /// <summary>Gets the amount of water taken up by the plant.</summary>
@@ -2661,7 +2667,7 @@ namespace Models.AgPasture
         [Units("mm")]
         public double[] WaterUptake
         {
-            get { return mySoilWaterTakenUp; }
+            get { return mySoilWaterUptake; }
         }
 
         #endregion
@@ -2895,10 +2901,12 @@ namespace Models.AgPasture
         /// <summary>Initialise arrays to same length as soil layers</summary>
         private void InitiliaseSoilArrays()
         {
-            mySoilAvailableWater = new double[nLayers];
-            mySoilWaterTakenUp = new double[nLayers];
-            mySoilNH4available = new double[nLayers];
-            mySoilNO3available = new double[nLayers];
+            mySoilWaterAvailable = new double[nLayers];
+            mySoilWaterUptake = new double[nLayers];
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
             mySoilAvailableN = new double[nLayers];
             mySoilNitrogenTakenUp = new double[nLayers];
         }
@@ -3775,7 +3783,7 @@ namespace Models.AgPasture
                 if (SoilWater.Uptakes[iCrop].Name == Name)
                 {
                     for (int layer = 0; layer < SoilWater.Uptakes[iCrop].Amount.Length; layer++)
-                        mySoilWaterTakenUp[layer] = SoilWater.Uptakes[iCrop].Amount[layer];
+                        mySoilWaterUptake[layer] = SoilWater.Uptakes[iCrop].Amount[layer];
                 }
             }
         }
@@ -3785,9 +3793,9 @@ namespace Models.AgPasture
         /// </summary>
         private void GetWaterUptake()
         {
-            Array.Clear(mySoilWaterTakenUp, 0, mySoilWaterTakenUp.Length);
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
-                mySoilWaterTakenUp[layer] = uptakeWater[layer];
+            Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                mySoilWaterUptake[layer] = uptakeWater[layer];
         }
 
         /// <summary>
@@ -3831,7 +3839,7 @@ namespace Models.AgPasture
             GetSoilAvailableWater();
             // myWaterDemand given by MicroClimate
             if (myWaterUptakeSource.ToLower() == "species")
-                mySoilWaterTakenUp = DoSoilWaterUptake();
+                mySoilWaterUptake = DoSoilWaterUptake();
             //else
             //    uptake is controlled by the sward or by another apsim module
         }
@@ -3840,13 +3848,13 @@ namespace Models.AgPasture
         /// <remarks>Different approaches are available</remarks>
         internal void GetSoilAvailableWater()
         {
-            mySoilAvailableWater = new double[nLayers];
+            mySoilWaterAvailable = new double[nLayers];
             if (myWaterAvailableMethod == "default")
-                mySoilAvailableWater = PlantAvailableSoilWaterDefault();
+                mySoilWaterAvailable = PlantAvailableSoilWaterDefault();
             else if(myWaterAvailableMethod == "alternativeKL")
-                mySoilAvailableWater = PlantAvailableSoilWaterAlternativeKL();
+                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKL();
             else if (myWaterAvailableMethod == "alternativeKS")
-                mySoilAvailableWater = PlantAvailableSoilWaterAlternativeKS();
+                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKS();
         }
 
         /// <summary>Estimate the amount of plant available soil water in each layer of root zone</summary>
@@ -3856,7 +3864,7 @@ namespace Models.AgPasture
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 result[layer] = Math.Max(0.0, mySoil.SoilWater.SW[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
                 result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
@@ -3878,7 +3886,7 @@ namespace Models.AgPasture
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
             double swFac;
             double rldFac;
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
                     swFac = 1.0;
@@ -3914,7 +3922,7 @@ namespace Models.AgPasture
             double rldFac = 0.0;
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 condFac = 1.0 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
                 swFac = 1.0 - Math.Pow(10, -Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer])
@@ -3939,12 +3947,12 @@ namespace Models.AgPasture
             PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
             WaterTakenUp.DeltaWater = new double[nLayers];
 
-            double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(myWaterDemand, mySoilAvailableWater.Sum(), 0.0));
+            double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(myWaterDemand, mySoilWaterAvailable.Sum(), 0.0));
             double[] result = new double[nLayers];
 
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
-                result[layer] = mySoilAvailableWater[layer] * uptakeFraction;
+                result[layer] = mySoilWaterAvailable[layer] * uptakeFraction;
                 WaterTakenUp.DeltaWater[layer] = -result[layer];
             }
 
@@ -3962,8 +3970,8 @@ namespace Models.AgPasture
             WaterChangedType WaterTakenUp = new WaterChangedType();
             WaterTakenUp.DeltaWater = new double[nLayers];
 
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
-                WaterTakenUp.DeltaWater[layer] = -mySoilWaterTakenUp[layer];
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                WaterTakenUp.DeltaWater[layer] = -mySoilWaterUptake[layer];
 
             // send the delta water taken up
             WaterChanged.Invoke(WaterTakenUp);
@@ -3981,7 +3989,7 @@ namespace Models.AgPasture
             // get the amount of N taken up from soil
             Array.Clear(mySoilNitrogenTakenUp, 0, mySoilNitrogenTakenUp.Length);
             mySoilNuptake = 0.0;
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 mySoilNitrogenTakenUp[layer] = uptakeNH4[layer] + uptakeNO3[layer];
                 mySoilNuptake += mySoilNitrogenTakenUp[layer];
@@ -4175,18 +4183,18 @@ namespace Models.AgPasture
         /// </summary>
         internal void GetSoilAvailableN()
         {
-            mySoilNH4available = new double[nLayers];
-            mySoilNO3available = new double[nLayers];
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 if (useAltNUptake == "no")
                 {
                     // simple way, all N in the root zone is available
-                    mySoilNH4available[layer] = mySoil.NH4N[layer] * FractionLayerWithRoots(layer);
-                    mySoilNO3available[layer] = mySoil.NO3N[layer] * FractionLayerWithRoots(layer);
+                    mySoilNH4Available[layer] = mySoil.NH4N[layer] * FractionLayerWithRoots(layer);
+                    mySoilNO3Available[layer] = mySoil.NO3N[layer] * FractionLayerWithRoots(layer);
                 }
                 else
                 {
@@ -4194,18 +4202,18 @@ namespace Models.AgPasture
                     // N is available following water and a given 'availability' factor (for each N form) and the fraction of water taken up
 
                     // fraction of available water taken up
-                    facWtaken = MathUtilities.Divide(mySoilWaterTakenUp[layer],
+                    facWtaken = MathUtilities.Divide(mySoilWaterUptake[layer],
                         Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]), 0.0);
 
                     // Theoretical amount available
-                    mySoilNH4available[layer] = mySoil.NH4N[layer] * kuNH4 * FractionLayerWithRoots(layer);
-                    mySoilNO3available[layer] = mySoil.NO3N[layer] * kuNO3 * FractionLayerWithRoots(layer);
+                    mySoilNH4Available[layer] = mySoil.NH4N[layer] * kuNH4 * FractionLayerWithRoots(layer);
+                    mySoilNO3Available[layer] = mySoil.NO3N[layer] * kuNO3 * FractionLayerWithRoots(layer);
 
                     // actual amount available
-                    mySoilNH4available[layer] *= facWtaken;
-                    mySoilNO3available[layer] *= facWtaken;
+                    mySoilNH4Available[layer] *= facWtaken;
+                    mySoilNO3Available[layer] *= facWtaken;
                 }
-                mySoilAvailableN[layer] = mySoilNH4available[layer] + mySoilNO3available[layer];
+                mySoilAvailableN[layer] = mySoilNH4Available[layer] + mySoilNO3Available[layer];
             }
         }
 
@@ -4215,20 +4223,20 @@ namespace Models.AgPasture
         /// </summary>
         internal void GetSoilAvailableN1(SoilState soilState)
         {
-            mySoilNH4available = new double[nLayers];
-            mySoilNO3available = new double[nLayers];
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
             mySoilAvailableN = new double[nLayers];
 
             double facWtaken = 0.0;
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 if (useAltNUptake == "no")
                 {
                     // simple way, all N in the root zone is available
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                     {
-                        mySoilNH4available[layer] += zone.NH4N[layer] * FractionLayerWithRoots(layer);
-                        mySoilNH4available[layer] += zone.NO3N[layer] * FractionLayerWithRoots(layer);
+                        mySoilNH4Available[layer] += zone.NH4N[layer] * FractionLayerWithRoots(layer);
+                        mySoilNH4Available[layer] += zone.NO3N[layer] * FractionLayerWithRoots(layer);
                     }
                 }
                 else
@@ -4237,21 +4245,21 @@ namespace Models.AgPasture
                     // N is available following water and a given 'availability' factor (for each N form) and the fraction of water taken up
 
                     // fraction of available water taken up
-                    facWtaken = MathUtilities.Divide(mySoilWaterTakenUp[layer],
+                    facWtaken = MathUtilities.Divide(mySoilWaterUptake[layer],
                         Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]), 0.0);
 
                     // Theoretical amount available
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                     {
-                        mySoilNH4available[layer] += zone.NH4N[layer] * kuNH4 * FractionLayerWithRoots(layer);
-                        mySoilNH4available[layer] += zone.NO3N[layer] * kuNO3 * FractionLayerWithRoots(layer);
+                        mySoilNH4Available[layer] += zone.NH4N[layer] * kuNH4 * FractionLayerWithRoots(layer);
+                        mySoilNH4Available[layer] += zone.NO3N[layer] * kuNO3 * FractionLayerWithRoots(layer);
                     }
 
                     // actual amount available
-                    mySoilNH4available[layer] *= facWtaken;
-                    mySoilNO3available[layer] *= facWtaken;
+                    mySoilNH4Available[layer] *= facWtaken;
+                    mySoilNO3Available[layer] *= facWtaken;
                 }
-                mySoilAvailableN[layer] = mySoilNH4available[layer] + mySoilNO3available[layer];
+                mySoilAvailableN[layer] = mySoilNH4Available[layer] + mySoilNO3Available[layer];
             }
         }
 
@@ -4281,7 +4289,7 @@ namespace Models.AgPasture
                 }
 
                 double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(result, mySoilAvailableN.Sum(), 0.0));
-                for (int layer = 0; layer < roots.BottomLayer; layer++)
+                for (int layer = 0; layer <= roots.BottomLayer; layer++)
                 {
                     foreach (ZoneWaterAndN zone in soilState.Zones)
                     {
@@ -4406,10 +4414,12 @@ namespace Models.AgPasture
                             uptakeFraction = Math.Min(1.0,
                                 MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
 
-                        for (int layer = 0; layer < roots.BottomLayer; layer++)
+                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
                         {
-                            NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
-                            NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
+                            //NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
+                            //NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
+                            NUptake.DeltaNH4[layer] = -mySoilNH4Available[layer] * uptakeFraction;
+                            NUptake.DeltaNO3[layer] = -mySoilNO3Available[layer] * uptakeFraction;
 
                             mySoilNitrogenTakenUp[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
                         }
@@ -4423,7 +4433,7 @@ namespace Models.AgPasture
                         double[] fWUptake = new double[nLayers];
                         double totNH4Available = mySoilAvailableN.Sum();
                         double totNO3Available = mySoilAvailableN.Sum();
-                        double totWuptake = mySoilWaterTakenUp.Sum();
+                        double totWuptake = mySoilWaterUptake.Sum();
                         for (int layer = 0; layer < nLayers; layer++)
                         {
                             fNH4Avail[layer] = Math.Min(1.0,
@@ -4431,7 +4441,7 @@ namespace Models.AgPasture
                             fNO3Avail[layer] = Math.Min(1.0,
                                 MathUtilities.Divide(mySoilAvailableN[layer], totNO3Available, 0.0));
                             fWUptake[layer] = Math.Min(1.0,
-                                MathUtilities.Divide(mySoilWaterTakenUp[layer], totWuptake, 0.0));
+                                MathUtilities.Divide(mySoilWaterUptake[layer], totWuptake, 0.0));
                         }
                         double totFacNH4 = fNH4Avail.Sum() + fWUptake.Sum();
                         double totFacNO3 = fNO3Avail.Sum() + fWUptake.Sum();
@@ -4482,7 +4492,7 @@ namespace Models.AgPasture
             NUptake.DeltaNO3 = new double[nLayers];
             NUptake.DeltaNH4 = new double[nLayers];
 
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 NUptake.DeltaNH4[layer] = -uptakeNH4[layer];
                 NUptake.DeltaNO3[layer] = -uptakeNO3[layer];
@@ -4588,6 +4598,13 @@ namespace Models.AgPasture
             NSenescedRemobilisable = 0.0;
             NLuxuryRemobilisable = 0.0;
             NLuxuryRemobilised = 0.0;
+
+            mySoilWaterAvailable = new double[nLayers];
+            mySoilWaterUptake = new double[nLayers];
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
 
             // reset transfer variables for all tissues in each organ
             leaves.DoCleanTransferAmounts();
@@ -5262,7 +5279,7 @@ namespace Models.AgPasture
                         MyZone = Z;
 
                 GetSoilAvailableWater();
-                double Supply = mySoilAvailableWater.Sum();
+                double Supply = mySoilWaterAvailable.Sum();
                 double Demand = myWaterDemand;
                 double FractionUsed = 0.0;
                 if (Supply > Epsilon)
@@ -5271,7 +5288,7 @@ namespace Models.AgPasture
                 // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN();
                 uptake.Name = MyZone.Name;
-                uptake.Water = MathUtilities.Multiply_Value(mySoilAvailableWater, FractionUsed);
+                uptake.Water = MathUtilities.Multiply_Value(mySoilWaterAvailable, FractionUsed);
                 uptake.NO3N = new double[nLayers];
                 uptake.NH4N = new double[nLayers];
 
@@ -5566,7 +5583,7 @@ namespace Models.AgPasture
             if (myWaterDemand <= Epsilon)
                 result = 1.0;
             else
-                result = mySoilWaterTakenUp.Sum() / myWaterDemand;
+                result = mySoilWaterUptake.Sum() / myWaterDemand;
 
             return Math.Max(0.0, Math.Min(1.0, result));
         }
@@ -5588,7 +5605,7 @@ namespace Models.AgPasture
             double fractionLayer = 0.0;
 
             // gather water status over the root zone
-            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 // fraction of layer with roots 
                 fractionLayer = FractionLayerWithRoots(layer);
@@ -5749,7 +5766,7 @@ namespace Models.AgPasture
         internal double FractionLayerWithRoots(int layer)
         {
             double fractionInLayer = 0.0;
-            if (layer < roots.BottomLayer)
+            if (layer <= roots.BottomLayer)
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
