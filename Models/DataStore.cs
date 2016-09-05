@@ -964,6 +964,9 @@ namespace Models
             DataTable DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
             List<string> simulationNamesInDB = DataTableUtilities.GetColumnAsStrings(DB, "Name").ToList();
 
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("BEGIN");
+
             // For those simulations in 'table' that aren't in the DB, add them
             // to the simulations table
             string insertSQL = null;
@@ -978,9 +981,9 @@ namespace Models
                     insertSQL += "('" + simulationNameInTable + "')";
 
                     numSoFar++;
-                    if (numSoFar == 50)
+                    if (numSoFar == 20)
                     {
-                        // cannot have too many values in a single INSERT statement. Limit to 50
+                        // cannot have too many values in a single INSERT statement. Limit to 20
                         RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES " + insertSQL);
                         numSoFar = 0;
                     }
@@ -988,6 +991,10 @@ namespace Models
             }
             if (insertSQL != null)
                 RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES " + insertSQL);
+
+            // Tell SQLite that we're ending a transaction.
+            Connection.ExecuteNonQuery("END");
+
 
             // Get a list of simulation names and IDs from DB
             DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
