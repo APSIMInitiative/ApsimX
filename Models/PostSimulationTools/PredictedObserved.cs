@@ -100,6 +100,8 @@ namespace Models.PostSimulationTools
 
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
+                //string sql = "SELECT * FROM Observed I INNER JOIN DailyReport R USING (SimulationID) WHERE I.'Clock.Today' = R.'Clock.Today'";
+                //DataTable predictedObservedData = dataStore.RunQuery(sql);
                 if (predictedObservedData != null)
                     dataStore.WriteTable(null, this.Name, predictedObservedData);
                 dataStore.Disconnect();
