@@ -293,6 +293,10 @@ namespace Models.Soils
         /// </summary>
         public int TimeStep { get; set; }
         /// <summary>
+        /// Change in pond depth for the day
+        /// </summary>
+        public double DeltaPond { get { return SODPondDepth - EODPondDepth; } }
+        /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
         [Units("mm/h")]
@@ -454,6 +458,8 @@ namespace Models.Soils
         {
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
+            SODPondDepth = pond;
+            double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
             for (int h = 0; h < 24; h++)
             {
                 InitialProfileWater = MathUtilities.Sum(SWmm);
@@ -477,8 +483,14 @@ namespace Models.Soils
                 doDownwardDiffusion();
                 doUpwardDiffusion();
             }
+            EODPondDepth = pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
             Drainage = MathUtilities.Sum(Hourly.Drainage);
+            double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
+            double DeltaSWC = SoilWaterContentSOD - SoilWaterContentEOD;
+            double CheckMass = DeltaSWC + Infiltration - Drainage;
+            if (Math.Abs(CheckMass) > FloatingPointTolerance)
+                throw new Exception(this + " Mass balance violated");
         }
         /// <summary>
         /// Adds irrigation events into daily total
@@ -532,6 +544,8 @@ namespace Models.Soils
         /// </summary>
         private double InitialResidueWater { get; set; }
         private double ProfileSaturation { get; set; }
+        private double SODPondDepth { get; set; }
+        private double EODPondDepth { get; set; }
         #endregion
 
         #region Internal Properties and Methods
@@ -664,7 +678,7 @@ namespace Models.Soils
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AdsorptionCapacity[0] + PercolationCapacityBelow[0];
+            PotentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0],TransmissionCapacity[0]);
         }
         /// <summary>
         /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
