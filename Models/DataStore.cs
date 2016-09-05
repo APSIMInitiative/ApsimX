@@ -969,32 +969,15 @@ namespace Models
 
             // For those simulations in 'table' that aren't in the DB, add them
             // to the simulations table
-            string insertSQL = null;
             List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
-            int numSoFar = 0;
             foreach (string simulationNameInTable in simulationNamesInTable)
             {
                 if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
-                {
-                    if (insertSQL != null)
-                        insertSQL += ",";
-                    insertSQL += "('" + simulationNameInTable + "')";
-
-                    numSoFar++;
-                    if (numSoFar == 20)
-                    {
-                        // cannot have too many values in a single INSERT statement. Limit to 20
-                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES " + insertSQL);
-                        numSoFar = 0;
-                    }
-                }
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
             }
-            if (insertSQL != null)
-                RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES " + insertSQL);
 
             // Tell SQLite that we're ending a transaction.
             Connection.ExecuteNonQuery("END");
-
 
             // Get a list of simulation names and IDs from DB
             DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
