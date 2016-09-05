@@ -968,6 +968,7 @@ namespace Models
             // to the simulations table
             string insertSQL = null;
             List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
+            int numSoFar = 0;
             foreach (string simulationNameInTable in simulationNamesInTable)
             {
                 if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
@@ -975,6 +976,14 @@ namespace Models
                     if (insertSQL != null)
                         insertSQL += ",";
                     insertSQL += "('" + simulationNameInTable + "')";
+
+                    numSoFar++;
+                    if (numSoFar == 50)
+                    {
+                        // cannot have too many values in a single INSERT statement. Limit to 50
+                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES " + insertSQL);
+                        numSoFar = 0;
+                    }
                 }
             }
             if (insertSQL != null)
