@@ -97,6 +97,7 @@ namespace UserInterface.Presenters
             this.view = view as IProfileView;
             this.explorerPresenter = explorerPresenter;
 
+            this.view.ShowView(false);
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
             this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
@@ -142,6 +143,7 @@ namespace UserInterface.Presenters
             
             this.view.ProfileGrid.ResizeControls();
             this.view.PropertyGrid.ResizeControls();
+            this.view.ShowView(true);
         }
 
         /// <summary>
@@ -322,9 +324,9 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
-                if (property.Units != null)
+                if (property.UnitsLabel != null)
                 {
-                    columnName += "\r\n(" + property.Units + ")";
+                    columnName += "\r\n" + property.UnitsLabel;
                 }
 
                 // add a total to the column header if necessary.
@@ -492,9 +494,9 @@ namespace UserInterface.Presenters
                         if (!double.IsNaN(total))
                         {
                             string columnName = property.Description;
-                            if (property.Units != null)
+                            if (property.UnitsLabel != null)
                             {
-                                columnName += "\r\n(" + property.Units + ")";
+                                columnName += "\r\n" + property.UnitsLabel;
                             }
 
                             columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
@@ -539,8 +541,12 @@ namespace UserInterface.Presenters
                 this.view.ProfileGrid.ClearContextActions();
                 this.indexOfClickedVariable = e.Column.ColumnIndex;
                 VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-                foreach (string unit in property.AllowableUnits)
-                    this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);                     
+                if (property.AllowableUnits.Length > 0)
+                {
+                    this.view.ProfileGrid.AddContextSeparator();
+                    foreach (string unit in property.AllowableUnits)
+                        this.view.ProfileGrid.AddContextOption(unit, this.OnUnitClick, unit == property.Units);
+                }
             }
         }
 
@@ -552,8 +558,11 @@ namespace UserInterface.Presenters
         private void OnUnitClick(object sender, EventArgs e)
         {
             VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-            /// TBI property.Units = (sender as System.Windows.Forms.ToolStripDropDownItem).Text;
-            this.OnModelChanged(this.model);
+            if (sender is Gtk.MenuItem)
+            {
+                property.Units = ((sender as Gtk.MenuItem).Child as Gtk.AccelLabel).Text;
+                this.OnModelChanged(this.model);
+            }
         }
     }
 }

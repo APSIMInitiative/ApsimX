@@ -39,41 +39,39 @@ namespace UserInterface.Forms
         /// </summary>
         private IMainView tabbedExplorerView;
         [Widget]
-        private VBox vbox1;
+        private Window window1 = null;
         [Widget]
-        private Window window1;
+        private Button button1 = null;
         [Widget]
-        private Button button1;
+        private Button button2 = null;
         [Widget]
-        private Button button2;
+        private Entry firstNameBox = null;
         [Widget]
-        private Entry firstNameBox;
+        private Entry lastNameBox = null;
         [Widget]
-        private Entry lastNameBox;
+        private Entry organisationBox = null;
         [Widget]
-        private Entry organisationBox;
+        private Entry emailBox = null;
         [Widget]
-        private Entry emailBox;
+        private Entry address1Box = null;
         [Widget]
-        private Entry address1Box;
+        private Entry address2Box = null;
         [Widget]
-        private Entry address2Box;
+        private Entry cityBox = null;
         [Widget]
-        private Entry cityBox;
+        private Entry stateBox = null;
         [Widget]
-        private Entry stateBox;
+        private Entry countryBox = null;
         [Widget]
-        private Entry countryBox;
+        private Entry postcodeBox = null;
         [Widget]
-        private Entry postcodeBox;
+        private Label label1 = null;
         [Widget]
-        private Label label1;
+        private Alignment HTMLalign = null;
         [Widget]
-        private Alignment HTMLalign;
+        private CheckButton checkbutton1 = null;
         [Widget]
-        private CheckButton checkbutton1;
-        [Widget]
-        private TreeView listview1;
+        private TreeView listview1 = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private Views.HTMLView HTMLview;
 

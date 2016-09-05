@@ -153,7 +153,10 @@ namespace UserInterface.Presenters
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
             this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-       
+
+            this.propertyPresenter.Detach();
+            if (this.graphPresenter != null)
+                this.graphPresenter.Detach();
             if (this.parentForGraph != null && this.graph != null)
             {
                 this.parentForGraph.Children.Remove(this.graph);
@@ -319,9 +322,9 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
-                if (property.Units != null)
+                if (property.UnitsLabel != null)
                 {
-                    columnName += "\r\n(" + property.Units + ")";
+                    columnName += "\r\n" + property.UnitsLabel;
                 }
 
                 // add a total to the column header if necessary.
@@ -487,9 +490,9 @@ namespace UserInterface.Presenters
                         if (!double.IsNaN(total))
                         {
                             string columnName = property.Description;
-                            if (property.Units != null)
+                            if (property.UnitsLabel != null)
                             {
-                                columnName += "\r\n(" + property.Units + ")";
+                                columnName += "\r\n" + property;
                             }
 
                             columnName = columnName + "\r\n" + total.ToString("N1") + " mm";

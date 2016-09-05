@@ -971,10 +971,6 @@ It is important to note that these modifiers are applied to the kl value specifi
       <End>Maturity</End>
     </PhaseBasedSwitch>
     <Constant>
-      <Name>TemperatureEffect</Name>
-      <Value>1</Value>
-    </Constant>
-    <Constant>
       <Name>MaximumRootDepth</Name>
       <Value>1500</Value>
     </Constant>

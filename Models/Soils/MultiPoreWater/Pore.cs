@@ -13,26 +13,56 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
-        /// <summary>The thickness of the layer that the pore is within</summary>
+        private double FloatingPointTolerance = 0.0000000001;
+        /// <summary>The layer that this pore compartment is located in</summary>
+        [XmlIgnore]
+        public double Layer { get; set; }
+        /// <summary>The size compartment that this pore represents</summary>
+        [XmlIgnore]
+        public double Compartment { get; set; }/// <summary>The thickness of the layer that the pore is within</summary>
         [XmlIgnore]
         [Units("mm")]
         public double Thickness { get; set; }
         /// <summary>The diameter of the upper boundry of the pore</summary>
         [XmlIgnore]
         [Units("nm")]
-        public double MaxDiameter { get; set; }
+        public double DiameterUpper { get; set; }
         /// <summary>The diameter of the lower boundry of the pore</summary>
         [XmlIgnore]
         [Units("nm")]
-        public double MinDiameter { get; set; }
-        /// <summary>The volume of the the pore</summary>
+        public double DiameterLower { get; set; }
+        /// <summary>The diameter of the lower boundry of the pore</summary>
+        [XmlIgnore]
+        [Units("cm")]
+        public double PsiLower { get { return -3000 / DiameterLower; } }
+        /// <summary>The mean pore diameter</summary>
+        [XmlIgnore]
+        [Units("cm")]
+        public double PsiUpper { get { return -3000 / DiameterUpper; } }
+        /// <summary>The water content of the soil when this pore is full and larger pores are empty</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double Volume { get; set; }
+        public double ThetaUpper { get; set; }
+        /// <summary>The water content of the soil when this pore is empty and smaller pores are full</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double ThetaLower { get; set; }
+        /// <summary>The volume of the the pore relative to the volume of soil</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double Volume { get { return ThetaUpper - ThetaLower; } }
+        /// <summary>The volume of the the pore in mm</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double VolumeDepth { get { return Volume * Thickness; } }
         /// <summary>The water filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
         public double WaterFilledVolume { get { return WaterDepth / Thickness; } }
+        /// <summary>The water filled volume of the pore relative to the air space</summary>
+        [XmlIgnore]
+        [Units("ml/ml")]
+        public double RelativeWaterContent { get { return WaterFilledVolume / Volume; } }
         /// <summary>The air filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -50,6 +80,8 @@ namespace Models.Soils
             {
                 if (value < -0.000000000001) throw new Exception("Trying to set a negative pore water depth");
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
+                if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
+                    throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -59,11 +91,67 @@ namespace Models.Soils
         /// <summary>The conductivity of water moving into a pore, The net result of gravity driving it in, capilary forces drawing it in and repellency stopping it</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivityIn { get; set; }
+        public double HydraulicConductivity { get { return HydraulicConductivityUpper - HydraulicConductivityLower; } }
+        /// <summary>The conductivity from a conductivity curve when this pore is full but larger pores are empty</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityUpper { get; set; }
+        /// <summary>The conductivity from a conductivity curve when this pore is empty but smaller pores are full</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityLower { get; set; }
+        /// <summary>The maximum possible conductivity through a pore of given size</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityIn
+        {
+            get
+            {
+                return HydraulicConductivity + Adsorption;
+            }
+        }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivityOut { get; set; }
-
+        public double HydraulicConductivityOut
+        {
+            get
+            {
+                return HydraulicConductivity * TensionFactor;
+            }
+        }
+        /// <summary>
+        /// The rate of water movement into a pore space due to the chemical attraction from the matris
+        /// </summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double Adsorption
+        {
+            get
+            {
+                double AbsFac = 1;
+                if (RelativeWaterContent < 0.3)
+                    AbsFac = 0.3;
+                return AbsFac;
+            }
+        }
+        /// <summary>
+        /// Factor describing the effects of water surface tension holding water in pores.  Is zero where surface tension exceeds the forces of gravity and neglegable where suction is low in larger pores
+        /// equals 1
+        /// </summary>
+        public double TensionFactor
+        {
+            get
+            {
+                double factor = 0;
+                if (GravitationalPotential < PsiUpper)
+                    factor = 1;
+                return factor;
+            }
+        }
+        /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double GravitationalPotential { get; set; }
     }
 }

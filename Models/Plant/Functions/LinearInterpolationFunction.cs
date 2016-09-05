@@ -135,8 +135,8 @@ namespace Models.PMF.Functions
             {
                 IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
                 string xName = XProperty;
-                if (xProperty != null && xProperty.Units != string.Empty)
-                    xName += " (" + xProperty.Units + ")";
+                if (xProperty != null && xProperty.UnitsLabel != string.Empty)
+                    xName += " " + xProperty.UnitsLabel;
 
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value") + "</i>", indent));
 

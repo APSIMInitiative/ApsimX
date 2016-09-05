@@ -88,6 +88,8 @@ namespace UserInterface.Views
             /// Another way to get around this problem is to add JSON.Parse support available from
             /// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
             /// into the HTML Script added when loading Google Maps
+            /// I am taking the belts-and-braces approach of doing both, primarily because the 
+            /// meta tag, while probably the technically better" solution, sometimes doesn't work.
 
             wb.DocumentText = @"<!DOCTYPE html>
                    <html>
@@ -411,16 +413,6 @@ namespace UserInterface.Views
         }
 
         #region Event Handlers
-
-        /// <summary>
-        /// User has clicked a link.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnLinkClicked(object sender, /* TBI LinkClicked */ EventArgs e)
-        {
-            /// TBI Process.Start(e.LinkText);
-        }
 
         /// <summary>
         /// User has clicked 'edit'

@@ -153,7 +153,7 @@ namespace UserInterface.Views
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
-                if (selPath == null)
+                if (selPath == null || selPath.Length == 0)
                     return null;
                 else
                 {

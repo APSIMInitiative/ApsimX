@@ -58,7 +58,7 @@ namespace UserInterface.Views
         private string nodePathBeforeRename;
 
         [Widget]
-        private VBox vbox1;
+        private VBox vbox1 = null;
         [Widget]
         private Toolbar toolStrip = null;
         [Widget]
