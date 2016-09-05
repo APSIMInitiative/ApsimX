@@ -63,7 +63,6 @@
               <double>0.36</double>
               <double>0.392</double>
               <double>0.446</double>
-              <double>0.446</double>
             </LL>
             <KL>
               <double>0.06</double>
@@ -73,10 +72,8 @@
               <double>0.04</double>
               <double>0.02</double>
               <double>0.01</double>
-              <double>0.01</double>
             </KL>
             <XF>
-              <double>1</double>
               <double>1</double>
               <double>1</double>
               <double>1</double>
@@ -94,7 +91,6 @@
             <double>200</double>
             <double>200</double>
             <double>200</double>
-            <double>200</double>
           </Thickness>
           <BD>
             <double>1.01056473311131</double>
@@ -104,7 +100,6 @@
             <double>1.17301160318016</double>
             <double>1.16287303586874</double>
             <double>1.18749547755906</double>
-            <double>1.19</double>
           </BD>
           <AirDry>
             <double>0.130250054518252</double>
@@ -114,10 +109,8 @@
             <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
-            <double>0.25</double>
           </AirDry>
           <LL15>
-            <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
@@ -134,7 +127,6 @@
             <double>0.46</double>
             <double>0.45</double>
             <double>0.44</double>
-            <double>0.44</double>
           </DUL>
           <SAT>
             <double>0.6</double>
@@ -144,10 +136,8 @@
             <double>0.56</double>
             <double>0.55</double>
             <double>0.54</double>
-            <double>0.54</double>
           </SAT>
           <KS>
-            <double>30</double>
             <double>30</double>
             <double>30</double>
             <double>30</double>
@@ -159,6 +149,17 @@
         </Water>
         <MultiPoreWater>
           <Name>MultiPoreWater</Name>
+          <XYPairs>
+            <Name>AdsorptionResponse</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
           <PoreBounds>
             <double>30598</double>
             <double>3059</double>
@@ -514,10 +515,8 @@
             <double>200</double>
             <double>200</double>
             <double>200</double>
-            <double>200</double>
           </Thickness>
           <SW>
-            <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
             <double>0.25</double>
@@ -546,6 +545,7 @@
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1289,5 +1289,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>285</ExplorerWidth>
+  <ExplorerWidth>277</ExplorerWidth>
 </Simulations>
