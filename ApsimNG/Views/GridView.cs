@@ -525,6 +525,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
+        {
+            CheckMenuItem item = new CheckMenuItem(menuItemText);
+            item.DrawAsRadio = true;
+            item.Active = active;
+            item.Activated += onClick;
+            Popup.Append(item);
+            Popup.ShowAll();
+        }
+
+        /// <summary>
         /// Clear all presenter defined context items.
         /// </summary>
         public void ClearContextActions()

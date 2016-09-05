@@ -120,6 +120,42 @@ namespace Models.Core
         {
             get
             {
+                string unitString = null;
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                if (unitsAttribute != null)
+                {
+                    unitString = unitsAttribute.ToString();
+                }
+                else if (unitsInfo != null)
+                {
+                    object val = unitsInfo.GetValue(this.Object, null);
+                    unitString = val.ToString();
+                }
+                return unitString;
+            }
+            set
+            {
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
+                if (unitsSet != null)
+                {
+                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
+                }
+                else if (unitsInfo != null)
+                {
+                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
                 // Get units from property
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
@@ -139,21 +175,7 @@ namespace Models.Core
                 }
                 else if (unitsToStringInfo != null)
                     unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
-                return unitString;
-            }
-
-            set
-            {
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
-                if (unitsSet != null)
-                {
-                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
-                }
-                else if (unitsInfo != null)
-                {
-                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
-                }
+                return "(" + unitString + ")";
             }
         }
 

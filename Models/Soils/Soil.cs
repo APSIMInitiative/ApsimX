@@ -105,6 +105,22 @@ namespace Models.Soils
         [Description("Longitude (WGS84)")]
         public double Longitude { get; set; }
 
+        /// <summary>Gets or sets an array of latitudes for a soil area.</summary>
+        [Summary]
+        [Description("List of area polygon latitudes")]
+        public double[] PolyLatitude { get; set; }
+
+        /// <summary>Gets or sets an array of longitudes for a soil area.</summary>
+        [Summary]
+        [Description("List of area polygon longitudes")]
+        public double[] PolyLongitude { get; set; }
+
+        /// <summary>Gets or sets an area the soil represents.</summary>
+        [Summary]
+        [Description("Area this soil represents")]
+        [Units("ha")]
+        public double Area { get; set; }
+
         /// <summary>Gets or sets the location accuracy.</summary>
         [Summary]
         [Description("Location accuracy")]

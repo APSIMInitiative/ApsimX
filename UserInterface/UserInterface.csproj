@@ -211,6 +211,7 @@
     <Compile Include="Commands\DeleteModelCommand.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
+    <Compile Include="Commands\SaveApsimJob.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />

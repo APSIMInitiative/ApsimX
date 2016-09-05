@@ -322,9 +322,9 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
-                if (property.Units != null)
+                if (property.UnitsLabel != null)
                 {
-                    columnName += "\r\n(" + property.Units + ")";
+                    columnName += "\r\n" + property.UnitsLabel;
                 }
 
                 // add a total to the column header if necessary.
@@ -490,9 +490,9 @@ namespace UserInterface.Presenters
                         if (!double.IsNaN(total))
                         {
                             string columnName = property.Description;
-                            if (property.Units != null)
+                            if (property.UnitsLabel != null)
                             {
-                                columnName += "\r\n(" + property.Units + ")";
+                                columnName += "\r\n" + property;
                             }
 
                             columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
