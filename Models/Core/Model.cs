@@ -280,7 +280,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// returns the version number of APSIM running
+        /// Return the current APSIM version number.
         /// </summary>
         public string ApsimVersion
         {

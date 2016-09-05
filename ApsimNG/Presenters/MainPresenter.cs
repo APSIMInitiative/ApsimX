@@ -75,7 +75,8 @@ namespace UserInterface.Presenters
 
         /// <summary>Detach this presenter from the view.</summary>
         /// <param name="view">The view used for this object</param>
-        public void Detach(object view) {
+        public void Detach(object view)
+        {
             this.view.AllowClose -= OnClosing;
             this.view.StartPage1.List.DoubleClicked -= OnFileDoubleClicked1;
             this.view.StartPage2.List.DoubleClicked -= OnFileDoubleClicked2;
@@ -106,27 +107,25 @@ namespace UserInterface.Presenters
         /// <summary>Execute the specified script, returning any error messages or NULL if all OK.</summary>
         public string ProcessStartupScript(string code)
         {
-            {
-                Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
 
-                // Get the script 'Type' from the compiled assembly.
-                Type scriptType = compiledAssembly.GetType("Script");
-                if (scriptType == null)
-                    throw new Exception("Cannot find a public class called 'Script'");
+            // Get the script 'Type' from the compiled assembly.
+            Type scriptType = compiledAssembly.GetType("Script");
+            if (scriptType == null)
+                throw new Exception("Cannot find a public class called 'Script'");
 
-                // Look for a method called Execute
-                MethodInfo executeMethod = scriptType.GetMethod("Execute");
-                if (executeMethod == null)
-                    throw new Exception("Cannot find a method Script.Execute");
+            // Look for a method called Execute
+            MethodInfo executeMethod = scriptType.GetMethod("Execute");
+            if (executeMethod == null)
+                throw new Exception("Cannot find a method Script.Execute");
 
-                // Create a new script model.
-                object script = compiledAssembly.CreateInstance("Script");
+            // Create a new script model.
+            object script = compiledAssembly.CreateInstance("Script");
 
-                // Call Execute on our newly created script instance.
-                object[] arguments = new object[] { this };
-                executeMethod.Invoke(script, arguments);
-                return null;
-            }
+            // Call Execute on our newly created script instance.
+            object[] arguments = new object[] { this };
+            executeMethod.Invoke(script, arguments);
+            return null;
         }
 
         /// <summary>
@@ -202,7 +201,7 @@ namespace UserInterface.Presenters
             return view.AskUserForSaveFileName(fileSpec, oldFilename);
         }
 
-        /// <summary>Populate the view for the first time. Will throw fif there are errors on startup.</summary>
+        /// <summary>Populate the view for the first time. Will throw if there are errors on startup.</summary>
         /// <param name="startPage">The start page to populate.</param>
         private void PopulateStartPage(IListButtonView startPage)
         {
@@ -403,8 +402,6 @@ namespace UserInterface.Presenters
             bool onLeftTabControl = true;
             if (sender != null)
                 onLeftTabControl = this.view.IsControlOnLeft(sender);
-            onLeftTabControl = (sender as Gtk.Widget).IsAncestor((this.view.StartPage1 as ListButtonView).MainWidget);
-
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
         }
 
