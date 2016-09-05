@@ -149,6 +149,17 @@
         </Water>
         <MultiPoreWater>
           <Name>MultiPoreWater</Name>
+          <XYPairs>
+            <Name>AdsorptionResponse</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
           <PoreBounds>
             <double>30598</double>
             <double>3059</double>
@@ -534,6 +545,7 @@
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1277,5 +1289,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>285</ExplorerWidth>
+  <ExplorerWidth>277</ExplorerWidth>
 </Simulations>

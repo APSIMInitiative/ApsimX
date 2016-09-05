@@ -153,6 +153,17 @@
         </Water>
         <MultiPoreWater>
           <Name>MultiPoreWater</Name>
+          <XYPairs>
+            <Name>AdsorptionResponse</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
           <PoreBounds>
             <double>30598</double>
             <double>3059</double>
@@ -536,6 +547,7 @@
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1351,13 +1363,13 @@ namespace Models
               <double>1.18749547755906</double>
             </BD>
             <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
             </AirDry>
             <LL15>
               <double>0.25</double>
@@ -1396,6 +1408,28 @@ namespace Models
               <double>20</double>
             </KS>
           </Water>
+          <HydraulicProperties>
+            <Name>HydraulicProperties</Name>
+            <psidul>-100</psidul>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <kdul>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </kdul>
+          </HydraulicProperties>
           <Specifications>
             <string>[Water]</string>
           </Specifications>
@@ -1423,13 +1457,13 @@ namespace Models
               <double>1.18749547755906</double>
             </BD>
             <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
             </AirDry>
             <LL15>
               <double>0.25</double>
@@ -1461,13 +1495,35 @@ namespace Models
             <KS>
               <double>100</double>
               <double>100</double>
-              <double>20</double>
               <double>0</double>
               <double>0</double>
-              <double>20</double>
-              <double>20</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </KS>
           </Water>
+          <HydraulicProperties>
+            <Name>HydraulicProperties</Name>
+            <psidul>-100</psidul>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <kdul>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </kdul>
+          </HydraulicProperties>
           <Specifications>
             <string>[Water]</string>
           </Specifications>
@@ -1495,13 +1551,13 @@ namespace Models
               <double>1.18749547755906</double>
             </BD>
             <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
             </AirDry>
             <LL15>
               <double>0.25</double>
@@ -1531,15 +1587,37 @@ namespace Models
               <double>0.54</double>
             </SAT>
             <KS>
-              <double>10</double>
-              <double>10</double>
-              <double>20</double>
               <double>1</double>
               <double>1</double>
-              <double>20</double>
-              <double>20</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </KS>
           </Water>
+          <HydraulicProperties>
+            <Name>HydraulicProperties</Name>
+            <psidul>-100</psidul>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <kdul>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </kdul>
+          </HydraulicProperties>
           <Specifications>
             <string>[Water]</string>
           </Specifications>
@@ -1586,6 +1664,7 @@ namespace Models
             <string>[Soil].MultiPoreWater.Infiltration</string>
             <string>[Soil].MultiPoreWater.pond</string>
             <string>[Irrigation].IrrigationApplied</string>
+            <string>[Soil].MultiPoreWater.DeltaPond + [Soil].MultiPoreWater.Infiltration + [Soil].MultiPoreWater.Drainage as Check</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -1664,6 +1743,17 @@ namespace Models
           </Water>
           <MultiPoreWater>
             <Name>MultiPoreWater</Name>
+            <XYPairs>
+              <Name>AdsorptionResponse</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
             <PoreBounds>
               <double>30598</double>
               <double>3059</double>
@@ -2047,6 +2137,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -2207,7 +2298,11 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>InitSatKsatMid</string>
+          <string>InitMidKsatMid</string>
+          <string>InitLLKsatMid</string>
+        </DisabledSeries>
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -2248,11 +2343,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>InitSatKsatMid</string>
-          <string>InitMidKsatMid</string>
-          <string>InitLLKsatMid</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -2917,6 +3008,47 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
+      <Graph>
+        <Name>Check</Name>
+        <Series>
+          <Name>Series</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>0</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Check</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Experiment>
   <ExplorerWidth>285</ExplorerWidth>
