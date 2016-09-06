@@ -204,6 +204,7 @@
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
