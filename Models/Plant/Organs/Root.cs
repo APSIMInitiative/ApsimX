@@ -829,15 +829,21 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the N amount available for uptake</summary>
         /// <returns>N available to be taken up</returns>
-        private double AvailableNUptake()
+        public double AvailableNUptake()
         {
+            if (plantZone.soil.Thickness != null)
+            {
                 double[] no3supply = new double[plantZone.soil.Thickness.Length];
                 double[] nh4supply = new double[plantZone.soil.Thickness.Length];
                 SoilNSupply(no3supply, nh4supply);
                 double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) +
                                   Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
                 return NSupply;
-
+            }
+            else
+            { //Soil not initialised yet
+                return 0.0;
+            }
         }
 
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
