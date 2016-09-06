@@ -557,37 +557,6 @@ namespace Models.PMF.Organs
             return depth_of_root_in_layer / plantZone.soil.Thickness[layer];
         }
         
-        /// <summary>Soils the n supply.</summary>
-        /// <param name="NO3Supply">The n o3 supply.</param>
-        /// <param name="NH4Supply">The n h4 supply.</param>
-        private void SoilNSupply(double[] NO3Supply, double[] NH4Supply)
-        {
-            double[] no3ppm = new double[plantZone.soil.Thickness.Length];
-            double[] nh4ppm = new double[plantZone.soil.Thickness.Length];
-
-            for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
-            {
-                if (plantZone.LayerLive[layer].Wt > 0)
-                {
-                    double kno3 = KNO3.ValueForX(LengthDensity[layer]);
-                    double knh4 = KNH4.ValueForX(LengthDensity[layer]);
-                    double RWC = 0;
-                    RWC = (plantZone.soil.Water[layer] - plantZone.soil.SoilWater.LL15mm[layer]) / (plantZone.soil.SoilWater.DULmm[layer] - plantZone.soil.SoilWater.LL15mm[layer]);
-                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
-                    no3ppm[layer] = plantZone.soil.NO3N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NO3Supply[layer] = plantZone.soil.NO3N[layer] * kno3 * no3ppm[layer] * SWAF;
-                    nh4ppm[layer] = plantZone.soil.NH4N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NH4Supply[layer] = plantZone.soil.NH4N[layer] * knh4 * nh4ppm[layer] * SWAF;
-                }
-                else
-                {
-                    NO3Supply[layer] = 0;
-                    NH4Supply[layer] = 0;
-                }
-            }
-        }
-
         /// <summary>Called when crop is ending</summary>
         public override void DoPlantEnding()
         {
@@ -825,31 +794,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the n supply.</summary>
         /// <value>The n supply.</value>
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Reallocation = 0.0,
-                    Retranslocation = 0.0,
-                    Uptake = 0.0// AvailableNUptake()
-                };
-            }
-        }
+        public override BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } }
 
-        /// <summary>Gets the N amount available for uptake</summary>
-        /// <returns>N available to be taken up</returns>
-        private double AvailableNUptake()
-        {
-                double[] no3supply = new double[plantZone.soil.Thickness.Length];
-                double[] nh4supply = new double[plantZone.soil.Thickness.Length];
-                SoilNSupply(no3supply, nh4supply);
-                double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) +
-                                  Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
-                return NSupply;
 
-        }
 
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
