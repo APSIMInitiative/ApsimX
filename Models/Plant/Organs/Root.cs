@@ -797,21 +797,17 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         public override double[] NO3NSupply(ZoneWaterAndN zone)
         {
-            return CalcNUptake(zone.NO3N, zone.Name, KNO3);
-        }
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        public override double[] NH4NSupply(ZoneWaterAndN zone)
-        {
-            return CalcNUptake(zone.NH4N, zone.Name, KNH4);
-        }
-        private double[] CalcNUptake(double[] N, string zoneName, LinearInterpolationFunction K)
-        {
-            ZoneState myZone = zones.Find(z => z.Name == zoneName);
+            ZoneState myZone = zones.Find(z => z.Name == zone.Name);
             if (myZone != null)
             {
-                double[] Nsupply = new double[myZone.soil.Thickness.Length];
-                double NUptake = 0;
+                double[] NO3 = zone.NO3N;
+
+                double[] NO3Supply = new double[myZone.soil.Thickness.Length];
+
+                double[] no3ppm = new double[myZone.soil.Thickness.Length];
+
+                double NO3uptake = 0;
+
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
                     if (myZone.LayerLive[layer].Wt > 0)
@@ -819,19 +815,64 @@ namespace Models.PMF.Organs
                         double RWC = 0;
                         RWC = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
                         RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                        double k = K.ValueForX(LengthDensity[layer]);
+                        double kno3 = KNO3.ValueForX(LengthDensity[layer]);
                         double SWAF = NUptakeSWFactor.ValueForX(RWC);
-                        double Nppm = N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
-                        Nsupply[layer] = Math.Min(N[layer] * k * Nppm * SWAF, (MaxDailyNUptake.Value - NUptake));
-                        NUptake += Nsupply[layer];
+                        no3ppm[layer] = NO3[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * SWAF, (MaxDailyNUptake.Value - NO3uptake));
+                        NO3uptake += NO3Supply[layer];
+                    }
+                    else
+                    {
+                        NO3Supply[layer] = 0;
                     }
                 }
-                return Nsupply;
+
+                return NO3Supply;
             }
             return null;
         }
+        /// <summary>Gets the ammonium uptake supply for the given nitrogen state.</summary>
+        /// <param name="zone">The zone</param>
+        public override double[] NH4NSupply(ZoneWaterAndN zone)
+        {
+            ZoneState myZone = zones.Find(z => z.Name == zone.Name);
+            if (myZone != null)
+            {
+                double[] NH4 = zone.NH4N;
 
- 
+                double[] NH4Supply = new double[myZone.soil.Thickness.Length];
+
+                double[] NH4ppm = new double[myZone.soil.Thickness.Length];
+
+                double NH4uptake = 0;
+
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                {
+                    if (myZone.LayerLive[layer].Wt > 0)
+                    {
+                        double RWC = 0;
+                        RWC = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
+                        RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
+                        double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                        double SWAF = NUptakeSWFactor.ValueForX(RWC);
+                        NH4ppm[layer] = NH4Supply[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * SWAF, (MaxDailyNUptake.Value - NH4uptake));
+                        NH4uptake += NH4Supply[layer];
+                    }
+                    else
+                    {
+                        NH4Supply[layer] = 0;
+                    }
+                }
+
+                return NH4Supply;
+            }
+
+            return null;
+        }
+
+
+
 
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
