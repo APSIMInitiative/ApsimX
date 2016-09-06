@@ -792,12 +792,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
-        public override BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } }
-
-
-
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] NO3NSupply(ZoneWaterAndN zone)
