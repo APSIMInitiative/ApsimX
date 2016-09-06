@@ -23,8 +23,8 @@ namespace Models.Soils
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class MultiPoreWater : Model, ISoilWater
     {
@@ -293,28 +293,36 @@ namespace Models.Soils
         /// </summary>
         public int TimeStep { get; set; }
         /// <summary>
+        /// Change in pond depth for the day
+        /// </summary>
+        public double DeltaPond { get { return SODPondDepth - EODPondDepth; } }
+        /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
+        [Units("mm/h")]
         [Summary]
         [Description("The hydraulic conducitivity of water into the pore")]
         public double[][] HydraulicConductivityIn { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy out of each pore
         /// </summary>
+        [Units("mm/h")]
         [Summary]
         [Description("The hydraulic conducitivity of water out of the pore")]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
         /// The water potential when this pore space is full and larger pores are empty
         /// </summary>
+        [Units("cm")]
         [Summary]
-        [Description("The water potential when this pore space is full and larger pores are empty")]
+        [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
         public double[][] PsiUpper { get; set; }
         /// <summary>
         /// The relative water water filled porosity when this pore space if full and larger pores are empty
         /// </summary>
+        [Units("0-1")]
         [Summary]
-        [Description("The relative water water filled porosity when this pore space if full and larger pores are empty")]
+        [Description("Layer relative water water filled porosity when there pores are full and larger pores are empty")]
         public double[][] RelativePoreVolume { get; set; }
         #endregion
 
@@ -450,6 +458,8 @@ namespace Models.Soils
         {
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
+            SODPondDepth = pond;
+            double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
             for (int h = 0; h < 24; h++)
             {
                 InitialProfileWater = MathUtilities.Sum(SWmm);
@@ -473,8 +483,14 @@ namespace Models.Soils
                 doDownwardDiffusion();
                 doUpwardDiffusion();
             }
+            EODPondDepth = pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
             Drainage = MathUtilities.Sum(Hourly.Drainage);
+            double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
+            double DeltaSWC = SoilWaterContentSOD - SoilWaterContentEOD;
+            double CheckMass = DeltaSWC + Infiltration - Drainage;
+            if (Math.Abs(CheckMass) > FloatingPointTolerance)
+                throw new Exception(this + " Mass balance violated");
         }
         /// <summary>
         /// Adds irrigation events into daily total
@@ -528,6 +544,8 @@ namespace Models.Soils
         /// </summary>
         private double InitialResidueWater { get; set; }
         private double ProfileSaturation { get; set; }
+        private double SODPondDepth { get; set; }
+        private double EODPondDepth { get; set; }
         #endregion
 
         #region Internal Properties and Methods
@@ -567,7 +585,7 @@ namespace Models.Soils
                     HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
-                 }
+                }
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
@@ -660,7 +678,7 @@ namespace Models.Soils
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AdsorptionCapacity[0] + PercolationCapacityBelow[0];
+            PotentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0],TransmissionCapacity[0]);
         }
         /// <summary>
         /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
