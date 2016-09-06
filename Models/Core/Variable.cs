@@ -81,6 +81,16 @@
             }
         }
 
+        /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>
@@ -163,12 +173,26 @@
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
-                    return "(" + unitsAttribute.ToString() + ")";
+                    return unitsAttribute.ToString();
                 return null;
             }
 
             set
             {
+            }
+        }
+
+        /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return "(" + unitsAttribute.ToString() + ")";
+                return null;
             }
         }
     }

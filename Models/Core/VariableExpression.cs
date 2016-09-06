@@ -115,6 +115,17 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Fill the function variables with names.
         /// </summary>
         private void FillVariableNames()

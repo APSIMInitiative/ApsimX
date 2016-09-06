@@ -7,7 +7,7 @@
     /// <summary>
     /// This runnable class runs an external process.
     /// </summary>
-    class RunAllCompletedEvent : JobManager.IRunnable
+    public class RunAllCompletedEvent : JobManager.IRunnable
     {
         private Simulations simulations;
 

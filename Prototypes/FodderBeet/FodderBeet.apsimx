@@ -754,22 +754,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>PartitionFraction</Name>
           <Value>0.05</Value>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>

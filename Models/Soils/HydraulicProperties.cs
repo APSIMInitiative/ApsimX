@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Models.Soils
 {
@@ -10,8 +11,8 @@ namespace Models.Soils
     /// Returns theta and ksat values for specified psi and theta values respectively.  Gets its parameters from the soil Water node and a couple of parameters it owns
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class HydraulicProperties : Model
     {
@@ -96,6 +97,31 @@ namespace Models.Soils
         [Units("cm")]
         [Bounds(Lower = -1e3, Upper = 0.0)]
         public double psidul { get; set; }
+        
+        /// <summary>Gets or sets the thickness.</summary>
+        /// <value>The thickness.</value>
+        public double[] Thickness { get; set; }
+
+        /// <summary>
+        /// Gets or sets the depth strings e.g. 0-10
+        /// </summary>
+        [Summary]
+        [Description("Depth")]
+        [XmlIgnore]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(this.Thickness);
+            }
+
+            set
+            {
+                this.Thickness = Soil.ToThickness(value);
+            }
+        }
+
         /// <summary>
         /// kdul
         /// </summary>
@@ -104,8 +130,7 @@ namespace Models.Soils
         /// </value>
         [Description("The hydraulic conductivity when the soil is at DUL")]
         [Units("mm/d")]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        public double kdul { get; set; }
+        public double[] kdul { get; set; }
         #endregion
 
         #region public methods
@@ -199,6 +224,7 @@ namespace Models.Soils
             Y1 = new double[Water.Thickness.Length, 5];
             MicroP = new double[Water.Thickness.Length];
             MicroKs = new double[Water.Thickness.Length];
+            kdul = new double[Water.Thickness.Length];
             Kdula = new double[Water.Thickness.Length];
             MacroP = new double[Water.Thickness.Length];
             psid = new double[Water.Thickness.Length];
@@ -288,7 +314,7 @@ namespace Models.Soils
             {
                 double b = -Math.Log(psidul / psi_ll15) / Math.Log(Water.DUL[layer] / Water.LL15[layer]);
                 MicroP[layer] = b * 2.0 + 3.0;
-                Kdula[layer] = Math.Min(0.99 * kdul, Water.KS[layer]);
+                Kdula[layer] = Math.Min(0.99 * kdul[layer], Water.KS[layer]);
                 MicroKs[layer] = Kdula[layer] / Math.Pow(Water.DUL[layer] / Water.SAT[layer], MicroP[layer]);
 
                 double Sdul = Water.DUL[layer] / Water.SAT[layer];

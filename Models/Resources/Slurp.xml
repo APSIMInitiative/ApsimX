@@ -51,27 +51,30 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
-        <Constant>
-          <Name>RootFrontVelocity</Name>
-          <Value>0</Value>
-          <Units>mm/d</Units>
-        </Constant>
+		<MultiplyFunction>
+		    <Name>RootFrontVelocity</Name>
+			<AirTemperatureFunction>
+			  <Name>TemperatureEffect</Name>
+			  <XYPairs>
+				<Name>XYPairs</Name>
+				<X>
+				  <double>0</double>
+				  <double>26</double>
+				  <double>35</double>
+				</X>
+				<Y>
+				  <double>0</double>
+				  <double>1</double>
+				  <double>1</double>
+				</Y>
+			  </XYPairs>
+			</AirTemperatureFunction>
+			<Constant>
+			  <Name>Potential</Name>
+			  <Value>0</Value>
+			  <Units>mm/d</Units>
+			</Constant>
+		</MultiplyFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
           <Value>1</Value>
@@ -117,7 +120,18 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>50</Value>
           <Units>g/plant</Units>
         </Constant>
+		<Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>0</Value>
+            <Units>0-1</Units>
+          </Constant>
+
           <Name>SpecificRootLength</Name>
           <Value>40</Value>
           <Units>m/g</Units>
@@ -370,7 +384,7 @@ This is important in SLURP as it is set for each species to represent their diff
 ]]></MemoText>
         </Memo>
         <Command>[Root].MaximumRootDepth.Value = 800</Command>
-        <Command>[Root].RootFrontVelocity.Value = 15</Command>
+        <Command>[Root].RootFrontVelocity.Potential.Value = 15</Command>
         <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.0</Command>
@@ -383,7 +397,7 @@ This is important in SLURP as it is set for each species to represent their diff
 ]]></MemoText>
         </Memo>
         <Command>[Root].MaximumRootDepth.Value = 2500</Command>
-        <Command>[Root].RootFrontVelocity.Value = 15</Command>
+        <Command>[Root].RootFrontVelocity.Potential.Value = 15</Command>
         <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.8</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>

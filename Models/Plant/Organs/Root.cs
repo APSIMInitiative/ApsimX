@@ -14,48 +14,6 @@ namespace Models.PMF.Organs
     ///<summary>
     /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
     ///</summary>
-    /// \param InitialDM <b>(Constant)</b> The initial dry weight of root (\f$g mm^{-2}\f$. CHECK).
-    /// \param SpecificRootLength <b>(Constant)</b> The length of the specific root 
-    ///     (\f$m g^{-1}\f$. CHECK).
-    /// \param KNO3 <b>(Constant)</b> Fraction of extractable soil NO3 (\f$K_{NO3}\f$, unitless).  
-    /// \param KNH4 <b>(Constant)</b> Fraction of extractable soil NH4 (\f$K_{NH4}\f$, unitless).  
-    /// \param NitrogenDemandSwitch <b>(IFunction)</b> Whether to switch on nitrogen demand 
-    ///     when nitrogen deficit is calculated (0 or 1, unitless).
-    /// \param RootFrontVelocity <b>(IFunction)</b> The daily growth speed of root depth 
-    ///     (\f$mm d^{-1}\f$. CHECK).
-    /// \param PartitionFraction <b>(IFunction)</b> The fraction of biomass partitioning 
-    ///     into root (0-1, unitless).
-    /// \param KLModifier <b>(IFunction)</b> The modifier for KL factor which is defined as 
-    ///     the fraction of available water able to be extracted per day, and empirically 
-    ///     derived incorporating both plant and soil factors which limit rate of water 
-    ///     update (0-1, unitless).
-    /// \param TemperatureEffect <b>(IFunction)</b> 
-    ///     The temperature effects on root depth growth (0-1, unitless).
-    /// \param MaximumNConc <b>(IFunction)</b> 
-    ///     Maximum nitrogen concentration (\f$g m^{-2}\f$. CHECK).
-    /// \param MinimumNConc <b>(IFunction)</b> 
-    ///     Minimum nitrogen concentration (\f$g m^{-2}\f$. CHECK).
-    /// \param MaxDailyNUptake <b>(IFunction)</b> 
-    ///     Maximum daily nitrogen update (\f$kg ha^{-1}\f$. CHECK).
-    /// 
-    /// \param SenescenceRate <b>(IFunction, Optional)</b> The daily senescence rate of 
-    ///     root length (0-1, unitless).
-    ///     
-    /// \retval Length Total root length (mm).
-    /// \retval Depth Root depth (mm).
-    /// 
-    ///<remarks>
-    /// 
-    /// Potential root growth 
-    /// ------------------------
-    ///  
-    /// Actual root growth
-    /// ------------------------
-    /// 
-    /// Nitrogen deficit 
-    /// ------------------------
-    /// 
-    ///</remarks>
     [Serializable]
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
@@ -100,42 +58,47 @@ namespace Models.PMF.Organs
         /// <summary>The nitrogen demand switch</summary>
         [Link]
         IFunction NitrogenDemandSwitch = null;
+
         /// <summary>The senescence rate</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
-        /// <summary>The temperature effect</summary>
-        [Link(IsOptional = true)]
-        [Units("0-1")]
-        IFunction TemperatureEffect = null;
+        
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
+        
         /// <summary>The partition fraction</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("0-1")]
         IFunction PartitionFraction = null;
+        
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
+        
         /// <summary>The maximum daily n uptake</summary>
         [Link]
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
+        
         /// <summary>The minimum n conc</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
+        
         /// <summary>The Maximum Root Depth</summary>
         [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction MaximumRootDepth = null;
+        
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
@@ -158,12 +121,19 @@ namespace Models.PMF.Organs
 
         class ZoneState
         {
+            /// <summary>Name of the parent plant</summary>
+            public string plantName;
+
+            /// <summary>Lower limit</summary>
+            public double[] LL = null;
+            /// <summary>Exploration factor</summary>
+            public double[] XF = null;
+            /// <summary>KL</summary>
+            public double[] KL = null;
+
             /// <summary>The soil in this zone</summary>
             public Soil soil = null;
-
-            /// <summary>The soil crop in this zone</summary>
-            public SoilCrop soilCrop = null;
-            
+          
             /// <summary>Name of zone.</summary>
             public string Name;
 
@@ -191,8 +161,7 @@ namespace Models.PMF.Organs
             [XmlIgnore]
             [Units("g/m2")]
             public double[] NonStructuralNDemand { get; set; }
-            /// <summary>The _ senescence rate</summary>
-            public double mySenescenceRate = 0;
+
             /// <summary>The Nuptake</summary>
             public double[] NitUptake = null;
 
@@ -224,6 +193,7 @@ namespace Models.PMF.Organs
             [Units("mm")]
             public double LayerMidPointDepth { get; set; }
 
+
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
             /// <param name="plantName">The name of the parent plant.</param>
@@ -233,10 +203,14 @@ namespace Models.PMF.Organs
             /// <param name="maxNConc">maximum n concentration</param>
             public ZoneState(Soil soil, string plantName, double depth, double initialDM, double population, double maxNConc)
             {
+                this.plantName = plantName;
                 this.soil = soil;
-                soilCrop = this.soil.Crop(plantName) as SoilCrop;
-                if (soilCrop == null)
+                if (this.soil.Crop(plantName) == null)
                     throw new Exception("Cannot find a soil crop parameterisation for " + plantName);
+                LL = (this.soil.Crop(plantName) as SoilCrop).LL;
+                XF = (this.soil.Crop(plantName) as SoilCrop).XF;
+                KL = (this.soil.Crop(plantName) as SoilCrop).KL;
+
                 Clear();
                 Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
                 if (zone == null)
@@ -250,7 +224,7 @@ namespace Models.PMF.Organs
             /// <param name="initialDM">Initial dry matter</param>
             /// <param name="population">plant population</param>
             /// <param name="maxNConc">maximum n concentration</param>
-            private void Initialise(double depth, double initialDM, double population, double maxNConc)
+            public void Initialise(double depth, double initialDM, double population, double maxNConc)
             {
                 Depth = depth;
                 double AccumulatedDepth = 0;
@@ -279,7 +253,7 @@ namespace Models.PMF.Organs
                 NitUptake = null;
                 DeltaNO3 = new double[soil.Thickness.Length];
                 DeltaNH4 = new double[soil.Thickness.Length];
-                mySenescenceRate = 0.0;
+
                 Length = 0.0;
                 Depth = 0.0;
 
@@ -327,7 +301,7 @@ namespace Models.PMF.Organs
             {
                 double[] value = new double[plantZone.soil.Thickness.Length];
                 for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    value[i] = plantZone.soilCrop.LL[i] * plantZone.soil.Thickness[i];
+                    value[i] = plantZone.LL[i] * plantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -358,15 +332,15 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNDemand { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total N Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNAllocated { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total DM Demanded by roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMDemand { get; set; }
-        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        ///<Summary>Total DM Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMAllocated { get; set; }
@@ -375,71 +349,38 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double NTakenUp { get; set; }
 
-        /// <summary>Plant depth.</summary>
+        /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.Depth;
-            }
-        }
+        public double Depth { get { return plantZone.Depth; } }
         /// <summary>Layer mid point depth.</summary>
         [XmlIgnore]
-        public double LayerMidPointDepth
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.LayerMidPointDepth;
-            }
-        }
-        /// <summary>Layer live</summary>
-        [XmlIgnore]
-        public Biomass[] LayerLive
-        {
-            get
-            {
-                if (plantZone == null)
-                    return null;
-                else
-                    return plantZone.LayerLive;
-            }
-        }
+          public double LayerMidPointDepth
+          {
+              get
+              {
+                  if (plantZone == null)
+                      return 0;
+                  else
+                      return plantZone.LayerMidPointDepth;
+              }
+          }
+
+
+/// <summary>Layer live</summary>
+[XmlIgnore]
+        public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
+
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead
-        {
-            get
-            {
-                if (plantZone == null)
-                    return null;
-                else
-                    return plantZone.LayerDead;
-            }
-        }
+        public Biomass[] LayerDead { get { return plantZone.LayerDead; } }
 
         /// <summary>Gets or sets the length.</summary>
         /// <value>The length.</value>
         [XmlIgnore]
-        public double Length
-        {
-            get
-            {
-                if (plantZone == null)
-                    return 0;
-                else
-                    return plantZone.Length;
-            }
-        }
+        public double Length { get { return plantZone.Length; } }
 
         #endregion
-
+    
         #region Functions
 
         /// <summary>Constructor</summary>
@@ -473,11 +414,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
-                if (soil == null)
-                    throw new Exception("Cannot find soil");
-
-                plantZone = new ZoneState(soil, Plant.Name, Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
+                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
                 InitialiseZones();
             }
         }
@@ -512,39 +449,8 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
-            {
-                plantZone.mySenescenceRate = 0;
-                if (SenescenceRate != null) //Default of zero means no senescence
-                    plantZone.mySenescenceRate = SenescenceRate.Value;
+                plantZone.Length = MathUtilities.Sum(LengthDensity);
 
-                /*  if (Live.Wt == 0)
-                  {
-                      //determine how many layers to put initial DM into.
-                      Depth = Plant.SowingData.Depth;
-                      double AccumulatedDepth = 0;
-                      double InitialLayers = 0;
-                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                      {
-                          if (AccumulatedDepth < Depth)
-                              InitialLayers += 1;
-                          AccumulatedDepth += Soil.SoilWater.Thickness[layer];
-                      }
-                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                      {
-                          if (layer <= InitialLayers - 1)
-                          {
-                              //dirstibute root biomass evently through root depth
-                              LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
-                              LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
-                          }
-                      }
-               
-                  }
-                  */
-                plantZone.Length = 0;
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
-                    plantZone.Length += LengthDensity[layer];
-            }
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -558,14 +464,13 @@ namespace Models.PMF.Organs
             {
                 // Do Root Front Advance
                 int RootLayer = LayerIndex(plantZone.Depth);
-                double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
-                plantZone.Depth = plantZone.Depth + RootFrontVelocity.Value * plantZone.soilCrop.XF[RootLayer] * TEM;
+                plantZone.Depth = plantZone.Depth + RootFrontVelocity.Value * plantZone.XF[RootLayer];
 
                 //Limit root depth for impeded layers
                 double MaxDepth = 0;
                 for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    if (plantZone.soilCrop.XF[i] > 0)
+                    if (plantZone.XF[i] > 0)
                         MaxDepth += plantZone.soil.Thickness[i];
                 //Limit root depth for the crop specific maximum depth
                 if (MaximumRootDepth != null)
@@ -574,8 +479,7 @@ namespace Models.PMF.Organs
                 plantZone.Depth = Math.Min(plantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
-                if (plantZone.mySenescenceRate > 0.0)
-                    DoRootBiomassRemoval(plantZone.mySenescenceRate);
+                DoRootBiomassRemoval(SenescenceRate.Value);
             }
         }
 
@@ -600,22 +504,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        public override void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName)
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        public override void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
-            ZoneState zone = zones.Find(z => z.Name == zoneName);
-            if (zone == null)
-                throw new Exception("Cannot find a zone called " + zoneName);
+            foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
+            {
+                ZoneState zone = zones.Find(z => z.Name == thisZone.Name);
+                if (zone == null)
+                    throw new Exception("Cannot find a zone called " + thisZone.Name);
 
-            // Send the delta water back to SoilN that we're going to uptake.
-            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(NO3NAmount, -1.0);
-            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(NH4NAmount, -1.0);
+                // Send the delta water back to SoilN that we're going to uptake.
+                NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
+                NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
+                NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
 
-            zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-            zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+                zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+            }
         }
         
         /// <summary>Layers the index.</summary>
@@ -653,37 +558,6 @@ namespace Models.PMF.Organs
             return depth_of_root_in_layer / plantZone.soil.Thickness[layer];
         }
         
-        /// <summary>Soils the n supply.</summary>
-        /// <param name="NO3Supply">The n o3 supply.</param>
-        /// <param name="NH4Supply">The n h4 supply.</param>
-        private void SoilNSupply(double[] NO3Supply, double[] NH4Supply)
-        {
-            double[] no3ppm = new double[plantZone.soil.Thickness.Length];
-            double[] nh4ppm = new double[plantZone.soil.Thickness.Length];
-
-            for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
-            {
-                if (plantZone.LayerLive[layer].Wt > 0)
-                {
-                    double kno3 = KNO3.ValueForX(LengthDensity[layer]);
-                    double knh4 = KNH4.ValueForX(LengthDensity[layer]);
-                    double RWC = 0;
-                    RWC = (plantZone.soil.Water[layer] - plantZone.soil.SoilWater.LL15mm[layer]) / (plantZone.soil.SoilWater.DULmm[layer] - plantZone.soil.SoilWater.LL15mm[layer]);
-                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
-                    no3ppm[layer] = plantZone.soil.NO3N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NO3Supply[layer] = plantZone.soil.NO3N[layer] * kno3 * no3ppm[layer] * SWAF;
-                    nh4ppm[layer] = plantZone.soil.NH4N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NH4Supply[layer] = plantZone.soil.NH4N[layer] * knh4 * nh4ppm[layer] * SWAF;
-                }
-                else
-                {
-                    NO3Supply[layer] = 0;
-                    NH4Supply[layer] = 0;
-                }
-            }
-        }
-
         /// <summary>Called when crop is ending</summary>
         public override void DoPlantEnding()
         {
@@ -755,7 +629,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if ((isGrowing)&&(PartitionFraction != null))
+                if (isGrowing)
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -919,40 +793,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Reallocation = 0.0,
-                    Retranslocation = 0.0,
-                    Uptake = AvailableNUptake()
-                };
-            }
-        }
-
-        /// <summary>Gets the N amount available for uptake</summary>
-        /// <returns>N available to be taken up</returns>
-        public double AvailableNUptake()
-        {
-            if (plantZone.soil.Thickness != null)
-            {
-                double[] no3supply = new double[plantZone.soil.Thickness.Length];
-                double[] nh4supply = new double[plantZone.soil.Thickness.Length];
-                SoilNSupply(no3supply, nh4supply);
-                double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) +
-                                  Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
-                return NSupply;
-            }
-            else
-            { //Soil not initialised yet
-                return 0.0;
-            }
-        }
-
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] NO3NSupply(ZoneWaterAndN zone)
@@ -1030,6 +870,10 @@ namespace Models.PMF.Organs
 
             return null;
         }
+
+
+
+
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         /// <exception cref="System.Exception">
@@ -1099,7 +943,7 @@ namespace Models.PMF.Organs
         }
 
 
-        /// <summary>Gets or sets the water supply.</summary>
+        /// <summary>Gets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] WaterSupply(ZoneWaterAndN zone)
         {
@@ -1108,9 +952,9 @@ namespace Models.PMF.Organs
             {
                 double[] SW = zone.Water;
                 double[] supply = new double[myZone.soil.Thickness.Length];
-
                 double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
                 double depth_to_layer_top = 0;      // depth to top of layer (mm)
+                
 
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
@@ -1119,8 +963,8 @@ namespace Models.PMF.Organs
                     myZone.LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
 
                     if (layer <= LayerIndex(myZone.Depth))
-                        supply[layer] = Math.Max(0.0, myZone.soilCrop.KL[layer] * KLModifier.Value *
-                            (SW[layer] - myZone.soilCrop.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
+                        supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.Value *
+                            (SW[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
                     else
                         supply[layer] = 0;
                 }
@@ -1134,7 +978,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("mm")]
-        public override double WaterUptake
+        public double WaterUptake
         {
             get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }
         }
@@ -1194,20 +1038,6 @@ namespace Models.PMF.Organs
                     child.Document(tags, headingLevel + 5, indent + 1);
             }
 
-            if (TemperatureEffect.GetType() == typeof(Constant))
-            {
-                //Temp having no effect so no need to document
-            }
-            else
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity described above is influenced by temperature as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "TemperatureEffect")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-            }
-
             tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
 
             tags.Add(new AutoDocumentation.Heading("Drymatter Demands", headingLevel + 1));
@@ -1220,7 +1050,13 @@ namespace Models.PMF.Organs
                 if (child.Name == "PartitionFraction")
                     child.Document(tags, headingLevel + 5, indent + 1);
             }
-            
+            tags.Add(new AutoDocumentation.Paragraph("The daily loss of roots is calculated using:", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.Name == "SenescenceRate")
+                    child.Document(tags, headingLevel + 5, indent + 1);
+            }
+
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
             if (NitrogenDemandSwitch != null)
@@ -1260,8 +1096,7 @@ namespace Models.PMF.Organs
                     | (child.Name != "KLModifier")
                     | (child.Name != "SoilWaterEffect")
                     | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
-                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumNConc")
                     | (child.Name != "MaximumRootDepth")
                     | (child.Name != "KLModifier")
                     | (child.Name != "RootFrontVelocity")
@@ -1285,8 +1120,7 @@ namespace Models.PMF.Organs
                     | (child.Name != "KLModifier")
                     | (child.Name != "SoilWaterEffect")
                     | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "SenescenceRate") | (child.Name != "MaximumNConc")
-                    | (child.Name != "TemperatureEffect")
+                    | (child.Name != "MaximumNConc")
                     | (child.Name != "MaximumRootDepth")
                     | (child.Name != "KLModifier")
                     | (child.Name != "RootFrontVelocity")

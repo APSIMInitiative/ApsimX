@@ -77,22 +77,14 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the water allocation.</summary>
         double WaterAllocation { get; set; }
 
-        /// <summary>Gets or sets the water uptake.</summary>
-        double WaterUptake { get; set; }
-        
-        /// <summary>Gets or sets the water uptake.</summary>
-        double NUptake { get; set; }
-
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
         void DoWaterUptake(double[] Amount, string zoneName);
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName);
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator);
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>

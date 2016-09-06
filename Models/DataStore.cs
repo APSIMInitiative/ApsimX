@@ -207,22 +207,33 @@ namespace Models
 
         /// <summary>Remove all simulations from the database that don't exist in 'simulationsToKeep'</summary>
         /// <param name="simulationsToKeep">The simulations to keep.</param>
-        public void RemoveUnwantedSimulations(Simulations simulationsToKeep)
+        /// <param name="simulationNamesToBeRun">The simulation names about to be run.</param>
+        public void RemoveUnwantedSimulations(Simulations simulationsToKeep, List<string> simulationNamesToBeRun)
         {
             Open(forWriting: true);
 
             string[] simulationNamesToKeep = simulationsToKeep.FindAllSimulationNames();
 
+
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("BEGIN");
+            
             // Make sure that the list of simulations in 'simulationsToKeep' are in the 
             // Simulations table.
             string[] simulationNames = this.SimulationNames;
+            string sql = string.Empty;
             foreach (string simulationNameToKeep in simulationNamesToKeep)
             {
                 if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
                 {
-                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
+                    if (sql != string.Empty)
+                        sql += ",";
+                    sql += "'" + simulationNameToKeep + "'";
                 }
             }
+
+            if (sql != string.Empty)
+                RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
 
             // Get a list of simulation IDs that we are to delete.
             List<int> idsToDelete = new List<int>();
@@ -231,9 +242,6 @@ namespace Models
                 {
                     idsToDelete.Add(GetSimulationID(simulationNameInDB));
                 }
-
-            if (idsToDelete.Count == 0)
-                return;
 
             // create an SQL WHERE clause with all IDs
             string idString = "";
@@ -244,7 +252,14 @@ namespace Models
                 idString += "ID = " + idsToDelete[i].ToString();
             }
 
-            RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+            if (idString != string.Empty)
+                RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+
+            // Now add to IDs to delete the simulations IDs of the simulations we are
+            // about to run i.e. remove the rows that we are about to regenerate.
+            idsToDelete.Clear();
+            foreach (string simulationNameToBeRun in simulationNamesToBeRun)
+                idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
 
             idString = "";
             for (int i = 0; i < idsToDelete.Count; i++)
@@ -253,11 +268,18 @@ namespace Models
                     idString += " OR ";
                 idString += "SimulationID = " + idsToDelete[i].ToString();
             }
+
             foreach (string tableName in TableNames)
             {
                 // delete this simulation
                 RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
             }
+
+
+
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("END");
+
         }
 
         /// <summary>Delete all tables</summary>
@@ -938,14 +960,29 @@ namespace Models
         /// <exception cref="Models.Core.ApsimXException">Cannot find Simulations table</exception>
         private void AddSimulationIDColumnToTable(DataTable table)
         {
-            DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
-            if (idTable == null)
-                throw new ApsimXException(this, "Cannot find Simulations table");
-            List<double> ids = new List<double>();
-            ids.AddRange(DataTableUtilities.GetColumnAsDoubles(idTable, "ID"));
+            // Get a list of simulations that are in the DB
+            DataTable DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
+            List<string> simulationNamesInDB = DataTableUtilities.GetColumnAsStrings(DB, "Name").ToList();
 
-            List<string> simulationNames = new List<string>();
-            simulationNames.AddRange(DataTableUtilities.GetColumnAsStrings(idTable, "Name"));
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("BEGIN");
+
+            // For those simulations in 'table' that aren't in the DB, add them
+            // to the simulations table
+            List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
+            foreach (string simulationNameInTable in simulationNamesInTable)
+            {
+                if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+            }
+
+            // Tell SQLite that we're ending a transaction.
+            Connection.ExecuteNonQuery("END");
+
+            // Get a list of simulation names and IDs from DB
+            DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
+            List<double> ids = DataTableUtilities.GetColumnAsDoubles(DB, "ID").ToList();
+            simulationNamesInDB = DataTableUtilities.GetColumnAsStrings(DB, "Name").ToList();
 
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
             foreach (DataRow row in table.Rows)
@@ -953,16 +990,11 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = StringUtilities.IndexOfCaseInsensitive(simulationNames, simulationName);
-                    if (index != -1)
-                        row["SimulationID"] = ids[index];
+                    int index = StringUtilities.IndexOfCaseInsensitive(simulationNamesInDB, simulationName);
+                    if (index == -1)
+                        throw new Exception("Cannot find simulation name: " + simulationName);
                     else
-                    {
-                        int id = GetSimulationID(simulationName);
-                        ids.Add(id);
-                        simulationNames.Add(simulationName);
-                        row["SimulationID"] = id;
-                    }
+                        row["SimulationID"] = ids[index];
                 }
             }
         }
