@@ -833,7 +833,7 @@ namespace Models.PMF.Organs
                 {
                     Reallocation = 0.0,
                     Retranslocation = 0.0,
-                    Uptake = AvailableNUptake()
+                    Uptake = 0.0// AvailableNUptake()
                 };
             }
         }
