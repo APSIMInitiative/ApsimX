@@ -504,22 +504,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        public override void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName)
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        public override void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
-            ZoneState zone = zones.Find(z => z.Name == zoneName);
-            if (zone == null)
-                throw new Exception("Cannot find a zone called " + zoneName);
+            foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
+            {
+                ZoneState zone = zones.Find(z => z.Name == thisZone.Name);
+                if (zone == null)
+                    throw new Exception("Cannot find a zone called " + thisZone.Name);
 
-            // Send the delta water back to SoilN that we're going to uptake.
-            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(NO3NAmount, -1.0);
-            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(NH4NAmount, -1.0);
+                // Send the delta water back to SoilN that we're going to uptake.
+                NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
+                NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
+                NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
 
-            zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-            zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+                zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+            }
         }
         
         /// <summary>Layers the index.</summary>

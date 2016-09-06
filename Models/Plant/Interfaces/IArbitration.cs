@@ -89,10 +89,8 @@ namespace Models.PMF.Interfaces
         void DoWaterUptake(double[] Amount, string zoneName);
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName);
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator);
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>

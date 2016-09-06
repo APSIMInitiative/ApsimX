@@ -817,15 +817,13 @@ namespace Models.PMF
                         if (Plant.Phenology.Emerged == true)
                         {
                             DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                            foreach (ZoneWaterAndN Z in zones)
-                                Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
+                            Plant.Root.DoNitrogenUptake(zones);
                         }
                     }
                     else
                     {
                         DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                        foreach (ZoneWaterAndN Z in zones)
-                            Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
+                        Plant.Root.DoNitrogenUptake(zones);
                     }
                 }
             }
