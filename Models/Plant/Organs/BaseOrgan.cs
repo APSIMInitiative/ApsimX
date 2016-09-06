@@ -116,16 +116,6 @@ namespace Models.PMF.Organs
         /// <value>The water uptake.</value>
         /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
         [XmlIgnore]
-        virtual public double WaterUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
         virtual public double NUptake
         {
             get { return 0; }

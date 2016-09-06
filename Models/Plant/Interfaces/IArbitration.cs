@@ -77,12 +77,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the water allocation.</summary>
         double WaterAllocation { get; set; }
 
-        /// <summary>Gets or sets the water uptake.</summary>
-        double WaterUptake { get; set; }
-        
-        /// <summary>Gets or sets the water uptake.</summary>
-        double NUptake { get; set; }
-
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
