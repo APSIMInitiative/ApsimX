@@ -22,7 +22,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("mm")]
-        public override double WaterUptake
+        public double WaterUptake
         {
             get { return -MathUtilities.Sum(Uptake); }
         }

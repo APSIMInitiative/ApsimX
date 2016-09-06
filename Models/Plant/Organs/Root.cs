@@ -504,22 +504,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        public override void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName)
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        public override void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
-            ZoneState zone = zones.Find(z => z.Name == zoneName);
-            if (zone == null)
-                throw new Exception("Cannot find a zone called " + zoneName);
+            foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
+            {
+                ZoneState zone = zones.Find(z => z.Name == thisZone.Name);
+                if (zone == null)
+                    throw new Exception("Cannot find a zone called " + thisZone.Name);
 
-            // Send the delta water back to SoilN that we're going to uptake.
-            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(NO3NAmount, -1.0);
-            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(NH4NAmount, -1.0);
+                // Send the delta water back to SoilN that we're going to uptake.
+                NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
+                NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
+                NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
 
-            zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-            zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+                zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+            }
         }
         
         /// <summary>Layers the index.</summary>
@@ -557,37 +558,6 @@ namespace Models.PMF.Organs
             return depth_of_root_in_layer / plantZone.soil.Thickness[layer];
         }
         
-        /// <summary>Soils the n supply.</summary>
-        /// <param name="NO3Supply">The n o3 supply.</param>
-        /// <param name="NH4Supply">The n h4 supply.</param>
-        private void SoilNSupply(double[] NO3Supply, double[] NH4Supply)
-        {
-            double[] no3ppm = new double[plantZone.soil.Thickness.Length];
-            double[] nh4ppm = new double[plantZone.soil.Thickness.Length];
-
-            for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
-            {
-                if (plantZone.LayerLive[layer].Wt > 0)
-                {
-                    double kno3 = KNO3.ValueForX(LengthDensity[layer]);
-                    double knh4 = KNH4.ValueForX(LengthDensity[layer]);
-                    double RWC = 0;
-                    RWC = (plantZone.soil.Water[layer] - plantZone.soil.SoilWater.LL15mm[layer]) / (plantZone.soil.SoilWater.DULmm[layer] - plantZone.soil.SoilWater.LL15mm[layer]);
-                    RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                    double SWAF = NUptakeSWFactor.ValueForX(RWC);
-                    no3ppm[layer] = plantZone.soil.NO3N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NO3Supply[layer] = plantZone.soil.NO3N[layer] * kno3 * no3ppm[layer] * SWAF;
-                    nh4ppm[layer] = plantZone.soil.NH4N[layer] * (100.0 / (plantZone.soil.BD[layer] * plantZone.soil.Thickness[layer]));
-                    NH4Supply[layer] = plantZone.soil.NH4N[layer] * knh4 * nh4ppm[layer] * SWAF;
-                }
-                else
-                {
-                    NO3Supply[layer] = 0;
-                    NH4Supply[layer] = 0;
-                }
-            }
-        }
-
         /// <summary>Called when crop is ending</summary>
         public override void DoPlantEnding()
         {
@@ -823,34 +793,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Reallocation = 0.0,
-                    Retranslocation = 0.0,
-                    Uptake = AvailableNUptake()
-                };
-            }
-        }
-
-        /// <summary>Gets the N amount available for uptake</summary>
-        /// <returns>N available to be taken up</returns>
-        private double AvailableNUptake()
-        {
-                double[] no3supply = new double[plantZone.soil.Thickness.Length];
-                double[] nh4supply = new double[plantZone.soil.Thickness.Length];
-                SoilNSupply(no3supply, nh4supply);
-                double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) +
-                                  Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
-                return NSupply;
-
-        }
-
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] NO3NSupply(ZoneWaterAndN zone)
@@ -928,6 +870,10 @@ namespace Models.PMF.Organs
 
             return null;
         }
+
+
+
+
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         /// <exception cref="System.Exception">
@@ -997,7 +943,7 @@ namespace Models.PMF.Organs
         }
 
 
-        /// <summary>Gets or sets the water supply.</summary>
+        /// <summary>Gets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] WaterSupply(ZoneWaterAndN zone)
         {
@@ -1032,7 +978,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("mm")]
-        public override double WaterUptake
+        public double WaterUptake
         {
             get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }
         }
