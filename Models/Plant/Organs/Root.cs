@@ -12,7 +12,40 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Organs
 {
     ///<summary>
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent 
+    /// root length density.
+    /// 
+    /// **Root Growth**
+    /// 
+    /// Roots grow downward through the soil profile and rate is determined by RootFrontVelocity. The RootFrontVelocity 
+    /// is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value.
+    /// 
+    /// **Dry Matter Demands**
+    /// 
+    /// 100% of the dry matter (DM) demanded from the root is structural. The daily DM demand from root is calculated as a 
+    /// proportion of total DM supply using a PartitionFraction function. The daily loss of roots is calculated using
+    /// a SenescenceRate function.
+    /// 
+    /// **Nitrogen Demands**
+    /// 
+    /// The daily structural N demand from root is the product of total DM demand and a nitrogen concentration of MinimumNConc%.
+    /// 
+    /// **Nitrogen Uptake**
+    /// 
+    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.
+    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor 
+    /// controlling the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) 
+    /// and a soil moisture factor which decreases as the soil dries. Nitrogen uptake demand is limited to the maximum 
+    /// of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which 
+    /// determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up.
+    /// 
+    /// **Water Uptake**
+    /// 
+    /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.
+    /// In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor 
+    /// controlling the rate of extraction (KL). The KL values are set in the soil and may be further modified by the crop
+    /// via KLModifier, KNO3 and KN4.
+    /// 
     ///</summary>
     [Serializable]
     [Description("Root Class")]
@@ -955,127 +988,5 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            Name = this.Name;
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is parameterised using the PMF Root class which provides the core functions of taking up water and nutrients from the soil.  It is parameterised as follows.", indent));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            //Describe root growth
-            tags.Add(new AutoDocumentation.Heading("Root Growth", headingLevel+1));
-            tags.Add(new AutoDocumentation.Paragraph("Roots grow downward through the soil profile and rate is determined by:",indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "RootFrontVelocity")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Drymatter Demands", headingLevel + 1));
-            // Describe biomass Demand
-            tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from the root is structural", indent));
-
-            tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from root is calculated as a proportion of total DM supply using:", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "PartitionFraction")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-            tags.Add(new AutoDocumentation.Paragraph("The daily loss of roots is calculated using:", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "SenescenceRate")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
-            if (NitrogenDemandSwitch != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "NitrogenDemandSwitch")
-                        child.Document(tags, headingLevel + 5, indent);
-                }
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Uptake", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("potential N uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controllint the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) and a soil moisture factor which decreases as the soil dries.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up:", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Water Uptake", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor controllint the rate of extraction (kl)", indent));
-            tags.Add(new AutoDocumentation.Paragraph("The kl values are set in the soil and may be further modified by the crop.  are calculated in relation to root length density in each layer as :", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "KLModifier" || child.Name == "KNO3" || child.Name == "KNH4")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-                
-            // write Other functions.
-            bool NonStandardFunctions = false;
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if  ((child.GetType() != typeof(Memo))
-                    | (child.GetType() != typeof(Biomass))
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MinimumNConc")
-                    | (child.Name != "NitrogenDemandSwitch")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "SoilWaterEffect")
-                    | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MaximumRootDepth")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "RootFrontVelocity")
-                    | (child.Name != "PartitionFraction"))
-                    {
-                        NonStandardFunctions = true;
-                    }
-            }
-
-            if (NonStandardFunctions)
-            {
-                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if ((child.GetType() == typeof(Memo))
-                    | (child is Biomass)
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MinimumNConc")
-                    | (child.Name != "NitrogenDemandSwitch")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "SoilWaterEffect")
-                    | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MaximumRootDepth")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "RootFrontVelocity")
-                    | (child.Name != "PartitionFraction"))
-                    {//Already documented 
-                    }
-                    else
-                    {
-                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
-                        child.Document(tags, headingLevel + 2, indent + 1);
-                    }
-                }
-            }
-        }
     }
 }
