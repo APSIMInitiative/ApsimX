@@ -148,15 +148,6 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            // Get a list of all child models that we need to notify about the serialisation.
-            List<IModel> modelsToNotify = ChildrenRecursively(model);
-            modelsToNotify.Insert(0, model);
-
-            // Let all models know that we're about to serialise.
-            object[] args = new object[] { true };
-            foreach (Model modelToNotify in modelsToNotify)
-                CallEventHandler(modelToNotify, "Serialising", args);
-
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
             model.Parent = null;
@@ -171,10 +162,6 @@ namespace Models.Core
 
                 // Reinstate parent
                 model.Parent = parent;
-
-                // Let all models know that we've finished serialising
-                foreach (Model modelToNotify in modelsToNotify)
-                    CallEventHandler(modelToNotify, "Serialised", args);
 
                 return returnObject;
             }
