@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -213,7 +213,9 @@
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -306,6 +308,8 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>50</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -742,10 +746,21 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </Leaf>
       <Root>
         <Name>Root</Name>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
@@ -898,7 +913,9 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <GenericAboveGroundOrgan>
         <Name>Bulb</Name>
@@ -1298,100 +1315,100 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>ExtraVariables.Script.AccumPlantN</Name>
             <n>10</n>
-            <Slope>1.0033060105344669</Slope>
-            <Intercept>10.674131861298918</Intercept>
-            <SEslope>0.17953998218839898</SEslope>
-            <SEintercept>55.307248418753026</SEintercept>
-            <R2>0.79606414869981768</R2>
-            <RMSE>42.24838411959864</RMSE>
-            <NSE>0.7208590232658012</NSE>
-            <ME>11.657636943268805</ME>
-            <MAE>35.1349262967976</MAE>
-            <RSR>0.501225377510735</RSR>
+            <Slope>-2.0066118635505394</Slope>
+            <Intercept>-21.348287462261169</Intercept>
+            <SEslope>0.35907991505514419</SEslope>
+            <SEintercept>110.61448164398246</SEintercept>
+            <R2>0.79606416780987777</R2>
+            <RMSE>950.29552671780652</RMSE>
+            <NSE>-140.22798328959988</NSE>
+            <ME>-915.785258090272</ME>
+            <MAE>915.785258090272</MAE>
+            <RSR>11.274093531660977</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Bulb.Live.N</Name>
             <n>10</n>
-            <Slope>0.81681149306468137</Slope>
-            <Intercept>1.2836552282203382</Intercept>
-            <SEslope>0.092313368378997271</SEslope>
-            <SEintercept>1.8183484198113509</SEintercept>
-            <R2>0.90729095943760874</R2>
-            <RMSE>3.1958494889715334</RMSE>
-            <NSE>0.82880451613124739</NSE>
-            <ME>-2.0357205270562577</ME>
-            <MAE>2.6082620118332955</MAE>
-            <RSR>0.3925250762459353</RSR>
+            <Slope>0.81681147327091685</Slope>
+            <Intercept>1.2836552698809989</Intercept>
+            <SEslope>0.092313361904273278</SEslope>
+            <SEintercept>1.8183482922750647</SEintercept>
+            <R2>0.90729096716021707</R2>
+            <RMSE>3.1958496693252441</RMSE>
+            <NSE>0.828804496808847</NSE>
+            <ME>-2.0357208440586079</ME>
+            <MAE>2.6082621820964658</MAE>
+            <RSR>0.39252509839758992</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Bulb.Live.Wt</Name>
             <n>10</n>
-            <Slope>0.82015001205404059</Slope>
-            <Intercept>216.49369645598949</Intercept>
-            <SEslope>0.0791741582326698</SEslope>
-            <SEintercept>139.87677514612105</SEintercept>
-            <R2>0.93061875243794179</R2>
-            <RMSE>229.36273924432015</RMSE>
-            <NSE>0.90894250412742539</NSE>
-            <ME>-70.3364587770336</ME>
-            <MAE>179.3318793632904</MAE>
-            <RSR>0.28627215422621377</RSR>
+            <Slope>0.820149999132942</Slope>
+            <Intercept>216.49370133361822</Intercept>
+            <SEslope>0.079174152788590718</SEslope>
+            <SEintercept>139.87676552808097</SEintercept>
+            <R2>0.93061875928290316</R2>
+            <RMSE>229.36274123569987</RMSE>
+            <NSE>0.90894250254626141</NSE>
+            <ME>-70.336474506360631</ME>
+            <MAE>179.33187441128936</MAE>
+            <RSR>0.28627215671169404</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.CoverGreen</Name>
             <n>5</n>
-            <Slope>1.9422552790969034</Slope>
-            <Intercept>-0.88320051306943848</Intercept>
-            <SEslope>0.64452938658892167</SEslope>
-            <SEintercept>0.58103528014861416</SEintercept>
-            <R2>0.75167339152968893</R2>
-            <RMSE>0.083404843547914317</RMSE>
-            <NSE>-1.5956604686969502</NSE>
-            <ME>-0.035170773114783581</ME>
-            <MAE>0.06728758184771598</MAE>
-            <RSR>1.4410164381288508</RSR>
+            <Slope>1.9422552281524983</Slope>
+            <Intercept>-0.88320046472844838</Intercept>
+            <SEslope>0.64452937651506081</SEslope>
+            <SEintercept>0.58103527106715314</SEintercept>
+            <R2>0.75167338757259172</R2>
+            <RMSE>0.083404840329143845</RMSE>
+            <NSE>-1.5956602683528272</NSE>
+            <ME>-0.0351707706237576</ME>
+            <MAE>0.067287579632044389</MAE>
+            <RSR>1.4410163825169589</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.LAI</Name>
             <n>10</n>
-            <Slope>0.99350313292002235</Slope>
-            <Intercept>0.05802568973437694</Intercept>
-            <SEslope>0.21011726494722308</SEslope>
-            <SEintercept>0.74994411686606766</SEintercept>
-            <R2>0.7364700081494151</R2>
-            <RMSE>0.67357563164571954</RMSE>
-            <NSE>0.645749858805661</NSE>
-            <ME>0.036033794420817049</ME>
-            <MAE>0.552751806112911</MAE>
-            <RSR>0.56464601926774</RSR>
+            <Slope>0.99350313098933152</Slope>
+            <Intercept>0.058025698967810957</Intercept>
+            <SEslope>0.21011726090984154</SEslope>
+            <SEintercept>0.74994410245596888</SEintercept>
+            <R2>0.73647001485361863</R2>
+            <RMSE>0.67357561890980544</RMSE>
+            <NSE>0.64574987220192759</NSE>
+            <ME>0.036033797118862079</ME>
+            <MAE>0.552751795571066</MAE>
+            <RSR>0.5646460085914583</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.Live.N</Name>
             <n>10</n>
-            <Slope>0.92126411654223428</Slope>
-            <Intercept>-0.53470220080778752</Intercept>
-            <SEslope>0.23630848256034656</SEslope>
-            <SEintercept>1.7797339188754409</SEintercept>
-            <R2>0.65515477893147955</R2>
-            <RMSE>1.9178055508409377</RMSE>
-            <NSE>0.32593319644405472</NSE>
-            <ME>-1.0984511237372949</ME>
-            <MAE>1.3073807450996431</MAE>
-            <RSR>0.77888389584093387</RSR>
+            <Slope>0.92126410512629253</Slope>
+            <Intercept>-0.53470244883214946</Intercept>
+            <SEslope>0.23630845626986738</SEslope>
+            <SEintercept>1.7797337208713022</SEintercept>
+            <R2>0.65515482360325972</R2>
+            <RMSE>1.9178056008680597</RMSE>
+            <NSE>0.32593316127717087</NSE>
+            <ME>-1.0984514534998</ME>
+            <MAE>1.307380783970248</MAE>
+            <RSR>0.77888391615859309</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.Live.Wt</Name>
             <n>10</n>
-            <Slope>0.9912654301110323</Slope>
-            <Intercept>6.3076223243682819</Intercept>
-            <SEslope>0.2064719237505479</SEslope>
-            <SEintercept>42.193290947771246</SEintercept>
-            <R2>0.74234531393128511</R2>
-            <RMSE>36.867986130312772</RMSE>
-            <NSE>0.6534636570768847</NSE>
-            <ME>4.6085737922318888</ME>
-            <MAE>30.532966724499751</MAE>
-            <RSR>0.55846459926373471</RSR>
+            <Slope>0.99126542778338078</Slope>
+            <Intercept>6.3076215194652434</Intercept>
+            <SEslope>0.20647192161017802</SEslope>
+            <SEintercept>42.193290510378851</SEintercept>
+            <R2>0.74234531699856066</R2>
+            <RMSE>36.867985599131543</RMSE>
+            <NSE>0.65346366706243686</NSE>
+            <ME>4.6085725345541153</ME>
+            <MAE>30.532966262325314</MAE>
+            <RSR>0.55846459121756931</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Leaf.PlantAppearedGreenLeafNo</Name>
@@ -1410,30 +1427,30 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.N</Name>
             <n>10</n>
-            <Slope>0.24067221209569439</Slope>
-            <Intercept>4.7859242053779578</Intercept>
-            <SEslope>0.67758934068212429</SEslope>
-            <SEintercept>2.1512794342553567</SEintercept>
-            <R2>0.01552506562985545</R2>
-            <RMSE>2.9174170224917262</RMSE>
-            <NSE>-13.338483021655485</NSE>
-            <ME>2.4471946403572389</ME>
-            <MAE>2.4827458844459791</MAE>
-            <RSR>3.5923021475775023</RSR>
+            <Slope>0.24067232216162207</Slope>
+            <Intercept>4.7859233393557172</Intercept>
+            <SEslope>0.67758920257060662</SEslope>
+            <SEintercept>2.1512789957648879</SEintercept>
+            <R2>0.015525085840098263</R2>
+            <RMSE>2.9174164110825038</RMSE>
+            <NSE>-13.338477011764015</NSE>
+            <ME>2.4471941133380519</ME>
+            <MAE>2.4827453574267921</MAE>
+            <RSR>3.5923013947311846</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.Wt</Name>
             <n>10</n>
-            <Slope>0.45446659074582557</Slope>
-            <Intercept>269.08192981291916</Intercept>
-            <SEslope>0.62276365329389727</SEslope>
-            <SEintercept>125.62580381353207</SEintercept>
-            <R2>0.062413531053093885</R2>
-            <RMSE>202.96716254990642</RMSE>
-            <NSE>-8.9724755179837352</NSE>
-            <ME>164.77048546404345</ME>
-            <MAE>164.77048546404345</MAE>
-            <RSR>2.9958684827918205</RSR>
+            <Slope>0.45446658467446133</Slope>
+            <Intercept>269.08192857925542</Intercept>
+            <SEslope>0.62276364353676517</SEslope>
+            <SEintercept>125.62580184529332</SEintercept>
+            <R2>0.062413531323231242</R2>
+            <RMSE>202.96715968401648</RMSE>
+            <NSE>-8.9724752363616584</NSE>
+            <ME>164.77048306947415</ME>
+            <MAE>164.77048306947415</MAE>
+            <RSR>2.995868440490252</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Phenology.Stage</Name>
@@ -1452,16 +1469,16 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>FodderBeet.Total.Wt</Name>
             <n>10</n>
-            <Slope>1.0036481228589118</Slope>
-            <Intercept>271.62013626258704</Intercept>
-            <SEslope>0.094452278561142231</SEslope>
-            <SEintercept>213.90658808873744</SEintercept>
-            <R2>0.9338358902400633</R2>
-            <RMSE>359.305233526164</RMSE>
-            <NSE>0.81965867934556791</NSE>
-            <ME>279.28382090808014</ME>
-            <MAE>280.47071100350217</MAE>
-            <RSR>0.40287366331021052</RSR>
+            <Slope>1.0036467788253505</Slope>
+            <Intercept>271.62171827973089</Intercept>
+            <SEslope>0.094452453694154323</SEslope>
+            <SEintercept>213.9069847134208</SEintercept>
+            <R2>0.93383549562849211</R2>
+            <RMSE>359.30452247508077</RMSE>
+            <NSE>0.81965939312178127</NSE>
+            <ME>279.282579487043</ME>
+            <MAE>280.47039497982104</MAE>
+            <RSR>0.40287286603889921</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2031,7 +2048,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -2064,6 +2080,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
               <double>0.55</double>
               <double>0.55</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2197,6 +2214,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FodderBeet</Name>
@@ -5753,7 +5771,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -5786,6 +5803,7 @@ namespace Models
             <double>0.55</double>
             <double>0.55</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -5919,6 +5937,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -8247,7 +8266,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -8280,6 +8298,7 @@ namespace Models
             <double>0.55</double>
             <double>0.55</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -8413,6 +8432,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>

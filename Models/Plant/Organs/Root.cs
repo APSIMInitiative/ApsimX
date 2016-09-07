@@ -12,7 +12,40 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Organs
 {
     ///<summary>
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent 
+    /// root length density.
+    /// 
+    /// **Root Growth**
+    /// 
+    /// Roots grow downward through the soil profile and rate is determined by RootFrontVelocity. The RootFrontVelocity 
+    /// is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value.
+    /// 
+    /// **Dry Matter Demands**
+    /// 
+    /// 100% of the dry matter (DM) demanded from the root is structural. The daily DM demand from root is calculated as a 
+    /// proportion of total DM supply using a PartitionFraction function. The daily loss of roots is calculated using
+    /// a SenescenceRate function.
+    /// 
+    /// **Nitrogen Demands**
+    /// 
+    /// The daily structural N demand from root is the product of total DM demand and a nitrogen concentration of MinimumNConc%.
+    /// 
+    /// **Nitrogen Uptake**
+    /// 
+    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.
+    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor 
+    /// controlling the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) 
+    /// and a soil moisture factor which decreases as the soil dries. Nitrogen uptake demand is limited to the maximum 
+    /// of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which 
+    /// determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up.
+    /// 
+    /// **Water Uptake**
+    /// 
+    /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.
+    /// In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor 
+    /// controlling the rate of extraction (KL). The KL values are set in the soil and may be further modified by the crop
+    /// via KLModifier, KNO3 and KN4.
+    /// 
     ///</summary>
     [Serializable]
     [Description("Root Class")]
@@ -75,7 +108,7 @@ namespace Models.PMF.Organs
         IFunction PartitionFraction = null;
         
         /// <summary>The maximum n conc</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         
@@ -92,7 +125,7 @@ namespace Models.PMF.Organs
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
-        IFunction KLModifier = null;
+        LinearInterpolationFunction KLModifier = null;
         
         /// <summary>The Maximum Root Depth</summary>
         [Link(IsOptional = true)]
@@ -288,23 +321,6 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Class Properties
-        /// <summary>Gets a value indicating whether this instance is growing.</summary>
-        private bool isGrowing { get { return (Plant.IsAlive && Plant.SowingData.Depth < plantZone.Depth); } }
-
-
-        /// <summary>Gets the l ldep.</summary>
-        /// <value>The l ldep.</value>
-        [Units("mm")]
-        double[] LLdep
-        {
-            get
-            {
-                double[] value = new double[plantZone.soil.Thickness.Length];
-                for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    value[i] = plantZone.LL[i] * plantZone.soil.Thickness[i];
-                return value;
-            }
-        }
 
         /// <summary>Gets the root length density.</summary>
         /// <value>The current length density.</value>
@@ -352,22 +368,9 @@ namespace Models.PMF.Organs
         /// <summary>Root depth.</summary>
         [XmlIgnore]
         public double Depth { get { return plantZone.Depth; } }
-        /// <summary>Layer mid point depth.</summary>
+
+        /// <summary>Layer live</summary>
         [XmlIgnore]
-          public double LayerMidPointDepth
-          {
-              get
-              {
-                  if (plantZone == null)
-                      return 0;
-                  else
-                      return plantZone.LayerMidPointDepth;
-              }
-          }
-
-
-/// <summary>Layer live</summary>
-[XmlIgnore]
         public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
@@ -402,7 +405,7 @@ namespace Models.PMF.Organs
             if (soil == null)
                 throw new Exception("Cannot find soil");
 
-            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaxNconc);
+            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
 
         }
 
@@ -414,7 +417,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
+                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
                 InitialiseZones();
             }
         }
@@ -436,7 +439,7 @@ namespace Models.PMF.Organs
                     Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaxNconc);
+                    ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
                     zones.Add(newZone);
                 }
             }
@@ -629,7 +632,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (isGrowing)
+                if (Plant.IsAlive && Plant.SowingData.Depth < plantZone.Depth)
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -781,7 +784,7 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < plantZone.LayerLive.Length; i++)
                 {
                     plantZone.StructuralNDemand[i] = plantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaxNconc * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
+                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
                     plantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - plantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(plantZone.NonStructuralNDemand);
@@ -797,12 +800,18 @@ namespace Models.PMF.Organs
         {
             return CalcNUptake(zone.NO3N, zone.Name, KNO3);
         }
+
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] NH4NSupply(ZoneWaterAndN zone)
         {
             return CalcNUptake(zone.NH4N, zone.Name, KNH4);
         }
+
+        /// <summary>Calculate NO3 or NH4 uptake</summary>
+        /// <param name="N">The array of NO3 or NH4 values</param>
+        /// <param name="zoneName">The zone name to calculate uptake from.</param>
+        /// <param name="K">The K modifier</param>
         private double[] CalcNUptake(double[] N, string zoneName, LinearInterpolationFunction K)
         {
             ZoneState myZone = zones.Find(z => z.Name == zoneName);
@@ -829,17 +838,7 @@ namespace Models.PMF.Organs
             return null;
         }
 
- 
-
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// Cannot Allocate N to roots in layers when demand is zero
-        /// or
-        /// Error in N Allocation:  + Name
-        /// or
-        /// Request for N uptake exceeds soil N supply
-        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -872,18 +871,7 @@ namespace Models.PMF.Organs
                 
             }
         }
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.  Has a default of 0.01</value>
-        public override double MaxNconc
-        {
-            get
-            {
-                if (MaximumNConc != null)
-                    return MaximumNConc.Value;
-                else
-                    return 0.01; 
-            }
-        }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
@@ -897,37 +885,24 @@ namespace Models.PMF.Organs
             }
         }
 
-
-        /// <summary>Gets the water supply.</summary>
+        /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] WaterSupply(ZoneWaterAndN zone)
         {
             ZoneState myZone = zones.Find(z => z.Name == zone.Name);
-            if (myZone != null)
-            {
-                double[] SW = zone.Water;
-                double[] supply = new double[myZone.soil.Thickness.Length];
-                double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-                double depth_to_layer_top = 0;      // depth to top of layer (mm)
-                
-
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
-                {
-                    depth_to_layer_bottom += myZone.soil.Thickness[layer];
-                    depth_to_layer_top = depth_to_layer_bottom - myZone.soil.Thickness[layer];
-                    myZone.LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
-
-                    if (layer <= LayerIndex(myZone.Depth))
-                        supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.Value *
-                            (SW[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
-                    else
-                        supply[layer] = 0;
-                }
-
-                return supply;
-            }
-            else
+            if (myZone == null)
                 return null;
+
+            double[] supply = new double[myZone.soil.Thickness.Length];
+            double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
+            for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+            {
+                if (layer <= LayerIndex(myZone.Depth))
+                    supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                        (zone.Water[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
+            }
+
+            return supply;
         }
 
         /// <summary>Gets or sets the water uptake.</summary>
@@ -935,15 +910,67 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double WaterUptake
         {
-            get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }
+            get
+            {
+                double[] uptake = null;
+                if (plantZone.Uptake != null )
+                    uptake = new double[plantZone.Uptake.Length];
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.Uptake != null)
+                            uptake = MathUtilities.Subtract(uptake, zone.Uptake);  // Subtract here because zone.Uptake is -ve
+                    }
+                }
+                if (uptake == null)
+                    return 0;
+
+                return MathUtilities.Sum(uptake);
+            }
         }
-        
+
         /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
+        [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                List<double> uptake = new List<double>();
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.Uptake != null)
+                            uptake.Add(-MathUtilities.Sum(zone.Uptake));
+                    }
+                }
+                if (uptake == null)
+                    return null;
+
+                return uptake.ToArray();
+            }
+        }
+
+        /// <summary>Gets or sets the water uptake.</summary>
         [Units("kg/ha")]
         public override double NUptake
         {
-            get {return plantZone.NitUptake == null ? 0.0 : -MathUtilities.Sum(plantZone.NitUptake);}
+            get
+            {
+                double[] uptake = plantZone.NitUptake;
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.NitUptake != null)
+                            uptake = MathUtilities.Add(uptake, zone.NitUptake);
+                    }
+                }
+                if (uptake == null)
+                    return 0;
+                return MathUtilities.Sum(uptake);
+            }
         }
         #endregion
 
@@ -956,7 +983,6 @@ namespace Models.PMF.Organs
             if (totalFractionToRemove > 1.0)
             {
                 throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
-                                    + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
                                     + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
             }
@@ -968,127 +994,5 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            Name = this.Name;
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is parameterised using the PMF Root class which provides the core functions of taking up water and nutrients from the soil.  It is parameterised as follows.", indent));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            //Describe root growth
-            tags.Add(new AutoDocumentation.Heading("Root Growth", headingLevel+1));
-            tags.Add(new AutoDocumentation.Paragraph("Roots grow downward through the soil profile and rate is determined by:",indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "RootFrontVelocity")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Paragraph("The RootFrontVelocity is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Drymatter Demands", headingLevel + 1));
-            // Describe biomass Demand
-            tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from the root is structural", indent));
-
-            tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from root is calculated as a proportion of total DM supply using:", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "PartitionFraction")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-            tags.Add(new AutoDocumentation.Paragraph("The daily loss of roots is calculated using:", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "SenescenceRate")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MinNconc * 100 + "%", indent));
-            if (NitrogenDemandSwitch != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "NitrogenDemandSwitch")
-                        child.Document(tags, headingLevel + 5, indent);
-                }
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Uptake", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("potential N uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controllint the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) and a soil moisture factor which decreases as the soil dries.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up:", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Water Uptake", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.", indent));
-            tags.Add(new AutoDocumentation.Paragraph("In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor controllint the rate of extraction (kl)", indent));
-            tags.Add(new AutoDocumentation.Paragraph("The kl values are set in the soil and may be further modified by the crop.  are calculated in relation to root length density in each layer as :", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "KLModifier" || child.Name == "KNO3" || child.Name == "KNH4")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-                
-            // write Other functions.
-            bool NonStandardFunctions = false;
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if  ((child.GetType() != typeof(Memo))
-                    | (child.GetType() != typeof(Biomass))
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MinimumNConc")
-                    | (child.Name != "NitrogenDemandSwitch")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "SoilWaterEffect")
-                    | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MaximumRootDepth")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "RootFrontVelocity")
-                    | (child.Name != "PartitionFraction"))
-                    {
-                        NonStandardFunctions = true;
-                    }
-            }
-
-            if (NonStandardFunctions)
-            {
-                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if ((child.GetType() == typeof(Memo))
-                    | (child is Biomass)
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MinimumNConc")
-                    | (child.Name != "NitrogenDemandSwitch")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "SoilWaterEffect")
-                    | (child.Name != "MaximumDailyUptake")
-                    | (child.Name != "MaximumNConc")
-                    | (child.Name != "MaximumRootDepth")
-                    | (child.Name != "KLModifier")
-                    | (child.Name != "RootFrontVelocity")
-                    | (child.Name != "PartitionFraction"))
-                    {//Already documented 
-                    }
-                    else
-                    {
-                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
-                        child.Document(tags, headingLevel + 2, indent + 1);
-                    }
-                }
-            }
-        }
     }
 }

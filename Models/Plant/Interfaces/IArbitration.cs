@@ -52,9 +52,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Sets the n allocation.</summary>
         BiomassAllocationType NAllocation { set; }
 
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        double MaxNconc { get; set; }
-
         /// <summary>Gets or sets the minimum nconc.</summary>
         double MinNconc { get; set; }
 
