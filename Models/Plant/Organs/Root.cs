@@ -955,15 +955,58 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double WaterUptake
         {
-            get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }
+            // get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }  //this was before zones and for a single-zone simulation gives a sensible result
+            get
+            {
+                double[] uptake = new double[plantZone.Uptake.Length];
+                foreach (ZoneState zone in zones)
+                {
+                    if (zone.Uptake != null)
+                    {
+                        uptake = MathUtilities.Subtract(uptake, zone.Uptake);  // Subtract here because zone.Uptake is -ve
+                    }
+                }
+                return MathUtilities.Sum(uptake);
+            } 
         }
-        
+
         /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
+        [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                List<double> uptake = new List<double>();
+
+                foreach (ZoneState zone in zones)
+                {
+                    if (zone.Uptake != null)
+                    {
+                        uptake.Add(-MathUtilities.Sum(zone.Uptake));
+
+                        //Console.WriteLine("Root " + Clock.Today + " in zone " + zone.Name + " " + MathUtilities.Sum(uptake));
+                    }
+                }
+                return uptake.ToArray();
+            }
+        }
+
+        /// <summary>Gets or sets the nitrogen uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("kg/ha")]
         public override double NUptake
         {
-            get {return plantZone.NitUptake == null ? 0.0 : -MathUtilities.Sum(plantZone.NitUptake);}
+            get
+            {
+                double[] uptake = plantZone.NitUptake;
+                foreach (ZoneState zone in zones)
+                {
+                    if (zone.Uptake != null)
+                        uptake = MathUtilities.Add(uptake, zone.NitUptake);
+                }
+                return MathUtilities.Sum(uptake);
+            }
         }
         #endregion
 
