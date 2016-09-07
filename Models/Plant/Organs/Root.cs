@@ -108,7 +108,7 @@ namespace Models.PMF.Organs
         IFunction PartitionFraction = null;
         
         /// <summary>The maximum n conc</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         
@@ -321,23 +321,6 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Class Properties
-        /// <summary>Gets a value indicating whether this instance is growing.</summary>
-        private bool isGrowing { get { return (Plant.IsAlive && Plant.SowingData.Depth < plantZone.Depth); } }
-
-
-        /// <summary>Gets the l ldep.</summary>
-        /// <value>The l ldep.</value>
-        [Units("mm")]
-        double[] LLdep
-        {
-            get
-            {
-                double[] value = new double[plantZone.soil.Thickness.Length];
-                for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    value[i] = plantZone.LL[i] * plantZone.soil.Thickness[i];
-                return value;
-            }
-        }
 
         /// <summary>Gets the root length density.</summary>
         /// <value>The current length density.</value>
@@ -385,22 +368,9 @@ namespace Models.PMF.Organs
         /// <summary>Root depth.</summary>
         [XmlIgnore]
         public double Depth { get { return plantZone.Depth; } }
-        /// <summary>Layer mid point depth.</summary>
+
+        /// <summary>Layer live</summary>
         [XmlIgnore]
-          public double LayerMidPointDepth
-          {
-              get
-              {
-                  if (plantZone == null)
-                      return 0;
-                  else
-                      return plantZone.LayerMidPointDepth;
-              }
-          }
-
-
-/// <summary>Layer live</summary>
-[XmlIgnore]
         public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
@@ -435,7 +405,7 @@ namespace Models.PMF.Organs
             if (soil == null)
                 throw new Exception("Cannot find soil");
 
-            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaxNconc);
+            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
 
         }
 
@@ -447,7 +417,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaxNconc);
+                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
                 InitialiseZones();
             }
         }
@@ -469,7 +439,7 @@ namespace Models.PMF.Organs
                     Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaxNconc);
+                    ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
                     zones.Add(newZone);
                 }
             }
@@ -662,7 +632,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (isGrowing)
+                if (Plant.IsAlive && Plant.SowingData.Depth < plantZone.Depth)
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -814,7 +784,7 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < plantZone.LayerLive.Length; i++)
                 {
                     plantZone.StructuralNDemand[i] = plantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaxNconc * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
+                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
                     plantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - plantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(plantZone.NonStructuralNDemand);
@@ -830,12 +800,18 @@ namespace Models.PMF.Organs
         {
             return CalcNUptake(zone.NO3N, zone.Name, KNO3);
         }
+
         /// <summary>Gets the nitrogne supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] NH4NSupply(ZoneWaterAndN zone)
         {
             return CalcNUptake(zone.NH4N, zone.Name, KNH4);
         }
+
+        /// <summary>Calculate NO3 or NH4 uptake</summary>
+        /// <param name="N">The array of NO3 or NH4 values</param>
+        /// <param name="zoneName">The zone name to calculate uptake from.</param>
+        /// <param name="K">The K modifier</param>
         private double[] CalcNUptake(double[] N, string zoneName, LinearInterpolationFunction K)
         {
             ZoneState myZone = zones.Find(z => z.Name == zoneName);
@@ -862,17 +838,7 @@ namespace Models.PMF.Organs
             return null;
         }
 
- 
-
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// Cannot Allocate N to roots in layers when demand is zero
-        /// or
-        /// Error in N Allocation:  + Name
-        /// or
-        /// Request for N uptake exceeds soil N supply
-        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -905,18 +871,7 @@ namespace Models.PMF.Organs
                 
             }
         }
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.  Has a default of 0.01</value>
-        public override double MaxNconc
-        {
-            get
-            {
-                if (MaximumNConc != null)
-                    return MaximumNConc.Value;
-                else
-                    return 0.01; 
-            }
-        }
+
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
@@ -955,15 +910,67 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double WaterUptake
         {
-            get { return plantZone.Uptake == null ? 0.0 : -MathUtilities.Sum(plantZone.Uptake); }
+            get
+            {
+                double[] uptake = null;
+                if (plantZone.Uptake != null )
+                    uptake = new double[plantZone.Uptake.Length];
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.Uptake != null)
+                            uptake = MathUtilities.Subtract(uptake, zone.Uptake);  // Subtract here because zone.Uptake is -ve
+                    }
+                }
+                if (uptake == null)
+                    return 0;
+
+                return MathUtilities.Sum(uptake);
+            }
         }
-        
+
         /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
+        [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                List<double> uptake = new List<double>();
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.Uptake != null)
+                            uptake.Add(-MathUtilities.Sum(zone.Uptake));
+                    }
+                }
+                if (uptake == null)
+                    return null;
+
+                return uptake.ToArray();
+            }
+        }
+
+        /// <summary>Gets or sets the water uptake.</summary>
         [Units("kg/ha")]
         public override double NUptake
         {
-            get {return plantZone.NitUptake == null ? 0.0 : -MathUtilities.Sum(plantZone.NitUptake);}
+            get
+            {
+                double[] uptake = plantZone.NitUptake;
+                if (zones != null)
+                {
+                    foreach (ZoneState zone in zones)
+                    {
+                        if (zone.NitUptake != null)
+                            uptake = MathUtilities.Add(uptake, zone.NitUptake);
+                    }
+                }
+                if (uptake == null)
+                    return 0;
+                return MathUtilities.Sum(uptake);
+            }
         }
         #endregion
 
@@ -976,7 +983,6 @@ namespace Models.PMF.Organs
             if (totalFractionToRemove > 1.0)
             {
                 throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
-                                    + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
                                     + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
             }

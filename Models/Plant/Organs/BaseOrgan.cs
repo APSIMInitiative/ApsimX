@@ -84,10 +84,6 @@ namespace Models.PMF.Organs
         /// <value>The n demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        [XmlIgnore]
-        virtual public double MaxNconc { get { return 0; } set { } }
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc.</value>
         [XmlIgnore]

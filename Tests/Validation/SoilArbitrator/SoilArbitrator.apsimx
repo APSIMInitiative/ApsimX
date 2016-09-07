@@ -2898,6 +2898,10 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>40</Value>
               <Units>m/g</Units>
             </Constant>
+			<Constant>
+			  <Name>MaximumNConc</Name>
+			  <Value>0.01</Value>
+			</Constant> 			
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -3310,6 +3314,10 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>40</Value>
               <Units>m/g</Units>
             </Constant>
+			<Constant>
+			  <Name>MaximumNConc</Name>
+			  <Value>0.01</Value>
+			</Constant> 			
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
