@@ -786,31 +786,23 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
-        public override double[] NO3NSupply(ZoneWaterAndN zone)
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        public override void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
-            return CalcNUptake(zone.NO3N, zone.Name, KNO3);
-        }
+            NO3Supply = null;
+            NH4Supply = null;
 
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        public override double[] NH4NSupply(ZoneWaterAndN zone)
-        {
-            return CalcNUptake(zone.NH4N, zone.Name, KNH4);
-        }
-
-        /// <summary>Calculate NO3 or NH4 uptake</summary>
-        /// <param name="N">The array of NO3 or NH4 values</param>
-        /// <param name="zoneName">The zone name to calculate uptake from.</param>
-        /// <param name="K">The K modifier</param>
-        private double[] CalcNUptake(double[] N, string zoneName, LinearInterpolationFunction K)
-        {
-            ZoneState myZone = zones.Find(z => z.Name == zoneName);
+            ZoneState myZone = zones.Find(z => z.Name == zone.Name);
             if (myZone != null)
             {
-                double[] Nsupply = new double[myZone.soil.Thickness.Length];
-                double NUptake = 0;
+                NO3Supply = new double[myZone.soil.Thickness.Length];
+                NH4Supply = new double[myZone.soil.Thickness.Length];
+
+                double NO3Uptake = 0;
+                double NH4Uptake = 0;
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
                     if (myZone.LayerLive[layer].Wt > 0)
@@ -818,16 +810,20 @@ namespace Models.PMF.Organs
                         double RWC = 0;
                         RWC = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
                         RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                        double k = K.ValueForX(LengthDensity[layer]);
                         double SWAF = NUptakeSWFactor.ValueForX(RWC);
-                        double Nppm = N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
-                        Nsupply[layer] = Math.Min(N[layer] * k * Nppm * SWAF, (MaxDailyNUptake.Value - NUptake));
-                        NUptake += Nsupply[layer];
+
+                        double kno3 = KNO3.ValueForX(LengthDensity[layer]);
+                        double NO3ppm = zone.NO3N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value - NO3Uptake));
+                        NO3Uptake += NO3Supply[layer];
+
+                        double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                        double NH4ppm = zone.NH4N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value - NH4Uptake));
+                        NH4Uptake += NH4Supply[layer];
                     }
                 }
-                return Nsupply;
             }
-            return null;
         }
 
         /// <summary>Sets the n allocation.</summary>

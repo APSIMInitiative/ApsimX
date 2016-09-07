@@ -85,11 +85,9 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
-        double[] NO3NSupply(ZoneWaterAndN zone);
-
-        /// <summary>Gets the ammonium uptake supply for the given nitrogen state.</summary>
-        /// <param name="zone">The zone</param>
-        double[] NH4NSupply(ZoneWaterAndN zone);
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply);
     }
 
 
