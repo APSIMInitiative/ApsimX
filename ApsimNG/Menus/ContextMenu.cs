@@ -131,26 +131,27 @@ namespace UserInterface.Presenters
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
-            if (this.explorerPresenter.Save())
+            if (this.explorerPresenter.ApsimXFile.FileName == null)
+                this.explorerPresenter.Save();
+
+            List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
+            if (duplicates.Count > 0)
             {
-                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
-                if (duplicates.Count > 0)
-                {
-                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
-                }
-                else
-                {
-                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
+                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+            }
+            else
+            {
+                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
 
-                    JobManager.IRunnable job = Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false);
+                List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
+                jobs.Add(new SaveApsimJob(explorerPresenter.ApsimXFile));
+                jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
 
-                    this.command = new Commands.RunCommand(job, model.Name, this.explorerPresenter);
-                    this.command.Do(null);
-                }
+                this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter);
+                this.command.Do(null);
             }
         }
-
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
