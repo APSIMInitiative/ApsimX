@@ -92,7 +92,7 @@ namespace Models.PMF.Organs
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
-        IFunction KLModifier = null;
+        LinearInterpolationFunction KLModifier = null;
         
         /// <summary>The Maximum Root Depth</summary>
         [Link(IsOptional = true)]
@@ -897,37 +897,24 @@ namespace Models.PMF.Organs
             }
         }
 
-
-        /// <summary>Gets the water supply.</summary>
+        /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public override double[] WaterSupply(ZoneWaterAndN zone)
         {
             ZoneState myZone = zones.Find(z => z.Name == zone.Name);
-            if (myZone != null)
-            {
-                double[] SW = zone.Water;
-                double[] supply = new double[myZone.soil.Thickness.Length];
-                double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-                double depth_to_layer_top = 0;      // depth to top of layer (mm)
-                
-
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
-                {
-                    depth_to_layer_bottom += myZone.soil.Thickness[layer];
-                    depth_to_layer_top = depth_to_layer_bottom - myZone.soil.Thickness[layer];
-                    myZone.LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
-
-                    if (layer <= LayerIndex(myZone.Depth))
-                        supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.Value *
-                            (SW[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
-                    else
-                        supply[layer] = 0;
-                }
-
-                return supply;
-            }
-            else
+            if (myZone == null)
                 return null;
+
+            double[] supply = new double[myZone.soil.Thickness.Length];
+            double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
+            for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+            {
+                if (layer <= LayerIndex(myZone.Depth))
+                    supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                        (zone.Water[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
+            }
+
+            return supply;
         }
 
         /// <summary>Gets or sets the water uptake.</summary>
