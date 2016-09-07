@@ -1315,16 +1315,16 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>ExtraVariables.Script.AccumPlantN</Name>
             <n>10</n>
-            <Slope>-2.0066118635505394</Slope>
-            <Intercept>-21.348287462261169</Intercept>
-            <SEslope>0.35907991505514419</SEslope>
-            <SEintercept>110.61448164398246</SEintercept>
-            <R2>0.79606416780987777</R2>
-            <RMSE>950.29552671780652</RMSE>
-            <NSE>-140.22798328959988</NSE>
-            <ME>-915.785258090272</ME>
-            <MAE>915.785258090272</MAE>
-            <RSR>11.274093531660977</RSR>
+            <Slope>-1.003305931775268</Slope>
+            <Intercept>-10.674143731130982</Intercept>
+            <SEslope>0.179539957527574</SEslope>
+            <SEintercept>55.307240821991819</SEintercept>
+            <R2>0.79606416780987377</R2>
+            <RMSE>628.744947421419</RMSE>
+            <NSE>-60.823331424346271</NSE>
+            <ME>-606.63763026583911</ME>
+            <MAE>606.63763026583911</MAE>
+            <RSR>7.4592893952381036</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Bulb.Live.N</Name>
@@ -1427,16 +1427,16 @@ in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMe
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.N</Name>
             <n>10</n>
-            <Slope>0.24067232216162207</Slope>
-            <Intercept>4.7859233393557172</Intercept>
-            <SEslope>0.67758920257060662</SEslope>
-            <SEintercept>2.1512789957648879</SEintercept>
-            <R2>0.015525085840098263</R2>
-            <RMSE>2.9174164110825038</RMSE>
-            <NSE>-13.338477011764015</NSE>
-            <ME>2.4471941133380519</ME>
-            <MAE>2.4827453574267921</MAE>
-            <RSR>3.5923013947311846</RSR>
+            <Slope>0.2406723221616125</Slope>
+            <Intercept>4.7859233393557439</Intercept>
+            <SEslope>0.67758920257060518</SEslope>
+            <SEintercept>2.1512789957648835</SEintercept>
+            <R2>0.015525085840097153</R2>
+            <RMSE>2.9174164110825007</RMSE>
+            <NSE>-13.338477011763986</NSE>
+            <ME>2.4471941133380493</ME>
+            <MAE>2.482745357426789</MAE>
+            <RSR>3.5923013947311806</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.Petiole.Live.Wt</Name>
