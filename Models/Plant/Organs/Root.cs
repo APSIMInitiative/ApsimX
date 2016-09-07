@@ -851,27 +851,25 @@ namespace Models.PMF.Organs
                      { throw new Exception("N Allocation to roots exceeds Demand"); }
                 
                 double NAllocated = 0;
-                int i = -1;
-                foreach (Biomass Layer in plantZone.LayerLive)
+                for (int i = 0; i < plantZone.LayerLive.Length; i++)
                 {
-                    i += 1;
                     if (TotalStructuralNDemand > 0)
                     {
                         double StructFrac = plantZone.StructuralNDemand[i] / TotalStructuralNDemand;
-                        Layer.StructuralN += value.Structural * StructFrac;
+                        plantZone.LayerLive[i].StructuralN += value.Structural * StructFrac;
                         NAllocated += value.Structural * StructFrac;
                     }
                     if (TotalNonStructuralNDemand > 0)
                     {
                         double NonStructFrac = plantZone.NonStructuralNDemand[i] / TotalNonStructuralNDemand;
-                        Layer.NonStructuralN += value.NonStructural * NonStructFrac;
+                        plantZone.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
                         NAllocated += value.NonStructural * NonStructFrac;
                     }
                 }
+
                 if (!MathUtilities.FloatsAreEqual(NAllocated - TotalNAllocated, 0.0))
-                {
                     throw new Exception("Error in N Allocation: " + Name);
-                }
+                
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
