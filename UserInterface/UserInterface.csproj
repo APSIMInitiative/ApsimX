@@ -908,6 +908,7 @@
     <EmbeddedResource Include="Resources\LargeImages\BiomassRemoval.png" />
     <EmbeddedResource Include="Resources\LargeImages\EGrandis.png" />
     <EmbeddedResource Include="Resources\LargeImages\Fieldpea.png" />
+    <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>

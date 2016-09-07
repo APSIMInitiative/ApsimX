@@ -380,7 +380,6 @@ namespace UserInterface.Presenters
                 Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
                 WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
                 writeDocument.Do(null);
-                explorerPresenter.MainPresenter.ShowMessage("File " + writeDocument.fileName + " has been written", DataStore.ErrorLevel.Information);
             }
             catch (Exception err)
             {
