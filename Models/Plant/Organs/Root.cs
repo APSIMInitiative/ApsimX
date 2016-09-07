@@ -778,12 +778,10 @@ namespace Models.PMF.Organs
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
                     _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-                int i = -1;
-                foreach (Biomass Layer in plantZone.LayerLive)
+                for (int i = 0; i < plantZone.LayerLive.Length; i++)
                 {
-                    i += 1;
-                    plantZone.StructuralNDemand[i] = Layer.PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaxNconc * (Layer.Wt + Layer.PotentialDMAllocation) - (Layer.N + plantZone.StructuralNDemand[i]));
+                    plantZone.StructuralNDemand[i] = plantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    double NDeficit = Math.Max(0.0, MaxNconc * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
                     plantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - plantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
                 TotalNonStructuralNDemand = MathUtilities.Sum(plantZone.NonStructuralNDemand);
