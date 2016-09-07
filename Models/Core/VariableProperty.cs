@@ -175,7 +175,10 @@ namespace Models.Core
                 }
                 else if (unitsToStringInfo != null)
                     unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
-                return "(" + unitString + ")";
+                if (unitString != null)
+                    return "(" + unitString + ")";
+                else
+                    return null;
             }
         }
 
