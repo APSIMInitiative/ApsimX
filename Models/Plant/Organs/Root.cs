@@ -45,7 +45,6 @@ namespace Models.PMF.Organs
     /// In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor 
     /// controlling the rate of extraction (KL). The KL values are set in the soil and may be further modified by the crop
     /// via KLModifier, KNO3 and KN4.
-    /// 
     ///</summary>
     [Serializable]
     [Description("Root Class")]
@@ -159,8 +158,10 @@ namespace Models.PMF.Organs
 
             /// <summary>Lower limit</summary>
             public double[] LL = null;
+
             /// <summary>Exploration factor</summary>
             public double[] XF = null;
+
             /// <summary>KL</summary>
             public double[] KL = null;
 
@@ -172,25 +173,24 @@ namespace Models.PMF.Organs
 
             /// <summary>The uptake</summary>
             public double[] Uptake = null;
+
             /// <summary>The delta n h4</summary>
             public double[] DeltaNH4;
+
             /// <summary>The delta n o3</summary>
             public double[] DeltaNO3;
-            /// <summary>
-            /// Holds actual DM allocations to use in allocating N to structural and Non-Structural pools
-            /// </summary>
+
+            /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
             [XmlIgnore]
             [Units("g/2")]
             public double[] DMAllocated { get; set; }
-            /// <summary>
-            /// Demand for structural N, set when Ndemand is called and used again in N allocation
-            /// </summary>
+
+            /// <summary>Demand for structural N, set when Ndemand is called and used again in N allocation</summary>
             [XmlIgnore]
             [Units("g/2")]
             public double[] StructuralNDemand { get; set; }
-            /// <summary>
-            /// Demand for Non-structural N, set when Ndemand is called and used again in N allocation
-            /// </summary>
+
+            /// <summary>Demand for Non-structural N, set when Ndemand is called and used again in N allocation</summary>
             [XmlIgnore]
             [Units("g/m2")]
             public double[] NonStructuralNDemand { get; set; }
@@ -202,30 +202,26 @@ namespace Models.PMF.Organs
             public double NuptakeSupply { get; set; }
 
             /// <summary>Gets or sets the layer live.</summary>
-            /// <value>The layer live.</value>
             [XmlIgnore]
             public Biomass[] LayerLive { get; set; }
+
             /// <summary>Gets or sets the layer dead.</summary>
-            /// <value>The layer dead.</value>
             [XmlIgnore]
             public Biomass[] LayerDead { get; set; }
+
             /// <summary>Gets or sets the length.</summary>
-            /// <value>The length.</value>
             [XmlIgnore]
             public double Length { get; set; }
 
             /// <summary>Gets or sets the depth.</summary>
-            /// <value>The depth.</value>
             [XmlIgnore]
             [Units("mm")]
             public double Depth { get; set; }
 
             /// <summary>Gets depth or the mid point of the cuttent layer under examination</summary>
-            /// <value>The depth.</value>
             [XmlIgnore]
             [Units("mm")]
             public double LayerMidPointDepth { get; set; }
-
 
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
@@ -323,7 +319,6 @@ namespace Models.PMF.Organs
         #region Class Properties
 
         /// <summary>Gets the root length density.</summary>
-        /// <value>The current length density.</value>
         [Units("mm/mm3")]
         public double[] LengthDensity
         {
@@ -340,26 +335,32 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNonStructuralNDemand { get; set; }
+
         ///<Summary>Sum Structural N demand for all layers</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalStructuralNDemand { get; set; }
+
         ///<Summary>Sum N demand for all layers</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNDemand { get; set; }
+
         ///<Summary>Total N Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalNAllocated { get; set; }
+
         ///<Summary>Total DM Demanded by roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMDemand { get; set; }
+
         ///<Summary>Total DM Allocated to roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMAllocated { get; set; }
+
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
         [XmlIgnore]
@@ -378,7 +379,6 @@ namespace Models.PMF.Organs
         public Biomass[] LayerDead { get { return plantZone.LayerDead; } }
 
         /// <summary>Gets or sets the length.</summary>
-        /// <value>The length.</value>
         [XmlIgnore]
         public double Length { get { return plantZone.Length; } }
 
@@ -406,7 +406,7 @@ namespace Models.PMF.Organs
                 throw new Exception("Cannot find soil");
 
             plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
-
+            zones = new List<ZoneState>();
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -425,7 +425,7 @@ namespace Models.PMF.Organs
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            zones = new List<ZoneState>();
+            zones.Clear();
             zones.Add(plantZone);
             if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
                 ZoneRootDepths.Count != ZoneInitialDM.Count)
@@ -574,6 +574,7 @@ namespace Models.PMF.Organs
         {
             base.Clear();
             plantZone.Clear();
+            zones.Clear();
         }
 
         /// <summary>Performs the removal of roots</summary>
@@ -626,7 +627,6 @@ namespace Models.PMF.Organs
 
         #region Arbitrator method calls
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -640,12 +640,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
-        /// <exception cref="System.Exception">
-        /// Invalid allocation of potential DM in + Name
-        /// or
-        /// Error trying to partition potential root biomass
-        /// </exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -706,9 +700,8 @@ namespace Models.PMF.Organs
                 }
             }
         }
+
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        /// <exception cref="System.Exception">Error trying to partition root biomass</exception>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -768,7 +761,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         [Units("g/m2")]
         public override BiomassPoolType NDemand
         {
@@ -873,7 +865,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc. Has a default of 0.01</value>
         public override double MinNconc
         {
             get
@@ -906,27 +897,15 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
         [Units("mm")]
         public double WaterUptake
         {
             get
             {
-                double[] uptake = null;
-                if (plantZone.Uptake != null )
-                    uptake = new double[plantZone.Uptake.Length];
-                if (zones != null)
-                {
-                    foreach (ZoneState zone in zones)
-                    {
-                        if (zone.Uptake != null)
-                            uptake = MathUtilities.Subtract(uptake, zone.Uptake);  // Subtract here because zone.Uptake is -ve
-                    }
-                }
-                if (uptake == null)
-                    return 0;
-
-                return MathUtilities.Sum(uptake);
+                double uptake = 0;
+                foreach (ZoneState zone in zones)
+                    uptake = uptake + MathUtilities.Sum(zone.Uptake);
+                return -uptake;
             }
         }
 
@@ -936,19 +915,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                List<double> uptake = new List<double>();
-                if (zones != null)
-                {
-                    foreach (ZoneState zone in zones)
-                    {
-                        if (zone.Uptake != null)
-                            uptake.Add(-MathUtilities.Sum(zone.Uptake));
-                    }
-                }
-                if (uptake == null)
-                    return null;
-
-                return uptake.ToArray();
+                List<double> uptakes = new List<double>();
+                uptakes.Add(-MathUtilities.Sum(plantZone.Uptake));
+                foreach (ZoneState zone in zones)
+                    uptakes.Add(-MathUtilities.Sum(zone.Uptake));
+                    
+                return uptakes.ToArray();
             }
         }
 
@@ -958,18 +930,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] uptake = plantZone.NitUptake;
-                if (zones != null)
-                {
-                    foreach (ZoneState zone in zones)
-                    {
-                        if (zone.NitUptake != null)
-                            uptake = MathUtilities.Add(uptake, zone.NitUptake);
-                    }
-                }
-                if (uptake == null)
-                    return 0;
-                return MathUtilities.Sum(uptake);
+                double uptake = 0;
+                foreach (ZoneState zone in zones)
+                    uptake = MathUtilities.Sum(zone.NitUptake);
+                return uptake;
             }
         }
         #endregion
@@ -980,18 +944,12 @@ namespace Models.PMF.Organs
         {
             //NOTE: roots don't have dead biomass
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            if (totalFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
-                                    + " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            else if (totalFractionToRemove > 0.0)
-            {
+            if (totalFractionToRemove > 1.0 || totalFractionToRemove < 0)
+                throw new Exception("The sum of FractionToResidue and FractionToRemove sent is greater than 1 or less than 0.");
+            
+            if (totalFractionToRemove > 0)
                 DoRootBiomassRemoval(value.FractionLiveToResidue, value.FractionLiveToRemove);
-            }
         }
-
         #endregion
 
     }
