@@ -902,9 +902,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double uptake = MathUtilities.Sum(plantZone.Uptake);
+                double uptake = 0;
                 foreach (ZoneState zone in zones)
-                    uptake = uptake + MathUtilities.Sum(plantZone.Uptake);
+                    uptake = uptake + MathUtilities.Sum(zone.Uptake);
                 return -uptake;
             }
         }
@@ -930,7 +930,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double uptake = MathUtilities.Sum(plantZone.NitUptake);
+                double uptake = 0;
                 foreach (ZoneState zone in zones)
                     uptake = MathUtilities.Sum(zone.NitUptake);
                 return uptake;
@@ -947,7 +947,8 @@ namespace Models.PMF.Organs
             if (totalFractionToRemove > 1.0 || totalFractionToRemove < 0)
                 throw new Exception("The sum of FractionToResidue and FractionToRemove sent is greater than 1 or less than 0.");
             
-            DoRootBiomassRemoval(value.FractionLiveToResidue, value.FractionLiveToRemove);
+            if (totalFractionToRemove > 0)
+                DoRootBiomassRemoval(value.FractionLiveToResidue, value.FractionLiveToRemove);
         }
         #endregion
 
