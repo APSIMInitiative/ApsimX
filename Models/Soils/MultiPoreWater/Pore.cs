@@ -13,6 +13,10 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
+        /// <summary>
+        /// Link to the soil water model parent
+        /// </summary>
+        [Link]  MultiPoreWater MPW = null;
         private double FloatingPointTolerance = 0.0000000001;
         /// <summary>The layer that this pore compartment is located in</summary>
         [XmlIgnore]
@@ -25,17 +29,25 @@ namespace Models.Soils
         public double Thickness { get; set; }
         /// <summary>The diameter of the upper boundry of the pore</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("um")]
         public double DiameterUpper { get; set; }
         /// <summary>The diameter of the lower boundry of the pore</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("um")]
         public double DiameterLower { get; set; }
-        /// <summary>The diameter of the lower boundry of the pore</summary>
+        /// <summary>The mean horizontal arae of the pores in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("um2")]
+        public double Area { get { return Math.PI * Math.Pow(Radius,2); } }
+        /// <summary>The mean horizontal radius of pores in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("um")]
+        public double Radius { get { return (DiameterLower + DiameterUpper) / 4; } }
+        /// <summary>The water potential when this pore is empty but all smaller pores are full</summary>
         [XmlIgnore]
         [Units("cm")]
         public double PsiLower { get { return -3000 / DiameterLower; } }
-        /// <summary>The mean pore diameter</summary>
+        /// <summary>The water potential when this pore is full but all larger pores are empty</summary>
         [XmlIgnore]
         [Units("cm")]
         public double PsiUpper { get { return -3000 / DiameterUpper; } }
@@ -88,18 +100,22 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double AirDepth { get { return AirFilledVolume * Thickness; } }
-        /// <summary>The conductivity of water moving into a pore, The net result of gravity driving it in, capilary forces drawing it in and repellency stopping it</summary>
+        /// <summary>The volumetirc flow rate of a single pore</summary>
+        [XmlIgnore]
+        [Units("cm3/s")]
+        public double PoreFlowRate { get { return MPW.CFlow * Math.Pow(Radius,MPW.XFlow); } }
+        /// <summary>The number of pore 'cylinders' in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("/m2")]
+        public double Number { get { return Volume / (Area / 1000000000000)  ; } }
+        /// <summary>The volume flow rate of water through this pore compartment</summary>
+        [XmlIgnore]
+        [Units("cm3/s/m2")]
+        public double VolumetricFlowRate { get { return PoreFlowRate * Number ; } }
+        /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivity { get { return HydraulicConductivityUpper - HydraulicConductivityLower; } }
-        /// <summary>The conductivity from a conductivity curve when this pore is full but larger pores are empty</summary>
-        [XmlIgnore]
-        [Units("mm/h")]
-        public double HydraulicConductivityUpper { get; set; }
-        /// <summary>The conductivity from a conductivity curve when this pore is empty but smaller pores are full</summary>
-        [XmlIgnore]
-        [Units("mm/h")]
-        public double HydraulicConductivityLower { get; set; }
+        public double HydraulicConductivity { get { return VolumetricFlowRate/1000*3600; } }
         /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]

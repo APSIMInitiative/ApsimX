@@ -267,6 +267,16 @@ namespace Models.Soils
         /// </summary>
         [Description("Number of time steps each day.  Not implemented yet")]
         public int TimeSteps { get; set; }
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// </summary>
+        [Description("Pore flow Rate coefficient")]
+        public double CFlow { get; set; }
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// </summary>
+        [Description("Pore flow Shape coefficient")]
+        public double XFlow { get; set; }
         #endregion
 
         #region Outputs
@@ -582,8 +592,8 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
-                    Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
+                    //Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
+                    //Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
                     HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
