@@ -109,16 +109,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
-        virtual public double NUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
         
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
