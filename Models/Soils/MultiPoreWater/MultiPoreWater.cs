@@ -184,6 +184,8 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         public void SetSWmm(int Layer, double NewSWmm) { }
         ///<summary> Who knows</summary>
+        public void SetWater_frac(double[] New_SW) { }
+        ///<summary> Who knows</summary>
         public void Reset() { }
         ///<summary> Who knows</summary>
         public void SetWaterTable(double InitialDepth) { }
