@@ -194,7 +194,6 @@ namespace Models.PMF.Organs
 
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
-            /// <param name="plantName">The name of the parent plant.</param>
             /// <param name="depth">Root depth (mm)</param>
             /// <param name="initialDM">Initial dry matter</param>
             /// <param name="population">plant population</param>
