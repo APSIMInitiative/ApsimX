@@ -448,6 +448,34 @@ namespace Models.PMF.Organs
             PlantZone.Clear();
             Zones.Clear();
         }
+
+        /// <summary>
+        /// Calculate Root Activity Values for water and nitrogen
+        /// </summary>
+        /// <param name="RAw"></param>
+        /// <param name="TotalRAw"></param>
+        private void CalculateRootActivityValues(out double[] RAw, out double TotalRAw)
+        {
+            RAw = new double[PlantZone.soil.Thickness.Length];
+            TotalRAw = 0;
+            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+            {
+                if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
+                    if (PlantZone.LayerLive[layer].Wt > 0)
+                    {
+                        RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
+                                   * PlantZone.soil.Thickness[layer]
+                                   * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
+                        RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
+                    }
+                    else if (layer > 0)
+                        RAw[layer] = RAw[layer - 1];
+                    else
+                        RAw[layer] = 0;
+                TotalRAw += RAw[layer];
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -553,45 +581,15 @@ namespace Models.PMF.Organs
                     if (value.Structural < 0.000000000001) { }//All OK
                     else
                         throw new Exception("Invalid allocation of potential DM in" + Name);
-                // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[PlantZone.soil.Thickness.Length];
-                double[] RAn = new double[PlantZone.soil.Thickness.Length];
-                double TotalRAw = 0;
-                double TotalRAn = 0; ;
 
-                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
-                {
-                    if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
-                        if (PlantZone.LayerLive[layer].Wt > 0)
-                        {
-                            RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
-                                       * PlantZone.soil.Thickness[layer]
-                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
-                            RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
+                double[] RAw;
+                double TotalRAw;
+                CalculateRootActivityValues(out RAw, out TotalRAw);
 
-                            RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
-                                           * PlantZone.soil.Thickness[layer]
-                                           * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
-                            RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
-                        }
-                        else if (layer > 0)
-                        {
-                            RAw[layer] = RAw[layer - 1];
-                            RAn[layer] = RAn[layer - 1];
-                        }
-                        else
-                        {
-                            RAw[layer] = 0;
-                            RAn[layer] = 0;
-                        }
-                    TotalRAw += RAw[layer];
-                    TotalRAn += RAn[layer];
-                }
                 double allocated = 0;
                 for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
-
                         PlantZone.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
                     else if (value.Structural > 0)
                         throw new Exception("Error trying to partition potential root biomass");
@@ -607,54 +605,22 @@ namespace Models.PMF.Organs
             {
                 TotalDMAllocated = value.Structural;
                 PlantZone.DMAllocated = new double[PlantZone.soil.Thickness.Length];
-            
-                // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[PlantZone.soil.Thickness.Length];
-                double[] RAn = new double[PlantZone.soil.Thickness.Length];
-                double TotalRAw = 0;
-                double TotalRAn = 0;
 
-                if (PlantZone.Depth <= 0)
-                    return; // cannot do anything with no depth
-                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+                if (PlantZone.Depth > 0)
                 {
-                    if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
-                        if (PlantZone.LayerLive[layer].Wt > 0)
-                        {
-                            RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
-                                       * PlantZone.soil.Thickness[layer]
-                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
-                            RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
-
-                            RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
-                                       * PlantZone.soil.Thickness[layer]
-                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
-                            RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
-
-                        }
-                        else if (layer > 0)
-                        {
-                            RAw[layer] = RAw[layer - 1];
-                            RAn[layer] = RAn[layer - 1];
-                        }
-                        else
-                        {
-                            RAw[layer] = 0;
-                            RAn[layer] = 0;
-                        }
-                    TotalRAw += RAw[layer];
-                    TotalRAn += RAn[layer];
-                }
-                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
-                {
-                    if (TotalRAw > 0)
+                    double[] RAw;
+                    double TotalRAw;
+                    CalculateRootActivityValues(out RAw, out TotalRAw);
+                    for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                     {
-                        PlantZone.LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
-                        PlantZone.DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
+                        if (TotalRAw > 0)
+                        {
+                            PlantZone.LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
+                            PlantZone.DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
+                        }
+                        else if (value.Structural > 0)
+                            throw new Exception("Error trying to partition root biomass");
                     }
-                    else if (value.Structural > 0)
-                        throw new Exception("Error trying to partition root biomass");
-                        
                 }
             }
         }
@@ -753,7 +719,6 @@ namespace Models.PMF.Organs
 
                 if (!MathUtilities.FloatsAreEqual(NAllocated - TotalNAllocated, 0.0))
                     throw new Exception("Error in N Allocation: " + Name);
-                
             }
         }
 
