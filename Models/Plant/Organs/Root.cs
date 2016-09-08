@@ -151,7 +151,9 @@ namespace Models.PMF.Organs
 
         #region States
 
-        class ZoneState
+        /// <summary>The state of each zone that root knows about.</summary>
+        [Serializable]
+        public class ZoneState
         {
             /// <summary>Name of the parent plant</summary>
             public string plantName;
@@ -169,16 +171,16 @@ namespace Models.PMF.Organs
             public Soil soil = null;
           
             /// <summary>Name of zone.</summary>
-            public string Name;
+            public string Name { get; set; }
 
             /// <summary>The uptake</summary>
-            public double[] Uptake = null;
+            public double[] Uptake { get; set; }
 
             /// <summary>The delta n h4</summary>
-            public double[] DeltaNH4;
+            public double[] DeltaNH4 { get; set; }
 
             /// <summary>The delta n o3</summary>
-            public double[] DeltaNO3;
+            public double[] DeltaNO3 { get; set; }
 
             /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
             [XmlIgnore]
@@ -196,7 +198,7 @@ namespace Models.PMF.Organs
             public double[] NonStructuralNDemand { get; set; }
 
             /// <summary>The Nuptake</summary>
-            public double[] NitUptake = null;
+            public double[] NitUptake { get; set; }
 
             /// <summary>Gets or sets the nuptake supply.</summary>
             public double NuptakeSupply { get; set; }
@@ -308,12 +310,12 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>A list of all zones to grow roots in</summary>
-        [NonSerialized]
-        private List<ZoneState> zones = new List<ZoneState>();
+        [XmlIgnore]
+        public List<ZoneState> Zones { get; set; }
 
         /// <summary>The zone where the plant is growing</summary>
-        [NonSerialized]
-        private ZoneState plantZone = null;
+        [XmlIgnore]
+        public ZoneState PlantZone { get; set; }
         #endregion
         
         #region Class Properties
@@ -324,9 +326,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] value = new double[plantZone.soil.Thickness.Length];
-                for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    value[i] = plantZone.LayerLive[i].Wt * SpecificRootLength.Value * 1000 / 1000000 / plantZone.soil.Thickness[i];
+                double[] value = new double[PlantZone.soil.Thickness.Length];
+                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
+                    value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -368,19 +370,19 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return plantZone.Depth; } }
+        public double Depth { get { return PlantZone.Depth; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
-        public Biomass[] LayerLive { get { return plantZone.LayerLive; } }
+        public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
-        public Biomass[] LayerDead { get { return plantZone.LayerDead; } }
+        public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
         /// <summary>Gets or sets the length.</summary>
         [XmlIgnore]
-        public double Length { get { return plantZone.Length; } }
+        public double Length { get { return PlantZone.Length; } }
 
         #endregion
     
@@ -389,6 +391,7 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         public Root()
         {
+            Zones = new List<Organs.Root.ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
             ZoneInitialDM = new List<double>();
@@ -405,8 +408,8 @@ namespace Models.PMF.Organs
             if (soil == null)
                 throw new Exception("Cannot find soil");
 
-            plantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
-            zones = new List<ZoneState>();
+            PlantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+            Zones = new List<ZoneState>();
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -417,7 +420,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                plantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+                PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
                 InitialiseZones();
             }
         }
@@ -425,8 +428,8 @@ namespace Models.PMF.Organs
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            zones.Clear();
-            zones.Add(plantZone);
+            Zones.Clear();
+            Zones.Add(PlantZone);
             if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
                 ZoneRootDepths.Count != ZoneInitialDM.Count)
                 throw new Exception("The root zone variables (ZoneRootDepths, ZoneNamesToGrowRootsIn, ZoneInitialDM) need to have the same number of values");
@@ -440,7 +443,7 @@ namespace Models.PMF.Organs
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
-                    zones.Add(newZone);
+                    Zones.Add(newZone);
                 }
             }
         }
@@ -452,7 +455,7 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
-                plantZone.Length = MathUtilities.Sum(LengthDensity);
+                PlantZone.Length = MathUtilities.Sum(LengthDensity);
 
         }
 
@@ -466,20 +469,20 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 // Do Root Front Advance
-                int RootLayer = LayerIndex(plantZone.Depth);
+                int RootLayer = LayerIndex(PlantZone.Depth);
 
-                plantZone.Depth = plantZone.Depth + RootFrontVelocity.Value * plantZone.XF[RootLayer];
+                PlantZone.Depth = PlantZone.Depth + RootFrontVelocity.Value * PlantZone.XF[RootLayer];
 
                 //Limit root depth for impeded layers
                 double MaxDepth = 0;
-                for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
-                    if (plantZone.XF[i] > 0)
-                        MaxDepth += plantZone.soil.Thickness[i];
+                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
+                    if (PlantZone.XF[i] > 0)
+                        MaxDepth += PlantZone.soil.Thickness[i];
                 //Limit root depth for the crop specific maximum depth
                 if (MaximumRootDepth != null)
                     MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
 
-                plantZone.Depth = Math.Min(plantZone.Depth, MaxDepth);
+                PlantZone.Depth = Math.Min(PlantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
                 DoRootBiomassRemoval(SenescenceRate.Value);
@@ -490,7 +493,7 @@ namespace Models.PMF.Organs
         /// <param name="zoneName">The zone name to look for</param>
         public bool HaveRootsInZone(string zoneName)
         {
-            return zones.Find(z => z.Name == zoneName) != null;
+            return Zones.Find(z => z.Name == zoneName) != null;
         }
 
         /// <summary>Does the water uptake.</summary>
@@ -498,7 +501,7 @@ namespace Models.PMF.Organs
         /// <param name="zoneName">Zone name to do water uptake in</param>
         public override void DoWaterUptake(double[] Amount, string zoneName)
         {
-            ZoneState zone = zones.Find(z => z.Name == zoneName);
+            ZoneState zone = Zones.Find(z => z.Name == zoneName);
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
 				
@@ -512,7 +515,7 @@ namespace Models.PMF.Organs
         {
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
-                ZoneState zone = zones.Find(z => z.Name == thisZone.Name);
+                ZoneState zone = Zones.Find(z => z.Name == thisZone.Name);
                 if (zone == null)
                     throw new Exception("Cannot find a zone called " + thisZone.Name);
 
@@ -533,9 +536,9 @@ namespace Models.PMF.Organs
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < plantZone.soil.Thickness.Length; i++)
+            for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
             {
-                CumDepth = CumDepth + plantZone.soil.Thickness[i];
+                CumDepth = CumDepth + PlantZone.soil.Thickness[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
@@ -553,12 +556,12 @@ namespace Models.PMF.Organs
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += plantZone.soil.Thickness[i];
-            depth_to_layer_top = depth_to_layer_bottom - plantZone.soil.Thickness[layer];
+                depth_to_layer_bottom += PlantZone.soil.Thickness[i];
+            depth_to_layer_top = depth_to_layer_bottom - PlantZone.soil.Thickness[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / plantZone.soil.Thickness[layer];
+            return depth_of_root_in_layer / PlantZone.soil.Thickness[layer];
         }
         
         /// <summary>Called when crop is ending</summary>
@@ -573,8 +576,8 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             base.Clear();
-            plantZone.Clear();
-            zones.Clear();
+            PlantZone.Clear();
+            Zones.Clear();
         }
 
         /// <summary>Performs the removal of roots</summary>
@@ -583,26 +586,26 @@ namespace Models.PMF.Organs
         private void DoRootBiomassRemoval(double detachFraction, double removeFraction = 0.0)
         {
             //NOTE: at the moment Root has no Dead pool
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[plantZone.soil.Thickness.Length];
+            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[PlantZone.soil.Thickness.Length];
             double RemainingFraction = 1.0 - (detachFraction + removeFraction);
             double detachingWt = 0.0;
             double detachingN = 0.0;
-            for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
+            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
             {
-                detachingWt = plantZone.LayerLive[layer].Wt * detachFraction;
-                detachingN = plantZone.LayerLive[layer].N * detachFraction;
-                RemovedWt += plantZone.LayerLive[layer].Wt * removeFraction;
-                RemovedN += plantZone.LayerLive[layer].N * removeFraction;
+                detachingWt = PlantZone.LayerLive[layer].Wt * detachFraction;
+                detachingN = PlantZone.LayerLive[layer].N * detachFraction;
+                RemovedWt += PlantZone.LayerLive[layer].Wt * removeFraction;
+                RemovedN += PlantZone.LayerLive[layer].N * removeFraction;
                 DetachedWt += detachingWt;
                 DetachedN += detachingN;
 
-                plantZone.LayerLive[layer].StructuralWt *= RemainingFraction;
-                plantZone.LayerLive[layer].NonStructuralWt *= RemainingFraction;
-                plantZone.LayerLive[layer].MetabolicWt *= RemainingFraction;
+                PlantZone.LayerLive[layer].StructuralWt *= RemainingFraction;
+                PlantZone.LayerLive[layer].NonStructuralWt *= RemainingFraction;
+                PlantZone.LayerLive[layer].MetabolicWt *= RemainingFraction;
 
-                plantZone.LayerLive[layer].StructuralN *= RemainingFraction;
-                plantZone.LayerLive[layer].NonStructuralN *= RemainingFraction;
-                plantZone.LayerLive[layer].MetabolicN *= RemainingFraction;
+                PlantZone.LayerLive[layer].StructuralN *= RemainingFraction;
+                PlantZone.LayerLive[layer].NonStructuralN *= RemainingFraction;
+                PlantZone.LayerLive[layer].MetabolicN *= RemainingFraction;
 
                 FOMType fom = new FOMType();
                 fom.amount = (float) (detachingWt * 10);
@@ -632,7 +635,7 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (Plant.IsAlive && Plant.SowingData.Depth < plantZone.Depth)
+                if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
@@ -644,10 +647,10 @@ namespace Models.PMF.Organs
         {
             set
             {
-                if (plantZone.Uptake == null)
+                if (PlantZone.Uptake == null)
                     throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
            
-                if (plantZone.Depth <= 0)
+                if (PlantZone.Depth <= 0)
                     return; //cannot allocate growth where no length
 
                 if (DMDemand.Structural == 0)
@@ -655,24 +658,24 @@ namespace Models.PMF.Organs
                     else
                         throw new Exception("Invalid allocation of potential DM in" + Name);
                 // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[plantZone.soil.Thickness.Length];
-                double[] RAn = new double[plantZone.soil.Thickness.Length];
+                double[] RAw = new double[PlantZone.soil.Thickness.Length];
+                double[] RAn = new double[PlantZone.soil.Thickness.Length];
                 double TotalRAw = 0;
                 double TotalRAn = 0; ;
 
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
-                    if (layer <= LayerIndex(plantZone.Depth))
-                        if (plantZone.LayerLive[layer].Wt > 0)
+                    if (layer <= LayerIndex(PlantZone.Depth))
+                        if (PlantZone.LayerLive[layer].Wt > 0)
                         {
-                            RAw[layer] = plantZone.Uptake[layer] / plantZone.LayerLive[layer].Wt
-                                       * plantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, plantZone.Depth);
+                            RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
+                                       * PlantZone.soil.Thickness[layer]
+                                       * RootProportion(layer, PlantZone.Depth);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
-                            RAn[layer] = (plantZone.DeltaNO3[layer] + plantZone.DeltaNH4[layer]) / plantZone.LayerLive[layer].Wt
-                                           * plantZone.soil.Thickness[layer]
-                                           * RootProportion(layer, plantZone.Depth);
+                            RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
+                                           * PlantZone.soil.Thickness[layer]
+                                           * RootProportion(layer, PlantZone.Depth);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
                         }
                         else if (layer > 0)
@@ -689,11 +692,11 @@ namespace Models.PMF.Organs
                     TotalRAn += RAn[layer];
                 }
                 double allocated = 0;
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
 
-                        plantZone.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
+                        PlantZone.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
                     else if (value.Structural > 0)
                         throw new Exception("Error trying to partition potential root biomass");
                     allocated += (TotalRAw > 0) ? value.Structural * RAw[layer] / TotalRAw : 0;
@@ -707,29 +710,29 @@ namespace Models.PMF.Organs
             set
             {
                 TotalDMAllocated = value.Structural;
-                plantZone.DMAllocated = new double[plantZone.soil.Thickness.Length];
+                PlantZone.DMAllocated = new double[PlantZone.soil.Thickness.Length];
             
                 // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[plantZone.soil.Thickness.Length];
-                double[] RAn = new double[plantZone.soil.Thickness.Length];
+                double[] RAw = new double[PlantZone.soil.Thickness.Length];
+                double[] RAn = new double[PlantZone.soil.Thickness.Length];
                 double TotalRAw = 0;
                 double TotalRAn = 0;
 
-                if (plantZone.Depth <= 0)
+                if (PlantZone.Depth <= 0)
                     return; // cannot do anything with no depth
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
-                    if (layer <= LayerIndex(plantZone.Depth))
-                        if (plantZone.LayerLive[layer].Wt > 0)
+                    if (layer <= LayerIndex(PlantZone.Depth))
+                        if (PlantZone.LayerLive[layer].Wt > 0)
                         {
-                            RAw[layer] = plantZone.Uptake[layer] / plantZone.LayerLive[layer].Wt
-                                       * plantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, plantZone.Depth);
+                            RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
+                                       * PlantZone.soil.Thickness[layer]
+                                       * RootProportion(layer, PlantZone.Depth);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
-                            RAn[layer] = (plantZone.DeltaNO3[layer] + plantZone.DeltaNH4[layer]) / plantZone.LayerLive[layer].Wt
-                                       * plantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, plantZone.Depth);
+                            RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
+                                       * PlantZone.soil.Thickness[layer]
+                                       * RootProportion(layer, PlantZone.Depth);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
 
                         }
@@ -746,12 +749,12 @@ namespace Models.PMF.Organs
                     TotalRAw += RAw[layer];
                     TotalRAn += RAn[layer];
                 }
-                for (int layer = 0; layer < plantZone.soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
                     {
-                        plantZone.LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
-                        plantZone.DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
+                        PlantZone.LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
+                        PlantZone.DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
                     }
                     else if (value.Structural > 0)
                         throw new Exception("Error trying to partition root biomass");
@@ -766,21 +769,21 @@ namespace Models.PMF.Organs
         {
             get
             {
-                plantZone.StructuralNDemand = new double[plantZone.soil.Thickness.Length];
-                plantZone.NonStructuralNDemand = new double[plantZone.soil.Thickness.Length];
+                PlantZone.StructuralNDemand = new double[PlantZone.soil.Thickness.Length];
+                PlantZone.NonStructuralNDemand = new double[PlantZone.soil.Thickness.Length];
             
                 //Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
                     _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-                for (int i = 0; i < plantZone.LayerLive.Length; i++)
+                for (int i = 0; i < PlantZone.LayerLive.Length; i++)
                 {
-                    plantZone.StructuralNDemand[i] = plantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (plantZone.LayerLive[i].Wt + plantZone.LayerLive[i].PotentialDMAllocation) - (plantZone.LayerLive[i].N + plantZone.StructuralNDemand[i]));
-                    plantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - plantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
+                    PlantZone.StructuralNDemand[i] = PlantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (PlantZone.LayerLive[i].Wt + PlantZone.LayerLive[i].PotentialDMAllocation) - (PlantZone.LayerLive[i].N + PlantZone.StructuralNDemand[i]));
+                    PlantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - PlantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
-                TotalNonStructuralNDemand = MathUtilities.Sum(plantZone.NonStructuralNDemand);
-                TotalStructuralNDemand = MathUtilities.Sum(plantZone.StructuralNDemand);
+                TotalNonStructuralNDemand = MathUtilities.Sum(PlantZone.NonStructuralNDemand);
+                TotalStructuralNDemand = MathUtilities.Sum(PlantZone.StructuralNDemand);
                 TotalNDemand = TotalNonStructuralNDemand + TotalStructuralNDemand;
                 return new BiomassPoolType { Structural = TotalStructuralNDemand, NonStructural = TotalNonStructuralNDemand };
             }
@@ -795,7 +798,7 @@ namespace Models.PMF.Organs
             NO3Supply = null;
             NH4Supply = null;
 
-            ZoneState myZone = zones.Find(z => z.Name == zone.Name);
+            ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
             if (myZone != null)
             {
                 NO3Supply = new double[myZone.soil.Thickness.Length];
@@ -838,18 +841,18 @@ namespace Models.PMF.Organs
                      { throw new Exception("N Allocation to roots exceeds Demand"); }
                 
                 double NAllocated = 0;
-                for (int i = 0; i < plantZone.LayerLive.Length; i++)
+                for (int i = 0; i < PlantZone.LayerLive.Length; i++)
                 {
                     if (TotalStructuralNDemand > 0)
                     {
-                        double StructFrac = plantZone.StructuralNDemand[i] / TotalStructuralNDemand;
-                        plantZone.LayerLive[i].StructuralN += value.Structural * StructFrac;
+                        double StructFrac = PlantZone.StructuralNDemand[i] / TotalStructuralNDemand;
+                        PlantZone.LayerLive[i].StructuralN += value.Structural * StructFrac;
                         NAllocated += value.Structural * StructFrac;
                     }
                     if (TotalNonStructuralNDemand > 0)
                     {
-                        double NonStructFrac = plantZone.NonStructuralNDemand[i] / TotalNonStructuralNDemand;
-                        plantZone.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
+                        double NonStructFrac = PlantZone.NonStructuralNDemand[i] / TotalNonStructuralNDemand;
+                        PlantZone.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
                         NAllocated += value.NonStructural * NonStructFrac;
                     }
                 }
@@ -876,7 +879,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         public override double[] WaterSupply(ZoneWaterAndN zone)
         {
-            ZoneState myZone = zones.Find(z => z.Name == zone.Name);
+            ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
             if (myZone == null)
                 return null;
 
@@ -899,39 +902,12 @@ namespace Models.PMF.Organs
             get
             {
                 double uptake = 0;
-                foreach (ZoneState zone in zones)
+                foreach (ZoneState zone in Zones)
                     uptake = uptake + MathUtilities.Sum(zone.Uptake);
                 return -uptake;
             }
         }
 
-        /// <summary>Gets or sets the water uptake.</summary>
-        [Units("mm")]
-        public double[] WaterUptakeByZone
-        {
-            get
-            {
-                List<double> uptakes = new List<double>();
-                uptakes.Add(-MathUtilities.Sum(plantZone.Uptake));
-                foreach (ZoneState zone in zones)
-                    uptakes.Add(-MathUtilities.Sum(zone.Uptake));
-                    
-                return uptakes.ToArray();
-            }
-        }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        [Units("kg/ha")]
-        public override double NUptake
-        {
-            get
-            {
-                double uptake = 0;
-                foreach (ZoneState zone in zones)
-                    uptake = MathUtilities.Sum(zone.NitUptake);
-                return uptake;
-            }
-        }
         #endregion
 
         #region Biomass Removal

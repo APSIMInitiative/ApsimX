@@ -147,6 +147,15 @@ namespace Models.Core
                 {
                     sym.m_values = (double[])sometypeofobject;
                 }
+                else if (sometypeofobject is double[][])
+                {
+                    double[][] allvalues = sometypeofobject as double[][];
+                    List<double> singleArrayOfValues = new List<double>();
+                    foreach (double[] dimension in allvalues)
+                        foreach (double value in dimension)
+                            singleArrayOfValues.Add(value);
+                    sym.m_values = (double[])singleArrayOfValues.ToArray();
+                }
                 variablesToFill[i] = sym;
             }
             fn.Variables = variablesToFill;
