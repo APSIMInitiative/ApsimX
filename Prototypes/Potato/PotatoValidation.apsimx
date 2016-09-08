@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -156,6 +156,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Start>Maturity</Start>
           <End>Unused</End>
         </EndPhase>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
@@ -517,6 +518,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -643,7 +648,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Units>m/g</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
@@ -653,18 +660,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>900</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>2</Rank>
           <Area>600</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>3</Rank>
           <Area>300</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1500,142 +1513,142 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Leaf.LAI</Name>
             <n>146</n>
-            <Slope>0.98654554820750973</Slope>
-            <Intercept>-0.12038306359643203</Intercept>
-            <SEslope>0.045142280554765463</SEslope>
-            <SEintercept>0.14583542419737719</SEintercept>
-            <R2>0.76834098686566277</R2>
-            <RMSE>0.90553204768094386</RMSE>
-            <NSE>0.69717767985720125</NSE>
-            <ME>-0.15778736114761421</ME>
-            <MAE>0.742889584264249</MAE>
-            <RSR>0.54840513734133511</RSR>
+            <Slope>1.0001797987421219</Slope>
+            <Intercept>-0.13092633546685439</Intercept>
+            <SEslope>0.0449718702093</SEslope>
+            <SEintercept>0.14528490116856324</SEintercept>
+            <R2>0.77451483561501289</R2>
+            <RMSE>0.8975659101901079</RMSE>
+            <NSE>0.70248221525459742</NSE>
+            <ME>-0.13042648264836906</ME>
+            <MAE>0.731850908984823</MAE>
+            <RSR>0.54358071314129719</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.Live.Wt</Name>
             <n>234</n>
-            <Slope>0.31336994854426486</Slope>
-            <Intercept>31.611185373999753</Intercept>
-            <SEslope>0.039394580477022684</SEslope>
-            <SEintercept>5.2148289151977307</SEintercept>
-            <R2>0.21429547556406969</R2>
-            <RMSE>81.601740145936745</RMSE>
-            <NSE>-0.14453341561694155</NSE>
-            <ME>-42.675055678251887</ME>
-            <MAE>52.489527193290463</MAE>
-            <RSR>1.0675402789469513</RSR>
+            <Slope>0.32095282305955458</Slope>
+            <Intercept>32.207778823311394</Intercept>
+            <SEslope>0.040300834169309581</SEslope>
+            <SEintercept>5.3347935880490862</SEintercept>
+            <R2>0.21468831357025697</R2>
+            <RMSE>81.099622491095857</RMSE>
+            <NSE>-0.13049150130479359</NSE>
+            <ME>-41.258073953015668</ME>
+            <MAE>51.706498501392169</MAE>
+            <RSR>1.0609714138669371</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Leaf.SpecificArea</Name>
             <n>146</n>
-            <Slope>0.016073198138314131</Slope>
-            <Intercept>31363.087991769527</Intercept>
-            <SEslope>0.057859161945993789</SEslope>
-            <SEintercept>1699.0391734199402</SEintercept>
-            <R2>0.00053563030833880809</R2>
-            <RMSE>6388.9962710636028</RMSE>
-            <NSE>-0.81049799349225315</NSE>
-            <ME>2850.2151307152035</ME>
-            <MAE>4670.4406213722259</MAE>
-            <RSR>1.3409315129058419</RSR>
+            <Slope>0.0096817783042617376</Slope>
+            <Intercept>31167.823614334247</Intercept>
+            <SEslope>0.057780770146080594</SEslope>
+            <SEintercept>1696.7371915998142</SEintercept>
+            <R2>0.00019493797688252545</R2>
+            <RMSE>6249.0159979100372</RMSE>
+            <NSE>-0.732032558299389</NSE>
+            <ME>2469.7360190281784</ME>
+            <MAE>4445.49977619099</MAE>
+            <RSR>1.3115522565261013</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.N</Name>
             <n>144</n>
-            <Slope>0.14245416818697657</Slope>
-            <Intercept>2.0628533579437445</Intercept>
-            <SEslope>0.067608470213481361</SEslope>
-            <SEintercept>0.20978082945945267</SEintercept>
-            <R2>0.030317224573458867</R2>
-            <RMSE>2.1568348993715234</RMSE>
-            <NSE>-0.38660399977216486</NSE>
-            <ME>-0.084941639197952584</ME>
-            <MAE>1.5581453338352738</MAE>
-            <RSR>1.1734456976482988</RSR>
+            <Slope>0.18528633736920946</Slope>
+            <Intercept>2.2254689082364076</Intercept>
+            <SEslope>0.075375421981251786</SEslope>
+            <SEintercept>0.2338807326087114</SEintercept>
+            <R2>0.040816939347599668</R2>
+            <RMSE>2.2288317008282474</RMSE>
+            <NSE>-0.48072086649828694</NSE>
+            <ME>0.18495064811975315</ME>
+            <MAE>1.6703917289552264</MAE>
+            <RSR>1.2126162141020382</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>243</n>
-            <Slope>0.24939036116962432</Slope>
-            <Intercept>68.684077192173348</Intercept>
-            <SEslope>0.035997179398543383</SEslope>
-            <SEintercept>5.4925086999285444</SEintercept>
-            <R2>0.16608395264090792</R2>
-            <RMSE>87.828931249730715</RMSE>
-            <NSE>0.056315511457321943</NSE>
-            <ME>-23.573446068873846</ME>
-            <MAE>59.948886164654446</MAE>
-            <RSR>0.969433346487104</RSR>
+            <Slope>0.25659814823691829</Slope>
+            <Intercept>69.108920410859156</Intercept>
+            <SEslope>0.03630975603271</SEslope>
+            <SEintercept>5.54020215567258</SEintercept>
+            <R2>0.17165438726521554</R2>
+            <RMSE>87.2372709751949</RMSE>
+            <NSE>0.068986962257969742</NSE>
+            <ME>-22.262692853005269</ME>
+            <MAE>59.325023850187748</MAE>
+            <RSR>0.96290275125196623</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>184</n>
-            <Slope>1.0177556258601739</Slope>
-            <Intercept>0.57569687952562987</Intercept>
-            <SEslope>0.058680057331110161</SEslope>
-            <SEintercept>1.1044515399335837</SEintercept>
-            <R2>0.62304752525287521</R2>
-            <RMSE>6.8599036700229341</RMSE>
-            <NSE>0.36267280738176455</NSE>
-            <ME>0.87302544872929166</ME>
-            <MAE>5.1373878955185921</MAE>
-            <RSR>0.79615542319056343</RSR>
+            <Slope>1.0528136636830325</Slope>
+            <Intercept>0.61768269111511032</Intercept>
+            <SEslope>0.057167717630663729</SEslope>
+            <SEintercept>1.0759869134994984</SEintercept>
+            <R2>0.65077729994886946</R2>
+            <RMSE>6.8103311885267859</RMSE>
+            <NSE>0.37185070163881684</NSE>
+            <ME>1.5020790610848871</ME>
+            <MAE>5.0462902608599363</MAE>
+            <RSR>0.79040207709670485</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>281</n>
-            <Slope>0.75551462089507282</Slope>
-            <Intercept>343.19602157647375</Intercept>
-            <SEslope>0.036642654635756611</SEslope>
-            <SEintercept>39.9826475548553</SEintercept>
-            <R2>0.60376091595121706</R2>
-            <RMSE>480.10775985338677</RMSE>
-            <NSE>0.52644681912116376</NSE>
-            <ME>138.08223736181265</ME>
-            <MAE>290.30855504522731</MAE>
-            <RSR>0.68692644310890871</RSR>
+            <Slope>0.75845423436096548</Slope>
+            <Intercept>346.4879159205226</Intercept>
+            <SEslope>0.036630252002485257</SEslope>
+            <SEintercept>39.96911441650137</SEintercept>
+            <R2>0.60577915709706254</R2>
+            <RMSE>480.94484419765178</RMSE>
+            <NSE>0.52479406713916821</NSE>
+            <ME>143.84035379376357</ME>
+            <MAE>290.32607642688208</MAE>
+            <RSR>0.68812412292013225</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>190</n>
-            <Slope>1.0908255901465864</Slope>
-            <Intercept>-0.60008199462084022</Intercept>
-            <SEslope>0.025266554123758767</SEslope>
-            <SEintercept>0.34484241733400051</SEintercept>
-            <R2>0.90837683355913845</R2>
-            <RMSE>2.9280887836588096</RMSE>
-            <NSE>0.86932214737002855</NSE>
-            <ME>0.39760842895836562</ME>
-            <MAE>2.2086217596686124</MAE>
-            <RSR>0.36054136303375073</RSR>
+            <Slope>1.0901393976241676</Slope>
+            <Intercept>-0.34558929152975182</Intercept>
+            <SEslope>0.02457030918148705</SEslope>
+            <SEintercept>0.33533994272770734</SEintercept>
+            <R2>0.91282305933619823</R2>
+            <RMSE>2.8974010768978089</RMSE>
+            <NSE>0.8720469207866488</NSE>
+            <ME>0.64456352390131544</ME>
+            <MAE>2.1696339972227703</MAE>
+            <RSR>0.3567627250068785</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>295</n>
-            <Slope>0.97857922678452325</Slope>
-            <Intercept>-18.61256335771543</Intercept>
-            <SEslope>0.015529712721716025</SEslope>
-            <SEintercept>14.86850415572691</SEintercept>
-            <R2>0.931280058211619</R2>
-            <RMSE>160.8102790171786</RMSE>
-            <NSE>0.92538637329135132</NSE>
-            <ME>-34.785942847133747</ME>
-            <MAE>113.11759851105086</MAE>
-            <RSR>0.27269158248923603</RSR>
+            <Slope>0.98096074036962455</Slope>
+            <Intercept>-17.639201542595174</Intercept>
+            <SEslope>0.015491260745609775</SEslope>
+            <SEintercept>14.831689349376228</SEintercept>
+            <R2>0.931905830994296</R2>
+            <RMSE>159.75069426386489</RMSE>
+            <NSE>0.92636639768910223</NSE>
+            <ME>-32.014460927590058</ME>
+            <MAE>112.63788298420371</MAE>
+            <RSR>0.27089480777478064</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>259</n>
-            <Slope>0.97560139854750361</Slope>
-            <Intercept>-50.032716551562316</Intercept>
-            <SEslope>0.018887881521647363</SEslope>
-            <SEintercept>87.938966764694371</SEintercept>
-            <R2>0.91213536873554846</R2>
-            <RMSE>859.14402961266831</RMSE>
-            <NSE>0.90516600711080364</NSE>
-            <ME>-140.97595619808215</ME>
-            <MAE>573.94104877842619</MAE>
-            <RSR>0.30735620780536843</RSR>
+            <Slope>0.97779025046406387</Slope>
+            <Intercept>-44.572282562070086</Intercept>
+            <SEslope>0.018869792310384204</SEslope>
+            <SEintercept>87.85474627939287</SEintercept>
+            <R2>0.91264682299699362</R2>
+            <RMSE>855.75330109389006</RMSE>
+            <NSE>0.90591308043108387</NSE>
+            <ME>-127.3568052105682</ME>
+            <MAE>572.71226929809268</MAE>
+            <RSR>0.30614318481584823</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -1667,86 +1680,86 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <RegrStats>
             <Name>Potato.Stem.Live.Wt</Name>
             <n>4</n>
-            <Slope>0.89131816146777476</Slope>
-            <Intercept>77.807984880666027</Intercept>
-            <SEslope>0.41743367900339046</SEslope>
-            <SEintercept>43.717494874135774</SEintercept>
-            <R2>0.69508569200748682</R2>
-            <RMSE>68.1174187933692</RMSE>
-            <NSE>-7.7714783178051512</NSE>
-            <ME>66.703689666898086</ME>
-            <MAE>66.703689666898086</MAE>
-            <RSR>2.5648798682109586</RSR>
+            <Slope>1.0320707018167619</Slope>
+            <Intercept>67.5533402071388</Intercept>
+            <SEslope>0.41522320652166006</SEslope>
+            <SEintercept>43.48599386151939</SEintercept>
+            <R2>0.75544472904671756</R2>
+            <RMSE>72.1099847771855</RMSE>
+            <NSE>-8.829857829072715</NSE>
+            <ME>70.830084008086331</ME>
+            <MAE>70.830084008086331</MAE>
+            <RSR>2.7152151612357605</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.N</Name>
             <n>25</n>
-            <Slope>0.99458782188115358</Slope>
-            <Intercept>7.3815750925905359</Intercept>
-            <SEslope>0.12479808635486195</SEslope>
-            <SEintercept>2.1495740716434182</SEintercept>
-            <R2>0.734147504950029</R2>
-            <RMSE>8.3621079477641764</RMSE>
-            <NSE>-0.50060125265948807</NSE>
-            <ME>7.2959869079429724</ME>
-            <MAE>7.3383286692492948</MAE>
-            <RSR>1.2002404769683071</RSR>
+            <Slope>0.97351997940388657</Slope>
+            <Intercept>8.0000633549025917</Intercept>
+            <SEslope>0.13052572264798229</SEslope>
+            <SEintercept>2.2482292580097085</SEintercept>
+            <R2>0.70748528307399772</R2>
+            <RMSE>8.7044988660992555</RMSE>
+            <NSE>-0.62600288375869817</NSE>
+            <ME>7.5813083098017344</ME>
+            <MAE>7.6224940109189649</MAE>
+            <RSR>1.249384956051717</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.TotalLive.Wt</Name>
             <n>35</n>
-            <Slope>0.39059729488007983</Slope>
-            <Intercept>1101.9089995037084</Intercept>
-            <SEslope>0.10131048755324532</SEslope>
-            <SEintercept>120.81841388538796</SEintercept>
-            <R2>0.31055342841884892</R2>
-            <RMSE>744.33905266407487</RMSE>
-            <NSE>-0.27735686456354958</NSE>
-            <ME>496.03595429918954</ME>
-            <MAE>497.49662946020436</MAE>
-            <RSR>1.1139393853111792</RSR>
+            <Slope>0.38992656534090886</Slope>
+            <Intercept>1108.7557453810675</Intercept>
+            <SEslope>0.10117731949189684</SEslope>
+            <SEintercept>120.65960353573034</SEintercept>
+            <R2>0.31038073401092148</R2>
+            <RMSE>748.4507569265478</RMSE>
+            <NSE>-0.29150799608566946</NSE>
+            <ME>502.21585550226007</ME>
+            <MAE>502.70208769038163</MAE>
+            <RSR>1.120092749564106</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>33</n>
-            <Slope>1.095249165750146</Slope>
-            <Intercept>1.3308879149348094</Intercept>
-            <SEslope>0.058140227668239959</SEslope>
-            <SEintercept>1.0139519343004901</SEintercept>
-            <R2>0.91966259304282638</R2>
-            <RMSE>3.669300130839849</RMSE>
-            <NSE>0.7098747109225243</NSE>
-            <ME>2.8600411069791374</ME>
-            <MAE>3.2857252880867591</MAE>
-            <RSR>0.5304089117378078</RSR>
+            <Slope>1.0830283958949649</Slope>
+            <Intercept>1.6710744031981832</Intercept>
+            <SEslope>0.058501227881708126</SEslope>
+            <SEintercept>1.0202476933542322</SEintercept>
+            <R2>0.91705199767180823</R2>
+            <RMSE>3.7772489270918128</RMSE>
+            <NSE>0.6925529527062777</NSE>
+            <ME>3.00403239409704</ME>
+            <MAE>3.420693377530224</MAE>
+            <RSR>0.54601325084928443</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.Live.Wt</Name>
             <n>39</n>
-            <Slope>1.0085501764346165</Slope>
-            <Intercept>25.012391168160093</Intercept>
-            <SEslope>0.0441106703062285</SEslope>
-            <SEintercept>54.122773094460506</SEintercept>
-            <R2>0.93390100416666577</R2>
-            <RMSE>125.55231999650054</RMSE>
-            <NSE>0.92194640744855227</NSE>
-            <ME>34.7742679481372</ME>
-            <MAE>95.513196778886865</MAE>
-            <RSR>0.27577566677185622</RSR>
+            <Slope>1.0082810816102936</Slope>
+            <Intercept>29.40994326501459</Intercept>
+            <SEslope>0.044004022147726134</SEslope>
+            <SEintercept>53.991918268553434</SEintercept>
+            <R2>0.93416641780930387</R2>
+            <RMSE>126.46524083598257</RMSE>
+            <NSE>0.92080718813904872</NSE>
+            <ME>38.864590067077586</ME>
+            <MAE>96.780375778971944</MAE>
+            <RSR>0.27778089736596306</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Tuber.LiveFWt</Name>
             <n>39</n>
-            <Slope>1.0160918439859352</Slope>
-            <Intercept>94.72495670274202</Intercept>
-            <SEslope>0.041680459711152133</SEslope>
-            <SEintercept>246.2505929930218</SEintercept>
-            <R2>0.94139017109257317</R2>
-            <RMSE>554.28110516224888</RMSE>
-            <NSE>0.92748528204208425</NSE>
-            <ME>183.84006270965335</ME>
-            <MAE>457.88533243835951</MAE>
-            <RSR>0.26581077144353094</RSR>
+            <Slope>1.0156712617065784</Slope>
+            <Intercept>116.19694331758183</Intercept>
+            <SEslope>0.041384631113260191</SEslope>
+            <SEintercept>244.5028203398403</SEintercept>
+            <R2>0.94212611781765776</R2>
+            <RMSE>557.42601608477548</RMSE>
+            <NSE>0.92666007153281615</NSE>
+            <ME>202.982904545172</ME>
+            <MAE>455.35595432889869</MAE>
+            <RSR>0.26731894336325257</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2002,7 +2015,6 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -2043,6 +2055,7 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2212,6 +2225,7 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -6098,7 +6112,6 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -6139,6 +6152,7 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6281,6 +6295,7 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -9477,7 +9492,6 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -9518,6 +9532,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -9708,6 +9723,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -13264,7 +13280,6 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -13305,6 +13320,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -13495,6 +13511,7 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -17200,7 +17217,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -17241,6 +17257,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -17383,6 +17400,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -21862,7 +21880,6 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -21903,6 +21920,7 @@ A range of excelent experimental data has been collected by Plant and Food Resea
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -22093,6 +22111,7 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -25864,7 +25883,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -25905,6 +25923,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -26071,6 +26090,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -26292,6 +26312,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Start>Maturity</Start>
               <End>Unused</End>
             </EndPhase>
+            <DaysAfterSowing>0</DaysAfterSowing>
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
@@ -26650,7 +26671,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
-            <LinearInterpolationFunction>
+			<Constant>
+			  <Name>MaximumRootDepth</Name>
+			  <Value>1000000</Value>
+			</Constant>
+			<LinearInterpolationFunction>
               <Name>KLModifier</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
@@ -26691,7 +26716,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Units>m/g</Units>
             </Constant>
             <MaintenanceRespiration>0</MaintenanceRespiration>
-            <NuptakeSupply>0</NuptakeSupply>
+            <ZoneNamesToGrowRootsIn />
+            <ZoneRootDepths />
+            <ZoneInitialDM />
           </Root>
           <Leaf>
             <Name>Leaf</Name>
@@ -26701,18 +26728,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </VariableReference>
             <LeafCohort>
               <Name>InitialLeaf1</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>1</Rank>
               <Area>900</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>
             </LeafCohort>
             <LeafCohort>
               <Name>InitialLeaf2</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>2</Rank>
               <Area>600</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>
             </LeafCohort>
             <LeafCohort>
               <Name>InitialLeaf3</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>3</Rank>
               <Area>300</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -31242,7 +31275,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -31283,6 +31315,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -31449,6 +31482,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -31670,6 +31704,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Start>Maturity</Start>
               <End>Unused</End>
             </EndPhase>
+            <DaysAfterSowing>0</DaysAfterSowing>
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
@@ -31989,6 +32024,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <End>FullSenescence</End>
               </PhaseLookupValue>
             </PhaseLookup>
+		    <Constant>
+		      <Name>MaximumRootDepth</Name>
+		      <Value>1000000</Value>
+		    </Constant>
             <Constant>
               <Name>MaximumNConc</Name>
               <Value>0.01</Value>
@@ -32053,7 +32092,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Units>m/g</Units>
             </Constant>
             <MaintenanceRespiration>0</MaintenanceRespiration>
-            <NuptakeSupply>0</NuptakeSupply>
+            <ZoneNamesToGrowRootsIn />
+            <ZoneRootDepths />
+            <ZoneInitialDM />
           </Root>
           <Leaf>
             <Name>Leaf</Name>
@@ -32063,18 +32104,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </VariableReference>
             <LeafCohort>
               <Name>InitialLeaf1</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>1</Rank>
               <Area>900</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>
             </LeafCohort>
             <LeafCohort>
               <Name>InitialLeaf2</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>2</Rank>
               <Area>600</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>
             </LeafCohort>
             <LeafCohort>
               <Name>InitialLeaf3</Name>
+              <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+              <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
               <Rank>3</Rank>
               <Area>300</Area>
               <MaintenanceRespiration>0</MaintenanceRespiration>

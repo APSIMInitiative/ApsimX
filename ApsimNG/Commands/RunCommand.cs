@@ -13,7 +13,7 @@
     class RunCommand : ICommand
     {
         /// <summary>The job to run</summary>
-        private JobManager.IRunnable job;
+        private List<JobManager.IRunnable> jobs = null;
 
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -40,7 +40,21 @@
         /// <param name="presenter">The explorer presenter.</param>
         public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter)
         {
-            this.job = job;
+            jobs = new List<JobManager.IRunnable>();
+            this.jobs.Add(job);
+            this.jobName = name;
+            this.explorerPresenter = presenter;
+
+            jobManager = new JobManager();
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="job">The job to run.</param>
+        /// <param name="name">The name of the job</param>
+        /// <param name="presenter">The explorer presenter.</param>
+        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter)
+        {
+            this.jobs = jobs;
             this.jobName = name;
             this.explorerPresenter = presenter;
 
@@ -54,7 +68,7 @@
 
             stopwatch.Start();
                 
-            jobManager.AddJob(job);
+            jobs.ForEach(job => jobManager.AddJob(job));
             jobManager.Start(waitUntilFinished: false);
 
             timer = new Timer();
@@ -80,8 +94,9 @@
         private string GetErrorsFromSimulations()
         {
             string errorMessage = null;
-            foreach (Exception error in jobManager.Errors(job))
-                errorMessage += error.ToString() + Environment.NewLine;
+            foreach (JobManager.IRunnable job in jobs)
+                foreach (Exception error in jobManager.Errors(job))
+                    errorMessage += error.ToString() + Environment.NewLine;
 
             return errorMessage;
         }
