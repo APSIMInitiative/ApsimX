@@ -908,6 +908,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the water uptake.</summary>
+        [Units("kg/ha")]
+        public double NUptake
+        {
+            get
+            {
+                double uptake = 0;
+                foreach (ZoneState zone in Zones)
+                    uptake = MathUtilities.Sum(zone.NitUptake);
+                return uptake;
+            }
+        }
         #endregion
 
         #region Biomass Removal
