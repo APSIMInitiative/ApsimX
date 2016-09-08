@@ -13,10 +13,6 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
-        /// <summary>
-        /// Link to the soil water model parent
-        /// </summary>
-        [Link]  MultiPoreWater MPW = null;
         private double FloatingPointTolerance = 0.0000000001;
         /// <summary>The layer that this pore compartment is located in</summary>
         [XmlIgnore]
@@ -100,10 +96,20 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double AirDepth { get { return AirFilledVolume * Thickness; } }
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// </summary>
+        [Description("Pore flow Rate coefficient")]
+        public double CFlow { get; set; }
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// </summary>
+        [Description("Pore flow Shape coefficient")]
+        public double XFlow { get; set; }
         /// <summary>The volumetirc flow rate of a single pore</summary>
         [XmlIgnore]
         [Units("cm3/s")]
-        public double PoreFlowRate { get { return MPW.CFlow * Math.Pow(Radius,MPW.XFlow); } }
+        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
         /// <summary>The number of pore 'cylinders' in this pore compartment</summary>
         [XmlIgnore]
         [Units("/m2")]
@@ -115,7 +121,7 @@ namespace Models.Soils
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivity { get { return VolumetricFlowRate/1000*3600; } }
+        public double Capallarigy { get { return VolumetricFlowRate/1000*3600; } }
         /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -123,7 +129,7 @@ namespace Models.Soils
         {
             get
             {
-                return HydraulicConductivity + Adsorption;
+                return Capallarigy + Sorption;
             }
         }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
@@ -133,7 +139,7 @@ namespace Models.Soils
         {
             get
             {
-                return HydraulicConductivity * TensionFactor;
+                return Capallarigy * TensionFactor;
             }
         }
         /// <summary>
@@ -141,7 +147,7 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Adsorption
+        public double Sorption
         {
             get
             {

@@ -594,6 +594,8 @@ namespace Models.Soils
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
                     //Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
                     //Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
+                    Pores[l][c].CFlow = CFlow;
+                    Pores[l][c].XFlow = XFlow;
                     HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
