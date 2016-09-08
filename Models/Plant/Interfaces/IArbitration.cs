@@ -53,7 +53,7 @@ namespace Models.PMF.Interfaces
         BiomassAllocationType NAllocation { set; }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        double MinNconc { get; set; }
+        double MinNconc { get; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         double NFixationCost { get; set; }

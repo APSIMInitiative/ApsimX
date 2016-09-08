@@ -59,7 +59,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
-        /// <summary>Occurs when [incorp fom].</summary>
+        /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>
         public event FOMLayerDelegate IncorpFOM;
         #endregion
 
@@ -69,13 +69,13 @@ namespace Models.PMF.Organs
         [Link]
         LinearInterpolationFunction KNO3 = null;
 
-        /// <summary>Soil water factor for N Uptake</summary>
-        [Link]
-        LinearInterpolationFunction NUptakeSWFactor = null;
-
         /// <summary>Link to the KNH4 link</summary>
         [Link]
         LinearInterpolationFunction KNH4 = null;
+
+        /// <summary>Soil water factor for N Uptake</summary>
+        [Link]
+        LinearInterpolationFunction NUptakeSWFactor = null;
 
         /// <summary>Gets or sets the initial DM for this organ.</summary>
         [Link]
@@ -117,7 +117,7 @@ namespace Models.PMF.Organs
         IFunction MaxDailyNUptake = null;
         
         /// <summary>The minimum n conc</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         
@@ -130,10 +130,6 @@ namespace Models.PMF.Organs
         [Link]
         [Units("0-1")]
         IFunction MaximumRootDepth = null;
-        
-        /// <summary>The proportion of biomass repired each day</summary>
-        [Link(IsOptional = true)]
-        public IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>A list of other zone names to grow roots in</summary>
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
@@ -180,17 +176,14 @@ namespace Models.PMF.Organs
             public double[] DeltaNO3 { get; set; }
 
             /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
-            [XmlIgnore]
             [Units("g/2")]
             public double[] DMAllocated { get; set; }
 
             /// <summary>Demand for structural N, set when Ndemand is called and used again in N allocation</summary>
-            [XmlIgnore]
             [Units("g/2")]
             public double[] StructuralNDemand { get; set; }
 
             /// <summary>Demand for Non-structural N, set when Ndemand is called and used again in N allocation</summary>
-            [XmlIgnore]
             [Units("g/m2")]
             public double[] NonStructuralNDemand { get; set; }
 
@@ -201,26 +194,17 @@ namespace Models.PMF.Organs
             public double NuptakeSupply { get; set; }
 
             /// <summary>Gets or sets the layer live.</summary>
-            [XmlIgnore]
             public Biomass[] LayerLive { get; set; }
 
             /// <summary>Gets or sets the layer dead.</summary>
-            [XmlIgnore]
             public Biomass[] LayerDead { get; set; }
 
             /// <summary>Gets or sets the length.</summary>
-            [XmlIgnore]
             public double Length { get; set; }
 
             /// <summary>Gets or sets the depth.</summary>
-            [XmlIgnore]
             [Units("mm")]
             public double Depth { get; set; }
-
-            /// <summary>Gets depth or the mid point of the cuttent layer under examination</summary>
-            [XmlIgnore]
-            [Units("mm")]
-            public double LayerMidPointDepth { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="soil">The soil in the zone.</param>
@@ -575,6 +559,7 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
                     if (PlantZone.XF[i] > 0)
                         MaxDepth += PlantZone.soil.Thickness[i];
+
                 // Limit root depth for the crop specific maximum depth
                 MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
 
@@ -732,14 +717,11 @@ namespace Models.PMF.Organs
                 PlantZone.NonStructuralNDemand = new double[PlantZone.soil.Thickness.Length];
             
                 //Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-                double _NitrogenDemandSwitch = 1;
-                if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
                 for (int i = 0; i < PlantZone.LayerLive.Length; i++)
                 {
-                    PlantZone.StructuralNDemand[i] = PlantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  _NitrogenDemandSwitch;
+                    PlantZone.StructuralNDemand[i] = PlantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  NitrogenDemandSwitch.Value;
                     double NDeficit = Math.Max(0.0, MaximumNConc.Value * (PlantZone.LayerLive[i].Wt + PlantZone.LayerLive[i].PotentialDMAllocation) - (PlantZone.LayerLive[i].N + PlantZone.StructuralNDemand[i]));
-                    PlantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - PlantZone.StructuralNDemand[i]) * _NitrogenDemandSwitch;
+                    PlantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - PlantZone.StructuralNDemand[i]) * NitrogenDemandSwitch.Value;
                 }
                 return new BiomassPoolType { Structural = MathUtilities.Sum(PlantZone.StructuralNDemand),
                                              NonStructural = MathUtilities.Sum(PlantZone.NonStructuralNDemand) };
@@ -824,16 +806,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc
-        {
-            get
-            {
-                if (MinimumNConc != null)
-                    return MinimumNConc.Value;
-                else
-                    return 0.01;
-            }
-        }
+        public override double MinNconc { get { return MinimumNConc.Value; } }
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
@@ -859,64 +832,56 @@ namespace Models.PMF.Organs
 
         #region Biomass Removal
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        public override void DoRemoveBiomass(OrganBiomassRemovalType removal)
         {
             //NOTE: roots don't have dead biomass
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            double totalFractionToRemove = removal.FractionLiveToRemove + removal.FractionLiveToResidue;
             if (totalFractionToRemove > 1.0 || totalFractionToRemove < 0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove sent is greater than 1 or less than 0.");
-            
+                throw new Exception("The sum of FractionToResidue and FractionToRemove is greater than 1 or less than 0.");
+
             if (totalFractionToRemove > 0)
-                DoRootBiomassRemoval(value.FractionLiveToResidue, value.FractionLiveToRemove);
-        }
-
-
-        /// <summary>Performs the removal of roots</summary>
-        /// <param name="detachFraction">Fraction to send to residue (soil FOM)</param>
-        /// <param name="removeFraction">Fraction to remove from the system</param>
-        private void DoRootBiomassRemoval(double detachFraction, double removeFraction = 0.0)
-        {
-            //NOTE: at the moment Root has no Dead pool
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[PlantZone.soil.Thickness.Length];
-            double RemainingFraction = 1.0 - (detachFraction + removeFraction);
-            double detachingWt = 0.0;
-            double detachingN = 0.0;
-            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
             {
-                detachingWt = PlantZone.LayerLive[layer].Wt * detachFraction;
-                detachingN = PlantZone.LayerLive[layer].N * detachFraction;
-                RemovedWt += PlantZone.LayerLive[layer].Wt * removeFraction;
-                RemovedN += PlantZone.LayerLive[layer].N * removeFraction;
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
+                //NOTE: at the moment Root has no Dead pool
+                FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[PlantZone.soil.Thickness.Length];
+                double remainingFraction = 1.0 - (removal.FractionLiveToResidue + removal.FractionLiveToRemove);
+                double detachingWt = 0.0;
+                double detachingN = 0.0;
+                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+                {
+                    detachingWt = PlantZone.LayerLive[layer].Wt * removal.FractionLiveToResidue;
+                    detachingN = PlantZone.LayerLive[layer].N * removal.FractionLiveToResidue;
+                    RemovedWt += PlantZone.LayerLive[layer].Wt * removal.FractionLiveToRemove;
+                    RemovedN += PlantZone.LayerLive[layer].N * removal.FractionLiveToRemove;
+                    DetachedWt += detachingWt;
+                    DetachedN += detachingN;
 
-                PlantZone.LayerLive[layer].StructuralWt *= RemainingFraction;
-                PlantZone.LayerLive[layer].NonStructuralWt *= RemainingFraction;
-                PlantZone.LayerLive[layer].MetabolicWt *= RemainingFraction;
+                    PlantZone.LayerLive[layer].StructuralWt *= remainingFraction;
+                    PlantZone.LayerLive[layer].NonStructuralWt *= remainingFraction;
+                    PlantZone.LayerLive[layer].MetabolicWt *= remainingFraction;
 
-                PlantZone.LayerLive[layer].StructuralN *= RemainingFraction;
-                PlantZone.LayerLive[layer].NonStructuralN *= RemainingFraction;
-                PlantZone.LayerLive[layer].MetabolicN *= RemainingFraction;
+                    PlantZone.LayerLive[layer].StructuralN *= remainingFraction;
+                    PlantZone.LayerLive[layer].NonStructuralN *= remainingFraction;
+                    PlantZone.LayerLive[layer].MetabolicN *= remainingFraction;
 
-                FOMType fom = new FOMType();
-                fom.amount = (float)(detachingWt * 10);
-                fom.N = (float)(detachingN * 10);
-                fom.C = (float)(0.40 * detachingWt * 10);
-                fom.P = 0.0;
-                fom.AshAlk = 0.0;
+                    FOMType fom = new FOMType();
+                    fom.amount = (float)(detachingWt * 10);
+                    fom.N = (float)(detachingN * 10);
+                    fom.C = (float)(0.40 * detachingWt * 10);
+                    fom.P = 0.0;
+                    fom.AshAlk = 0.0;
 
-                FOMLayerLayerType Layer = new FOMLayerLayerType();
-                Layer.FOM = fom;
-                Layer.CNR = 0.0;
-                Layer.LabileP = 0.0;
-                FOMLayers[layer] = Layer;
+                    FOMLayerLayerType Layer = new FOMLayerLayerType();
+                    Layer.FOM = fom;
+                    Layer.CNR = 0.0;
+                    Layer.LabileP = 0.0;
+                    FOMLayers[layer] = Layer;
+                }
+                FOMLayerType FomLayer = new FOMLayerType();
+                FomLayer.Type = Plant.CropType;
+                FomLayer.Layer = FOMLayers;
+                IncorpFOM.Invoke(FomLayer);
             }
-            FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = Plant.CropType;
-            FomLayer.Layer = FOMLayers;
-            IncorpFOM.Invoke(FomLayer);
         }
         #endregion
-
     }
 }
