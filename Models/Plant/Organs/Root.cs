@@ -487,7 +487,7 @@ namespace Models.PMF.Organs
         public override void DoPlantEnding()
         {
             //Send all root biomass to soil FOM
-            DoRootBiomassRemoval(1.0);
+            DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
             Clear();
         }
 
@@ -566,7 +566,7 @@ namespace Models.PMF.Organs
                 PlantZone.Depth = Math.Min(PlantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
-                DoRootBiomassRemoval(SenescenceRate.Value);
+                DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
             }
         }
 
