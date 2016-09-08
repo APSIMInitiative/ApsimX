@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Functions;
-using Models.Soils;
-using System.Xml.Serialization;
-using Models.PMF.Interfaces;
-using Models.Soils.Arbitrator;
-using APSIM.Shared.Utilities;
-
 namespace Models.PMF.Organs
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.PMF.Functions;
+    using Models.PMF.Interfaces;
+    using Models.Soils;
+    using Models.Soils.Arbitrator;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
+
     ///<summary>
     /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent 
     /// root length density.
@@ -143,23 +142,10 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States
-
         /// <summary>The state of each zone that root knows about.</summary>
         [Serializable]
         public class ZoneState
         {
-            /// <summary>Name of the parent plant</summary>
-            public string plantName;
-
-            /// <summary>Lower limit</summary>
-            public double[] LL = null;
-
-            /// <summary>Exploration factor</summary>
-            public double[] XF = null;
-
-            /// <summary>KL</summary>
-            public double[] KL = null;
-
             /// <summary>The soil in this zone</summary>
             public Soil soil = null;
           
@@ -213,15 +199,9 @@ namespace Models.PMF.Organs
             /// <param name="initialDM">Initial dry matter</param>
             /// <param name="population">plant population</param>
             /// <param name="maxNConc">maximum n concentration</param>
-            public ZoneState(Soil soil, string plantName, double depth, double initialDM, double population, double maxNConc)
+            public ZoneState(Soil soil, double depth, double initialDM, double population, double maxNConc)
             {
-                this.plantName = plantName;
                 this.soil = soil;
-                if (this.soil.Crop(plantName) == null)
-                    throw new Exception("Cannot find a soil crop parameterisation for " + plantName);
-                LL = (this.soil.Crop(plantName) as SoilCrop).LL;
-                XF = (this.soil.Crop(plantName) as SoilCrop).XF;
-                KL = (this.soil.Crop(plantName) as SoilCrop).KL;
 
                 Clear();
                 Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
@@ -405,7 +385,9 @@ namespace Models.PMF.Organs
                     Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    ZoneState newZone = new ZoneState(soil, Plant.Name, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
+                    if (soil.Crop(Plant.Name) == null)
+                        throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
+                    ZoneState newZone = new ZoneState(soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
                     Zones.Add(newZone);
                 }
             }
@@ -451,38 +433,6 @@ namespace Models.PMF.Organs
             }
         }
         
-        /// <summary>Layers the index.</summary>
-        /// <param name="depth">The depth.</param>
-        private int LayerIndex(double depth)
-        {
-            double CumDepth = 0;
-            for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-            {
-                CumDepth = CumDepth + PlantZone.soil.Thickness[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
-        }
-        
-        /// <summary>Roots the proportion.</summary>
-        /// <param name="layer">The layer.</param>
-        /// <param name="root_depth">The root_depth.</param>
-        private double RootProportion(int layer, double root_depth)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            double depth_to_layer_top = 0;      // depth to top of layer (mm)
-            double depth_to_root = 0;           // depth to root in layer (mm)
-            double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
-            // Implementation Section ----------------------------------
-            for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += PlantZone.soil.Thickness[i];
-            depth_to_layer_top = depth_to_layer_bottom - PlantZone.soil.Thickness[layer];
-            depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
-            depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-
-            return depth_of_root_in_layer / PlantZone.soil.Thickness[layer];
-        }
-        
         /// <summary>Called when crop is ending</summary>
         public override void DoPlantEnding()
         {
@@ -512,8 +462,10 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
+            if (soil.Crop(Plant.Name) == null)
+                throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
 
-            PlantZone = new ZoneState(soil, Plant.Name, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+            PlantZone = new ZoneState(soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
             Zones = new List<ZoneState>();
         }
 
@@ -538,7 +490,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
                 PlantZone.Length = MathUtilities.Sum(LengthDensity);
-
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -550,14 +501,15 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 // Do Root Front Advance
-                int RootLayer = LayerIndex(PlantZone.Depth);
+                int RootLayer = Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness);
 
-                PlantZone.Depth = PlantZone.Depth + RootFrontVelocity.Value * PlantZone.XF[RootLayer];
+                SoilCrop crop = PlantZone.soil.Crop(Plant.Name) as SoilCrop;
+                PlantZone.Depth = PlantZone.Depth + RootFrontVelocity.Value * crop.XF[RootLayer];
 
                 // Limit root depth for impeded layers
                 double MaxDepth = 0;
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    if (PlantZone.XF[i] > 0)
+                    if (crop.XF[i] > 0)
                         MaxDepth += PlantZone.soil.Thickness[i];
 
                 // Limit root depth for the crop specific maximum depth
@@ -609,17 +561,17 @@ namespace Models.PMF.Organs
 
                 for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
-                    if (layer <= LayerIndex(PlantZone.Depth))
+                    if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
                         if (PlantZone.LayerLive[layer].Wt > 0)
                         {
                             RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
                                        * PlantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, PlantZone.Depth);
+                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
                             RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
                                            * PlantZone.soil.Thickness[layer]
-                                           * RootProportion(layer, PlantZone.Depth);
+                                           * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
                         }
                         else if (layer > 0)
@@ -666,17 +618,17 @@ namespace Models.PMF.Organs
                     return; // cannot do anything with no depth
                 for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
                 {
-                    if (layer <= LayerIndex(PlantZone.Depth))
+                    if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
                         if (PlantZone.LayerLive[layer].Wt > 0)
                         {
                             RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
                                        * PlantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, PlantZone.Depth);
+                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
                             RAn[layer] = (PlantZone.DeltaNO3[layer] + PlantZone.DeltaNH4[layer]) / PlantZone.LayerLive[layer].Wt
                                        * PlantZone.soil.Thickness[layer]
-                                       * RootProportion(layer, PlantZone.Depth);
+                                       * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
 
                         }
@@ -816,13 +768,14 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
+            SoilCrop crop = myZone.soil.Crop(Plant.Name) as SoilCrop;
             double[] supply = new double[myZone.soil.Thickness.Length];
             double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
             {
-                if (layer <= LayerIndex(myZone.Depth))
-                    supply[layer] = Math.Max(0.0, myZone.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
-                        (zone.Water[layer] - myZone.LL[layer] * myZone.soil.Thickness[layer]) * RootProportion(layer, myZone.Depth));
+                if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                    supply[layer] = Math.Max(0.0, crop.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                        (zone.Water[layer] - crop.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
             }
 
             return supply;
