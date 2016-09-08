@@ -1120,6 +1120,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Value>0.005</Value>
         </Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>

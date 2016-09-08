@@ -87,7 +87,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc.</value>
         [XmlIgnore]
-        virtual public double MinNconc { get { return 0; } set { } }
+        virtual public double MinNconc { get { return 0; } }
         #endregion
 
         #region Soil Arbitrator interface
