@@ -523,6 +523,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>MaxDailyNUptake</Name>
           <XYPairs>
