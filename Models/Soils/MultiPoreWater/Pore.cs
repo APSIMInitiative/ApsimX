@@ -98,6 +98,7 @@ namespace Models.Soils
         public double AirDepth { get { return AirFilledVolume * Thickness; } }
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// divide values from Arya 1999 etal by 10000 to convert from cm to um
         /// </summary>
         [Description("Pore flow Rate coefficient")]
         public double CFlow { get; set; }

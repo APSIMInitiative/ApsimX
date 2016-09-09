@@ -270,12 +270,12 @@ namespace Models.Soils
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// </summary>
-        [Description("Pore flow Rate coefficient")]
+        [Description("Pore flow rate shape coefficient")]
         public double CFlow { get; set; }
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// </summary>
-        [Description("Pore flow Shape coefficient")]
+        [Description("Pore flow rate exponent coefficient")]
         public double XFlow { get; set; }
         #endregion
 
@@ -314,12 +314,14 @@ namespace Models.Soils
         [Units("mm/h")]
         [Summary]
         [Description("The hydraulic conducitivity of water into the pore")]
+        [Display(Format = "N1")]
         public double[][] HydraulicConductivityIn { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy out of each pore
         /// </summary>
         [Units("mm/h")]
         [Summary]
+        [Display(Format = "N1")]
         [Description("The hydraulic conducitivity of water out of the pore")]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
@@ -327,6 +329,7 @@ namespace Models.Soils
         /// </summary>
         [Units("cm")]
         [Summary]
+        [Display(Format = "N1")]
         [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
         public double[][] PsiUpper { get; set; }
         /// <summary>
@@ -334,7 +337,8 @@ namespace Models.Soils
         /// </summary>
         [Units("0-1")]
         [Summary]
-        [Description("Layer relative water water filled porosity when there pores are full and larger pores are empty")]
+        [Display(Format = "N1")]
+        [Description("Layer relative water water filled porosity when these pores are full and larger pores are empty")]
         public double[][] RelativePoreVolume { get; set; }
         #endregion
 
@@ -592,9 +596,7 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    //Pores[l][c].HydraulicConductivityUpper = HyProps.SimpleK(l, Pores[l][c].PsiUpper) * 10;
-                    //Pores[l][c].HydraulicConductivityLower = HyProps.SimpleK(l, Pores[l][c].PsiLower) * 10;
-                    Pores[l][c].CFlow = CFlow;
+                    Pores[l][c].CFlow = CFlow/10000; //Input parameater in same dymension as reported by Arya etal 1999, divide by 10000 to convert to microns
                     Pores[l][c].XFlow = XFlow;
                     HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
