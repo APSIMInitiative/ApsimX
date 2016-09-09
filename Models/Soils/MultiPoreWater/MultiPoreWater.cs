@@ -277,6 +277,11 @@ namespace Models.Soils
         /// </summary>
         [Description("Pore flow rate exponent coefficient")]
         public double XFlow { get; set; }
+        /// <summary>
+        /// Allows Sorption processes to be switched off from the UI
+        /// </summary>
+        [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
+        public bool IncludeSorption { get; set; }
         #endregion
 
         #region Outputs
@@ -308,6 +313,15 @@ namespace Models.Soils
         /// Change in pond depth for the day
         /// </summary>
         public double DeltaPond { get { return SODPondDepth - EODPondDepth; } }
+        /// <summary>
+        /// The hydraulic conductivity of a layer at saturation
+        /// </summary>
+        [Units("mm/h")]
+        [Summary]
+        [Description("The hydraulic conducitivity of a layer at saturation")]
+        [Display(Format = "N1")]
+        [XmlIgnore]
+        public double[] Ksat { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
@@ -408,6 +422,7 @@ namespace Models.Soils
             AdsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
+            Ksat = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
             ProfileParams = new ProfileParameters(ProfileLayers);
@@ -439,7 +454,6 @@ namespace Models.Soils
 
             SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
            
-
             Hourly = new HourlyData();
             ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
             
@@ -579,7 +593,6 @@ namespace Models.Soils
             }
 
             HyProps.SetHydraulicProperties();
-            doGravitionalPotential();
             pond = 0;
             for (int l = 0; l < ProfileLayers; l++)
             {
@@ -596,25 +609,29 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    Pores[l][c].CFlow = CFlow/10000; //Input parameater in same dymension as reported by Arya etal 1999, divide by 10000 to convert to microns
-                    Pores[l][c].XFlow = XFlow;
-                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
-                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
-                    PsiUpper[l][c] = Pores[l][c].PsiUpper;
+                    //Pores[l][c].CFlow = CFlow/10000; //Input parameater in same dymension as reported by Arya etal 1999, divide by 10000 to convert to microns
+                    //Pores[l][c].XFlow = XFlow;
+                    Pores[l][c].IncludeSorption = IncludeSorption;
                 }
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+                Ksat[l] = LayerSum(Pores[l], "Capillarity");
                 ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
             }
+            doGravitionalPotential();
             for (int l = 0; l < ProfileLayers; l++)
             {
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
+                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
+                    HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
+                    PsiUpper[l][c] = Pores[l][c].PsiUpper;
                 }
             }
+            
         }
         private double ResidueInterception(double Precipitation)
         {
@@ -712,7 +729,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    if ((ProfileParams.Ksat[l + 1] < 0.001) || (SW[l + 1] == Water.SAT[l + 1]))
+                    if ((Ksat[l + 1] < 0.001) || (SW[l + 1] == Water.SAT[l + 1]))
                         LayerHeight[l] = 0;
                     else
                         LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1]/1000;
