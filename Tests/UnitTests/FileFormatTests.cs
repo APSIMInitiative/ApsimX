@@ -20,7 +20,10 @@ namespace UnitTests
     public class FileFormatTests
     {
 
-        /// <summary>Test basic read/write capability</summary>
+        /// <summary>
+        /// Test that a simulation can be written to a string and then
+        /// converted back into a simulation i.e. round trip.
+        /// </summary>
         [Test]
         public void FileFormat_EnsureWriteReadRoundTripWorks()
         {
@@ -50,36 +53,19 @@ namespace UnitTests
             Assert.AreEqual((rootNode2.Children[0] as ModelWrapper).Children.Count, 2);
         }
 
-
-        /// <summary>Make sure we can read a whole Simulations object.</summary>
+        /// <summary>
+        /// Make sure FileFormat to read an xml stream into a simulation.
+        /// </summary>
         [Test]
-        public void FileFormat_SimulationsRead()
-        {
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Resources.Continuous_Wheat.apsimx");
-            XmlDocument doc = new XmlDocument();
-            doc.Load(s);
-
-            Simulations simulations = Simulations.Read(doc.DocumentElement);
-         }
-
-        [Test]
-        public void FileFormat_Deserialise()
+        public void FileFormat_ReadFromStream()
         {
             // Get our test file.
-            Stream s2 = Assembly.GetExecutingAssembly().GetManifestResourceStream
-                ("UnitTests.Resources.APSIMFileReaderTests2.xml");
+            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream
+                ("UnitTests.Resources.APSIMFileReaderTests1.xml");
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(s2);
-            XmlReader reader = new XmlNodeReader(doc.DocumentElement);
-            reader.Read();
-
-            Assembly modelsAssembly = null;
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-                if (Path.GetFileName(a.Location) == "Models.exe")
-                    modelsAssembly = a;
-
-            ModelWrapper root = XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
+            FileFormat fileFormat = new FileFormat();
+            ModelWrapper rootNode = fileFormat.Read(s);
+            Assert.AreEqual(rootNode.Children.Count, 2);
         }
 
 

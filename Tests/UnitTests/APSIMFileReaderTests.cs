@@ -16,7 +16,7 @@ namespace UnitTests
 
     class APSIMFileReaderTests
     {
-        /// <summary>Ensure that APSIMFileReader can read and convert XML</summary>
+        /// <summary>Ensure that APSIMFileReader can read and convert simple XML</summary>
         [Test]
         public void APSIMFileReader_EnsureReadWorks()
         {
@@ -45,7 +45,50 @@ namespace UnitTests
             Assert.AreEqual(xml, acceptedXML);
         }
 
-        /// <summary>Another test to ensure that APSIMFileReader can read and convert standard toolbox XML</summary>
+        /// <summary>
+        /// Another test to ensure that an APSIMFileReader behaves the same as an
+        /// XmlNodeReader
+        /// </summary>
+        [Test]
+        public void APSIMFileReader_EnsureSameAsXmlNodeReader()
+        {
+            string toolboxFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                                                        "..",
+                                                                        "..",
+                                                                        "..",
+                                                                        "..",
+                                                                        "UserInterface",
+                                                                        "Resources",
+                                                                        "Toolboxes",
+                                                                        "StandardToolbox.apsimx");
+
+            XmlDocument toolboxdoc = new XmlDocument();
+            toolboxdoc.Load(toolboxFileName);
+
+            // Create 1st instance of reader which is an APSIMFileReader
+            XmlReader reader1 = new APSIMFileReader(toolboxdoc.DocumentElement);
+
+            // Create 2nd instance of reader based on XmlNodeReader where an XmlDocument
+            // has already done a complete read from APSIMFileReader.
+            XmlDocument doc = new XmlDocument();
+            XmlReader tempReader = new APSIMFileReader(toolboxdoc.DocumentElement);
+            tempReader.Read();
+            doc.Load(tempReader);
+            XmlReader reader2 = new XmlNodeReader(doc.DocumentElement);
+
+            // The two readers should be the same.
+            CompareReaders(reader1, reader2);
+            while (reader1.Read() && reader2.Read())
+                CompareReaders(reader1, reader2);
+            
+            bool ok = reader2.Read();
+            Assert.IsFalse(reader2.Read());
+        }
+
+        /// <summary>
+        /// Test to ensure that APSIMFileReader can read and convert standard toolbox XML. 
+        /// This is a more complex test than the one above.
+        /// </summary>
         [Test]
         public void APSIMFileReader_EnsureReadingStandardToolboxWorks()
         {
@@ -58,33 +101,43 @@ namespace UnitTests
                                                                         "Resources",
                                                                         "Toolboxes",
                                                                         "StandardToolbox.apsimx");
+
             XmlDocument toolboxdoc = new XmlDocument();
             toolboxdoc.Load(toolboxFileName);
 
             // Create instance of reader.
-            XmlReader reader = new APSIMFileReader(toolboxdoc.DocumentElement);
-            reader.Read();
-
-            // Get new XML from our reader
-            StringWriter writer = new StringWriter();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(reader);
-            doc.Save(writer);
-            string xml = writer.ToString();
+            XmlReader reader1 = new APSIMFileReader(toolboxdoc.DocumentElement);
+            reader1.Read();
 
             Assembly modelsAssembly = null;
             foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                 if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
                     modelsAssembly = a;
 
-            ModelWrapper wrapper = XmlUtilities.Deserialise(doc.DocumentElement, modelsAssembly) as ModelWrapper;
+            ModelWrapper wrapper = XmlUtilities.Deserialise(reader1, modelsAssembly) as ModelWrapper;
+            Assert.AreEqual(wrapper.Children.Count, 8);
+        }
 
-            FileFormat fileFormat = new FileFormat();
-            ModelWrapper rootNode = fileFormat.Read(toolboxdoc.DocumentElement);
-
-
-
-            // If we get this far then the read worked.
+        /// <summary>
+        /// Compare two readers.
+        /// </summary>
+        /// <param name="reader1">Reader 1</param>
+        /// <param name="reader2">Reader 2</param>
+        private void CompareReaders(XmlReader reader1, XmlReader reader2)
+        {
+            Assert.AreEqual(reader1.BaseURI, reader2.BaseURI);
+            Assert.AreEqual(reader1.NamespaceURI, reader2.NamespaceURI);
+            Assert.AreEqual(reader1.Prefix, reader2.Prefix);
+            Assert.AreEqual(reader1.Depth, reader2.Depth);
+            Assert.AreEqual(reader1.EOF, reader2.EOF);
+            Assert.AreEqual(reader1.NodeType, reader2.NodeType);
+            Assert.AreEqual(reader1.Name, reader2.Name);
+            Assert.AreEqual(reader1.Value, reader2.Value);
+            Assert.AreEqual(reader1.AttributeCount, reader2.AttributeCount);
+            for (int i = 0; i < reader1.AttributeCount; i++)
+            {
+                Assert.AreEqual(reader1.GetAttribute(i), reader2.GetAttribute(i));
+            }
         }
     }
 }

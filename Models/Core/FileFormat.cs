@@ -74,6 +74,21 @@ namespace Models.Core
         }
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
+        /// <param name="s">The stream to read from.</param>
+        public ModelWrapper Read(Stream s)
+        {
+            XmlReader reader = new APSIMFileReader(s);
+            reader.Read();
+
+            Assembly modelsAssembly = null;
+            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
+                    modelsAssembly = a;
+
+            return XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
+        }
+
+        /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="node">XML node to read from.</param>
         public ModelWrapper Read(XmlNode node)
         {

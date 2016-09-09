@@ -164,6 +164,7 @@ namespace Models.Core
                                 // 3. a new model e.g. <Clock>, OR
                                 CustomElement childElement = new CustomElement();
                                 childElement.Name = "Child";
+                                childElement.NodeType = XmlNodeType.Element; 
                                 childElement.attributes = new List<KeyValuePair<string, string>>();
                                 childElement.attributes.Add(new KeyValuePair<string, string>("xsi:type", "ModelWrapper"));
                                 elements.Add(childElement);
@@ -175,6 +176,7 @@ namespace Models.Core
                                     modelElement.attributes = new List<KeyValuePair<string, string>>();
                                     modelElement.attributes.Add(new KeyValuePair<string, string>("xsi:type", element.Name));
                                     modelElement.IsEmptyElement = true;
+                                    modelElement.NodeType = XmlNodeType.Element;
                                     elements.Add(modelElement);
                                     elements.Add(new CustomElement() { Name = "Child", NodeType = XmlNodeType.EndElement });
                                 }
@@ -190,6 +192,7 @@ namespace Models.Core
                                 // 4. the first property of a model e.g. <StartDate>
                                 CustomElement modelElement = new CustomElement();
                                 modelElement.Name = "Model";
+                                modelElement.NodeType = XmlNodeType.Element;
                                 modelElement.attributes = new List<KeyValuePair<string, string>>();
                                 modelElement.attributes.Add(new KeyValuePair<string, string>("xsi:type", modelTypesFound.Peek()));
                                 elements.Add(modelElement);
@@ -342,16 +345,6 @@ namespace Models.Core
             elements.Add(reader.Read()); // value
             elements.Add(reader.Read()); // end element
         }
-
-        /// <summary>Get the depth of the current element.</summary>
-        public override int Depth
-        {
-            get
-            {
-                return openElements.Count-1;
-            }
-        }
-
 
         /// <summary>Gets the prefix of the current element.</summary>
         public override string Prefix
