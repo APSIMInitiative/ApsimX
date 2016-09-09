@@ -477,22 +477,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Start>Planting</Start>
           <End>FinalLeaf</End>
         </PhaseBasedSwitch>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -539,6 +523,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>MaxDailyNUptake</Name>
           <XYPairs>

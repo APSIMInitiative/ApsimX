@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -90,6 +90,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <Model xsi:type="VernalisationC">
           <Name>Vernalisation</Name>
@@ -1203,16 +1204,6 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Units>kgN/ha</Units>
         </Constant>
         <Constant>
-          <Name>TemperatureEffect</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-No effect of temperature on root growth is currently captured in the model.
-]]></MemoText>
-          </Memo>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SoilWaterEffect</Name>
           <Memo>
             <Name>memo</Name>
@@ -1341,10 +1332,21 @@ No effect of soil water content on root growth is currently captured in the mode
             <End>Ripening</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1434,7 +1436,9 @@ No effect of soil water content on root growth is currently captured in the mode
           </OrganBiomassRemovalType>
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <GenericBelowGroundOrgan>
         <Name>Taproot</Name>
@@ -2906,7 +2910,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -2945,6 +2948,7 @@ namespace Models
                   <double>0.9</double>
                   <double>0.9</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -3119,6 +3123,7 @@ namespace Models
               <ApsoilNumber>0</ApsoilNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <LocationAccuracy>0</LocationAccuracy>
               <DataSource>published soil profile description (as an example)</DataSource>
             </Soil>
@@ -7210,7 +7215,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -7249,6 +7253,7 @@ namespace Models
                   <double>0.9</double>
                   <double>0.9</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -7423,6 +7428,7 @@ namespace Models
               <ApsoilNumber>0</ApsoilNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <LocationAccuracy>0</LocationAccuracy>
               <DataSource>published soil profile description (as an example)</DataSource>
             </Soil>
@@ -11443,7 +11449,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -11482,6 +11487,7 @@ namespace Models
                   <double>0.9</double>
                   <double>0.9</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -11656,6 +11662,7 @@ namespace Models
               <ApsoilNumber>0</ApsoilNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <LocationAccuracy>0</LocationAccuracy>
               <DataSource>published soil profile description (as an example)</DataSource>
             </Soil>
@@ -16272,7 +16279,6 @@ namespace Models
                 </Water>
                 <SoilWater>
                   <Name>SoilWater</Name>
-                  <residueinterception>0</residueinterception>
                   <SummerDate>1-Nov</SummerDate>
                   <SummerU>6</SummerU>
                   <SummerCona>3.5</SummerCona>
@@ -16311,6 +16317,7 @@ namespace Models
                     <double>0.9</double>
                     <double>0.9</double>
                   </SWCON>
+                  <residueinterception>0</residueinterception>
                 </SoilWater>
                 <SoilNitrogen>
                   <Name>SoilNitrogen</Name>
@@ -16485,6 +16492,7 @@ namespace Models
                 <ApsoilNumber>0</ApsoilNumber>
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
+                <Area>0</Area>
                 <LocationAccuracy>0</LocationAccuracy>
                 <DataSource>published soil profile description (as an example)</DataSource>
               </Soil>
@@ -20876,7 +20884,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -20915,6 +20922,7 @@ namespace Models
                   <double>0.1</double>
                   <double>0.1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -21057,6 +21065,7 @@ namespace Models
               <Country>New Zealand</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>Hamish Brown PhD Thesis</DataSource>
               <Comments>The physical properties are averages from Hamish's Thesis, Ks and biochemical data from similar soils (from NZ-NSD), texture is a rough estimate only</Comments>
             </Soil>
@@ -25370,7 +25379,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -25409,6 +25417,7 @@ namespace Models
                   <double>0.1</double>
                   <double>0.1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -25551,6 +25560,7 @@ namespace Models
               <Country>New Zealand</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>Hamish Brown PhD Thesis</DataSource>
               <Comments>The physical properties are averages from Hamish's Thesis, Ks and biochemical data from similar soils (from NZ-NSD), texture is a rough estimate only</Comments>
             </Soil>
@@ -29754,7 +29764,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -29793,6 +29802,7 @@ namespace Models
                 <double>0.9</double>
                 <double>0.9</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -29967,6 +29977,7 @@ namespace Models
             <ApsoilNumber>0</ApsoilNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
             <LocationAccuracy>0</LocationAccuracy>
             <DataSource>published soil profile description (as an example)</DataSource>
           </Soil>
@@ -34037,7 +34048,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -34068,6 +34078,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -34196,6 +34207,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>
@@ -38781,7 +38793,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -38812,6 +38823,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -38940,6 +38952,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>
@@ -42998,7 +43011,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -43029,6 +43041,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -43157,6 +43170,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>

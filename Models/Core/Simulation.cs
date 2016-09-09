@@ -23,6 +23,10 @@ namespace Models.Core
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
 
+        /// <summary></summary>
+        [NonSerialized]
+        private Events events = null;
+
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
         public bool IsCompleted { get; set; }
@@ -134,20 +138,15 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            Apsim.ConnectEvents(this);
-            Apsim.ResolveLinks(this);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-            {
-                Apsim.ConnectEvents(child);
-                Apsim.ResolveLinks(child);
-            }
+            ConnectLinksAndEvents();
 
             _IsRunning = true;
-            
+
             Locater.Clear();
             if (Commencing != null)
                 Commencing.Invoke(this, new EventArgs());
         }
+
 
         /// <summary>Perform the run. Will throw if error occurs.</summary>
         /// <param name="jobManager">The job manager</param>
@@ -169,16 +168,31 @@ namespace Models.Core
             if (Completed != null)
                 Completed.Invoke(this, null);
 
-            Apsim.DisconnectEvents(this);
-            Apsim.UnresolveLinks(this);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-            {
-                Apsim.DisconnectEvents(child);
-                Apsim.UnresolveLinks(child);
-            }
+            DisconnectLinksAndEvents();
 
             timer.Stop();
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));
+        }
+
+
+        /// <summary>Connect all links and events in simulation</summary>
+        public void ConnectLinksAndEvents()
+        {
+            events = new Events();
+            events.ConnectEvents(this);
+            Apsim.ResolveLinks(this);
+            foreach (Model child in Apsim.ChildrenRecursively(this))
+                Apsim.ResolveLinks(child);
+        }
+
+        /// <summary>Disconnect all links and events in simulation</summary>
+        public void DisconnectLinksAndEvents()
+        {
+            events.DisconnectEvents(this);
+            events = null;
+            Apsim.UnresolveLinks(this);
+            foreach (Model child in Apsim.ChildrenRecursively(this))
+                Apsim.UnresolveLinks(child);
         }
     }
 }

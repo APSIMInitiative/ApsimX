@@ -520,6 +520,10 @@
           </Memo>
           <Value>0</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -12396,7 +12400,7 @@ namespace Models
             <string>[FieldPea].Root.NTakenUp</string>
             <string>[FieldPea].Root.NUptake</string>
             <string>[FieldPea].Root.TotalNAllocated</string>
-            <string>[FieldPea].Root.TotalNDemand</string>
+            <string>[FieldPea].Root.PlantZone.TotalNDemand</string>
             <string>[FieldPea].Root.WaterSupply</string>
             <string>[FieldPea].Root.WaterUptake</string>
             <string>[FieldPea].Stem.Dead.N</string>
@@ -12640,7 +12644,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FieldPea.Root.TotalNDemand</YFieldName>
+            <YFieldName>[FieldPea].Root.PlantZone.TotalNDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

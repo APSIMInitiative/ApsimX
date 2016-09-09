@@ -88,6 +88,11 @@ namespace Models.Report
         private int maximumNumberArrayElements;
 
         /// <summary>
+        /// For jagged array variables, this will be the number of array elements in the second dimension to write to the data table.
+        /// </summary>
+        private int maximumNumberJaggedElements;
+
+        /// <summary>
         /// The data type of this column
         /// </summary>
         private Type valueType;
@@ -458,19 +463,19 @@ namespace Models.Report
             double result = double.NaN;
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
-                if (this.aggregationFunction == "sum")
+                if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Sum(this.valuesToAggregate);
-                else if (this.aggregationFunction == "avg")
+                else if (this.aggregationFunction.Equals("avg", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
-                else if (this.aggregationFunction == "min")
+                else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Min(this.valuesToAggregate);
-                else if (this.aggregationFunction == "max")
+                else if (this.aggregationFunction.Equals("max", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Max(this.valuesToAggregate);
-                else if (this.aggregationFunction == "first")
+                else if (this.aggregationFunction.Equals("first", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.First());
-                else if (this.aggregationFunction == "last")
+                else if (this.aggregationFunction.Equals("last", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.Last());
-                else if (this.aggregationFunction == "diff")
+                else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.Last()) - Convert.ToDouble(this.valuesToAggregate.First());
 
                 if (!double.IsNaN(result))
@@ -560,7 +565,15 @@ namespace Models.Report
             {
                 // Array
                 Array array = value as Array;
-                for (int columnIndex = 0; columnIndex < this.maximumNumberArrayElements; columnIndex++)
+                double numElements = 0;
+
+                // if name contains a '(' then we're in a jagged array
+                if (name.Count(x => x == '(') == 1)
+                    numElements = this.maximumNumberJaggedElements;
+                else
+                    numElements = this.maximumNumberArrayElements;
+
+                for (int columnIndex = 0; columnIndex < numElements; columnIndex++)
                 {
                     string heading = name;
                     heading += "(" + (columnIndex + 1).ToString() + ")";
@@ -569,6 +582,9 @@ namespace Models.Report
                     else
                     {
                         object arrayElement = array.GetValue(columnIndex);
+                        Array innerArray = arrayElement as Array;
+                        if (innerArray != null)
+                            this.maximumNumberJaggedElements = innerArray.Length;
                         flattenedValues.AddRange(this.FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
                     }
                 }

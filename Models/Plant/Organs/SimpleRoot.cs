@@ -65,7 +65,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("mm")]
-        public override double WaterUptake
+        public double WaterUptake
         {
             get
             {
@@ -117,41 +117,6 @@ namespace Models.PMF.Organs
             if (data.Plant == Plant)
                 Clear();
         }
-
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        public override double[] NO3NSupply(ZoneWaterAndN zone)
-        {
-            throw new NotImplementedException("SimpleRoot doesn't currently support SoilArbitrator");
-            //CurrentPaddockName = Apsim.FullPath(this);
-            //OurName = CurrentPaddockName;
-            //if (OurName.Length > 0)
-            //    OurName += ".";
-            //OurName += Plant.Name;
-
-            //TalkDirectlyToRoot = RootModelExists;
-
-            //double[] SWSupply;
-            //if (TalkDirectlyToRoot)
-            //{
-            //    SWSupply = (double[])Apsim.Get(this, OurName + "Root.SWSupply");
-            //    return SWSupply;
-            //}
-
-            //else
-            //{
-            //    double Total = 0;
-            //    //foreach (Zone SubPaddock in this.Models)
-            //    //{
-            //    //    SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
-            //    //    Total += MathUtilities.Sum(SWSupply);
-            //    //}
-            //    return Total;
-            //}
-        }
-
-
-
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>

@@ -115,6 +115,17 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Fill the function variables with names.
         /// </summary>
         private void FillVariableNames()
@@ -135,6 +146,15 @@ namespace Models.Core
                 else if (sometypeofobject is double[])
                 {
                     sym.m_values = (double[])sometypeofobject;
+                }
+                else if (sometypeofobject is double[][])
+                {
+                    double[][] allvalues = sometypeofobject as double[][];
+                    List<double> singleArrayOfValues = new List<double>();
+                    foreach (double[] dimension in allvalues)
+                        foreach (double value in dimension)
+                            singleArrayOfValues.Add(value);
+                    sym.m_values = (double[])singleArrayOfValues.ToArray();
                 }
                 variablesToFill[i] = sym;
             }

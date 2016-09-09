@@ -128,8 +128,8 @@ namespace UserInterface.Presenters
             {
                 string propertyName = xProperty.GetValue(xyPairs.Parent, null).ToString();
                 IVariable variable = Apsim.GetVariableObject(xyPairs, propertyName);
-                if (variable != null && variable.Units != null)
-                    return propertyName + " (" + variable.Units + ")";
+                if (variable != null && variable.UnitsLabel != null)
+                    return propertyName + " " + variable.UnitsLabel;
                 return propertyName;
             }
             else if (xyPairs.Parent is AirTemperatureFunction)
@@ -211,9 +211,9 @@ namespace UserInterface.Presenters
             foreach (VariableProperty property in this.propertiesInGrid)
             {
                 string columnName = property.Description;
-                if (property.Units != null)
+                if (property.UnitsLabel != null)
                 {
-                    columnName += "\r\n(" + property.Units + ")";
+                    columnName += "\r\n" + property.UnitsLabel;
                 }
 
                 Array values = property.Value as Array;
@@ -398,9 +398,9 @@ namespace UserInterface.Presenters
                     if (!double.IsNaN(total))
                     {
                         string columnName = property.Description;
-                        if (property.Units != null)
+                        if (property.UnitsLabel != null)
                         {
-                            columnName += "\r\n(" + property.Units + ")";
+                            columnName += "\r\n" + property.UnitsLabel;
                         }
 
                         columnName = columnName + "\r\n" + total.ToString("N1") + " mm";

@@ -765,10 +765,21 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </Leaf>
       <Root>
         <Name>Root</Name>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
@@ -813,6 +824,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>MinimumNConc</Name>
           <Value>0.005</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>PreEmerge</Start>

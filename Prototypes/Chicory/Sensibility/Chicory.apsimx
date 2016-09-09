@@ -1419,10 +1419,21 @@ No effect of soil water content on root growth is currently captured in the mode
             <End>Ripening</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>

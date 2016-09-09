@@ -522,8 +522,7 @@ namespace Models
             }
             else
             {
-                string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
-                writer.WriteLine(line);
+                DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
             }
         }
 
@@ -603,6 +602,10 @@ namespace Models
 
             initialConditionsTable.Rows.Add(
                 new object[] { Apsim.FullPath(simulation), "Simulation name", "Simulation name", "String", string.Empty, string.Empty, false, simulation.Name });
+            initialConditionsTable.Rows.Add(
+                new object[] { Apsim.FullPath(simulation), "APSIM version", "APSIM version", "String", string.Empty, string.Empty, false, simulation.ApsimVersion });
+            initialConditionsTable.Rows.Add(
+                new object[] { Apsim.FullPath(simulation), "Run on", "Run on", "String", string.Empty, string.Empty, false, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") });
 
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in Apsim.FindAll(simulation))
@@ -619,7 +622,7 @@ namespace Models
                     {
                         if (value != null && property.DataType == typeof(DateTime))
                         {
-                            value = ((DateTime)property.Value).ToString("yyyy-MM-dd hh:mm:ss");
+                            value = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
                         }
 
                         bool showTotal = !double.IsNaN(property.Total);
