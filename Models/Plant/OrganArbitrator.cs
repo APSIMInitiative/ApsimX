@@ -817,15 +817,13 @@ namespace Models.PMF
                         if (Plant.Phenology.Emerged == true)
                         {
                             DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                            foreach (ZoneWaterAndN Z in zones)
-                                Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
+                            Plant.Root.DoNitrogenUptake(zones);
                         }
                     }
                     else
                     {
                         DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                        foreach (ZoneWaterAndN Z in zones)
-                            Plant.Root.DoNitrogenUptake(Z.NO3N, Z.NH4N, Z.Name);
+                        Plant.Root.DoNitrogenUptake(zones);
                     }
                 }
             }
@@ -1163,14 +1161,17 @@ namespace Models.PMF
             //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
             for (int i = 0; i < Organs.Length; i++)
             {
-                double[] organNO3Supply = Organs[i].NO3NSupply(MyZone);
+                double[] organNO3Supply;
+                double[] organNH4Supply;
+
+                Organs[i].CalcNSupply(MyZone, out organNO3Supply, out organNH4Supply);
+
                 if (organNO3Supply != null)
                 {
                     PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                     BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
-                double[] organNH4Supply = Organs[i].NH4NSupply(MyZone);
                 if (organNH4Supply != null)
                 {
                     PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);

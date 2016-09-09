@@ -374,7 +374,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the maximum nconc.</summary>
         /// <value>The maximum nconc.</value>
-        public override double MaxNconc
+        public double MaxNconc
         {
             get
             {

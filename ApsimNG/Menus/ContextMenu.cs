@@ -143,9 +143,10 @@ namespace UserInterface.Presenters
                 {
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
 
-                    JobManager.IRunnable job = Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false);
+                    List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
+                    jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
 
-                    this.command = new Commands.RunCommand(job, model.Name, this.explorerPresenter);
+                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter);
                     this.command.Do(null);
                 }
             }
@@ -281,6 +282,7 @@ namespace UserInterface.Presenters
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
+                explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 List<DataTable> tables = new List<DataTable>();
                 foreach (string tableName in dataStore.TableNames)
                 {
@@ -291,11 +293,38 @@ namespace UserInterface.Presenters
                         tables.Add(table);
                     }
                 }
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
                     string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
                     Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
+                    explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, DataStore.ErrorLevel.Information);
+                }
+                finally
+                {
+                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Export the data store to text files
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to text files",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportDataStoreToTextFiles(object sender, EventArgs e)
+        {
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                try
+                {
+                    dataStore.WriteToTextFiles();
+                    string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
                 }
                 finally
                 {
@@ -329,7 +358,10 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
-                explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                finally
+                {
+                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                }
             }
         }
 
@@ -345,6 +377,27 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowInRightHandPanel(model,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.AddModelPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for a write debug document
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Write debug document",
+                     AppliesTo = new Type[] { typeof(Simulation) })]
+        public void WriteDebugDocument(object sender, EventArgs e)
+        {
+            try
+            {
+                Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
+                WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
+                writeDocument.Do(null);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Models.DataStore.ErrorLevel.Error);
+            }
         }
 
     }
