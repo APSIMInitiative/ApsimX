@@ -82,9 +82,9 @@ namespace Models.AgPasture
         /// <summary>Occurs when the plant takes up soil N.</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
-        #region Canopy interface  ------------------------------------------------------------------------------------------
+        #region ICanopy implementation  ------------------------------------------------------------------------------------
 
         /// <summary>Canopy type</summary>
         public string CanopyType
@@ -200,7 +200,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
@@ -262,7 +262,7 @@ namespace Models.AgPasture
             phenologicStage = -1;
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region ICrop2 implementation  -------------------------------------------------------------------------------------
 
@@ -346,7 +346,7 @@ namespace Models.AgPasture
         [XmlIgnore]
         public double[] uptakeNitrogenPropNO3 { get; set; }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Model parameters  ------------------------------------------------------------------------------------------
 
@@ -501,7 +501,7 @@ namespace Models.AgPasture
 
         /// <summary>Flag whether photosynthesis reduction due to cold damage is enabled [yes/no]</summary>
         [Description("Enable photosynthesis reduction due to cold damage [yes/no]:")]
-        [Units("oC")]
+        [Units("yes/no")]
         public YesNoAnswer UseColdStressFactor
         {
             get
@@ -575,7 +575,7 @@ namespace Models.AgPasture
         /// <summary>
         /// Flag whether Shoot:Root ratio should be adjusted to mimic DM allocation reproductive season (perennial species)
         /// </summary>
-        [Description("Adjust Shoot-Root ratio to mimic DM allocation during reproductive season (perennials)?")]
+        [Description("Adjust Shoot-Root ratio to mimic DM allocation during reproductive season?")]
         [Units("yes/no")]
         public YesNoAnswer UseReproSeasonFactor
         {
@@ -1012,7 +1012,7 @@ namespace Models.AgPasture
             set { myKNH4 = value; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Private variables  -----------------------------------------------------------------------------------------
 
@@ -1341,7 +1341,7 @@ namespace Models.AgPasture
         /// <summary>Number of layers in the soil</summary>
         private int nLayers = 0;
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Constants and auxiliary  -----------------------------------------------------------------------------------
 
@@ -1393,7 +1393,7 @@ namespace Models.AgPasture
             C4
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Model outputs  ---------------------------------------------------------------------------------------------
 
@@ -1750,7 +1750,7 @@ namespace Models.AgPasture
             get { return stolons.Tissue[2].DM; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - C and DM flows  ------------------------------------------------------------------------------------------
 
@@ -1916,7 +1916,7 @@ namespace Models.AgPasture
             get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1 - fractionToShoot) / CarbonFractionInDM; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - N amounts  -----------------------------------------------------------------------------------------------
 
@@ -2190,7 +2190,7 @@ namespace Models.AgPasture
             get { return stolons.Tissue[2].Namount; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - N concentrations  ----------------------------------------------------------------------------------------
 
@@ -2347,7 +2347,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(newGrowthN, dGrowthActual, 0.0); }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - N flows  -------------------------------------------------------------------------------------------------
 
@@ -2468,7 +2468,7 @@ namespace Models.AgPasture
             get { return newGrowthN; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Turnover rates and DM allocation  ------------------------------------------------------------------------
 
@@ -2536,7 +2536,7 @@ namespace Models.AgPasture
             get { return fractionToLeaf; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - LAI and cover  -------------------------------------------------------------------------------------------
 
@@ -2576,7 +2576,7 @@ namespace Models.AgPasture
             get { return CalcPlantCover(deadLAI); }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Root depth and distribution  -----------------------------------------------------------------------------
 
@@ -2626,7 +2626,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Water amounts  -------------------------------------------------------------------------------------------
 
@@ -2670,7 +2670,7 @@ namespace Models.AgPasture
             get { return mySoilWaterUptake; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Growth limiting factors  ---------------------------------------------------------------------------------
 
@@ -2765,7 +2765,7 @@ namespace Models.AgPasture
             get { return FVPDFunction.Value(VPD()); }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Harvest variables  ---------------------------------------------------------------------------------------
 
@@ -2850,9 +2850,9 @@ namespace Models.AgPasture
             get { return 16 * digestDefoliated * HarvestedWt; }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
@@ -3182,7 +3182,7 @@ namespace Models.AgPasture
             myRootProperties.RootLengthDensityByVolume = RLD;
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Daily processes  -------------------------------------------------------------------------------------------
 
@@ -3766,7 +3766,7 @@ namespace Models.AgPasture
                                  + stolons.NLuxuryRemobilisable + roots.NLuxuryRemobilisable;
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Water uptake processes  ----------------------------------------------------------------------------------
 
@@ -3827,10 +3827,10 @@ namespace Models.AgPasture
         }
 
         /// <summary>
-        /// Gather the amount of available eater and computes the water uptake for this species
+        /// Gather the amount of plant available water and computes the water uptake for this species
         /// </summary>
         /// <remarks>
-        /// Using this routine is discourage as it ignores the presence of other species and thus
+        /// Using this routine is discouraged as it ignores the presence of other species and thus
         /// might result in loss of mass balance or unbalanced supply, i.e. over-supply for one
         /// while under-supply for other species (depending on the order that species are considered)
         /// </remarks>
@@ -3977,7 +3977,7 @@ namespace Models.AgPasture
             WaterChanged.Invoke(WaterTakenUp);
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Nitrogen uptake processes  -------------------------------------------------------------------------------
 
@@ -4502,7 +4502,7 @@ namespace Models.AgPasture
             NitrogenChanged.Invoke(NUptake);
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Organic matter processes  --------------------------------------------------------------------------------
 
@@ -4568,7 +4568,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Handling and auxilary processes  -------------------------------------------------------------------------
 
@@ -4914,9 +4914,9 @@ namespace Models.AgPasture
             return result;
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Other processes  -------------------------------------------------------------------------------------------
 
@@ -5250,7 +5250,7 @@ namespace Models.AgPasture
             NLuxuryRemobilised = 0.0;
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Functions  -------------------------------------------------------------------------------------------------
 
@@ -5823,7 +5823,7 @@ namespace Models.AgPasture
             return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Auxiliary classes  ------------------------------------------------------------------------------------
 
@@ -5852,7 +5852,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion
+        #endregion  --------------------------------------------------------------------------------------------------------
     }
 
     /// <summary>Defines a broken stick (piecewise) function</summary>
