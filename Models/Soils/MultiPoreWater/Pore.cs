@@ -101,16 +101,19 @@ namespace Models.Soils
         /// divide values from Arya 1999 etal by 10000 to convert from cm to um
         /// </summary>
         [Description("Pore flow Rate coefficient")]
-        public double CFlow { get; set; }
+        public double CFlow { get { return DiameterUpper / 30; } }
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// </summary>
         [Description("Pore flow Shape coefficient")]
-        public double XFlow { get; set; }
-        /// <summary>The volumetirc flow rate of a single pore</summary>
+        public double XFlow { get { return 3.6; } }
+        /// <summary>
+        /// The volumetirc flow rate of a single pore
+        /// Radius is divided by 10000 to convert from micron to cm
+        /// </summary>
         [XmlIgnore]
         [Units("cm3/s")]
-        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
+        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius/10000,XFlow); } }
         /// <summary>The number of pore 'cylinders' in this pore compartment</summary>
         [XmlIgnore]
         [Units("/m2")]
@@ -122,7 +125,12 @@ namespace Models.Soils
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Capallarigy { get { return VolumetricFlowRate/1000*3600; } }
+        public double Capillarity { get { return VolumetricFlowRate/1000*3600; } }
+        /// <summary>
+        /// Allows Sorption processes to be switched off from the UI
+        /// </summary>
+        [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
+        public bool IncludeSorption { get; set; }
         /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -130,7 +138,10 @@ namespace Models.Soils
         {
             get
             {
-                return Capallarigy + Sorption;
+                if (IncludeSorption)
+                    return Capillarity + Sorption;
+                else
+                    return Capillarity;
             }
         }
         /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
@@ -140,7 +151,7 @@ namespace Models.Soils
         {
             get
             {
-                return Capallarigy * TensionFactor;
+                return Capillarity * TensionFactor;
             }
         }
         /// <summary>
