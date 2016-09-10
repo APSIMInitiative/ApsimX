@@ -176,9 +176,6 @@ namespace Models.PMF.Organs
             /// <summary>Gets or sets the layer dead.</summary>
             public Biomass[] LayerDead { get; set; }
 
-            /// <summary>Gets or sets the length.</summary>
-            public double Length { get; set; }
-
             /// <summary>Gets or sets the depth.</summary>
             [Units("mm")]
             public double Depth { get; set; }
@@ -233,8 +230,6 @@ namespace Models.PMF.Organs
             {
                 SWUptake = null;
                 NUptake = null;
-
-                Length = 0.0;
                 Depth = 0.0;
 
                 if (LayerLive == null || LayerLive.Length == 0)
@@ -313,10 +308,6 @@ namespace Models.PMF.Organs
         /// <summary>Layer dead.</summary>
         [XmlIgnore]
         public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
-
-        /// <summary>Gets or sets the length.</summary>
-        [XmlIgnore]
-        public double Length { get { return PlantZone.Length; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
         [Units("mm")]
@@ -496,16 +487,6 @@ namespace Models.PMF.Organs
                 PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
                 InitialiseZones();
             }
-        }
-
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-                PlantZone.Length = MathUtilities.Sum(LengthDensity);
         }
 
         /// <summary>Does the nutrient allocations.</summary>
