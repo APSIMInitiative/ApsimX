@@ -153,13 +153,7 @@ namespace Models.PMF.Organs
             public string Name { get; set; }
 
             /// <summary>The uptake</summary>
-            public double[] Uptake { get; set; }
-
-            /// <summary>The delta n h4</summary>
-            public double[] DeltaNH4 { get; set; }
-
-            /// <summary>The delta n o3</summary>
-            public double[] DeltaNO3 { get; set; }
+            public double[] SWUptake { get; set; }
 
             /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
             [Units("g/2")]
@@ -174,10 +168,7 @@ namespace Models.PMF.Organs
             public double[] NonStructuralNDemand { get; set; }
 
             /// <summary>The Nuptake</summary>
-            public double[] NitUptake { get; set; }
-
-            /// <summary>Gets or sets the nuptake supply.</summary>
-            public double NuptakeSupply { get; set; }
+            public double[] NUptake { get; set; }
 
             /// <summary>Gets or sets the layer live.</summary>
             public Biomass[] LayerLive { get; set; }
@@ -240,10 +231,8 @@ namespace Models.PMF.Organs
             /// <summary>Clears this instance.</summary>
             public void Clear()
             {
-                Uptake = null;
-                NitUptake = null;
-                DeltaNO3 = new double[soil.Thickness.Length];
-                DeltaNH4 = new double[soil.Thickness.Length];
+                SWUptake = null;
+                NUptake = null;
 
                 Length = 0.0;
                 Depth = 0.0;
@@ -337,7 +326,7 @@ namespace Models.PMF.Organs
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = uptake + MathUtilities.Sum(zone.Uptake);
+                    uptake = uptake + MathUtilities.Sum(zone.SWUptake);
                 return -uptake;
             }
         }
@@ -350,7 +339,7 @@ namespace Models.PMF.Organs
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = MathUtilities.Sum(zone.NitUptake);
+                    uptake = MathUtilities.Sum(zone.NUptake);
                 return uptake;
             }
         }
@@ -408,8 +397,8 @@ namespace Models.PMF.Organs
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
 				
-			zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.dlt_sw_dep = zone.Uptake;
+			zone.SWUptake = MathUtilities.Multiply_Value(Amount, -1.0);
+            zone.soil.SoilWater.dlt_sw_dep = zone.SWUptake;
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
@@ -427,7 +416,7 @@ namespace Models.PMF.Organs
                 NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
                 NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
 
-                zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+                zone.NUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
                 zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
             }
         }
@@ -462,7 +451,7 @@ namespace Models.PMF.Organs
                 if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
                     if (PlantZone.LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
+                        RAw[layer] = PlantZone.SWUptake[layer] / PlantZone.LayerLive[layer].Wt
                                    * PlantZone.soil.Thickness[layer]
                                    * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
@@ -570,7 +559,7 @@ namespace Models.PMF.Organs
         {
             set
             {
-                if (PlantZone.Uptake == null)
+                if (PlantZone.SWUptake == null)
                     throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
            
                 if (PlantZone.Depth <= 0)
