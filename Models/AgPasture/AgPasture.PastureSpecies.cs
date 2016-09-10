@@ -348,6 +348,118 @@ namespace Models.AgPasture
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
+        #region IUptake implementation  ------------------------------------------------------------------------------------
+
+        /// <summary>Gets the potential plant water uptake for each layer</summary>
+        /// <remarks>Model can only handle one root zone at present</remarks>
+        /// <param name="soilstate">Soil state (current water content)</param>
+        /// <returns>Potential water uptake (mm)</returns>
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        {
+            if (IsAlive)
+            {
+                // Get the zone this plant is in
+                ZoneWaterAndN myZone = new ZoneWaterAndN();
+                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                    if (zone.Name == parentZone.Name)
+                        myZone = zone;
+
+                // Get the amount of water available for this plant
+                EvaluateWaterAvailable(myZone);
+
+                // Get the amount of water potentially taken up by this plant
+                EvaluateWaterUptake();
+
+                // Pack potential uptake data for this plant
+                ZoneWaterAndN uptake = new ZoneWaterAndN();
+                uptake.Name = myZone.Name;
+                uptake.Water = mySoilWaterUptake;
+                uptake.NO3N = new double[nLayers];
+                uptake.NH4N = new double[nLayers];
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(uptake);
+                return zones;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="soilstate">soilstate</param>
+        /// <returns></returns>
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        {
+            //throw new NotImplementedException();
+
+            if (IsAlive)
+            {
+                // Model can only handle one root zone at present
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                    if (Z.Name == ParentZone.Name)
+                        MyZone = Z;
+
+                ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
+                GetPotentialNitrogenUptake(soilstate);
+
+                //Pack results into uptake structure
+                UptakeDemands.Name = MyZone.Name;
+                UptakeDemands.NH4N = myPotentialNH4NUptake;
+                UptakeDemands.NO3N = myPotentialNO3NUptake;
+                UptakeDemands.Water = new double[nLayers];
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(UptakeDemands);
+                return zones;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Sets the amount of water taken up by this plant from each layer (mm)</summary>
+        /// <remarks>Model can only handle one root zone at present</remarks>
+        /// <param name="zones">Soil info by zone</param>
+        public void SetSWUptake(List<ZoneWaterAndN> zones)
+        {
+            // Get the zone this plant is in
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
+
+            // Get the water uptake from each layer
+            uptakeWater = new double[nLayers];
+            for (int layer = 0; layer < nLayers; layer++)
+                uptakeWater[layer] = MyZone.Water[layer];
+        }
+
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<ZoneWaterAndN> zones)
+        {
+            // Model can only handle one root zone at present
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            Zone ParentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == ParentZone.Name)
+                    MyZone = Z;
+
+            uptakeNH4 = new double[nLayers];
+            uptakeNO3 = new double[nLayers];
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                uptakeNH4[layer] = MyZone.NH4N[layer];
+                uptakeNO3[layer] = MyZone.NO3N[layer];
+            }
+        }
+
+        #endregion  --------------------------------------------------------------------------------------------------------
+
         #region Model parameters  ------------------------------------------------------------------------------------------
 
         // NOTE: default parameters describe a generic perennial ryegrass species
@@ -2883,14 +2995,14 @@ namespace Models.AgPasture
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
 
-            // check whether uptake is done here or by another module
+            // check whether there is a resouce arbitrator, it will control the uptake
             if (apsimArbitrator != null)
             {
                 myWaterUptakeSource = "Arbitrator";
                 myNitrogenUptakeSource = "Arbitrator";
             }
 
-            // check whether uptake is done here or by another module
+            // check whether there is a resouce arbitrator, it will control the uptake
             if (soilArbitrator != null)
             {
                 myWaterUptakeSource = "SoilArbitrator";
@@ -3343,14 +3455,11 @@ namespace Models.AgPasture
         /// <summary>Calculates the growth after water limitations.</summary>
         internal void CalcGrowthAfterWaterLimitations()
         {
-            if (!isSwardControlled)
-            {
-                // get the limitation factor due to water deficiency (drought)
-                glfWater = WaterDeficitFactor();
+            // get the limitation factor due to water deficiency (drought)
+            glfWater = WaterDeficitFactor();
 
-                // get the limitation factor due to water logging (lack of aeration)
-                glfAeration = WaterLoggingFactor();
-            }
+            // get the limitation factor due to water logging (lack of aeration)
+            glfAeration = WaterLoggingFactor();
 
             // adjust today's growth for limitations related to soil water
             dGrowthWstress = dGrowthPot * Math.Min(glfWater, glfAeration);
@@ -3789,16 +3898,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>
-        /// Gets the amount of water uptake for this species as computed by the resource Arbitrator
-        /// </summary>
-        private void GetWaterUptake()
-        {
-            Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
-            for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                mySoilWaterUptake[layer] = uptakeWater[layer];
-        }
-
-        /// <summary>
         /// Consider water uptake calculations (plus GLFWater)
         /// </summary>
         internal void DoWaterCalculations()
@@ -3806,67 +3905,77 @@ namespace Models.AgPasture
             if (myWaterUptakeSource == "species")
             {
                 // this module will compute water uptake
-                MyWaterCalculations();
+
+                // Pack the soil information
+                ZoneWaterAndN myZone = new ZoneWaterAndN();
+                myZone.Name = this.Parent.Name;
+                myZone.Water = mySoil.Water;
+                myZone.NO3N = mySoil.NO3N;
+                myZone.NH4N = mySoil.NH4N;
+
+                // Get the amount of soil available water
+                EvaluateWaterAvailable(myZone);
+
+                // Get the amount of water taken up
+                EvaluateWaterUptake();
+
+                // Send the delta water to soil water module
+                DoSoilWaterUptake();
             }
-            //else if myWaterUptakeSource == "AgPasture"
-            //      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
-            //      water supply is hold by AgPasture only
-            //      myWaterUptake should have been computed by AgPasture (set directly)
-            //      glfWater is computed and set by AgPasture
             else if ((myWaterUptakeSource == "SoilArbitrator") || (myWaterUptakeSource == "arbitrator"))
             {
-                // water uptake has been calcualted by the resource arbitrator
-
-                // get the array with the amount of water taken up
-                GetWaterUptake();
-                DoSoilWaterUptake1();
+                // water uptake has been calculated by a resource arbitrator
+                mySoilWaterUptake = uptakeWater;
+                DoSoilWaterUptake();
             }
-            //else
-            //      water uptake be calculated by other modules (e.g. SWIM) and supplied as
-            //  Note: when AgPasture is doing the water uptake, it can do it using its own calculations or other module's...
+            else
+            {
+                // water uptake be calculated by other modules (e.g. SWIM) and supplied by OnWaterUptakesCalculated
+                throw new NotImplementedException();
+            }
         }
 
-        /// <summary>
-        /// Gather the amount of plant available water and computes the water uptake for this species
-        /// </summary>
-        /// <remarks>
-        /// Using this routine is discouraged as it ignores the presence of other species and thus
-        /// might result in loss of mass balance or unbalanced supply, i.e. over-supply for one
-        /// while under-supply for other species (depending on the order that species are considered)
-        /// </remarks>
-        private void MyWaterCalculations()
+        /// <summary>Finds out the amount of plant available water</summary>
+        /// <param name="myZone">Soil information</param>
+        internal void EvaluateWaterAvailable(ZoneWaterAndN myZone)
         {
-            GetSoilAvailableWater();
-            // myWaterDemand given by MicroClimate
-            if (myWaterUptakeSource.ToLower() == "species")
-                mySoilWaterUptake = DoSoilWaterUptake();
-            //else
-            //    uptake is controlled by the sward or by another apsim module
-        }
-
-        /// <summary>Finds out the amount soil water available for this plant in each layer</summary>
-        /// <remarks>Different approaches are available</remarks>
-        internal void GetSoilAvailableWater()
-        {
-            mySoilWaterAvailable = new double[nLayers];
             if (myWaterAvailableMethod == "default")
-                mySoilWaterAvailable = PlantAvailableSoilWaterDefault();
-            else if(myWaterAvailableMethod == "alternativeKL")
-                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKL();
+                mySoilWaterAvailable = PlantAvailableSoilWaterDefault(myZone);
+            else if (myWaterAvailableMethod == "alternativeKL")
+                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKL(myZone);
             else if (myWaterAvailableMethod == "alternativeKS")
-                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKS();
+                mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKS(myZone);
+        }
+
+        /// <summary>Computes the plant water uptake [potential]</summary>
+        internal void EvaluateWaterUptake()
+        {
+            // 1. Get the amount of soil available water
+            double supply = mySoilWaterAvailable.Sum();
+
+            // 2. Get the water demand for this plant (computed by Microclimate)
+            double demand = myWaterDemand;
+
+            // 3. Estimate fraction of water used
+            double fractionUsed = 0.0;
+            if (supply > Epsilon)
+                fractionUsed = Math.Min(1.0, demand / supply);
+
+            // 4. Get the amount of water actually taken up
+            mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
         }
 
         /// <summary>Estimate the amount of plant available soil water in each layer of root zone</summary>
         /// <remarks>This is the default APSIM method, with kl representing the daily rate for water extraction</remarks>
+        /// <param name="myZone">Soil information</param>
         /// <returns>Amount of available water</returns>
-        private double[] PlantAvailableSoilWaterDefault()
+        private double[] PlantAvailableSoilWaterDefault(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop) mySoil.Crop(Name);
             for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
-                result[layer] = Math.Max(0.0, mySoil.SoilWater.SW[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
                 result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
             }
 
@@ -3879,8 +3988,9 @@ namespace Models.AgPasture
         ///  this is further modiied by soil water content (a reduction for dry soil). A plant related factor is defined based on root
         ///  length density (limiting conditions when RLD is below ReferenceRLD)
         /// </remarks>
+        /// <param name="myZone">Soil information</param>
         /// <returns>Amount of available water</returns>
-        private double[] PlantAvailableSoilWaterAlternativeKL()
+        private double[] PlantAvailableSoilWaterAlternativeKL(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
@@ -3894,13 +4004,13 @@ namespace Models.AgPasture
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer]) /
+                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
                                         (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
                 }
 
                 rldFac = Math.Min(1.0, RLD[layer] / ReferenceRLD);
-                result[layer] = Math.Max(0.0, mySoil.SoilWater.SW[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
                 result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] * swFac * rldFac);
             }
 
@@ -3914,8 +4024,9 @@ namespace Models.AgPasture
         ///  (using ReferenceKSat and ReferenceRLD for KSat and root and DUL for soil water content). The effect of all factors are
         ///  assumed to vary between zero and one following exponential functions, such that the effect is 90% at the reference value.
         /// </remarks>
+        /// <param name="myZone">Soil information</param>
         /// <returns>Amount of available water</returns>
-        private double[] PlantAvailableSoilWaterAlternativeKS()
+        private double[] PlantAvailableSoilWaterAlternativeKS(ZoneWaterAndN myZone)
         {                 
             double condFac = 0.0;
             double swFac = 0.0;
@@ -3925,12 +4036,12 @@ namespace Models.AgPasture
             for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
                 condFac = 1.0 - Math.Pow(10, -mySoil.KS[layer] / ReferenceKSuptake);
-                swFac = 1.0 - Math.Pow(10, -Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer])
+                swFac = 1.0 - Math.Pow(10, -Math.Max(0.0, myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer])
                                            / (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]));
                 rldFac = 1.0 - Math.Pow(10, -RLD[layer] / ReferenceRLD);
 
                 // Theoretical total available water
-                result[layer] = Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
 
                 // Actual available water
                 result[layer] *= FractionLayerWithRoots(layer) * rldFac * condFac * swFac;
@@ -3938,43 +4049,17 @@ namespace Models.AgPasture
 
             return result;
         }
-        
-        /// <summary>Computes the actual water uptake and send the deltas to soil module</summary>
-        /// <returns>The amount of water taken up for each soil layer</returns>
-        /// <exception cref="System.Exception">Error on computing water uptake</exception>
-        private double[] DoSoilWaterUptake()
+
+        /// <summary>Sens the delta water to the soil module</summary>
+        private void DoSoilWaterUptake()
         {
             PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
             WaterTakenUp.DeltaWater = new double[nLayers];
-
-            double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(myWaterDemand, mySoilWaterAvailable.Sum(), 0.0));
-            double[] result = new double[nLayers];
-
-            for (int layer = 0; layer <= roots.BottomLayer; layer++)
-            {
-                result[layer] = mySoilWaterAvailable[layer] * uptakeFraction;
-                WaterTakenUp.DeltaWater[layer] = -result[layer];
-            }
-
-            // send the delta water taken up
-            if (WaterChanged != null)
-                WaterChanged.Invoke(WaterTakenUp);
-
-            return result;
-        }
-
-
-        /// <summary>Send the delta water taken up to  the soil module</summary>
-        private void DoSoilWaterUptake1()
-        {
-            WaterChangedType WaterTakenUp = new WaterChangedType();
-            WaterTakenUp.DeltaWater = new double[nLayers];
-
             for (int layer = 0; layer <= roots.BottomLayer; layer++)
                 WaterTakenUp.DeltaWater[layer] = -mySoilWaterUptake[layer];
 
-            // send the delta water taken up
-            WaterChanged.Invoke(WaterTakenUp);
+            if (WaterChanged != null)
+                WaterChanged.Invoke(WaterTakenUp);
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -4388,96 +4473,74 @@ namespace Models.AgPasture
         /// </summary>
         /// <exception cref="System.Exception">
         /// Error on computing N uptake
-        /// or
-        /// N uptake source was not recognised. Please specify it as either \"sward\" or \"species\".
         /// </exception>
         private void DoSoilNitrogenUptake()
         {
-            if (myNitrogenUptakeSource.ToLower() == "species")
+            // check whether there is any uptake
+            if (mySoilAvailableN.Sum() > 0.0 && mySoilNuptake > 0.0)
             {
-                // check whether there is any uptake
-                if (mySoilAvailableN.Sum() > 0.0 && mySoilNuptake > 0.0)
+                Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
+                NUptake.Sender = Name;
+                NUptake.SenderType = "Plant";
+                NUptake.DeltaNO3 = new double[nLayers];
+                NUptake.DeltaNH4 = new double[nLayers];
+                double uptakeFraction = 0;
+
+                if (useAltNUptake == "no")
                 {
+                    if (mySoilAvailableN.Sum() > 0.0)
+                        uptakeFraction = Math.Min(1.0,
+                            MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
 
-                    Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
-                    NUptake.Sender = Name;
-                    NUptake.SenderType = "Plant";
-                    NUptake.DeltaNO3 = new double[nLayers];
-                    NUptake.DeltaNH4 = new double[nLayers];
-
-                    mySoilNitrogenTakenUp = new double[nLayers];
-                    double uptakeFraction = 0;
-
-                    if (useAltNUptake == "no")
+                    for (int layer = 0; layer <= roots.BottomLayer; layer++)
                     {
-                        if (mySoilAvailableN.Sum() > 0.0)
-                            uptakeFraction = Math.Min(1.0,
-                                MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
+                        NUptake.DeltaNH4[layer] = -mySoilNH4Available[layer] * uptakeFraction;
+                        NUptake.DeltaNO3[layer] = -mySoilNO3Available[layer] * uptakeFraction;
 
-                        for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                        {
-                            //NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
-                            //NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
-                            NUptake.DeltaNH4[layer] = -mySoilNH4Available[layer] * uptakeFraction;
-                            NUptake.DeltaNO3[layer] = -mySoilNO3Available[layer] * uptakeFraction;
-
-                            mySoilNitrogenTakenUp[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
-                        }
+                        mySoilNitrogenTakenUp[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
                     }
-                    else
-                    {
-                        // Method implemented by RCichota,
-                        // N uptake is distributed considering water uptake and N availability
-                        double[] fNH4Avail = new double[nLayers];
-                        double[] fNO3Avail = new double[nLayers];
-                        double[] fWUptake = new double[nLayers];
-                        double totNH4Available = mySoilAvailableN.Sum();
-                        double totNO3Available = mySoilAvailableN.Sum();
-                        double totWuptake = mySoilWaterUptake.Sum();
-                        for (int layer = 0; layer < nLayers; layer++)
-                        {
-                            fNH4Avail[layer] = Math.Min(1.0,
-                                MathUtilities.Divide(mySoilAvailableN[layer], totNH4Available, 0.0));
-                            fNO3Avail[layer] = Math.Min(1.0,
-                                MathUtilities.Divide(mySoilAvailableN[layer], totNO3Available, 0.0));
-                            fWUptake[layer] = Math.Min(1.0,
-                                MathUtilities.Divide(mySoilWaterUptake[layer], totWuptake, 0.0));
-                        }
-                        double totFacNH4 = fNH4Avail.Sum() + fWUptake.Sum();
-                        double totFacNO3 = fNO3Avail.Sum() + fWUptake.Sum();
-                        for (int layer = 0; layer < nLayers; layer++)
-                        {
-                            uptakeFraction = Math.Min(1.0,
-                                MathUtilities.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
-                            NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
-
-                            uptakeFraction = Math.Min(1.0,
-                                MathUtilities.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
-                            NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
-
-                            mySoilNitrogenTakenUp[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
-                        }
-                    }
-
-                    //mySoilUptakeN.Sum()   2.2427998752781684  double
-
-                    if (Math.Abs(mySoilNuptake - mySoilNitrogenTakenUp.Sum()) > 0.0001)
-                        throw new Exception("Error on computing N uptake");
-
-                    // do the actual N changes
-                    NitrogenChanged.Invoke(NUptake);
                 }
                 else
                 {
-                    // no uptake, just zero out the array
-                    mySoilNitrogenTakenUp = new double[nLayers];
+                    // Method implemented by RCichota,
+                    // N uptake is distributed considering water uptake and N availability
+                    double[] fNH4Avail = new double[nLayers];
+                    double[] fNO3Avail = new double[nLayers];
+                    double[] fWUptake = new double[nLayers];
+                    double totNH4Available = mySoilAvailableN.Sum();
+                    double totNO3Available = mySoilAvailableN.Sum();
+                    double totWuptake = mySoilWaterUptake.Sum();
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        fNH4Avail[layer] = Math.Min(1.0,
+                            MathUtilities.Divide(mySoilAvailableN[layer], totNH4Available, 0.0));
+                        fNO3Avail[layer] = Math.Min(1.0,
+                            MathUtilities.Divide(mySoilAvailableN[layer], totNO3Available, 0.0));
+                        fWUptake[layer] = Math.Min(1.0,
+                            MathUtilities.Divide(mySoilWaterUptake[layer], totWuptake, 0.0));
+                    }
+                    double totFacNH4 = fNH4Avail.Sum() + fWUptake.Sum();
+                    double totFacNO3 = fNO3Avail.Sum() + fWUptake.Sum();
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        uptakeFraction = Math.Min(1.0,
+                            MathUtilities.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
+                        NUptake.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
+
+                        uptakeFraction = Math.Min(1.0,
+                            MathUtilities.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
+                        NUptake.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
+
+                        mySoilNitrogenTakenUp[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
+                    }
                 }
-            }
-            else
-            {
-                // N uptake calculated by other modules (e.g., SWIM)
-                string msg = "N uptake source was not recognised. Please specify it as either \"sward\" or \"species\".";
-                throw new Exception(msg);
+
+                //Check uptake balance
+                if (Math.Abs(mySoilNuptake - mySoilNitrogenTakenUp.Sum()) > 0.0001)
+                    throw new Exception("Error on computing N uptake");
+
+                // do the actual N changes
+                NitrogenChanged.Invoke(NUptake);
             }
         }
 
@@ -4605,6 +4668,7 @@ namespace Models.AgPasture
             mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
+            mySoilNitrogenTakenUp = new double[nLayers];
 
             // reset transfer variables for all tissues in each organ
             leaves.DoCleanTransferAmounts();
@@ -5263,114 +5327,6 @@ namespace Models.AgPasture
             return (myMetData.MaxT * wTmax) + (myMetData.MinT * (1.0 - wTmax));
         }
 
-        /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="soilstate">soilstate</param>
-        /// <returns></returns>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
-        {
-            //throw new NotImplementedException();
-            if (IsAlive)
-            {
-                // Model can only handle one root zone at present
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
-                Zone ParentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == ParentZone.Name)
-                        MyZone = Z;
-
-                GetSoilAvailableWater();
-                double Supply = mySoilWaterAvailable.Sum();
-                double Demand = myWaterDemand;
-                double FractionUsed = 0.0;
-                if (Supply > Epsilon)
-                    FractionUsed = Math.Min(1.0, Demand / Supply);
-
-                // Just send uptake from my zone
-                ZoneWaterAndN uptake = new ZoneWaterAndN();
-                uptake.Name = MyZone.Name;
-                uptake.Water = MathUtilities.Multiply_Value(mySoilWaterAvailable, FractionUsed);
-                uptake.NO3N = new double[nLayers];
-                uptake.NH4N = new double[nLayers];
-
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(uptake);
-                return zones;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="soilstate">soilstate</param>
-        /// <returns></returns>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
-        {
-            //throw new NotImplementedException();
-
-            if (IsAlive)
-            {
-                // Model can only handle one root zone at present
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
-                Zone ParentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
-                foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == ParentZone.Name)
-                        MyZone = Z;
-
-                ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
-                GetPotentialNitrogenUptake(soilstate);
-
-                //Pack results into uptake structure
-                UptakeDemands.Name = MyZone.Name;
-                UptakeDemands.NH4N = myPotentialNH4NUptake;
-                UptakeDemands.NO3N = myPotentialNO3NUptake;
-                UptakeDemands.Water = new double[nLayers];
-
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(UptakeDemands);
-                return zones;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Set the sw uptake for today
-        /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> zones)
-        {
-            // Model can only handle one root zone at present
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone ParentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
-            foreach (ZoneWaterAndN Z in zones)
-                if (Z.Name == ParentZone.Name)
-                    MyZone = Z;
-
-            uptakeWater = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-                uptakeWater[layer] = MyZone.Water[layer];
-        }
-
-        /// <summary>
-        /// Set the n uptake for today
-        /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> zones)
-        {
-            // Model can only handle one root zone at present
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone ParentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
-            foreach (ZoneWaterAndN Z in zones)
-                if (Z.Name == ParentZone.Name)
-                    MyZone = Z;
-
-            uptakeNH4 = new double[nLayers];
-            uptakeNO3 = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                uptakeNH4[layer] = MyZone.NH4N[layer];
-                uptakeNO3[layer] = MyZone.NO3N[layer];
-            }
-        }
-
         /// <summary>Growth limiting factor due to temperature</summary>
         /// <param name="Temp">Temperature for which the limiting factor will be computed</param>
         /// <returns>The value for the limiting factor (0-1)</returns>
@@ -5578,14 +5534,8 @@ namespace Models.AgPasture
         /// <returns>The limiting factor due to soil water deficit (0-1)</returns>
         internal double WaterDeficitFactor()
         {
-            double result = 0.0;
-
-            if (myWaterDemand <= Epsilon)
-                result = 1.0;
-            else
-                result = mySoilWaterUptake.Sum() / myWaterDemand;
-
-            return Math.Max(0.0, Math.Min(1.0, result));
+            double factor = MathUtilities.Divide(mySoilWaterUptake.Sum(), myWaterDemand, 1.0);
+            return Math.Max(0.0, Math.Min(1.0, factor));
         }
 
         /// <summary>Growth limiting factor due to excess of water in the soil (logging/lack of aeration)</summary>

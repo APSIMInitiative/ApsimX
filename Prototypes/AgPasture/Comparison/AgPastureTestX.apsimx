@@ -1255,6 +1255,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <AgPastureProto>
           <Name>AgPasture</Name>
@@ -4718,6 +4719,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <SwardProto>
           <Name>Sward</Name>
@@ -8219,6 +8221,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Sward>
           <Name>Sward</Name>
@@ -11824,6 +11827,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <PastureSpecies>
           <Name>Ryegrass</Name>
@@ -16254,6 +16258,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Sward>
           <Name>Sward</Name>
@@ -19841,6 +19846,7 @@ namespace Models
           <NaturalVegetation />
           <Latitude>-48.48</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <PastureSpecies>
           <Name>Ryegrass</Name>
