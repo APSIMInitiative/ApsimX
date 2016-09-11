@@ -8330,18 +8330,17 @@ namespace Models
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>1000</MassForMaximumHeight>
-            <MinimumRootDepth>0</MinimumRootDepth>
+            <MinimumRootDepth>50</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
-            <RootElongationRate>0</RootElongationRate>
+            <RootElongationRate>10</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
-            <KNO3>1</KNO3>
-            <KNH4>1</KNH4>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
           <WaterUptakeSource>sward</WaterUptakeSource>
           <NUptakeSource>sward</NUptakeSource>
-          <ReferenceKSuptake>1000</ReferenceKSuptake>
         </Sward>
         <Report>
           <Name>Results_Species</Name>
@@ -8488,13 +8487,13 @@ namespace Models
             <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
             <string>[SurfaceOrganicMatter].N as SurfaceOMN</string>
             <string>Fertiliser.NitrogenApplied as FertiliserN</string>
-            <string>[Sward].NitrogenFixed as FixedN</string>
+            <string>[Sward].FixedN as FixedN</string>
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].NitrogenUptake) as NitrogenUptake as UptakeN</string>
-            <string>[Sward].NitrogenRemobilisedSenescence as NitrogenRemobilisedSenescence</string>
-            <string>[Sward].NitrogenRemobilisedLuxury as NitrogenRemobilisedLuxury</string>
+            <string>sum([Sward].NitrogenUptake) as UptakeN</string>
+            <string>[Sward].RemobilisedN as NitrogenRemobilisedSenescence</string>
+            <string>[Sward].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
             <string>[Sward].ActualGrowthN as ActualGrowthN</string>
             <string>[Sward].LitterDepositionN as LitterDepositionN</string>
             <string>[Sward].RootSenescenceN as RootSenescenceN</string>
@@ -8507,7 +8506,7 @@ namespace Models
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Sward].WaterUptake) as WaterUptake</string>
             <string />
-            <string>[Sward].StandingPlantWt as Pasture.StandingWt</string>
+            <string>[Sward].StandingWt as Pasture.StandingWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -11932,13 +11931,13 @@ namespace Models
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>1000</MassForMaximumHeight>
-          <MinimumRootDepth>0</MinimumRootDepth>
+          <MinimumRootDepth>50</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
-          <RootElongationRate>0</RootElongationRate>
+          <RootElongationRate>10</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
-          <KNO3>1</KNO3>
-          <KNH4>1</KNH4>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
           <Name>Results_Species</Name>
@@ -12087,12 +12086,12 @@ namespace Models
             <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
             <string>[SurfaceOrganicMatter].N as SurfaceOMN</string>
             <string>Fertiliser.NitrogenApplied as FertiliserN</string>
-            <string>[Ryegrass].FixedN as NitrogeFixed as FixedN</string>
+            <string>[Ryegrass].FixedN as FixedN</string>
             <string>[Ryegrass].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Ryegrass].UptakeN) as UptakeN</string>
-            <string>[Ryegrass].SenescedNRemobilised as NitrogenRemobilisedSenescence</string>
+            <string>[Ryegrass].UptakeN as UptakeN</string>
+            <string>[Ryegrass].RemobilisedSenescedN as NitrogenRemobilisedSenescence</string>
             <string>[Ryegrass].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
             <string>[Ryegrass].ActualGrowthN as ActualGrowthN</string>
             <string>[Ryegrass].LitterN as LitterDepositionN</string>
@@ -12104,7 +12103,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as Drainage</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Ryegrass].WaterUptake) as WaterUptake</string>
-            <string>[Ryegrass].StandingPlantWt as Pasture.StandingWt</string>
+            <string>[Ryegrass].StandingWt as Pasture.StandingWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -12117,13 +12116,6 @@ namespace Models
             <string>[CutRotation].Script.NReturnedInDung as NReturnedInDung</string>
             <string>[CutRotation].Script.NReturnedInUrine as NReturnedInUrine</string>
             <string>[CutRotation].Script.DaysAfterCut as DaysAfterCut</string>
-            <string />
-            <string>[Ryegrass].HerbageDigestibility</string>
-            <string>[Ryegrass].AboveGroundDigestibility</string>
-            <string>[Ryegrass].HerbageDigestibilityOld</string>
-            <string>[Ryegrass].StandingDigestibilitySimp</string>
-            <string>[Ryegrass].HarvestedDigestibility</string>
-            <string>[Ryegrass].HarvestedDigestibility1</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -12235,12 +12227,12 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>Digest1</Name>
+          <Name>NBalance</Name>
           <Series>
-            <Name>Herbage</Name>
+            <Name>Leach</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-16776961</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -12251,17 +12243,17 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.HerbageDigestibility</YFieldName>
+            <YFieldName>LeachedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
+            <Cumulative>true</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>AboveGd</Name>
+            <Name>Denit</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
+            <YAxis>Right</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -12272,14 +12264,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.HarvestedDigestibility</YFieldName>
+            <YFieldName>DenitrifiedN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
+            <Cumulative>true</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Standing</Name>
+            <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -12293,22 +12285,28 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.HarvestedDigestibility1</YFieldName>
+            <YFieldName>UptakeN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
+            <Cumulative>true</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
-            <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Type>Bottom</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
-            <Type>Bottom</Type>
+            <Type>Right</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -14617,69 +14615,6 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>DMHarvestable</Name>
-      <Series>
-        <Name>Harvestable</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744193</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Dash</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestableWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Harvested</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Results_Species</TableName>
-        <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.HarvestedWt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Left</Type>
-        <Title>DM (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
       <Name>DMYield</Name>
       <Series>
         <Name>Harvested</Name>
@@ -15388,10 +15323,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16365,18 +16300,17 @@ namespace Models
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>1000</MassForMaximumHeight>
-            <MinimumRootDepth>0</MinimumRootDepth>
+            <MinimumRootDepth>50</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
-            <RootElongationRate>0</RootElongationRate>
+            <RootElongationRate>10</RootElongationRate>
             <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
             <ExponentRootDistribution>3.2</ExponentRootDistribution>
-            <KNO3>1</KNO3>
-            <KNH4>1</KNH4>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
           <WaterUptakeSource>species</WaterUptakeSource>
           <NUptakeSource>species</NUptakeSource>
-          <ReferenceKSuptake>1000</ReferenceKSuptake>
         </Sward>
         <Report>
           <Name>Results_Species</Name>
@@ -16449,8 +16383,8 @@ namespace Models
             <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableN) as Ryegrass.AvailableSoilN</string>
-            <string>sum([Sward].Ryegrass.UptakeN) as Ryegrass.UptakeN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
+            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
             <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
             <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
@@ -16523,13 +16457,13 @@ namespace Models
             <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
             <string>[SurfaceOrganicMatter].N as SurfaceOMN</string>
             <string>Fertiliser.NitrogenApplied as FertiliserN</string>
-            <string>[Sward].NitrogenFixed as FixedN</string>
+            <string>[Sward].FixedN as FixedN</string>
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].NitrogenUptake) as NitrogenUptake as UptakeN</string>
-            <string>[Sward].NitrogenRemobilisedSenescence as NitrogenRemobilisedSenescence</string>
-            <string>[Sward].NitrogenRemobilisedLuxury as NitrogenRemobilisedLuxury</string>
+            <string>sum([Sward].NitrogenUptake) as UptakeN</string>
+            <string>[Sward].RemobilisedN as NitrogenRemobilisedSenescence</string>
+            <string>[Sward].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
             <string>[Sward].ActualGrowthN as ActualGrowthN</string>
             <string>[Sward].LitterDepositionN as LitterDepositionN</string>
             <string>[Sward].RootSenescenceN as RootSenescenceN</string>
@@ -16542,7 +16476,7 @@ namespace Models
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Sward].WaterUptake) as WaterUptake</string>
             <string />
-            <string>[Sward].StandingPlantWt as Pasture.StandingWt</string>
+            <string>[Sward].StandingWt as Pasture.StandingWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -18946,10 +18880,10 @@ namespace Models
               <AllowFertiliser>yes</AllowFertiliser>
               <Depth2SoilN>500</Depth2SoilN>
               <CriticalSoilN>5</CriticalSoilN>
-              <FertNAmount>20</FertNAmount>
+              <FertNAmount>25</FertNAmount>
               <FertType>UreaN</FertType>
               <FertApplicationDepth>1</FertApplicationDepth>
-              <FertMinimumDays>30</FertMinimumDays>
+              <FertMinimumDays>15</FertMinimumDays>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19949,13 +19883,13 @@ namespace Models
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>1000</MassForMaximumHeight>
-          <MinimumRootDepth>0</MinimumRootDepth>
+          <MinimumRootDepth>50</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
-          <RootElongationRate>0</RootElongationRate>
+          <RootElongationRate>10</RootElongationRate>
           <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
           <ExponentRootDistribution>3.2</ExponentRootDistribution>
-          <KNO3>1</KNO3>
-          <KNH4>1</KNH4>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
           <Name>Results_Species</Name>
@@ -20028,8 +19962,8 @@ namespace Models
             <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>sum([Ryegrass].SoilAvailableN) as Ryegrass.AvailableSoilN</string>
-            <string>sum([Ryegrass].UptakeN) as Ryegrass.UptakeN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
+            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
             <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
             <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
@@ -20104,12 +20038,12 @@ namespace Models
             <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
             <string>[SurfaceOrganicMatter].N as SurfaceOMN</string>
             <string>Fertiliser.NitrogenApplied as FertiliserN</string>
-            <string>[Ryegrass].FixedN as NitrogeFixed as FixedN</string>
+            <string>[Ryegrass].FixedN as FixedN</string>
             <string>[Ryegrass].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Ryegrass].UptakeN) as UptakeN</string>
-            <string>[Ryegrass].SenescedNRemobilised as NitrogenRemobilisedSenescence</string>
+            <string>[Ryegrass].UptakeN as UptakeN</string>
+            <string>[Ryegrass].RemobilisedSenescedN as NitrogenRemobilisedSenescence</string>
             <string>[Ryegrass].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
             <string>[Ryegrass].ActualGrowthN as ActualGrowthN</string>
             <string>[Ryegrass].LitterN as LitterDepositionN</string>
@@ -20121,7 +20055,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as Drainage</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Ryegrass].WaterUptake) as WaterUptake</string>
-            <string>[Ryegrass].StandingPlantWt as Pasture.StandingWt</string>
+            <string>[Ryegrass].StandingWt as Pasture.StandingWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -20139,6 +20073,96 @@ namespace Models
             <string>[Clock].EndOfDay</string>
           </EventNames>
         </Report>
+        <Graph>
+          <Name>NBalance</Name>
+          <Series>
+            <Name>Leach</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_MassBalance</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>LeachedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Denit</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_MassBalance</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>DenitrifiedN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_MassBalance</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>UptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>true</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Right</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -22276,6 +22300,156 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>GLFW</Name>
+      <Series>
+        <Name>Demand</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.GlfWater</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water demand, uptake (mm/day)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>GLFN</Name>
+      <Series>
+        <Name>Demand</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Results_Species</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Ryegrass.GlfN</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water demand, uptake (mm/day)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Folder>
+  <Graph>
+    <Name>PlantWt</Name>
+    <Series>
+      <Name>AboveGroundWt</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744448</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>None</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>Solid</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>Results_Species</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Ryegrass.AboveGroundWt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>BelowGroundWt</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-32768</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>None</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>Dash</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>Results_Species</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Ryegrass.BelowGroundWt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Left</Type>
+      <Title>DM (kg/ha)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries>
+      <string>AgPproto</string>
+      <string>SwardProto</string>
+    </DisabledSeries>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

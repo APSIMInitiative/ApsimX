@@ -33,7 +33,7 @@ namespace Models.AgPasture
 
         /// <summary>Link to the Soil (soil layers and other information)</summary>
         [Link]
-        private Soils.Soil mySoil = null;
+        private Soil mySoil = null;
 
         /// <summary>Link to apsim's Resource Arbitrator module</summary>
         [Link(IsOptional = true)]
@@ -47,28 +47,28 @@ namespace Models.AgPasture
 
         /// <summary>Reference to a FOM incorporation event</summary>
         /// <param name="Data">The data with soil FOM to be added.</param>
-        public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
+        public delegate void FOMLayerDelegate(FOMLayerType Data);
 
         /// <summary>Occurs when plant is depositing senesced roots.</summary>
         public event FOMLayerDelegate IncorpFOM;
 
         /// <summary>Reference to a BiomassRemoved event</summary>
         /// <param name="Data">The data about biomass deposited by this plant to the soil surface.</param>
-        public delegate void BiomassRemovedDelegate(PMF.BiomassRemovedType Data);
+        public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
 
         /// <summary>Occurs when plant is depositing litter.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
         /// <summary>Reference to a WaterChanged event</summary>
         /// <param name="Data">The changes in the amount of water for each soil layer.</param>
-        public delegate void WaterChangedDelegate(PMF.WaterChangedType Data);
+        public delegate void WaterChangedDelegate(WaterChangedType Data);
 
         /// <summary>Occurs when plant takes up water.</summary>
         public event WaterChangedDelegate WaterChanged;
 
         /// <summary>Reference to a NitrogenChanged event</summary>
         /// <param name="Data">The changes in the soil N for each soil layer.</param>
-        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
 
         /// <summary>Occurs when the plant takes up soil N.</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
@@ -1132,17 +1132,10 @@ namespace Models.AgPasture
         {
             get
             {
-                if (isSwardControlled)
-                {
-                    return swardSoilWaterAvailable;
-                }
-                else
-                {
-                    double[] result = new double[nLayers];
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
-                    return result;
-                }
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    result[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
+                return result;
             }
         }
 
@@ -1398,9 +1391,6 @@ namespace Models.AgPasture
         /// <summary>Amount of soil water available to the sward, from each soil layer (mm)</summary>
         private double[] swardSoilWaterAvailable;
 
-        /// <summary>Daily soil water demand for the whole sward (mm)</summary>
-        private double swardWaterDemand = 0.0;
-
         /// <summary>Soil water uptake for the whole sward, from each soil layer (mm)</summary>
         private double[] swardSoilWaterUptake;
 
@@ -1507,11 +1497,11 @@ namespace Models.AgPasture
             swardSoilNO3Uptake = new double[nLayers];
         }
 
-        /// <summary>Performs the plant growth calculations</summary>
+        /// <summary>Performs the calculations for potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (swardIsAlive && isSwardControlled)
             {
@@ -1531,10 +1521,25 @@ namespace Models.AgPasture
                 // Get the water demand, supply, and uptake
                 DoWaterCalculations();
 
-                // Get the potential growth after water limitations
                 foreach (PastureSpecies species in mySpecies)
+                {
+                    // Get the potential growth after water limitations
                     species.CalcGrowthAfterWaterLimitations();
 
+                    // Get the N amount demanded for optimum growth and luxury uptake
+                    species.EvaluateNitrogenDemand();
+                }
+            }
+        }
+
+        /// <summary>Performs the calculations for actual growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPlantGrowth")]
+        private void OnDoPlantGrowth(object sender, EventArgs e)
+        {
+            if (swardIsAlive && isSwardControlled)
+            {
                 // Get the nitrogen demand, supply, and uptake
                 DoNitrogenCalculations();
 
@@ -1573,8 +1578,7 @@ namespace Models.AgPasture
                 // Get the amount of soil available water
                 GetSoilAvailableWater(myZone);
 
-                // Get the water demand
-                swardWaterDemand = mySpecies.Sum(species => species.myWaterDemand);
+                // Water demand computed by MicroClimate
 
                 // Get the amount of water taken up
                 GetSoilWaterUptake();
@@ -1582,7 +1586,21 @@ namespace Models.AgPasture
                 // Send the delta water to soil water module
                 DoSoilWaterUptake();
             }
-            // else { water uptake is controlled at species level}
+            else
+            {
+                //water uptake is controlled at species level, get sward totals
+                for (int layer = 0; layer <= RootFrontier; layer++)
+                {
+                    foreach (PastureSpecies species in mySpecies)
+                    {
+                        swardSoilWaterAvailable[layer] += species.mySoilWaterAvailable[layer];
+                        swardSoilWaterUptake[layer] += species.mySoilWaterUptake[layer];
+                    }
+                }
+
+                // Send the delta water to soil water module
+                DoSoilWaterUptake();
+            }
         }
 
         /// <summary>Finds out the amount of plant available water in the soil, consider all species</summary>
@@ -1612,7 +1630,7 @@ namespace Models.AgPasture
                 }
 
                 // Get total in the soil
-                totalSoilWater = Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer]) * layerFraction;
+                totalSoilWater = Math.Max(0.0, myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) * layerFraction;
 
                 // Sward total is the minimum of the two totals
                 swardSoilWaterAvailable[layer] = Math.Min(totalPlantWater, totalSoilWater);
@@ -1642,7 +1660,7 @@ namespace Models.AgPasture
         {
             if (swardSoilWaterUptake.Sum() > Epsilon)
             {
-                PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
+                WaterChangedType WaterTakenUp = new WaterChangedType();
                 WaterTakenUp.DeltaWater = new double[nLayers];
                 for (int layer = 0; layer <= RootFrontier; layer++)
                     WaterTakenUp.DeltaWater[layer] -= swardSoilWaterUptake[layer];
@@ -1673,31 +1691,44 @@ namespace Models.AgPasture
 
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    // Get the N amount demanded for optimum growth and luxury uptake
-                    species.EvaluateNitrogenDemand();
-
                     // Get the N amount fixed through symbiosis
                     species.EvaluateNitrogenFixation();
 
                     // Evaluate the use of N remobilised and get N amount demanded from soil
                     species.EvaluateSoilNitrogenDemand();
-                }
 
-                // Get N amount take up from the soil
-                GetSoilNitrogenUptake();
-                
-                // Evaluate whether remobilisation of luxury N is needed
-                for (int sp = 0; sp < NumSpecies; sp++)
-                {
-                    mySpecies[sp].EvaluateNLuxuryRemobilisation();
-                    mySpecies[sp].newGrowthN = mySpecies[sp].Nfixation + mySpecies[sp].RemobilisedSenescedN
-                                               + mySpecies[sp].UptakeN + mySpecies[sp].RemobilisedLuxuryN;
+                    // Get N amount taken up from the soil
+                    species.EvaluateSoilNitrogenUptake();
+                    for (int layer = 0; layer < RootFrontier; layer++)
+                    {
+                        swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
+                        swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
+                    }
+
+                    // Evaluate whether remobilisation of luxury N is needed
+                    species.EvaluateNLuxuryRemobilisation();
                 }
 
                 // Send delta N to the soil model
                 DoSoilNitrogenUptake();
             }
-            // else { N uptake is controlled at species level}
+            else
+            {
+                //N uptake is controlled at species level, get sward totals
+                for (int layer = 0; layer < RootFrontier; layer++)
+                {
+                    foreach (PastureSpecies species in mySpecies)
+                    {
+                        swardSoilNH4Available[layer] += species.mySoilNH4Available[layer];
+                        swardSoilNO3Available[layer] += species.mySoilNO3Available[layer];
+                        swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
+                        swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
+                    }
+                }
+
+                // Send delta N to the soil model
+                DoSoilNitrogenUptake();
+            }
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil, consider all species</summary>
@@ -1752,30 +1783,12 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of nitrogen to be taken up by the plant [potential], consider all species</summary>
-        private void GetSoilNitrogenUptake()
-        {
-            for (int sp = 0; sp < NumSpecies; sp++)
-                mySpecies[sp].EvaluateSoilNitrogenUptake();
-
-            for (int layer = 0; layer < RootFrontier; layer++)
-            {
-                swardSoilNH4Uptake[layer] = 0.0;
-                swardSoilNO3Uptake[layer] = 0.0;
-                foreach (PastureSpecies species in mySpecies)
-                {
-                    swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
-                    swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
-                }
-            }
-        }
-
         /// <summary>Sends the delta nitrogen to the soil module</summary>
         private void DoSoilNitrogenUptake()
         {
             if ((swardSoilNH4Uptake.Sum() + swardSoilNO3Uptake.Sum()) > Epsilon)
             {
-                Soils.NitrogenChangedType nitrogenTakenUp = new Soils.NitrogenChangedType();
+                NitrogenChangedType nitrogenTakenUp = new NitrogenChangedType();
                 nitrogenTakenUp.Sender = Name;
                 nitrogenTakenUp.SenderType = "Plant";
                 nitrogenTakenUp.DeltaNO3 = new double[nLayers];
@@ -1962,7 +1975,7 @@ namespace Models.AgPasture
             {
                 Single dDM = (Single)amountDM;
 
-                PMF.BiomassRemovedType BR = new PMF.BiomassRemovedType();
+                BiomassRemovedType BR = new BiomassRemovedType();
                 String[] type = new String[] { "grass" };  // TODO: this should be "pasture" ??
                 Single[] dltdm = new Single[] { (Single)amountDM };
                 Single[] dltn = new Single[] { (Single)amountN };
@@ -1984,20 +1997,20 @@ namespace Models.AgPasture
         /// <param name="amountN">N amount to return</param>
         private void DoIncorpFomEvent(double amountDM, double amountN)
         {
-            Soils.FOMLayerLayerType[] FOMdataLayer = new Soils.FOMLayerLayerType[nLayers];
+            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
 
             // ****  RCichota, Jun/2014
             // root senesced are returned to soil (as FOM) considering return is proportional to root mass
             for (int layer = 0; layer < nLayers; layer++)
             {
-                Soils.FOMType fomData = new Soils.FOMType();
+                FOMType fomData = new FOMType();
                 fomData.amount = amountDM * RootWtFraction[layer];
                 fomData.N = amountN * RootWtFraction[layer];
                 fomData.C = amountDM * RootWtFraction[layer] * CinDM;
                 fomData.P = 0.0;              // P not considered here
                 fomData.AshAlk = 0.0;         // Ash not considered here
 
-                Soils.FOMLayerLayerType layerData = new Soils.FOMLayerLayerType();
+                FOMLayerLayerType layerData = new FOMLayerLayerType();
                 layerData.FOM = fomData;
                 layerData.CNR = 0.0;        // not used here
                 layerData.LabileP = 0;      // not used here
@@ -2007,7 +2020,7 @@ namespace Models.AgPasture
 
             if (IncorpFOM != null)
             {
-                Soils.FOMLayerType FOMData = new Soils.FOMLayerType();
+                FOMLayerType FOMData = new FOMLayerType();
                 FOMData.Type = "Pasture";
                 FOMData.Layer = FOMdataLayer;
                 IncorpFOM.Invoke(FOMData);
