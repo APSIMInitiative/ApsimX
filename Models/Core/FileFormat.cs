@@ -19,20 +19,9 @@ namespace Models.Core
     /// </summary>
     public class FileFormat
     {
-        /// <summary>All known model types</summary>
-        private List<Type> modelTypes = null;
-
         /// <summary>Constructor</summary>
-        public FileFormat(List<Type> types)
+        public FileFormat()
         {
-            modelTypes = new List<Type>();
-            types.AddRange(Assembly.GetExecutingAssembly().GetTypes());
-            foreach (Type t in types)
-            {
-                if (t.IsPublic && !t.IsInterface &&  t.FullName.StartsWith("Models.") && t.BaseType == typeof(Model) &&
-                    t.FullName != "Models.Script")
-                    modelTypes.Add(t);
-            }
         }
 
         /// <summary>Convert the specified model to XML</summary>
@@ -43,7 +32,7 @@ namespace Models.Core
             StringWriter s = new StringWriter();
             APSIMFileWriter writer = new APSIMFileWriter(s);
             writer.Formatting = Formatting.Indented;
-            XmlUtilities.SerialiseWithOptions(rootNode, false, null, modelTypes.ToArray(), writer);
+            XmlUtilities.SerialiseWithOptions(rootNode, false, null, null, writer);
             return s.ToString();
         }
 
@@ -74,21 +63,46 @@ namespace Models.Core
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement);
-
-            XmlReader reader = new APSIMFileReader(doc.DocumentElement);
-            XmlSerializer serial = new XmlSerializer(typeof(ModelWrapper), modelTypes.ToArray());
-            return serial.Deserialize(reader) as ModelWrapper;
+            return Read(doc.DocumentElement);
         }
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public ModelWrapper ReadFile(string fileName)
         {
             return ReadXML(File.ReadAllText(fileName));
         }
 
+        /// <summary>Create a simulations object by reading the specified filename</summary>
+        /// <param name="s">The stream to read from.</param>
+        public ModelWrapper Read(Stream s)
+        {
+            XmlReader reader = new APSIMFileReader(s);
+            reader.Read();
+
+            Assembly modelsAssembly = null;
+            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
+                    modelsAssembly = a;
+
+            return XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
+        }
+
+        /// <summary>Create a simulations object by reading the specified filename</summary>
+        /// <param name="node">XML node to read from.</param>
+        public ModelWrapper Read(XmlNode node)
+        {
+            APSIMFileConverter.ConvertToLatestVersion(node);
+            
+            XmlReader reader = new APSIMFileReader(node);
+            reader.Read();
+
+            Assembly modelsAssembly = null;
+            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                if (!a.IsDynamic && Path.GetFileName(a.Location) == "Models.exe")
+                    modelsAssembly = a;
+
+            return XmlUtilities.Deserialise(reader, modelsAssembly) as ModelWrapper;
+        }
     }
 }

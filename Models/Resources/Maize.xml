@@ -733,18 +733,6 @@ No effect of soil water content on root growth is currently captured in the mode
       <Value>1</Value>
     </Constant>
     <Constant>
-      <Name>TemperatureEffect</Name>
-      <Memo>
-        <Name>memo</Name>
-        <MemoText>
-          <![CDATA[
-No effect of temperature on root growth is currently captured in the model.
-]]>
-        </MemoText>
-      </Memo>
-      <Value>1</Value>
-    </Constant>
-    <Constant>
       <Name>MaxDailyNUptake</Name>
       <Memo>
         <Name>memo</Name>
@@ -773,6 +761,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     <Constant>
       <Name>StructuralFraction</Name>
       <Value>1</Value>
+    </Constant>
+    <Constant>
+      <Name>MaximumRootDepth</Name>
+      <Value>1000000</Value>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>

@@ -113,7 +113,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the units of the property (in brackets) or null if not found.
+        /// Gets the units of the property or null if not found.
         /// </summary>
         public override string Units
         {
@@ -128,6 +128,20 @@ namespace Models.Core
             set
             {
 
+            }
+        }
+
+        /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
+                if (this.variables.Count == 0)
+                    return string.Empty;
+
+                return variables[variables.Count - 1].UnitsLabel;
             }
         }
     }

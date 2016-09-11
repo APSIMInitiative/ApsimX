@@ -84,24 +84,22 @@ namespace Models.PMF.Organs
         /// <value>The n demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        [XmlIgnore]
-        virtual public double MaxNconc { get { return 0; } set { } }
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc.</value>
         [XmlIgnore]
-        virtual public double MinNconc { get { return 0; } set { } }
+        virtual public double MinNconc { get { return 0; } }
         #endregion
 
         #region Soil Arbitrator interface
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
-        virtual public double[] NO3NSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets the ammonium uptake supply for the given nitrogen state.</summary>
-        /// <param name="zone">The zone</param>
-        virtual public double[] NH4NSupply(ZoneWaterAndN zone) { return null; }
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        {
+            NO3Supply = null;
+            NH4Supply = null;
+        }
 
         /// <summary>Gets or sets the water demand.</summary>
         /// <value>The water demand.</value>
@@ -111,26 +109,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
-        virtual public double WaterUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
-        virtual public double NUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
         
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
@@ -147,10 +125,8 @@ namespace Models.PMF.Organs
         virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        virtual public void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName) { }
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
 
         /// <summary>Gets the n supply uptake.</summary>
         /// <value>The n supply uptake.</value>

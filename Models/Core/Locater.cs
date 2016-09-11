@@ -10,6 +10,7 @@ namespace Models.Core
     using System.Linq;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+    using System.Collections;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -235,6 +236,14 @@ namespace Models.Core
                     else if (propertyInfo != null)
                     {
                         VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
+                        properties.Add(property);
+                        relativeToObject = property.Value;
+                    }
+                    else if (relativeToObject is IList)
+                    {
+                        // Special case: we are trying to get a property of an array(IList). In this case
+                        // we want to return the property value for all items in the array.
+                        VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
                         properties.Add(property);
                         relativeToObject = property.Value;
                     }

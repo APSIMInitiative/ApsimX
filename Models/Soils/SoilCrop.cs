@@ -42,7 +42,10 @@ namespace Models.Soils
         {
             get
             {
-                return Soil.ToDepthStrings(Soil.Thickness);
+                if (Soil != null)
+                    return Soil.ToDepthStrings(Soil.Thickness);
+                else
+                    return new string[0];
             }
         }
 

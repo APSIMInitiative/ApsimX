@@ -12,6 +12,7 @@ namespace Models.Core
     using Models.Soils;
     using System.Globalization;
     using APSIM.Shared.Utilities;
+    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -34,6 +35,9 @@ namespace Models.Core
         /// An optional upper bound array index.
         /// </summary>
         private int upperArraySpecifier;
+
+        /// <summary>The name of the property to call on each array element.</summary>
+        private string elementPropertyName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableProperty" /> class.
@@ -70,6 +74,17 @@ namespace Models.Core
                 this.lowerArraySpecifier = 0;
                 this.upperArraySpecifier = 0;
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VariableProperty" /> class.
+        /// </summary>
+        /// <param name="model">The underlying model for the property</param>
+        /// <param name="elementPropertyName">The name of the property to call on each array element.</param>
+        public VariableProperty(object model, string elementPropertyName)
+        {
+            this.Object = model;
+            this.elementPropertyName = elementPropertyName;
         }
 
         /// <summary>
@@ -120,6 +135,42 @@ namespace Models.Core
         {
             get
             {
+                string unitString = null;
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                if (unitsAttribute != null)
+                {
+                    unitString = unitsAttribute.ToString();
+                }
+                else if (unitsInfo != null)
+                {
+                    object val = unitsInfo.GetValue(this.Object, null);
+                    unitString = val.ToString();
+                }
+                return unitString;
+            }
+            set
+            {
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
+                if (unitsSet != null)
+                {
+                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
+                }
+                else if (unitsInfo != null)
+                {
+                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
+        /// </summary>
+        public override string UnitsLabel
+        {
+            get
+            {
                 // Get units from property
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
@@ -139,21 +190,10 @@ namespace Models.Core
                 }
                 else if (unitsToStringInfo != null)
                     unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
-                return unitString;
-            }
-
-            set
-            {
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
-                MethodInfo unitsSet = this.Object.GetType().GetMethod(this.property.Name + "UnitsSet");
-                if (unitsSet != null)
-                {
-                    unitsSet.Invoke(this.Object, new object[] { Enum.Parse(unitsInfo.PropertyType, value) });
-                }
-                else if (unitsInfo != null)
-                {
-                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
-                }
+                if (unitString != null)
+                    return "(" + unitString + ")";
+                else
+                    return null;
             }
         }
 
@@ -234,27 +274,41 @@ namespace Models.Core
         {
             get
             {
+                if (elementPropertyName != null)
+                    return ProcessPropertyOfArrayElement();
+                
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (this.lowerArraySpecifier != 0 && obj != null && obj.GetType().IsArray)
+                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
                 {
-                    Array array = obj as Array;
-                    if (array.Length == 0)
-                    {
+                    IList array = obj as IList;
+                    if (array.Count == 0)
                         return null;
+
+                    // Get the type of the items in the array.
+                    Type elementType;
+                    if (array.GetType().HasElementType)
+                        elementType = array.GetType().GetElementType();
+                    else
+                    {
+                        Type[] genericArguments = array.GetType().GetGenericArguments();
+                        if (genericArguments.Length > 0)
+                            elementType = genericArguments[0];
+                        else
+                            throw new Exception("Unknown type of array");
                     }
 
                     int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
-                    Array values = Array.CreateInstance(this.property.PropertyType.GetElementType(), numElements);
+                    Array values = Array.CreateInstance(elementType, numElements);
                     for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
                     {
                         int index = i - this.lowerArraySpecifier;
-                        if (i < 1 || i > array.Length)
+                        if (i < 1 || i > array.Count)
                         {
                             throw new Exception("Array index out of bounds while getting variable: " + this.Name);
                         }
 
-                        values.SetValue(array.GetValue(i - 1), index);
+                        values.SetValue(array[i - 1], index);
                     }
                     if (values.Length == 1)
                     {
@@ -279,6 +333,43 @@ namespace Models.Core
                 }
             }
         }
+
+
+        /// <summary>
+        /// Special case where trying to get a property of an array(IList). In this case
+        /// we want to return the property value for all items in the array.
+        /// e.g. Maize.Root.Zones.WaterUptake
+        /// Zones is a List of ZoneState objects.
+        /// </summary>
+        private object ProcessPropertyOfArrayElement()
+        {
+            IList list = Object as IList;
+
+            // Get the type of the items in the array.
+            Type elementType;
+            if (list.GetType().HasElementType)
+                elementType = list.GetType().GetElementType();
+            else
+            {
+                Type[] genericArguments = list.GetType().GetGenericArguments();
+                if (genericArguments.Length > 0)
+                    elementType = genericArguments[0];
+                else
+                    throw new Exception("Unknown type of array in Locater");
+            }
+
+            PropertyInfo propertyInfo = elementType.GetProperty(elementPropertyName);
+            if (propertyInfo == null)
+                throw new Exception(elementPropertyName + " is not a property of type " + elementType.Name);
+
+            // Create a return array.
+            Array values = Array.CreateInstance(propertyInfo.PropertyType, list.Count);
+            for (int i = 0; i < list.Count; i++)
+                values.SetValue(propertyInfo.GetValue(list[i]), i);
+
+            return values;
+        }
+
 
         /// <summary>
         /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
