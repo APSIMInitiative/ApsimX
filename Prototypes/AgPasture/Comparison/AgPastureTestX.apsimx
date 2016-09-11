@@ -8341,8 +8341,6 @@ namespace Models
           <ControlledBySward>yes</ControlledBySward>
           <WaterUptakeSource>sward</WaterUptakeSource>
           <NUptakeSource>sward</NUptakeSource>
-          <UseAlternativeWaterUptake>no</UseAlternativeWaterUptake>
-          <UseAlternativeNUptake>no</UseAlternativeNUptake>
           <ReferenceKSuptake>1000</ReferenceKSuptake>
         </Sward>
         <Report>
@@ -8416,8 +8414,8 @@ namespace Models
             <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableN) as Ryegrass.AvailableSoilN</string>
-            <string>sum([Sward].Ryegrass.UptakeN) as Ryegrass.UptakeN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
+            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
             <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
             <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
@@ -12013,8 +12011,8 @@ namespace Models
             <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
             <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
             <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>sum([Ryegrass].SoilAvailableN) as Ryegrass.AvailableSoilN</string>
-            <string>sum([Ryegrass].UptakeN) as Ryegrass.UptakeN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
+            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
             <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
             <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
             <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
@@ -16378,8 +16376,6 @@ namespace Models
           <ControlledBySward>yes</ControlledBySward>
           <WaterUptakeSource>species</WaterUptakeSource>
           <NUptakeSource>species</NUptakeSource>
-          <UseAlternativeWaterUptake>no</UseAlternativeWaterUptake>
-          <UseAlternativeNUptake>no</UseAlternativeNUptake>
           <ReferenceKSuptake>1000</ReferenceKSuptake>
         </Sward>
         <Report>

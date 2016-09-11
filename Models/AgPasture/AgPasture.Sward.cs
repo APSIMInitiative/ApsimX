@@ -187,42 +187,6 @@ namespace Models.AgPasture
             set { myNUptakeSource = value; }
         }
 
-        /// <summary>Flag whether the alternative water uptake process is to be used</summary>
-        private string useAltWUptake = "no";
-
-        /// <summary>Gets or sets whether the alternative water uptake is to be used.</summary>
-        /// <value>A yes/no value.</value>
-        [Description("Use alternative water uptake process?")]
-        public string UseAlternativeWaterUptake
-        {
-            get { return useAltWUptake; }
-            set { useAltWUptake = value; }
-        }
-
-        /// <summary>Flag whether the alternative N uptake process is to be used</summary>
-        private string useAltNUptake = "no";
-
-        /// <summary>Gets or sets whether the alternative N uptake is to be used.</summary>
-        /// <value>A yes/no value.</value>
-        [Description("Use alternative N uptake process?")]
-        public string UseAlternativeNUptake
-        {
-            get { return useAltNUptake; }
-            set { useAltNUptake = value; }
-        }
-
-        /// <summary>The reference hydraulic conductivity for water uptake</summary>
-        private double referenceKSuptake = 1000.0;
-
-        /// <summary>Gets or sets the reference soil hydraulic conductivity for water uptake.</summary>
-        /// <value>The Ksat value.</value>
-        [Description("Test - Reference soil Ksat for optimum water uptake (if using alternative method)")]
-        public double ReferenceKSuptake
-        {
-            get { return referenceKSuptake; }
-            set { referenceKSuptake = value; }
-        }
-
         //private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
         //[XmlIgnore]
         //public double[] PreferenceForGreenDM
@@ -884,16 +848,9 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                if (isSwardControlled)
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = swardSoilNH4Available[layer] + swardSoilNO3Available[layer];
-                }
-                else
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableN[layer]);
-                }
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int sp = 0; sp < numSpecies; sp++)
+                        result[layer] = mySpecies[sp].SoilNH4Available[layer] + mySpecies[sp].SoilNO3Available[layer];
                 return result;
             }
         }
@@ -908,7 +865,8 @@ namespace Models.AgPasture
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySpecies.Sum(mySpecies => mySpecies.UptakeN[layer]);
+                    for (int sp = 0; sp < numSpecies; sp++)
+                        result[layer] = mySpecies[sp].SoilNH4Uptake[layer] + mySpecies[sp].SOilNO3Uptake[layer];
                 return result;
             }
         }
@@ -1116,7 +1074,7 @@ namespace Models.AgPasture
         /// <value>The layer at bottom of root zone.</value>
         [Description("Layer at bottom of root zone")]
         [Units("mm")]
-        public double RootFrontier
+        public int RootFrontier
         {
             get { return mySpecies.Max(mySpecies => mySpecies.RootFrontier); }
         }
@@ -1448,38 +1406,17 @@ namespace Models.AgPasture
 
         // -- Nitrogen variables  -------------------------------------------------------------------------------------
 
-        /// <summary>Amount of soil N available for uptake to the whole sward</summary>
-        private double swardSoilAvailableN;
-
         /// <summary>Amount of NH4 available for uptake to the whole sward</summary>
         private double[] swardSoilNH4Available;
 
         /// <summary>Amount of NO3 available for uptake to the whole sward</summary>
         private double[] swardSoilNO3Available;
 
-        /// <summary>The N fixation amount for the whole sward</summary>
-        private double swardNFixation = 0.0;
+        /// <summary>Amount of NH4 taken up by the whole sward</summary>
+        private double[] swardSoilNH4Uptake;
 
-        /// <summary>The basic N demand for the sward (for optimum growth)</summary>
-        private double swardNDemand = 0.0;
-
-        /// <summary>The soil N demand for the whole sward</summary>
-        private double swardSoilNDemand = 0.0;
-
-        /// <summary>The total N uptake for the whole sward</summary>
-        private double swardSoilNUptake = 0.0;
-
-        /// <summary>The remobilised N in the whole sward</summary>
-        private double swardNRemobilised = 0.0;
-
-        /// <summary>The remobilised N to new growth</summary>
-        private double swardNRemobNewGrowth = 0.0;
-
-        /// <summary>The N amount in new growth, for the whole sward</summary>
-        private double swardNewGrowthN = 0.0;
-
-        /// <summary>The N remobilised from tissue 2, for the whole sward</summary>
-        private double swardNLuxuryRemobilised = 0.0;
+        /// <summary>Amount of NO3 taken up by the whole sward</summary>
+        private double[] swardSoilNO3Uptake;
 
         // - General variables  ---------------------------------------------------------------------------------------
 
@@ -1547,6 +1484,8 @@ namespace Models.AgPasture
             swardSoilWaterUptake = new double[nLayers];
             swardSoilNH4Available = new double[nLayers];
             swardSoilNO3Available = new double[nLayers];
+            swardSoilNH4Uptake = new double[nLayers];
+            swardSoilNO3Uptake = new double[nLayers];
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -1560,8 +1499,12 @@ namespace Models.AgPasture
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             // clear some variables
-            Array.Clear(swardSoilWaterAvailable, 0, nLayers);
-            Array.Clear(swardSoilWaterUptake, 0, nLayers);
+            swardSoilWaterAvailable = new double[nLayers];
+            swardSoilWaterUptake = new double[nLayers];
+            swardSoilNH4Available = new double[nLayers];
+            swardSoilNO3Available = new double[nLayers];
+            swardSoilNH4Uptake = new double[nLayers];
+            swardSoilNO3Uptake = new double[nLayers];
         }
 
         /// <summary>Performs the plant growth calculations</summary>
@@ -1605,7 +1548,6 @@ namespace Models.AgPasture
 
                     // Get the effective growth, after all limitations and senescence
                     species.DoEffectiveGrowth();
-                    swardNRemobilised += species.RemobilisedSenescedN;
                 }
 
                 // Send detached tissues (litter and roots) to other modules
@@ -1616,22 +1558,7 @@ namespace Models.AgPasture
 
         #region - Water uptake process  ------------------------------------------------------------------------------------
 
-        /// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM)</summary>
-        /// <param name="SoilWater">The soil water.</param>
-        [EventSubscribe("WaterUptakesCalculated")]
-        private void OnWaterUptakesCalculated(PMF.WaterUptakesCalculatedType SoilWater)
-        {
-            for (int iCrop = 0; iCrop < SoilWater.Uptakes.Length; iCrop++)
-            {
-                if (SoilWater.Uptakes[iCrop].Name == Name)
-                {
-                    for (int layer = 0; layer < SoilWater.Uptakes[iCrop].Amount.Length; layer++)
-                        swardSoilWaterUptake[layer] = SoilWater.Uptakes[iCrop].Amount[layer];
-                }
-            }
-        }
-
-        /// <summary>Water uptake processes</summary>
+        /// <summary>Performs the water uptake calculations</summary>
         private void DoWaterCalculations()
         {
             if (myWaterUptakeSource == "sward")
@@ -1658,36 +1585,53 @@ namespace Models.AgPasture
             // else { water uptake is controlled at species level}
         }
 
-        /// <summary>Finds out the amount of plant available water, consider all species</summary>
+        /// <summary>Finds out the amount of plant available water in the soil, consider all species</summary>
         /// <param name="myZone">Soil information</param>
         private void GetSoilAvailableWater(ZoneWaterAndN myZone)
         {
+            double totalPlantWater;
+            double totalSoilWater;
+            double waterFraction = 1.0;
+            double layerFraction = 1.0;
+
             // Get the water available as seen by each species
             foreach (PastureSpecies species in mySpecies)
-                species.EvaluateWaterAvailable(myZone);
+               species.EvaluateSoilWaterAvailable(myZone);
 
             // Evaluate the available water for whole sward and adjust availability for each species if needed
             for (int layer = 0; layer <= RootFrontier; layer++)
             {
-                double totalPlantWater = mySpecies.Sum(species => species.mySoilWaterAvailable[layer]);
-                double totalSoilWater = Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                // Get total as seen by each species
+                totalPlantWater = 0.0;
+                if (layer == RootFrontier) layerFraction = 0.0;
+                foreach (PastureSpecies species in mySpecies)
+                {
+                    totalPlantWater += species.mySoilWaterAvailable[layer];
+                    if (layer == RootFrontier)
+                        layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
+                }
+
+                // Get total in the soil
+                totalSoilWater = Math.Max(0.0, mySoil.SoilWater.SWmm[layer] - mySoil.SoilWater.LL15mm[layer]) * layerFraction;
+
+                // Sward total is the minimum of the two totals
                 swardSoilWaterAvailable[layer] = Math.Min(totalPlantWater, totalSoilWater);
                 if (totalPlantWater > totalSoilWater)
                 {
-                    // adjust the water available for each plant
-                    double fractionAvailable = MathUtilities.Divide(totalSoilWater, totalPlantWater, 0.0);
-                    foreach (PastureSpecies species in mySpecies)
-                        species.mySoilWaterAvailable[layer] *= fractionAvailable;
+                    // adjust the water available for each species
+                    waterFraction = MathUtilities.Divide(totalSoilWater, totalPlantWater, 0.0);
+                        foreach (PastureSpecies species in mySpecies)
+                            species.mySoilWaterAvailable[layer] *= waterFraction;
                 }
             }
         }
 
-        /// <summary>Computes the plant water uptake [potential], consider all species</summary>
+        /// <summary>Gets the plant water uptake [potential], consider all species</summary>
         private void GetSoilWaterUptake()
         {
             foreach (PastureSpecies species in mySpecies)
             {
-                species.EvaluateWaterUptake();
+                species.EvaluateSoilWaterUptake();
                 for (int layer = 0; layer <= species.roots.BottomLayer; layer++)
                     swardSoilWaterUptake[layer] += species.mySoilWaterUptake[layer];
             }
@@ -1696,338 +1640,155 @@ namespace Models.AgPasture
         /// <summary>Sends the delta water to the soil module</summary>
         private void DoSoilWaterUptake()
         {
-            PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
-            WaterTakenUp.DeltaWater = new double[nLayers];
-            for (int layer = 0; layer <= RootFrontier; layer++)
-                WaterTakenUp.DeltaWater[layer] -= swardSoilWaterUptake[layer];
+            if (swardSoilWaterUptake.Sum() > Epsilon)
+            {
+                PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
+                WaterTakenUp.DeltaWater = new double[nLayers];
+                for (int layer = 0; layer <= RootFrontier; layer++)
+                    WaterTakenUp.DeltaWater[layer] -= swardSoilWaterUptake[layer];
 
-            if (WaterChanged != null)
-                WaterChanged.Invoke(WaterTakenUp);
+                if (WaterChanged != null)
+                    WaterChanged.Invoke(WaterTakenUp);
+            }
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - Nitrogen uptake process  ---------------------------------------------------------------------------------
 
-        /// <summary>Performs the computations for N uptake</summary>
+        /// <summary>Performs the nitrogen uptake calculations</summary>
         private void DoNitrogenCalculations()
         {
             if (myNUptakeSource.ToLower() == "sward")
             {
-                // get N demand (optimum and luxury)
-                GetNDemand();
+                // Pack the soil information
+                ZoneWaterAndN myZone = new ZoneWaterAndN();
+                myZone.Name = this.Parent.Name;
+                myZone.Water = mySoil.Water;
+                myZone.NO3N = mySoil.NO3N;
+                myZone.NH4N = mySoil.NH4N;
 
-                // get soil available N
-                GetSoilAvailableN();
+                // Get the N amount available in the soil
+                GetSoilAvailableN(myZone);
 
-                // partition N available between species, based on their relative demand (luxury minus minimum fixation)
-                double sumDemand = mySpecies.Sum(mySpecies => mySpecies.RequiredLuxuryN * (1 - mySpecies.MinimumNFixation));
-                double speciesFraction = 0.0;
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    speciesFraction = species.RequiredLuxuryN * (1 - species.MinimumNFixation) / sumDemand;
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        //mySpecies.mySoilAvailableN = swardSoilAvailableN[layer] * speciesFraction;
-                        species.mySoilNH4Available[layer] = swardSoilNH4Available[layer] * speciesFraction;
-                        species.mySoilNO3Available[layer] = swardSoilNO3Available[layer] * speciesFraction;
-                    }
+                    // Get the N amount demanded for optimum growth and luxury uptake
+                    species.EvaluateNitrogenDemand();
+
+                    // Get the N amount fixed through symbiosis
+                    species.EvaluateNitrogenFixation();
+
+                    // Evaluate the use of N remobilised and get N amount demanded from soil
+                    species.EvaluateSoilNitrogenDemand();
                 }
 
-                // get N fixation
-                swardNFixation = CalcNFixation();
-
-                // evaluate the use of N remobilised and any soil demand
-                foreach (PastureSpecies species in mySpecies)
-                    species.CalcSoilNDemand();
-                swardNRemobilised = mySpecies.Sum(mySpecies => mySpecies.RemobilisableSenescedN);
-                swardNRemobNewGrowth = mySpecies.Sum(mySpecies => mySpecies.RemobilisedSenescedN);
-                swardSoilNDemand = mySpecies.Sum(mySpecies => mySpecies.DemandSoilN);
-
-                // get the amount of N taken up from soil
-                swardSoilNUptake = CalcSoilNUptake();
-
-                // preliminary N budget
-                foreach (PastureSpecies species in mySpecies)
-                    species.newGrowthN = species.FixedN + species.RemobilisedSenescedN + species.mySoilNuptake;
-                swardNewGrowthN = swardNFixation + swardNRemobNewGrowth + swardSoilNUptake;
-
-                // evaluate whether further remobilisation (from luxury N) is needed
-                swardNLuxuryRemobilised = 0.0;
-                foreach (PastureSpecies species in mySpecies)
+                // Get N amount take up from the soil
+                GetSoilNitrogenUptake();
+                
+                // Evaluate whether remobilisation of luxury N is needed
+                for (int sp = 0; sp < NumSpecies; sp++)
                 {
-                    species.EvaluateNLuxuryRemobilisation();
-                    species.newGrowthN += species.RemobilisedLuxuryN;
-                    swardNLuxuryRemobilised += species.RemobilisedLuxuryN;
+                    mySpecies[sp].EvaluateNLuxuryRemobilisation();
+                    mySpecies[sp].newGrowthN = mySpecies[sp].Nfixation + mySpecies[sp].RemobilisedSenescedN
+                                               + mySpecies[sp].UptakeN + mySpecies[sp].RemobilisedLuxuryN;
                 }
-                swardNewGrowthN += swardNLuxuryRemobilised;
 
-                // send delta N to the soil model
+                // Send delta N to the soil model
                 DoSoilNitrogenUptake();
-
-                // get the glfN for each species
-                foreach (PastureSpecies species in mySpecies)
-                {
-                    if (species.ActualGrowthN > 0.0)
-                        species.glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(species.ActualGrowthN, species.RequiredOptimumN, 1.0)));
-                    else
-                        species.glfN = 1.0;
-                }
             }
-            else
-            { // N uptake is evaluated by the plant mySpecies or some other module
-                foreach (PastureSpecies species in mySpecies)
-                    species.DoNitrogenCalculations();
-            }
+            // else { N uptake is controlled at species level}
         }
 
-        /// <summary>
-        /// Find out the amount of Nitrogen in the soil available to plants for each soil layer
-        /// </summary>
-        private void GetSoilAvailableN()
+        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil, consider all species</summary>
+        /// <param name="myZone">Soil information</param>
+        private void GetSoilAvailableN(ZoneWaterAndN myZone)
         {
-            swardSoilNH4Available = new double[nLayers];
-            swardSoilNO3Available = new double[nLayers];
-            swardSoilAvailableN = 0.0;
-            double layerFraction = 0.0;   //fraction of soil layer explored by plants
-            double nK = 0.0;              //N availability factor
-            double totWaterUptake = swardSoilWaterUptake.Sum();
-            double facWtaken = 0.0;
+            double totalSoilNH4;
+            double totalSoilNO3;
+            double totalPlantNH4;
+            double totalPlantNO3;
+            double nh4Fraction = 1.0;
+            double no3Fraction = 1.0;
+            double layerFraction = 1.0;
 
-            for (int layer = 0; layer <= RootFrontier; layer++)
+            // Get the N available as seen by each species
+            foreach (PastureSpecies species in mySpecies)
+                species.EvaluateSoilNitrogenAvailable(myZone);
+
+            // Evaluate the available N for whole sward and adjust availability for each species if needed
+                for (int layer = 0; layer <= RootFrontier; layer++)
             {
-                if (useAltNUptake == "no")
+                // Get total as seen by each species
+                totalPlantNH4 = 0.0;
+                totalPlantNO3 = 0.0;
+                if (layer == RootFrontier) layerFraction = 0.0;
+                    foreach (PastureSpecies species in mySpecies)
                 {
-                    // simple way, all N in the root zone is available
-                    layerFraction = 1.0; //TODO: shold be this: LayerFractionWithRoots(layer);
-                    swardSoilNH4Available[layer] = mySoil.NH4N[layer] * layerFraction;
-                    swardSoilNO3Available[layer] = mySoil.NO3N[layer] * layerFraction;
+                    totalPlantNH4 += species.mySoilNH4Available[layer];
+                    totalPlantNO3 += species.mySoilNO3Available[layer];
+                    if (layer == RootFrontier)
+                        layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
-                else
+
+                // Get total in the soil
+                totalSoilNH4 = myZone.NH4N[layer] * layerFraction;
+                totalSoilNO3 = myZone.NO3N[layer] * layerFraction;
+
+                // Sward total is the minimum of the two totals
+                swardSoilNH4Available[layer] = Math.Min(totalPlantNH4, totalSoilNH4);
+                swardSoilNO3Available[layer] = Math.Min(totalPlantNO3, totalSoilNO3);
+                if ((totalPlantNH4 > totalSoilNH4) || (totalPlantNO3 > totalSoilNO3))
                 {
-                    // Method implemented by RCichota,
-                    // N is available following water uptake and a given 'availability' factor (for each N form)
-
-                    facWtaken = swardSoilWaterUptake[layer] / Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]);
-
-                    layerFraction = mySpecies.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
-                    nK = mySpecies.Max(mySpecies => mySpecies.kuNH4);
-                    swardSoilNH4Available[layer] = mySoil.NH4N[layer] * nK * layerFraction;
-                    swardSoilNH4Available[layer] *= facWtaken;
-
-                    nK = mySpecies.Max(mySpecies => mySpecies.kuNO3);
-                    swardSoilNO3Available[layer] = mySoil.NO3N[layer] * nK * layerFraction;
-                    swardSoilNO3Available[layer] *= facWtaken;
-                }
-                swardSoilAvailableN += swardSoilNH4Available[layer] + swardSoilNO3Available[layer];
-            }
-        }
-
-        /// <summary>
-        /// Find out the amount of Nitrogen in the soil available to plants for each soil layer
-        /// </summary>
-        private void GetSoilAvailableN1(SoilState soilState)
-        {
-            swardSoilNH4Available = new double[nLayers];
-            swardSoilNO3Available = new double[nLayers];
-            swardSoilAvailableN = 0.0;
-            double layerFraction = 0.0;   //fraction of soil layer explored by plants
-            double nK = 0.0;              //N availability factor
-            double totWaterUptake = swardSoilWaterUptake.Sum();
-            double facWtaken = 0.0;
-
-            for (int layer = 0; layer <= RootFrontier; layer++)
-            {
-                if (useAltNUptake == "no")
-                {
-                    // simple way, all N in the root zone is available
-                    layerFraction = 1.0; //TODO: shold be this: LayerFractionWithRoots(layer);
-                    foreach (ZoneWaterAndN zone in soilState.Zones)
+                    // adjust the N available for each species
+                    nh4Fraction = Math.Min(1.0, MathUtilities.Divide(totalSoilNH4, totalPlantNH4, 0.0));
+                    no3Fraction = Math.Min(1.0, MathUtilities.Divide(totalSoilNO3, totalPlantNO3, 0.0));
+                    foreach (PastureSpecies species in mySpecies)
                     {
-                        swardSoilNH4Available[layer] += zone.NH4N[layer] * layerFraction;
-                        swardSoilNO3Available[layer] += zone.NO3N[layer] * layerFraction;
+                        species.mySoilNH4Available[layer] *= nh4Fraction;
+                        species.mySoilNO3Available[layer] *= no3Fraction;
                     }
                 }
-                else
-                {
-                    // Method implemented by RCichota,
-                    // N is available following water uptake and a given 'availability' factor (for each N form)
-
-                    facWtaken = swardSoilWaterUptake[layer] / Math.Max(0.0, mySoil.Water[layer] - mySoil.SoilWater.LL15mm[layer]);
-
-                    layerFraction = mySpecies.Max(mySpecies => mySpecies.FractionLayerWithRoots(layer));
-                    nK = mySpecies.Max(mySpecies => mySpecies.kuNH4);
-                    foreach (ZoneWaterAndN zone in soilState.Zones)
-                        swardSoilNH4Available[layer] += zone.NH4N[layer] * nK * layerFraction;
-
-                    nK = mySpecies.Max(mySpecies => mySpecies.kuNO3);
-                    foreach (ZoneWaterAndN zone in soilState.Zones)
-                        swardSoilNO3Available[layer] += zone.NO3N[layer] * nK * layerFraction;
-
-                    swardSoilNH4Available[layer] *= facWtaken;
-                    swardSoilNO3Available[layer] *= facWtaken;
-                }
-                swardSoilAvailableN += swardSoilNH4Available[layer] + swardSoilNO3Available[layer];
             }
         }
 
-        /// <summary>
-        /// Get the N demanded for plant growth (with optimum and luxury uptake) for each mySpecies
-        /// </summary>
-        private void GetNDemand()
+        /// <summary>Gets the amount of nitrogen to be taken up by the plant [potential], consider all species</summary>
+        private void GetSoilNitrogenUptake()
         {
-            foreach (PastureSpecies species in mySpecies)
-                species.CalcNDemand();
-            // get N demand for optimum growth (discount minimum N fixation in legumes)
-            swardNDemand = 0.0;
-            foreach (PastureSpecies species in mySpecies)
-                swardNDemand += species.RequiredOptimumN * (1 - species.MinimumNFixation);
-        }
+            for (int sp = 0; sp < NumSpecies; sp++)
+                mySpecies[sp].EvaluateSoilNitrogenUptake();
 
-        /// <summary>Computes the amount of N fixed for each mySpecies</summary>
-        /// <returns>The total amount of N fixed in the sward</returns>
-        private double CalcNFixation()
-        {
-            foreach (PastureSpecies species in mySpecies)
-                species.Nfixation = species.CalcNFixation();
-            return mySpecies.Sum(mySpecies => mySpecies.FixedN);
-        }
-
-        /// <summary>Computes the amount of N to be taken up from the soil</summary>
-        /// <returns>The total amount of N to be actually taken up from the soil</returns>
-        private double CalcSoilNUptake()
-        {
-            double result;
-            if (swardSoilNDemand == 0.0)
-            { // No demand, no uptake
-                result = 0.0;
-                foreach (PastureSpecies species in mySpecies)
-                    species.mySoilNuptake = 0.0;
-            }
-            else
+            for (int layer = 0; layer < RootFrontier; layer++)
             {
-                if (swardSoilAvailableN >= swardSoilNDemand)
-                { // soil can supply all remaining N needed
-                    result = swardSoilNDemand;
-                    foreach (PastureSpecies species in mySpecies)
-                        species.mySoilNuptake = species.DemandSoilN;
-                }
-                else
-                { // soil cannot supply all N needed. Get the available N
-                    result = swardSoilAvailableN;
-                    // for species, uptake is equal demand adjusted to total uptake
-                    double uptakeFraction = result / swardSoilNDemand;
-                    foreach (PastureSpecies species in mySpecies)
-                        species.mySoilNuptake = species.DemandSoilN * uptakeFraction;
+                swardSoilNH4Uptake[layer] = 0.0;
+                swardSoilNO3Uptake[layer] = 0.0;
+                foreach (PastureSpecies species in mySpecies)
+                {
+                    swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
+                    swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
                 }
             }
-
-            return result;
         }
 
-        /// <summary>
-        /// Computes the distribution of N uptake over the soil profile and send the delta to soil module
-        /// </summary>
-        /// <exception cref="System.Exception">
-        ///  Error on computing N uptake
-        ///  or
-        ///  N uptake source was not recognised. Please specify it as either \"sward\" or \"species\".
-        /// </exception>
+        /// <summary>Sends the delta nitrogen to the soil module</summary>
         private void DoSoilNitrogenUptake()
         {
-            if (myNUptakeSource.ToLower() == "sward")
+            if ((swardSoilNH4Uptake.Sum() + swardSoilNO3Uptake.Sum()) > Epsilon)
             {
-                if (swardSoilAvailableN > 0.0 && swardSoilNUptake > 0.0)
+                Soils.NitrogenChangedType nitrogenTakenUp = new Soils.NitrogenChangedType();
+                nitrogenTakenUp.Sender = Name;
+                nitrogenTakenUp.SenderType = "Plant";
+                nitrogenTakenUp.DeltaNO3 = new double[nLayers];
+                nitrogenTakenUp.DeltaNH4 = new double[nLayers];
+
+                for (int layer = 0; layer <= RootFrontier; layer++)
                 {
-                    // there is N in the soil and there is plant uptake
-                    Soils.NitrogenChangedType NTakenUp = new Soils.NitrogenChangedType();
-                    NTakenUp.Sender = Name;
-                    NTakenUp.SenderType = "Plant";
-                    NTakenUp.DeltaNO3 = new double[nLayers];
-                    NTakenUp.DeltaNH4 = new double[nLayers];
-
-                    double uptakeFraction = Math.Min(1.0, swardSoilNUptake / swardSoilAvailableN);
-                    double speciesFraction = 0.0;
-
-                    if (useAltNUptake == "no")
-                    {
-                        // calc the amount of each N form taken up
-                        for (int layer = 0; layer <= RootFrontier; layer++)
-                        {
-                            NTakenUp.DeltaNH4[layer] = -mySoil.NH4N[layer] * uptakeFraction;
-                            NTakenUp.DeltaNO3[layer] = -mySoil.NO3N[layer] * uptakeFraction;
-                        }
-
-                        // partition the amount taken up between species, considering amount actually taken up
-                        foreach (PastureSpecies species in mySpecies)
-                        {
-                            species.mySoilNitrogenTakenUp = new double[nLayers];
-                            if (swardSoilNUptake > 0.0)
-                            {
-                                speciesFraction = species.mySoilNuptake / swardSoilNUptake;
-                                for (int layer = 0; layer <= RootFrontier; layer++)
-                                    species.mySoilNitrogenTakenUp[layer] = -(NTakenUp.DeltaNH4[layer] + NTakenUp.DeltaNO3[layer]) * speciesFraction;
-                            }
-                        }
-                    }
-                    else
-                    { // Method implemented by RCichota,
-                        // Uptake is distributed over the profile according to N availability,
-                        //  this means that N and water status as well as root distribution have been taken into account
-
-                        double[] adjustedNH4Available;
-                        double[] adjustedNO3Available;
-
-                        double[] sumNH4Available = new double[nLayers];
-                        double[] sumNO3Available = new double[nLayers];
-                        for (int layer = 0; layer < RootFrontier; layer++)
-                        {
-                            sumNH4Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
-                            sumNO3Available[layer] = mySpecies.Sum(mySpecies => mySpecies.SoilAvailableWater[layer]);
-                        }
-                        foreach (PastureSpecies species in mySpecies)
-                        {
-                            // get adjusted N available
-                            adjustedNH4Available = new double[nLayers];
-                            adjustedNO3Available = new double[nLayers];
-                            for (int layer = 0; layer <= species.RootFrontier; layer++)
-                            {
-                                adjustedNH4Available[layer] = swardSoilNH4Available[layer] * species.mySoilNH4Available[layer] / sumNH4Available[layer];
-                                adjustedNO3Available[layer] = swardSoilNO3Available[layer] * species.mySoilNO3Available[layer] / sumNO3Available[layer];
-                            }
-
-                            // get fraction of demand supplied by the soil
-                            uptakeFraction = Math.Min(1.0, species.mySoilNuptake / (adjustedNH4Available.Sum() + adjustedNO3Available.Sum()));
-
-                            // get the actual amounts taken up from each layer
-                            species.mySoilNitrogenTakenUp = new double[nLayers];
-                            for (int layer = 0; layer <= species.RootFrontier; layer++)
-                            {
-                                species.mySoilNitrogenTakenUp[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
-                                NTakenUp.DeltaNH4[layer] -= mySoil.NH4N[layer] * uptakeFraction;
-                                NTakenUp.DeltaNO3[layer] -= mySoil.NO3N[layer] * uptakeFraction;
-                            }
-                        }
-                    }
-                    double totalUptake = mySpecies.Sum(mySpecies => mySpecies.UptakeN.Sum());
-                    if ((Math.Abs(swardSoilNUptake - totalUptake) > 0.0001) || (Math.Abs(NTakenUp.DeltaNH4.Sum() + NTakenUp.DeltaNO3.Sum() + totalUptake) > 0.0001))
-                        throw new Exception("Error on computing N uptake");
-
-                    // do the actual N changes
-                    NitrogenChanged.Invoke(NTakenUp);
+                    nitrogenTakenUp.DeltaNH4[layer] = -swardSoilNH4Uptake[layer];
+                    nitrogenTakenUp.DeltaNO3[layer] = -swardSoilNO3Uptake[layer];
                 }
-                else
-                {
-                    // No uptake, just zero out the arrays
-                    foreach (PastureSpecies species in mySpecies)
-                        species.mySoilNitrogenTakenUp = new double[nLayers];
-                }
-            }
-            else
-            {
-                // N uptake calculated by other modules (e.g., SWIM) - not actually implemented
-                string msg = "N uptake source was not recognised. Please specify it as either \"sward\" or \"species\".";
-                throw new Exception(msg);
+
+                if (NitrogenChanged != null)
+                    NitrogenChanged.Invoke(nitrogenTakenUp);
             }
         }
 
