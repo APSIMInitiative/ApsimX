@@ -40,7 +40,7 @@ namespace Models.AgPasture
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
 
-        /// <summary>Gets or sets the N concentration for optimum growth [g/g]</summary>
+        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
         internal double NConcOptimum
         {
             get { return Tissue[0].NConcOptimum; }
@@ -51,7 +51,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [g/g]</summary>
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
         internal double NConcMaximum
         {
             get { return Tissue[0].NConcMaximum; }
@@ -62,7 +62,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the minimum N concentration, structural N [g/g]</summary>
+        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
         internal double NConcMinimum
         {
             get { return Tissue[0].NConcMinimum; }
@@ -73,7 +73,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the total dry matter in this organ [g/m^2]</summary>
+        /// <summary>Gets the total dry matter in this organ [kg/ha]</summary>
         internal double DMTotal
         {
             get
@@ -86,7 +86,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the dry matter in the live (green) tissues [g/m^2]</summary>
+        /// <summary>Gets the dry matter in the live (green) tissues [kg/ha]</summary>
         internal double DMLive
         {
             get
@@ -99,14 +99,14 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the dry matter in the dead tissues [g/m^2]</summary>
+        /// <summary>Gets the dry matter in the dead tissues [kg/ha]</summary>
         /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double DMDead
         {
             get { return Tissue[TissueCount - 1].DM; }
         }
 
-        /// <summary>The total N amount in this tissue [g/m^2]</summary>
+        /// <summary>The total N amount in this tissue [kg/ha]</summary>
         internal double NTotal
         {
             get
@@ -119,7 +119,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the N amount in the live (green) tissues [g/m^2]</summary>
+        /// <summary>Gets the N amount in the live (green) tissues [kg/ha]</summary>
         internal double NLive
         {
             get
@@ -132,44 +132,44 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the N amount in the dead tissues [g/m^2]</summary>
+        /// <summary>Gets the N amount in the dead tissues [kg/ha]</summary>
         /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double NDead
         {
             get { return Tissue[TissueCount - 1].Namount; }
         }
 
-        /// <summary>Gets the average N concentration in this organ [g/g]</summary>
+        /// <summary>Gets the average N concentration in this organ [kg/kg]</summary>
         internal double NconcTotal
         {
             get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in the live tissues [g/g]</summary>
+        /// <summary>Gets the average N concentration in the live tissues [kg/kg]</summary>
         internal double NconcLive
         {
             get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in dead tissues [g/g]</summary>
+        /// <summary>Gets the average N concentration in dead tissues [kg/kg]</summary>
         internal double NconcDead
         {
             get { return MathUtilities.Divide(NDead, DMDead, 0.0); }
         }
 
-        /// <summary>Gets the amount of senesced N available for remobilisation [g/m^2]</summary>
+        /// <summary>Gets the amount of senesced N available for remobilisation [kg/ha]</summary>
         internal double NSenescedRemobilisable
         {
             get { return Tissue[TissueCount - 1].NRemobilisable; }
         }
 
-        /// <summary>Gets the amount of senesced N remobilised into new growth [g/m^2]</summary>
+        /// <summary>Gets the amount of senesced N remobilised into new growth [kg/ha]</summary>
         internal double NSenescedRemobilised
         {
             get { return Tissue[TissueCount - 1].NRemobilised; }
         }
 
-        /// <summary>Gets the amount of luxury N available for remobilisation [g/m^2]</summary>
+        /// <summary>Gets the amount of luxury N available for remobilisation [kg/ha]</summary>
         internal double NLuxuryRemobilisable
         {
             get
@@ -182,7 +182,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of luxury N remobilised into new growth [g/m^2]</summary>
+        /// <summary>Gets the amount of luxury N remobilised into new growth [kg/ha]</summary>
         internal double NLuxuryRemobilised
         {
             get
@@ -195,43 +195,43 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the DM amount added to this organ via growth [g/m^2]</summary>
+        /// <summary>Gets the DM amount added to this organ via growth [kg/ha]</summary>
         internal double DMGrowth
         {
             get { return Tissue[0].DMTransferedIn; }
         }
 
-        /// <summary>Gets the amount of N added to this organ via growth [g/m^2]</summary>
+        /// <summary>Gets the amount of N added to this organ via growth [kg/ha]</summary>
         internal double NGrowth
         {
             get { return Tissue[0].NTransferedIn; }
         }
 
-        /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
+        /// <summary>Gets the DM amount senescing from this organ [kg/ha]</summary>
         internal double DMSenesced
         {
             get { return Tissue[TissueCount - 2].DMTransferedOut; }
         }
 
-        /// <summary>Gets the amount of N senescing from this organ [g/m^2]</summary>
+        /// <summary>Gets the amount of N senescing from this organ [kg/ha]</summary>
         internal double NSenesced
         {
             get { return Tissue[TissueCount - 2].NTransferedOut; }
         }
 
-        /// <summary>Gets the DM amount detached from this organ [g/m^2]</summary>
+        /// <summary>Gets the DM amount detached from this organ [kg/ha]</summary>
         internal double DMDetached
         {
             get { return Tissue[TissueCount - 1].DMTransferedOut; }
         }
 
-        /// <summary>Gets the amount of N detached from this organ [g/m^2]</summary>
+        /// <summary>Gets the amount of N detached from this organ [kg/ha]</summary>
         internal double NDetached
         {
             get { return Tissue[TissueCount - 1].NTransferedOut; }
         }
 
-        /// <summary>Gets the average digestibility of all biomass for this organ [g/g]</summary>
+        /// <summary>Gets the average digestibility of all biomass for this organ [kg/kg]</summary>
         internal double DigestibilityTotal
         {
             get
@@ -244,7 +244,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average digestibility of live biomass for this organ [g/g]</summary>
+        /// <summary>Gets the average digestibility of live biomass for this organ [kg/kg]</summary>
         internal double DigestibilityLive
         {
             get
@@ -257,7 +257,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average digestibility of dead biomass for this organ [g/g]</summary>
+        /// <summary>Gets the average digestibility of dead biomass for this organ [kg/kg]</summary>
         /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double DigestibilityDead
         {
@@ -412,7 +412,7 @@ namespace Models.AgPasture
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
 
-        /// <summary>Gets or sets the N concentration for optimum growth [g/g]</summary>
+        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
         internal double NConcOptimum
         {
             get { return Tissue[0].NConcOptimum; }
@@ -423,7 +423,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [g/g]</summary>
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
         internal double NConcMaximum
         {
             get { return Tissue[0].NConcMaximum; }
@@ -434,7 +434,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the minimum N concentration, structural N [g/g]</summary>
+        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
         internal double NConcMinimum
         {
             get { return Tissue[0].NConcMinimum; }
@@ -445,7 +445,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the total dry matter in this organ [g/m^2]</summary>
+        /// <summary>Gets the total dry matter in this organ [kg/ha]</summary>
         internal double DMTotal
         {
             get
@@ -458,7 +458,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the dry matter in the live (green) tissues [g/m^2]</summary>
+        /// <summary>Gets the dry matter in the live (green) tissues [kg/ha]</summary>
         internal double DMLive
         {
             get
@@ -471,14 +471,14 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the dry matter in the dead tissues [g/m^2]</summary>
+        /// <summary>Gets the dry matter in the dead tissues [kg/ha]</summary>
         /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double DMDead
         {
             get { return Tissue[TissueCount - 1].DM; }
         }
 
-        /// <summary>The total N amount in this tissue [g/m^2]</summary>
+        /// <summary>The total N amount in this tissue [kg/ha]</summary>
         internal double NTotal
         {
             get
@@ -491,7 +491,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the N amount in the live (green) tissues [g/m^2]</summary>
+        /// <summary>Gets the N amount in the live (green) tissues [kg/ha]</summary>
         internal double NLive
         {
             get
@@ -504,44 +504,44 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the N amount in the dead tissues [g/m^2]</summary>
+        /// <summary>Gets the N amount in the dead tissues [kg/ha]</summary>
         /// <remarks>Last tissues is assumed to represent dead material</remarks>
         internal double NDead
         {
             get { return Tissue[TissueCount - 1].Namount; }
         }
 
-        /// <summary>Gets the average N concentration in this organ [g/g]</summary>
+        /// <summary>Gets the average N concentration in this organ [kg/kg]</summary>
         internal double NconcTotal
         {
             get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in the live tissues [g/g]</summary>
+        /// <summary>Gets the average N concentration in the live tissues [kg/kg]</summary>
         internal double NconcLive
         {
             get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in dead tissues [g/g]</summary>
+        /// <summary>Gets the average N concentration in dead tissues [kg/kg]</summary>
         internal double NconcDead
         {
             get { return MathUtilities.Divide(NDead, DMDead, 0.0); }
         }
 
-        /// <summary>Gets the amount of senesced N available for remobilisation [g/m^2]</summary>
+        /// <summary>Gets the amount of senesced N available for remobilisation [kg/ha]</summary>
         internal double NSenescedRemobilisable
         {
             get { return Tissue[TissueCount - 1].NRemobilisable; }
         }
 
-        /// <summary>Gets the amount of senesced N remobilised into new growth [g/m^2]</summary>
+        /// <summary>Gets the amount of senesced N remobilised into new growth [kg/ha]</summary>
         internal double NSenescedRemobilised
         {
             get { return Tissue[TissueCount - 1].NRemobilised; }
         }
 
-        /// <summary>Gets the amount of luxury N available for remobilisation [g/m^2]</summary>
+        /// <summary>Gets the amount of luxury N available for remobilisation [kg/ha]</summary>
         internal double NLuxuryRemobilisable
         {
             get
@@ -554,7 +554,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of senesced N remobilised into new growth [g/m^2]</summary>
+        /// <summary>Gets the amount of senesced N remobilised into new growth [kg/ha]</summary>
         internal double NLuxuryRemobilised
         {
             get
@@ -567,37 +567,37 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the DM amount added to this organ via growth [g/m^2]</summary>
+        /// <summary>Gets the DM amount added to this organ via growth [kg/ha]</summary>
         internal double DMGrowth
         {
             get { return Tissue[0].DMTransferedIn; }
         }
 
-        /// <summary>Gets the amount of N added to this organ via growth [g/m^2]</summary>
+        /// <summary>Gets the amount of N added to this organ via growth [kg/ha]</summary>
         internal double NGrowth
         {
             get { return Tissue[0].NTransferedIn; }
         }
 
-        /// <summary>Gets the DM amount senescing from this organ [g/m^2]</summary>
+        /// <summary>Gets the DM amount senescing from this organ [kg/ha]</summary>
         internal double DMSenesced
         {
             get { return Tissue[TissueCount - 2].DMTransferedOut; }
         }
 
-        /// <summary>Gets the amount of N senescing from this organ [g/m^2]</summary>
+        /// <summary>Gets the amount of N senescing from this organ [kg/ha]</summary>
         internal double NSenesced
         {
             get { return Tissue[TissueCount - 2].NTransferedOut; }
         }
 
-        /// <summary>Gets the DM amount detached from this organ [g/m^2]</summary>
+        /// <summary>Gets the DM amount detached from this organ [kg/ha]</summary>
         internal double DMDetached
         {
             get { return Tissue[TissueCount - 1].DMTransferedOut; }
         }
 
-        /// <summary>Gets the amount of N detached from this organ [g/m^2]</summary>
+        /// <summary>Gets the amount of N detached from this organ [kg/ha]</summary>
         internal double NDetached
         {
             get { return Tissue[TissueCount - 1].NTransferedOut; }
@@ -738,44 +738,44 @@ namespace Models.AgPasture
 
         // >> State amounts .......................................................................
 
-        /// <summary>Gets or sets the dry matter weight [g/m^2]</summary>
+        /// <summary>Gets or sets the dry matter weight [kg/ha]</summary>
         internal virtual double DM { get; set; }
 
-        /// <summary>Gets or sets the nitrogen content [g/m^2]</summary>
+        /// <summary>Gets or sets the nitrogen content [kg/ha]</summary>
         internal virtual double Namount { get; set; }
 
-        /// <summary>Gets or sets the phosphorus content [g/m^2]</summary>
+        /// <summary>Gets or sets the phosphorus content [kg/ha]</summary>
         internal virtual double Pamount { get; set; }
 
         // >> Amounts in and out ..................................................................
 
-        /// <summary>Gets or sets the DM amount transfered into this tissue [g/m^2]</summary>
+        /// <summary>Gets or sets the DM amount transfered into this tissue [kg/ha]</summary>
         internal double DMTransferedIn { get; set; } = 0.0;
 
-        /// <summary>Gets or sets the DM amount transfered out of this tissue [g/m^2]</summary>
+        /// <summary>Gets or sets the DM amount transfered out of this tissue [kg/ha]</summary>
         internal double DMTransferedOut { get; set; } = 0.0;
 
-        /// <summary>Gets or sets the amount of N transfered into this tissue [g/m^2]</summary>
+        /// <summary>Gets or sets the amount of N transfered into this tissue [kg/ha]</summary>
         internal double NTransferedIn { get; set; } = 0.0;
 
-        /// <summary>Gets or sets the amount of N transfered out of this tissue [g/m^2]</summary>
+        /// <summary>Gets or sets the amount of N transfered out of this tissue [kg/ha]</summary>
         internal double NTransferedOut { get; set; } = 0.0;
 
-        /// <summary>Gets or sets the amount of N available for remobilisation [g/m2]</summary>
+        /// <summary>Gets or sets the amount of N available for remobilisation [kg/ha]</summary>
         internal double NRemobilisable { get; set; }
 
-        /// <summary>Gets or sets the amount of N remobilised into new growth [g/m^2]</summary>
+        /// <summary>Gets or sets the amount of N remobilised into new growth [kg/ha]</summary>
         internal double NRemobilised { get; set; } = 0.0;
 
         // >> Characteristics (parameters)  .......................................................
 
-        /// <summary>Gets or sets the N concentration for optimum growth [g/g]</summary>
+        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
         internal double NConcOptimum { get; set; } = 0.04;
 
-        /// <summary>Gets or sets the maximum N concentration [g/g]</summary>
+        /// <summary>Gets or sets the maximum N concentration [kg/kg]</summary>
         internal double NConcMaximum { get; set; } = 0.05;
 
-        /// <summary>Gets or sets the minimum N concentration, structural N [g/g]</summary>
+        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
         internal double NConcMinimum { get; set; } = 0.02;
 
         /// <summary>Gets or sets the fraction of N tranfered out remobilisable [0-1]</summary>
@@ -798,21 +798,21 @@ namespace Models.AgPasture
 
         #region Derived properties (get only)  ------------------------------------------------------------------------
 
-        /// <summary>Gets the nitrogen concentration [g/g]</summary>
+        /// <summary>Gets the nitrogen concentration [kg/kg]</summary>
         internal double Nconc
         {
             get { return MathUtilities.Divide(Namount, DM, 0.0); }
             set { Namount = value * DM; }
         }
 
-        /// <summary>Gets the phosphorus concentration [g/g]</summary>
+        /// <summary>Gets the phosphorus concentration [kg/kg]</summary>
         internal double Pconc
         {
             get { return MathUtilities.Divide(Pamount, DM, 0.0); }
             set { Pamount = value * DM; }
         }
 
-        /// <summary>Gets the amount of luxury N, above optimum concentration [g/m^2]</summary>
+        /// <summary>Gets the amount of luxury N, above optimum concentration [kg/ha]</summary>
         internal double NLuxury
         {
             get
@@ -822,7 +822,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the digestibility of this tissue [g/g]</summary>
+        /// <summary>Gets the digestibility of this tissue [kg/kg]</summary>
         /// <remarks>Digestibility of sugars is assumed to be 100%</remarks>
         internal double Digestibility
         {
@@ -902,7 +902,7 @@ namespace Models.AgPasture
 
         #region Basic properties  -------------------------------------------------------------------------------------
 
-        /// <summary>Gets or sets the dry matter weight [g/m^2]</summary>
+        /// <summary>Gets or sets the dry matter weight [kg/ha]</summary>
         internal override double DM
         {
             get { return DMLayer.Sum(); }
@@ -914,10 +914,10 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the DM amount for each layer [g/m^2]</summary>
+        /// <summary>Gets or sets the DM amount for each layer [kg/ha]</summary>
         internal double[] DMLayer;
 
-        /// <summary>Gets or sets the nitrogen content [g/m^2]</summary>
+        /// <summary>Gets or sets the nitrogen content [kg/ha]</summary>
         internal override double Namount
         {
             get { return NamountLayer.Sum(); }
@@ -928,10 +928,10 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the N content for each layer [g/m^2]</summary>
+        /// <summary>Gets or sets the N content for each layer [kg/ha]</summary>
         internal double[] NamountLayer;
 
-        /// <summary>Gets or sets the phosphorus content [g/m^2]</summary>
+        /// <summary>Gets or sets the phosphorus content [kg/ha]</summary>
         internal override double Pamount
         {
             get { return PamountLayer.Sum(); }
@@ -942,7 +942,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the P content for each layer [g/m^2]</summary>
+        /// <summary>Gets or sets the P content for each layer [kg/ha]</summary>
         internal double[] PamountLayer { get; set; }
 
         /// <summary>Gets the dry matter fraction for each layer [0-1]</summary>
@@ -957,10 +957,10 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets or sets the DM amount transfered into this tissue, for eac layer [g/m^2]</summary>
+        /// <summary>Gets or sets the DM amount transfered into this tissue, for eac layer [kg/ha]</summary>
         internal double[] DMLayersTransferedIn { get; set; }
 
-        /// <summary>Gets or sets the amount of N transfered into this tissue, for eac layer [g/m^2]</summary>
+        /// <summary>Gets or sets the amount of N transfered into this tissue, for eac layer [kg/ha]</summary>
         internal double[] NLayersTransferedIn { get; set; }
 
         #endregion ----------------------------------------------------------------------------------------------------

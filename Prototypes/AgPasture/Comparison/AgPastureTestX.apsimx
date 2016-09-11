@@ -8227,6 +8227,7 @@ namespace Models
           <Name>Sward</Name>
           <PastureSpecies>
             <Name>Ryegrass</Name>
+            <MaximumNUptake>10</MaximumNUptake>
             <InterceptedRadn>0</InterceptedRadn>
             <fractionToLeaf>0</fractionToLeaf>
             <Albedo>0.26</Albedo>
@@ -8271,6 +8272,11 @@ namespace Models
             <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
             <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+            <FractionLeafMaximum>0.7</FractionLeafMaximum>
+            <FractionLeafMinimum>0.7</FractionLeafMinimum>
+            <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
+            <FractionLeafDMFactor>2000</FractionLeafDMFactor>
+            <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
             <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
@@ -8329,7 +8335,7 @@ namespace Models
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
-            <MassForMaximumHeight>1000</MassForMaximumHeight>
+            <MassForMaximumHeight>10000</MassForMaximumHeight>
             <MinimumRootDepth>50</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
             <RootElongationRate>10</RootElongationRate>
@@ -11828,6 +11834,7 @@ namespace Models
         </Soil>
         <PastureSpecies>
           <Name>Ryegrass</Name>
+          <MaximumNUptake>10</MaximumNUptake>
           <InterceptedRadn>0</InterceptedRadn>
           <fractionToLeaf>0</fractionToLeaf>
           <Albedo>0.26</Albedo>
@@ -11872,6 +11879,11 @@ namespace Models
           <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
           <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+          <FractionLeafMaximum>0.7</FractionLeafMaximum>
+          <FractionLeafMinimum>0.7</FractionLeafMinimum>
+          <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
+          <FractionLeafDMFactor>2000</FractionLeafDMFactor>
+          <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
           <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
@@ -11930,7 +11942,7 @@ namespace Models
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
-          <MassForMaximumHeight>1000</MassForMaximumHeight>
+          <MassForMaximumHeight>10000</MassForMaximumHeight>
           <MinimumRootDepth>50</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
           <RootElongationRate>10</RootElongationRate>
@@ -12059,11 +12071,12 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Ryegrass].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Ryegrass].RLD as Ryegrass.RLD</string>
-            <string>[Ryegrass].NitrogenAvailable as Ryegrass.NitrogenAvailable</string>
-            <string>[Ryegrass].NitrogenUptake as Ryegrass.NitrogenUptake</string>
+            <string>[Ryegrass].SoilNH4Available as Ryegrass.NH4Available</string>
+            <string>[Ryegrass].SoilNO3Available as Ryegrass.NO3Available</string>
+            <string>[Ryegrass].SoilNH4Uptake as Ryegrass.NH4Uptake</string>
+            <string>[Ryegrass].SoilNO3Uptake as Ryegrass.NO3Uptake</string>
             <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
-            <string>[Ryegrass].RootWtFraction1</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -16197,6 +16210,7 @@ namespace Models
           <Name>Sward</Name>
           <PastureSpecies>
             <Name>Ryegrass</Name>
+            <MaximumNUptake>10</MaximumNUptake>
             <InterceptedRadn>0</InterceptedRadn>
             <fractionToLeaf>0</fractionToLeaf>
             <Albedo>0.26</Albedo>
@@ -16241,6 +16255,11 @@ namespace Models
             <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
             <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
             <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+            <FractionLeafMaximum>0.7</FractionLeafMaximum>
+            <FractionLeafMinimum>0.7</FractionLeafMinimum>
+            <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
+            <FractionLeafDMFactor>2000</FractionLeafDMFactor>
+            <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
             <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
@@ -16299,7 +16318,7 @@ namespace Models
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
-            <MassForMaximumHeight>1000</MassForMaximumHeight>
+            <MassForMaximumHeight>10000</MassForMaximumHeight>
             <MinimumRootDepth>50</MinimumRootDepth>
             <MaximumRootDepth>750</MaximumRootDepth>
             <RootElongationRate>10</RootElongationRate>
@@ -19780,6 +19799,7 @@ namespace Models
         </Soil>
         <PastureSpecies>
           <Name>Ryegrass</Name>
+          <MaximumNUptake>10</MaximumNUptake>
           <InterceptedRadn>0</InterceptedRadn>
           <fractionToLeaf>0</fractionToLeaf>
           <Albedo>0.26</Albedo>
@@ -19824,6 +19844,11 @@ namespace Models
           <ReproSeasonOnsetDurationFactor>0.6</ReproSeasonOnsetDurationFactor>
           <ReproSeasonMaxAllocationIncrease>0.5</ReproSeasonMaxAllocationIncrease>
           <ReproSeasonAllocationCoeff>0.1</ReproSeasonAllocationCoeff>
+          <FractionLeafMaximum>0.7</FractionLeafMaximum>
+          <FractionLeafMinimum>0.7</FractionLeafMinimum>
+          <FractionLeafDMThreshold>500</FractionLeafDMThreshold>
+          <FractionLeafDMFactor>2000</FractionLeafDMFactor>
+          <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
           <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
@@ -19882,7 +19907,7 @@ namespace Models
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
-          <MassForMaximumHeight>1000</MassForMaximumHeight>
+          <MassForMaximumHeight>10000</MassForMaximumHeight>
           <MinimumRootDepth>50</MinimumRootDepth>
           <MaximumRootDepth>750</MaximumRootDepth>
           <RootElongationRate>10</RootElongationRate>
@@ -20012,8 +20037,10 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Ryegrass].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Ryegrass].RLD as Ryegrass.RLD</string>
-            <string>[Ryegrass].NitrogenAvailable as Ryegrass.NitrogenAvailable</string>
-            <string>[Ryegrass].NitrogenUptake as Ryegrass.NitrogenUptake</string>
+            <string>[Ryegrass].SoilNH4Available as Ryegrass.NH4Available</string>
+            <string>[Ryegrass].SoilNO3Available as Ryegrass.NO3Available</string>
+            <string>[Ryegrass].SoilNH4Uptake as Ryegrass.NH4Uptake</string>
+            <string>[Ryegrass].SoilNO3Uptake as Ryegrass.NO3Uptake</string>
             <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>

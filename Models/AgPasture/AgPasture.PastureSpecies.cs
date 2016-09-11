@@ -738,9 +738,9 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double ReproSeasonOnsetDurationFactor { get; set; } = 0.60;
 
-        /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth [>1.0]</summary>
-        [Description("Maximum increase in Shoot-Root ratio during reproductive growth [>1.0]:")]
-        [Units(">1.0")]
+        /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth [0-1]</summary>
+        [Description("Maximum increase in Shoot-Root ratio during reproductive growth [0-1]:")]
+        [Units("0-1")]
         public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
 
         /// <summary>Coefficient controling the increase in shoot allocation during reproductive growth as function of latitude [-]</summary>
@@ -751,27 +751,27 @@ namespace Models.AgPasture
         /// <summary>Maximum target allocation of new growth to leaves [0-1]</summary>
         [Description("Maximum target allocation of new growth to leaves [0-1]")]
         [Units("0-1")]
-        private double FractionLeafMaximum { get; set; } = 0.7;
+        public double FractionLeafMaximum { get; set; } = 0.7;
 
         /// <summary>Minimum target allocation of new growth to leaves [0-1]</summary>
         [Description("Minimum target allocation of new growth to leaves [0-1]")]
         [Units("0-1")]
-        private double FractionLeafMinimum { get; set; } = 0.7;
+        public double FractionLeafMinimum { get; set; } = 0.7;
 
-        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease [g/m^2]</summary>
-        [Description("Shoot DM at which allocation of new growth to leaves start to decrease [g/m^2]")]
-        [Units("g/m^2")]
-        private double FractionLeafDMThreshold { get; set; } = 100;
+        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease [kg/ha]</summary>
+        [Description("Shoot DM at which allocation of new growth to leaves start to decrease [kg/ha]")]
+        [Units("kg/ha")]
+        public double FractionLeafDMThreshold { get; set; } = 500;
 
-        /// <summary>Shoot DM factor, when allocation to leaves is midway maximum and minimum [g/m^2]</summary>
-        [Description("Shoot DM factor, when allocation to leaves is midway maximum and minimum [g/m^2]")]
-        [Units("g/m^2")]
-        private double FractionLeafDMFactor { get; set; } = 500;
+        /// <summary>Shoot DM factor, when allocation to leaves is midway maximum and minimum [kg/ha]</summary>
+        [Description("Shoot DM factor, when allocation to leaves is midway maximum and minimum [kg/ha]")]
+        [Units("kg/ha")]
+        public double FractionLeafDMFactor { get; set; } = 2000;
 
         /// <summary>Exponent of function describing DM allocation to leaves [>0.0]</summary>
         [Description("Exponent of function describing DM allocation to leaves [>0.0]")]
         [Units(">0.0")]
-        private double FractionLeafExponent { get; set; } = 3.0;
+        public double FractionLeafExponent { get; set; } = 3.0;
 
         /// <summary>Fraction of new shoot growth allocated to stolons [0-1]</summary>
         [Description("Fraction of new shoot growth allocated to stolons [0-1]:")]
@@ -888,24 +888,24 @@ namespace Models.AgPasture
 
         // - N concentration  -----------------------------------------------------------------------------------------
 
-        /// <summary>N concentration thresholds for leaves (optimum, minimum and maximum) [g/g]</summary>
-        [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [g/g]:")]
-        [Units("g/g")]
+        /// <summary>N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]</summary>
+        [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]:")]
+        [Units("kg/kg")]
         public double[] NThresholdsForLeaves { get; set; } = { 0.040, 0.012, 0.050 };
 
-        /// <summary>N concentration thresholds for stems (optimum, minimum and maximum) [g/g]</summary>
-        [Description("N concentration thresholds for stems (optimum, minimum and maximum) [g/g:]")]
-        [Units("g/g")]
+        /// <summary>N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg]</summary>
+        [Description("N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
         public double[] NThresholdsForStems { get; set; } = { 0.020, 0.006, 0.025 };
 
-        /// <summary>N concentration thresholds for stolons (optimum, minimum and maximum) [g/g]</summary>
-        [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [g/g:]")]
-        [Units("g/g")]
+        /// <summary>N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg]</summary>
+        [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
         public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
 
-        /// <summary>N concentration thresholds for roots (optimum, minimum and maximum) [g/g]</summary>
-        [Description("N concentration thresholds for roots (optimum, minimum and maximum) [g/g:]")]
-        [Units("g/g")]
+        /// <summary>N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg]</summary>
+        [Description("N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
         public double[] NThresholdsForRoots { get; set; } = { 0.020, 0.006, 0.025 };
 
         // - N fixation  ----------------------------------------------------------------------------------------------
@@ -1022,10 +1022,10 @@ namespace Models.AgPasture
         [Units(">1.0")]
         public double ExponentHeightFromMass { get; set; } = 2.8;
 
-        /// <summary>DM weight for maximum shoot height[g/m2]</summary>
-        [Description("DM weight for maximum shoot height[g/m2]:")]
-        [Units("g/m2")]
-        public double MassForMaximumHeight { get; set; } = 1000;
+        /// <summary>DM weight for maximum shoot height[kg/ha]</summary>
+        [Description("DM weight for maximum shoot height[kg/ha]:")]
+        [Units("kg/ha")]
+        public double MassForMaximumHeight { get; set; } = 10000;
 
         // - Root distribution and height  ----------------------------------------------------------------------------
 
@@ -1115,8 +1115,10 @@ namespace Models.AgPasture
         /// <summary>Exponent of function determining soil extractable N</summary>
         internal double NuptakeSWFactor = 0.25;
 
-        /// <summary>Maximum daily amount of N that can be taken up by the plant</summary>
-        internal double MaximumNUptake = 10.0;
+        /// <summary>Maximum daily amount of N that can be taken up by the plant [kg/ha]</summary>
+        [Description("Maximum daily amount of N that can be taken up by the plant [kg/ha]")]
+        [Units("kg/ha")]
+        public double MaximumNUptake = 10.0;
 
         /// <summary>The value for the nitrate uptake coefficient</summary>
         //[Description("Nitrate uptake coefficient")]
@@ -2792,7 +2794,7 @@ namespace Models.AgPasture
             {
                 double[] result = new double[nLayers];
                 double totalRootLength = roots.Tissue[0].DM * SpecificRootLength; // m root/m2 
-                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil) - TODO: fix this when using DM in g/m2
+                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
                     result[layer] = roots.Tissue[0].FractionWt[layer] * totalRootLength / mySoil.Thickness[layer];
@@ -4872,10 +4874,9 @@ namespace Models.AgPasture
         {
             double TodaysHeight = MaximumPlantHeight;
 
-            // TODO: remove the multiplier (0.1) when DM is given in g/m2
-            if (StandingWt * 0.1 <= MassForMaximumHeight)
+            if (StandingWt <= MassForMaximumHeight)
             {
-                double massRatio = StandingWt * 0.1 / MassForMaximumHeight;
+                double massRatio = StandingWt / MassForMaximumHeight;
                 double heightF = ExponentHeightFromMass - (ExponentHeightFromMass * massRatio) + massRatio;
                 heightF *= Math.Pow(massRatio, ExponentHeightFromMass - 1);
                 TodaysHeight *= heightF;
