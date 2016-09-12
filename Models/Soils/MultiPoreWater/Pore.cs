@@ -101,12 +101,12 @@ namespace Models.Soils
         /// divide values from Arya 1999 etal by 10000 to convert from cm to um
         /// </summary>
         [Description("Pore flow Rate coefficient")]
-        public double CFlow { get { return DiameterUpper / 30; } }
+        public double CFlow { get { return 0.01; } }
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// </summary>
         [Description("Pore flow Shape coefficient")]
-        public double XFlow { get { return 3.6; } }
+        public double XFlow { get { return 1.6 + 2 * Math.Exp(Radius*-0.008); } }
         /// <summary>
         /// The volumetirc flow rate of a single pore
         /// Radius is divided by 10000 to convert from micron to cm
