@@ -149,6 +149,7 @@
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
+    <Compile Include="Core\ModelTypes.cs" />
     <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
