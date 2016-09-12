@@ -232,7 +232,7 @@ namespace Models.Soils
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
-        [Units("nm")]
+        [Units("um")]
         [Description("The pore diameters that seperate modeled pore compartments")]
         public double[] PoreBounds { get; set; }
         /// <summary>
@@ -268,18 +268,8 @@ namespace Models.Soils
         [Description("Number of time steps each day.  Not implemented yet")]
         public int TimeSteps { get; set; }
         /// <summary>
-        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
-        /// </summary>
-        [Description("Pore flow rate shape coefficient")]
-        public double CFlow { get; set; }
-        /// <summary>
-        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
-        /// </summary>
-        [Description("Pore flow rate exponent coefficient")]
-        public double XFlow { get; set; }
-        /// <summary>
-        /// Allows Sorption processes to be switched off from the UI
-        /// </summary>
+                                             /// Allows Sorption processes to be switched off from the UI
+                                             /// </summary>
         [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
         public bool IncludeSorption { get; set; }
         #endregion
@@ -609,8 +599,6 @@ namespace Models.Soils
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
-                    //Pores[l][c].CFlow = CFlow/10000; //Input parameater in same dymension as reported by Arya etal 1999, divide by 10000 to convert to microns
-                    //Pores[l][c].XFlow = XFlow;
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
                 if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
