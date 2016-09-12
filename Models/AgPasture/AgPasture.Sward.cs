@@ -866,7 +866,7 @@ namespace Models.AgPasture
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
                     for (int sp = 0; sp < numSpecies; sp++)
-                        result[layer] = mySpecies[sp].SoilNH4Uptake[layer] + mySpecies[sp].SOilNO3Uptake[layer];
+                        result[layer] = mySpecies[sp].SoilNH4Uptake[layer] + mySpecies[sp].SoilNO3Uptake[layer];
                 return result;
             }
         }
@@ -1593,8 +1593,8 @@ namespace Models.AgPasture
                 {
                     foreach (PastureSpecies species in mySpecies)
                     {
-                        swardSoilWaterAvailable[layer] += species.mySoilWaterAvailable[layer];
-                        swardSoilWaterUptake[layer] += species.mySoilWaterUptake[layer];
+                        swardSoilWaterAvailable[layer] += species.SoilAvailableWater[layer];
+                        swardSoilWaterUptake[layer] += species.WaterUptake[layer];
                     }
                 }
 
@@ -1624,7 +1624,7 @@ namespace Models.AgPasture
                 if (layer == RootFrontier) layerFraction = 0.0;
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    totalPlantWater += species.mySoilWaterAvailable[layer];
+                    totalPlantWater += species.SoilAvailableWater[layer];
                     if (layer == RootFrontier)
                         layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
@@ -1639,7 +1639,7 @@ namespace Models.AgPasture
                     // adjust the water available for each species
                     waterFraction = MathUtilities.Divide(totalSoilWater, totalPlantWater, 0.0);
                         foreach (PastureSpecies species in mySpecies)
-                            species.mySoilWaterAvailable[layer] *= waterFraction;
+                            species.SoilAvailableWater[layer] *= waterFraction;
                 }
             }
         }
@@ -1651,7 +1651,7 @@ namespace Models.AgPasture
             {
                 species.EvaluateSoilWaterUptake();
                 for (int layer = 0; layer <= species.roots.BottomLayer; layer++)
-                    swardSoilWaterUptake[layer] += species.mySoilWaterUptake[layer];
+                    swardSoilWaterUptake[layer] += species.WaterUptake[layer];
             }
         }
 
@@ -1701,8 +1701,8 @@ namespace Models.AgPasture
                     species.EvaluateSoilNitrogenUptake();
                     for (int layer = 0; layer < RootFrontier; layer++)
                     {
-                        swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
-                        swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
+                        swardSoilNH4Uptake[layer] += species.SoilNH4Uptake[layer];
+                        swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
                     }
 
                     // Evaluate whether remobilisation of luxury N is needed
@@ -1719,10 +1719,10 @@ namespace Models.AgPasture
                 {
                     foreach (PastureSpecies species in mySpecies)
                     {
-                        swardSoilNH4Available[layer] += species.mySoilNH4Available[layer];
-                        swardSoilNO3Available[layer] += species.mySoilNO3Available[layer];
-                        swardSoilNH4Uptake[layer] += species.mySoilNH4Uptake[layer];
-                        swardSoilNO3Uptake[layer] += species.mySoilNO3Uptake[layer];
+                        swardSoilNH4Available[layer] += species.SoilNH4Available[layer];
+                        swardSoilNO3Available[layer] += species.SoilNO3Available[layer];
+                        swardSoilNH4Uptake[layer] += species.SoilNH4Uptake[layer];
+                        swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
                     }
                 }
 
@@ -1756,8 +1756,8 @@ namespace Models.AgPasture
                 if (layer == RootFrontier) layerFraction = 0.0;
                     foreach (PastureSpecies species in mySpecies)
                 {
-                    totalPlantNH4 += species.mySoilNH4Available[layer];
-                    totalPlantNO3 += species.mySoilNO3Available[layer];
+                    totalPlantNH4 += species.SoilNH4Available[layer];
+                    totalPlantNO3 += species.SoilNO3Available[layer];
                     if (layer == RootFrontier)
                         layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
@@ -1776,8 +1776,8 @@ namespace Models.AgPasture
                     no3Fraction = Math.Min(1.0, MathUtilities.Divide(totalSoilNO3, totalPlantNO3, 0.0));
                     foreach (PastureSpecies species in mySpecies)
                     {
-                        species.mySoilNH4Available[layer] *= nh4Fraction;
-                        species.mySoilNO3Available[layer] *= no3Fraction;
+                        species.SoilNH4Available[layer] *= nh4Fraction;
+                        species.SoilNO3Available[layer] *= no3Fraction;
                     }
                 }
             }

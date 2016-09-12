@@ -179,7 +179,6 @@ namespace Models.AgPasture
             set
             {
                 myWaterDemand = value;
-                demandWater = myWaterDemand;
             }
         }
 
@@ -312,35 +311,55 @@ namespace Models.AgPasture
         /// <summary>The root data for this plant</summary>
         RootProperties myRootProperties = new RootProperties();
 
+
         /// <summary> Water demand for this plant (mm/day)</summary>
         [XmlIgnore]
-        public double demandWater { get; set; }
+        public double demandWater
+        {
+            get { return myWaterDemand; }
+            set { double test = value; }
+        }
 
         /// <summary> The actual supply of water to the plant (mm), values given for each soil layer</summary>
         [XmlIgnore]
-        public double[] uptakeWater { get; set; }
+        public double[] uptakeWater
+        {
+            get { return null; }
+            set { mySoilWaterUptake = value; }
+        }
 
         /// <summary>Nitrogen demand for this plant (kgN/ha/day)</summary>
         [XmlIgnore]
-        public double demandNitrogen { get; set; }
+        public double demandNitrogen
+        {
+            get
+            {
+                // Pack the soil information
+                ZoneWaterAndN myZone = new ZoneWaterAndN();
+                myZone.Name = this.Parent.Name;
+                myZone.Water = mySoil.Water;
+                myZone.NO3N = mySoil.NO3N;
+                myZone.NH4N = mySoil.NH4N;
+
+                // Get the N amount available in the soil
+                EvaluateSoilNitrogenAvailable(myZone);
+
+                // Get the N amount fixed through symbiosis
+                EvaluateNitrogenFixation();
+
+                // Evaluate the use of N remobilised and get N amount demanded from soil
+                EvaluateSoilNitrogenDemand();
+
+                return mySoilNDemand;
+            }
+            set { double test = value; }
+        }
 
         /// <summary>
         /// The actual supply of nitrogen (ammonium and nitrate) to the plant (kgN/ha), values given for each soil layer
         /// </summary>
         [XmlIgnore]
         public double[] uptakeNitrogen { get; set; }
-
-        /// <summary>
-        /// The actual supply of nitrogen (nitrate) to the plant (kgN/ha), values given for each soil layer
-        /// </summary>
-        [XmlIgnore]
-        public double[] uptakeNO3 { get; set; }
-
-        /// <summary>
-        /// The actual supply of nitrogen (ammonium) to the plant (kgN/ha), values given for each soil layer
-        /// </summary>
-        [XmlIgnore]
-        public double[] uptakeNH4 { get; set; }
 
         /// <summary>The proportion of nitrogen uptake from each layer in the form of nitrate (0-1)</summary>
         [XmlIgnore]
@@ -442,10 +461,7 @@ namespace Models.AgPasture
 
             // Get the water uptake from each layer
             for (int layer = 0; layer < nLayers; layer++)
-            {
-                uptakeWater[layer] = MyZone.Water[layer];
-                mySoilWaterUptake[layer] = uptakeWater[layer];
-            }
+                mySoilWaterUptake[layer] = MyZone.Water[layer];
         }
 
         /// <summary>Sets the amount of N taken up by this plant</summary>
@@ -463,10 +479,8 @@ namespace Models.AgPasture
             // Get the N uptake from each layer
             for (int layer = 0; layer < nLayers; layer++)
             {
-                uptakeNH4[layer] = MyZone.NH4N[layer];
-                uptakeNO3[layer] = MyZone.NO3N[layer];
-                mySoilNH4Uptake[layer] = uptakeNH4[layer];
-                mySoilNO3Uptake[layer] = uptakeNO3[layer];
+                mySoilNH4Uptake[layer] = MyZone.NH4N[layer];
+                mySoilNO3Uptake[layer] = MyZone.NO3N[layer];
             }
         }
 
@@ -1120,15 +1134,15 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double MaximumNUptake = 10.0;
 
-        /// <summary>The value for the nitrate uptake coefficient</summary>
-        //[Description("Nitrate uptake coefficient")]
-        [XmlIgnore]
-        public double KNO3 { get; set; } = 1.0;
-
         /// <summary>The value for the ammonium uptake coefficient</summary>
         //[Description("Ammonium uptake coefficient")]
         [XmlIgnore]
         public double KNH4 { get; set; } = 1.0;
+
+        /// <summary>The value for the nitrate uptake coefficient</summary>
+        //[Description("Nitrate uptake coefficient")]
+        [XmlIgnore]
+        public double KNO3 { get; set; } = 1.0;
 
         /// <summary>Availability factor for NH4</summary>
         [XmlIgnore]
@@ -1350,27 +1364,27 @@ namespace Models.AgPasture
         private double mySoilNDemand;
 
         /// <summary>The amount of NH4 in the soil available to the plant</summary>
-        internal double[] mySoilNH4Available;
+        private double[] mySoilNH4Available;
 
         /// <summary>The amount of NO3 in the soil available to the plant</summary>
-        internal double[] mySoilNO3Available;
+        private double[] mySoilNO3Available;
 
         /// <summary>The amount of soil NH4 taken up by the plant</summary>
-        internal double[] mySoilNH4Uptake;
+        private double[] mySoilNH4Uptake;
 
         /// <summary>The amount of soil NO3 taken up by the plant</summary>
-        internal double[] mySoilNO3Uptake;
+        private double[] mySoilNO3Uptake;
 
         // water uptake process  --------------------------------------------------------------------------------------
 
         /// <summary>The amount of water demanded for new growth</summary>
-        internal double myWaterDemand = 0.0;
+        private double myWaterDemand = 0.0;
 
         /// <summary>The amount of soil available water</summary>
-        internal double[] mySoilWaterAvailable;
+        private double[] mySoilWaterAvailable;
 
         /// <summary>The amount of soil water taken up</summary>
-        internal double[] mySoilWaterUptake;
+        private double[] mySoilWaterUptake;
 
         // growth limiting factors ------------------------------------------------------------------------------------
 
@@ -1399,7 +1413,7 @@ namespace Models.AgPasture
         private double glfCold = 1.0;
 
         /// <summary>The growth limiting factor due to water stress</summary>
-        internal double glfWater = 1.0;
+        private double glfWater = 1.0;
 
         /// <summary>Flag whether the factor reducing growth due to logging is used on a cumulative basis</summary>
         private bool usingCumulativeWaterLogging = false;
@@ -2609,22 +2623,24 @@ namespace Models.AgPasture
         }
 
 
-        /// <summary>Gets the amount of plant available NH4 in the soil.</summary>
+        /// <summary>Gets or sets the amount of plant available NH4 in the soil.</summary>
         /// <value>The soil available NH4.</value>
         [Description("Amount of NH4 N available in the soil")]
         [Units("kgN/ha")]
         public double[] SoilNH4Available
         {
             get { return mySoilNH4Available; }
+            set { mySoilNH4Available = value; }
         }
 
-        /// <summary>Gets the amount of plant available NO3 in the soil.</summary>
+        /// <summary>Gets or sets the amount of plant available NO3 in the soil.</summary>
         /// <value>The soil available NO3.</value>
         [Description("Amount of NO3 N available in the soil")]
         [Units("kgN/ha")]
         public double[] SoilNO3Available
         {
             get { return mySoilNO3Available; }
+            set { mySoilNO3Available = value; }
         }
 
         /// <summary>Gets the amount of NH4 taken up from soil.</summary>
@@ -2640,7 +2656,7 @@ namespace Models.AgPasture
         /// <value>The NO3 uptake.</value>
         [Description("Amount of NO3 N uptake")]
         [Units("kgN/ha")]
-        public double[] SOilNO3Uptake
+        public double[] SoilNO3Uptake
         {
             get { return mySoilNO3Uptake; }
         }
@@ -2829,13 +2845,14 @@ namespace Models.AgPasture
             get { return myWaterDemand; }
         }
 
-        /// <summary>Gets the amount of soil water available for uptake.</summary>
+        /// <summary>Gets or sets the amount of soil water available for uptake.</summary>
         /// <value>The soil available water.</value>
         [Description("Plant availabe water")]
         [Units("mm")]
         public double[] SoilAvailableWater
         {
             get { return mySoilWaterAvailable; }
+            set { mySoilWaterAvailable = value; }
         }
 
         /// <summary>Gets the amount of water taken up by the plant.</summary>
@@ -3084,11 +3101,6 @@ namespace Models.AgPasture
             mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
-
-            // these are need for ICrop2, ight need to use these and replace ours
-            uptakeWater = new double[nLayers];
-            uptakeNH4 = new double[nLayers];
-            uptakeNO3 = new double[nLayers];
         }
 
         /// <summary>Initialise, check, and save the varibles representing the initial plant state</summary>
@@ -3345,16 +3357,16 @@ namespace Models.AgPasture
             myRootProperties.KL = soilCrop.KL;
             myRootProperties.MinNO3ConcForUptake = new double[nLayers];
             myRootProperties.MinNH4ConcForUptake = new double[nLayers];
-            myRootProperties.KNO3 = kuNO3;
-            myRootProperties.KNH4 = kuNH4; //TODO: check these coefficients
+            myRootProperties.KNH4 = KNH4; //TODO: check these coefficients
+            myRootProperties.KNO3 = KNO3;
             myRootProperties.LowerLimitDep = new double[nLayers];
             myRootProperties.UptakePreferenceByLayer = new double[nLayers];
             myRootProperties.RootExplorationByLayer = new double[nLayers];
             for (int layer = 0; layer < nLayers; layer++)
             {
                 myRootProperties.LowerLimitDep[layer] = soilCrop.LL[layer] * mySoil.Thickness[layer];
-                myRootProperties.MinNO3ConcForUptake[layer] = 0.0;
                 myRootProperties.MinNH4ConcForUptake[layer] = 0.0;
+                myRootProperties.MinNO3ConcForUptake[layer] = 0.0;
                 myRootProperties.UptakePreferenceByLayer[layer] = 1.0;
                 myRootProperties.RootExplorationByLayer[layer] = FractionLayerWithRoots(layer);
             }
@@ -3985,7 +3997,7 @@ namespace Models.AgPasture
                 // Send the delta water to soil water module
                 DoSoilWaterUptake();
             }
-            else if ((myWaterUptakeSource == "SoilArbitrator") || (myWaterUptakeSource == "arbitrator"))
+            else if ((myWaterUptakeSource == "SoilArbitrator") || (myWaterUptakeSource == "Arbitrator"))
             {
                 // water uptake has been calculated by a resource arbitrator
                 DoSoilWaterUptake();
@@ -4196,6 +4208,23 @@ namespace Models.AgPasture
                 // Send delta N to the soil model
                 DoSoilNitrogenUptake();
             }
+            else if (myNitrogenUptakeSource == "Arbitrator")
+            {
+                // Nitrogen uptake was computed by the resource arbitrator
+
+                // gather the uptake values
+                if (myNitrogenUptakeSource == "Arbitrator")
+                {
+                    for (int layer = 0; layer <= roots.BottomLayer; layer++)
+                    {
+                        mySoilNH4Uptake[layer] = uptakeNitrogen[layer] * (1.0 - uptakeNitrogenPropNO3[layer]);
+                        mySoilNO3Uptake[layer] = uptakeNitrogen[layer] * uptakeNitrogenPropNO3[layer];
+                    }
+                }
+
+                // Evaluate whether remobilisation of luxury N is needed
+                EvaluateNLuxuryRemobilisation();
+            }
             else
             {
                 // N uptake is computed by another module (e.g. SWIM) and supplied by OnNitrogenUptakesCalculated
@@ -4276,9 +4305,6 @@ namespace Models.AgPasture
                 stolons.Tissue[stolons.TissueCount - 1].DoRemobiliseN(fracRemobilised);
                 roots.Tissue[roots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
             }
-
-            // variable used by arbitrator - TODO: put this is a better place
-            demandNitrogen = mySoilNDemand;
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil</summary>
