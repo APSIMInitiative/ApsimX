@@ -559,13 +559,15 @@
     <MicroClimate>
       <Name>MicroClimate</Name>
     </MicroClimate>
-    <Memo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Memo>
       <Name>Memo</Name>
       <MemoText>
         <![CDATA[]]>
       </MemoText>
     </Memo>
-    <Map />
+    <Map>
+	  <Name>Map</Name>
+	</Map>
   </Folder>
   <Folder>
     <Name>Crops</Name>
@@ -595,6 +597,7 @@
       <CropType>SCRUM</CropType>
     </Plant>
     <CultivarFolder >
+	  <Name>CultivarFolder</Name>
     </CultivarFolder>
     <Folder>
       <Name>Wheat cultivars</Name>
@@ -834,7 +837,7 @@
     <Supplement>
       <Name>Supplement</Name>
     </Supplement>
-  </Folder>  
+  </Folder>
   <Folder>
     <Name>Graphs</Name>
     <Graph>
@@ -848,6 +851,7 @@
         <Title></Title>
       </Axis>
       <Series>
+	    <Name>Series</Name>
         <Title>Series1</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -859,17 +863,30 @@
         <SplitOn>Simulation</SplitOn>
       </Series>
     </Graph>
-    <Regression></Regression>
+    <Regression>
+       <Name>Regression</Name>
+	</Regression>
   </Folder>
   <Folder>
     <Name>Data store and analysis models</Name>
-    <DataStore />
+    <DataStore>
+	   <Name>DataStore</Name>
+	</DataStore>
     <Input>
       <Name>Input</Name>
     </Input>
-    <ExcelInput />
-    <PredictedObserved/>
+    <ExcelInput>
+      <Name>ExcelInput</Name>
+      <FileNameMetadata>
+        <string>Excel files (*.xlsx)|*.xlsx</string>
+        <string>All files (*.*)|*.*</string>
+      </FileNameMetadata>
+    </ExcelInput>
+    <PredictedObserved>
+	  <Name>PredictedObserved</Name>
+	</PredictedObserved>
     <TimeSeriesStats>
+	  <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <Probability>
@@ -878,11 +895,15 @@
       <Exceedence>true</Exceedence>
     </Probability>
   </Folder>
-  <Tests />
+  <Tests>
+    <Name>Tests</Name>
+  </Tests>
   <Experiment>
+    <Name>Experiment</Name>
     <Factors>
+	  <Name>Factors</Name>
       <Factor>
-        
+        <Name>Factor</Name>
       </Factor>
     </Factors>
     <Simulation>

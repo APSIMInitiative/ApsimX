@@ -11,27 +11,21 @@ namespace UserInterface.Views
     using System.Linq;
     using System.Drawing;
     using System.Data;
-    ///using System.Windows.Forms;
-    using Interfaces;
-    using Models.Graph;
+    using Gtk;
+    using Glade;
     using OxyPlot;
-    using OxyPlot.Annotations;
     using OxyPlot.Axes;
-    using OxyPlot.Series;
     using OxyPlot.GtkSharp;
-    using EventArguments;
-    using Classes;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public partial class TreeProxyView : ViewBase, Interfaces.IGraphView
+    public class TreeProxyView : ViewBase
     {
-        private OxyPlot.GtkSharp.PlotView pBelowGround; /// TEMP
-        private OxyPlot.GtkSharp.PlotView pAboveGround; /// TEMP
-        private GridView gridView1; /// TEMP
+        private OxyPlot.GtkSharp.PlotView pBelowGround;
+        private OxyPlot.GtkSharp.PlotView pAboveGround;
+        private GridView gridView1;
 
         /// <summary>
         /// A list to hold all plots to make enumeration easier.
@@ -72,37 +66,58 @@ namespace UserInterface.Views
         /// </summary>
         public double[] SoilMidpoints;
 
+        [Widget]
+        VPaned vpaned1 = null;
+
+        [Widget]
+        Alignment alignment1 = null;
+
+        [Widget]
+        HBox hbox1 = null;
+
+        [Widget]
+        TreeView treeview1 = null;
+
+        [Widget]
+        TreeView treeview2 = null;
+
+        private ListStore heightModel = new ListStore(typeof(string));
+        private ListStore gridModel = new ListStore(typeof(string));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeProxyView" /> class.
         /// </summary>
         public TreeProxyView(ViewBase owner) : base(owner)
         {
-            /// TBI this.InitializeComponent();
-            this.pBelowGround = new OxyPlot.GtkSharp.PlotView(); /// TEMP
-            this.pAboveGround = new OxyPlot.GtkSharp.PlotView(); /// TEMP
-            this.gridView1 = new Views.GridView(this); /// TEMP
+            Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.TreeProxyView.glade", "vpaned1");
+            gxml.Autoconnect(this);
+            _mainWidget = vpaned1;
+            this.pBelowGround = new OxyPlot.GtkSharp.PlotView();
+            this.pAboveGround = new OxyPlot.GtkSharp.PlotView();
             this.pAboveGround.Model = new PlotModel();
             this.pBelowGround.Model = new PlotModel();
             plots.Add(pAboveGround);
             plots.Add(pBelowGround);
+            pAboveGround.SetSizeRequest(-1, 100);
+            hbox1.PackStart(pAboveGround, true, true, 0);
+            pBelowGround.SetSizeRequest(-1, 100);
+            hbox1.PackStart(pBelowGround, true, true, 0);
+
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
+            this.LeftRightPadding = 40;
+            this.gridView1 = new Views.GridView(this);
+            alignment1.Add(this.gridView1.MainWidget);
+            smallestDate = DateTime.MaxValue;
+            largestDate = DateTime.MinValue;
+            treeview2.CursorChanged += GridCursorChanged;
+            MainWidget.ShowAll();
         }
 
         /// <summary>
         /// Constants grid.
         /// </summary>
         public GridView ConstantsGrid { get { return gridView1; } }
-
-        /// <summary>
-        /// Invoked when the user clicks on the plot area (the area inside the axes)
-        /// </summary>
-        public event EventHandler OnPlotClick
-        {
-            add { }
-            remove { }
-        }
 
         /// <summary>
         /// Update the graph data sources; this causes the axes minima and maxima to be calculated
@@ -166,11 +181,10 @@ namespace UserInterface.Views
             //TODO: This will only save the last bitmap. Might need to change the interface.
             foreach (PlotView plot in plots)
             {
-                /* TBI
-                DockStyle saveStyle = plot.Dock;
-                plot.Dock = DockStyle.None;
-                plot.Width = bitmap.Width;
-                plot.Height = bitmap.Height;
+                ///DockStyle saveStyle = plot.Dock;
+                ///plot.Dock = DockStyle.None;
+                ///plot.Width = bitmap.Width;
+                ///plot.Height = bitmap.Height;
 
                 LegendPosition savedLegendPosition = LegendPosition.RightTop;
                 if (legendOutside)
@@ -180,7 +194,12 @@ namespace UserInterface.Views
                     plot.Model.LegendPosition = LegendPosition.RightTop;
                 }
 
-                plot.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+                System.IO.MemoryStream stream = new System.IO.MemoryStream();
+                PngExporter pngExporter = new PngExporter();
+                pngExporter.Width = bitmap.Width;
+                pngExporter.Height = bitmap.Height;
+                pngExporter.Export(plot.Model, stream);
+                bitmap = new Bitmap(stream);
 
                 if (legendOutside)
                 {
@@ -188,68 +207,25 @@ namespace UserInterface.Views
                     plot.Model.LegendPosition = savedLegendPosition;
                 }
 
-                plot.Dock = saveStyle;
-                */
+                // plot.Dock = saveStyle;
             }
-        }
+        } 
 
         public void ExportToClipboard()
         {
-            // Set the clipboard text.
-            Bitmap bitmap = new Bitmap(800, 600);
-            Export(ref bitmap, false);
-            /// TBI Clipboard.SetImage(bitmap);
-        }
-
-        /// <summary>
-        /// Invoked when the user clicks on an axis.
-        /// </summary>
-        public event ClickAxisDelegate OnAxisClick
-        {
-            add { }
-            remove { }
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            PngExporter pngExporter = new PngExporter();
+            pngExporter.Width = 800;
+            pngExporter.Height = 600;
+            pngExporter.Export(plots[0].Model, stream);
+            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            cb.Image = new Gdk.Pixbuf(stream);
         }
 
         /// <summary>
         /// Invoked when the user finishes editing a cell.
         /// </summary>
         public event EventHandler OnCellEndEdit;
-
-        /// <summary>
-        /// Invoked when the user clicks on a legend.
-        /// </summary>
-        public event EventHandler<LegendClickArgs> OnLegendClick
-        {
-            add { }
-            remove { }
-        }
-
-        /// <summary>
-        /// Invoked when the user clicks on the graph title.
-        /// </summary>
-        public event EventHandler OnTitleClick
-        {
-            add { }
-            remove { }
-        }
-
-        /// <summary>
-        /// Invoked when the user clicks on the graph caption.
-        /// </summary>
-        public event EventHandler OnCaptionClick
-        {
-            add { }
-            remove { }
-        }
-
-        /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint
-        {
-            add { }
-            remove { }
-        }
 
         /// <summary>
         /// Left margin in pixels.
@@ -272,7 +248,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Refresh the graph.
         /// </summary>
-        public /* TBI override */ void Refresh()
+        public void Refresh()
         {
             foreach (PlotView p in plots)
             {
@@ -284,10 +260,8 @@ namespace UserInterface.Views
                 p.Model.LegendBackground = OxyColors.White;
                 p.Model.InvalidatePlot(true);
 
-                /* TBI
                 if (this.LeftRightPadding != 0)
-                    this.Padding = new Padding(this.LeftRightPadding, 0, this.LeftRightPadding, 0);
-                */
+                    p.Model.Padding = new OxyThickness(this.LeftRightPadding, 0, this.LeftRightPadding, 0);
 
                 foreach (OxyPlot.Axes.Axis axis in p.Model.Axes)
                 {
@@ -623,8 +597,8 @@ namespace UserInterface.Views
         /// </summary>
         public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
         {
-            /// TBI foreach (PlotView p in plots)
-            /// TBI    p.Refresh();
+            foreach (PlotView p in plots)
+                p.InvalidatePlot(true);
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
             if (axis != null)
@@ -653,7 +627,66 @@ namespace UserInterface.Views
 
         public void SetupGrid(List<List<string>> data)
         {
+            while (treeview2.Columns.Length > 0)
+            {
+                TreeViewColumn col = treeview2.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.Edited -= GridCellEdited;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                treeview2.RemoveColumn(treeview2.GetColumn(0));
+            }
+
+            int nCols = data[0].Count;
+            Type[] colTypes = new Type[nCols];
+            for (int i = 0; i < nCols; i++)
+            {
+                colTypes[i] = typeof(string);
+                CellRendererText textRender = new Gtk.CellRendererText();
+
+                textRender.Editable = i > 0;
+                textRender.Edited += GridCellEdited;
+                textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
+
+                TreeViewColumn column = new TreeViewColumn(data[0][i], textRender, "text", i);
+                column.Sizing = TreeViewColumnSizing.Autosize;
+
+                column.Resizable = true;
+                column.Alignment = 0.5f; // For centered alignment of the column header
+                column.SetCellDataFunc(textRender, OnSetGridData);
+                treeview2.AppendColumn(column);
+            }
+
+            // Add an empty column at the end; auto-sizing will give this any "leftover" space
+            TreeViewColumn fillColumn = new TreeViewColumn();
+            fillColumn.Sizing = TreeViewColumnSizing.Autosize;
+            treeview2.AppendColumn(fillColumn);
+
+            // Now let's add some padding to the column headers, to avoid having very narrow columns
+            for (int i = 0; i < nCols; i++)
+            {
+                Label label = GetColumnHeaderLabel(i, treeview2);
+                label.Justify = Justification.Center;
+                label.SetPadding(10, 0);
+            }
+
+            gridModel = new ListStore(colTypes);
+
+            for (int i = 0; i < data[1].Count; i++)
+            {
+                string[] row = new string[nCols];
+                for (int j = 1; j <= nCols; j++)
+                    row[j - 1] = data[j][i];
+
+                gridModel.AppendValues(row);
+            }
+            treeview2.Model = gridModel;
+
             table = new DataTable();
+
             // data[0] holds the column names
             foreach (string s in data[0])
             {
@@ -669,96 +702,150 @@ namespace UserInterface.Views
                 }
                 table.Rows.Add(row);
             }
-            /* TBI
-            Grid.DataSource = table;
-            Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[1].ReadOnly = true; //RLD title row
-            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[2].ReadOnly = true; //Depth title row
-            Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
-            */
-            ResizeControls();
-
             SetupGraphs();
+        }
+
+        private void GridCursorChanged(object sender, EventArgs e)
+        {
+            TreeSelection selection = treeview2.Selection;
+            TreeModel model;
+            TreeIter iter;
+            // The iter will point to the selected row
+            if (selection.GetSelected(out model, out iter))
+            {
+                Gtk.TreePath path = gridModel.GetPath(iter);
+                int row = path.Indices[0];
+                bool editable = row < 1 || row > 2;
+                for (int i = 1; i < treeview2.Columns.Count() - 1; i++)
+                    (treeview2.Columns[i].CellRenderers[0] as CellRendererText).Editable = editable;
+            }
+        }
+
+        private void GridCellEdited(object o, EditedArgs args)
+        {
+            Gtk.TreeIter iter;
+            Gtk.TreePath path = new Gtk.TreePath(args.Path);
+            gridModel.GetIter(out iter, path);
+            int row = path.Indices[0];
+            int col;
+            for (col = 0; col < treeview2.Columns.Count(); col++)
+                if (treeview2.Columns[col].CellRenderers[0] == o)
+                    break;
+            if (col == treeview2.Columns.Count())
+                return;  // Could not locate the column!
+            string value = args.NewText.Trim();
+            if (value == gridModel.GetValue(iter, col) as string)
+                return;
+            double numval;
+            if (Double.TryParse(args.NewText, out numval))
+            {
+                // It seems a bit silly to have two parallel data stores -
+                // a Gtk.ListStore and a System.Data.Table. However, we want a
+                // ListStore for the GUI, and don't want the Presenter to 
+                // have to know about Gtk.
+                    gridModel.SetValue(iter, col, value);
+                table.Rows[row][col] = value;
+                if (OnCellEndEdit != null)
+                    OnCellEndEdit.Invoke(this, new EventArgs());
+            }
+        }
+
+        public void OnSetGridData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        {
+            TreePath path = model.GetPath(iter);
+            int row = path.Indices[0];
+            if (cell is CellRendererText)
+            {
+                if (row == 1 || row == 2)
+                    (cell as CellRendererText).Background = "lightgray";
+                else
+                    (cell as CellRendererText).Background = "white";
+            }
         }
 
         public void SetReadOnly()
         {
-            /* TBI
-            Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[1].ReadOnly = true; //RLD title row
-            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[2].ReadOnly = true; //Depth title row
-            Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
-            */
         }
 
         public void SetupHeights(DateTime[] dates, double[] heights, double[] NDemands, double[] CanopyWidths, double[] TreeLeafAreas)
         {
-            /* TBI
-            dgvHeights.Rows.Clear();
+            while (treeview1.Columns.Length > 0)
+            {
+                TreeViewColumn col = treeview1.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.Edited -= HeightCellEdited;
+                    }
+                treeview1.RemoveColumn(treeview1.GetColumn(0));
+            }
+            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
+            // Begin by creating a new ListStore with the appropriate number of
+            // columns. Use the string column type for everything.
+            Type[] colTypes = new Type[5];
+            for (int i = 0; i < 5; i++)
+            {
+                colTypes[i] = typeof(string);
+                CellRendererText textRender = new Gtk.CellRendererText();
+
+                textRender.Editable = true;
+                textRender.Edited += HeightCellEdited;
+                textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
+
+                TreeViewColumn column = new TreeViewColumn(colLabels[i], textRender, "text", i);
+                column.Sizing = TreeViewColumnSizing.Autosize;
+                column.Resizable = true;
+                column.Alignment = 0.5f; // For centered alignment of the column header
+                treeview1.AppendColumn(column);
+            }
+            // Add an empty column at the end; auto-sizing will give this any "leftover" space
+            TreeViewColumn fillColumn = new TreeViewColumn();
+            fillColumn.Sizing = TreeViewColumnSizing.Autosize;
+            treeview1.AppendColumn(fillColumn);
+
+            heightModel = new ListStore(colTypes);
+
             for (int i = 0; i < dates.Count(); i++)
             {
-                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000,NDemands[i], CanopyWidths[i], TreeLeafAreas[i]);
+                heightModel.AppendValues(dates[i].ToShortDateString(), (heights[i] / 1000).ToString(), NDemands[i].ToString(), CanopyWidths[i].ToString(), TreeLeafAreas[i].ToString());
             }
-            */
+            // Add an empty row to allow for adding new values
+            heightModel.Append();
+            treeview1.Model = heightModel;
         }
 
-        private void ResizeControls()
+        private void HeightCellEdited(object o, EditedArgs args)
         {
-            //resize tree heights grid
-            /* TBI
-            int hWidth = 0;
-            int hHeight = 0;
-            foreach (DataGridViewColumn col in dgvHeights.Columns)
-                hWidth += col.Width;
-            foreach (DataGridViewRow row in dgvHeights.Rows)
-                hHeight += row.Height;
-            dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 3;
-            if (hHeight + 25 >= Grid.Parent.Height / 3)
+            Gtk.TreeIter iter;
+            Gtk.TreePath path = new Gtk.TreePath(args.Path);
+            heightModel.GetIter(out iter, path);
+            int row = path.Indices[0];
+            int col;
+            for (col = 0; col < treeview1.Columns.Count(); col++)
+                if (treeview1.Columns[col].CellRenderers[0] == o)
+                    break;
+            if (col == treeview1.Columns.Count())
+                return;  // Could not locate the column!
+            string value = args.NewText.Trim();
+            if (value == (string)heightModel.GetValue(iter, col))
+                return;
+            if (value == String.Empty)
+                heightModel.SetValue(iter, col, value);
+            else if (col == 0)
             {
-                dgvHeights.Height = Grid.Parent.Height / 3;
-                dgvHeights.Width += 25;
+                DateTime dateval;
+                if (DateTime.TryParse(args.NewText, out dateval))
+                    heightModel.SetValue(iter, col, value);
             }
             else
-                dgvHeights.Height = hHeight + dgvHeights.ColumnHeadersHeight + 3; //ternary is to catch case where Rows.Count == 0
-            dgvHeights.Location = new Point(0, 0);
-
-            //resize Grid
-            int width = 0;
-            int height = 0;
-
-            foreach (DataGridViewColumn col in Grid.Columns)
-                width += col.Width;
-            foreach (DataGridViewRow row in Grid.Rows)
-                height += row.Height;
-            Grid.Width = width + 3;
-            if (height + 25 > Grid.Parent.Height / 3)
             {
-                Grid.Height = Grid.Parent.Height / 3;
-                Grid.Width += 25; //extra width for scrollbar
+                double numval;
+                if (Double.TryParse(args.NewText, out numval))
+                    heightModel.SetValue(iter, col, value);
             }
-            else
-                Grid.Height = height + 25;
-
-            Grid.Location = new Point(dgvHeights.Location.X + dgvHeights.Width + 3, 0);
-            if (Grid.Width + Grid.Location.X > Grid.Parent.Width)
-                Grid.Width = Grid.Parent.Width - Grid.Location.X;
-
-            height = Math.Max(Grid.Height, dgvHeights.Height);
-            width = Math.Max(Grid.Width, dgvHeights.Width);
-
-
-            //resize above ground graph
-            pAboveGround.Width = pAboveGround.Parent.Width / 2;
-            pAboveGround.Height = pAboveGround.Parent.Height - height;
-            pAboveGround.Location = new Point(0, height);
-
-            //resize below ground graph
-            pBelowGround.Width = pBelowGround.Parent.Width / 2;
-            pBelowGround.Height = pBelowGround.Parent.Height - height;
-            pBelowGround.Location = new Point(pAboveGround.Width, height);
-            */
+            if (!String.IsNullOrEmpty(value) && row == heightModel.IterNChildren() - 1)  // Entry on the last row? Add a new blank one
+                heightModel.Append();
         }
 
         private void SetupGraphs()
@@ -821,7 +908,7 @@ namespace UserInterface.Views
                 pBelowGround.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
-                // List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
+                List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
                 bgyAxis.Position = AxisPosition.Left;
                 bgxAxis.Position = AxisPosition.Top;
@@ -847,7 +934,7 @@ namespace UserInterface.Views
                     double[] data = new double[table.Rows.Count - 4];
                     for (int j = 4; j < table.Rows.Count; j++)
                     {
-                        /// TBI data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i));
                     }
 
                     List<DataPoint> points = new List<DataPoint>();
@@ -881,113 +968,56 @@ namespace UserInterface.Views
         public DateTime[] SaveDates()
         {
             List<DateTime> dates = new List<DateTime>();
-            /* TBI
-            foreach (DataGridViewRow row in dgvHeights.Rows)
+            foreach (object[] row in heightModel)
             {
-                if (row.Cells[0].Value != null && row.Cells[0].Value.ToString() != "")
-                    dates.Add(DateTime.Parse(row.Cells[0].Value.ToString()));
-            } */
+                if (!String.IsNullOrEmpty((string)row[0]))
+                   dates.Add(DateTime.Parse((string)row[0]));
+            }
             return dates.ToArray();
         }
 
         public double[] SaveHeights()
         {
             List<double> heights = new List<double>();
-            /* TBI
-            foreach (DataGridViewRow row in dgvHeights.Rows)
+            foreach (object[] row in heightModel)
             {
-                if (row.Cells[1].Value != null)
-                    heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
-            } */
+                if (!String.IsNullOrEmpty((string)row[1]))
+                    heights.Add(Convert.ToDouble((string)row[1]) * 1000.0);
+            }
             return heights.ToArray();
         }
+
         public double[] SaveNDemands()
         {
             List<double> NDemands = new List<double>();
-            /* TBI
-            foreach (DataGridViewRow row in dgvHeights.Rows)
+            foreach (object[] row in heightModel)
             {
-                if (row.Cells[2].Value != null)
-                    NDemands.Add(Convert.ToDouble(row.Cells[2].Value.ToString()));
-            } */
+                if (!String.IsNullOrEmpty((string)row[2]))
+                    NDemands.Add(Convert.ToDouble((string)row[2]));
+            }
             return NDemands.ToArray();
         }
+
         public double[] SaveCanopyWidths()
         {
             List<double> CanopyWidths = new List<double>();
-            /* TBI
-            foreach (DataGridViewRow row in dgvHeights.Rows)
+            foreach (object[] row in heightModel)
             {
-                if (row.Cells[2].Value != null)
-                    CanopyWidths.Add(Convert.ToDouble(row.Cells[3].Value.ToString()));
-            } */
+                if (!String.IsNullOrEmpty((string)row[3]))
+                    CanopyWidths.Add(Convert.ToDouble((string)row[3]));
+            }
             return CanopyWidths.ToArray();
         }
+
         public double[] SaveTreeLeafAreas()
         {
             List<double> TreeLeafAreas = new List<double>();
-            /* TBI
-            foreach (DataGridViewRow row in dgvHeights.Rows)
+            foreach (object[] row in heightModel)
             {
-                if (row.Cells[2].Value != null)
-                    TreeLeafAreas.Add(Convert.ToDouble(row.Cells[4].Value.ToString()));
-            } */
+                if (!String.IsNullOrEmpty((string)row[4]))
+                    TreeLeafAreas.Add(Convert.ToDouble((string)row[4]));
+            }
             return TreeLeafAreas.ToArray();
-        }
-        private void ForestryView_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
-        }
-
-        private void Grid_CellEndEdit(object sender, /* TBI DataGridViewCell*/ EventArgs e)
-        {
-            /* TBI
-            if (!Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected)
-                return;
-            Invoke(OnCellEndEdit);
-            */
-        }
-
-        private void Grid_KeyDown(object sender, /* TBI Key */ EventArgs e)
-        {
-            /* TBI
-            if (e.KeyData == Keys.Enter)
-            {
-                e.Handled = true;
-            }
-            */
-        }
-
-        private void Grid_EditingControlShowing(object sender, /* DataGridViewEditingControlShowing */EventArgs e)
-        {
-            /* TBI
-            TextBox box = (TextBox)e.Control;
-            box.PreviewKeyDown += Grid_PreviewKeyDown;
-            */
-        }
-
-        private void Grid_PreviewKeyDown(object sender, /* PreviewKeyDown */ EventArgs e)
-        {
-            /* TBI
-            if (e.KeyData == Keys.Enter)
-            {
-                int col = Grid.CurrentCell.ColumnIndex;
-                int row = Grid.CurrentCell.RowIndex;
-
-                if (row < Grid.RowCount - 1)
-                {
-                    row++;
-                }
-                else
-                {
-                    row = 0;
-                    col++;
-                }
-
-                if (col < Grid.ColumnCount)
-                    currentCell = new int[2] { col, row };
-            }
-            */
         }
 
         private void Grid_SelectionChanged(object sender, EventArgs e)
@@ -999,14 +1029,35 @@ namespace UserInterface.Views
             }
         }
 
-        private void dgvHeights_RowsRemoved(object sender, /* TBI DataGridViewRowsRemoved */ EventArgs e)
+        public Label GetColumnHeaderLabel(int colNo, TreeView view)
         {
-            ResizeControls();
-        }
-
-        private void dgvHeights_RowsAdded(object sender, /* TBI DataGridViewRowsAdded */ EventArgs e)
-        {
-            ResizeControls();
+            int i = 0;
+            foreach (Widget widget in view.AllChildren)
+            {
+                if (widget.GetType() != (typeof(Gtk.Button)))
+                    continue;
+                else if (i++ == colNo)
+                {
+                    foreach (Widget child in ((Gtk.Button)widget).AllChildren)
+                    {
+                        if (child.GetType() != (typeof(Gtk.HBox)))
+                            continue;
+                        foreach (Widget grandChild in ((Gtk.HBox)child).AllChildren)
+                        {
+                            if (grandChild.GetType() != (typeof(Gtk.Alignment)))
+                                continue;
+                            foreach (Widget greatGrandChild in ((Gtk.Alignment)grandChild).AllChildren)
+                            {
+                                if (greatGrandChild.GetType() != (typeof(Gtk.Label)))
+                                    continue;
+                                else
+                                    return greatGrandChild as Label;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         private void Grid_KeyUp(object sender, /* TBI Key */EventArgs e)
@@ -1050,11 +1101,6 @@ namespace UserInterface.Views
                     cell.Value = string.Empty;
             }
             */
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetReadOnly();
         }
     }
 }
