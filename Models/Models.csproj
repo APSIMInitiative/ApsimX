@@ -45,7 +45,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -149,6 +149,7 @@
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
+    <Compile Include="Core\ModelTypes.cs" />
     <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />

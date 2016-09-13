@@ -131,27 +131,27 @@ namespace UserInterface.Presenters
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
-            if (this.explorerPresenter.ApsimXFile.FileName == null)
-                this.explorerPresenter.Save();
-
-            List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
-            if (duplicates.Count > 0)
+            if (this.explorerPresenter.Save())
             {
-                string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
-            }
-            else
-            {
-                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
+                if (duplicates.Count > 0)
+                {
+                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
+                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                }
+                else
+                {
+                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
 
-                List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
-                jobs.Add(new SaveApsimJob(explorerPresenter.ApsimXFile));
-                jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
+                    List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
+                    jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
 
-                this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter);
-                this.command.Do(null);
+                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter);
+                    this.command.Do(null);
+                }
             }
         }
+
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
@@ -377,6 +377,27 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowInRightHandPanel(model,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.AddModelPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for a write debug document
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Write debug document",
+                     AppliesTo = new Type[] { typeof(Simulation) })]
+        public void WriteDebugDocument(object sender, EventArgs e)
+        {
+            try
+            {
+                Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
+                WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
+                writeDocument.Do(null);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Models.DataStore.ErrorLevel.Error);
+            }
         }
 
     }

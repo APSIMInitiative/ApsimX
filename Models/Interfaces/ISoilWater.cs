@@ -116,6 +116,11 @@ namespace Models.Interfaces
         double WinterU { get; set; }
         ///<summary> Who knows</summary>
         void SetSWmm(int Layer, double NewSWmm);
+        /// <summary>
+        /// Sets soil water for profile
+        /// </summary>
+        /// <param name="New_SW"></param>
+        void SetWater_frac(double[] New_SW);
         ///<summary> Who knows</summary>
         void Reset();
         ///<summary> Who knows</summary>

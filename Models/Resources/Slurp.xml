@@ -93,7 +93,11 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
-        </Constant>        
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant> 		
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -124,7 +128,7 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>50</Value>
           <Units>g/plant</Units>
         </Constant>
-		    <Constant>
+		<Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>

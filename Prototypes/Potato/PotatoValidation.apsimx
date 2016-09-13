@@ -518,6 +518,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -26667,7 +26671,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
-            <LinearInterpolationFunction>
+			<Constant>
+			  <Name>MaximumRootDepth</Name>
+			  <Value>1000000</Value>
+			</Constant>
+			<LinearInterpolationFunction>
               <Name>KLModifier</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
@@ -32016,6 +32024,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <End>FullSenescence</End>
               </PhaseLookupValue>
             </PhaseLookup>
+		    <Constant>
+		      <Name>MaximumRootDepth</Name>
+		      <Value>1000000</Value>
+		    </Constant>
             <Constant>
               <Name>MaximumNConc</Name>
               <Value>0.01</Value>

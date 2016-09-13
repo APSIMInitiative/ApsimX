@@ -368,6 +368,10 @@
           <Name>MinimumNConc</Name>
           <Value>0.004</Value>
         </Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>

@@ -1039,6 +1039,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-ma
           <Value>0.01</Value>
           <Units>g/g</Units>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
           <XYPairs>
