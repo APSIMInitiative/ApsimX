@@ -133,13 +133,13 @@
             <double>0.44</double>
           </DUL>
           <SAT>
-            <double>0.6</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.56</double>
             <double>0.55</double>
-            <double>0.54</double>
+            <double>0.5</double>
+            <double>0.49</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
           </SAT>
           <KS>
             <double>10</double>
@@ -165,8 +165,8 @@
             </Y>
           </XYPairs>
           <PoreBounds>
-            <double>30598</double>
-            <double>3059</double>
+            <double>3500</double>
+            <double>2000</double>
             <double>305</double>
             <double>76</double>
             <double>30</double>
@@ -181,6 +181,7 @@
           <CalculateDrainage>true</CalculateDrainage>
           <ReportDetail>false</ReportDetail>
           <TimeSteps>0</TimeSteps>
+          <IncludeSorption>true</IncludeSorption>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>
@@ -1239,7 +1240,7 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Init</Name>
+        <Name>ItitialWater</Name>
         <Factor>
           <Name>Sat</Name>
           <Sample>
@@ -1339,9 +1340,9 @@ namespace Models
         <Specifications />
       </Factor>
       <Factor>
-        <Name>Ksat</Name>
+        <Name>MacroPores</Name>
         <Factor>
-          <Name>Mid</Name>
+          <Name>Many</Name>
           <Water>
             <Name>Water</Name>
             <Thickness>
@@ -1408,9 +1409,14 @@ namespace Models
               <double>20</double>
             </KS>
           </Water>
-          <HydraulicProperties>
-            <Name>HydraulicProperties</Name>
-            <psidul>-100</psidul>
+          <Specifications>
+            <string>[Water]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Few</Name>
+          <Water>
+            <Name>Water</Name>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1420,7 +1426,52 @@ namespace Models
               <double>300</double>
               <double>300</double>
             </Thickness>
-            <kdul>
+            <BD>
+              <double>1.01056473311131</double>
+              <double>1.07145631083388</double>
+              <double>1.09393858528057</double>
+              <double>1.15861335018721</double>
+              <double>1.17301160318016</double>
+              <double>1.16287303586874</double>
+              <double>1.18749547755906</double>
+            </BD>
+            <AirDry>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+            </AirDry>
+            <LL15>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+              <double>0.25</double>
+            </LL15>
+            <DUL>
+              <double>0.59</double>
+              <double>0.58</double>
+              <double>0.57</double>
+              <double>0.56</double>
+              <double>0.55</double>
+              <double>0.54</double>
+              <double>0.53</double>
+            </DUL>
+            <SAT>
+              <double>0.6</double>
+              <double>0.59</double>
+              <double>0.58</double>
+              <double>0.57</double>
+              <double>0.56</double>
+              <double>0.55</double>
+              <double>0.54</double>
+            </SAT>
+            <KS>
               <double>1</double>
               <double>1</double>
               <double>1</double>
@@ -1428,8 +1479,8 @@ namespace Models
               <double>1</double>
               <double>1</double>
               <double>1</double>
-            </kdul>
-          </HydraulicProperties>
+            </KS>
+          </Water>
           <Specifications>
             <string>[Water]</string>
           </Specifications>
@@ -1475,13 +1526,13 @@ namespace Models
               <double>0.25</double>
             </LL15>
             <DUL>
-              <double>0.5</double>
-              <double>0.49</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.45</double>
-              <double>0.44</double>
+              <double>0.6</double>
+              <double>0.59</double>
+              <double>0.58</double>
+              <double>0.57</double>
+              <double>0.56</double>
+              <double>0.55</double>
+              <double>0.54</double>
             </DUL>
             <SAT>
               <double>0.6</double>
@@ -1502,122 +1553,6 @@ namespace Models
               <double>0</double>
             </KS>
           </Water>
-          <HydraulicProperties>
-            <Name>HydraulicProperties</Name>
-            <psidul>-100</psidul>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <kdul>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </kdul>
-          </HydraulicProperties>
-          <Specifications>
-            <string>[Water]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Low</Name>
-          <Water>
-            <Name>Water</Name>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-            </AirDry>
-            <LL15>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-            </LL15>
-            <DUL>
-              <double>0.5</double>
-              <double>0.49</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.45</double>
-              <double>0.44</double>
-            </DUL>
-            <SAT>
-              <double>0.6</double>
-              <double>0.59</double>
-              <double>0.58</double>
-              <double>0.57</double>
-              <double>0.56</double>
-              <double>0.55</double>
-              <double>0.54</double>
-            </SAT>
-            <KS>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </KS>
-          </Water>
-          <HydraulicProperties>
-            <Name>HydraulicProperties</Name>
-            <psidul>-100</psidul>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <kdul>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </kdul>
-          </HydraulicProperties>
           <Specifications>
             <string>[Water]</string>
           </Specifications>
@@ -1755,7 +1690,7 @@ namespace Models
               </Y>
             </XYPairs>
             <PoreBounds>
-              <double>30598</double>
+              <double>3500</double>
               <double>3059</double>
               <double>305</double>
               <double>76</double>
@@ -1771,6 +1706,7 @@ namespace Models
             <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <TimeSteps>0</TimeSteps>
+            <IncludeSorption>true</IncludeSorption>
             <ResidueWater>0</ResidueWater>
             <Hour>0</Hour>
             <ReportLayer>0</ReportLayer>
@@ -2298,11 +2234,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>InitSatKsatMid</string>
-          <string>InitMidKsatMid</string>
-          <string>InitLLKsatMid</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
