@@ -24595,6 +24595,29 @@ namespace Models
     <Name>New Zealand</Name>
     <Experiment>
       <Name>Lincoln9192</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This is a water response trial run in the rain out shelter at Plant and Food Research in Lincoln, New Zealand.  It is described in full by [Jamieson_WaterResponse_1995] but briefly.  A winter crop of 'Batten' wheat was sown at 300 plants/m^2^ on the 8th of June 1991 and range of irrigation amount and timing treatments were applied.  Six of these treatments have been included in this validation:  
+
+
+01. Full irrigation where measured ET was replaced weekly
+
+03. Short Early Drought where irrigation was withheld from sowing until late October then full irrigation was applied
+
+05. Long Early Drought where irrigation was withheld from sowing until mid December then full irrigation was applied
+
+06. Long Late Drought where full irrigation was applied from sowing until mid September then withheld for the rest of the season
+
+07. Moderate Late Drought where full irrigation was applied from sowing until mid October then withheld for the rest of the season 
+
+08. Short Late Drought where full irrigation was applied from sowing until Early November then withheld for the rest of the season
+
+11. Nil where no water was applied and the crop grew on soil stored water only.
+
+
+
+Irrigation was applied at weekly intervals through and assemply of low rate drip emitters on each plot.  Soil water content was measured weekly with a neutron probe and biomass was measured at 10 - 14 day intervals.  Samples throughtout the crop were from two 0.1m^2^ quatrants and the final harvest sample was from a 1 m^2^ quadrant.  Each treatment was replicated twice and there was considerable soil variation from plot to plot so each treatment was initianilised with unique soil parameters which best described the soil they were growing on.]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -28151,6 +28174,20 @@ namespace Models
     </Experiment>
     <Experiment>
       <Name>Lincoln2014</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This is a water response trial run in the rain out shelter at Plant and Food Research in Lincoln, New Zealand.  It is described in full by [Chakwizira_wheat_2014] but briefly.  An Autumn crop of 'Wakanui' wheat was sown at 165 plants/m^2^ on the 28th of March 2013 and 6 irrigation timing treatments were applied:  
+
+1. Full irrigation where measured ET was replaced weekly
+.  
+2. Nill irrigation.  
+3. Very Early Drought where irrigation was withheld from sowing until the beginning of stem extension.  
+4. Early Drought where irrigation was withheld between Flag leaf and the beginning of grain fill.  
+5. Middle Drought where irrigation was withheld between Flag leaf and 1 week into grain fill.  
+6. Late Drought where irrigation was withheld from heading until harvest.  
+
+Irrigation was applied at weekly intervals through and assemply of low rate drip emitters on each plot.  Soil water content was measured weekly with a neutron probe and biomass was measured on 5 occasions throughout the crop.  Samples throughtout the crop were from a 0.43m^2^ quatrant and the final harvest sample was from a 1 m^2^ quadrant.  Each treatment was replicated four times and there was considerable soil variation from plot to plot so each treatment was initianilised with unique soil parameters which best described the soil they were growing on.]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -30170,6 +30207,11 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Clock>
+          <Name>clock1</Name>
+          <StartDate>2013-03-22T00:00:00</StartDate>
+          <EndDate>2014-04-01T00:00:00</EndDate>
+        </Clock>
         <Area>0</Area>
         <Slope>0</Slope>
       </Simulation>
