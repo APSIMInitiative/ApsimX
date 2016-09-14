@@ -242,6 +242,7 @@
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\MultiPoreWater\SubHourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\ProfileParameters.cs" />
     <Compile Include="Soils\MultiPoreWater\MultiPoreWater.cs" />
