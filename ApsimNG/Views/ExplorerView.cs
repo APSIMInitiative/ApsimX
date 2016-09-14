@@ -72,6 +72,7 @@ namespace UserInterface.Views
 
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
         private CellRendererText textRender;
+        private AccelGroup accel = new AccelGroup();
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -113,6 +114,8 @@ namespace UserInterface.Views
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
             treeview1.DragDataDelete += OnDragDataDelete;
+            treeview1.FocusInEvent += Treeview1_FocusInEvent;
+            treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -137,6 +140,8 @@ namespace UserInterface.Views
             treeview1.DragDataReceived -= OnDragDataReceived;
             treeview1.DragEnd -= OnDragEnd;
             treeview1.DragDataDelete -= OnDragDataDelete;
+            treeview1.FocusInEvent -= Treeview1_FocusInEvent;
+            treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
@@ -176,22 +181,6 @@ namespace UserInterface.Views
                 }
             }
         }
-
-        //        public void treecelldatafunc(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
-        //        {
-        //            If a grid value is numeric or a dateTime, we can set the text property of its renderer by formatting the value here, I think
-        //            TreePath path = model.GetPath(iter);
-        //            if (path.Depth > 1 && path.Indices[1] % 2 == 0)
-        //            {
-        //                col.Cells[0].Visible = true;
-        //                col.Cells[1].Visible = false;
-        //            }
-        //            else
-        //            {
-        //                col.Cells[1].Visible = true;
-        //                col.Cells[0].Visible = false;
-        //            }
-        //        }
 
         /// <summary>
         /// This event will be invoked when a node is selected not by the user
@@ -376,13 +365,38 @@ namespace UserInterface.Views
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
             ClearPopup();
-            ///AccelGroup accel = new AccelGroup();
-            ///(treeview1.Toplevel as Window).AddAccelGroup(accel);
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 ImageMenuItem item = new ImageMenuItem(Description.Name);
                 if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage) )
                     item.Image = new Image(null, Description.ResourceNameForImage);
+                if (!String.IsNullOrEmpty(Description.ShortcutKey))
+                {
+                    string keyName = String.Empty;
+                    Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                    string[] keyNames = Description.ShortcutKey.Split(new Char[] { '+' });
+                    foreach (string name in keyNames)
+                    {
+                        if (name == "Ctrl")
+                            modifier |= Gdk.ModifierType.ControlMask;
+                        else if (name == "Shift")
+                            modifier |= Gdk.ModifierType.ShiftMask;
+                        else if (name == "Alt")
+                            modifier |= Gdk.ModifierType.Mod1Mask;
+                        else if (name == "Del")
+                            keyName = "Delete";
+                        else
+                            keyName = name;
+                    }
+                    try
+                    {
+                        Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                        item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                    }
+                    catch
+                    {
+                    }
+                }
                 item.Activated += Description.OnClick;
                 Popup.Append(item);
 
@@ -390,30 +404,7 @@ namespace UserInterface.Views
             if (Popup.AttachWidget == null)
                 Popup.AttachToWidget(treeview1, null);
             Popup.ShowAll();
-            //Popup.Popup();
-
-
-                /* TBI
-                PopupMenu.Font = this.Font;
-                PopupMenu.Items.Clear();
-                foreach (MenuDescriptionArgs Description in menuDescriptions)
-                {
-                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
-                    Bitmap Icon = null;
-                    if (s != null)
-                        Icon = new Bitmap(s);
-
-                    ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
-                    Button.TextImageRelation = TextImageRelation.ImageBeforeText;
-                    Button.Checked = Description.Checked;
-                    if (Description.ShortcutKey != null)
-                    {
-                        KeysConverter kc = new KeysConverter();
-                        Button.ShortcutKeys = (Keys)kc.ConvertFromString(Description.ShortcutKey);
-                    }
-                    Button.Enabled = Description.Enabled;
-                } */
-            }
+        }
 
         /// <summary>Populates the static label on the toolbar.</summary>
         /// <param name="labelText">The label text.</param>
@@ -659,6 +650,31 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Handle loss of focus by removing the accelerators from the popup menu
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void Treeview1_FocusOutEvent(object o, FocusOutEventArgs args)
+        {
+            (treeview1.Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+        }
+
+        /// <summary>
+        /// Handle receiving focus by adding accelerators for the popup menu
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void Treeview1_FocusInEvent(object o, FocusInEventArgs args)
+        {
+            (treeview1.Toplevel as Gtk.Window).AddAccelGroup(accel);
+        }
+
+        /// <summary>
+        /// Displays the popup menu when the right mouse button is released
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnButtonUp(object sender, ButtonReleaseEventArgs e)
         {
             if (e.Event.Button == 3)

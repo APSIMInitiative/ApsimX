@@ -177,6 +177,7 @@
           <CalculateDrainage>true</CalculateDrainage>
           <ReportDetail>true</ReportDetail>
           <TimeSteps>0</TimeSteps>
+          <IncludeSorption>false</IncludeSorption>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>

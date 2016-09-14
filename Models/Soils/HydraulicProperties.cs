@@ -175,9 +175,9 @@ namespace Models.Soils
 
             double tSqr = t * t;
             double tCube = tSqr * t;
-
-            return (2 * tCube - 3 * tSqr + 1) * Y0[layer, i] + (tCube - 2 * tSqr + t) * M0[layer, i]
+            double theta = (2 * tCube - 3 * tSqr + 1) * Y0[layer, i] + (tCube - 2 * tSqr + t) * M0[layer, i]
                     + (-2 * tCube + 3 * tSqr) * Y1[layer, i] + (tCube - tSqr) * M1[layer, i];
+            return Math.Min(theta, Water.SAT[layer]); //When Sat and DUL are very close, spline can produce number greater that sat
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Models.Soils
             {
                 psid[layer] = psidul;  //- (p%x(p%n) - p%x(layer))
 
-                DELk[layer, 0] = (Water.DUL[layer] - Water.SAT[layer]) / (Math.Log10(-psid[layer]));
+                DELk[layer, 0] = (Water.DUL[layer] - (Water.SAT[layer]+0.000000000001)) / (Math.Log10(-psid[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
                 DELk[layer, 1] = (Water.LL15[layer] - Water.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 DELk[layer, 2] = -Water.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 DELk[layer, 3] = -Water.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));

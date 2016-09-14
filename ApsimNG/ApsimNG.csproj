@@ -9,10 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ApsimNG</RootNamespace>
     <AssemblyName>ApsimNG</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -64,9 +64,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\TreeProxyView.resx">
-      <DependentUpon>TreeProxyView.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
@@ -102,6 +99,7 @@
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
+    <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -232,9 +230,6 @@
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
-    <Compile Include="Views\TreeProxyView.Designer.cs">
-      <DependentUpon>TreeProxyView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
   </ItemGroup>
@@ -628,12 +623,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\webkit-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
