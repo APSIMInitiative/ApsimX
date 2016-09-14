@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Name>Simulations</Name>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Brassica</Name>
+      <Phenology>
+        <Name>Phenology</Name>
+        <AirTemperatureFunction>
+          <Name>ThermalTime</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>37</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>26</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+          </Memo>
+        </AirTemperatureFunction>
+        <AirTemperatureFunction>
+          <Name>DailyVernalisation</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>8</double>
+              <double>16</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+          </Memo>
+        </AirTemperatureFunction>
+        <AccumulateFunction>
+          <Name>AccumVernalisation</Name>
+          <VariableReference>
+            <Name>Vernalisation</Name>
+            <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
+          </VariableReference>
+          <StartStageName>FirstVernalisation</StartStageName>
+          <EndStageName>SecondVernalisation</EndStageName>
+        </AccumulateFunction>
+        <PhotoperiodFunction>
+          <Name>Photoperiod</Name>
+          <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
+        </PhotoperiodFunction>
+        <GerminatingPhase>
+          <Name>Germinating</Name>
+          <Start>Sowing</Start>
+          <End>Germination</End>
+        </GerminatingPhase>
+        <EmergingPhase>
+          <Name>Emerging</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>Germination</Start>
+          <End>Emergence</End>
+          <ShootLag>40</ShootLag>
+          <ShootRate>1.5</ShootRate>
+        </EmergingPhase>
+        <GenericPhase>
+          <Name>ObligateInduction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[This phase will have a length of zero for spring varieties and a length > 0 for winter varieties. 
+Although it has a TheremalTime propertiy, this is actually Vernalisation.  It takes Vernal days each day and sums them until the sum equals the target, then it proceeds to the next phase
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>Target</Name>
+            <Value>0</Value>
+          </Constant>
+          <Start>Emergence</Start>
+          <End>FirstVernalisation</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>FacultativeInduction</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>Target</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>25</double>
+              </X>
+              <Y>
+                <double>200</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].AccumVernalisation.Value</XProperty>
+          </LinearInterpolationFunction>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[This phase has a maximum thermal time duration that gradually decreases as vernal days are accumulated]]></MemoText>
+          </Memo>
+          <Start>FirstVernalisation</Start>
+          <End>SecondVernalisation</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>PhotoSensitive</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>Target</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>10</double>
+                <double>16</double>
+              </X>
+              <Y>
+                <double>200</double>
+                <double>50</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+          </LinearInterpolationFunction>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[This phase has a thermalTime target that changes in response to photoperiod]]></MemoText>
+          </Memo>
+          <Start>SecondVernalisation</Start>
+          <End>FloralInitiation</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>FlowerDevelopment</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>Target</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>10</double>
+                <double>16</double>
+              </X>
+              <Y>
+                <double>200</double>
+                <double>50</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+          </LinearInterpolationFunction>
+          <Start>Greenbud</Start>
+          <End>StartFlowering</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Flowering</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>120</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>StartFlowering</Start>
+          <End>EndFlowering</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>GrainFilling</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>545</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>EndFlowering</Start>
+          <End>EndGrainFill</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Maturing</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>35</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>EndGrainFill</Start>
+          <End>Maturity</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Ripening</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>300</Value>
+          </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>Maturity</Start>
+          <End>HarvestRipe</End>
+        </GenericPhase>
+        <EndPhase>
+          <Name>ReadyForHarvesting</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <Start>HarvestRipe</Start>
+          <End>Unused</End>
+        </EndPhase>
+        <OnEventFunction>
+          <Name>FloralInitiationDAS</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+A function is used to provide flowering date as days after sowing(DAS).
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Phenology].DaysAfterSowing</VariableName>
+          </VariableReference>
+          <SetEvent>FloralInitiation</SetEvent>
+          <ReSetEvent>never</ReSetEvent>
+        </OnEventFunction>
+        <OnEventFunction>
+          <Name>GreenBudDAS</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+A function is used to provide flowering date as days after sowing(DAS).
+]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Phenology].DaysAfterSowing</VariableName>
+          </VariableReference>
+          <SetEvent>Greenbud</SetEvent>
+          <ReSetEvent>never</ReSetEvent>
+        </OnEventFunction>
+        <OnEventFunction>
+          <Name>FloweringDAS</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>0</Value>
+          </Constant>
+          <VariableReference>
+            <Name>PostEventValue</Name>
+            <VariableName>[Phenology].DaysAfterSowing</VariableName>
+          </VariableReference>
+          <SetEvent>StartFlowering</SetEvent>
+          <ReSetEvent>never</ReSetEvent>
+        </OnEventFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
+      </Phenology>
+      <CultivarFolder>
+        <Name>Cultivars</Name>
+        <CultivarFolder>
+          <Name>Australia</Name>
+          <Cultivar>
+            <Name>Can1</Name>
+            <Command />
+          </Cultivar>
+        </CultivarFolder>
+      </CultivarFolder>
+      <CropType>Brassica</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+  </Replacements>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>3000</MaximumResultsPerPage>
+  </DataStore>
+  <Experiment>
+    <Name>OptExpt</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>ObVrnReq</Name>
+        <Specifications>
+          <string>[SetOblPhase].Script.ObPhaseTarget = 0,15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>FacPhaSens</Name>
+        <Manager>
+          <Name>High</Name>
+          <Script>
+            <FacPhaseX>0,25</FacPhaseX>
+            <FacPhaseY>200,0</FacPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Amount of Vernal Days accumulated")]
+		public double[] FacPhaseX { get; set; }
+		[Description("TT duration of the FacPhase in response the vernal day accumulation")]
+		public double[] FacPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.X", FacPhaseX);
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.Y", FacPhaseY);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Mid</Name>
+          <Script>
+            <FacPhaseX>0,25</FacPhaseX>
+            <FacPhaseY>200,100</FacPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Amount of Vernal Days accumulated")]
+		public double[] FacPhaseX { get; set; }
+		[Description("TT duration of the FacPhase in response the vernal day accumulation")]
+		public double[] FacPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.X", FacPhaseX);
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.Y", FacPhaseY);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>None</Name>
+          <Script>
+            <FacPhaseX>0,25</FacPhaseX>
+            <FacPhaseY>200,200</FacPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Amount of Vernal Days accumulated")]
+		public double[] FacPhaseX { get; set; }
+		[Description("TT duration of the FacPhase in response the vernal day accumulation")]
+		public double[] FacPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.X", FacPhaseX);
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.Y", FacPhaseY);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Specifications>
+          <string>[SetFacPhase]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>PhotoPhaSens</Name>
+        <Manager>
+          <Name>High</Name>
+          <Script>
+            <PhotoPhaseX>10,16</PhotoPhaseX>
+            <PhotoPhaseY>200,50</PhotoPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Photoperiod")]
+		public double[] PhotoPhaseX { get; set; }
+		[Description("TT duration of the PhotoSensitive phase in response to photoperiod")]
+		public double[] PhotoPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.X", PhotoPhaseX);
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.Y", PhotoPhaseY);
+			}	
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>Mid</Name>
+          <Script>
+            <PhotoPhaseX>10,16</PhotoPhaseX>
+            <PhotoPhaseY>200,125</PhotoPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Photoperiod")]
+		public double[] PhotoPhaseX { get; set; }
+		[Description("TT duration of the PhotoSensitive phase in response to photoperiod")]
+		public double[] PhotoPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.X", PhotoPhaseX);
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.Y", PhotoPhaseY);
+			}	
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>None</Name>
+          <Script>
+            <PhotoPhaseX>10,16</PhotoPhaseX>
+            <PhotoPhaseY>200,200</PhotoPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Photoperiod")]
+		public double[] PhotoPhaseX { get; set; }
+		[Description("TT duration of the PhotoSensitive phase in response to photoperiod")]
+		public double[] PhotoPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.X", PhotoPhaseX);
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.Y", PhotoPhaseY);
+			}	
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Specifications>
+          <string>[SetPhotoPhase]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Location</Name>
+        <Factor>
+          <Name>GoodNwindy</Name>
+          <Specifications>
+            <string>[Weather].FileName = Goond.met</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Lincoln</Name>
+          <Specifications>
+            <string>[Weather].FileName = Lincoln.met</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
+      </Factor>
+      <Factor>
+        <Name>Sowing</Name>
+        <Specifications>
+          <string>[Clock].StartDate = 1970-03-01,1970-06-01,1970-09-01</string>
+        </Specifications>
+      </Factor>
+    </Factors>
+    <Simulation>
+      <Name>BaseCanola</Name>
+      <Clock>
+        <Name>Clock</Name>
+        <StartDate>1970-06-08T00:00:00</StartDate>
+        <EndDate>1972-07-01T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>summaryfile</Name>
+      </Summary>
+      <Weather>
+        <Name>Weather</Name>
+        <FileName>Goond.met</FileName>
+        <ExcelWorkSheetName />
+      </Weather>
+      <Zone>
+        <Name>paddock</Name>
+        <Plant>
+          <Name>Brassica</Name>
+          <ResourceName>Brassica</ResourceName>
+          <CropType>Brassica</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
+        </Plant>
+        <Manager>
+          <Name>SowAndTerminate</Name>
+          <Script />
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Brassica;
+		[Link] Clock Clock;
+		[Link] Simulation sim;
+		[Link] Summary Summary;
+	
+		[XmlIgnore] public bool Sown { get; set; }
+		[XmlIgnore] public bool Harvested { get; set; }
+		[XmlIgnore] public bool EndSet { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+			Harvested = false;
+			EndSet = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Brassica.Sow(population: 200, cultivar: "Can1", depth: 15, rowSpacing: 150, budNumber: 1);
+				Sown = true;
+			}
+			
+			if (Brassica.Phenology.CurrentPhaseName == "GrainFilling")
+			{
+				Brassica.Harvest();
+				Brassica.EndCrop();
+				Harvested = true;
+				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
+			}
+			
+			if ((Harvested == true) && (EndSet == false))
+			{
+				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
+				EndSet = true;
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>SetOblPhase</Name>
+          <Script>
+            <ObPhaseTarget>0</ObPhaseTarget>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("TT length of obligate phase")]
+		public string ObPhaseTarget { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.ObligateInduction.Target.Value", ObPhaseTarget);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>SetFacPhase</Name>
+          <Script>
+            <FacPhaseX>0,25</FacPhaseX>
+            <FacPhaseY>200,0</FacPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Amount of Vernal Days accumulated")]
+		public double[] FacPhaseX { get; set; }
+		[Description("TT duration of the FacPhase in response the vernal day accumulation")]
+		public double[] FacPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.X", FacPhaseX);
+				zone.Set("Brassica.Phenology.FacultativeInduction.Target.XYPairs.Y", FacPhaseY);
+			}
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>SetPhotoPhase</Name>
+          <Script>
+            <PhotoPhaseX>10,16</PhotoPhaseX>
+            <PhotoPhaseY>200,50</PhotoPhaseY>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Zone zone;
+		
+		[Description("Photoperiod")]
+		public double[] PhotoPhaseX { get; set; }
+		[Description("TT duration of the PhotoSensitive phase in response to photoperiod")]
+		public double[] PhotoPhaseY { get; set; }
+		
+		[XmlIgnore] public bool Sown { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Sown = false;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Sown == false)
+			{
+				Sown = true;
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.X", PhotoPhaseX);
+				zone.Set("Brassica.Phenology.PhotoSensitive.Target.XYPairs.Y", PhotoPhaseY);
+			}	
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Report>
+          <Name>DailyReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Brassica].Phenology.CurrentPhaseName</string>
+            <string>[Brassica].Phenology.CurrentStageName</string>
+            <string>[Brassica].Phenology.DailyVernalisation.Value</string>
+            <string>[Brassica].Phenology.Photoperiod.Value</string>
+            <string>[Brassica].Phenology.Stage</string>
+            <string>[Brassica].Phenology.ThermalTime.Value</string>
+            <string>[Brassica].Phenology.DaysAfterSowing</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HarvestReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Brassica].Phenology.CurrentPhaseName</string>
+            <string>[Brassica].Phenology.CurrentStageName</string>
+            <string>[Brassica].Phenology.FloralInitiationDAS.Value</string>
+            <string>[Brassica].Phenology.GreenBudDAS.Value</string>
+            <string>[Brassica].Phenology.FloweringDAS.Value</string>
+            <string>[Brassica].SowingData.Cultivar</string>
+            <string>[Brassica].SowingDate.DayOfYear</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Brassica].Harvesting</string>
+          </EventNames>
+        </Report>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
+    </Simulation>
+    <Graph>
+      <Name>FIDate</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>HarvestReport</TableName>
+        <XFieldName>Brassica.SowingDate.DayOfYear</XFieldName>
+        <YFieldName>Brassica.Phenology.FloralInitiationDAS.Value</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FIDate1</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>0</ColourArgb>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>3</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Brassica.Phenology.Stage</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+  </Experiment>
+  <ExplorerWidth>414</ExplorerWidth>
+</Simulations>
