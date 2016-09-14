@@ -29315,7 +29315,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
         </Weather>
         <SoilArbitrator>
           <Name>Soil Arbitrator</Name>
