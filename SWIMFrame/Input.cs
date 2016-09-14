@@ -39,7 +39,7 @@ namespace SWIMFrame
         static double[,] isopar; //2 params (nt,2)
 
         //public static void Setup()
-        public static void Main(string[] args)
+        public static void Main_(string[] args)
         {
             c0 = new double[ns + 1];
             cin = new double[ns + 1];

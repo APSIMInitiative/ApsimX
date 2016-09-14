@@ -693,10 +693,10 @@ namespace UnitTests
         public void TwoTables()
         {
             TwoFluxes.TestReset();
-            SoilProps sp1 = Soil.ReadProps(@"..\..\..\..\SWIMFrame\bin\soil103.dat");
-            SoilProps sp2 = Soil.ReadProps(@"..\..\..\..\SWIMFrame\bin\soil109.dat");
-            FluxTable ft1 = Fluxes.ReadFluxTable(@"..\..\..\..\SWIMFrame\bin\soil103dz50.dat");
-            FluxTable ft2 = Fluxes.ReadFluxTable(@"..\..\..\..\SWIMFrame\bin\soil109dz100.dat");
+            SoilProps sp1 = Soil.ReadProps("soil103.dat");
+            SoilProps sp2 = Soil.ReadProps("soil109.dat");
+            FluxTable ft1 = Fluxes.ReadFluxTable("soil103dz50.dat");
+            FluxTable ft2 = Fluxes.ReadFluxTable("soil109dz100.dat");
 
             double[,] ftwo = new double[,] {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                             {0, 5.51462542E-10, -3.98929405E-05, -7.91353013E-05, -7.07292464E-04, -1.09449506E-03, -3.27854138E-03, -5.36258845E-03, -8.40617623E-03, -1.12077072E-02, -1.67764928E-02, -2.24631336E-02, -6.03153892E-02, -0.10269000, -0.14294197, -0.19206049, -0.21180321, -0.23268265, -0.29834604, -0.37132788, -0.42404830, -0.48002136, -0.64894092, -0.82481670, -1.2326915, -1.6736805, -1.8571875, -2.0429912, },
@@ -727,8 +727,8 @@ namespace UnitTests
 
             ftwo = Matrix<double>.Build.DenseOfArray(ftwo).Transpose().ToArray();
             FluxTable res = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
-            for (int x = 0; x < res.ftable.GetLength(0); x++)
-                for (int y = 0; y < ftwo.GetLength(1); y++)
+            for (int x = 1; x < res.ftable.GetLength(0); x++)
+                for (int y = 1; y < ftwo.GetLength(1); y++)
                     Assert.AreEqual(ftwo[x, y], res.ftable[x, y], 1E-2); //accuracy is a bit off. Will need to see effect in sims.
         }
 

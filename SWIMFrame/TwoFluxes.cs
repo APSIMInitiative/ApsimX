@@ -293,7 +293,6 @@ namespace SWIMFrame
             coqM.SetRow(ni - 1, lincoV);
             coq = coqM.ToArray();
             coq[ni - 1, 3] = 0;
-            coq[1, 3] = 0.10467559869575349; //debug
 
             double[,] getco = new double[20, 20];
 
@@ -307,7 +306,7 @@ namespace SWIMFrame
                 {
                     phico2[k] = phif[ip, 2];
                     double[] co2co = Soil.Cuco(new double[5] { 0, phif[ip, 2], phif[ip + 1, 2], phif[ip + 2, 2], phif[ip + 3, 2] },
-                                               new double[5] { 0, qf[j, ip, 2], qf[j, ip + 1, 2], qf[j, ip + 2, 2], qf[j, ip + 3, 2] });
+                                               new double[5] { 0, qf[ip, j, 2], qf[ip + 1, j, 2], qf[ip + 2, j, 2], qf[ip + 3, j, 2] });
                     for (int x = 1; x < co2co.Length; x++)
                         co2[j, k, x] = co2co[x];
                     ip += 3;

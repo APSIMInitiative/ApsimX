@@ -306,7 +306,8 @@ namespace SWIMFrame
         public static SoilProps ReadProps(string file)
         {
             SoilProps sp;
-            using (Stream stream = File.Open(file, FileMode.Open))
+            string path = @"C:\ApsimX\SWIMFrame\bin\" + file;
+            using (Stream stream = File.Open(path, FileMode.Open))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 sp = (SoilProps)formatter.Deserialize(stream);

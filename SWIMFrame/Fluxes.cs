@@ -619,7 +619,8 @@ namespace SWIMFrame
         public static FluxTable ReadFluxTable(string file)
         {
             FluxTable ft = new FluxTable();
-            using (BinaryReader b = new BinaryReader(File.OpenRead(file)))
+            string path = @"C:\ApsimX\SWIMFrame\bin\" + file;
+            using (BinaryReader b = new BinaryReader(File.OpenRead(path)))
             {
                 int nFluxEnd;
                 int nphif;
