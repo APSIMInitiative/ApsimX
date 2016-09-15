@@ -33349,7 +33349,7 @@ namespace Models
       <Name>Lincoln1992</Name>
       <Memo>
         <Name>Memo</Name>
-        <MemoText><![CDATA[This trial has never been formally written up.  It was conducted at Plant and Foods A Block with 'Batten' Wheat grown on a Templeton silt loam (160mm AWC/m).  It was a 2 x 2 x 4 factorial with the following treatments:
+        <MemoText><![CDATA[This trial has never been formally written up.  It was conducted at Plant and Foods A Block, Lincoln, New Zealand with 'Batten' Wheat grown on a Templeton silt loam (160mm AWC/m).  It was a 2 x 2 x 4 factorial with the following treatments:
 
 1. Sowing Date (5 May 1992 and 5 Aug 1992)  
 2. Irrigation (Nil and 120 mm)  
@@ -36654,6 +36654,17 @@ namespace Models
     </Experiment>
     <Experiment>
       <Name>Leeston2014</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[The design, management and yield results of this trial have been described in full by [Craigie_Wheat_2015].  In brief, this trial was conducted to assess the impact of earlier sowing on potential yields of 'Wakanui' wheat grown at Wakanui (the cultivar was named after the area) in Mid Canterbury, New Zealand.  it was a 4 x 4 factorial with 4 replicates of the following treatments:
+
+1. Sowing date (20 February, 10 March, 28 March, 23 April)  
+2. Sowing density (50,100,150 and 200 plants/m^2^  
+
+In addition to yield, measurements of leaf appearance and senescence and canopy cover (measured with NDVI)  were measured at 10 - 14 day intervals and biomass measurements were taken at growth stages 32 and 65.
+
+Considerable canopy decay was observed during the winter for the early sown treatments and we have not introduced mechanisms into the model to capture this yet so there is a genral over prediction of canopy size and biomass in these first sowing dates. ]]></MemoText>
+      </Memo>
       <Factors>
         <Name>Factors</Name>
         <Factor>
@@ -42403,6 +42414,12 @@ namespace Models
     </Experiment>
     <Folder>
       <Name>CPTPhenology</Name>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[A range of soon to be released cultivares have their phenology assesed each year at Plant and Food Research in Lincoln, New Zealand.  Each cultivar is planted on 4 sowing dates representing Autumn, Winter, Early Spring and Late Spring sowings. (approx April, June, Aug, Nov).  Each cultivar is observed for 3 years but a number of standards are included each year or for more than 3 years bacause of the value of the data they provided.
+
+]]></MemoText>
+      </Memo>
       <Experiment>
         <Name>CPTCultOtane</Name>
         <Factors>
