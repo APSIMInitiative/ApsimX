@@ -605,33 +605,10 @@ namespace UserInterface.Views
             return result;         
         }
 
-        /* TBI
-        /// <summary>
-        /// Override the process command key method so that we can implement global keyboard
-        /// shortcuts.
-        /// </summary>
-        /// <param name="msg">The windows message to process</param>
-        /// <param name="keyData">The key to process</param>
-        /// <returns>True if command key was processed.</returns>
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (ShortcutKeyPressed != null && ShortcutKeys != null)
-            {
-                KeysConverter kc = new KeysConverter();
-                string keyName = kc.ConvertToString(keyData);
-                if (ShortcutKeys.Contains(keyName))
-                {
-                    ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
-                    return true;
-                }
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
 
         #endregion
 
         #region Events
-        */
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
