@@ -1089,7 +1089,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-		<StructuralFraction>1.0</StructuralFraction>		
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+		
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>

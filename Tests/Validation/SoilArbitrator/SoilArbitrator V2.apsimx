@@ -830,7 +830,12 @@ This is important in SLURP as it is set for each species to represent their diff
             <Biomass>
               <Name>Dead</Name>
             </Biomass>
-			<StructuralFraction>1.0</StructuralFraction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+
             <Constant>
               <Name>Photosynthesis</Name>
               <Value>5</Value>
@@ -1251,7 +1256,11 @@ This is important in SLURP as it is set for each species to represent their diff
             <Biomass>
               <Name>Dead</Name>
             </Biomass>
-			<StructuralFraction>1.0</StructuralFraction>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
             <Constant>
               <Name>Photosynthesis</Name>
               <Value>5</Value>
