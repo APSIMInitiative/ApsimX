@@ -141,24 +141,25 @@ namespace Models
         }
         
         /// <summary>Gets or sets the a_interception.</summary>
-        [Description("a_interception")]
+        [Description("multiplier on rainfall to calculate interception losses")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm/mm")]
         public double a_interception { get; set; }
 
         /// <summary>Gets or sets the b_interception.</summary>
-        [Description("b_interception")]
+        [Description("power on rainfall to calculate interception losses")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
+        [Units("-")]
         public double b_interception { get; set;}
 
         /// <summary>Gets or sets the c_interception.</summary>
-        [Description("c_interception")]
+        [Description("multiplier on LAI to calculate interception losses")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         public double c_interception { get; set; }
 
         /// <summary>Gets or sets the d_interception.</summary>
-        [Description("d_interception")]
+        [Description("constant value to add to calculate interception losses")]
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
@@ -166,6 +167,7 @@ namespace Models
         /// <summary>Gets or sets the soil_albedo.</summary>
         [Description("soil albedo")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("MJ/MJ")]
         public double soil_albedo { get; set; }
         
         /// <summary>The air_pressure</summary>
@@ -176,7 +178,7 @@ namespace Models
 
         /// <summary>The soil_emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
-        [Units("")]
+        [Units("0-1")]
         [Description("soil emissivity")]
         public double soil_emissivity { get; set; }
 
@@ -187,46 +189,55 @@ namespace Models
         public double sun_angle { get; set; }
 
         /// <summary>The soil_heat_flux_fraction</summary>
+        [Description("fraction of solar radiation reaching the soil surface that results in soil heating")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("")]
+        [Units("MJ/MJ")]
         public double soil_heat_flux_fraction { get; set; }
 
         /// <summary>The night_interception_fraction</summary>
+        [Description("the fraction of intercepted rainfall that evaporates at night")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("")]
+        [Units("0-1")]
         public double night_interception_fraction { get; set; }
 
         /// <summary>The windspeed_default</summary>
+        [Description("default windspeed to use if not supplied in the met file")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m/s")]
         public double windspeed_default { get; set; }
 
         /// <summary>The refheight</summary>
+        [Description("height of the weather instruments")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
         public double refheight { get; set; }
 
         /// <summary>The albedo</summary>
+        [Description("albedo of the combined plant-soil system")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double albedo { get; set; }
 
         /// <summary>The emissivity</summary>
+        [Description("emissivity of the combined plant-soil system")]
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("0-1")]
         public double emissivity { get; set; }
 
         /// <summary>The gsmax</summary>
+        [Description("maximum stomatal conductance of the plant")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("m/s")]
         public double gsmax { get; set; }
 
         /// <summary>The R50</summary>
+        [Description("radiation at which the stomatal conductance of the plant drops to 50% of maximum")]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("W/m^2")]
         public double r50 { get; set; }
 
         /// <summary>Gets the interception.</summary>
+        [Description("intercepted rainfall")]
         [Units("mm")]
         public double interception
         {
@@ -245,6 +256,8 @@ namespace Models
         }
 
         /// <summary>Gets the gc.</summary>
+        [Description("canopy conductance of the whole system")]
+        [Units("m/s")]
         public double gc
         {
             // Should this be returning a sum or an array instead of just the first value???
@@ -252,6 +265,8 @@ namespace Models
         }
 
         /// <summary>Gets the ga.</summary>
+        [Description("aerodynamic conductance of the whole system")]
+        [Units("m/s")]
         public double ga
         {
             // Should this be returning a sum or an array instead of just the first value???
@@ -259,6 +274,8 @@ namespace Models
         }
 
         /// <summary>Gets the petr.</summary>
+        [Description("radiation component of PET")]
+        [Units("mm/day")]
         public double petr
         {
             get
@@ -276,6 +293,8 @@ namespace Models
         }
 
         /// <summary>Gets the peta.</summary>
+        [Description("aerodynamic component of PET")]
+        [Units("mm/day")]
         public double peta
         {
             get
@@ -293,18 +312,24 @@ namespace Models
         }
 
         /// <summary>Gets the net_radn.</summary>
+        [Description("net all-wave radiation of the whole system")]
+        [Units("MJ/m2/day")]
         public double net_radn
         {
             get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
         }
 
         /// <summary>Gets the net_rs.</summary>
+        [Description("net short-wave radiation of the whole system")]
+        [Units("MJ/m2/day")]
         public double net_rs
         {
             get { return weather.Radn * (1.0 - _albedo); }
         }
 
         /// <summary>Gets the net_rl.</summary>
+        [Description("net long-wave radiation of the whole system")]
+        [Units("MJ/m2/day")]
         public double net_rl
         {
             get { return netLongWave; }
