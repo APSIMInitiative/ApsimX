@@ -173,7 +173,11 @@
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-		<StructureFraction>1.0</StructuralFraction>		
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
         <MultiplyFunction>
           <Name>Photosynthesis</Name>
           <Constant>

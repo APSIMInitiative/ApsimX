@@ -463,6 +463,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
         </Memo>
         <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
           <Name>InitialDM</Name>
           <Memo>
             <Name>Description</Name>

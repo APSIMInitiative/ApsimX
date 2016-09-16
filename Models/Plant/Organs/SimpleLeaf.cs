@@ -284,11 +284,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double Demand = 0;
-                if (DMDemandFunction != null)
-                    Demand = DMDemandFunction.Value;
-                else
-                    Demand = 1;
+                double Demand = DMDemandFunction.Value;
                 if (Math.Round(Demand, 8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
                 return new BiomassPoolType { Structural = Demand };
@@ -338,13 +334,9 @@ namespace Models.PMF.Organs
                         NDeficit = 0;
                 }
 
-                if (MaximumNConc == null)
-                    NDeficit = 0;
-                else
-                {
-                    StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                }
+                StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
+                NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
+                
                 if (Math.Round(StructuralDemand, 8) < 0)
                     throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
                 if (Math.Round(NDeficit, 8) < 0)
@@ -491,14 +483,11 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
 
-            if (DMDemandFunction != null)
+            tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "DMDemandFunction")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
+                if (child.Name == "DMDemandFunction")
+                    child.Document(tags, headingLevel + 5, indent + 1);
             }
 
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));

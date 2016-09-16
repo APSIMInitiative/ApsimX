@@ -427,7 +427,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1.0</Value>
+          <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
         <RUEModel>
@@ -768,7 +768,6 @@ DM demand is based on ...
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-        <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
