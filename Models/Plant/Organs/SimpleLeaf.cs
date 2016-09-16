@@ -180,8 +180,6 @@ namespace Models.PMF.Organs
         #region States and variables
         /// <summary>The _ water allocation</summary>
         private double _WaterAllocation;
-        /// <summary>The biomass yesterday</summary>
-        public double BiomassYesterday = 0;
         /// <summary>The _ structural fraction</summary>
         private double _StructuralFraction = 1;
 
@@ -225,12 +223,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double F = 0;
                 if (WaterDemand > 0)
-                    F = EP / WaterDemand;
+                    return EP / WaterDemand;
                 else
-                    F = 1;
-                return F;
+                    return 1;
             }
         }
         /// <summary>Gets the function.</summary>
@@ -372,12 +368,8 @@ namespace Models.PMF.Organs
         {
             set
             {
-                // Allocation
-                if (value.Structural > 0)
-                    Live.StructuralN += value.Structural;
-                if (value.NonStructural > 0)
-                    Live.NonStructuralN += value.NonStructural;
-
+                Live.StructuralN += value.Structural;
+                Live.NonStructuralN += value.NonStructural;
             }
         }
 
@@ -402,11 +394,8 @@ namespace Models.PMF.Organs
         {
             if (Phenology != null)
                 if (Phenology.OnDayOf("Emergence"))
-                {
-                    if (Structure != null)
+                   if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
-                }
-
             EP = 0;
         }
         #endregion
