@@ -8230,7 +8230,6 @@ namespace Models
             <MaximumNUptake>10</MaximumNUptake>
             <InterceptedRadn>0</InterceptedRadn>
             <fractionToLeaf>0</fractionToLeaf>
-            <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
@@ -8329,9 +8328,10 @@ namespace Models
               <double>0.2</double>
             </DigestibilitiesCellWall>
             <MinimumGreenWt>300</MinimumGreenWt>
+            <FractionStolonStanding>0</FractionStolonStanding>
             <MinimumRootProp>0.5</MinimumRootProp>
-            <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
-            <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
+            <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+            <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
@@ -10873,7 +10873,7 @@ namespace Models
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
 			{
-				Pasture.Harvest(amount: removeAmount, type: "SetRemoveAmount");
+				Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
 				
 				// get total harvested
 				DefoliatedWt = Pasture.HarvestedWt;
@@ -11837,7 +11837,6 @@ namespace Models
           <MaximumNUptake>10</MaximumNUptake>
           <InterceptedRadn>0</InterceptedRadn>
           <fractionToLeaf>0</fractionToLeaf>
-          <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
@@ -11936,9 +11935,10 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
+          <FractionStolonStanding>0</FractionStolonStanding>
           <MinimumRootProp>0.5</MinimumRootProp>
-          <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
-          <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
+          <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+          <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
@@ -16213,7 +16213,6 @@ namespace Models
             <MaximumNUptake>10</MaximumNUptake>
             <InterceptedRadn>0</InterceptedRadn>
             <fractionToLeaf>0</fractionToLeaf>
-            <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
@@ -16312,9 +16311,10 @@ namespace Models
               <double>0.2</double>
             </DigestibilitiesCellWall>
             <MinimumGreenWt>300</MinimumGreenWt>
+            <FractionStolonStanding>0</FractionStolonStanding>
             <MinimumRootProp>0.5</MinimumRootProp>
-            <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
-            <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
+            <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+            <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
             <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
@@ -18838,7 +18838,7 @@ namespace Models
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
 			{
-				Pasture.Harvest(amount: removeAmount, type: "SetRemoveAmount");
+				Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
 				
 				// get total harvested
 				DefoliatedWt = Pasture.HarvestedWt;
@@ -19802,7 +19802,6 @@ namespace Models
           <MaximumNUptake>10</MaximumNUptake>
           <InterceptedRadn>0</InterceptedRadn>
           <fractionToLeaf>0</fractionToLeaf>
-          <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
@@ -19901,9 +19900,10 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
+          <FractionStolonStanding>0</FractionStolonStanding>
           <MinimumRootProp>0.5</MinimumRootProp>
-          <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
-          <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
+          <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+          <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
@@ -22512,7 +22512,7 @@ namespace Models
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
 			{
-				Pasture.Harvest(amount: removeAmount, type: "SetRemoveAmount");
+				Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
 				
 				// get total harvested
 				DefoliatedWt = Pasture.HarvestedWt;
@@ -23481,7 +23481,6 @@ namespace Models
           <MaximumNUptake>10</MaximumNUptake>
           <InterceptedRadn>0</InterceptedRadn>
           <fractionToLeaf>0</fractionToLeaf>
-          <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
@@ -23580,9 +23579,10 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
+          <FractionStolonStanding>0</FractionStolonStanding>
           <MinimumRootProp>0.5</MinimumRootProp>
-          <RelativePreferenceForGreen>1</RelativePreferenceForGreen>
-          <RelativePreferenceForLeaf>1</RelativePreferenceForLeaf>
+          <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
+          <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
           <ExponentHeightFromMass>2.8</ExponentHeightFromMass>

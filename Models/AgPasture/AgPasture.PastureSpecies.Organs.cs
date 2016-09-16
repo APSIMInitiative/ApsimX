@@ -35,43 +35,29 @@ namespace Models.AgPasture
         /// <summary>The collection of tissues for this organ</summary>
         internal GenericTissue[] Tissue { get; set; }
 
+        #region Organ specific characteristics  -----------------------------------------------------------------------
+
+        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
+        internal double NConcOptimum { get; set; } = 4.0;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
+        internal double NConcMaximum { get; set; } = 4.5;
+
+        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
+        internal double NConcMinimum { get; set; } = 1.2;
+
+        /// <summary>Minimum DM amount of live tissues [kg/ha]</summary>
+        internal double MinimumLiveDM { get; set; } = 1.0;
+
+        /// <summary>Proportion of organ DM that is standing, available to harvest [0-1]</summary>
+        internal double FractionStanding { get; set; } = 1.0;
+
+        #endregion ----------------------------------------------------------------------------------------------------
+
         #region Organ properties (summary of tissues)  ----------------------------------------------------------------
 
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
-
-        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
-        internal double NConcOptimum
-        {
-            get { return Tissue[0].NConcOptimum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcOptimum = value;
-            }
-        }
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
-        internal double NConcMaximum
-        {
-            get { return Tissue[0].NConcMaximum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcMaximum = value;
-            }
-        }
-
-        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
-        internal double NConcMinimum
-        {
-            get { return Tissue[0].NConcMinimum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcMinimum = value;
-            }
-        }
 
         /// <summary>Gets the total dry matter in this organ [kg/ha]</summary>
         internal double DMTotal
@@ -104,6 +90,18 @@ namespace Models.AgPasture
         internal double DMDead
         {
             get { return Tissue[TissueCount - 1].DM; }
+        }
+
+        /// <summary>The dry matter in the live (green) tissues available to harvest (kg/ha)</summary>
+        internal double DMLiveHarvestable
+        {
+            get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionStanding)); }
+        }
+
+        /// <summary>The dry matter in the dead tissues available to harvest (kg/ha)</summary>
+        internal virtual double DMDeadHarvestable
+        {
+            get { return DMDead * FractionStanding; }
         }
 
         /// <summary>The total N amount in this tissue [kg/ha]</summary>
@@ -174,11 +172,11 @@ namespace Models.AgPasture
         {
             get
             {
-                double luxNAmount = 0.0;
+                double result = 0.0;
                 for (int t = 0; t < TissueCount - 1; t++)
-                    luxNAmount += Tissue[t].NLuxury;
+                    result += Tissue[t].NRemobilisable;
 
-                return luxNAmount;
+                return result;
             }
         }
 
@@ -337,17 +335,21 @@ namespace Models.AgPasture
                 Tissue[t].DMTransferedOut += turnedoverDM;
                 Tissue[t].NTransferedOut += turnedoverN;
 
-                // pass amounts turned over from this tissue to the next (except last one)
                 if (t < TissueCount - 1)
                 {
+                    // pass amounts turned over from this tissue to the next (except last one)
                     Tissue[t + 1].DMTransferedIn += turnedoverDM;
                     Tissue[t + 1].NTransferedIn += turnedoverN;
+
+                    // get the amounts remobilisable (luxury N)
+                    double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
                 }
                 else
                 {
                     // N transfered into dead tissue in excess of minimum N concentration is remobilisable
-                    double remobN = Tissue[t].NTransferedIn - (Tissue[t].DMTransferedIn * NConcMinimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, remobN);
+                    double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
+                    Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
                 }
             }
         }
@@ -393,8 +395,16 @@ namespace Models.AgPasture
         /// <summary>The collection of tissues for this organ</summary>
         internal RootTissue[] Tissue { get; set; }
 
-
         #region Root specific characteristics  ------------------------------------------------------------------------
+
+        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
+        internal double NConcOptimum { get; set; } = 2.0;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
+        internal double NConcMaximum { get; set; } = 2.5;
+
+        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
+        internal double NConcMinimum { get; set; } = 0.6;
 
         /// <summary>Gets or sets the rooting depth [mm]</summary>
         internal double Depth { get; set; }
@@ -411,39 +421,6 @@ namespace Models.AgPasture
 
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
-
-        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
-        internal double NConcOptimum
-        {
-            get { return Tissue[0].NConcOptimum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcOptimum = value;
-            }
-        }
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
-        internal double NConcMaximum
-        {
-            get { return Tissue[0].NConcMaximum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcMaximum = value;
-            }
-        }
-
-        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
-        internal double NConcMinimum
-        {
-            get { return Tissue[0].NConcMinimum; }
-            set
-            {
-                for (int t = 0; t < TissueCount; t++)
-                    Tissue[t].NConcMinimum = value;
-            }
-        }
 
         /// <summary>Gets the total dry matter in this organ [kg/ha]</summary>
         internal double DMTotal
@@ -548,7 +525,7 @@ namespace Models.AgPasture
             {
                 double result = 0.0;
                 for (int t = 0; t < TissueCount - 1; t++)
-                    result += Tissue[t].NRemobilised;
+                    result += Tissue[t].NRemobilisable;
 
                 return result;
             }
@@ -559,11 +536,11 @@ namespace Models.AgPasture
         {
             get
             {
-                double luxNAmount = 0.0;
+                double result = 0.0;
                 for (int t = 0; t < TissueCount - 1; t++)
-                    luxNAmount += Tissue[t].NLuxury;
+                    result += Tissue[t].NRemobilised;
 
-                return luxNAmount;
+                return result;
             }
         }
 
@@ -684,9 +661,9 @@ namespace Models.AgPasture
                 Tissue[t].DMTransferedOut += turnoverDM;
                 Tissue[t].NTransferedOut += turnoverN;
 
-                // pass amounts turned over from this tissue to the next
                 if (t < TissueCount - 1)
                 {
+                    // pass amounts turned over from this tissue to the next
                     Tissue[t + 1].DMTransferedIn += turnoverDM;
                     Tissue[t + 1].NTransferedIn += turnoverN;
 
@@ -696,12 +673,16 @@ namespace Models.AgPasture
                         Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
                         Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
                     }
+
+                    // get the amounts remobilisable (luxury N)
+                    double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
                 }
                 else
                 {
-                    // part of N might be remobilisable
-                    double remobN = Tissue[t].NTransferedIn - (Tissue[t].DMTransferedIn * NConcMinimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, remobN);
+                    // N transfered into dead tissue in excess of minimum N concentration is remobilisable
+                    double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
+                    Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
                 }
             }
         }
@@ -728,7 +709,6 @@ namespace Models.AgPasture
         /// <summary>Minimum significant difference between two values</summary>
         const double Epsilon = 0.000000001;
     }
-
 
     /// <summary>Describes a generic tissue of a pasture species</summary>
     [Serializable]
@@ -769,19 +749,6 @@ namespace Models.AgPasture
 
         // >> Characteristics (parameters)  .......................................................
 
-        /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
-        internal double NConcOptimum { get; set; } = 0.04;
-
-        /// <summary>Gets or sets the maximum N concentration [kg/kg]</summary>
-        internal double NConcMaximum { get; set; } = 0.05;
-
-        /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
-        internal double NConcMinimum { get; set; } = 0.02;
-
-        /// <summary>Gets or sets the fraction of N tranfered out remobilisable [0-1]</summary>
-        /// <remarks>This should be be zero for all but mature tissue (whose DM is transfered into dead)</remarks>
-        internal double FractionNTransferRemobilisable { get; set; } = 0.0;
-
         /// <summary>Gets or sets the fraction of luxury N remobilisable per day [0-1]</summary>
         internal double FractionNLuxuryRemobilisable { get; set; } = 0.0;
 
@@ -810,16 +777,6 @@ namespace Models.AgPasture
         {
             get { return MathUtilities.Divide(Pamount, DM, 0.0); }
             set { Pamount = value * DM; }
-        }
-
-        /// <summary>Gets the amount of luxury N, above optimum concentration [kg/ha]</summary>
-        internal double NLuxury
-        {
-            get
-            {
-                NRemobilisable = FractionNLuxuryRemobilisable * ((DM * NConcOptimum) - Namount);
-                return Math.Max(0.0, NRemobilisable);
-            }
         }
 
         /// <summary>Gets the digestibility of this tissue [kg/kg]</summary>

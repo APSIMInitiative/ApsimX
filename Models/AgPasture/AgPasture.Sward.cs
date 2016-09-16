@@ -1868,10 +1868,10 @@ namespace Models.AgPasture
                 double[] tempWeights = new double[numSpecies];
                 double[] tempAmounts = new double[numSpecies];
                 double tempTotal = 0.0;
-                double totalPreference = mySpecies.Sum(mySpecies => mySpecies.RelativePreferenceForGreen + 1.0);
+                double totalPreference = mySpecies.Sum(mySpecies => mySpecies.PreferenceForGreenOverDead + 1.0);
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    tempWeights[s] = mySpecies[s].RelativePreferenceForGreen + 1.0;
+                    tempWeights[s] = mySpecies[s].PreferenceForGreenOverDead + 1.0;
                     tempWeights[s] += (totalPreference - tempWeights[s]) * (amountToRemove / amountRemovable);
                     tempAmounts[s] = Math.Max(0.0, mySpecies[s].StandingLiveWt - mySpecies[s].MinimumGreenWt)
                                    + mySpecies[s].StandingDeadWt;
@@ -1891,79 +1891,6 @@ namespace Models.AgPasture
                     mySpecies[s].RemoveDM(amountToRemove * mySpecies[s].HarvestedFraction);
                 }
             }
-        }
-
-        /// <summary>Remove biomass from sward</summary>
-        /// <param name="RemovalData">Info about what and how much to remove</param>
-        /// <remarks>Greater details on how much and which parts are removed is given</remarks>
-        [EventSubscribe("RemoveCropBiomass")]
-        private void Onremove_crop_biomass(RemoveCropBiomassType RemovalData)
-        {
-            // NOTE: It is responsability of the calling module to check that the amount of 
-            //  herbage in each plant part is correct
-            // No checking if the removing amount passed in are too much here
-
-            // ATTENTION: The amounts passed should be in g/m^2
-
-            double fractionToRemove = 0.0;
-
-            for (int i = 0; i < RemovalData.dm.Length; i++)           // for each pool (green or dead)
-            {
-                string plantPool = RemovalData.dm[i].pool;
-                for (int j = 0; j < RemovalData.dm[i].dlt.Length; j++)   // for each part (leaf or stem)
-                {
-                    string plantPart = RemovalData.dm[i].part[j];
-                    double amountToRemove = RemovalData.dm[i].dlt[j] * 10.0;    // convert to kgDM/ha
-                    if (plantPool.ToLower() == "green" && plantPart.ToLower() == "leaf")
-                    {
-                        for (int s = 0; s < numSpecies; s++)           //for each mySpecies
-                        {
-                            if (LeafLiveWt - amountToRemove > 0.0)
-                            {
-                                fractionToRemove = amountToRemove / LeafLiveWt;
-                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
-                            }
-                        }
-                    }
-                    else if (plantPool.ToLower() == "green" && plantPart.ToLower() == "stem")
-                    {
-                        for (int s = 0; s < numSpecies; s++)           //for each mySpecies
-                        {
-                            if (StemLiveWt - amountToRemove > 0.0)
-                            {
-                                fractionToRemove = amountToRemove / StemLiveWt;
-                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
-                            }
-                        }
-                    }
-                    else if (plantPool.ToLower() == "dead" && plantPart.ToLower() == "leaf")
-                    {
-                        for (int s = 0; s < numSpecies; s++)           //for each mySpecies
-                        {
-                            if (LeafDeadWt - amountToRemove > 0.0)
-                            {
-                                fractionToRemove = amountToRemove / LeafDeadWt;
-                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
-                            }
-                        }
-                    }
-                    else if (plantPool.ToLower() == "dead" && plantPart.ToLower() == "stem")
-                    {
-                        for (int s = 0; s < numSpecies; s++)           //for each mySpecies
-                        {
-                            if (StemDeadWt - amountToRemove > 0.0)
-                            {
-                                fractionToRemove = amountToRemove / StemDeadWt;
-                                mySpecies[s].RemoveFractionDM(fractionToRemove, plantPool, plantPart);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // update digestibility and fractionToHarvest
-            for (int s = 0; s < numSpecies; s++)
-                mySpecies[s].RefreshAfterRemove();
         }
 
         /// <summary>Return a given amount of DM (and N) to surface organic matter</summary>
