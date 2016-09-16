@@ -425,6 +425,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>0.005</Value>
           <Units>g/plant</Units>
         </Constant>
+		<StructuralFraction>1.0</StructuralFraction>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>

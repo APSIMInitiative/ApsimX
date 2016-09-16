@@ -154,7 +154,7 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction LaiDeadFunction = null;
         /// <summary>The structural fraction</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction StructuralFraction = null;
 
         /// <summary>The structure</summary>
@@ -180,8 +180,6 @@ namespace Models.PMF.Organs
         #region States and variables
         /// <summary>The _ water allocation</summary>
         private double _WaterAllocation;
-        /// <summary>The _ structural fraction</summary>
-        private double _StructuralFraction = 1;
 
         /// <summary>Gets or sets the ep.</summary>
         /// <value>The ep.</value>
@@ -344,7 +342,7 @@ namespace Models.PMF.Organs
                     NDeficit = 0;
                 else
                 {
-                    StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * _StructuralFraction;
+                    StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
                     NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 }
                 if (Math.Round(StructuralDemand, 8) < 0)
@@ -409,12 +407,7 @@ namespace Models.PMF.Organs
         private new void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
-            {
                 Clear();
-
-                if (StructuralFraction != null)
-                    _StructuralFraction = StructuralFraction.Value;
-            }
         }
 
         /// <summary>Clears this instance.</summary>
@@ -497,10 +490,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + " ", indent));
 
             tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
-            if (StructuralFraction != null)
-                tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
-            else
-                tags.Add(new AutoDocumentation.Paragraph("100% of the DM demanded from this organ is structural", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
 
             if (DMDemandFunction != null)
             {

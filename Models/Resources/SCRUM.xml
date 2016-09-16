@@ -376,6 +376,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
     <Biomass>
       <Name>Dead</Name>
     </Biomass>
+	<StructuralFraction>1.0</StructuralFraction>
     <MultiplyFunction>
       <Name>Photosynthesis</Name>
       <DeltaFunction>
