@@ -16,27 +16,6 @@ namespace Models.PMF.Organs
     /// <summary>
     /// A simple leaf organ
     /// </summary>
-    /// \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
-    /// \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
-    /// \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
-    ///     \f[
-    /// /// LAI = \text{LAI}_{g} + \text{LAI}_{d}
-    ///     \f]
-    /// \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). The value of CoverFunction is returned 
-    ///     if "CoverFunction" exists in the model. \f$C_g\f$ is calculated according to
-    ///     extinction coefficient of green leaf (\f$k_{g}\f$) 
-    ///     if "ExtinctionCoefficientFunction" exists in the model.
-    ///     \f[
-    /// /// C_g = 1-\exp(-k_{g} * \text{LAI}_{g})
-    ///     \f]
-    ///     where, \f$k\f$ is the extinction coefficient which calculates by "ExtinctionCoefficientFunction"
-    /// \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless). \f$C_d\f$ is calculated according to 
-    ///     extinction coefficient of dead leaf (\f$k_{d}\f$). 
-    ///     \f[
-    /// /// C_d = 1-\exp(-k_{d} * \text{LAI}_{d})
-    ///     \f]
-    /// <remarks>
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -105,10 +84,6 @@ namespace Models.PMF.Organs
         {
             get
             {
-                //if (CoverFunction == null)
-                //    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
-                //return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
-
                 if (Plant.IsAlive)
                 {
                     double greenCover = 0.0;
@@ -119,9 +94,7 @@ namespace Models.PMF.Organs
                     return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
-                {
                     return 0.0;
-                }
 
             }
         }
@@ -241,10 +214,6 @@ namespace Models.PMF.Organs
                 }
                 return PotentialEP;
             }
-            //set
-            //{
-            //    Plant.PotentialEP = value;
-            //}
         }
         /// <summary>Gets the transpiration.</summary>
         /// <value>The transpiration.</value>
@@ -405,9 +374,7 @@ namespace Models.PMF.Organs
             {
                 // Allocation
                 if (value.Structural > 0)
-                {
                     Live.StructuralN += value.Structural;
-                }
                 if (value.NonStructural > 0)
                     Live.NonStructuralN += value.NonStructural;
 
@@ -507,27 +474,6 @@ namespace Models.PMF.Organs
                 else
                     LAIDead = 0;
 
-                /*/Set N Demand
-                double StructuralDemand = 0;
-                double NDeficit = 0;
-                if (NitrogenDemandSwitch == null)
-                    NDeficit = 0;
-                if (NitrogenDemandSwitch != null)
-                {
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-                }
-
-                if (NConc == null)
-                    NDeficit = 0;
-                else
-                {
-                    StructuralDemand = NConc.Value * DeltaBiomass * _StructuralFraction;
-                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic) - Live.N) - StructuralDemand;
-                } //return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
-                NDemand = new BiomassPoolType();           
-                NDemand.Structural = StructuralDemand;
-                NDemand.NonStructural = NDeficit;*/
             }
         }
 
