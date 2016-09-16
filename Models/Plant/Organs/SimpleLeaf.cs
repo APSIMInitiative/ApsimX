@@ -145,10 +145,10 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction ExtinctionCoefficientFunction = null;
         /// <summary>The photosynthesis</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction Photosynthesis = null;
         /// <summary>The height function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction HeightFunction = null;
         /// <summary>The lai dead function</summary>
         [Link(IsOptional = true)]
@@ -479,8 +479,7 @@ namespace Models.PMF.Organs
 
             // Describe biomass production
             tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));  //FIXME, this will need to be changed to photoysnthesis rather that potential Biomass
-            if (Photosynthesis != null)
-                tags.Add(new AutoDocumentation.Paragraph("DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.", indent));
+            tags.Add(new AutoDocumentation.Paragraph("DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.", indent));
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
                 if (child.Name == "Photosynthesis")
