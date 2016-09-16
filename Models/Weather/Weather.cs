@@ -527,7 +527,7 @@ namespace Models
 
             if (this.clock.Today != this.reader.GetDateFromValues(values))
             {
-                throw new Exception("Non consecutive dates found in file: " + this.FileName);
+                throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
             }
 
             this.todaysMetData.Today = this.clock.Today;
