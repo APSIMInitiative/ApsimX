@@ -409,7 +409,7 @@ namespace Models.Core
                             {
                                 if (k > 0)
                                 {
-                                    stringValue += " | ";
+                                    stringValue += " \r\n ";
                                 }
                                 
                                 stringValue += arr2d.GetValue(k).ToString();

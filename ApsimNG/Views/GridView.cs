@@ -82,7 +82,7 @@ namespace UserInterface.Views
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
         private Menu Popup = new Menu();
-
+        private AccelGroup accel = new AccelGroup();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
@@ -97,11 +97,15 @@ namespace UserInterface.Views
             fixedcolview.Model = gridmodel;
             fixedcolview.Selection.Mode = SelectionMode.Multiple;
             Popup.AttachToWidget(gridview, null);
-            AddContextAction("Copy", OnCopyToClipboard);
-            AddContextAction("Paste", OnPasteFromClipboard);
-            AddContextAction("Delete", OnDeleteClick);
+            AddContextActionWithAccel("Copy", OnCopyToClipboard, "Ctrl+C");
+            AddContextActionWithAccel("Paste", OnPasteFromClipboard, "Ctrl+V");
+            AddContextActionWithAccel("Delete", OnDeleteClick, "Delete");
             gridview.ButtonPressEvent += OnButtonDown;
             fixedcolview.ButtonPressEvent += OnButtonDown;
+            gridview.FocusInEvent += FocusInEvent;
+            gridview.FocusOutEvent += FocusOutEvent;
+            fixedcolview.FocusInEvent += FocusInEvent;
+            fixedcolview.FocusOutEvent += FocusOutEvent;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -242,7 +246,6 @@ namespace UserInterface.Views
             for (int i = 0; i < nCols; i++)
                 colTypes[i] = typeof(string);
             gridmodel = new ListStore(colTypes);
-            gridview.FixedHeightMode = false;
             gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
             gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
             fixedcolview.ModifyBase(StateType.Active, gridview.Style.Base(StateType.Selected));
@@ -523,6 +526,67 @@ namespace UserInterface.Views
             Popup.Append(item);
             Popup.ShowAll();
         }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
+        {
+            ImageMenuItem item = new ImageMenuItem(menuItemText);
+            if (!String.IsNullOrEmpty(shortcut))
+            {
+                string keyName = String.Empty;
+                Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                string[] keyNames = shortcut.Split(new Char[] { '+' });
+                foreach (string name in keyNames)
+                {
+                    if (name == "Ctrl")
+                        modifier |= Gdk.ModifierType.ControlMask;
+                    else if (name == "Shift")
+                        modifier |= Gdk.ModifierType.ShiftMask;
+                    else if (name == "Alt")
+                        modifier |= Gdk.ModifierType.Mod1Mask;
+                    else if (name == "Del")
+                        keyName = "Delete";
+                    else
+                        keyName = name;
+                }
+                try
+                {
+                    Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                    item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                }
+                catch
+                {
+                }
+            }
+            item.Activated += onClick;
+            Popup.Append(item);
+            Popup.ShowAll();
+        }
+
+        /// <summary>
+        /// Handle loss of focus by removing the accelerators from the popup menu
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void FocusOutEvent(object o, FocusOutEventArgs args)
+        {
+            ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+        }
+
+        /// <summary>
+        /// Handle receiving focus by adding accelerators for the popup menu
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void FocusInEvent(object o, FocusInEventArgs args)
+        {
+            ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
+        }
+
 
         /// <summary>
         /// Add an action (on context menu) on the series grid.
@@ -1119,6 +1183,7 @@ namespace UserInterface.Views
                 e.RetVal = true;
             }
         }
+
         /// <summary>
         /// Gets the Label widget rendering the text in the Gtk Button which displays a column header
         /// This is pretty much a hack, but it works. However, it may break in future versions of Gtk.
