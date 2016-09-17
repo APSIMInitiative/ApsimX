@@ -3354,7 +3354,11 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>1.0</Value>
           <Units>0-1</Units>
         </Constant>
-
+		<Constant>
+          <Name>InitialDM</Name>
+          <Value>0.0</Value>
+          <Units>g/plant</Units>
+        </Constant>
             <Constant>
               <Name>Photosynthesis</Name>
               <Value>5</Value>
