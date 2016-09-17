@@ -28,55 +28,55 @@ namespace Models.AgPasture
 
         //- Links  ----------------------------------------------------------------------------------------------------
 
-        /// <summary>Link to APSIM's Clock (time information)</summary>
+        /// <summary>Link to APSIM's Clock (provides time information).</summary>
         [Link]
         private Clock myClock = null;
 
-        /// <summary>Link to APSIM's WeatherFile (meteorological information)</summary>
+        /// <summary>Link to APSIM's WeatherFile (provides meteorological information).</summary>
         [Link]
         private IWeather myMetData = null;
 
-        /// <summary>Link to APSIM summary</summary>
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
         [Link]
         private ISummary mySummary = null;
 
-        /// <summary>Link to the Soil (soil layers and other information)</summary>
+        /// <summary>Link to the Soil (provodes soil information).</summary>
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to apsim's Resource Arbitrator module</summary>
+        /// <summary>Link to apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
         private Arbitrator.Arbitrator apsimArbitrator = null;
 
-        /// <summary>Link to apsim's Resource Arbitrator module</summary>
+        /// <summary>Link to apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
         //- Events  ---------------------------------------------------------------------------------------------------
 
-        /// <summary>Reference to a FOM incorporation event</summary>
-        /// <param name="Data">The data with soil FOM to be added.</param>
+        /// <summary>Invoked for incorporating soil FOM.</summary>
+        /// <param name="Data">The data about biomass deposited by this plant into the soil FOM</param>
         public delegate void FOMLayerDelegate(FOMLayerType Data);
 
-        /// <summary>Occurs when plant is depositing senesced roots.</summary>
+        /// <summary>Occurs when plant is detaching senesced roots.</summary>
         public event FOMLayerDelegate IncorpFOM;
 
-        /// <summary>Reference to a BiomassRemoved event</summary>
-        /// <param name="Data">The data about biomass deposited by this plant to the soil surface.</param>
+        /// <summary>Invoked for incorporating surface OM.</summary>
+        /// <param name="Data">The data about biomass deposited by this plant onto the soil surface</param>
         public delegate void BiomassRemovedDelegate(PMF.BiomassRemovedType Data);
 
-        /// <summary>Occurs when plant is depositing litter.</summary>
+        /// <summary>Occurs when plant is detaching dead tissues, litter.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        /// <summary>Reference to a WaterChanged event</summary>
-        /// <param name="Data">The changes in the amount of water for each soil layer.</param>
+        /// <summary>Invoked for changing soil water due to uptake.</summary>
+        /// <param name="Data">The changes in the amount of water for each soil layer</param>
         public delegate void WaterChangedDelegate(PMF.WaterChangedType Data);
 
         /// <summary>Occurs when plant takes up water.</summary>
         public event WaterChangedDelegate WaterChanged;
 
-        /// <summary>Reference to a NitrogenChanged event</summary>
-        /// <param name="Data">The changes in the soil N for each soil layer.</param>
+        /// <summary>Invoked for changing soil nitrogen due to uptake.</summary>
+        /// <param name="Data">The changes in the soil N for each soil layer</param>
         public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
 
         /// <summary>Occurs when the plant takes up soil N.</summary>
@@ -86,19 +86,10 @@ namespace Models.AgPasture
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------
 
-        /// <summary>Canopy type</summary>
-        public string CanopyType
-        {
-            get { return Name; }
-        }
-
-        /// <summary>The albedo value for this species</summary>
+        /// <summary>The canopy albedo for this plant (0-1).</summary>
         private double myAlbedo = 0.26;
 
-        /// <summary>Gets or sets the species albedo.</summary>
-        /// <value>The albedo value.</value>
-        [XmlIgnore]
-        [Description("Albedo for canopy:")]
+        /// <summary>Gets or sets the canopy albedo for this plant (0-1).</summary>
         [Units("0-1")]
         public double Albedo
         {
@@ -106,10 +97,10 @@ namespace Models.AgPasture
             set { myAlbedo = value; }
         }
 
-        /// <summary>The maximum stomatal conductance (m/s)</summary>
+        /// <summary>The maximum stomatal conductance (m/s).</summary>
         private double myGsmax = 0.011;
 
-        /// <summary>Gets or sets the gsmax</summary>
+        /// <summary>Gets or sets the  maximum stomatal conductance (m/s).</summary>
         [Units("m/s")]
         public double Gsmax
         {
@@ -117,51 +108,59 @@ namespace Models.AgPasture
             set { myGsmax = value; }
         }
 
-        /// <summary>The solar radiation at which stomatal conductance decreases to 50% (W/m2)</summary>
+        /// <summary>The solar radiation at which stomatal conductance decreases to 50% (W/m^2).</summary>
         private double myR50 = 200;
 
-        /// <summary>Gets or sets the R50</summary>
-        [Units("W/m2")]
+        /// <summary>Gets or sets the R50 factor (W/m^2).</summary>
+        [Units("W/m^2")]
         public double R50
         {
             get { return myR50; }
             set { myR50 = value; }
         }
 
-        /// <summary>Gets the LAI of live tissue (m^2/m^2)</summary>
+        /// <summary>Gets the LAI of live tissues (m^2/m^2).</summary>
+        [Description("Leaf area index of green tissues")]
+        [Units("m^2/m^2")]
         public double LAI
         {
             get { return LAIGreen; }
         }
 
-        /// <summary>Gets the total LAI, live + dead (m^2/m^2)</summary>
+        /// <summary>Gets the total LAI, live + dead (m^2/m^2).</summary>
+        [Description("Total leaf area index")]
+        [Units("m^2/m^2")]
         public double LAITotal
         {
             get { return LAIGreen + LAIDead; }
         }
 
-        /// <summary>Gets the cover green (0-1)</summary>
+        /// <summary>Gets the plant's green cover (0-1).</summary>
+        [Description("Fraction of soil covered by green tissues")]
+        [Units("0-1")]
         public double CoverGreen
         {
             get { return CalcPlantCover(greenLAI); }
         }
 
-        /// <summary>Gets the cover total (0-1)</summary>
+        /// <summary>Gets the total plant cover (0-1).</summary>
+        [Description("Fraction of soil covered by plant tissues")]
+        [Units("0-1")]
         public double CoverTotal
         {
             get { return CalcPlantCover(greenLAI + deadLAI); }
         }
 
-        /// <summary>Gets the canopy height (mm)</summary>
-        [Description("The average height of plants (mm)")]
+        /// <summary>Gets the canopy height (mm).</summary>
+        [Description("The average canopy height")]
         [Units("mm")]
         public double Height
         {
             get { return HeightfromDM(); }
         }
 
-        /// <summary>Gets the canopy depth (mm)</summary>
-        [Description("The depth of the canopy (mm)")]
+        /// <summary>Gets the canopy depth (mm).</summary>
+        [Description("The depth of the canopy")]
         [Units("mm")]
         public double Depth
         {
@@ -169,27 +168,28 @@ namespace Models.AgPasture
         }
 
         // TODO: have to verify how this works (what exactly is needed by MicroClimate
-        /// <summary>Plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
+        /// <summary>Plant growth limiting factor, supplied to MicroClimate for calculating potential transpiration.</summary>
+        [Description("General growth limiting factor (for MicroClimate)")]
+        [Units("0-1")]
         public double FRGR
         {
             get { return 1.0; }
         }
 
-        /// <summary>Potential evapotranspiration, as calculated by MicroClimate</summary>
+        /// <summary>Potential evapotranspiration, as calculated by MicroClimate (mm).</summary>
         [XmlIgnore]
+        [Units("mm")]
         public double PotentialEP
         {
             get { return myWaterDemand; }
-            set
-            {
-                myWaterDemand = value;
-            }
+            set { myWaterDemand = value; }
         }
 
-        /// <summary>Light profile (energy available for each canopy layer)</summary>
+        /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
-        /// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
+        /// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate (W/m^2).</summary>
+        /// <remarks>This is the intercepted radiation for each layer of the canopy.</remarks>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
         {
@@ -207,13 +207,13 @@ namespace Models.AgPasture
 
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
-        /// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
+        /// <summary>Gets a list of cultivar names (not used by AgPasture).</summary>
         public string[] CultivarNames
         {
             get { return null; }
         }
 
-        /// <summary>Sows the plant</summary>
+        /// <summary>Sows the plant.</summary>
         /// <param name="cultivar">Cultivar type (not used)</param>
         /// <param name="population">Plants per area (not used)</param>
         /// <param name="depth">Sowing depth (not used)</param>
@@ -239,18 +239,19 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Returns true if the crop is ready for harvesting</summary>
+        /// <summary>Returns true if the crop is ready for harvesting.</summary>
         public bool IsReadyForHarvesting
         {
             get { return false; }
         }
 
-        /// <summary>Harvest the crop</summary>
+        /// <summary>Harvests the crop.</summary>
         public void Harvest()
         {
         }
 
-        /// <summary>End the crop</summary>
+        /// <summary>Ends the crop.</summary>
+        /// <remarks>All plant material is moved on to surfaceOM and soilFOM.</remarks>
         public void EndCrop()
         {
             // Return all above ground parts to surface OM
@@ -269,9 +270,7 @@ namespace Models.AgPasture
 
         #region ICrop2 implementation  -------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
-        /// </summary>
+        /// <summary>Generic descriptor for this plant (used by Arbitrator).</summary>
         [Description("Generic type of crop")]
         [Units("")]
         public string CropType
@@ -279,61 +278,63 @@ namespace Models.AgPasture
             get { return Name; }
         }
 
-        /// <summary>Flag whether the plant in the ground</summary>
+        /// <summary>Flag whether the plant in the ground.</summary>
         [XmlIgnore]
+        [Units("true/false")]
         public bool PlantInGround
         {
-            get { return true; }
+            get { return isAlive; }
         }
 
-        /// <summary>Flag whether the plant has emerged</summary>
+        /// <summary>Flag whether the plant has emerged.</summary>
         [XmlIgnore]
+        [Units("true/false")]
         public bool PlantEmerged
         {
-            get { return true; }
+            get { return phenologicStage > 0; }
         }
 
-        /// <summary>
-        /// The set of crop canopy properties used by Arbitrator for light and energy calculations
-        /// </summary>
+        /// <summary>The canopy data for this plant.</summary>
+        private CanopyProperties myCanopyProperties = new CanopyProperties();
+
+        /// <summary>Collection of crop canopy properties (used by Arbitrator).</summary>
+        [Units("")]
         public CanopyProperties CanopyProperties
         {
             get { return myCanopyProperties; }
         }
 
-        /// <summary>The canopy data for this plant</summary>
-        CanopyProperties myCanopyProperties = new CanopyProperties();
+        /// <summary>The root data for this plant.</summary>
+        RootProperties myRootProperties = new RootProperties();
 
-        /// <summary>
-        /// The set of crop root properties used by Arbitrator for water and nutrient calculations
-        /// </summary>
+        /// <summary>Collection of crop root properties (used by Arbitrator).</summary>
+        [Units("")]
         public RootProperties RootProperties
         {
             get { return myRootProperties; }
         }
 
-        /// <summary>The root data for this plant</summary>
-        RootProperties myRootProperties = new RootProperties();
-
-
-        /// <summary> Water demand for this plant (mm/day)</summary>
+        /// <summary> Water demand for this plant (mm).</summary>
         [XmlIgnore]
+        [Units("mm")]
         public double demandWater
         {
             get { return myWaterDemand; }
-            set { double test = value; }
+            set { double dummy = value; }
         }
 
-        /// <summary> The actual supply of water to the plant (mm), values given for each soil layer</summary>
+        /// <summary> The actual supply of water to the plant for each soil layer (mm).</summary>
         [XmlIgnore]
+        [Units("mm")]
         public double[] uptakeWater
         {
             get { return null; }
             set { mySoilWaterUptake = value; }
         }
 
-        /// <summary>Nitrogen demand for this plant (kgN/ha/day)</summary>
+        /// <summary>Nitrogen demand for this plant (kg/ha).</summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double demandNitrogen
         {
             get
@@ -356,25 +357,25 @@ namespace Models.AgPasture
 
                 return mySoilNDemand;
             }
-            set { double test = value; }
+            set { double dummy = value; }
         }
 
-        /// <summary>
-        /// The actual supply of nitrogen (ammonium and nitrate) to the plant (kgN/ha), values given for each soil layer
-        /// </summary>
+        /// <summary>The actual supply of nitrogen (ammonium and nitrate) to the plant for each soil layer (kg/ha).</summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double[] uptakeNitrogen { get; set; }
 
-        /// <summary>The proportion of nitrogen uptake from each layer in the form of nitrate (0-1)</summary>
+        /// <summary>The proportion of nitrogen uptake from each layer in the form of nitrate (0-1).</summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double[] uptakeNitrogenPropNO3 { get; set; }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region IUptake implementation  ------------------------------------------------------------------------------------
 
-        /// <summary>Gets the potential plant water uptake for each layer</summary>
-        /// <remarks>Model can only handle one root zone at present</remarks>
+        /// <summary>Gets the potential plant water uptake for each layer (mm).</summary>
+        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">Soil state (current water content)</param>
         /// <returns>Potential water uptake (mm)</returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
@@ -409,8 +410,8 @@ namespace Models.AgPasture
                 return null;
         }
 
-        /// <summary>Gets the potential plant N uptake for each layer</summary>
-        /// <remarks>Model can only handle one root zone at present</remarks>
+        /// <summary>Gets the potential plant N uptake for each layer (mm).</summary>
+        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">Soil state (current N contents)</param>
         /// <returns>Potential N uptake (kg/ha)</returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
@@ -451,8 +452,8 @@ namespace Models.AgPasture
                 return null;
         }
 
-        /// <summary>Sets the amount of water taken up by this plant</summary>
-        /// <remarks>Model can only handle one root zone at present</remarks>
+        /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
+        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">Water uptake from each layer (mm), by zone</param>
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
@@ -468,9 +469,9 @@ namespace Models.AgPasture
                 mySoilWaterUptake[layer] = MyZone.Water[layer];
         }
 
-        /// <summary>Sets the amount of N taken up by this plant</summary>
-        /// <remarks>Model can only handle one root zone at present</remarks>
-        /// <param name="zones">N uptake from each layer (kgN/ha), by zone</param>
+        /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
+        /// <remarks>The model can only handle one root zone at present.</remarks>
+        /// <param name="zones">N uptake from each layer (kg/ha), by zone</param>
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
             // Get the zone this plant is in
@@ -494,11 +495,12 @@ namespace Models.AgPasture
 
         // NOTE: default parameters describe a generic perennial ryegrass species
 
-        /// <summary>Family type for this plant species (grass/legume/brassica)</summary>
+        /// <summary>Family type for this plant species (grass/legume/brassica).</summary>
         private PlantFamilyType mySpeciesFamily = PlantFamilyType.Grass;
 
         /// <summary>Gets or sets the species family type.</summary>
         [Description("Family type for this plant species [grass/legume/brassica]:")]
+        [Units("")]
         public PlantFamilyType SpeciesPlantFamily
         {
             get { return mySpeciesFamily; }
@@ -510,49 +512,51 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets or sets the species photosynthetic pathway.</summary>
-        /// <value>The species photo pathway.</value>
         [Description("Metabolic pathway for C fixation during photosynthesis [C3/C4/CAM]:")]
+        [Units("")]
         public PhotosynthesisPathwayType PhotosynthesisPathway { get; set; } = PhotosynthesisPathwayType.C3;
 
-        /// <summary>Gets or sets the initial shoot DM.</summary>
-        [Description("Initial above ground DM (leaf, stem, stolon, etc) [kg DM/ha]:")]
+        // - Initial DM values  ---------------------------------------------------------------------------------------
+
+        /// <summary>Gets or sets the initial above ground DM (kg/ha).</summary>
+        [Description("Initial above ground DM (leaf, stem, and stolon) [kg/ha]:")]
         [Units("kg/ha")]
         public double InitialShootDM { get; set; } = 2000.0;
 
-        /// <summary>Gets or sets the initial dm root.</summary>
-        [Description("Initial below ground DM (roots) [kg DM/ha]:")]
+        /// <summary>Gets or sets the initial root DM (kg/ha).</summary>
+        [Description("Initial below ground DM (roots) [kg/ha]:")]
         [Units("kg/ha")]
         public double InitialRootDM { get; set; } = 500.0;
 
-        /// <summary>Gets or sets the initial root depth.</summary>
+        /// <summary>Gets or sets the initial root depth (mm).</summary>
         [Description("Initial depth for roots [mm]:")]
         [Units("mm")]
         public double InitialRootDepth { get; set; } = 750.0;
 
-        /// <summary>The initial fractions of DM for each plant part in grass</summary>
+        /// <summary>The initial fractions of DM for each plant part in grass (0-1).</summary>
         private double[] initialDMFractions_grass = new double[]
         {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00};
 
-        /// <summary>The initial fractions of DM for each plant part in legume</summary>
+        /// <summary>The initial fractions of DM for each plant part in legume (0-1).</summary>
         private double[] initialDMFractions_legume = new double[]
         {0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12};
 
-        /// <summary>The initial fractions of DM for each plant part in forbs</summary>
+        /// <summary>The initial fractions of DM for each plant part in forbs (0-1).</summary>
         private double[] initialDMFractions_forbs = new double[]
         {0.20, 0.20, 0.15, 0.05, 0.15, 0.15, 0.10, 0.00, 0.00, 0.00, 0.00};
 
-        // - Photosysnthesis and growth  ------------------------------------------------------------------------------
+        // - Photosysnthesis and respiration  -------------------------------------------------------------------------
 
-        /// <summary>Reference CO2 assimilation rate during photosynthesis [mg CO2/m2 leaf/s].</summary>
-        [Description("Reference CO2 assimilation rate during photosynthesis [mg CO2/m2/s]:")]
+        /// <summary>Gets or sets the reference CO2 assimilation rate for photosynthesis (mg CO2/m^2 leaf/s).</summary>
+        [Description("Reference CO2 assimilation rate during photosynthesis [mg CO2/m^2/s]:")]
         [Units("mg/m^2/s")]
         public double ReferencePhotosynthesisRate { get; set; } = 1.0;
 
-        /// <summary>Leaf photosynthetic efficiency [mg CO2/J]</summary>
+        /// <summary>Gets or sets the leaf photosynthetic efficiency (mg CO2/J).</summary>
         [XmlIgnore]
         public double PhotosyntheticEfficiency { get; set; } = 0.01;
 
-        /// <summary>Photosynthesis curvature parameter [J/kg/s]</summary>
+        /// <summary>Gets or sets the photosynthesis curvature parameter (J/kg/s).</summary>
         [XmlIgnore]
         public double PhotosynthesisCurveFactor { get; set; } = 0.8;
 
@@ -560,53 +564,52 @@ namespace Models.AgPasture
         [XmlIgnore]
         private double fractionPAR { get; set; } = 0.5;
 
-        /// <summary>Light extinction coefficient (0-1)</summary>
+        /// <summary>Gets or sets the light extinction coefficient (0-1).</summary>
         [Description("Light extinction coefficient [0-1]:")]
         [Units("0-1")]
         public double LightExtentionCoefficient { get; set; } = 0.5;
 
-        /// <summary>Minimum temperature for growth [oC]</summary>
-        /// <value>The growth tmin.</value>
+        /// <summary>Gets or sets the minimum temperature for growth (oC).</summary>
         [Description("Minimum temperature for growth [oC]:")]
         [Units("oC")]
         public double GrowthTmin { get; set; } = 2.0;
 
-        /// <summary>Optimum temperature for growth [oC]</summary>
+        /// <summary>Gets or sets the optimum temperature for growth (oC).</summary>
         [Description("Optimum temperature for growth [oC]:")]
         [Units("oC")]
         public double GrowthTopt { get; set; } = 20.0;
 
-        /// <summary>Curve parameter for growth response to temperature</summary>
+        /// <summary>Gets or sets the curve parameter for growth response to temperature (>0.0).</summary>
         [Description("Curve parameter for growth response to temperature:")]
         [Units("-")]
         public double GrowthTq { get; set; } = 1.75;
 
-        /// <summary>Reference CO2 concentration for photosynthesis [ppm]</summary>
-        [Description("Reference CO2 concentration for photosynthesis [ppm]:")]
+        /// <summary>Gets or sets the reference CO2 concentration for photosynthesis (ppm).</summary>
+        [Description("Reference atmospheric CO2 concentration for photosynthesis [ppm]:")]
         [Units("ppm")]
         public double ReferenceCO2 { get; set; } = 380.0;
 
-        /// <summary> Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]</summary>
-        [Description("Coefficient for the function describing the CO2 effect on photosynthesis [ppm CO2]:")]
+        /// <summary>Gets or sets the coefficient controlling the CO2 effect on photosynthesis (ppm).</summary>
+        [Description("Coefficient controlling the CO2 effect on photosynthesis [ppm]:")]
         [Units("ppm")]
         public double CO2EffectScaleFactor { get; set; } = 700.0;
 
-        /// <summary>Scalling paramenter for the CO2 effects on N uptake [ppm Co2]</summary>
-        [Description("Scalling paramenter for the CO2 effects on N requirement [ppm Co2]:")]
+        /// <summary>Gets or sets the scalling paramenter for the CO2 effects on N uptake (ppm).</summary>
+        [Description("Scalling paramenter for the CO2 effects on N requirement [ppm]:")]
         [Units("ppm")]
         public double CO2EffectOffsetFactor { get; set; } = 600.0;
 
-        /// <summary>Minimum value for the effect of CO2 on N requirement [0-1]</summary>
-        [Description("Minimum value for the effect of CO2 on N requirement [0-1]:")]
+        /// <summary>Gets or sets the minimum value of the CO2 effect on N requirements (0-1).</summary>
+        [Description("Minimum value for the CO2 effect on N requirements [0-1]:")]
         [Units("0-1")]
         public double CO2EffectMinimum { get; set; } = 0.7;
 
-        /// <summary>Exponent of the function describing the effect of CO2 on N requirement</summary>
-        [Description("Exponent of the function describing the effect of CO2 on N requirement:")]
+        /// <summary>Gets or sets the exponent controlling the CO2 effect on N requirements (>0.0).</summary>
+        [Description("Exponent controlling the CO2 effect on N requirements:")]
         [Units("-")]
         public double CO2EffectExponent { get; set; } = 2.0;
 
-        /// <summary>Flag whether photosynthesis reduction due to heat damage is enabled [yes/no]</summary>
+        /// <summary>Flag whether photosynthesis reduction due to heat damage is enabled (yes/no).</summary>
         [Description("Enable photosynthesis reduction due to heat damage [yes/no]:")]
         [Units("oC")]
         public YesNoAnswer UseHeatStressFactor
@@ -621,27 +624,27 @@ namespace Models.AgPasture
             set { usingHeatStressFactor = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Onset temperature for heat effects on photosynthesis [oC]</summary>
+        /// <summary>Gets or sets the onset temperature for heat effects on photosynthesis (oC).</summary>
         [Description("Onset temperature for heat effects on photosynthesis [oC]:")]
         [Units("oC")]
         public double HeatOnsetTemp { get; set; } = 28.0;
 
-        /// <summary>Temperature for full heat effect on photosynthesis (growth stops) [oC]</summary>
+        /// <summary>Gets or sets the temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
         [Description("Temperature for full heat effect on photosynthesis [oC]:")]
         [Units("oC")]
         public double HeatFullTemp { get; set; } = 35.0;
 
-        /// <summary>Cumulative degrees-day for recovery from heat stress [oCd]</summary>
+        /// <summary>Gets or sets the cumulative degrees-day for recovery from heat stress (oCd).</summary>
         [Description("Cumulative degrees-day for recovery from heat stress [oCd]:")]
         [Units("oCd")]
         public double HeatSumDD { get; set; } = 30.0;
 
-        /// <summary>Reference temperature for recovery from heat stress [oC]</summary>
+        /// <summary>Gets or sets the reference temperature for recovery from heat stress (oC).</summary>
         [Description("Reference temperature for recovery from heat stress [oC]:")]
         [Units("oC")]
         public double HeatRecoverTemp { get; set; } = 25.0;
 
-        /// <summary>Flag whether photosynthesis reduction due to cold damage is enabled [yes/no]</summary>
+        /// <summary>Flag whether photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Description("Enable photosynthesis reduction due to cold damage [yes/no]:")]
         [Units("yes/no")]
         public YesNoAnswer UseColdStressFactor
@@ -656,66 +659,88 @@ namespace Models.AgPasture
             set { usingColdStressFactor = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Onset temperature for cold effects on photosynthesis [oC]</summary>
+        /// <summary>Gets or sets the onset temperature for cold effects on photosynthesis (oC).</summary>
         [Description("Onset temperature for cold effects on photosynthesis [oC]:")]
         [Units("oC")]
         public double ColdOnsetTemp { get; set; } = 0.0;
 
-        /// <summary>Temperature for full cold effect on photosynthesis (growth stops) [oC]</summary>
+        /// <summary>Gets or sets the temperature for full cold effect on photosynthesis, growth stops (oC).</summary>
         [Description("Temperature for full cold effect on photosynthesis [oC]:")]
         [Units("oC")]
         public double ColdFullTemp { get; set; } = -3.0;
 
-        /// <summary>Cumulative degrees for recovery from cold stress [oCd]</summary>
+        /// <summary>Gets or sets the cumulative degrees for recovery from cold stress (oCd).</summary>
         [Description("Cumulative degrees for recovery from cold stress [oCd]:")]
         [Units("oCd")]
         public double ColdSumDD { get; set; } = 20.0;
 
-        /// <summary>Reference temperature for recovery from cold stress [oC]</summary>
+        /// <summary>Gets or sets the reference temperature for recovery from cold stress (oC).</summary>
         [Description("Reference temperature for recovery from cold stress [oC]:")]
         [Units("oC")]
         public double ColdRecoverTemp { get; set; } = 0.0;
 
-        /// <summary> Maintenance respiration coefficient - Fraction of DM consumed by respiration [0-1]</summary>
+        /// <summary>Gets or sets the maintenance respiration coefficient (0-1).</summary>
         [Description("Maintenance respiration coefficient [0-1]:")]
         [Units("0-1")]
         public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
 
-        /// <summary>Growth respiration coefficient - fraction of photosynthesis CO2 not assimilated (0-1)</summary>
+        /// <summary>Gets or sets the growth respiration coefficient (0-1).</summary>
         [Description("Growth respiration coefficient [0-1]:")]
         [Units("0-1")]
         public double GrowthRespirationCoefficient { get; set; } = 0.20;
 
+        // - N concentration  -----------------------------------------------------------------------------------------
+
+        /// <summary>Gets or sets the N concentration thresholds for leaves, optimum, minimum and maximum (kg/kg).</summary>
+        [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]:")]
+        [Units("kg/kg")]
+        public double[] NThresholdsForLeaves { get; set; } = { 0.040, 0.012, 0.050 };
+
+        /// <summary>Gets or sets the N concentration thresholds for stems, optimum, minimum and maximum (kg/kg).</summary>
+        [Description("N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
+        public double[] NThresholdsForStems { get; set; } = { 0.020, 0.006, 0.025 };
+
+        /// <summary>Gets or sets the N concentration thresholds for stolons, optimum, minimum and maximum (kg/kg).</summary>
+        [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
+        public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
+
+        /// <summary>Gets or sets the N concentration thresholds for roots, optimum, minimum and maximum (kg/kg).</summary>
+        [Description("N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg:]")]
+        [Units("kg/kg")]
+        public double[] NThresholdsForRoots { get; set; } = { 0.020, 0.006, 0.025 };
+
         // - Germination and emergence  -------------------------------------------------------------------------------
 
-        /// <summary>Cumulative degrees-day needed for seed germination [oCd]</summary>
+        /// <summary>Gets or sets the cumulative degrees-day needed for seed germination (oCd).</summary>
         [Description("Cumulative degrees-day needed for seed germination [oCd]:")]
         [Units("oCd")]
         public double DegreesDayForGermination { get; set; } = 100.0;
 
-        /// <summary>The fractions of DM for each plant part at emergence (all plants)</summary>
+        /// <summary>The fractions of DM for each plant part at emergence, for all plants (0-1).</summary>
         private double[] EmergenceDMFractions = new double[]
         {0.60, 0.25, 0.00, 0.00, 0.15, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
 
         // - DM allocation  -------------------------------------------------------------------------------------------
 
-        /// <summary>Target, or ideal, shoot-root ratio</summary>
+        /// <summary>Gets or sets the target, or ideal, shoot-root ratio (>0.0).</summary>
         [Description("Target, or ideal, shoot-root ratio (for DM allocation) [>0.0]:")]
         [Units("")]
         public double TargetSRratio { get; set; } = 3.0;
 
-        /// <summary>Maximum fraction of DM allocated to roots (from daily growth) [0-1]</summary>
-        [Description("Maximum fraction of DM allocated to roots (from daily growth) [0-1]:")]
+        /// <summary>Gets or sets the maximum fraction of DM growth allocated to roots (0-1).</summary>
+        [Description("Maximum fraction of DM growth allocated to roots [0-1]:")]
         [Units("0-1")]
         public double MaxRootAllocation { get; set; } = 0.25;
 
-        /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio [0-1]</summary>
+        /// <summary>Gets or sets the maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
         [Description("Maximum effect that soil GLFs have on Shoot-Root ratio [0-1]:")]
         [Units("0-1")]
         public double ShootRootGlfFactor { get; set; } = 0.50;
 
         /// <summary>
-        /// Flag whether Shoot:Root ratio should be adjusted to mimic DM allocation reproductive season (perennial species)
+        /// Flag whether Shoot:Root ratio should be adjusted to mimic DM allocation during reproductive season (perennial species).
         /// </summary>
         [Description("Adjust Shoot-Root ratio to mimic DM allocation during reproductive season?")]
         [Units("yes/no")]
@@ -731,87 +756,89 @@ namespace Models.AgPasture
             set { usingReproSeasonFactor = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Reference latitude determining timing for reproductive season [degress]</summary>
+        /// <summary>Gets or sets the reference latitude determining timing for reproductive season (degress).</summary>
         [Description("Reference latitude determining timing for reproductive season [degress]:")]
         [Units("degrees")]
         public double ReproSeasonReferenceLatitude { get; set; } = 41.0;
 
-        /// <summary>Coefficient controling the time to start the reproductive season as function of latitude [-]</summary>
-        [Description("Coefficient controling the time to start the reproductive season as function of latitude [-]:")]
+        /// <summary>Gets or sets the coefficient controlling the time to start the reproductive season as function of latitude (-).</summary>
+        [Description("Coefficient controlling the time to start the reproductive season as function of latitude [-]:")]
         [Units("-")]
         public double ReproSeasonTimingCoeff { get; set; } = 0.14;
 
-        /// <summary>Coefficient controling the duration of the reproductive season as function of latitude [-]</summary>
-        [Description("Coefficient controling the duration of the reproductive season as function of latitude [-]:")]
+        /// <summary>Gets or sets the coefficient controlling the duration of the reproductive season as function of latitude (-).</summary>
+        [XmlIgnore]
         [Units("-")]
         public double ReproSeasonDurationCoeff { get; set; } = 2.0;
 
-        /// <summary>Ratio between the length of shoulders and the period with full reproductive growth effect [-]</summary>
-        [Description("Ratio between the length of shoulders and the period with full reproductive growth effect [-]:")]
+        /// <summary>Gets or sets the ratio between the length of shoulders and the period with full reproductive growth effect (-).</summary>
+        [XmlIgnore]
         [Units("-")]
         public double ReproSeasonShouldersLengthFactor { get; set; } = 1.0;
 
-        /// <summary>Proportion of the shoulder length period prior to period with full reproductive growth effect [0-1]</summary>
-        [Description("Proportion of the shoulder length period prior to period with full reproductive growth effect [0-1]:")]
+        /// <summary>Gets or sets the proportion of the onset phase of shoulder period with reproductive growth effect (0-1).</summary>
+        [XmlIgnore]
         [Units("0-1")]
         public double ReproSeasonOnsetDurationFactor { get; set; } = 0.60;
 
-        /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth [0-1]</summary>
+        /// <summary>Gets or sets the maximum increase in Shoot-Root ratio during reproductive growth (0-1).</summary>
         [Description("Maximum increase in Shoot-Root ratio during reproductive growth [0-1]:")]
         [Units("0-1")]
         public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
 
-        /// <summary>Coefficient controling the increase in shoot allocation during reproductive growth as function of latitude [-]</summary>
-        [Description("Coefficient controling the increase in shoot allocation during reproductive growth as function of latitude [-]:")]
+        /// <summary>
+        /// Gets or sets the coefficient controlling the increase in shoot allocation during reproductive growth as function of latitude (-).
+        /// </summary>
+        [Description("Coefficient controlling the increase in shoot allocation during reproductive growth as function of latitude [-]:")]
         [Units("-")]
         public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
 
-        /// <summary>Maximum target allocation of new growth to leaves [0-1]</summary>
+        /// <summary>Gets or sets the maximum target allocation of new growth to leaves (0-1).</summary>
         [Description("Maximum target allocation of new growth to leaves [0-1]")]
         [Units("0-1")]
         public double FractionLeafMaximum { get; set; } = 0.7;
 
-        /// <summary>Minimum target allocation of new growth to leaves [0-1]</summary>
+        /// <summary>Gets or sets the minimum target allocation of new growth to leaves (0-1).</summary>
         [Description("Minimum target allocation of new growth to leaves [0-1]")]
         [Units("0-1")]
         public double FractionLeafMinimum { get; set; } = 0.7;
 
-        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease [kg/ha]</summary>
+        /// <summary>Gets or sets the shoot DM at which allocation of new growth to leaves start to decrease (kg/ha).</summary>
         [Description("Shoot DM at which allocation of new growth to leaves start to decrease [kg/ha]")]
         [Units("kg/ha")]
         public double FractionLeafDMThreshold { get; set; } = 500;
 
-        /// <summary>Shoot DM factor, when allocation to leaves is midway maximum and minimum [kg/ha]</summary>
-        [Description("Shoot DM factor, when allocation to leaves is midway maximum and minimum [kg/ha]")]
+        /// <summary>Gets or sets the shoot DM when allocation to leaves is midway maximum and minimum (kg/ha).</summary>
+        [Description("Shoot DM factor allocation to leaves is midway maximum and minimum [kg/ha]")]
         [Units("kg/ha")]
         public double FractionLeafDMFactor { get; set; } = 2000;
 
-        /// <summary>Exponent of function describing DM allocation to leaves [>0.0]</summary>
+        /// <summary>Gets or sets the exponent controlling the DM allocation to leaves (>0.0).</summary>
         [Description("Exponent of function describing DM allocation to leaves [>0.0]")]
         [Units(">0.0")]
         public double FractionLeafExponent { get; set; } = 3.0;
 
-        /// <summary>Fraction of new shoot growth allocated to stolons [0-1]</summary>
+        /// <summary>Gets or sets the fraction of new shoot growth allocated to stolons (0-1).</summary>
         [Description("Fraction of new shoot growth allocated to stolons [0-1]:")]
         [Units("0-1")]
         public double FractionToStolon { get; set; } = 0.0;
 
-        /// <summary>Number of live leaves per tiller [-]</summary>
+        /// <summary>Gets or sets the number of live leaves per tiller (-).</summary>
         [Description("Number of live leaves per tiller [-]:")]
         [Units("-")]
         public double LiveLeavesPerTiller { get; set; } = 3.0;
 
-        /// <summary>Specific leaf area [m^2/kg DM]</summary>
+        /// <summary>Gets or sets the specific leaf area (m^2/kg DM).</summary>
         [Description("Specific leaf area [m^2/kg DM]:")]
         [Units("m^2/kg")]
         public double SpecificLeafArea { get; set; } = 20.0;
 
-        /// <summary>Specific root length [m/g DM]</summary>
+        /// <summary>Gets or sets the specific root length (m/g DM).</summary>
         [Description("Specific root length [m/g DM]:")]
         [Units("m/g")]
         public double SpecificRootLength { get; set; } = 75.0;
 
-        /// <summary>Flag whether stem and stolons are considered for computing LAI green (mostly when DM is low)</summary>
+        /// <summary>Flag whether stem and stolons are considered for computing LAI green (yes/no).</summary>
         [Description("Use stems and stolons effect on LAI?")]
         [Units("yes/no")]
         public YesNoAnswer UseStemStolonEffectOnLAI
@@ -826,138 +853,109 @@ namespace Models.AgPasture
             set { usingStemStolonEffect = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Fraction of stolon that can be considered green tissue when computing LAI</summary>
+        /// <summary>Gets or sets the fraction of stolon tissue used when computing green LAI (0-1).</summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double StolonEffectOnLAI { get; set; } = 0.3;
 
-        /// <summary>Maximum aboveground biomass for stems to be considered when computing LAI [kg/ha]</summary>
+        /// <summary>Gets or sets the maximum aboveground biomass for using stems when computing LAI (kg/ha).</summary>
         [XmlIgnore]
+        [Units("kg/ha")]
         public double ShootMaxEffectOnLAI { get; set; } = 1000;
 
-        /// <summary>Maximum effect of stems considered when computing LAI</summary>
+        /// <summary>Gets or sets the maximum effect of stems when computing green LAI (0-1).</summary>
         [XmlIgnore]
+        [Units("0-1")]
         public double MaxStemEffectOnLAI { get; set; } = 0.316227766;
 
         // Turnover and senescence  -----------------------------------------------------------------------------------
 
-        /// <summary>Daily DM turnover rate for shoot tissue [0-1]</summary>
-        [Description("Daily DM turnover rate for shoot tissue  [0-1]:")]
+        /// <summary>Gets or sets the daily DM turnover rate for shoot tissues (0-1).</summary>
+        /// <remarks>This is closely related to the leaf apearence rate.</remarks>
+        [Description("Daily DM turnover rate for shoot tissues [0-1]:")]
         [Units("0-1")]
         public double TissueTurnoverRateShoot { get; set; } = 0.025;
 
-        /// <summary>Daily DM turnover rate for root tissue [0-1]</summary>
+        /// <summary>Gets or sets the daily DM turnover rate for root tissue (0-1).</summary>
         [Description("Daily DM turnover rate for root tissue [0-1]")]
         [Units("0-1")]
         public double TissueTurnoverRateRoot { get; set; } = 0.02;
 
-        /// <summary>Relative turnover rate for growing tissue [-]</summary>
+        /// <summary>Gets or sets the relative turnover rate for growing tissues (>0.0).</summary>
         [XmlIgnore]
+        [Units("-")]
         public double RelativeTurnoverGrowing { get; set; } = 2.0;
 
-        /// <summary>Daily detachment rate for DM dead [0-1]</summary>
+        /// <summary>Gets or sets the daily detachment rate for dead tissues (0-1).</summary>
         [Description("Daily detachment rate for DM dead [0-1]:")]
         [Units("0-1")]
         public double DetachmentRate { get; set; } = 0.11;
 
-        /// <summary>Minimum temperature for tissue turnover [oC]</summary>
+        /// <summary>Gets or sets the minimum temperature for tissue turnover (oC).</summary>
         [Description("Minimum temperature for tissue turnover [oC]:")]
         [Units("oC")]
         public double TissueTurnoverTmin { get; set; } = 2.0;
 
-        /// <summary>Optimum temperature for tissue turnover [oC]</summary>
-        [Description("Optimum temperature for tissue turnover [oC]:")]
+        /// <summary>Gets or sets the reference temperature for tissue turnover (oC).</summary>
+        [Description("Reference temperature for tissue turnover [oC]:")]
         [Units("oC")]
-        public double TissueTurnoverTopt { get; set; } = 20.0;
+        public double TissueTurnoverTref { get; set; } = 20.0;
 
-        /// <summary>Maximum increase in tissue turnover due to water stress</summary>
-        [Description("Maximum increase in tissue turnover due to water stress:")]
+        /// <summary>Gets or sets the maximum increase in tissue turnover due to water stress (>0.0).</summary>
+        [Description("Maximum increase in tissue turnover due to water deficit:")]
         [Units("-")]
         public double TissueTurnoverDroughtMax { get; set; } = 1.0;
 
-        /// <summary>Minimum GLFwater without effect on tissue turnover [0-1], below this value tissue turnover increases</summary>
-        [Description("Minimum GLFwater without effect on tissue turnover [0-1]")]
+        /// <summary>Gets or sets the minimum GLFwater without effect on tissue turnover (0-1).</summary>
+        [Description("Minimum GLFwater without effect on tissue turnover [0-1]:")]
         [Units("0-1")]
         public double TissueTurnoverDroughtThreshold { get; set; } = 0.5;
 
-        /// <summary>Stock factor for increasing tissue turnover rate</summary>
+        /// <summary>Gets or sets the stock factor increasing tissue turnover rate (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double StockParameter { get; set; } = 0.05;
+        public double TissueTurnoverStockFactor { get; set; } = 0.05;
 
-        /// <summary>Fraction of luxury N remobilisable each day, for each tissue age (growing, developed, mature) [0-1]</summary>
-        [Description("Fraction of luxury N remobilisable each day, for each tissue age (growing, developed, mature) [0-1]:")]
+        /// <summary>Gets or sets the fraction of luxury N remobilisable each day for each tissue age, growing, developed, mature (0-1).</summary>
+        [Description("Fraction of luxury N remobilisable each day for each tissue age (growing, developed, mature) [0-1]:")]
         [Units("0-1")]
         public double[] FractionNLuxuryRemobilisable { get; set; } = {0.0, 0.0, 0.0};
 
-        /// <summary>Fraction of non-utilised remobilised N that is kept on dead material [0-1]</summary>
-        [XmlIgnore]
-        [Units("0-1")]
-        public double FractionNRemobKept { get; set; } = 1.0;
-
-        /// <summary>Fraction of C in senescent carbohydrate DM that is remobilised to new growth [0-1]</summary>
+        /// <summary>Gets or sets the fraction of C in senescent carbohydrate DM that is remobilised to new growth (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
         public double FractionSenescedCarbRemob { get; set; } = 0.0;
 
-        /// <summary>Fraction of C in senescent protein DM that is remobilised to new growth [0-1]</summary>
-        [XmlIgnore]
-        [Units("0-1")]
-        public double FactionSenescedProteinRemob { get; set; } = 0.0;
-
-        // - N concentration  -----------------------------------------------------------------------------------------
-
-        /// <summary>N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]</summary>
-        [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]:")]
-        [Units("kg/kg")]
-        public double[] NThresholdsForLeaves { get; set; } = { 0.040, 0.012, 0.050 };
-
-        /// <summary>N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg]</summary>
-        [Description("N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg:]")]
-        [Units("kg/kg")]
-        public double[] NThresholdsForStems { get; set; } = { 0.020, 0.006, 0.025 };
-
-        /// <summary>N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg]</summary>
-        [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg:]")]
-        [Units("kg/kg")]
-        public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
-
-        /// <summary>N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg]</summary>
-        [Description("N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg:]")]
-        [Units("kg/kg")]
-        public double[] NThresholdsForRoots { get; set; } = { 0.020, 0.006, 0.025 };
-
         // - N fixation  ----------------------------------------------------------------------------------------------
 
-        /// <summary>Minimum fraction of N demand supplied by biologic N fixation [0-1]</summary>
+        /// <summary>Gets or sets the minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Description("Minimum fraction of N demand supplied by biologic N fixation [0-1]:")]
         [Units("0-1")]
         public double MinimumNFixation { get; set; } = 0.0;
 
-        /// <summary>Maximum fraction of N demand supplied by biologic N fixation [0-1]</summary>
+        /// <summary>Gets or sets the maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Description("Maximum fraction of N demand supplied by biologic N fixation [0-1]:")]
         [Units("0-1")]
         public double MaximumNFixation { get; set; } = 0.0;
 
         // - Growth limiting factors  ---------------------------------------------------------------------------------
 
-        /// <summary>Exponent for modifying the effect of N deficiency on plant growth.</summary>
+        /// <summary>Gets or sets the exponent for modifying the effect of N deficiency on plant growth (>0.0).</summary>
         [Description("Exponent for modifying the effect of N deficiency on plant growth:")]
         [Units("-")]
         public double NDillutionCoefficient { get; set; } = 0.5;
 
-        /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) [0-1]</summary>
+        /// <summary>Gets or sets the maximum reduction in plant growth due to water logging, saturated soil (0-1).</summary>
         [Description("Maximum reduction in plant growth due to water logging (saturated soil) [0-1]:")]
         [Units("0-1")]
         public double SoilWaterSaturationFactor { get; set; } = 0.1;
 
-        /// <summary>Minimum water-free pore space for growth with no limitations [0-1]</summary>
+        /// <summary>Gets or sets the minimum water-free pore space for growth with no limitations (0-1).</summary>
         [Description("Minimum water-free pore space for growth with no limitations [0-1]:")]
         [Units("0-1")]
         public double MinimumWaterFreePorosity { get; set; } = 0.1;
 
-        /// <summary>
-        /// Flag whether water logging effect is considered as a cumulative effect (instead of only daily effect)
-        /// </summary>
+        /// <summary>Flag whether water logging effect is considered as a cumulative effect, instead of only daily effect (yes/no).</summary>
         [Description("Use cumulative effects on plant growth due to water logging?")]
         [Units("yes/no")]
         public YesNoAnswer UseCumulativeWaterLoggingEffect
@@ -972,133 +970,150 @@ namespace Models.AgPasture
             set { usingCumulativeWaterLogging = (value == YesNoAnswer.yes); }
         }
 
-        /// <summary>Daily recovery rate from water logging [0-1]</summary>
+        /// <summary>Gets or sets the daily recovery rate from water logging (0-1).</summary>
         [XmlIgnore]
         public double SoilWaterSaturationRecoveryFactor { get; set; } = 1.0;
 
-        /// <summary>Gets or sets a generic growth factor, represents any arbitrary limitation to potential growth.</summary>
-        /// <remarks> This factor can be used to describe the effects of conditions such as disease, etc.</remarks>
+        /// <summary>Gets or sets a generic growth limiting factor, represents an arbitrary limitation to potential growth (0-1).</summary>
+        /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
         [Description("Generic factor affecting potential plant growth [0-1]:")]
         [Units("0-1")]
         public double GlfGeneric { get; set; } = 1.0;
 
-        /// <summary>Gets or sets a generic growth limiting factor, represents an arbitrary soil limitation.</summary>
+        /// <summary>Gets or sets a generic growth limiting factor, represents an arbitrary soil limitation (0-1).</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
-        [Description("Generic limiting factor due to soil fertilisty [0-1]:")]
+        [Description("Generic growth limiting factor due to soil fertility [0-1]:")]
         [Units("0-1")]
         public double GlfSFertility { get; set; } = 1.0;
 
-        // - Digestibility and feed quality  --------------------------------------------------------------------------
-
-        /// <summary>Digestibility of cell walls in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
-        [Description("Digestibility of cell wall in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
-        [Units("0-1")]
-        public double[] DigestibilitiesCellWall { get; set; } = { 0.6, 0.6, 0.6, 0.2 };
-
-        /// <summary>Digestibility of protein in plant tissues, by age (growing, developed, mature and dead) [0-1]</summary>
-        [XmlIgnore]
-        public double[] DigestibilitiesProtein { get; set; } = {1.0, 1.0, 1.0, 1.0};
-
-        /// <summary>Soluble fraction of carbohydrates in newly grown tissues for each plant organ (leaf, stem, stolon, root) [0-1]</summary>
-        [XmlIgnore]
-        public double[] SugarFractionNewGrowth { get; set; } = { 0.5, 0.5, 0.5, 0.0 };
-
-        // - Minimum DM and preferences when harvesting  --------------------------------------------------------------
-
-        /// <summary>Minimum above ground green DM [kg DM/ha]</summary>
-        [Description("Minimum above ground green DM [kg DM/ha]:")]
-        [Units("kg/ha")]
-        public double MinimumGreenWt { get; set; } = 300.0;  // TODO: this should really be leaves only
-
-        /// <summary>Proportion of stolon DM standing, available for removal [0-1]</summary>
-        [Description("Proportion of stolon DM standing, available for removal [0-1]:")]
-        [Units("0-1")]
-        public double FractionStolonStanding { get; set; } = 0.0;
-
-        /// <summary>Minimum root amount relative to minimum green Wt</summary>
-        public double MinimumRootProp { get; set; } = 0.5;
-
-        /// <summary>Relative preference for live over dead material during graze</summary>
-        [Description("Relative preference for live over dead material during graze:")]
-        [Units(">0.0")]
-        public double PreferenceForGreenOverDead { get; set; } = 1.0;
-
-        /// <summary>Relative preference for leaf over stem-stolon material during graze</summary>
-        [Description("Relative preference for leaf over stem-stolon material during graze:")]
-        [Units(">0.0")]
-        public double PreferenceForLeafOverStems { get; set; } = 1.0;
-
         // - Plant height  --------------------------------------------------------------------------------------------
 
-        /// <summary>Minimum shoot height [mm]</summary>
+        /// <summary>Gets or sets the minimum shoot height (mm).</summary>
         [Description("Minimum shoot height [mm]:")]
         [Units("mm")]
         public double MinimumPlantHeight { get; set; } = 25.0;
 
-        /// <summary>Maximum shoot height [mm]</summary>
+        /// <summary>Gets or sets the maximum shoot height (mm).</summary>
         [Description("Maximum shoot height [mm]:")]
         [Units("mm")]
         public double MaximumPlantHeight { get; set; } = 600.0;
 
-        /// <summary>Exponent of shoot height funtion [>1.0]</summary>
+        /// <summary>Gets or sets the exponent of shoot height funtion (>1.0).</summary>
         [Description("Exponent of shoot height funtion [>1.0]:")]
         [Units(">1.0")]
         public double ExponentHeightFromMass { get; set; } = 2.8;
 
-        /// <summary>DM weight for maximum shoot height[kg/ha]</summary>
+        /// <summary>Gets or sets the DM weight for maximum shoot height (kg/ha).</summary>
         [Description("DM weight for maximum shoot height[kg/ha]:")]
         [Units("kg/ha")]
         public double MassForMaximumHeight { get; set; } = 10000;
 
         // - Root distribution and height  ----------------------------------------------------------------------------
 
-        /// <summary>Minimum rooting depth, at emergence [mm]</summary>
+        /// <summary>Gets or sets the minimum rooting depth, at emergence (mm).</summary>
         [Description("Minimum rooting depth, at emergence [mm]:")]
         [Units("mm")]
         public double MinimumRootDepth { get; set; } = 50.0;
 
-        /// <summary>Maximum rooting depth [mm]</summary>
+        /// <summary>Gets or sets the maximum rooting depth (mm).</summary>
         [Description("Maximum rooting depth [mm]:")]
         [Units("mm")]
         public double MaximumRootDepth { get; set; } = 750.0;
 
-        /// <summary>Daily root elongation rate at optimum temperature [mm/day]</summary>
+        /// <summary>Gets or sets the daily root elongation rate at optimum temperature (mm/day).</summary>
         [Description("Daily root elongation rate at optimum temperature [mm/day]:")]
         [Units("mm/day")]
         public double RootElongationRate { get; set; } = 10.0;
 
-        /// <summary>Depth for constant distribution of roots, proportion decreases below this value [mm]</summary>
+        /// <summary>Gets or sets the depth coefficient for root distribution, proportion decreases below this value (mm).</summary>
         [Description("Depth for constant distribution of roots [mm]:")]
         [Units("mm")]
         public double DepthForConstantRootProportion { get; set; } = 90.0;
 
-        /// <summary>Coefficient for the root distribution, exponent to reduce proportion as function of depth [-]</summary>
-        [Description("Coefficient for the root distribution [-]:")]
+        /// <summary>Gets or sets the exponent for the root distribution, controls the reducion as function of depth (>0.0).</summary>
+        [Description("Coefficient for the root distribution [>0.0]:")]
         [Units("-")]
         public double ExponentRootDistribution { get; set; } = 3.2;
 
-        /// <summary>Factor to compute root distribution (where below maxRootDepth the function is zero)</summary>
+        /// <summary>Factor to compute root distribution (controls where, below maxRootDepth, the function is zero).</summary>
         private double rootBottomDistributionFactor = 1.05;
+
+        // - Digestibility and feed quality  --------------------------------------------------------------------------
+
+        /// <summary>Gets or sets the digestibility of cell walls for each tissue age, growing, developed, mature and dead (0-1).</summary>
+        [Description("Digestibility of cell wall in plant tissues, by age (growing, developed, mature and dead) [0-1]:")]
+        [Units("0-1")]
+        public double[] DigestibilitiesCellWall { get; set; } = { 0.6, 0.6, 0.6, 0.2 };
+
+        /// <summary>Gets or sets the digestibility of proteins in plant tissues (0-1).</summary>
+        [XmlIgnore]
+        public double DigestibilitiesProtein { get; set; } = 1.0;
+
+        /// <summary>
+        /// Gets or sets the soluble fraction of carbohydrates in newly grown tissues for each plant organ, leaf, stem, stolon, root (0-1).
+        /// </summary>
+        [XmlIgnore]
+        public double[] SugarFractionNewGrowth { get; set; } = { 0.5, 0.5, 0.5, 0.0 };
+
+        // - Minimum DM and preferences when harvesting  --------------------------------------------------------------
+
+        /// <summary>Gets or sets the minimum above ground green DM, leaf and stems (kg/ha).</summary>
+        [Description("Minimum above ground green DM [kg/ha]:")]
+        [Units("kg/ha")]
+        public double MinimumGreenWt { get; set; } = 300.0;
+
+        /// <summary>Gets or sets the leaf proportion in the minimum green Wt (0-1).</summary>
+        public double MinimumGreenLeafProp { get; set; } = 0.8;
+
+        /// <summary>Gets or sets the minimum root amount relative to minimum green Wt (>0.0).</summary>
+        public double MinimumGreenRootProp { get; set; } = 0.5;
+
+        /// <summary>Gets or sets the proportion of stolon DM standing, available for removal (0-1).</summary>
+        [Description("Proportion of stolon DM standing, available for removal [0-1]:")]
+        [Units("0-1")]
+        public double FractionStolonStanding { get; set; } = 0.0;
+
+        /// <summary>Gets or sets the relative preference for live over dead material during graze (-).</summary>
+        [Description("Relative preference for live over dead material during graze:")]
+        [Units(">0.0")]
+        public double PreferenceForGreenOverDead { get; set; } = 1.0;
+
+        /// <summary>Gets or sets the relative preference for leaf over stem-stolon material during graze (-).</summary>
+        [Description("Relative preference for leaf over stem-stolon material during graze:")]
+        [Units(">0.0")]
+        public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
         // - Annual species  ------------------------------------------------------------------------------------------
 
-        /// <summary>The day of year when seeds are allowed to germinate</summary>
-        private int doyGermination = 240;
+        /// <summary>Gets or sets the day of year when seeds are allowed to germinate</summary>
+        [XmlIgnore]
+        [Units("day")]
+        public int doyGermination { get; set; } = 240;
 
-        /// <summary>The number of days from emergence to anthesis</summary>
-        private int daysEmergenceToAnthesis = 100;
+        /// <summary>Gets or sets the number of days from emergence to anthesis</summary>
+        [XmlIgnore]
+        [Units("day")]
+        public int daysEmergenceToAnthesis { get; set; } = 100;
 
-        /// <summary>The number of days from anthesis to maturity</summary>
-        private int daysAnthesisToMaturity = 100;
+        /// <summary>Gets or sets the number of days from anthesis to maturity</summary>
+        [XmlIgnore]
+        [Units("days")]
+        public int daysAnthesisToMaturity { get; set; } = 100;
 
-        /// <summary>The cumulative degrees-day from emergence to anthesis</summary>
-        private double degreesDayForAnthesis = 0.0;
+        /// <summary>Gets or sets the cumulative degrees-day from emergence to anthesis</summary>
+        [XmlIgnore]
+        [Units("oCd")]
+        public double degreesDayForAnthesis { get; set; } = 0.0;
 
-        /// <summary>The cumulative degrees-day from anthesis to maturity</summary>
-        private double degreesDayForMaturity = 0.0;
+        /// <summary>Gets or sets the cumulative degrees-day from anthesis to maturity</summary>
+        [XmlIgnore]
+        [Units("oCd")]
+        public double degreesDayForMaturity { get; set; } = 0.0;
 
-        /// <summary>The number of days from emergence with reduced growth</summary>
-        private int daysAnnualsFactor = 60;
+        /// <summary>Gets or sets the number of days from emergence with reduced growth</summary>
+        [XmlIgnore]
+        [Units("days")]
+        public int daysAnnualsFactor { get; set; } = 60;
 
         // - Other parameters  ----------------------------------------------------------------------------------------
 
@@ -1165,330 +1180,312 @@ namespace Models.AgPasture
 
         #region Private variables  -----------------------------------------------------------------------------------------
 
-        /// <summary>Flag for whether several routines are ran by species or are controlled by the Sward</summary>
+        /// <summary>Flag whether several routines are ran by species or are controlled by the Sward.</summary>
         internal bool isSwardControlled = false;
 
-        /// <summary>Flag for whether this species is alive (activelly growing)</summary>
+        /// <summary>Flag whether this species is alive (activelly growing).</summary>
         private bool isAlive = true;
 
-        /// <summary>State of leaves (DM and N)</summary>
+        /// <summary>Holds info about state of leaves (DM and N).</summary>
         internal PastureAboveGroundOrgan leaves;
 
-        /// <summary>State of sheath/stems (DM and N)</summary>
+        /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
         internal PastureAboveGroundOrgan stems;
 
-        /// <summary>State of stolons (DM and N)</summary>
+        /// <summary>Holds info about state of stolons (DM and N).</summary>
         internal PastureAboveGroundOrgan stolons;
 
-        /// <summary>State of roots (DM and N)</summary>
+        /// <summary>Holds info about state of roots (DM and N).</summary>
         internal PastureBelowGroundOrgan roots;
 
-        /// <summary>Basic state variables for this plant (to be used for reset)</summary>
+        /// <summary>Holds the basic state variables for this plant (to be used for reset).</summary>
         private SpeciesBasicStateSettings InitialState;
 
         // Defining the plant type  -----------------------------------------------------------------------------------
 
-        /// <summary>Flag this species type, annual or perennial</summary>
+        /// <summary>Flag whether this species is annual or perennial.</summary>
         private bool isAnnual = false;
 
-        /// <summary>Flag whether this species is a legume</summary>
+        /// <summary>Flag whether this species is a legume.</summary>
         private bool isLegume = false;
 
         // Annual species adn phenology  ------------------------------------------------------------------------------
 
-        /// <summary>The phenologic stage</summary>
-        /// <remarks>0 = germinating, 1 = vegetative, 2 = reproductive, negative for dormant/not sown</remarks>
+        /// <summary>The phenologic stage (0-2).</summary>
+        /// <remarks>0 = germinating, 1 = vegetative, 2 = reproductive, negative for dormant/not sown.</remarks>
         private int phenologicStage = -1;
 
-        /// <summary>The number of days since emergence</summary>
+        /// <summary>The number of days since emergence (days).</summary>
         private double daysSinceEmergence = 0;
 
-        /// <summary>The cumulatve degrees day during vegetative phase</summary>
+        /// <summary>The cumulatve degrees day during vegetative phase (oCd).</summary>
         private double growingGDD = 0.0;
 
-        /// <summary>The factor for biomass senescence according to phase</summary>
+        /// <summary>The factor for biomass senescence according to phase (0-1).</summary>
         private double phenoFactor = 0.0;
+
+        /// <summary>The cumulative degrees-day during germination phase (oCd).</summary>
+        private double germinationGDD = 0.0;
 
         // Photosynthesis, growth, and turnover  ----------------------------------------------------------------------
 
-        /// <summary>The intercepted solar radiation</summary>
-        public double InterceptedRadn;
-
-        /// <summary>The irradiance on top of canopy</summary>
+        /// <summary>The irradiance on top of canopy (J/m^2 leaf/s).</summary>
         private double irradianceTopOfCanopy;
 
-        /// <summary>The gross photosynthesis rate (C assimilation)</summary>
+        /// <summary>The gross photosynthesis rate, or C assimilation (kg C/ha/day).</summary>
         private double grossPhotosynthesis = 0.0;
 
-        /// <summary>The growth respiration rate (C loss)</summary>
+        /// <summary>The growth respiration rate (kg C/ha/day).</summary>
         private double respirationGrowth = 0.0;
 
-        /// <summary>The maintenance respiration rate (C loss)</summary>
+        /// <summary>The maintenance respiration rate (kg C/ha/day).</summary>
         private double respirationMaintenance = 0.0;
 
-        /// <summary>The amount of C remobilisable from senesced tissue</summary>
+        /// <summary>The amount of C remobilisable from senesced tissue (kg C/ha/day).</summary>
         private double remobilisableC = 0.0;
 
-        /// <summary>The amount of C remobilised from senesced tissue</summary>
+        /// <summary>The amount of C remobilised from senesced tissue (kg C/ha/day).</summary>
         private double remobilisedC = 0.0;
 
-        /// <summary>Daily net growth potential (kgDM/ha)</summary>
+        /// <summary>Daily net growth potential (kg DM/ha).</summary>
         private double dGrowthPot;
 
-        /// <summary>Daily potential growth after water stress</summary>
+        /// <summary>Daily potential growth after water stress (kg DM/ha).</summary>
         private double dGrowthWstress;
 
-        /// <summary>Daily growth after nutrient stress (actual growth)</summary>
+        /// <summary>Daily growth after nutrient stress, actual growth (kg DM/ha).</summary>
         private double dGrowthActual;
 
-        /// <summary>Effective plant growth (actual growth minus senescence)</summary>
+        /// <summary>Effective plant growth, actual growth minus senescence (kg DM/ha).</summary>
         private double dGrowthEff;
 
-        /// <summary>Actual growth of shoot</summary>
+        /// <summary>Actual growth of shoot (kg/ha).</summary>
         private double dGrowthShootDM;
 
-        /// <summary>Actual growth of roots</summary>
+        /// <summary>Actual growth of roots (kg/ha).</summary>
         private double dGrowthRootDM;
 
-        /// <summary>Actual N allocation into shoot</summary>
+        /// <summary>Actual N allocation into shoot (kg/ha).</summary>
         private double dGrowthShootN;
 
-        /// <summary>Actual N allocation into roots</summary>
+        /// <summary>Actual N allocation into roots (kg/ha).</summary>
         private double dGrowthRootN;
 
-        /// <summary>DM amount senesced shoot</summary>
-        private double senescedShootDM;
-
-        /// <summary>N amount in senesced tissues from shoot</summary>
-        private double senescedShootN;
-
-        /// <summary>DM amount detached from shoot (added to surface OM)</summary>
+        /// <summary>DM amount detached from shoot, added to surface OM (kg/ha).</summary>
         private double detachedShootDM;
 
-        /// <summary>N amount in detached tissues from shoot</summary>
+        /// <summary>N amount in detached tissues from shoot (kg/ha).</summary>
         private double detachedShootN;
 
-        /// <summary>DM amount in senesced roots</summary>
-        private double senescedRootDM;
-
-        /// <summary>N amount in senesced tissues from roots</summary>
-        private double senescedRootN;
-
-        /// <summary>DM amount in detached roots (added to soil FOM)</summary>
+        /// <summary>DM amount detached from roots, added to soil FOM (kg/ha).</summary>
         private double detachedRootDM;
 
-        /// <summary>N amount in detached tissues from roots</summary>
+        /// <summary>N amount in detached tissues from roots (kg/ha).</summary>
         private double detachedRootN;
 
-        /// <summary>Fraction of new growth allocated to shoot (0-1)</summary>
+        /// <summary>Fraction of new growth allocated to shoot (0-1).</summary>
         private double fractionToShoot;
 
-        /// <summary>Fraction of new shoot growth allocated to leaves (0-1)</summary>
-        public double fractionToLeaf;
+        /// <summary>Fraction of new shoot growth allocated to leaves (0-1).</summary>
+        private double fractionToLeaf;
 
-        /// <summary>Flag whether the factor adjusting Shoot:Root ratio during reproductive season is being used</summary>
+        /// <summary>Flag whether the factor adjusting Shoot:Root ratio during reproductive season is being used.</summary>
         private bool usingReproSeasonFactor = true;
 
-        /// <summary>The three intervals defining the reproductive season (onset, main phase, and outset)</summary>
+        /// <summary>The three intervals defining the reproductive season (onset, main phase, and outset).</summary>
         private double[] reproSeasonInterval;
 
-        /// <summary>The day of the year for the start of the reproductive season</summary>
+        /// <summary>The day of the year for the start of the reproductive season.</summary>
         private double doyIniReproSeason;
 
-        /// <summary>The relative increase in the shoot-root ratio during reproductive season</summary>
+        /// <summary>The relative increase in the shoot-root ratio during reproductive season (0-1).</summary>
         private double allocationIncreaseRepro;
 
-        /// <summary>The daily DM turnover rate (from tissue 1 to 2, then to 3, then to 4)</summary>
+        /// <summary>The daily DM turnover rate for live shoot tissues (0-1).</summary>
         private double gama = 0.0;
 
-        /// <summary>The daily DM turnover rate for stolons</summary>
-        private double gamaS = 0.0; // for stolons
-
-        /// <summary>The daily DM turnover rate for dead tissue (from tissue 4 to litter)</summary>
+        /// <summary>The daily DM turnover rate for dead shoot tissues (0-1).</summary>
         private double gamaD = 0.0;
 
-        /// <summary>The daily DM turnover rate for roots</summary>
+        /// <summary>The daily DM turnover rate for roots tissue (0-1).</summary>
         private double gamaR = 0.0;
 
-        /// <summary>The tissue turnover factor due to variations in temperature</summary>
+        /// <summary>The daily DM turnover rate for stolon tissue (0-1).</summary>
+        private double gamaS = 0.0;
+
+        /// <summary>The tissue turnover factor due to variations in temperature (0-1).</summary>
         private double ttfTemperature = 0.0;
 
-        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        /// <summary>The tissue turnover factor due to variations in moisture (0-1).</summary>
         private double ttfMoistureShoot = 0.0;
 
-        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        /// <summary>The tissue turnover factor due to variations in moisture (0-1).</summary>
         private double ttfMoistureRoot = 0.0;
 
-        /// <summary>The tissue turnover factor due to variations in moisture</summary>
+        /// <summary>The tissue turnover factor due to variations in moisture (0-1).</summary>
         private double ttfLeafNumber = 0.0;
-
-        /// <summary>The cumulative degrees-day during germination phase</summary>
-        private double germinationGDD = 0.0;
 
         // Plant height, LAI and cover  -------------------------------------------------------------------------------
 
-        /// <summary>The plant's green LAI</summary>
+        /// <summary>The plant's green LAI (m^2/m^2).</summary>
         private double greenLAI;
 
-        /// <summary>The plant's dead LAI</summary>
+        /// <summary>The plant's dead LAI (m^2/m^2).</summary>
         private double deadLAI;
 
-        /// <summary>Flag whether stem and stolons are considered for computing LAI green (mostly when DM is low)</summary>
+        /// <summary>Flag whether stem and stolons are considered for computing LAI green (mostly when DM is low).</summary>
         private bool usingStemStolonEffect = true;
 
         // Root depth and distribution --------------------------------------------------------------------------------
 
-        /// <summary>The daily variation in root depth</summary>
+        /// <summary>The daily variation in root depth (mm).</summary>
         private double dRootDepth = 50;
-
-        // Amounts and fluxes of N in the plant  ----------------------------------------------------------------------
-
-        /// <summary>The N demand for new growth, with luxury uptake</summary>
-        private double NdemandLux;
-
-        /// <summary>The N demand for new growth, at optimum N content</summary>
-        private double NdemandOpt;
-
-        /// <summary>The amount of N fixation from atmosphere (for legumes)</summary>
-        internal double Nfixation = 0.0;
-
-        /// <summary>The amount of senesced N actually remobilised</summary>
-        private double NSenescedRemobilised = 0.0;
-
-        /// <summary>The amount of N used in new growth</summary>
-        internal double dNewGrowthN = 0.0;
-
-        /// <summary>The amount of luxury N actually remobilised</summary>
-        private double NLuxuryRemobilised;
-
-        // N uptake process  ------------------------------------------------------------------------------------------
-
-        /// <summary>The amount of N demanded from the soil</summary>
-        private double mySoilNDemand;
-
-        /// <summary>The amount of NH4 in the soil available to the plant</summary>
-        private double[] mySoilNH4Available;
-
-        /// <summary>The amount of NO3 in the soil available to the plant</summary>
-        private double[] mySoilNO3Available;
-
-        /// <summary>The amount of soil NH4 taken up by the plant</summary>
-        private double[] mySoilNH4Uptake;
-
-        /// <summary>The amount of soil NO3 taken up by the plant</summary>
-        private double[] mySoilNO3Uptake;
 
         // water uptake process  --------------------------------------------------------------------------------------
 
-        /// <summary>The amount of water demanded for new growth</summary>
+        /// <summary>The amount of water demanded for new growth (mm).</summary>
         private double myWaterDemand = 0.0;
 
-        /// <summary>The amount of soil available water</summary>
+        /// <summary>The amount of soil available water (mm).</summary>
         private double[] mySoilWaterAvailable;
 
-        /// <summary>The amount of soil water taken up</summary>
+        /// <summary>The amount of soil water taken up (mm).</summary>
         private double[] mySoilWaterUptake;
+
+        // Amounts and fluxes of N in the plant  ----------------------------------------------------------------------
+
+        /// <summary>The N demand for new growth, with luxury uptake (kg/ha).</summary>
+        private double demandLuxuryN;
+
+        /// <summary>The N demand for new growth, at optimum N content (kg/ha).</summary>
+        private double demandOptimumN;
+
+        /// <summary>The amount of N fixation from atmosphere, for legumes (kg/ha).</summary>
+        private double fixedN = 0.0;
+
+        /// <summary>The amount of senesced N actually remobilised (kg/ha).</summary>
+        private double senescedNRemobilised = 0.0;
+
+        /// <summary>The amount of luxury N actually remobilised (kg/ha).</summary>
+        private double luxuryNRemobilised;
+
+        /// <summary>The amount of N used in new growth (kg/ha).</summary>
+        private double dNewGrowthN = 0.0;
+
+        // N uptake process  ------------------------------------------------------------------------------------------
+
+        /// <summary>The amount of N demanded from the soil (kg/ha).</summary>
+        private double mySoilNDemand;
+
+        /// <summary>The amount of NH4-N in the soil available to the plant (kg/ha).</summary>
+        private double[] mySoilNH4Available;
+
+        /// <summary>The amount of NO3-N in the soil available to the plant (kg/ha).</summary>
+        private double[] mySoilNO3Available;
+
+        /// <summary>The amount of soil NH4-N taken up by the plant (kg/ha).</summary>
+        private double[] mySoilNH4Uptake;
+
+        /// <summary>The amount of soil NO3-N taken up by the plant (kg/ha).</summary>
+        private double[] mySoilNO3Uptake;
 
         // growth limiting factors ------------------------------------------------------------------------------------
 
-        /// <summary>The growth factor due to variations in intercepted radiation</summary>
+        /// <summary>The growth factor due to variations in intercepted radiation (0-1).</summary>
         private double glfRadn = 1.0;
 
-        /// <summary>The growth factor due to N variations in atmospheric CO2</summary>
+        /// <summary>The growth factor due to N variations in atmospheric CO2 (0-1).</summary>
         private double glfCO2 = 1.0;
 
-        /// <summary>The growth factor due to variations in plant N concentration</summary>
+        /// <summary>The growth factor due to variations in plant N concentration (0-1).</summary>
         private double glfNc = 1.0;
 
-        /// <summary>The growth factor due to variations in air temperature</summary>
+        /// <summary>The growth factor due to variations in air temperature (0-1).</summary>
         private double glfTemp = 1.0;
 
-        /// <summary>Flag whether the factor reducing photosynthesis due to heat damage is being used</summary>
+        /// <summary>Flag whether the factor reducing photosynthesis due to heat damage is being used.</summary>
         private bool usingHeatStressFactor = true;
 
-        /// <summary>Flag whether the factor reducing photosynthesis due to cold damage is being used</summary>
+        /// <summary>Flag whether the factor reducing photosynthesis due to cold damage is being used.</summary>
         private bool usingColdStressFactor = true;
 
-        /// <summary>The growth factor due to heat stress</summary>
+        /// <summary>The growth factor due to heat stress (0-1).</summary>
         private double glfHeat = 1.0;
-        
-        /// <summary>The growth factor due to cold stress</summary>
+
+        /// <summary>The growth factor due to cold stress (0-1).</summary>
         private double glfCold = 1.0;
 
-        /// <summary>The growth limiting factor due to water stress</summary>
+        /// <summary>The growth limiting factor due to water stress (0-1).</summary>
         private double glfWater = 1.0;
 
-        /// <summary>Flag whether the factor reducing growth due to logging is used on a cumulative basis</summary>
+        /// <summary>Flag whether the factor reducing growth due to logging is used on a cumulative basis.</summary>
         private bool usingCumulativeWaterLogging = false;
 
-        /// <summary>The cumulative water logging factor</summary>
+        /// <summary>The cumulative water logging factor (0-1).</summary>
         private double cumWaterLogging = 0.0;
 
-        /// <summary>The growth limiting factor due to water logging</summary>
-        internal double glfAeration = 1.0;
+        /// <summary>The growth limiting factor due to water logging (0-1).</summary>
+        private double glfAeration = 1.0;
 
-        /// <summary>The growth limiting factor due to N stress</summary>
-        internal double glfN = 1.0;
+        /// <summary>The growth limiting factor due to N stress (0-1).</summary>
+        private double glfN = 1.0;
 
         // Auxiliary variables for temperature stress  ----------------------------------------------------------------
 
-        /// <summary>Growth rate reduction factor due to high temperatures</summary>
+        /// <summary>Growth rate reduction factor due to high temperatures (0-1).</summary>
         private double highTempStress = 1.0;
 
-        /// <summary>Cumulative degress of temperature for recovery from heat damage</summary>
+        /// <summary>Cumulative degress of temperature for recovery from heat damage (oCd).</summary>
         private double accumDDHeat = 0.0;
 
-        /// <summary>Growth rate reduction factor due to low temperatures</summary>
+        /// <summary>Growth rate reduction factor due to low temperatures (0-1).</summary>
         private double lowTempStress = 1.0;
 
-        /// <summary>Cumulative degress of temperature for recovery from cold damage</summary>
+        /// <summary>Cumulative degress of temperature for recovery from cold damage (oCd).</summary>
         private double accumDDCold = 0.0;
 
         // Harvest and digestibility  ---------------------------------------------------------------------------------
 
-        /// <summary>The fraction of DM harvested (defoliated)</summary>
-        private double fractionDefoliated = 0.0;
+        /// <summary>The fraction of standing DM harvested (0-1).</summary>
+        private double defoliatedFraction = 0.0;
 
-        /// <summary>The DM amount harvested (defoliated)</summary>
-        private double dmDefoliated = 0.0;
+        /// <summary>The DM amount harvested (kg/ha).</summary>
+        private double defoliatedDM = 0.0;
 
-        /// <summary>The N amount harvested (defoliated)</summary>
-        private double Ndefoliated = 0.0;
+        /// <summary>The N amount in the harvested material (kg/ha).</summary>
+        private double defoliatedN = 0.0;
 
-        /// <summary>The digestibility of herbage</summary>
-        private double digestHerbage = 0.0;
+        /// <summary>The digestibility of defoliated material (0-1).</summary>
+        private double defoliatedDigestibility = 0.0;
 
-        /// <summary>The digestibility of defoliated material</summary>
-        private double digestDefoliated = 0.0;
-
-        /// <summary>The fraction of standing DM harvested</summary>
-        internal double fractionHarvested = 0.0;
+        /// <summary>The digestibility of herbage (0-1).</summary>
+        private double herbageDigestibility = 0.0;
 
         // general auxiliary variables  -------------------------------------------------------------------------------
 
-        /// <summary>Number of layers in the soil</summary>
+        /// <summary>Number of layers in the soil.</summary>
         private int nLayers = 0;
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Constants and auxiliary  -----------------------------------------------------------------------------------
 
-        /// <summary>Average carbon content in plant dry matter</summary>
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         internal const double CarbonFractionInDM = 0.4;
 
-        /// <summary>Factor for converting nitrogen to protein</summary>
+        /// <summary>Factor for converting nitrogen to protein (kg/kg).</summary>
         internal const double NitrogenToProteinFactor = 6.25;
 
-        /// <summary>The C:N ratio of protein</summary>
+        /// <summary>The C:N ratio of protein (-).</summary>
         internal const double CNratioProtein = 3.5;
 
-        /// <summary>The C:N ratio of cell wall</summary>
+        /// <summary>The C:N ratio of cell wall (-).</summary>
         internal const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values</summary>
         internal const double Epsilon = 0.000000001;
 
-        /// <summary>A yes or no answer</summary>
+        /// <summary>A yes or no answer.</summary>
         public enum YesNoAnswer
         {
             /// <summary>a positive answer</summary>
@@ -1498,7 +1495,7 @@ namespace Models.AgPasture
             no
         }
 
-        /// <summary>List of valid species family names</summary>
+        /// <summary>List of valid species family names.</summary>
         public enum PlantFamilyType
         {
             /// <summary>A grass species, Poaceae</summary>
@@ -1511,7 +1508,7 @@ namespace Models.AgPasture
             Forb
         }
 
-        /// <summary>List of valid photosynthesis pathways</summary>
+        /// <summary>List of valid photosynthesis pathways.</summary>
         public enum PhotosynthesisPathwayType
         {
             /// <summary>A C3 plant</summary>
@@ -1521,7 +1518,7 @@ namespace Models.AgPasture
             C4
         }
 
-        /// <summary>List of valid methods to compute plant available water</summary>
+        /// <summary>List of valid methods to compute plant available water.</summary>
         public enum PlantAvailableWaterMethod
         {
             /// <summary>The APSIM default, using kL</summary>
@@ -1534,7 +1531,7 @@ namespace Models.AgPasture
             AlternativeKS
         }
 
-        /// <summary>List of valid methods to compute plant available water</summary>
+        /// <summary>List of valid methods to compute plant available water.</summary>
         public enum PlantAvailableNitrogenMethod
         {
             /// <summary>The AgPasture old default</summary>
@@ -1554,16 +1551,13 @@ namespace Models.AgPasture
 
         #region Model outputs  ---------------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Is the plant alive?
-        /// </summary>
+        /// <summary>Flag whether the plant is alive</summary>
         public bool IsAlive
         {
             get { return PlantStatus == "alive"; }
         }
 
-        /// <summary>Gets the plant status.</summary>
-        /// <value>The plant status (dead, alive, etc).</value>
+        /// <summary>Gets the plant status (dead, alive, etc).</summary>
         [Description("Plant status (dead, alive, etc)")]
         [Units("")]
         public string PlantStatus
@@ -1578,7 +1572,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the index for the plant development stage.</summary>
-        /// <value>The stage index.</value>
         [Description("Plant development stage number")]
         [Units("")]
         public int Stage
@@ -1598,7 +1591,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the name of the plant development stage.</summary>
-        /// <value>The name of the stage.</value>
         [Description("Plant development stage name")]
         [Units("")]
         public string StageName
@@ -1617,291 +1609,265 @@ namespace Models.AgPasture
             }
         }
 
+        /// <summary>The intercepted solar radiation (W/m^2)</summary>
+        [XmlIgnore]
+        [Units("W/m^2")]
+        public double InterceptedRadn { get; set; }
+
         #region - DM and C amounts  ----------------------------------------------------------------------------------------
 
-        /// <summary>Gets the total plant C content.</summary>
-        /// <value>The plant C content.</value>
+        /// <summary>Gets the total plant C content (kg/ha).</summary>
         [Description("Total amount of C in plants")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double TotalC
         {
             get { return TotalWt * CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the plant total dry matter weight.</summary>
-        /// <value>The total DM weight.</value>
+        /// <summary>Gets the plant total dry matter weight (kg/ha).</summary>
         [Description("Total plant dry matter weight")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double TotalWt
         {
             get { return AboveGroundWt + BelowGroundWt; }
         }
 
-        /// <summary>Gets the plant DM weight above ground.</summary>
-        /// <value>The above ground DM weight.</value>
+        /// <summary>Gets the plant DM weight above ground (kg/ha).</summary>
         [Description("Dry matter weight above ground")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double AboveGroundWt
         {
             get { return AboveGroundLiveWt + AboveGroundDeadWt; }
         }
 
-        /// <summary>Gets the DM weight of live plant parts above ground.</summary>
-        /// <value>The above ground DM weight of live plant parts.</value>
+        /// <summary>Gets the DM weight of live plant parts above ground (kg/ha).</summary>
         [Description("Dry matter weight of alive plants above ground")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double AboveGroundLiveWt
         {
             get { return leaves.DMLive + stems.DMLive + stolons.DMLive; }
         }
 
-        /// <summary>Gets the DM weight of dead plant parts above ground.</summary>
-        /// <value>The above ground dead DM weight.</value>
+        /// <summary>Gets the DM weight of dead plant parts above ground (kg/ha).</summary>
         [Description("Dry matter weight of dead plants above ground")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double AboveGroundDeadWt
         {
             get { return leaves.DMDead + stems.DMDead + stolons.DMDead; }
         }
 
-        /// <summary>Gets the DM weight of the plant below ground.</summary>
-        /// <value>The below ground DM weight of plant.</value>
+        /// <summary>Gets the DM weight of the plant below ground (kg/ha).</summary>
         [Description("Dry matter weight below ground")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double BelowGroundWt
         {
             get { return roots.DMTotal; }
         }
 
-        /// <summary>Gets the total standing DM weight.</summary>
-        /// <value>The DM weight of leaves and stems.</value>
+        /// <summary>Gets the total standing DM weight (kg/ha).</summary>
         [Description("Dry matter weight of standing herbage")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StandingWt
         {
             get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the DM weight of standing live plant material.</summary>
-        /// <value>The DM weight of live leaves and stems.</value>
+        /// <summary>Gets the DM weight of standing live plant material (kg/ha).</summary>
         [Description("Dry matter weight of live standing plants parts")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StandingLiveWt
         {
             get { return leaves.DMLive + stems.DMLive + stolons.DMLive * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the DM weight of standing dead plant material.</summary>
-        /// <value>The DM weight of dead leaves and stems.</value>
+        /// <summary>Gets the DM weight of standing dead plant material (kg/ha).</summary>
         [Description("Dry matter weight of dead standing plants parts")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StandingDeadWt
         {
             get { return leaves.DMDead + stems.DMDead + stolons.DMDead * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the total DM weight of leaves.</summary>
-        /// <value>The leaf DM weight.</value>
+        /// <summary>Gets the total DM weight of leaves (kg/ha).</summary>
         [Description("Dry matter weight of leaves")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double LeafWt
         {
             get { return leaves.DMTotal; }
         }
 
-        /// <summary>Gets the DM weight of green leaves.</summary>
-        /// <value>The green leaf DM weight.</value>
+        /// <summary>Gets the DM weight of live leaves (kg/ha).</summary>
         [Description("Dry matter weight of live leaves")]
-        [Units("kgDM/ha")]
-        public double LeafGreenWt
+        [Units("kg/ha")]
+        public double LeafLiveWt
         {
             get { return leaves.DMLive; }
         }
 
-        /// <summary>Gets the DM weight of dead leaves.</summary>
-        /// <value>The dead leaf DM weight.</value>
+        /// <summary>Gets the DM weight of dead leaves (kg/ha).</summary>
         [Description("Dry matter weight of dead leaves")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double LeafDeadWt
         {
             get { return leaves.DMDead; }
         }
 
-        /// <summary>Gets the toal DM weight of stems and sheath.</summary>
-        /// <value>The stem DM weight.</value>
+        /// <summary>Gets the toal DM weight of stems and sheath (kg/ha).</summary>
         [Description("Dry matter weight of stems and sheath")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StemWt
         {
             get { return stems.DMTotal; }
         }
 
-        /// <summary>Gets the DM weight of live stems and sheath.</summary>
-        /// <value>The live stems DM weight.</value>
+        /// <summary>Gets the DM weight of live stems and sheath (kg/ha).</summary>
         [Description("Dry matter weight of alive stems and sheath")]
-        [Units("kgDM/ha")]
-        public double StemGreenWt
+        [Units("kg/ha")]
+        public double StemLiveWt
         {
             get { return stems.DMLive; }
         }
 
-        /// <summary>Gets the DM weight of dead stems and sheath.</summary>
-        /// <value>The dead stems DM weight.</value>
+        /// <summary>Gets the DM weight of dead stems and sheath (kg/ha).</summary>
         [Description("Dry matter weight of dead stems and sheath")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StemDeadWt
         {
             get { return stems.DMDead; }
         }
 
-        /// <summary>Gets the total DM weight od stolons.</summary>
-        /// <value>The stolon DM weight.</value>
+        /// <summary>Gets the total DM weight od stolons (kg/ha).</summary>
         [Description("Dry matter weight of stolons")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StolonWt
         {
             get { return stolons.DMTotal; }
         }
 
-        /// <summary>Gets the total DM weight of roots.</summary>
-        /// <value>The root DM weight.</value>
+        /// <summary>Gets the total DM weight of roots (kg/ha).</summary>
         [Description("Dry matter weight of roots")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double RootWt
         {
             get { return roots.DMTotal; }
         }
 
-        /// <summary>Gets the DM weight of roots for each layer.</summary>
-        /// <value>The root DM weight.</value>
+        /// <summary>Gets the DM weight of roots for each layer (kg/ha).</summary>
         [Description("Dry matter weight of roots")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double[] RootLayerWt
         {
             get { return roots.Tissue[0].DMLayer; }
         }
 
-        /// <summary>Gets the DM weight of growing tissues from all above ground organs.</summary>
-        /// <value>The DM weight of growing tissues.</value>
+        /// <summary>Gets the DM weight of growing tissues from all above ground organs (kg/ha).</summary>
         [Description("Dry matter weight of growing tissues from all above ground organs")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double GrowingTissuesWt
         {
             get { return leaves.Tissue[0].DM + stems.Tissue[0].DM + stolons.Tissue[0].DM; }
         }
 
-        /// <summary>Gets the DM weight of developed tissues from all above ground organs.</summary>
-        /// <value>The DM weight of developed tissues.</value>
+        /// <summary>Gets the DM weight of developed tissues from all above ground organs (kg/ha).</summary>
         [Description("Dry matter weight of developed tissues from all above ground organs")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double DevelopedTissuesWt
         {
             get { return leaves.Tissue[1].DM + stems.Tissue[1].DM + stolons.Tissue[1].DM; }
         }
 
-        /// <summary>Gets the DM weight of mature tissues from all above ground organs.</summary>
-        /// <value>The DM weight of mature tissues.</value>
+        /// <summary>Gets the DM weight of mature tissues from all above ground organs (kg/ha).</summary>
         [Description("Dry matter weight of mature tissues from all above ground organs")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double MatureTissuesWt
         {
             get { return leaves.Tissue[2].DM + stems.Tissue[2].DM + stolons.Tissue[2].DM; }
         }
 
-        /// <summary>Gets the DM weight of leaves at stage1 (developing).</summary>
-        /// <value>The stage1 leaf DM weight.</value>
-        [Description("Dry matter weight of leaves at stage 1 (developing)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of leaves at stage1, growing (kg/ha).</summary>
+        [Description("Dry matter weight of leaves at stage 1 (growing)")]
+        [Units("kg/ha")]
         public double LeafStage1Wt
         {
             get { return leaves.Tissue[0].DM; }
         }
 
-        /// <summary>Gets the DM weight of leaves stage2 (mature).</summary>
-        /// <value>The stage2 leaf DM weight.</value>
-        [Description("Dry matter weight of leaves at stage 2 (mature)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of leaves stage2, developing (kg/ha).</summary>
+        [Description("Dry matter weight of leaves at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double LeafStage2Wt
         {
             get { return leaves.Tissue[1].DM; }
         }
 
-        /// <summary>Gets the DM weight of leaves at stage3 (senescing).</summary>
-        /// <value>The stage3 leaf DM weight.</value>
-        [Description("Dry matter weight of leaves at stage 3 (senescing)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of leaves at stage3, mature (kg/ha).</summary>
+        [Description("Dry matter weight of leaves at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double LeafStage3Wt
         {
             get { return leaves.Tissue[2].DM; }
         }
 
-        /// <summary>Gets the DM weight of leaves at stage4 (dead).</summary>
-        /// <value>The stage4 leaf DM weight.</value>
+        /// <summary>Gets the DM weight of leaves at stage4, dead (kg/ha).</summary>
         [Description("Dry matter weight of leaves at stage 4 (dead)")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double LeafStage4Wt
         {
             get { return leaves.Tissue[3].DM; }
         }
 
-        /// <summary>Gets the DM weight stems and sheath at stage1 (developing).</summary>
-        /// <value>The stage1 stems DM weight.</value>
-        [Description("Dry matter weight of stems at stage 1 (developing)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight stems and sheath at stage1, growing (kg/ha).</summary>
+        [Description("Dry matter weight of stems at stage 1 (growing)")]
+        [Units("kg/ha")]
         public double StemStage1Wt
         {
             get { return stems.Tissue[0].DM; }
         }
 
-        /// <summary>Gets the DM weight of stems and sheath at stage2 (mature).</summary>
-        /// <value>The stage2 stems DM weight.</value>
-        [Description("Dry matter weight of stems at stage 2 (mature)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of stems and sheath at stage2, developing (kg/ha).</summary>
+        [Description("Dry matter weight of stems at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double StemStage2Wt
         {
             get { return stems.Tissue[1].DM; }
         }
 
-        /// <summary>Gets the DM weight of stems and sheath at stage3 (senescing)).</summary>
+        /// <summary>Gets the DM weight of stems and sheath at stage3, mature (kg/ha).</summary>
         /// <value>The stage3 stems DM weight.</value>
-        [Description("Dry matter weight of stems at stage 3 (senescing)")]
-        [Units("kgDM/ha")]
+        [Description("Dry matter weight of stems at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double StemStage3Wt
         {
             get { return stems.Tissue[2].DM; }
         }
 
-        /// <summary>Gets the DM weight of stems and sheath at stage4 (dead).</summary>
-        /// <value>The stage4 stems DM weight.</value>
+        /// <summary>Gets the DM weight of stems and sheath at stage4, dead (kg/ha).</summary>
         [Description("Dry matter weight of stems at stage 4 (dead)")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double StemStage4Wt
         {
             get { return stems.Tissue[3].DM; }
         }
 
-        /// <summary>Gets the DM weight of stolons at stage1 (developing).</summary>
-        /// <value>The stage1 stolon DM weight.</value>
-        [Description("Dry matter weight of stolons at stage 1 (developing)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of stolons at stage1, growing (kg/ha).</summary>
+        [Description("Dry matter weight of stolons at stage 1 (growing)")]
+        [Units("kg/ha")]
         public double StolonStage1Wt
         {
             get { return stolons.Tissue[0].DM; }
         }
 
-        /// <summary>Gets the DM weight of stolons at stage2 (mature).</summary>
-        /// <value>The stage2 stolon DM weight.</value>
-        [Description("Dry matter weight of stolons at stage 2 (mature)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of stolons at stage2, developing (kg/ha).</summary>
+        [Description("Dry matter weight of stolons at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double StolonStage2Wt
         {
             get { return stolons.Tissue[1].DM; }
         }
 
-        /// <summary>Gets the DM weight of stolons at stage3 (senescing).</summary>
-        /// <value>The stage3 stolon DM weight.</value>
-        [Description("Dry matter weight of stolons at stage 3 (senescing)")]
-        [Units("kgDM/ha")]
+        /// <summary>Gets the DM weight of stolons at stage3, mature (kg/ha).</summary>
+        [Description("Dry matter weight of stolons at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double StolonStage3Wt
         {
             get { return stolons.Tissue[2].DM; }
@@ -1911,17 +1877,15 @@ namespace Models.AgPasture
 
         #region - C and DM flows  ------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the potential carbon assimilation.</summary>
-        /// <value>The potential carbon assimilation.</value>
-        [Description("Potential C assimilation, corrected for extreme temperatures")]
+        /// <summary>Gets the potential carbon assimilation (kg/ha).</summary>
+        [Description("Potential C assimilation")]
         [Units("kgC/ha")]
         public double PotCarbonAssimilation
         {
             get { return grossPhotosynthesis; }
         }
 
-        /// <summary>Gets the carbon loss via respiration.</summary>
-        /// <value>The carbon loss via respiration.</value>
+        /// <summary>Gets the carbon loss via respiration (kg/ha).</summary>
         [Description("Loss of C via respiration")]
         [Units("kgC/ha")]
         public double CarbonLossRespiration
@@ -1929,8 +1893,7 @@ namespace Models.AgPasture
             get { return respirationMaintenance; }
         }
 
-        /// <summary>Gets the carbon remobilised from senescent tissue.</summary>
-        /// <value>The carbon remobilised.</value>
+        /// <summary>Gets the carbon remobilised from senescent tissue (kg/ha).</summary>
         [Description("C remobilised from senescent tissue")]
         [Units("kgC/ha")]
         public double CarbonRemobilisable
@@ -1938,136 +1901,121 @@ namespace Models.AgPasture
             get { return remobilisableC; }
         }
 
-        /// <summary>Gets the gross potential growth rate.</summary>
-        /// <value>The potential C assimilation, in DM equivalent.</value>
+        /// <summary>Gets the gross potential growth rate (kg DM/ha).</summary>
         [Description("Gross potential growth rate (potential C assimilation)")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double GrossPotentialGrowthWt
         {
             get { return grossPhotosynthesis / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the respiration rate.</summary>
-        /// <value>The loss of C due to respiration, in DM equivalent.</value>
+        /// <summary>Gets the respiration rate (kg DM/ha).</summary>
         [Description("Respiration rate (DM lost via respiration)")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double RespirationWt
         {
             get { return respirationMaintenance / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the remobilisation rate.</summary>
-        /// <value>The C remobilised, in DM equivalent.</value>
+        /// <summary>Gets the remobilisation rate (kg DM/ha).</summary>
         [Description("C remobilisation (DM remobilised from old tissue to new growth)")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double RemobilisationWt
         {
             get { return remobilisableC / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the net potential growth rate.</summary>
-        /// <value>The net potential growth rate.</value>
+        /// <summary>Gets the net potential growth rate (kg DM/ha).</summary>
         [Description("Net potential growth rate")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double NetPotentialGrowthWt
         {
             get { return dGrowthPot; }
         }
 
-        /// <summary>Gets the potential growth rate after water stress.</summary>
-        /// <value>The potential growth after water stress.</value>
+        /// <summary>Gets the potential growth rate after water stress (kg DM/ha).</summary>
         [Description("Potential growth rate after water stress")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double PotGrowthWt_Wstress
         {
             get { return dGrowthWstress; }
         }
 
-        /// <summary>Gets the actual growth rate.</summary>
-        /// <value>The actual growth rate.</value>
+        /// <summary>Gets the actual growth rate (kg DM/ha).</summary>
         [Description("Actual growth rate, after nutrient stress")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double ActualGrowthWt
         {
             get { return dGrowthActual; }
         }
 
-        /// <summary>Gets the effective growth rate.</summary>
-        /// <value>The effective growth rate.</value>
+        /// <summary>Gets the effective growth rate (kg DM/ha).</summary>
         [Description("Effective growth rate, after turnover")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double EffectiveGrowthWt
         {
             get { return dGrowthEff; }
         }
 
-        /// <summary>Gets the effective herbage growth rate.</summary>
-        /// <value>The herbage growth rate.</value>
+        /// <summary>Gets the effective herbage growth rate (kg/ha).</summary>
         [Description("Effective herbage growth rate, above ground")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double HerbageGrowthWt
         {
             get { return dGrowthShootDM; }
         }
 
-        /// <summary>Gets the effective root growth rate.</summary>
-        /// <value>The root growth DM weight.</value>
+        /// <summary>Gets the effective root growth rate (kg/ha).</summary>
         [Description("Effective root growth rate")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double RootGrowthWt
         {
             get { return dGrowthRootDM - detachedRootDM; }
         }
 
-        /// <summary>Gets the litter DM weight deposited onto soil surface.</summary>
-        /// <value>The litter DM weight deposited.</value>
+        /// <summary>Gets the litter DM weight deposited onto soil surface (kg/ha).</summary>
         [Description("Litter amount deposited onto soil surface")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double LitterWt
         {
             get { return detachedShootDM; }
         }
 
-        /// <summary>Gets the senesced root DM weight.</summary>
-        /// <value>The senesced root DM weight.</value>
+        /// <summary>Gets the senesced root DM weight (kg/ha).</summary>
         [Description("Amount of senesced roots added to soil FOM")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double RootSenescedWt
         {
             get { return detachedRootDM; }
         }
 
-        /// <summary>Gets the gross primary productivity.</summary>
-        /// <value>The gross primary productivity.</value>
+        /// <summary>Gets the gross primary productivity (kg/ha).</summary>
         [Description("Gross primary productivity")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double GPP
         {
             get { return grossPhotosynthesis / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the net primary productivity.</summary>
-        /// <value>The net primary productivity.</value>
+        /// <summary>Gets the net primary productivity (kg/ha).</summary>
         [Description("Net primary productivity")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double NPP
         {
             get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the net above-ground primary productivity.</summary>
-        /// <value>The net above-ground primary productivity.</value>
+        /// <summary>Gets the net above-ground primary productivity (kg/ha).</summary>
         [Description("Net above-ground primary productivity")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double NAPP
         {
             get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * fractionToShoot / CarbonFractionInDM; }
         }
 
-        /// <summary>Gets the net below-ground primary productivity.</summary>
-        /// <value>The net below-ground primary productivity.</value>
+        /// <summary>Gets the net below-ground primary productivity (kg/ha).</summary>
         [Description("Net below-ground primary productivity")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double NBPP
         {
             get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1 - fractionToShoot) / CarbonFractionInDM; }
@@ -2077,271 +2025,241 @@ namespace Models.AgPasture
 
         #region - N amounts  -----------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the plant total N content.</summary>
-        /// <value>The total N content.</value>
+        /// <summary>Gets the plant total N content (kg/ha).</summary>
         [Description("Total plant N amount")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double TotalN
         {
             get { return AboveGroundN + BelowGroundN; }
         }
 
-        /// <summary>Gets the N content in the plant above ground.</summary>
-        /// <value>The above ground N content.</value>
+        /// <summary>Gets the N content in the plant above ground (kg/ha).</summary>
         [Description("N amount of plant parts above ground")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double AboveGroundN
         {
             get { return AboveGroundLiveN + AboveGroundDeadN; }
         }
 
-        /// <summary>Gets the N content in live plant material above ground.</summary>
-        /// <value>The N content above ground of live plants.</value>
+        /// <summary>Gets the N content in live plant material above ground (kg/ha).</summary>
         [Description("N amount of alive plant parts above ground")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double AboveGroundLiveN
         {
             get { return leaves.NLive + stems.NLive + stolons.NLive; }
         }
 
-        /// <summary>Gets the N content of dead plant material above ground.</summary>
-        /// <value>The N content above ground of dead plants.</value>
+        /// <summary>Gets the N content of dead plant material above ground (kg/ha).</summary>
         [Description("N amount of dead plant parts above ground")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double AboveGroundDeadN
         {
             get { return leaves.NDead + stems.NDead + stolons.NDead; }
         }
 
-        /// <summary>Gets the N content of plants below ground.</summary>
-        /// <value>The below ground N content.</value>
+        /// <summary>Gets the N content of plants below ground (kg/ha).</summary>
         [Description("N amount of plant parts below ground")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double BelowGroundN
         {
             get { return roots.NTotal; }
         }
 
-        /// <summary>Gets the N content of standing plants.</summary>
-        /// <value>The N content of leaves and stems.</value>
+        /// <summary>Gets the N content of standing plants (kg/ha).</summary>
         [Description("N amount of standing herbage")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StandingN
         {
             get { return leaves.NTotal + stems.NTotal + stolons.NTotal * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the N content of standing live plant material.</summary>
-        /// <value>The N content of live leaves and stems.</value>
+        /// <summary>Gets the N content of standing live plant material (kg/ha).</summary>
         [Description("N amount of alive standing herbage")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StandingLiveN
         {
             get { return leaves.NLive + stems.NLive + stolons.NLive * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the N content  of standing dead plant material.</summary>
-        /// <value>The N content of dead leaves and stems.</value>
+        /// <summary>Gets the N content  of standing dead plant material (kg/ha).</summary>
         [Description("N amount of dead standing herbage")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StandingDeadN
         {
             get { return leaves.NDead + stems.NDead + stolons.NDead * FractionStolonStanding; }
         }
 
-        /// <summary>Gets the total N content of leaves.</summary>
-        /// <value>The leaf N content.</value>
+        /// <summary>Gets the total N content of leaves (kg/ha).</summary>
         [Description("N amount in the plant's leaves")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double LeafN
         {
             get { return leaves.NTotal; }
         }
 
-        /// <summary>Gets the total N content of stems and sheath.</summary>
-        /// <value>The stem N content.</value>
+        /// <summary>Gets the total N content of stems and sheath (kg/ha).</summary>
         [Description("N amount in the plant's stems")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StemN
         {
             get { return stems.NTotal; }
         }
 
-        /// <summary>Gets the total N content of stolons.</summary>
-        /// <value>The stolon N content.</value>
+        /// <summary>Gets the total N content of stolons (kg/ha).</summary>
         [Description("N amount in the plant's stolons")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StolonN
         {
             get { return stolons.NTotal; }
         }
 
-        /// <summary>Gets the total N content of roots.</summary>
-        /// <value>The root N content.</value>
+        /// <summary>Gets the total N content of roots (kg/ha).</summary>
         [Description("N amount in the plant's roots")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RootN
         {
             get { return roots.NTotal; }
         }
 
-        /// <summary>Gets the N content of green leaves.</summary>
-        /// <value>The green leaf N content.</value>
-        [Description("N amount in alive leaves")]
-        [Units("kgN/ha")]
-        public double LeafGreenN
+        /// <summary>Gets the N content of live leaves (kg/ha).</summary>
+        [Description("N amount in live leaves")]
+        [Units("kg/ha")]
+        public double LeafLiveN
         {
             get { return leaves.NLive; }
         }
 
-        /// <summary>Gets the N content of dead leaves.</summary>
-        /// <value>The dead leaf N content.</value>
+        /// <summary>Gets the N content of dead leaves (kg/ha).</summary>
         [Description("N amount in dead leaves")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double LeafDeadN
         {
             get { return leaves.NDead; }
         }
 
-        /// <summary>Gets the N content of green stems and sheath.</summary>
-        /// <value>The green stem N content.</value>
-        [Description("N amount in alive stems")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of live stems and sheath (kg/ha).</summary>
+        [Description("N amount in live stems")]
+        [Units("kg/ha")]
         public double StemGreenN
         {
             get { return stems.NLive; }
         }
 
-        /// <summary>Gets the N content of dead stems and sheath.</summary>
-        /// <value>The dead stem N content.</value>
+        /// <summary>Gets the N content of dead stems and sheath (kg/ha).</summary>
         [Description("N amount in dead sytems")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StemDeadN
         {
             get { return stems.NDead; }
         }
 
-        /// <summary>Gets the N content of growing tissues from all above ground organs.</summary>
-        /// <value>The N content of growing tissues.</value>
+        /// <summary>Gets the N content of growing tissues from all above ground organs (kg/ha).</summary>
         [Description("N amount in growing tissues from all above ground organs")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double GrowingTissuesN
         {
             get { return leaves.Tissue[0].Namount + stems.Tissue[0].Namount + stolons.Tissue[0].Namount; }
         }
 
-        /// <summary>Gets the N content of developed tissues from all above ground organs.</summary>
-        /// <value>The N content of developed tissues.</value>
+        /// <summary>Gets the N content of developed tissues from all above ground organs (kg/ha).</summary>
         [Description("N amount in developed tissues from all above ground organs")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double DevelopedTissuesN
         {
             get { return leaves.Tissue[1].Namount + stems.Tissue[1].Namount + stolons.Tissue[1].Namount; }
         }
 
-        /// <summary>Gets the N content of mature tissues from all above ground organs.</summary>
-        /// <value>The N content of mature tissues.</value>
+        /// <summary>Gets the N content of mature tissues from all above ground organs (kg/ha).</summary>
         [Description("N amount in mature tissues from all above ground organs")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double MatureTissuesN
         {
             get { return leaves.Tissue[2].Namount + stems.Tissue[2].Namount + stolons.Tissue[2].Namount; }
         }
-        
-        /// <summary>Gets the N content of leaves at stage1 (developing).</summary>
-        /// <value>The stage1 leaf N.</value>
-        [Description("N amount in leaves at stage 1 (developing)")]
-        [Units("kgN/ha")]
+
+        /// <summary>Gets the N content of leaves at stage1, growing (kg/ha).</summary>
+        [Description("N amount in leaves at stage 1 (growing)")]
+        [Units("kg/ha")]
         public double LeafStage1N
         {
             get { return leaves.Tissue[0].Namount; }
         }
 
-        /// <summary>Gets the N content of leaves at stage2 (mature).</summary>
-        /// <value>The stage2 leaf N.</value>
-        [Description("N amount in leaves at stage 2 (mature)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of leaves at stage2, developing (kg/ha).</summary>
+        [Description("N amount in leaves at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double LeafStage2N
         {
             get { return leaves.Tissue[1].Namount; }
         }
 
-        /// <summary>Gets the N content of leaves at stage3 (senescing).</summary>
-        /// <value>The stage3 leaf N.</value>
-        [Description("N amount in leaves at stage 3 (senescing)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of leaves at stage3, mature (kg/ha).</summary>
+        [Description("N amount in leaves at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double LeafStage3N
         {
             get { return leaves.Tissue[2].Namount; }
         }
 
-        /// <summary>Gets the N content of leaves at stage4 (dead).</summary>
-        /// <value>The stage4 leaf N.</value>
+        /// <summary>Gets the N content of leaves at stage4, dead (kg/ha).</summary>
         [Description("N amount in leaves at stage 4 (dead)")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double LeafStage4N
         {
             get { return leaves.Tissue[3].Namount; }
         }
 
-        /// <summary>Gets the N content of stems and sheath at stage1 (developing).</summary>
-        /// <value>The stage1 stem N.</value>
+        /// <summary>Gets the N content of stems and sheath at stage1, growing (kg/ha).</summary>
         [Description("N amount in stems at stage 1 (developing)")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StemStage1N
         {
             get { return stems.Tissue[0].Namount; }
         }
 
-        /// <summary>Gets the N content of stems and sheath at stage2 (mature).</summary>
-        /// <value>The stage2 stem N.</value>
-        [Description("N amount in stems at stage 2 (mature)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of stems and sheath at stage2, developing (kg/ha).</summary>
+        [Description("N amount in stems at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double StemStage2N
         {
             get { return stems.Tissue[1].Namount; }
         }
 
-        /// <summary>Gets the N content of stems and sheath at stage3 (senescing).</summary>
-        /// <value>The stage3 stem N.</value>
-        [Description("N amount in stems at stage 3 (senescing)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of stems and sheath at stage3, mature (kg/ha).</summary>
+        [Description("N amount in stems at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double StemStage3N
         {
             get { return stems.Tissue[2].Namount; }
         }
 
-        /// <summary>Gets the N content of stems and sheath at stage4 (dead).</summary>
-        /// <value>The stage4 stem N.</value>
+        /// <summary>Gets the N content of stems and sheath at stage4, dead (kg/ha).</summary>
         [Description("N amount in stems at stage 4 (dead)")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StemStage4N
         {
             get { return stems.Tissue[3].Namount; }
         }
 
-        /// <summary>Gets the N content of stolons at stage1 (developing).</summary>
-        /// <value>The stage1 stolon N.</value>
+        /// <summary>Gets the N content of stolons at stage1, growing (kg/ha).</summary>
         [Description("N amount in stolons at stage 1 (developing)")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double StolonStage1N
         {
             get { return stolons.Tissue[0].Namount; }
         }
 
-        /// <summary>Gets the N content of stolons at stage2 (mature).</summary>
-        /// <value>The stage2 stolon N.</value>
-        [Description("N amount in stolons at stage 2 (mature)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of stolons at stage2, developing (kg/ha).</summary>
+        [Description("N amount in stolons at stage 2 (developing)")]
+        [Units("kg/ha")]
         public double StolonStage2N
         {
             get { return stolons.Tissue[1].Namount; }
         }
 
-        /// <summary>Gets the N content of stolons as stage3 (senescing).</summary>
-        /// <value>The stolon stage3 n.</value>
-        [Description("N amount in stolons at stage 3 (senescing)")]
-        [Units("kgN/ha")]
+        /// <summary>Gets the N content of stolons as stage3, mature (kg/ha).</summary>
+        [Description("N amount in stolons at stage 3 (mature)")]
+        [Units("kg/ha")]
         public double StolonStage3N
         {
             get { return stolons.Tissue[2].Namount; }
@@ -2351,167 +2269,141 @@ namespace Models.AgPasture
 
         #region - N concentrations  ----------------------------------------------------------------------------------------
 
-        /// <summary>Gets the average N concentration of standing plant material.</summary>
-        /// <value>The average N concentration of leaves and stems.</value>
+        /// <summary>Gets the average N concentration of standing plant material (kg/kg).</summary>
         [Description("Average N concentration in standing plant parts")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double StandingNConc
         {
             get { return MathUtilities.Divide(StandingN, StandingWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of leaves.</summary>
-        /// <value>The leaf N concentration.</value>
+        /// <summary>Gets the average N concentration of leaves (kg/kg).</summary>
         [Description("Average N concentration in leaves")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double LeafNConc
         {
             get { return MathUtilities.Divide(LeafN, LeafWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of stems and sheath.</summary>
-        /// <value>The stem N concentration.</value>
+        /// <summary>Gets the average N concentration of stems and sheath (kg/kg).</summary>
         [Description("Average N concentration in stems")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double StemNConc
         {
             get { return MathUtilities.Divide(StemN, StemWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of stolons.</summary>
-        /// <value>The stolon N concentration.</value>
+        /// <summary>Gets the average N concentration of stolons (kg/kg).</summary>
         [Description("Average N concentration in stolons")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double StolonNConc
         {
             get { return MathUtilities.Divide(StolonN, StolonWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of roots.</summary>
-        /// <value>The root N concentration.</value>
+        /// <summary>Gets the average N concentration of roots (kg/kg).</summary>
         [Description("Average N concentration in roots")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double RootNConc
         {
             get { return MathUtilities.Divide(RootN, RootWt, 0.0); }
         }
 
-        /// <summary>Gets the N concentration of leaves at stage1 (developing).</summary>
-        /// <value>The stage1 leaf N concentration.</value>
-        [Description("N concentration of leaves at stage 1 (developing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of leaves at stage1, growing (kg/kg).</summary>
+        [Description("N concentration of leaves at stage 1 (growing)")]
+        [Units("kg/kg")]
         public double LeafStage1NConc
         {
             get { return leaves.Tissue[0].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of leaves at stage2 (mature).</summary>
-        /// <value>The stage2 leaf N concentration.</value>
-        [Description("N concentration of leaves at stage 2 (mature)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of leaves at stage2, developing (kg/kg).</summary>
+        [Description("N concentration of leaves at stage 2 (developing)")]
+        [Units("kg/kg")]
         public double LeafStage2NConc
         {
             get { return leaves.Tissue[1].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of leaves at stage3 (senescing).</summary>
-        /// <value>The stage3 leaf N concentration.</value>
-        [Description("N concentration of leaves at stage 3 (senescing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of leaves at stage3, mature (kg/kg).</summary>
+        [Description("N concentration of leaves at stage 3 (mature)")]
+        [Units("kg/kg")]
         public double LeafStage3NConc
         {
             get { return leaves.Tissue[2].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of leaves at stage4 (dead).</summary>
-        /// <value>The stage4 leaf N concentration.</value>
+        /// <summary>Gets the N concentration of leaves at stage4, dead (kg/kg).</summary>
         [Description("N concentration of leaves at stage 4 (dead)")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double LeafStage4NConc
         {
             get { return leaves.Tissue[3].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stems at stage1 (developing).</summary>
-        /// <value>The stage1 stem N concentration.</value>
-        [Description("N concentration of stems at stage 1 (developing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stems at stage1, growing (kg/kg).</summary>
+        [Description("N concentration of stems at stage 1 (growing)")]
+        [Units("kg/kg")]
         public double StemStage1NConc
         {
             get { return stems.Tissue[0].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stems at stage2 (mature).</summary>
-        /// <value>The stage2 stem N concentration.</value>
-        [Description("N concentration of stems at stage 2 (mature)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stems at stage2, developing (kg/kg).</summary>
+        [Description("N concentration of stems at stage 2 (developing)")]
+        [Units("kg/kg")]
         public double StemStage2NConc
         {
             get { return stems.Tissue[1].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stems at stage3 (senescing).</summary>
-        /// <value>The stage3 stem N concentration.</value>
-        [Description("N concentration of stems at stage 3 (senescing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stems at stage3, mature (kg/kg).</summary>
+        [Description("N concentration of stems at stage 3 (mature)")]
+        [Units("kg/kg")]
         public double StemStage3NConc
         {
             get { return stems.Tissue[2].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stems at stage4 (dead).</summary>
-        /// <value>The stage4 stem N concentration.</value>
+        /// <summary>Gets the N concentration of stems at stage4, dead (kg/kg).</summary>
         [Description("N concentration of stems at stage 4 (dead)")]
-        [Units("kgN/kgDM")]
+        [Units("kg/kg")]
         public double StemStage4NConc
         {
             get { return stems.Tissue[3].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stolons at stage1 (developing).</summary>
-        /// <value>The stage1 stolon N concentration.</value>
-        [Description("N concentration of stolons at stage 1 (developing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stolons at stage1, growing (kg/kg).</summary>
+        [Description("N concentration of stolons at stage 1 (growing)")]
+        [Units("kg/kg")]
         public double StolonStage1NConc
         {
             get { return stolons.Tissue[0].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stolons at stage2 (mature).</summary>
-        /// <value>The stage2 stolon N concentration.</value>
-        [Description("N concentration of stolons at stage 2 (mature)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stolons at stage2, developing (kg/kg).</summary>
+        [Description("N concentration of stolons at stage 2 (developing)")]
+        [Units("kg/kg")]
         public double StolonStage2NConc
         {
             get { return stolons.Tissue[1].Nconc; }
         }
 
-        /// <summary>Gets the N concentration of stolons at stage3 (senescing).</summary>
-        /// <value>The stage3 stolon N concentration.</value>
-        [Description("N concentration of stolons at stage 3 (senescing)")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the N concentration of stolons at stage3, mature (kg/kg).</summary>
+        [Description("N concentration of stolons at stage 3 (mature)")]
+        [Units("kg/kg")]
         public double StolonStage3NConc
         {
             get { return stolons.Tissue[2].Nconc; }
-        }
-
-        /// <summary>Gets the N concentration in new grown tissue.</summary>
-        /// <value>The actual growth N concentration.</value>
-        [Description("Concentration of N in new growth")]
-        [Units("kgN/kgDM")]
-        public double ActualGrowthNConc
-        {
-            get { return MathUtilities.Divide(dNewGrowthN, dGrowthActual, 0.0); }
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region - N flows  -------------------------------------------------------------------------------------------------
 
-        /// <summary>Gets amount of N remobilisable from senesced tissue.</summary>
-        /// <value>The remobilisable N amount.</value>
+        /// <summary>Gets amount of N remobilisable from senesced tissue (kg/ha).</summary>
         [Description("Amount of N remobilisable from senesced material")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RemobilisableSenescedN
         {
             get
@@ -2520,148 +2412,129 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of N remobilised from senesced tissue.</summary>
-        /// <value>The remobilised N amount.</value>
+        /// <summary>Gets the amount of N remobilised from senesced tissue (kg/ha).</summary>
         [Description("Amount of N remobilised from senesced material")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RemobilisedSenescedN
         {
-            get { return NSenescedRemobilised; }
+            get { return senescedNRemobilised; }
         }
 
-        /// <summary>Gets the amount of luxury N potentially remobilisable.</summary>
-        /// <value>The remobilisable luxury N amount.</value>
+        /// <summary>Gets the amount of luxury N potentially remobilisable (kg/ha).</summary>
         [Description("Amount of luxury N potentially remobilisable")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RemobilisableLuxuryN
         {
             get { return leaves.NLuxuryRemobilisable + stems.NLuxuryRemobilisable + stolons.NLuxuryRemobilisable + roots.NLuxuryRemobilisable; }
         }
 
-        /// <summary>Gets the amount of luxury N remobilised.</summary>
-        /// <value>The remobilised luxury N amount.</value>
+        /// <summary>Gets the amount of luxury N remobilised (kg/ha).</summary>
         [Description("Amount of luxury N remobilised")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RemobilisedLuxuryN
         {
-            get { return NLuxuryRemobilised; }
+            get { return luxuryNRemobilised; }
         }
 
-        /// <summary>Gets the amount of atmospheric N fixed.</summary>
-        /// <value>The fixed N amount.</value>
+        /// <summary>Gets the amount of atmospheric N fixed (kg/ha).</summary>
         [Description("Amount of atmospheric N fixed")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double FixedN
         {
-            get { return Nfixation; }
+            get { return fixedN; }
         }
 
-        /// <summary>Gets the amount of N required with luxury uptake.</summary>
-        /// <value>The required N with luxury.</value>
+        /// <summary>Gets the amount of N required with luxury uptake (kg/ha).</summary>
         [Description("Amount of N required with luxury uptake")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RequiredLuxuryN
         {
-            get { return NdemandLux; }
+            get { return demandLuxuryN; }
         }
 
-        /// <summary>Gets the amount of N required for optimum N content.</summary>
-        /// <value>The required optimum N amount.</value>
+        /// <summary>Gets the amount of N required for optimum N content (kg/ha).</summary>
         [Description("Amount of N required for optimum growth")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double RequiredOptimumN
         {
-            get { return NdemandOpt; }
+            get { return demandOptimumN; }
         }
 
-        /// <summary>Gets the amount of N demanded from soil.</summary>
-        /// <value>The N demand from soil.</value>
+        /// <summary>Gets the amount of N demanded from soil (kg/ha).</summary>
         [Description("Amount of N demanded from soil")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double DemandSoilN
         {
             get { return mySoilNDemand; }
         }
 
-        /// <summary>Gets the amount of plant available N in the soil.</summary>
-        /// <value>The soil available N.</value>
+        /// <summary>Gets the amount of plant available N in the soil (kg/ha).</summary>
         [Description("Amount of N available in the soil")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double SoilAvailableN
         {
             get { return mySoilNH4Available.Sum() + mySoilNO3Available.Sum(); }
         }
 
-        /// <summary>Gets the amount of N taken up from soil.</summary>
-        /// <value>The N uptake.</value>
+        /// <summary>Gets the amount of N taken up from soil (kg/ha).</summary>
         [Description("Amount of N uptake")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double UptakeN
         {
             get { return mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum(); }
         }
 
-        /// <summary>Gets the amount of N deposited as litter onto soil surface.</summary>
-        /// <value>The litter N amount.</value>
+        /// <summary>Gets the amount of N deposited as litter onto surface OM (kg/ha).</summary>
         [Description("Amount of N deposited as litter onto soil surface")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double LitterN
         {
             get { return detachedShootN; }
         }
 
-        /// <summary>Gets the amount of N from senesced roots added to soil FOM.</summary>
-        /// <value>The senesced root N amount.</value>
+        /// <summary>Gets the amount of N from senesced roots added to soil FOM (kg/ha).</summary>
         [Description("Amount of N from senesced roots added to soil FOM")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double SenescedRootN
         {
             get { return detachedRootN; }
         }
 
-        /// <summary>Gets the amount of N in new grown tissue.</summary>
-        /// <value>The actual growth N amount.</value>
+        /// <summary>Gets the amount of N in new grown tissue (kg/ha).</summary>
         [Description("Amount of N in new growth")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double ActualGrowthN
         {
             get { return dNewGrowthN; }
         }
 
-
-        /// <summary>Gets or sets the amount of plant available NH4 in the soil.</summary>
-        /// <value>The soil available NH4.</value>
+        /// <summary>Gets the amount of plant available NH4-N in the soil (kg/ha).</summary>
         [Description("Amount of NH4 N available in the soil")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double[] SoilNH4Available
         {
             get { return mySoilNH4Available; }
-            set { mySoilNH4Available = value; }
         }
 
-        /// <summary>Gets or sets the amount of plant available NO3 in the soil.</summary>
-        /// <value>The soil available NO3.</value>
+        /// <summary>Gets the amount of plant available NO3-N in the soil (kg/ha).</summary>
         [Description("Amount of NO3 N available in the soil")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double[] SoilNO3Available
         {
             get { return mySoilNO3Available; }
-            set { mySoilNO3Available = value; }
         }
 
-        /// <summary>Gets the amount of NH4 taken up from soil.</summary>
-        /// <value>The NH4 uptake.</value>
+        /// <summary>Gets the amount of NH4-N taken up from the soil (kg/ha).</summary>
         [Description("Amount of NH4 N uptake")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double[] SoilNH4Uptake
         {
             get { return mySoilNH4Uptake; }
         }
 
-        /// <summary>Gets the amount of NO3 taken up from soil.</summary>
-        /// <value>The NO3 uptake.</value>
+        /// <summary>Gets the amount of NO3-N taken up from the soil (kg/ha).</summary>
         [Description("Amount of NO3 N uptake")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double[] SoilNO3Uptake
         {
             get { return mySoilNO3Uptake; }
@@ -2671,8 +2544,7 @@ namespace Models.AgPasture
 
         #region - Turnover rates and DM allocation  ------------------------------------------------------------------------
 
-        /// <summary>Gets the turnover rate for live DM (leaves, stems and sheath).</summary>
-        /// <value>The turnover rate for live DM.</value>
+        /// <summary>Gets the turnover rate for live shoot DM (0-1).</summary>
         [Description("Turnover rate for live DM (leaves and stem)")]
         [Units("0-1")]
         public double LiveDMTurnoverRate
@@ -2680,8 +2552,7 @@ namespace Models.AgPasture
             get { return gama; }
         }
 
-        /// <summary>Gets the turnover rate for dead DM (leaves, stems and sheath).</summary>
-        /// <value>The turnover rate for dead DM.</value>
+        /// <summary>Gets the turnover rate for dead shoot DM (0-1).</summary>
         [Description("Turnover rate for dead DM (leaves and stem)")]
         [Units("0-1")]
         public double DeadDMTurnoverRate
@@ -2689,8 +2560,7 @@ namespace Models.AgPasture
             get { return gamaD; }
         }
 
-        /// <summary>Gets the turnover rate for live DM in stolons.</summary>
-        /// <value>The turnover rate for stolon DM.</value>
+        /// <summary>Gets the turnover rate for live DM in stolons (0-1).</summary>
         [Description("DM turnover rate for stolons")]
         [Units("0-1")]
         public double StolonDMTurnoverRate
@@ -2698,8 +2568,7 @@ namespace Models.AgPasture
             get { return gamaS; }
         }
 
-        /// <summary>Gets the turnover rate for live DM in roots.</summary>
-        /// <value>The turnover rate for root DM.</value>
+        /// <summary>Gets the turnover rate for live DM in roots (0-1).</summary>
         [Description("DM turnover rate for roots")]
         [Units("0-1")]
         public double RootDMTurnoverRate
@@ -2707,17 +2576,15 @@ namespace Models.AgPasture
             get { return gamaR; }
         }
 
-        /// <summary>Gets the DM allocation to shoot.</summary>
-        /// <value>The shoot DM allocation.</value>
-        [Description("Fraction of DM allocated to Shoot")]
+        /// <summary>Gets the fraction of new growth allocated to shoot (0-1).</summary>
+        [Description("Fraction of DM allocated to shoot")]
         [Units("0-1")]
         public double ShootDMAllocation
         {
             get { return fractionToShoot; }
         }
 
-        /// <summary>Gets the DM allocation to roots.</summary>
-        /// <value>The root dm allocation.</value>
+        /// <summary>Gets the fraction of new growth allocated to roots (0-1).</summary>
         [Description("Fraction of DM allocated to roots")]
         [Units("0-1")]
         public double RootDMAllocation
@@ -2725,10 +2592,8 @@ namespace Models.AgPasture
             get { return 1 - fractionToShoot; }
         }
 
-
-        /// <summary>Gets the DM allocation to leaves.</summary>
-        /// <value>The leaf DM allocation.</value>
-        [Description("Fraction of DM allocated to leaves")]
+        /// <summary>Gets the fraction of new shoot growth allocated to leaves (0-1).</summary>
+        [Description("Fraction of new shoot DM allocated to leaves")]
         [Units("0-1")]
         public double LeafDMAllocation
         {
@@ -2739,37 +2604,33 @@ namespace Models.AgPasture
 
         #region - LAI and cover  -------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the plant's green LAI (leaf area index).</summary>
-        /// <value>The green LAI.</value>
-        [Description("Leaf area index of green leaves")]
+        /// <summary>Gets the plant's green LAI (leaf area index) (-).</summary>
+        [Description("Leaf area index of green tissues")]
         [Units("m^2/m^2")]
         public double LAIGreen
         {
             get { return greenLAI; }
         }
 
-        /// <summary>Gets the plant's dead LAI (leaf area index).</summary>
-        /// <value>The dead LAI.</value>
-        [Description("Leaf area index of dead leaves")]
+        /// <summary>Gets the plant's dead LAI (leaf area index) (-).</summary>
+        [Description("Leaf area index of dead tissues")]
         [Units("m^2/m^2")]
         public double LAIDead
         {
             get { return deadLAI; }
         }
 
-        /// <summary>Gets the irradiance on top of canopy.</summary>
-        /// <value>The irradiance on top of canopy.</value>
-        [Description("Irridance on the top of canopy")]
+        /// <summary>Gets the irradiance on top of canopy (W.m^2/m^2).</summary>
+        [Description("Irradiance on the top of canopy")]
         [Units("W.m^2/m^2")]
         public double IrradianceTopCanopy
         {
             get { return irradianceTopOfCanopy; }
         }
 
-        /// <summary>Gets the plant's dead cover.</summary>
-        /// <value>The dead cover.</value>
-        [Description("Fraction of soil covered by dead leaves")]
-        [Units("%")]
+        /// <summary>Gets the plant's cover of dead material (0-1).</summary>
+        [Description("Fraction of soil covered by dead tissues")]
+        [Units("0-1")]
         public double CoverDead
         {
             get { return CalcPlantCover(deadLAI); }
@@ -2779,8 +2640,7 @@ namespace Models.AgPasture
 
         #region - Root depth and distribution  -----------------------------------------------------------------------------
 
-        /// <summary>Gets the root depth.</summary>
-        /// <value>The root depth.</value>
+        /// <summary>Gets the root depth (mm).</summary>
         [Description("Depth of roots")]
         [Units("mm")]
         public double RootDepth
@@ -2788,17 +2648,15 @@ namespace Models.AgPasture
             get { return roots.Depth; }
         }
 
-        /// <summary>Gets the root frontier.</summary>
-        /// <value>The layer at bottom of root zone.</value>
+        /// <summary>Gets the root frontier (layer at bottom of root zone).</summary>
         [Description("Layer at bottom of root zone")]
-        [Units("mm")]
+        [Units("-")]
         public int RootFrontier
         {
             get { return roots.BottomLayer; }
         }
 
-        /// <summary>Gets the fraction of root dry matter for each soil layer.</summary>
-        /// <value>The root fraction.</value>
+        /// <summary>Gets the fraction of root dry matter for each soil layer (0-1).</summary>
         [Description("Fraction of root dry matter for each soil layer")]
         [Units("0-1")]
         public double[] RootWtFraction
@@ -2806,8 +2664,7 @@ namespace Models.AgPasture
             get { return roots.Tissue[0].FractionWt; }
         }
 
-        /// <summary>Gets the plant's root length density for each soil layer.</summary>
-        /// <value>The root length density.</value>
+        /// <summary>Gets the plant's root length density for each soil layer (mm/mm^3).</summary>
         [Description("Root length density")]
         [Units("mm/mm^3")]
         public double[] RLD
@@ -2829,9 +2686,8 @@ namespace Models.AgPasture
 
         #region - Water amounts  -------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the lower limit of soil water content for plant uptake.</summary>
-        /// <value>The water uptake lower limit.</value>
-        [Description("Lower limit of soil water content for plant uptake")]
+        /// <summary>Gets the lower limit of soil water content for plant uptake (mm^3/mm^3).</summary>
+        [Description("Soil water content at lower limit for plant uptake")]
         [Units("mm^3/mm^3")]
         public double[] LL
         {
@@ -2842,8 +2698,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of water demanded by the plant.</summary>
-        /// <value>The water demand.</value>
+        /// <summary>Gets the amount of water demanded by the plant (mm).</summary>
         [Description("Plant water demand")]
         [Units("mm")]
         public double WaterDemand
@@ -2851,18 +2706,15 @@ namespace Models.AgPasture
             get { return myWaterDemand; }
         }
 
-        /// <summary>Gets or sets the amount of soil water available for uptake.</summary>
-        /// <value>The soil available water.</value>
-        [Description("Plant availabe water")]
+        /// <summary>Gets the amount of soil water available for plant uptake (mm).</summary>
+        [Description("Plant soil available water")]
         [Units("mm")]
         public double[] SoilAvailableWater
         {
             get { return mySoilWaterAvailable; }
-            set { mySoilWaterAvailable = value; }
         }
 
-        /// <summary>Gets the amount of water taken up by the plant.</summary>
-        /// <value>The water uptake.</value>
+        /// <summary>Gets the amount of water taken up by the plant (mm).</summary>
         [Description("Plant water uptake")]
         [Units("mm")]
         public double[] WaterUptake
@@ -2874,8 +2726,7 @@ namespace Models.AgPasture
 
         #region - Growth limiting factors  ---------------------------------------------------------------------------------
 
-        /// <summary>Gets the growth factor due to variations in intercepted radiation.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth factor due to variations in intercepted radiation (0-1).</summary>
         [Description("Growth factor due to variations in intercepted radiation")]
         [Units("0-1")]
         public double GlfRadnIntercept
@@ -2883,8 +2734,7 @@ namespace Models.AgPasture
             get { return glfRadn; }
         }
 
-        /// <summary>Gets the growth limiting factor due to variations in atmospheric CO2.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to variations in atmospheric CO2 (0-1).</summary>
         [Description("Growth limiting factor due to variations in atmospheric CO2")]
         [Units("0-1")]
         public double GlfCO2
@@ -2892,8 +2742,7 @@ namespace Models.AgPasture
             get { return glfCO2; }
         }
 
-        /// <summary>Gets the growth limiting factor due to variations in plant N concentration.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to variations in plant N concentration (0-1).</summary>
         [Description("Growth limiting factor due to variations in plant N concentration")]
         [Units("0-1")]
         public double GlfNContent
@@ -2901,8 +2750,7 @@ namespace Models.AgPasture
             get { return glfNc; }
         }
 
-        /// <summary>Gets the growth limiting factor due to variations in air temperature.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to variations in air temperature (0-1).</summary>
         [Description("Growth limiting factor due to variations in air temperature")]
         [Units("0-1")]
         public double GlfTemperature
@@ -2910,8 +2758,7 @@ namespace Models.AgPasture
             get { return glfTemp; }
         }
 
-        /// <summary>Gets the growth limiting factor due to heat stress.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to heat stress (0-1).</summary>
         [Description("Growth limiting factor due to heat stress")]
         [Units("0-1")]
         public double GlfHeatDamage
@@ -2919,8 +2766,7 @@ namespace Models.AgPasture
             get { return glfHeat; }
         }
 
-        /// <summary>Gets the growth limiting factor due to cold stress.</summary>
-        /// <value>A factor influencing potential plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to cold stress (0-1).</summary>
         [Description("Growth limiting factor due to cold stress")]
         [Units("0-1")]
         public double GlfColdDamage
@@ -2928,8 +2774,7 @@ namespace Models.AgPasture
             get { return glfCold; }
         }
 
-        /// <summary>Gets the growth limiting factor due to water deficit.</summary>
-        /// <value>A factor limiting plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to water deficit (0-1).</summary>
         [Description("Growth limiting factor due to water deficit")]
         [Units("0-1")]
         public double GlfWaterSupply
@@ -2937,17 +2782,15 @@ namespace Models.AgPasture
             get { return glfWater; }
         }
 
-        /// <summary>Gets the growth limiting factor due to lack of soil aeration.</summary>
-        /// <value>A factor limiting plant growth.</value>
-        [Description("Growth limiting factor due to lack of soil aeration")]
+        /// <summary>Gets the growth limiting factor due to water logging (0-1).</summary>
+        [Description("Growth limiting factor due to water logging")]
         [Units("0-1")]
         public double GlfWaterLogging
         {
             get { return glfAeration; }
         }
 
-        /// <summary>Gets the growth limiting factor due to soil N availability.</summary>
-        /// <value>A factor limiting plant growth.</value>
+        /// <summary>Gets the growth limiting factor due to soil N availability (0-1).</summary>
         [Description("Growth limiting factor due to soil N availability")]
         [Units("0-1")]
         public double GlfNSupply
@@ -2956,8 +2799,7 @@ namespace Models.AgPasture
         }
 
         // TODO: verify that this is really needed
-        /// <summary>Gets the vapour pressure deficit factor.</summary>
-        /// <value>The vapour pressure deficit factor.</value>
+        /// <summary>Gets the vapour pressure deficit factor (0-1).</summary>
         [Description("Effect of vapour pressure on growth (used by micromet)")]
         [Units("0-1")]
         public double FVPD
@@ -2969,85 +2811,77 @@ namespace Models.AgPasture
 
         #region - Harvest variables  ---------------------------------------------------------------------------------------
 
-        /// <summary>Gets the amount of dry matter harvestable (leaf + stem).</summary>
+        /// <summary>Gets the amount of dry matter available for harvest (kg/ha).</summary>
         /// <value>The harvestable DM weight.</value>
-        [Description("Amount of dry matter harvestable (leaf+stem)")]
-        [Units("kgDM/ha")]
+        [Description("Amount of dry matter harvestable")]
+        [Units("kg/ha")]
         public double HarvestableWt
         {
             get { return Math.Max(0.0, StandingLiveWt - MinimumGreenWt) + StandingDeadWt; }
         }
 
-        /// <summary>Gets the amount of dry matter harvested.</summary>
-        /// <value>The harvested DM weight.</value>
+        /// <summary>Gets the amount of dry matter harvested (kg/ha).</summary>
         [Description("Amount of plant dry matter removed by harvest")]
-        [Units("kgDM/ha")]
+        [Units("kg/ha")]
         public double HarvestedWt
         {
-            get { return dmDefoliated; }
+            get { return defoliatedDM; }
         }
 
-        /// <summary>Gets the fraction of the plant that was harvested.</summary>
-        /// <value>The fraction harvested.</value>
+        /// <summary>Gets the fraction of the plant that was harvested (0-1).</summary>
         [Description("Fraction harvested")]
         [Units("0-1")]
         public double HarvestedFraction
         {
-            get { return fractionHarvested; }
+            get { return defoliatedFraction; }
         }
 
-        /// <summary>Gets the amount of plant N removed by harvest.</summary>
-        /// <value>The harvested N amount.</value>
+        /// <summary>Gets the amount of plant N removed by harvest (kg/ha).</summary>
         [Description("Amount of plant nitrogen removed by harvest")]
-        [Units("kgN/ha")]
+        [Units("kg/ha")]
         public double HarvestedN
         {
-            get { return Ndefoliated; }
+            get { return defoliatedN; }
         }
 
-        /// <summary>Gets the N concentration in harvested DM.</summary>
-        /// <value>The N concentration in harvested DM.</value>
-        [Description("average N concentration of harvested material")]
-        [Units("kgN/kgDM")]
+        /// <summary>Gets the average N concentration in harvested DM (kg/kg).</summary>
+        [Description("average average N concentration of harvested material")]
+        [Units("kg/kg")]
         public double HarvestedNconc
         {
             get { return MathUtilities.Divide(HarvestedN, HarvestedWt, 0.0); }
         }
 
-        /// <summary>Gets the average herbage digestibility.</summary>
-        /// <value>The herbage digestibility.</value>
-        [Description("Average digestibility of herbage")]
-        [Units("0-1")]
-        public double HerbageDigestibility
-        {
-            get { return digestHerbage; }
-        }
-
-        /// <summary>Gets the average digestibility of harvested DM.</summary>
-        /// <value>The harvested digestibility.</value>
+        /// <summary>Gets the average digestibility of harvested material (0-1).</summary>
         [Description("Average digestibility of harvested meterial")]
         [Units("0-1")]
         public double HarvestedDigestibility
         {
-            get { return digestDefoliated; }
+            get { return defoliatedDigestibility; }
         }
 
-        /// <summary>Gets the average herbage ME (metabolisable energy).</summary>
-        /// <value>The herbage ME.</value>
-        [Description("Average ME of herbage")]
-        [Units("(MJ/ha)")]
-        public double HerbageME
-        {
-            get { return 16 * digestHerbage * AboveGroundWt; }
-        }
-
-        /// <summary>Gets the average ME (metabolisable energy) of harvested DM.</summary>
-        /// <value>The harvested ME.</value>
+        /// <summary>Gets the average ME (metabolisable energy) of harvested DM (MJ/ha).</summary>
         [Description("Average ME of harvested material")]
         [Units("(MJ/ha)")]
         public double HarvestedME
         {
-            get { return 16 * digestDefoliated * HarvestedWt; }
+            get { return 16 * defoliatedDigestibility * HarvestedWt; }
+        }
+
+        /// <summary>Gets the average herbage digestibility (0-1).</summary>
+        [Description("Average digestibility of standing herbage")]
+        [Units("0-1")]
+        public double HerbageDigestibility
+        {
+            get { return herbageDigestibility; }
+        }
+
+        /// <summary>Gets the average herbage ME, metabolisable energy (MJ/ha).</summary>
+        [Description("Average ME of standing herbage")]
+        [Units("(MJ/ha)")]
+        public double HerbageME
+        {
+            get { return 16 * herbageDigestibility * AboveGroundWt; }
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -3056,9 +2890,9 @@ namespace Models.AgPasture
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
-        /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc)</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc).</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -3098,7 +2932,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Initialise arrays to same length as soil layers</summary>
+        /// <summary>Initialises arrays to same length as soil layers.</summary>
         private void InitiliaseSoilArrays()
         {
             mySoilWaterAvailable = new double[nLayers];
@@ -3109,7 +2943,7 @@ namespace Models.AgPasture
             mySoilNO3Uptake = new double[nLayers];
         }
 
-        /// <summary>Initialise, check, and save the varibles representing the initial plant state</summary>
+        /// <summary>Initialises, checks, and saves the varibles representing the initial plant state.</summary>
         private void CheckInitialState()
         {
             // 1. Choose the appropriate DM partition, based on species family
@@ -3186,15 +3020,15 @@ namespace Models.AgPasture
             for (int tissue = 0; tissue < 4; tissue++)
             {
                 leaves.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
-                leaves.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                leaves.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein;
 
                 stems.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
-                stems.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                stems.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein;
 
                 if (tissue < 3)
                 {
                     stolons.Tissue[tissue].DigestibilityCellWall = DigestibilitiesCellWall[tissue];
-                    stolons.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein[tissue];
+                    stolons.Tissue[tissue].DigestibilityProtein = DigestibilitiesProtein;
                 }
             }
 
@@ -3205,7 +3039,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>
-        /// Set the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth
+        /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
         /// </summary>
         private void SetInitialState()
         {
@@ -3256,7 +3090,7 @@ namespace Models.AgPasture
             EvaluateLAI();
         }
 
-        /// <summary>Set the plant state at germination</summary>
+        /// <summary>Set the plant state at germination.</summary>
         internal void SetEmergenceState()
         {
             // 1. Set the above ground DM, equals MinimumGreenWt
@@ -3300,7 +3134,7 @@ namespace Models.AgPasture
             EvaluateLAI();
         }
 
-        /// <summary>Initialise parameters to compute factor increasing shoot allocation during reproductive growth</summary>
+        /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
         /// <remarks>
         /// Reproductive phase of perennial is not simulated by the model, the ReproductiveGrowthFactor attempts to mimic the main
         ///  effect, which is a higher allocation of DM to shoot during this period. The beginning and length of the reproductive
@@ -3336,7 +3170,7 @@ namespace Models.AgPasture
             allocationIncreaseRepro = ReproSeasonMaxAllocationIncrease / (1.0 + reproAux);
         }
 
-        /// <summary>Initialise the variables in canopy properties</summary>
+        /// <summary>Initialises the variables in canopy properties.</summary>
         private void InitialiseCanopy()
         {
             // Used in Val's Arbitrator (via ICrop2)
@@ -3353,7 +3187,7 @@ namespace Models.AgPasture
             myCanopyProperties.Frgr = FRGR;
         }
 
-        /// <summary>Initialise the variables in root properties</summary>
+        /// <summary>Initialises the variables in root properties</summary>
         private void InitialiseRootsProperties()
         {
             // Used in Val's Arbitrator (via ICrop2)
@@ -3383,9 +3217,9 @@ namespace Models.AgPasture
 
         #region Daily processes  -------------------------------------------------------------------------------------------
 
-        /// <summary>EventHandler - preparation befor the main process</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <summary>EventHandler - preparation before the main daily processes.</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -3394,8 +3228,8 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the calculations for potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
@@ -3439,8 +3273,8 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the calculations for actual growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
@@ -3470,7 +3304,7 @@ namespace Models.AgPasture
 
         #region - Plant growth processes  ----------------------------------------------------------------------------------
 
-        /// <summary>Evaluates the phenologic stage of annual plants</summary>
+        /// <summary>Evaluates the phenologic stage of annual plants.</summary>
         /// <remarks>
         /// This method keeps track of days after emergence as well as cumulative degrees days, it uses both to evaluate the progress
         ///  through each phase. The two approaches are used concomitantly to enable some basic sensitivity to environmental factors,
@@ -3525,15 +3359,15 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computation of daily progress through germination</summary>
-        /// <returns>Fraction of germination phase completed</returns>
+        /// <summary>Computes the daily progress through germination.</summary>
+        /// <returns>Fraction of germination phase completed (0-1)</returns>
         internal double DailyGerminationProgress()
         {
             germinationGDD += Math.Max(0.0, Tmean(0.5) - GrowthTmin);
             return MathUtilities.Divide(germinationGDD, DegreesDayForGermination, 1.0);
         }
 
-        /// <summary>Calculates the potential growth.</summary>
+        /// <summary>Calculates the potential plant growth.</summary>
         internal void CalcDailyPotentialGrowth()
         {
             // Get today's gross potential photosynthetic rate (kgC/ha/day)
@@ -3546,7 +3380,7 @@ namespace Models.AgPasture
             // Get C remobilisation (kgC/ha/day) (got from tissue turnover) - TODO: implement C remobilisation
             remobilisedC = remobilisableC;
 
-            // Net potential growth (kgDM/ha/day)
+            // Net potential growth (kg/ha/day)
             dGrowthPot = Math.Max(0.0, grossPhotosynthesis - respirationGrowth + remobilisedC - respirationMaintenance);
             dGrowthPot /= CarbonFractionInDM;
         }
@@ -3577,13 +3411,13 @@ namespace Models.AgPasture
         internal void CalcGrowthAfterNutrientLimitations()
         {
             // get total N to allocate in new growth
-            dNewGrowthN = Nfixation + NSenescedRemobilised + UptakeN + NLuxuryRemobilised;
+            dNewGrowthN = fixedN + senescedNRemobilised + UptakeN + luxuryNRemobilised;
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
             if (dNewGrowthN > Epsilon)
             {
-                glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, NdemandOpt, 1.0)));
+                glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
 
                 // adjust the glfN
                 glfNit = Math.Pow(glfN, NDillutionCoefficient);
@@ -3622,7 +3456,7 @@ namespace Models.AgPasture
             if(Math.Abs(preTotalWt + dGrowthActual - detachedShootDM - detachedRootDM - TotalWt) > Epsilon)
                 throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (Math.Abs(preTotalN + dNewGrowthN - NSenescedRemobilised -NLuxuryRemobilised - detachedShootN - detachedRootN - TotalN) > Epsilon)
+            if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised -luxuryNRemobilised - detachedShootN - detachedRootN - TotalN) > Epsilon)
                 throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
@@ -3632,7 +3466,7 @@ namespace Models.AgPasture
             EvaluateDigestibility();
         }
 
-        /// <summary>Computes the plant's gross potential growth rate</summary>
+        /// <summary>Computes the plant's gross potential growth rate.</summary>
         /// <returns>The potential amount of C assimilated via photosynthesis (kgC/ha)</returns>
         private double DailyPotentialPhotosynthesis()
         {
@@ -3695,12 +3529,10 @@ namespace Models.AgPasture
             return GrossPhotosynthesis * Math.Min(glfHeat, glfCold) * GlfGeneric;
         }
 
-        /// <summary>
-        /// Compute the photosynthetic rate for a single leaf
-        /// </summary>
-        /// <param name="IL">Instantaneous intercepted radiation (depends on time of day)</param>
-        /// <param name="Pmax">Max photosynthetic rate, given T, CO2 and N concentration</param>
-        /// <returns>the photosynthetic rate [mgCO2/m2 leaf/s]</returns>
+        /// <summary>Compute the photosynthetic rate for a single leaf.</summary>
+        /// <param name="IL">Instantaneous intercepted radiation (J/m2 leaf/s)</param>
+        /// <param name="Pmax">Max photosynthetic rate (mg CO2/m^2 leaf/s)</param>
+        /// <returns>the photosynthetic rate (mgCO2/m^2 leaf/s)</returns>
         private double SingleLeafPhotosynthesis(double IL, double Pmax)
         {
             double photoAux1 = PhotosyntheticEfficiency * IL + Pmax;
@@ -3709,7 +3541,7 @@ namespace Models.AgPasture
             return Pl;
         }
 
-        /// <summary>Computes the plant's loss of C due to maintenance respiration</summary>
+        /// <summary>Computes the plant's loss of C due to maintenance respiration.</summary>
         /// <returns>The amount of C lost to atmosphere (kgC/ha)</returns>
         private double DailyMaintenanceRespiration()
         {
@@ -3735,14 +3567,14 @@ namespace Models.AgPasture
             return Math.Max(0.0, result);
         }
 
-        /// <summary>Computes the plant's loss of C due to growth respiration</summary>
+        /// <summary>Computes the plant's loss of C due to growth respiration.</summary>
         /// <returns>The amount of C lost to atmosphere (kgC/ha)</returns>
         private double DailyGrowthRespiration()
         {
             return grossPhotosynthesis * GrowthRespirationCoefficient;
         }
 
-        /// <summary>Computes the allocation of new growth to all tissues in each organ</summary>
+        /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
         internal void EvaluateNewGrowthAllocation()
         {
             if (dGrowthActual > Epsilon)
@@ -3764,7 +3596,7 @@ namespace Models.AgPasture
                 roots.Tissue[0].DMTransferedIn += toRoot * dGrowthActual;
 
                 // Evaluate allocation of N
-                if (dNewGrowthN > NdemandOpt)
+                if (dNewGrowthN > demandOptimumN)
                 {
                     // There is more N than needed for basic demand (i.e. there is luxury uptake)
                     // 1. Allocate optimum N
@@ -3830,7 +3662,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the turnover rates for each tissue pool of all plant organs</summary>
+        /// <summary>Computes the turnover rates for each tissue pool of all plant organs.</summary>
         /// <remarks>
         /// The rate are passe on to each organ and the amounts potentially turned over are computed for each tissue.
         /// The turnover rates are affected by variations in soil water and air temperature. For leaves the number of leaves
@@ -3858,10 +3690,10 @@ namespace Models.AgPasture
 
             //stocking rate affecting transfer of dead to litter (default as 0 for now - should be read in)
             double SR = 0;
-            double StockFac2Litter = StockParameter * SR;
+            double StockFac2Litter = TissueTurnoverStockFactor * SR;
 
             // Turnover rate for leaf and stem tissues
-            gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot;
+            gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
 
             // Turnover rate for dead to litter (detachment)
             double digestDead = (leaves.DigestibilityDead * leaves.DMDead) + (stems.DigestibilityDead * stems.DMDead);
@@ -3907,7 +3739,7 @@ namespace Models.AgPasture
                     }
 
                     // set a minimum for roots too
-                    if (roots.DMLive * (1.0 - gamaR) < MinimumGreenWt * MinimumRootProp)
+                    if (roots.DMLive * (1.0 - gamaR) < MinimumGreenWt * MinimumGreenRootProp)
                         gamaR = 0.0;
                 }
 
@@ -3918,7 +3750,7 @@ namespace Models.AgPasture
                     gamaS = gama;
 
                     // Adjust stolon turnover due to defoliation (increases stolon senescence)
-                    gamaS += fractionDefoliated * (1.0 - gamaS);
+                    gamaS += defoliatedFraction * (1.0 - gamaS);
                 }
                 else
                     gamaS = 0.0;
@@ -3951,13 +3783,9 @@ namespace Models.AgPasture
                 remobilisableC += 0.0;
                 remobilisableC *= CarbonFractionInDM;
 
-                // Get the amounts senesced and detached today
-                senescedShootDM = leaves.DMSenesced + stems.DMSenesced + stolons.DMSenesced;
-                senescedShootN = leaves.NSenesced + stems.NSenesced + stolons.NSenesced;
+                // Get the amounts detached today
                 detachedShootDM = leaves.DMDetached + stems.DMDetached + stolons.DMDetached;
                 detachedShootN = leaves.NDetached + stems.NDetached + stolons.NDetached;
-                senescedRootDM = roots.DMSenesced;
-                senescedRootN = roots.NSenesced;
                 detachedRootDM = roots.DMDetached;
                 detachedRootN = roots.NDetached;
             }
@@ -3967,7 +3795,7 @@ namespace Models.AgPasture
 
         #region - Water uptake processes  ----------------------------------------------------------------------------------
 
-        /// <summary>Performs the water uptake calculations</summary>
+        /// <summary>Performs the water uptake calculations.</summary>
         internal void DoWaterCalculations()
         {
             if (myWaterUptakeSource == "species")
@@ -4002,7 +3830,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Finds out the amount of plant available water in the soil</summary>
+        /// <summary>Finds out the amount of plant available water in the soil.</summary>
         /// <param name="myZone">Soil information</param>
         internal void EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
         {
@@ -4014,7 +3842,7 @@ namespace Models.AgPasture
                 mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKS(myZone);
         }
 
-        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone.</summary>
         /// <remarks>This is the default APSIM method, with kl representing the daily rate for water extraction</remarks>
         /// <param name="myZone">Soil information</param>
         /// <returns>Amount of available water (mm)</returns>
@@ -4031,7 +3859,7 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Estimates the amount of plant available  water in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available  water in each soil layer of the root zone.</summary>
         /// <remarks>
         /// This is an alternative method, kl representing a soil limiting factor for water extraction (clayey soils have lower values)
         ///  this is further modiied by soil water content (a reduction for dry soil). A plant related factor is defined based on root
@@ -4066,7 +3894,7 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone.</summary>
         /// <remarks>
         /// This is an alternative method, which does not use kl. A factor based on Ksat is used instead. This is further modified
         ///  by soil water content and a plant related factor, defined based on root length density. All three factors are normalised 
@@ -4107,7 +3935,19 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Computes the plant water uptake [potential]</summary>
+
+        /// <summary>Adjusts the values of available water by a given fraction.</summary>
+        /// <remarks>This is needed while using sward to control water processes</remarks>
+        /// <param name="fraction">Fraction to adjust the current values</param>
+        internal void UpdateAvailableWater(double fraction)
+        {
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
+            {
+                mySoilWaterAvailable[layer] *= fraction;
+            }
+        }
+
+        /// <summary>Computes the potential plant water uptake.</summary>
         internal void EvaluateSoilWaterUptake()
         {
             // 1. Get the amount of soil water available
@@ -4125,7 +3965,7 @@ namespace Models.AgPasture
             mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
         }
 
-        /// <summary>Sends the delta water to the soil module</summary>
+        /// <summary>Sends the delta water to the soil module.</summary>
         private void DoSoilWaterUptake()
         {
             if (mySoilWaterUptake.Sum() > Epsilon)
@@ -4140,7 +3980,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM)</summary>
+        /// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM).</summary>
         /// <param name="SoilWater">The soil water uptake data.</param>
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(PMF.WaterUptakesCalculatedType SoilWater)
@@ -4159,7 +3999,7 @@ namespace Models.AgPasture
 
         #region - Nitrogen uptake processes  -------------------------------------------------------------------------------
 
-        /// <summary>Performs the nitrogen uptake calculations</summary>
+        /// <summary>Performs the nitrogen uptake calculations.</summary>
         internal void DoNitrogenCalculations()
         {
             if (myNitrogenUptakeSource == "species")
@@ -4225,7 +4065,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake</summary>
+        /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
             double toRoot = dGrowthWstress * (1.0 - fractionToShoot);
@@ -4234,64 +4074,64 @@ namespace Models.AgPasture
             double toStem = dGrowthWstress * fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
 
             // N demand for new growth, with optimum N (kg/ha)
-            NdemandOpt = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
+            demandOptimumN = (toLeaf * leaves.NConcOptimum) + (toStem * stems.NConcOptimum)
                        + (toStol * stolons.NConcOptimum) + (toRoot * roots.NConcOptimum);
 
             // get the factor to reduce the demand under elevated CO2
             double fN = NFactorDueToCO2();
-            NdemandOpt *= fN;
+            demandOptimumN *= fN;
 
             // N demand for new growth, with luxury uptake (maximum [N])
-            NdemandLux = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
+            demandLuxuryN = (toLeaf * leaves.NConcMaximum) + (toStem * stems.NConcMaximum)
                        + (toStol * stolons.NConcMaximum) + (toRoot * roots.NConcMaximum);
             // It is assumed that luxury uptake is not affected by CO2 variations
         }
 
-        /// <summary>Computes the amount of atmospheric nitrogen fixed through symbiosis</summary>
+        /// <summary>Computes the amount of atmospheric nitrogen fixed through symbiosis.</summary>
         internal void EvaluateNitrogenFixation()
         {
-            Nfixation = 0.0;
-            if (isLegume && NdemandLux > Epsilon)
+            fixedN = 0.0;
+            if (isLegume && demandLuxuryN > Epsilon)
             {
                 // Start with minimum fixation
-                Nfixation = MinimumNFixation * NdemandLux;
+                fixedN = MinimumNFixation * demandLuxuryN;
 
                 // Evaluate N stress
-                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, NdemandLux - Nfixation, 1.0));
+                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, demandLuxuryN - fixedN, 1.0));
 
                 // Update N fixation if under N stress
                 if (Nstress < 0.99)
-                    Nfixation += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * NdemandLux;
+                    fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * demandLuxuryN;
             }
         }
 
-        /// <summary>Evaluates the use of remobilised nitrogen and computes soil nitrogen demand</summary>
+        /// <summary>Evaluates the use of remobilised nitrogen and computes soil nitrogen demand.</summary>
         internal void EvaluateSoilNitrogenDemand()
         {
             double fracRemobilised = 0.0;
-            if (NdemandLux-Nfixation < Epsilon)
+            if (demandLuxuryN-fixedN < Epsilon)
             {
                 // N demand is fulfilled by fixation alone
-                NSenescedRemobilised = 0.0;
+                senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if (NdemandLux - (Nfixation + RemobilisableSenescedN) < Epsilon)
+            else if (demandLuxuryN - (fixedN + RemobilisableSenescedN) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
-                NSenescedRemobilised = Math.Max(0.0, NdemandLux - Nfixation);
+                senescedNRemobilised = Math.Max(0.0, demandLuxuryN - fixedN);
                 mySoilNDemand = 0.0;
-                fracRemobilised = MathUtilities.Divide(NSenescedRemobilised, RemobilisableSenescedN, 0.0);
+                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, RemobilisableSenescedN, 0.0);
             }
             else
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
-                NSenescedRemobilised = RemobilisableSenescedN;
-                mySoilNDemand = NdemandLux - (Nfixation + NSenescedRemobilised);
+                senescedNRemobilised = RemobilisableSenescedN;
+                mySoilNDemand = demandLuxuryN - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
             // Update N remobilised in each organ
-            if (NSenescedRemobilised > Epsilon)
+            if (senescedNRemobilised > Epsilon)
             {
                 leaves.Tissue[leaves.TissueCount - 1].DoRemobiliseN(fracRemobilised);
                 stems.Tissue[stems.TissueCount - 1].DoRemobiliseN(fracRemobilised);
@@ -4300,7 +4140,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil</summary>
+        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
         /// <param name="myZone">Soil information</param>
         internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone)
         {
@@ -4314,7 +4154,7 @@ namespace Models.AgPasture
                 PlantAvailableSoilNAlternativeWup(myZone);
         }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
         /// <remarks>This is a basic method, used as default in old AgPasture, all N in the root zone is available</remarks>
         /// <param name="myZone">Soil information</param>
         private void PlantAvailableSoilNBasicAgPasture(ZoneWaterAndN myZone)
@@ -4328,7 +4168,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
         /// <remarks>
         /// This method approximates the default approach in APSIM plants (method 3 in Plant1 models)
         /// Soil water status and uptake coefficient control the availability, which is a square function of N content.
@@ -4378,9 +4218,9 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
         /// <remarks>
-        /// This method considers soil water status and root length density to define factors controling N availability.
+        /// This method considers soil water status and root length density to define factors controlling N availability.
         /// Soil water stauts is used to define a factor that varies from zero at LL, below which no uptake can happen, 
         ///  to one at DUL, above which no restrictions to uptake exist.
         /// Root length density is used to define a factor varying from zero if there are no roots to one when root length
@@ -4432,9 +4272,9 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone</summary>
+        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
         /// <remarks>
-        /// This method considers soil water as the main factor controling N availability/uptake.
+        /// This method considers soil water as the main factor controlling N availability/uptake.
         /// Availability is given by the proportion of water taken up in each layer, further modified by uptake factors
         /// Uptake is caped for a maximum value plants can take in one day.
         /// </remarks>
@@ -4471,7 +4311,20 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the amount of nitrogen to be taken up by the plant [potential]</summary>
+        /// <summary>Adjusts the values of available NH4 and NO3 by a given fraction.</summary>
+        /// <remarks>This is needed while using sward to control N processes</remarks>
+        /// <param name="nh4Fraction">Fraction to adjust the current NH4 values</param>
+        /// <param name="no3Fraction">Fraction to adjust the current NO3 values</param>
+        internal void UpdateAvailableNitrogen(double nh4Fraction, double no3Fraction)
+        {
+            for (int layer = 0; layer <= roots.BottomLayer; layer++)
+            {
+                mySoilNH4Available[layer] *= nh4Fraction;
+                mySoilNO3Available[layer] *= no3Fraction;
+            }
+        }
+
+        /// <summary>Computes the potential amount of nitrogen taken up by the plant.</summary>
         internal void EvaluateSoilNitrogenUptake()
         {
             // 1. Get the amount of soil N available
@@ -4490,12 +4343,12 @@ namespace Models.AgPasture
             mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
         }
 
-        /// <summary>Computes the amount of nitrogen remobilised from tissues with N content above optimum</summary>
+        /// <summary>Computes the amount of nitrogen remobilised from tissues with N content above optimum.</summary>
         internal void EvaluateNLuxuryRemobilisation()
         {
             // check whether there is still demand for N (only match demand for growth at optimum N conc.)
             // check whether there is any luxury N remobilisable
-            double Nmissing = NdemandOpt - (Nfixation + NSenescedRemobilised + UptakeN);
+            double Nmissing = demandOptimumN - (fixedN + senescedNRemobilised + UptakeN);
             if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
             {
                 // all N already considered is not enough to match demand for growth, check remobilisation of luxury N
@@ -4504,8 +4357,8 @@ namespace Models.AgPasture
                     // N luxury is just or not enough for optimum growth, use up all there is
                     if (RemobilisableLuxuryN > Epsilon)
                     {
-                        NLuxuryRemobilised = RemobilisableLuxuryN;
-                        Nmissing -= NLuxuryRemobilised;
+                        luxuryNRemobilised = RemobilisableLuxuryN;
+                        Nmissing -= luxuryNRemobilised;
 
                         // remove the luxury N
                         for (int tissue = 0; tissue < 3; tissue++)
@@ -4537,7 +4390,7 @@ namespace Models.AgPasture
                         if (tissue == 0)
                             roots.Tissue[tissue].DoRemobiliseN(fracRemobilised);
 
-                        NLuxuryRemobilised += Nusedup;
+                        luxuryNRemobilised += Nusedup;
                         Nmissing -= Nusedup;
                         if (Nmissing <= Epsilon) tissue = 0;
                     }
@@ -4545,7 +4398,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Sends the delta nitrogen to the soil module</summary>
+        /// <summary>Sends the delta nitrogen to the soil module.</summary>
         private void DoSoilNitrogenUptake()
         {
             if ((mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum()) > Epsilon)
@@ -4571,9 +4424,9 @@ namespace Models.AgPasture
 
         #region - Organic matter processes  --------------------------------------------------------------------------------
 
-        /// <summary>Return a given amount of DM (and N) to surface organic matter</summary>
-        /// <param name="amountDM">DM amount to return</param>
-        /// <param name="amountN">N amount to return</param>
+        /// <summary>Returns a given amount of DM (and N) to surface organic matter.</summary>
+        /// <param name="amountDM">DM amount to return (kg/ha)</param>
+        /// <param name="amountN">N amount to return (kg/ha)</param>
         private void DoSurfaceOMReturn(double amountDM, double amountN)
         {
             if (BiomassRemoved != null)
@@ -4597,9 +4450,9 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Return scenescent roots to fresh organic matter pool in the soil</summary>
-        /// <param name="amountDM">DM amount to return</param>
-        /// <param name="amountN">N amount to return</param>
+        /// <summary>Returns a given amount of DM (and N) to fresh organic matter pool in the soil</summary>
+        /// <param name="amountDM">DM amount to return (kg/ha)</param>
+        /// <param name="amountN">N amount to return (kg/ha)</param>
         private void DoIncorpFomEvent(double amountDM, double amountN)
         {
             FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
@@ -4637,30 +4490,26 @@ namespace Models.AgPasture
 
         #region - Handling and auxilary processes  -------------------------------------------------------------------------
 
-        /// <summary>Refresh the value of several variables</summary>
+        /// <summary>Zeroes out the value of several variables.</summary>
         internal void RefreshVariables()
         {
             // reset variables for whole plant
-            dmDefoliated = 0.0;
-            Ndefoliated = 0.0;
-            digestDefoliated = 0.0;
+            defoliatedDM = 0.0;
+            defoliatedN = 0.0;
+            defoliatedDigestibility = 0.0;
 
             dGrowthShootDM = 0.0;
             dGrowthShootN = 0.0;
             dGrowthRootDM = 0.0;
             dGrowthRootN = 0.0;
 
-            senescedShootDM = 0.0;
-            senescedShootN = 0.0;
             detachedShootDM = 0.0;
             detachedShootN = 0.0;
-            senescedRootDM = 0.0;
-            senescedRootN = 0.0;
             detachedRootDM = 0.0;
             detachedRootN = 0.0;
 
-            NSenescedRemobilised = 0.0;
-            NLuxuryRemobilised = 0.0;
+            senescedNRemobilised = 0.0;
+            luxuryNRemobilised = 0.0;
 
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
@@ -4676,7 +4525,7 @@ namespace Models.AgPasture
             roots.DoCleanTransferAmounts();
         }
 
-        /// <summary>Computes a growth factor for annual species, related to phenology/population</summary>
+        /// <summary>Computes a growth factor for annual species, related to phenology/population.</summary>
         /// <returns>A growth factor (0-1)</returns>
         private double AnnualSpeciesGrowthFactor()
         {
@@ -4695,7 +4544,7 @@ namespace Models.AgPasture
             return rFactor;
         }
 
-        /// <summary>Calculate the factor increasing shoot allocation during reproductive growth</summary>
+        /// <summary>Calculates the factor increasing shoot allocation during reproductive growth.</summary>
         /// <remarks>
         /// This mimics the changes in DM allocation during reproductive season; allocation to shoot increases up to a maximum
         ///  value (defined by allocationIncreaseRepro). This value is used during the main phase, two shoulder periods are
@@ -4735,14 +4584,14 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Computes the allocations into shoot and leaves of todays growth</summary>
+        /// <summary>Computes the allocations into shoot and leaves of todays growth.</summary>
         internal void EvaluateGrowthAllocation()
         {
             EvaluateAllocationToShoot();
             EvaluateAllocationToLeaf();
         }
 
-        /// <summary>Calculates the fraction of new growth allocated to shoot</summary>
+        /// <summary>Calculates the fraction of new growth allocated to shoot.</summary>
         /// <remarks>
         /// Allocation of new growth to shoot is a function of the current and a target (ideal) Shoot-Root ratio; it is further
         ///  modified according to soil's growth limiting factors (plants favour root growth when water or N are limiting).
@@ -4788,7 +4637,7 @@ namespace Models.AgPasture
                 fractionToShoot = 1 - MaxRootAllocation;
         }
 
-        /// <summary>Computes the fraction of new shoot DM that is allocated to leaves</summary>
+        /// <summary>Computes the fraction of new shoot DM that is allocated to leaves.</summary>
         /// <remarks>
         /// This method is used to reduce the propotion of leaves as plants grow, this is used for species that 
         ///  allocate proportionally more DM to stolon/stems when the whole plant's DM is high.
@@ -4818,7 +4667,7 @@ namespace Models.AgPasture
             fractionToLeaf = newLS / (1 + newLS);
         }
 
-        /// <summary>Computes the variations in root depth</summary>
+        /// <summary>Computes the variations in root depth.</summary>
         /// <remarks>
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
         /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
@@ -4845,7 +4694,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the allocation of new growth to roots for each layer</summary>
+        /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
         /// <remarks>
         /// The current target distribution for roots changes whenever then root depth changes, this is then used to allocate 
         ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
@@ -4885,7 +4734,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Calculates the plant height as function of DM</summary>
+        /// <summary>Calculates the plant height as function of DM.</summary>
         /// <returns>Plant height (mm)</returns>
         internal double HeightfromDM()
         {
@@ -4902,7 +4751,7 @@ namespace Models.AgPasture
             return Math.Max(TodaysHeight, MinimumPlantHeight);
         }
 
-        /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material</summary>
+        /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
         /// <remarks>This method considers leaves plus an additional effect of stems and stolons</remarks>
         private void EvaluateLAI()
         {
@@ -4937,8 +4786,7 @@ namespace Models.AgPasture
             deadLAI = (leaves.DMDead / 10000) * SpecificLeafArea;
         }
 
-        /// <summary>Compute the average digestibility of aboveground plant material</summary>
-        /// <returns>The digestibility of plant material (0-1)</returns>
+        /// <summary>Compute the average digestibility of above-ground plant material.</summary>
         private void EvaluateDigestibility()
         {
             double result = 0.0;
@@ -4950,10 +4798,10 @@ namespace Models.AgPasture
                 result /= AboveGroundWt;
             }
 
-            digestHerbage = result;
+            herbageDigestibility = result;
         }
 
-        /// <summary>Compute the average digestibility of harvested plant material</summary>
+        /// <summary>Compute the average digestibility of harvested plant material.</summary>
         /// <param name="leafLiveWt">removed DM of live leaves</param>
         /// <param name="leafDeadWt">removed DM of dead leaves</param>
         /// <param name="stemLiveWt">removed DM of live stems</param>
@@ -4982,46 +4830,30 @@ namespace Models.AgPasture
 
         #region Other processes  -------------------------------------------------------------------------------------------
 
-        /// <summary>Harvest the crop.</summary>
+        /// <summary>Harvests the crop.</summary>
         public void Harvest(RemovalFractions removalData)
         {
             // to be added
         }
 
-        /// <summary>Removing plant material simulating a graze event.</summary>
-        /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount).</param>
-        /// <param name="amount">The DM amount [kg/ha].</param>
-        public void Graze(string type, double amount)
-        {
-            // pass data to the graze manager
-            DoGraze(type.ToLower(), amount);
-        }
-
-        /// <summary>Removing plant material simulating a graze event.</summary>
-        /// <param name="grazeData">The graze data (type and amount).</param>
-        [EventSubscribe("Graze")]
-        private void OnGraze(GrazeType grazeData)
-        {
-            // pass data to the graze manager
-            DoGraze(grazeData.type.ToLower(), grazeData.amount);
-        }
-
-        /// <summary>Performs the removal of plant material for a graze event.</summary>
+        /// <summary>Removes plant material simulating a graze event.</summary>
+        /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
+        /// <param name="amount">The DM amount (kg/ha)</param>
         /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount'</exception>
-        private void DoGraze(string type, double amount)
+        public void Graze(string type, double amount)
         {
             if (isAlive && HarvestableWt > Epsilon)
             {
-                // get the amount required to remove
+                // Get the amount required to remove
                 double amountRequired = 0.0;
-                if (type == "setresidueamount")
+                if (type.ToLower() == "setresidueamount")
                 {
                     // Remove all DM above given residual amount
                     amountRequired = Math.Max(0.0, StandingWt - amount);
                 }
-                else if (type == "setremoveamount")
+                else if (type.ToLower() == "setremoveamount")
                 {
-                    // Attempt to remove a given amount
+                    // Remove a given amount
                     amountRequired = Math.Max(0.0, amount);
                 }
                 else
@@ -5029,7 +4861,7 @@ namespace Models.AgPasture
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
                 }
 
-                // get the actual amount to remove
+                // Get the actual amount to remove
                 double amountToRemove = Math.Min(amountRequired, HarvestableWt);
 
                 // Do the actual removal
@@ -5048,7 +4880,7 @@ namespace Models.AgPasture
         /// </remarks>
         /// <param name="amountToRemove">Amount to remove (kg/ha)</param>
         /// <exception cref="System.Exception">Removal of DM resulted in loss of mass balance</exception>
-        public void RemoveDMold(double amountToRemove)
+        public void RemoveDM(double amountToRemove)
         {
             // get existing DM and N amounts
             double PreRemovalDM = AboveGroundWt;
@@ -5082,7 +4914,7 @@ namespace Models.AgPasture
                 fractionRemainingDead = Math.Max(0.0, Math.Min(1.0, 1.0 - RemovingDeadDM / StandingDeadWt));
 
             // get digestibility of DM being harvested
-            digestDefoliated = calcHarvestDigestibility(leaves.DMLive * fractionToHarvestGreen, leaves.DMDead * fractionToHarvestDead,
+            defoliatedDigestibility = calcHarvestDigestibility(leaves.DMLive * fractionToHarvestGreen, leaves.DMDead * fractionToHarvestDead,
                 stems.DMLive * fractionToHarvestGreen, stems.DMDead * fractionToHarvestDead,
                 stolons.DMLive * fractionToHarvestGreen, stolons.DMDead * fractionToHarvestDead);
 
@@ -5117,19 +4949,19 @@ namespace Models.AgPasture
             //NLuxuryRemobilisable *= fractionRemainingGreen;
 
             // save fraction defoliated (to be used on tissue turnover)
-            fractionDefoliated = MathUtilities.Divide(dmDefoliated, dmDefoliated + AboveGroundWt, 0.0); //TODO: it should use StandingLiveWt
+            defoliatedFraction = MathUtilities.Divide(defoliatedDM, defoliatedDM + AboveGroundWt, 0.0); //TODO: it should use StandingLiveWt
 
             // check mass balance and set outputs
-            dmDefoliated = PreRemovalDM - AboveGroundWt;
-            Ndefoliated = PreRemovalN - AboveGroundN;
-            if (Math.Abs(dmDefoliated - amountToRemove) > Epsilon)
+            defoliatedDM = PreRemovalDM - AboveGroundWt;
+            defoliatedN = PreRemovalN - AboveGroundN;
+            if (Math.Abs(defoliatedDM - amountToRemove) > Epsilon)
                 throw new ApsimXException(this, " Removal of DM resulted in loss of mass balance");
         }
 
-        /// <summary>Removes plant DM</summary>
-        /// <param name="amountToRemove">The DM amount to remove</param>
+        /// <summary>Removes a given amount of DM (and N) from this plant.</summary>
+        /// <param name="amountToRemove">The DM amount to remove (kg/ha)</param>
         /// <returns>Amount actually removed (kg/ha)</returns>
-        internal double RemoveDM(double amountToRemove)
+        internal double RemoveDMnew(double amountToRemove)
         {
             // get existing DM and N amounts
             double preRemovalDM = AboveGroundWt;
@@ -5191,7 +5023,7 @@ namespace Models.AgPasture
             double greenDigestibility = (leaves.DigestibilityLive * fracRemoving[0]) + (stems.DigestibilityLive * fracRemoving[1])
                                         + (stolons.DigestibilityLive * fracRemoving[2]);
             double deadDigestibility = (leaves.DigestibilityDead * fracRemoving[3]) + (stems.DigestibilityDead * fracRemoving[4]);
-            digestDefoliated = greenDigestibility + deadDigestibility;
+            defoliatedDigestibility = greenDigestibility + deadDigestibility;
 
             // update the various pools
             // Leaves
@@ -5235,15 +5067,15 @@ namespace Models.AgPasture
             EvaluateDigestibility();
 
             // Check balance and set outputs
-            dmDefoliated = preRemovalDM - AboveGroundWt;
-            Ndefoliated = preRemovalN - AboveGroundN;
-            if (Math.Abs(dmDefoliated - amountToRemove) > Epsilon)
+            defoliatedDM = preRemovalDM - AboveGroundWt;
+            defoliatedN = preRemovalN - AboveGroundN;
+            if (Math.Abs(defoliatedDM - amountToRemove) > Epsilon)
                 throw new Exception("  AgPasture - removal of DM resulted in loss of mass balance");
 
-            return dmDefoliated;
+            return defoliatedDM;
         }
 
-        /// <summary>Remove a fraction of DM from a given plant part</summary>
+        /// <summary>Remove a fraction of DM from a given plant part.</summary>
         /// <param name="fractionR">The fraction of DM and N to remove</param>
         /// <param name="pool">The pool to remove from (green or dead)</param>
         /// <param name="part">The part to remove from (leaf or stem)</param>
@@ -5254,8 +5086,8 @@ namespace Models.AgPasture
                 if (part.ToLower() == "leaf")
                 {
                     // removing green leaves
-                    dmDefoliated += LeafGreenWt * fractionR;
-                    Ndefoliated += LeafGreenN * fractionR;
+                    defoliatedDM += LeafLiveWt * fractionR;
+                    defoliatedN += LeafLiveN * fractionR;
 
                     leaves.Tissue[0].DM *= fractionR;
                     leaves.Tissue[1].DM *= fractionR;
@@ -5268,8 +5100,8 @@ namespace Models.AgPasture
                 else if (part.ToLower() == "stem")
                 {
                     // removing green stems
-                    dmDefoliated += StemGreenWt * fractionR;
-                    Ndefoliated += StemGreenN * fractionR;
+                    defoliatedDM += StemLiveWt * fractionR;
+                    defoliatedN += StemGreenN * fractionR;
 
                     stems.Tissue[0].DM *= fractionR;
                     stems.Tissue[1].DM *= fractionR;
@@ -5285,8 +5117,8 @@ namespace Models.AgPasture
                 if (part.ToLower() == "leaf")
                 {
                     // removing dead leaves
-                    dmDefoliated += LeafDeadWt * fractionR;
-                    Ndefoliated += LeafDeadN * fractionR;
+                    defoliatedDM += LeafDeadWt * fractionR;
+                    defoliatedN += LeafDeadN * fractionR;
 
                     leaves.Tissue[3].DM *= fractionR;
                     leaves.Tissue[3].Namount *= fractionR;
@@ -5294,8 +5126,8 @@ namespace Models.AgPasture
                 else if (part.ToLower() == "stem")
                 {
                     // removing dead stems
-                    dmDefoliated += StemDeadWt * fractionR;
-                    Ndefoliated += StemDeadN * fractionR;
+                    defoliatedDM += StemDeadWt * fractionR;
+                    defoliatedN += StemDeadN * fractionR;
 
                     stems.Tissue[3].DM *= fractionR;
                     stems.Tissue[3].Namount *= fractionR;
@@ -5303,20 +5135,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Performs few actions to update variables after RemoveFractionDM</summary>
-        public void RefreshAfterRemove()
-        {
-            // set values for fractionHarvest (in fact fraction harvested)
-            fractionHarvested = MathUtilities.Divide(dmDefoliated, StandingWt + dmDefoliated, 0.0);
-
-            // Update LAI
-            EvaluateLAI();
-
-            // Update digestibility
-            EvaluateDigestibility();
-        }
-
-        /// <summary>Reset this plant state to its initial values</summary>
+        /// <summary>Resets this plant state to its initial values.</summary>
         public void Reset()
         {
             leaves.DoResetOrgan();
@@ -5326,12 +5145,10 @@ namespace Models.AgPasture
             SetInitialState();
         }
 
-        /// <summary>Kill parts of this plant</summary>
-        /// <param name="KillData">Fraction of crop to be killed</param>
-        [EventSubscribe("KillCrop")]
-        public void OnKillCrop(KillCropType KillData)
+        /// <summary>Kill parts of this plant.</summary>
+        /// <param name="fractioToKill">Fraction of crop to be killed (0-1)</param>
+        public void KillCrop(double fractioToKill)
         {
-            double fractioToKill = MathUtilities.Bound(KillData.KillFraction, 0.0, 1.0);
             if (fractioToKill < 1.0)
             {
                 // transfer fracton of live tissues into dead, will be detached later
@@ -5347,7 +5164,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Reset this plant to zero (kill crop)</summary>
+        /// <summary>Resets this plant's variables to zero.</summary>
         public void ResetZero()
         {
             // Zero out the DM and N pools is all organs and tissues
@@ -5357,66 +5174,62 @@ namespace Models.AgPasture
             roots.DoResetOrgan();
 
             // Zero out the variables for whole plant
-            dmDefoliated = 0.0;
-            Ndefoliated = 0.0;
-            digestDefoliated = 0.0;
+            defoliatedDM = 0.0;
+            defoliatedN = 0.0;
+            defoliatedDigestibility = 0.0;
 
             dGrowthShootDM = 0.0;
             dGrowthShootN = 0.0;
             dGrowthRootDM = 0.0;
             dGrowthRootN = 0.0;
 
-            senescedShootDM = 0.0;
-            senescedShootN = 0.0;
             detachedShootDM = 0.0;
             detachedShootN = 0.0;
-            senescedRootDM = 0.0;
-            senescedRootN = 0.0;
             detachedRootDM = 0.0;
             detachedRootN = 0.0;
 
-            NSenescedRemobilised = 0.0;
-            NLuxuryRemobilised = 0.0;
+            senescedNRemobilised = 0.0;
+            luxuryNRemobilised = 0.0;
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Functions  -------------------------------------------------------------------------------------------------
 
-        /// <summary>Today's weighted average temperature</summary>
+        /// <summary>Today's weighted average temperature.</summary>
         /// <param name="wTmax">Weight to Tmax</param>
-        /// <returns>Mean Temperature</returns>
+        /// <returns>Average Temperature (oC)</returns>
         private double Tmean(double wTmax)
         {
             wTmax = MathUtilities.Bound(wTmax, 0.0, 1.0);
             return (myMetData.MaxT * wTmax) + (myMetData.MinT * (1.0 - wTmax));
         }
 
-        /// <summary>Growth limiting factor due to temperature</summary>
-        /// <param name="Temp">Temperature for which the limiting factor will be computed</param>
+        /// <summary>Growth limiting factor due to temperature.</summary>
+        /// <param name="temperature">Temperature for which the limiting factor will be computed</param>
         /// <returns>The value for the limiting factor (0-1)</returns>
         /// <exception cref="System.Exception">Photosynthesis pathway is not valid</exception>
-        private double TemperatureLimitingFactor(double Temp)
+        private double TemperatureLimitingFactor(double temperature)
         {
             double result = 0.0;
             double growthTmax = GrowthTopt + (GrowthTopt - GrowthTmin) / GrowthTq;
             if (PhotosynthesisPathway == PhotosynthesisPathwayType.C3)
             {
-                if (Temp > GrowthTmin && Temp < growthTmax)
+                if (temperature > GrowthTmin && temperature < growthTmax)
                 {
-                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax - Temp);
+                    double val1 = Math.Pow((temperature - GrowthTmin), GrowthTq) * (growthTmax - temperature);
                     double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax - GrowthTopt);
                     result = val1 / val2;
                 }
             }
             else if (PhotosynthesisPathway == PhotosynthesisPathwayType.C4)
             {
-                if (Temp > GrowthTmin)
+                if (temperature > GrowthTmin)
                 {
-                    if (Temp > GrowthTopt)
-                        Temp = GrowthTopt;
+                    if (temperature > GrowthTopt)
+                        temperature = GrowthTopt;
 
-                    double val1 = Math.Pow((Temp - GrowthTmin), GrowthTq) * (growthTmax - Temp);
+                    double val1 = Math.Pow((temperature - GrowthTmin), GrowthTq) * (growthTmax - temperature);
                     double val2 = Math.Pow((GrowthTopt - GrowthTmin), GrowthTq) * (growthTmax - GrowthTopt);
                     result = val1 / val2;
                 }
@@ -5426,24 +5239,24 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Effect of temperature on tissue turnover</summary>
-        /// <param name="Temp">The temporary.</param>
+        /// <summary>Effect of temperature on tissue turnover.</summary>
+        /// <param name="temperature">The temporary.</param>
         /// <returns>Temperature factor (0-1)</returns>
-        private double TempFactorForTissueTurnover(double Temp)
+        private double TempFactorForTissueTurnover(double temperature)
         {
             double result = 0.0;
-            if (Temp > TissueTurnoverTmin && Temp <= TissueTurnoverTopt)
+            if (temperature > TissueTurnoverTmin && temperature <= TissueTurnoverTref)
             {
-                result = (Temp - TissueTurnoverTmin) / (TissueTurnoverTopt - TissueTurnoverTmin);  // TODO: implement power function
+                result = (temperature - TissueTurnoverTmin) / (TissueTurnoverTref - TissueTurnoverTmin);  // TODO: implement power function
             }
-            else if (Temp > TissueTurnoverTopt)
+            else if (temperature > TissueTurnoverTref)
             {
                 result = 1.0;
             }
             return result;
         }
 
-        /// <summary>Computes the reduction factor for photosynthesis due to heat damage</summary>
+        /// <summary>Computes the reduction factor for photosynthesis due to heat damage.</summary>
         /// <remarks>Stress computed as function of daily maximum temperature, recovery based on average temp.</remarks>
         /// <returns>The reduction in photosynthesis rate (0-1)</returns>
         private double HeatStress()
@@ -5485,7 +5298,7 @@ namespace Models.AgPasture
             return 1.0;
         }
 
-        /// <summary>Computes the reduction factor for photosynthesis due to cold damage (frost)</summary>
+        /// <summary>Computes the reduction factor for photosynthesis due to cold damage (frost).</summary>
         /// <remarks>Stress computed as function of daily minimum temperature, recovery based on average temp.</remarks>
         /// <returns>The reduction in photosynthesis rate (0-1)</returns>
         private double ColdStress()
@@ -5529,7 +5342,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the relative effect of atmospheric CO2 on photosynthesis.</summary>
-        /// <returns>A factor to adjust photosynthesis due to CO2</returns>
+        /// <returns>A factor to adjust photosynthesis due to CO2 (0-1)</returns>
         private double CO2EffectOnPhotosynthesis()
         {
             if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
@@ -5545,7 +5358,7 @@ namespace Models.AgPasture
         /// This mimics the effect that N concentration have on the amount of chlorophyll (assumed directly proportional to N conc).
         /// The effect is adjusted by a function of atmospheric CO2 (plants need less N at high CO2).
         /// </remarks>
-        /// <returns>A factor to adjust photosynthesis due to N concentration</returns>
+        /// <returns>A factor to adjust photosynthesis due to N concentration (0-1)</returns>
         private double NConcentrationEffect()
         {
             // get variation in N optimum due to CO2
@@ -5565,8 +5378,8 @@ namespace Models.AgPasture
             return effect;
         }
 
-        /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2</summary>
-        /// <returns>A factor to adjust optimum N in leaves</returns>
+        /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2.</summary>
+        /// <returns>A factor to adjust optimum N in leaves (0-1)</returns>
         private double NFactorDueToCO2()
         {
             if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
@@ -5579,7 +5392,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the variation in stomata conductances due to variation in atmospheric CO2.</summary>
-        /// <returns>Stomata conductuctance</returns>
+        /// <returns>Stomata conductuctance (m/s)</returns>
         private double ConductanceCO2Effects()
         {
             if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.5)
@@ -5595,7 +5408,7 @@ namespace Models.AgPasture
             return Gmin + Fc;
         }
 
-        /// <summary>Growth limiting factor due to soil moisture deficit</summary>
+        /// <summary>Computes the growth limiting factor due to soil moisture deficit.</summary>
         /// <returns>The limiting factor due to soil water deficit (0-1)</returns>
         internal double WaterDeficitFactor()
         {
@@ -5603,14 +5416,14 @@ namespace Models.AgPasture
             return Math.Max(0.0, Math.Min(1.0, factor));
         }
 
-        /// <summary>Growth limiting factor due to excess of water in the soil (logging/lack of aeration)</summary>
+        /// <summary>Computes the growth limiting factor due to excess of water in the soil (water logging/lack of aeration).</summary>
         /// <remarks>
         /// Growth is limited if soil water content is above a given threshold (defined by MinimumWaterFreePorosity), which
         ///  will be the soil DUL is MinimumWaterFreePorosity is set to a negative value. If usingCumulativeWaterLogging, 
         ///  growth is limited by the cumulative value of the logging effect, with maximum increment in one day equal to 
         ///  SoilWaterSaturationFactor. Recovery happens if water content is below the threshold set by MinimumWaterFreePorosity
         /// </remarks>
-        /// <returns>The limiting factor due to excess in soil water</returns>
+        /// <returns>The limiting factor due to excess in soil water (0-1)</returns>
         internal double WaterLoggingFactor()
         {
             double effect = 0.0;
@@ -5650,8 +5463,8 @@ namespace Models.AgPasture
             return effect;
         }
 
-        /// <summary>Effect of water stress on tissue turnover</summary>
-        /// <remarks>Tissue turnover is higher under water stress, GLFwater to mimic that effect</remarks>
+        /// <summary>Computes the effect of water stress on tissue turnover.</summary>
+        /// <remarks>Tissue turnover is higher under water stress, GLFwater is used to mimic that effect.</remarks>
         /// <returns>Water stress factor for tissue turnover (0-1)</returns>
         private double WaterFactorForTissueTurnover()
         {
@@ -5665,7 +5478,7 @@ namespace Models.AgPasture
             return effect;
         }
 
-        /// <summary>Computes the ground cover for the plant, or plant part</summary>
+        /// <summary>Computes the ground cover for the plant, or plant part.</summary>
         /// <param name="givenLAI">The LAI for this plant</param>
         /// <returns>Fraction of ground effectively covered (0-1)</returns>
         private double CalcPlantCover(double givenLAI)
@@ -5674,7 +5487,7 @@ namespace Models.AgPasture
             return (1.0 - Math.Exp(-LightExtentionCoefficient * givenLAI));
         }
 
-        /// <summary>Compute the target (or ideal) distribution of roots in the soil profile</summary>
+        /// <summary>Computes the target (or ideal) distribution of roots in the soil profile.</summary>
         /// <remarks>
         /// This distribution is solely based on root parameters (maximum depth and distribution parameters)
         /// These values will be used to allocate initial rootDM as well as any growth over the profile
@@ -5730,12 +5543,12 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>Compute the current target distribution of roots in the soil profile</summary>
+        /// <summary>Computes the current target distribution of roots in the soil profile.</summary>
         /// <remarks>
         /// This distribution is a correction of the target distribution, taking into account the depth of soil
         /// as well as the current rooting depth
         /// </remarks>
-        /// <returns>The proportion of root mass expected in each soil layer</returns>
+        /// <returns>The proportion of root mass expected in each soil layer (0-1)</returns>
         private double[] CurrentRootDistributionTarget()
         {
             double currentDepth = 0.0;
@@ -5773,11 +5586,9 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>
-        /// Compute how much of the layer is actually explored by roots (considering depth only)
-        /// </summary>
+        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
         /// <param name="layer">The index for the layer being considered</param>
-        /// <returns>Fraction of the layer in consideration that is explored by roots</returns>
+        /// <returns>Fraction of the layer in consideration that is explored by roots (0-1)</returns>
         internal double FractionLayerWithRoots(int layer)
         {
             double fractionInLayer = 0.0;
@@ -5797,9 +5608,7 @@ namespace Models.AgPasture
             return fractionInLayer;
         }
 
-        /// <summary>
-        /// Compute the index of the layer at the bottom of the root zone
-        /// </summary>
+        /// <summary>Computes the index of the layer at the bottom of the root zone</summary>
         /// <returns>Index of a layer</returns>
         private int RootZoneBottomLayer()
         {
@@ -5819,11 +5628,11 @@ namespace Models.AgPasture
             return result;
         }
 
-        /// <summary>VPDs this instance.</summary>
-        /// <returns></returns>
-        /// The following helper functions [VDP and svp] are for calculating Fvdp
+        /// <summary>Computes the vapour pressure deficit.</summary>
+        /// <returns>The vapour pressure deficit (hPa?)</returns>
         private double VPD()
         {
+            //TODO: this can possibly be deleted (not use and calculated in MicroClimate)
             double VPDmint = svp(myMetData.MinT) - myMetData.VP;
             VPDmint = Math.Max(VPDmint, 0.0);
 
@@ -5834,10 +5643,10 @@ namespace Models.AgPasture
             return vdp;
         }
 
-        /// <summary>SVPs the specified temporary.</summary>
-        /// <param name="temp">The temporary.</param>
-        /// <returns></returns>
-        private double svp(double temp)  // from Growth.for documented in MicroMet
+        /// <summary>Saturate vapour pressure in the air.</summary>
+        /// <param name="temp">The air temperature (oC)</param>
+        /// <returns>The saturated vapour presure (hPa?)</returns>
+        private double svp(double temp)
         {
             return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
         }
@@ -5853,13 +5662,13 @@ namespace Models.AgPasture
             /// <summary>Plant phenologic stage</summary>
             internal int PhenoStage;
 
-            /// <summary>DM weight for each biomass pool</summary>
+            /// <summary>DM weight for each biomass pool (kg/ha)</summary>
             internal double[] DMWeight;
 
-            /// <summary>N amount for each biomass pool</summary>
+            /// <summary>N amount for each biomass pool (kg/ha)</summary>
             internal double[] NAmount;
 
-            /// <summary>Root depth</summary>
+            /// <summary>Root depth (mm)</summary>
             internal double RootDepth;
 
             /// <summary>Constructor, initialise the arrays</summary>
