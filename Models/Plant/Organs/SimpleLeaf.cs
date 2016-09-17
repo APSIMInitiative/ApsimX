@@ -184,15 +184,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the ep.</summary>
         /// <value>The ep.</value>
         private double EP { get; set; }
-        /// <summary>Gets or sets the k.</summary>
-        /// <value>The k.</value>
-        public double K { get; set; }                      // Extinction Coefficient (Green)
         /// <summary>Gets or sets the k dead.</summary>
         /// <value>The k dead.</value>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Gets or sets the delta biomass.</summary>
-        /// <value>The delta biomass.</value>
-        public double DeltaBiomass { get; set; }
         /// <summary>Gets or sets the water demand.</summary>
         /// <value>The water demand.</value>
         [Units("mm")]
