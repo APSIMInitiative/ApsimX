@@ -171,7 +171,7 @@ namespace Models.PMF.Organs
         IFunction SVPFrac = null;
 
         /// <summary>The initial leaf DM</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/plant")]
         IFunction InitialDM = null;
 
@@ -423,19 +423,14 @@ namespace Models.PMF.Organs
             {
                 if (!isInitialised)
                 {
-                    if (InitialDM != null)
-                    {
-                        Live.StructuralWt = InitialDM.Value * Plant.Population;
-                        Live.StructuralN = InitialDM.Value * Plant.Population * MaxNconc;
-                        isInitialised = true;
-                    }
+                    Live.StructuralWt = InitialDM.Value * Plant.Population;
+                    Live.StructuralN = Live.StructuralWt * MaxNconc;
+                    isInitialised = true;
                 }
 
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)
-                {
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                }
                 if (CoverFunction != null)
                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
                 if (LAIFunction != null)
