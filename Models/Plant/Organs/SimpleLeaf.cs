@@ -178,8 +178,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States and variables
-        /// <summary>The _ water allocation</summary>
-        private double _WaterAllocation;
 
         /// <summary>Gets or sets the ep.</summary>
         /// <value>The ep.</value>
@@ -263,15 +261,8 @@ namespace Models.PMF.Organs
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
-        public override double WaterAllocation
-        {
-            get { return _WaterAllocation; }
-            set
-            {
-                _WaterAllocation = value;
-                EP += _WaterAllocation;
-            }
-        }
+        public override double WaterAllocation { get { return EP; } set { EP += value; } }
+        
         /// <summary>Gets or sets the dm demand.</summary>
         /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
