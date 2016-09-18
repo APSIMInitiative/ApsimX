@@ -2929,7 +2929,13 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>0.0</Value>
           <Units>g/plant</Units>
         </Constant>
-            <Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
+		<Constant>
               <Name>Photosynthesis</Name>
               <Value>5</Value>
               <Units>g/m2/d</Units>
@@ -3359,7 +3365,13 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>0.0</Value>
           <Units>g/plant</Units>
         </Constant>
-            <Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
+		<Constant>
               <Name>Photosynthesis</Name>
               <Value>5</Value>
               <Units>g/m2/d</Units>

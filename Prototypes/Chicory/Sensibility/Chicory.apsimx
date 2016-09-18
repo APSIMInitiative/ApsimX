@@ -476,6 +476,12 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>0.005</Value>
           <Units>g/plant</Units>
         </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>

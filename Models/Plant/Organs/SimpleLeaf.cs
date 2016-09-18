@@ -151,7 +151,7 @@ namespace Models.PMF.Organs
         [Link]
         IFunction HeightFunction = null;
         /// <summary>The lai dead function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction LaiDeadFunction = null;
         /// <summary>The structural fraction</summary>
         [Link]
@@ -311,13 +311,10 @@ namespace Models.PMF.Organs
             {
                 double StructuralDemand = 0;
                 double NDeficit = 0;
-                if (NitrogenDemandSwitch == null)
-                    NDeficit = 0;
+
                 if (NitrogenDemandSwitch != null)
-                {
                     if (NitrogenDemandSwitch.Value == 0)
                         NDeficit = 0;
-                }
 
                 StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
                 NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
@@ -423,10 +420,7 @@ namespace Models.PMF.Organs
 
                 Height = HeightFunction.Value;
 
-                if (LaiDeadFunction != null)
-                    LAIDead = LaiDeadFunction.Value;
-                else
-                    LAIDead = 0;
+                LAIDead = LaiDeadFunction.Value;
 
             }
         }

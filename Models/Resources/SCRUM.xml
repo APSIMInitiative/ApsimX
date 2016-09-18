@@ -386,6 +386,12 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
       <Value>0.0</Value>
       <Units>g/plant</Units>
     </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
     <MultiplyFunction>
       <Name>Photosynthesis</Name>
       <DeltaFunction>
