@@ -108,7 +108,59 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
               <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
             </Memo>
           </AirTemperatureFunction>
+          <PhaseLookup>
+            <Name>SoilTemperatureCorrection</Name>
+            <PhaseLookupValue>
+              <Name>ApexBelowGround</Name>
+              <MultiplyFunction>
+                <Name>NetDailyRadiativeHeating</Name>
+                <LinearInterpolationFunction>
+                  <Name>DaylengthRadiationFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>4</double>
+                      <double>12</double>
+                      <double>20</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>0</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                </LinearInterpolationFunction>
+                <LinearInterpolationFunction>
+                  <Name>CanopyInsulationEffect</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>1</double>
+                    </X>
+                    <Y>
+                      <double>1</double>
+                      <double>0.3</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Leaf].RadIntTot</XProperty>
+                </LinearInterpolationFunction>
+              </MultiplyFunction>
+              <Start>Germination</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
         </AddFunction>
+        <MovingAverageFunction>
+          <Name>MeanThermalTime</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <NumberOfDays>10</NumberOfDays>
+          <InitialValue>15</InitialValue>
+        </MovingAverageFunction>
         <MultiplyFunction>
           <Name>DailyVernalisation</Name>
           <Memo>
@@ -204,26 +256,6 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           </PhaseLookupValue>
         </PhaseLookup>
         <MinimumFunction>
-          <Name>Vrn4</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[For genotypes displaying a vernalisation lag, Vrn4 experssion will begin at a positive value and is down regulated with the same temperature response as Vrn1 accumulation.  For implementaiton convenience we have modelled this as an an accumulation of Vrn4 up to saturation.  in reality it is a reduction to zero from saturation but the two appraoches give the same result]]></MemoText>
-          </Memo>
-          <VariableReference>
-            <Name>MaxExpression</Name>
-            <VariableName>[Phenology].VernLag.Value</VariableName>
-          </VariableReference>
-          <AccumulateFunction>
-            <Name>CurrentExpression</Name>
-            <VariableReference>
-              <Name>VernalisationConditioning</Name>
-              <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
-            </VariableReference>
-            <StartStageName>Germination</StartStageName>
-            <EndStageName>TerminalSpikelet</EndStageName>
-          </AccumulateFunction>
-        </MinimumFunction>
-        <MinimumFunction>
           <Name>Vrn1</Name>
           <Memo>
             <Name>Memo</Name>
@@ -255,6 +287,22 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
                 <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
               </VariableReference>
             </LessThanFunction>
+            <StartStageName>Germination</StartStageName>
+            <EndStageName>TerminalSpikelet</EndStageName>
+          </AccumulateFunction>
+        </MinimumFunction>
+        <MinimumFunction>
+          <Name>Vrn4</Name>
+          <VariableReference>
+            <Name>MaxExpression</Name>
+            <VariableName>[Phenology].VernLag.Value</VariableName>
+          </VariableReference>
+          <AccumulateFunction>
+            <Name>CurrentExpression</Name>
+            <VariableReference>
+              <Name>VernalisationConditioning</Name>
+              <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
+            </VariableReference>
             <StartStageName>Germination</StartStageName>
             <EndStageName>TerminalSpikelet</EndStageName>
           </AccumulateFunction>
