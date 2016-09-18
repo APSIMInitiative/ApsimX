@@ -463,6 +463,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
         </Memo>
         <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
           <Name>InitialDM</Name>
           <Memo>
             <Name>Description</Name>
@@ -471,6 +476,12 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>0.005</Value>
           <Units>g/plant</Units>
         </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>

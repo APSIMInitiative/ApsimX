@@ -92,7 +92,7 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
@@ -548,10 +548,7 @@ namespace Models.PMF.Organs
             }
 
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            if (MaximumNConc != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand.", indent));
-            }
+            tags.Add(new AutoDocumentation.Paragraph("The daily non-structural N demand from " + this.Name + " is the product of Total DM demand and a Maximum N concentration of " + MaximumNConc.Value * 100 + "% less the structural N demand.", indent));
             if (MinimumNConc != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Minimum N concentration of " + MinimumNConc.Value * 100 + "%", indent));
