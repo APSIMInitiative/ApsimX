@@ -824,6 +824,30 @@ namespace Models.AgPasture
             set { myGrowthRespirationCoefficient = value; }
         }
 
+        /// <summary>Reference temperature for maintenance respiration (oC).</summary>
+        private double myRespirationTreference = 20.0;
+
+        /// <summary>Gets or sets the reference temperature for maintenance respiration (oC).</summary>
+        [Description("Reference temperature for maintenance respiration [oC]:")]
+        [Units("oC")]
+        public double RespirationTreference
+        {
+            get { return myRespirationTreference; }
+            set { myRespirationTreference = value; }
+        }
+
+        /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
+        private double myRespirationExponent = 1.5;
+
+        /// <summary>Gets or sets the exponent controlling the effect of temperature on respiration (>1.0).</summary>
+        [Description("Exponent controlling the effect of temperature on respiration [>1]:")]
+        [Units("-")]
+        public double RespirationExponent
+        {
+            get { return myRespirationExponent; }
+            set { myRespirationExponent = value; }
+        }
+
         // - N concentration  -----------------------------------------------------------------------------------------
 
         /// <summary>N concentration thresholds for leaves, optimum, minimum and maximum (kg/kg).</summary>
@@ -1208,6 +1232,18 @@ namespace Models.AgPasture
         {
             get { return myTissueTurnoverTref; }
             set { myTissueTurnoverTref = value; }
+        }
+
+        /// <summary>Exponent of function for temperature effect on tissue turnover (-).</summary>
+        private double myTissueTurnoverTq = 1.0;
+
+        /// <summary>Gets or sets the exponent of function for temperature effect on tissue turnover (-).</summary>
+        [Description("Exponent of function for temperature effect on tissue turnover:")]
+        [Units("-")]
+        public double TissueTurnoverTq
+        {
+            get { return myTissueTurnoverTq; }
+            set { myTissueTurnoverTq = value; }
         }
 
         /// <summary>Maximum increase in tissue turnover due to water stress (>0.0).</summary>
@@ -4005,25 +4041,23 @@ namespace Models.AgPasture
 
             // Update each organ, returns test for mass balance
             if (leaves.DoOrganUpdate() == false)
-                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for leaves");
+                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for leaves");
 
             if (stems.DoOrganUpdate() == false)
-                throw new Exception("Growth and tissue turnover resulted in loss of mass balance for stems");
+                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stems");
 
             if (stolons.DoOrganUpdate() == false)
                 throw new Exception("Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            if ((dGrowthRootDM + detachedRootDM) < Epsilon)
-                preTotalN += 0.0;
             if (roots.DoOrganUpdate() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
             // Check for loss of mass balance of total plant
             if (Math.Abs(preTotalWt + dGrowthActual - detachedShootDM - detachedRootDM - TotalWt) > Epsilon)
-                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
+                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - TotalN) > Epsilon)
-                throw new Exception("  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
+                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
             EvaluateLAI();
@@ -4112,20 +4146,7 @@ namespace Models.AgPasture
         private double DailyMaintenanceRespiration()
         {
             // Temperature effects on respiration
-            double Teffect = 0;
-            if (Tmean(0.5) > myGrowthTminimum)
-            {
-                if (Tmean(0.5) < myGrowthToptimum)
-                {
-                    Teffect = TemperatureLimitingFactor(Tmean(0.5));
-                }
-                else
-                {
-                    Teffect = Math.Min(1.25, Tmean(0.5) / myGrowthToptimum);
-                    // Using growthTopt as reference temperature, and maximum of 1.25
-                    Teffect *= TemperatureLimitingFactor(myGrowthToptimum);
-                }
-            }
+            double Teffect = TemperatureEffectOnRespiration(Tmean(0.5));
 
             // Total DM converted to C (kg/ha)
             double liveBiomassC = (AboveGroundLiveWt + roots.DMLive) * CarbonFractionInDM;
@@ -5594,7 +5615,7 @@ namespace Models.AgPasture
                         break;
                     }
                 }
-                mySummary.WriteMessage(this, " AgPasture " + Name + " needed " + count + " iterations to solve parttion of removed DM");
+                //mySummary.WriteMessage(this, " AgPasture " + Name + " needed " + count + " iterations to solve parttion of removed DM");
             }
 
             // get digestibility of DM being harvested (do this before updating pools)
@@ -5899,6 +5920,48 @@ namespace Models.AgPasture
             return result;
         }
 
+        /// <summary>Computes the effects of temperature on respiration</summary>
+        /// <returns>Temperature factor</returns>
+        private double TemperatureEffectOnRespirationNew(double temperature)
+        {
+            double result;
+            if (temperature <= 0.0)
+            {
+                // too cold, no respiration
+                result = 0.0;
+            }
+            else
+            {
+                double scalef = 1.0 - Math.Exp(-1.0);
+                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / myRespirationTreference, myRespirationExponent));
+                result = baseEffect / scalef;
+            }
+
+            return result;
+        }
+
+        /// <summary>Computes the effects of temperature on respiration</summary>
+        /// <returns>Temperature factor</returns>
+        private double TemperatureEffectOnRespiration(double temperature)
+        {
+            double Teffect = 0;
+            if (temperature > myGrowthTminimum)
+            {
+                if (Tmean(0.5) < myGrowthToptimum)
+                {
+                    Teffect = TemperatureLimitingFactor(temperature);
+                }
+                else
+                {
+                    Teffect = Math.Min(1.25, Tmean(0.5) / myGrowthToptimum);
+                    // Using growthTopt as reference temperature, and maximum of 1.25
+                    Teffect *= TemperatureLimitingFactor(myGrowthToptimum);
+                }
+            }
+
+            return Teffect;
+        }
+
         /// <summary>Effect of temperature on tissue turnover.</summary>
         /// <param name="temperature">The temporary.</param>
         /// <returns>Temperature factor (0-1)</returns>
@@ -5907,7 +5970,7 @@ namespace Models.AgPasture
             double result = 0.0;
             if (temperature > myTissueTurnoverTmin && temperature <= myTissueTurnoverTref)
             {
-                result = (temperature - myTissueTurnoverTmin) / (myTissueTurnoverTref - myTissueTurnoverTmin);  // TODO: implement power function
+                result = Math.Pow((temperature - myTissueTurnoverTmin) / (myTissueTurnoverTref - myTissueTurnoverTmin), myTissueTurnoverTq);
             }
             else if (temperature > myTissueTurnoverTref)
             {
