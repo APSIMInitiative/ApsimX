@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -7290,7 +7290,7 @@ namespace Models
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
 			{
-				Pasture.Harvest(amount: removeAmount, type: "SetRemoveAmount");
+				Pasture.Graze(amount: removeAmount, type: "SetRemoveAmount");
 				
 				// get total harvested
 				DefoliatedWt = Pasture.HarvestedWt;
@@ -8229,31 +8229,26 @@ namespace Models
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
-            <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+            <SpeciesFamily>Grass</SpeciesFamily>
             <PhotosynthesisPathway>C3</PhotosynthesisPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
             <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
-            <GrowthTmin>2</GrowthTmin>
-            <GrowthTopt>20</GrowthTopt>
+            <GrowthTminimum>2</GrowthTminimum>
+            <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
-            <ReferenceCO2>380</ReferenceCO2>
-            <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
-            <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
-            <CO2EffectMinimum>0.7</CO2EffectMinimum>
-            <CO2EffectExponent>2</CO2EffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
-            <HeatOnsetTemp>28</HeatOnsetTemp>
-            <HeatFullTemp>35</HeatFullTemp>
-            <HeatSumDD>30</HeatSumDD>
-            <HeatRecoverTemp>25</HeatRecoverTemp>
+            <HeatOnsetTemperature>28</HeatOnsetTemperature>
+            <HeatFullTemperature>35</HeatFullTemperature>
+            <HeatRecoverySumDD>30</HeatRecoverySumDD>
+            <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
-            <ColdOnsetTemp>0</ColdOnsetTemp>
-            <ColdFullTemp>-3</ColdFullTemp>
-            <ColdSumDD>20</ColdSumDD>
-            <ColdRecoverTemp>0</ColdRecoverTemp>
+            <ColdOnsetTemperature>0</ColdOnsetTemperature>
+            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdRecoverySumDD>20</ColdRecoverySumDD>
+            <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
             <NThresholdsForLeaves>
@@ -8276,7 +8271,6 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
@@ -8311,7 +8305,7 @@ namespace Models
             <MaximumNFixation>0</MaximumNFixation>
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
-            <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+            <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
             <GlfGeneric>1</GlfGeneric>
             <GlfSFertility>1</GlfSFertility>
@@ -8331,8 +8325,6 @@ namespace Models
               <double>0.2</double>
             </DigestibilitiesCellWall>
             <MinimumGreenWt>300</MinimumGreenWt>
-            <MinimumGreenLeafProp>0.8</MinimumGreenLeafProp>
-            <MinimumGreenRootProp>0.5</MinimumGreenRootProp>
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
@@ -10296,6 +10288,27 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.WaterAvailable</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -11832,31 +11845,26 @@ namespace Models
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+          <SpeciesFamily>Grass</SpeciesFamily>
           <PhotosynthesisPathway>C3</PhotosynthesisPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
           <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
-          <GrowthTmin>2</GrowthTmin>
-          <GrowthTopt>20</GrowthTopt>
+          <GrowthTminimum>2</GrowthTminimum>
+          <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
-          <ReferenceCO2>380</ReferenceCO2>
-          <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
-          <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
-          <CO2EffectMinimum>0.7</CO2EffectMinimum>
-          <CO2EffectExponent>2</CO2EffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
-          <HeatOnsetTemp>28</HeatOnsetTemp>
-          <HeatFullTemp>35</HeatFullTemp>
-          <HeatSumDD>30</HeatSumDD>
-          <HeatRecoverTemp>25</HeatRecoverTemp>
+          <HeatOnsetTemperature>28</HeatOnsetTemperature>
+          <HeatFullTemperature>35</HeatFullTemperature>
+          <HeatRecoverySumDD>30</HeatRecoverySumDD>
+          <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
-          <ColdOnsetTemp>0</ColdOnsetTemp>
-          <ColdFullTemp>-3</ColdFullTemp>
-          <ColdSumDD>20</ColdSumDD>
-          <ColdRecoverTemp>0</ColdRecoverTemp>
+          <ColdOnsetTemperature>0</ColdOnsetTemperature>
+          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdRecoverySumDD>20</ColdRecoverySumDD>
+          <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
           <NThresholdsForLeaves>
@@ -11879,7 +11887,6 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
@@ -11914,7 +11921,7 @@ namespace Models
           <MaximumNFixation>0</MaximumNFixation>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
-          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <GlfGeneric>1</GlfGeneric>
           <GlfSFertility>1</GlfSFertility>
@@ -11934,8 +11941,6 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
-          <MinimumGreenLeafProp>0.8</MinimumGreenLeafProp>
-          <MinimumGreenRootProp>0.5</MinimumGreenRootProp>
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
@@ -14091,6 +14096,27 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.WaterAvailable</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -16204,31 +16230,26 @@ namespace Models
             <Albedo>0.26</Albedo>
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
-            <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+            <SpeciesFamily>Grass</SpeciesFamily>
             <PhotosynthesisPathway>C3</PhotosynthesisPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
             <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
-            <GrowthTmin>2</GrowthTmin>
-            <GrowthTopt>20</GrowthTopt>
+            <GrowthTminimum>2</GrowthTminimum>
+            <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
-            <ReferenceCO2>380</ReferenceCO2>
-            <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
-            <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
-            <CO2EffectMinimum>0.7</CO2EffectMinimum>
-            <CO2EffectExponent>2</CO2EffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
-            <HeatOnsetTemp>28</HeatOnsetTemp>
-            <HeatFullTemp>35</HeatFullTemp>
-            <HeatSumDD>30</HeatSumDD>
-            <HeatRecoverTemp>25</HeatRecoverTemp>
+            <HeatOnsetTemperature>28</HeatOnsetTemperature>
+            <HeatFullTemperature>35</HeatFullTemperature>
+            <HeatRecoverySumDD>30</HeatRecoverySumDD>
+            <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
-            <ColdOnsetTemp>0</ColdOnsetTemp>
-            <ColdFullTemp>-3</ColdFullTemp>
-            <ColdSumDD>20</ColdSumDD>
-            <ColdRecoverTemp>0</ColdRecoverTemp>
+            <ColdOnsetTemperature>0</ColdOnsetTemperature>
+            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdRecoverySumDD>20</ColdRecoverySumDD>
+            <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
             <NThresholdsForLeaves>
@@ -16251,7 +16272,6 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <DegreesDayForGermination>100</DegreesDayForGermination>
             <TargetSRratio>3</TargetSRratio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
@@ -16286,7 +16306,7 @@ namespace Models
             <MaximumNFixation>0</MaximumNFixation>
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
-            <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+            <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
             <GlfGeneric>1</GlfGeneric>
             <GlfSFertility>1</GlfSFertility>
@@ -16306,8 +16326,6 @@ namespace Models
               <double>0.2</double>
             </DigestibilitiesCellWall>
             <MinimumGreenWt>300</MinimumGreenWt>
-            <MinimumGreenLeafProp>0.8</MinimumGreenLeafProp>
-            <MinimumGreenRootProp>0.5</MinimumGreenRootProp>
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
@@ -19789,31 +19807,26 @@ namespace Models
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+          <SpeciesFamily>Grass</SpeciesFamily>
           <PhotosynthesisPathway>C3</PhotosynthesisPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
           <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
-          <GrowthTmin>2</GrowthTmin>
-          <GrowthTopt>20</GrowthTopt>
+          <GrowthTminimum>2</GrowthTminimum>
+          <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
-          <ReferenceCO2>380</ReferenceCO2>
-          <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
-          <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
-          <CO2EffectMinimum>0.7</CO2EffectMinimum>
-          <CO2EffectExponent>2</CO2EffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
-          <HeatOnsetTemp>28</HeatOnsetTemp>
-          <HeatFullTemp>35</HeatFullTemp>
-          <HeatSumDD>30</HeatSumDD>
-          <HeatRecoverTemp>25</HeatRecoverTemp>
+          <HeatOnsetTemperature>28</HeatOnsetTemperature>
+          <HeatFullTemperature>35</HeatFullTemperature>
+          <HeatRecoverySumDD>30</HeatRecoverySumDD>
+          <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
-          <ColdOnsetTemp>0</ColdOnsetTemp>
-          <ColdFullTemp>-3</ColdFullTemp>
-          <ColdSumDD>20</ColdSumDD>
-          <ColdRecoverTemp>0</ColdRecoverTemp>
+          <ColdOnsetTemperature>0</ColdOnsetTemperature>
+          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdRecoverySumDD>20</ColdRecoverySumDD>
+          <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
           <NThresholdsForLeaves>
@@ -19836,7 +19849,6 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
@@ -19871,7 +19883,7 @@ namespace Models
           <MaximumNFixation>0</MaximumNFixation>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
-          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <GlfGeneric>1</GlfGeneric>
           <GlfSFertility>1</GlfSFertility>
@@ -19891,8 +19903,6 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
-          <MinimumGreenLeafProp>0.8</MinimumGreenLeafProp>
-          <MinimumGreenRootProp>0.5</MinimumGreenRootProp>
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
@@ -23464,31 +23474,26 @@ namespace Models
           <Albedo>0.26</Albedo>
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
-          <SpeciesPlantFamily>Grass</SpeciesPlantFamily>
+          <SpeciesFamily>Grass</SpeciesFamily>
           <PhotosynthesisPathway>C3</PhotosynthesisPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
           <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
-          <GrowthTmin>2</GrowthTmin>
-          <GrowthTopt>20</GrowthTopt>
+          <GrowthTminimum>2</GrowthTminimum>
+          <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
-          <ReferenceCO2>380</ReferenceCO2>
-          <CO2EffectScaleFactor>700</CO2EffectScaleFactor>
-          <CO2EffectOffsetFactor>600</CO2EffectOffsetFactor>
-          <CO2EffectMinimum>0.7</CO2EffectMinimum>
-          <CO2EffectExponent>2</CO2EffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
-          <HeatOnsetTemp>28</HeatOnsetTemp>
-          <HeatFullTemp>35</HeatFullTemp>
-          <HeatSumDD>30</HeatSumDD>
-          <HeatRecoverTemp>25</HeatRecoverTemp>
+          <HeatOnsetTemperature>28</HeatOnsetTemperature>
+          <HeatFullTemperature>35</HeatFullTemperature>
+          <HeatRecoverySumDD>30</HeatRecoverySumDD>
+          <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
-          <ColdOnsetTemp>0</ColdOnsetTemp>
-          <ColdFullTemp>-3</ColdFullTemp>
-          <ColdSumDD>20</ColdSumDD>
-          <ColdRecoverTemp>0</ColdRecoverTemp>
+          <ColdOnsetTemperature>0</ColdOnsetTemperature>
+          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdRecoverySumDD>20</ColdRecoverySumDD>
+          <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
           <NThresholdsForLeaves>
@@ -23511,7 +23516,6 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <DegreesDayForGermination>100</DegreesDayForGermination>
           <TargetSRratio>3</TargetSRratio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
@@ -23546,7 +23550,7 @@ namespace Models
           <MaximumNFixation>0</MaximumNFixation>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
-          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <GlfGeneric>1</GlfGeneric>
           <GlfSFertility>1</GlfSFertility>
@@ -23566,8 +23570,6 @@ namespace Models
             <double>0.2</double>
           </DigestibilitiesCellWall>
           <MinimumGreenWt>300</MinimumGreenWt>
-          <MinimumGreenLeafProp>0.8</MinimumGreenLeafProp>
-          <MinimumGreenRootProp>0.5</MinimumGreenRootProp>
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>

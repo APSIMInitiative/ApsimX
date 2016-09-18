@@ -1217,8 +1217,8 @@ namespace Models.AgPasture
             foreach (PastureSpecies species in mySpecies)
             {
                 species.isSwardControlled = isSwardControlled;
-                species.myWaterUptakeSource = myWaterUptakeSource;
-                species.myNitrogenUptakeSource = myNUptakeSource;
+                species.MyWaterUptakeSource = myWaterUptakeSource;
+                species.MyNitrogenUptakeSource = myNUptakeSource;
             }
 
             // get the number of layers in the soil profile
@@ -1364,6 +1364,7 @@ namespace Models.AgPasture
         {
             double totalPlantWater;
             double totalSoilWater;
+            double maxPlantWater = 0.0;
             double waterFraction = 1.0;
             double layerFraction = 1.0;
 
@@ -1380,12 +1381,14 @@ namespace Models.AgPasture
                 foreach (PastureSpecies species in mySpecies)
                 {
                     totalPlantWater += species.SoilAvailableWater[layer];
+                    maxPlantWater = Math.Max(maxPlantWater, species.SoilAvailableWater[layer]);
                     if (layer == RootFrontier)
                         layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
 
                 // Get total in the soil
                 totalSoilWater = Math.Max(0.0, myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) * layerFraction;
+                totalSoilWater = Math.Max(totalSoilWater, maxPlantWater); //allows for a plant to uptake below LL15 
 
                 // Sward total is the minimum of the two totals
                 swardSoilWaterAvailable[layer] = Math.Min(totalPlantWater, totalSoilWater);
@@ -1565,79 +1568,13 @@ namespace Models.AgPasture
 
         #region Other processes  -------------------------------------------------------------------------------------------
 
-        /// <summary>Harvest (remove DM) the sward</summary>
-        /// <param name="amount">DM amount</param>
-        /// <param name="type">How the amount is interpreted (remove or residual)</param>
-        public void Harvest(double amount, string type)
-        {
-            GrazeType GrazeData = new GrazeType();
-            GrazeData.amount = amount;
-            GrazeData.type = type;
-            OnGraze(GrazeData);
-        }
-
-        /// <summary>Graze event, remove DM from sward</summary>
-        /// <param name="GrazeData">How amount of DM to remove is defined</param>
-        [EventSubscribe("Graze")]
-        private void OnGraze(GrazeType GrazeData)
-        {
-            if ((!swardIsAlive) || StandingWt == 0)
-                return;
-
-            // Get the amount that can potentially be removed
-            double amountRemovable = mySpecies.Sum(mySpecies => mySpecies.HarvestableWt);
-
-            // get the amount required to remove
-            double amountRequired = 0.0;
-            if (GrazeData.type.ToLower() == "SetResidueAmount".ToLower())
-            { // Remove all DM above given residual amount
-                amountRequired = Math.Max(0.0, StandingWt - GrazeData.amount);
-            }
-            else if (GrazeData.type.ToLower() == "SetRemoveAmount".ToLower())
-            { // Attempt to remove a given amount
-                amountRequired = Math.Max(0.0, GrazeData.amount);
-            }
-            else
-            {
-                Console.WriteLine("  AgPasture - Method to set amount to remove not recognized, command will be ignored");
-            }
-            // get the actual amount to remove
-            double amountToRemove = Math.Min(amountRequired, amountRemovable);
-
-            // get the amounts to remove by mySpecies:
-            if (amountRequired > 0.0)
-            {
-                // get the weights for each mySpecies, consider preference and available DM
-                double[] tempWeights = new double[numSpecies];
-                double[] tempAmounts = new double[numSpecies];
-                double tempTotal = 0.0;
-                double totalPreference = mySpecies.Sum(mySpecies => mySpecies.PreferenceForGreenOverDead + 1.0);
-                for (int s = 0; s < numSpecies; s++)
-                {
-                    tempWeights[s] = mySpecies[s].PreferenceForGreenOverDead + 1.0;
-                    tempWeights[s] += (totalPreference - tempWeights[s]) * (amountToRemove / amountRemovable);
-                    tempAmounts[s] = Math.Max(0.0, mySpecies[s].StandingLiveWt - mySpecies[s].MinimumGreenWt)
-                                   + mySpecies[s].StandingDeadWt;
-                    tempTotal += tempAmounts[s] * tempWeights[s];
-                }
-
-                // do the actual removal for each mySpecies
-                for (int s = 0; s < numSpecies; s++)
-                {
-                    // get the actual fractions to remove for each mySpecies
-                        double fractionToHarvest = Math.Max(0.0, Math.Min(1.0, tempWeights[s] * tempAmounts[s] / tempTotal));
-
-                    // remove DM and N for each mySpecies (digestibility is also evaluated)
-                    mySpecies[s].RemoveDM(amountToRemove * fractionToHarvest);
-                }
-            }
-        }
         /// <summary>Removes plant material simulating a graze event.</summary>
         /// <param name="amount">DM amount (kg/ha)</param>
         /// <param name="type">How the amount is interpreted (SetResidueAmount or SetRemoveAmount).</param>
         public void Graze(double amount, string type)
         {
-            if (swardIsAlive || (HarvestableWt > Epsilon))
+            double amountAvailable = HarvestableWt;
+            if (swardIsAlive || (amountAvailable > Epsilon))
             {
                 // Get the amount required to remove
                 double amountRequired = 0.0;
@@ -1656,7 +1593,7 @@ namespace Models.AgPasture
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
                 }
                 // Get the actual amount to remove
-                double amountToRemove = Math.Min(amountRequired, HarvestableWt);
+                double amountToRemove = Math.Min(amountRequired, amountAvailable);
 
                 // Get the amounts to remove by mySpecies:
                 if (amountRequired > 0.0)
@@ -1665,7 +1602,7 @@ namespace Models.AgPasture
                     for (int s = 0; s < numSpecies; s++)
                     {
                         // get the fraction to required for each mySpecies, partition according to available DM to harvest
-                        fractionToRemove[s] = mySpecies[s].HarvestableWt / HarvestableWt;
+                        fractionToRemove[s] = mySpecies[s].HarvestableWt / amountAvailable;
 
                         // remove DM and N for each mySpecies (digestibility is also evaluated)
                         mySpecies[s].RemoveDM(amountToRemove * fractionToRemove[s]);

@@ -38,19 +38,22 @@ namespace Models.AgPasture
         #region Organ specific characteristics  -----------------------------------------------------------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
-        internal double NConcOptimum { get; set; } = 4.0;
+        internal double NConcOptimum = 0.04;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
-        internal double NConcMaximum { get; set; } = 4.5;
+        internal double NConcMaximum = 0.05;
 
         /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
-        internal double NConcMinimum { get; set; } = 1.2;
+        internal double NConcMinimum = 0.012;
 
         /// <summary>Minimum DM amount of live tissues [kg/ha]</summary>
-        internal double MinimumLiveDM { get; set; } = 1.0;
+        internal double MinimumLiveDM = 0.0;
 
         /// <summary>Proportion of organ DM that is standing, available to harvest [0-1]</summary>
-        internal double FractionStanding { get; set; } = 1.0;
+        internal double FractionStanding = 1.0;
+
+        /// <summary>List of BiomassRemovalTypes with default biomass removal fractions for given removal types</summary>
+        private Dictionary<string, OrganBiomassRemovalType> defaultRemovalFractions = new Dictionary<string, OrganBiomassRemovalType>();
 
         #endregion ----------------------------------------------------------------------------------------------------
 
@@ -343,7 +346,7 @@ namespace Models.AgPasture
 
                     // get the amounts remobilisable (luxury N)
                     double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
+                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
                 }
                 else
                 {
@@ -372,6 +375,25 @@ namespace Models.AgPasture
             return (dmIsOk || nIsOk);
         }
 
+        /// <summary>Adds a removal type to the defaultRemovalFractions</summary>
+        /// <param name="typeName">The name of the removal type</param>
+        /// <param name="removalFractions">Default removal fractions</param>
+        internal void SetRemovalFractions(string typeName, OrganBiomassRemovalType removalFractions)
+        {
+            defaultRemovalFractions.Add(typeName, removalFractions);
+        }
+
+        /// <summary>Gets the default removal fractions for a given removal type</summary>
+        /// <param name="typeName">The type of removal</param>
+        /// <returns>The default removal fractions</returns>
+        internal OrganBiomassRemovalType GetRemovalFractions(string typeName)
+        {
+            if (defaultRemovalFractions.ContainsKey(typeName))
+                return defaultRemovalFractions[typeName];
+            else
+                return null;
+        }
+
         #endregion ----------------------------------------------------------------------------------------------------
 
         /// <summary>Minimum significant difference between two values</summary>
@@ -398,13 +420,16 @@ namespace Models.AgPasture
         #region Root specific characteristics  ------------------------------------------------------------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
-        internal double NConcOptimum { get; set; } = 2.0;
+        internal double NConcOptimum = 2.0;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake [kg/kg]</summary>
-        internal double NConcMaximum { get; set; } = 2.5;
+        internal double NConcMaximum  = 2.5;
 
         /// <summary>Gets or sets the minimum N concentration, structural N [kg/kg]</summary>
-        internal double NConcMinimum { get; set; } = 0.6;
+        internal double NConcMinimum = 0.6;
+
+        /// <summary>Minimum DM amount of live tissues [kg/ha]</summary>
+        internal double MinimumLiveDM = 0.0;
 
         /// <summary>Gets or sets the rooting depth [mm]</summary>
         internal double Depth { get; set; }
@@ -730,36 +755,36 @@ namespace Models.AgPasture
         // >> Amounts in and out ..................................................................
 
         /// <summary>Gets or sets the DM amount transfered into this tissue [kg/ha]</summary>
-        internal double DMTransferedIn { get; set; } = 0.0;
+        internal double DMTransferedIn { get; set; }
 
         /// <summary>Gets or sets the DM amount transfered out of this tissue [kg/ha]</summary>
-        internal double DMTransferedOut { get; set; } = 0.0;
+        internal double DMTransferedOut { get; set; }
 
         /// <summary>Gets or sets the amount of N transfered into this tissue [kg/ha]</summary>
-        internal double NTransferedIn { get; set; } = 0.0;
+        internal double NTransferedIn { get; set; }
 
         /// <summary>Gets or sets the amount of N transfered out of this tissue [kg/ha]</summary>
-        internal double NTransferedOut { get; set; } = 0.0;
+        internal double NTransferedOut { get; set; }
 
         /// <summary>Gets or sets the amount of N available for remobilisation [kg/ha]</summary>
         internal double NRemobilisable { get; set; }
 
         /// <summary>Gets or sets the amount of N remobilised into new growth [kg/ha]</summary>
-        internal double NRemobilised { get; set; } = 0.0;
+        internal double NRemobilised { get; set; }
 
         // >> Characteristics (parameters)  .......................................................
 
         /// <summary>Gets or sets the fraction of luxury N remobilisable per day [0-1]</summary>
-        internal double FractionNLuxuryRemobilisable { get; set; } = 0.0;
+        internal double FractionNLuxuryRemobilisable = 0.0;
 
         /// <summary>Gets or sets the sugar fraction on new growth, i.e. soluble carbohydrate [0-1]</summary>
-        internal double FractionSugarNewGrowth { get; set; } = 0.0;
+        internal double FractionSugarNewGrowth = 0.0;
 
         /// <summary>Gets or sets the digestibility of cell walls [0-1]</summary>
-        internal double DigestibilityCellWall { get; set; } = 0.5;
+        internal double DigestibilityCellWall = 0.5;
 
         /// <summary>Gets or sets the digestibility of proteins [0-1]</summary>
-        internal double DigestibilityProtein { get; set; } = 1.0;
+        internal double DigestibilityProtein = 1.0;
 
         #endregion ----------------------------------------------------------------------------------------------------
 
