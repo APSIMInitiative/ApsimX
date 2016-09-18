@@ -125,11 +125,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPastureProto.cs" />
     <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
     <Compile Include="AgPasture\AgPasture.PastureSpecies.Organs.cs" />
-    <Compile Include="AgPasture\AgPasture.SwardProto.cs" />
-    <Compile Include="AgPasture\AgPasture.PastureSpeciesSwd.cs" />
     <Compile Include="AgPasture\AgPasture.Sward.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
