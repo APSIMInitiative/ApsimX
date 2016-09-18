@@ -19,40 +19,8 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, AboveGround, ICanopy, ILeaf
+    public class SimpleLeaf : GenericOrgan, AboveGround, ICanopy
     {
-        #region Leaf Interface
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-        #endregion
 
         #region Canopy interface
 
