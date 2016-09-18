@@ -300,6 +300,8 @@ namespace Models.PMF.Organs
 
             set
             {
+                // What is going on here?  Why no non-structural???
+                // This needs to be checked!
                 Live.StructuralWt += value.Structural;
             }
         }

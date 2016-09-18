@@ -1099,6 +1099,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>0.0</Value>
           <Units>g/plant</Units>
         </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
