@@ -14,7 +14,37 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// A simple leaf organ
+    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It is parameterised as follows.
+    /// 
+    /// **Dry Matter Supply**
+    /// 
+    /// DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.
+    /// DM is not retranslocated out of this organ.
+    /// 
+    /// **Dry Matter Demands**
+    /// 
+    /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
+    /// 
+    /// **Nitrogen Demands**
+    /// 
+    /// The daily structural N demand of this organ is the product of Total DM demand and a maximum Nitrogen concentration.  The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
+    /// 
+    /// **Nitrogen Supplies**
+    /// 
+    /// N is not reallocated from  this organ.  Nonstructural N is not available for retranslocation to other organs.
+    /// 
+    /// **Biomass Senescence and Detachment**
+    /// 
+    /// No senescence occurs from this organ.  
+    /// No detachment occurs from this organ.
+    /// 
+    /// **Canopy**
+    /// 
+    /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
+    /// 
+    /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
+    /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -429,155 +459,5 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            Name = this.Name;
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It is parameterised as follows.", indent));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            // Describe biomass production
-            tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));  //FIXME, this will need to be changed to photoysnthesis rather that potential Biomass
-            tags.Add(new AutoDocumentation.Paragraph("DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "Photosynthesis")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Paragraph("DM is not retranslocated out of " + this.Name + " ", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Dry Matter Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("Of the organs total DM demand " + StructuralFraction.Value * 100 + "% is structural demand and " + (100 - StructuralFraction.Value * 100) + "is non-structural demand", indent));
-
-            tags.Add(new AutoDocumentation.Paragraph("The daily DM demand from this organ is calculated using", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "DMDemandFunction")
-                    child.Document(tags, headingLevel + 5, indent + 1);
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Demands", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand from " + this.Name + " is the product of Total DM demand and a Nitrogen concentration of " + MaximumNConc.Value * 100 + "%", indent));
-            if (NitrogenDemandSwitch != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The Nitrogen demand swith is a multiplier applied to nitrogen demand so it can be turned off at certain phases.  For the " + Name + " Organ it is set as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "NitrogenDemandSwitch")
-                        child.Document(tags, headingLevel + 5, indent);
-                }
-            }
-
-            tags.Add(new AutoDocumentation.Heading("Nitrogen Supplies", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("N is not reallocated from " + this.Name + " ", indent));
-            tags.Add(new AutoDocumentation.Paragraph("Non-structural N in " + this.Name + "  is not available for re-translocation to other organs", indent));
-
-            tags.Add(new AutoDocumentation.Heading("Biomass Senescece and Detachment", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("No senescence occurs from " + Name, indent));
-            tags.Add(new AutoDocumentation.Paragraph("No Detachment occurs from " + Name, indent));
-
-            tags.Add(new AutoDocumentation.Heading("Canopy", headingLevel + 1));
-            if (CoverFunction != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The Green cover (proportion of ground cover comprising green leaf) and Leaf area index (LAI, the area of leaf per unit area of ground) estimations are calculated using a CoverFunction as folows" + " ", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "CoverFunction")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-                tags.Add(new AutoDocumentation.Paragraph("Then LAI is calculated using an inverted Beer Lamberts equation with the estimated Cover value:"
-                    + " <b>LAI = Log(1 - Cover) / (ExtinctionCoefficient * -1));", indent));
-                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent + 1));
-            }
-            if (LAIFunction != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("First the leaf area index is calculated as:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if (child.Name == "LAIFunction")
-                        child.Document(tags, headingLevel + 5, indent + 1);
-                }
-                tags.Add(new AutoDocumentation.Paragraph("Then the cover produced by the canopy is calculated using LAI and the Beer Lamberts equation:" + this.Name
-                    + " <b>Cover = 1.0 - e<sup>((-1 * ExtinctionCoefficient) * LAI);", indent));
-                tags.Add(new AutoDocumentation.Paragraph("Where ExtinctionCoefficient has a value of " + ExtinctionCoefficientFunction.Value, indent + 1));
-            }
-            tags.Add(new AutoDocumentation.Paragraph("The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop", indent));
-            tags.Add(new AutoDocumentation.Paragraph("The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf", indent));
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (child.Name == "FRGRFunction")
-                    child.Document(tags, headingLevel + 1, indent + 1);
-            }
-            // write Other functions.
-            bool NonStandardFunctions = false;
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
-                if (((child.Name != "StructuralFraction")
-                   | (child.Name != "DMDemandFunction")
-                   | (child.Name != "NConc")
-                   | (child.Name != "Photosynthesis")
-                   | (child.Name != "Photosynthesis")
-                   | (child.Name != "NReallocationFactor")
-                   | (child.Name != "NRetranslocationFactor")
-                   | (child.Name != "DMRetranslocationFactor")
-                   | (child.Name != "SenescenceRate")
-                   | (child.Name != "DetachmentRateFunctionFunction")
-                   | (child.Name != "LAIFunction")
-                   | (child.Name != "CoverFunction")
-                   | (child.Name != "ExtinctionCoefficientFunction")
-                   | (child.Name != "Live")
-                   | (child.Name != "Dead")
-                   | (child.Name != "FRGRFunction")
-                   | (child.Name != "NitrogenDemandSwitch"))
-                   && (child.GetType() != typeof(Memo)))
-                {
-                    NonStandardFunctions = true;
-                }
-            }
-
-            if (NonStandardFunctions)
-            {
-                tags.Add(new AutoDocumentation.Heading("Other functionality", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("In addition to the core functionality and parameterisation described above, the " + this.Name + " organ has additional functions used to provide paramters for core functions and create additional functionality", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                {
-                    if ((child.Name == "StructuralFraction")
-                       | (child.Name == "DMDemandFunction")
-                       | (child.Name == "NConc")
-                       | (child.Name == "Photosynthesis")
-                       | (child.Name == "Photosynthesis")
-                       | (child.Name == "NReallocationFactor")
-                       | (child.Name == "NRetranslocationFactor")
-                       | (child.Name == "DMRetranslocationFactor")
-                       | (child.Name == "SenescenceRate")
-                       | (child.Name == "DetachmentRateFunctionFunction")
-                       | (child.Name == "LAIFunction")
-                       | (child.Name == "CoverFunction")
-                       | (child.Name == "ExtinctionCoefficientFunction")
-                       | (child.Name == "Live")
-                       | (child.Name == "Dead")
-                       | (child.Name == "FRGRFunction")
-                       | (child.Name == "NitrogenDemandSwitch")
-                       | (child.GetType() == typeof(Memo)))
-                    {//Already documented 
-                    }
-                    else
-                    {
-                        //tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel + 2));
-                        child.Document(tags, headingLevel + 2, indent + 1);
-                    }
-                }
-            }
-        }
     }
 }

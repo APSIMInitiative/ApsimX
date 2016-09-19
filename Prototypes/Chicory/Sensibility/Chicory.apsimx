@@ -1078,7 +1078,7 @@ DM demand is based on ...
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Inflorescence</Name>
         <Memo>
@@ -1257,7 +1257,7 @@ DM demand is based on ...
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <Memo>

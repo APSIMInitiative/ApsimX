@@ -1876,7 +1876,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
         <Biomass>
@@ -2032,7 +2032,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Memo>

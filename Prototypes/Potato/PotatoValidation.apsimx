@@ -433,7 +433,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
@@ -1203,7 +1203,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>
@@ -26570,7 +26570,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Biomass>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
-          </GenericAboveGroundOrgan>
+          </GenericOrgan>
           <Root>
             <Name>Root</Name>
             <CompositeBiomass>
@@ -27196,7 +27196,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Biomass>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
-          </GenericAboveGroundOrgan>
+          </GenericOrgan>
           <CompositeBiomass>
             <Name>AboveGround</Name>
             <Propertys>
@@ -31962,7 +31962,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Biomass>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
-          </GenericAboveGroundOrgan>
+          </GenericOrgan>
           <Root>
             <Name>Root</Name>
             <CompositeBiomass>
@@ -32566,7 +32566,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Biomass>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
-          </GenericAboveGroundOrgan>
+          </GenericOrgan>
           <CompositeBiomass>
             <Name>AboveGround</Name>
             <Propertys>

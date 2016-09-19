@@ -1368,7 +1368,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMRetranslocationFactor</Name>
           <Value>0.1</Value>
         </Constant>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
@@ -1475,7 +1475,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
         <Biomass>
@@ -1607,7 +1607,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Memo>
@@ -4057,7 +4057,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
         <Biomass>
@@ -4215,7 +4215,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

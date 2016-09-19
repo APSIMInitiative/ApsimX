@@ -360,7 +360,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>

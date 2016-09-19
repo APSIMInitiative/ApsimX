@@ -2231,7 +2231,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseLookup>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
         <Biomass>
@@ -2436,7 +2436,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </DivideFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

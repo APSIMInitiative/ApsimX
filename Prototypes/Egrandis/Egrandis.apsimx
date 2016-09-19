@@ -513,7 +513,7 @@
         </Biomass>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Cultivar>
         <Name>EGrandis</Name>
         <Command />

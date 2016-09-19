@@ -1571,7 +1571,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
     </Folder>
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <GenericAboveGroundOrgan>
     <Name>Rachis</Name>
     <MultiplyFunction>
@@ -1709,7 +1709,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
     </Folder>
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <GenericAboveGroundOrgan>
     <Name>Stem</Name>
     <Biomass>
@@ -1872,7 +1872,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
     </Folder>
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <Memo>
