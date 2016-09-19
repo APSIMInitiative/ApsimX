@@ -10,7 +10,7 @@ namespace Models.PMF.Organs
     /// A below ground organ
     /// </summary>
     [Serializable]
-    public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
+    public class BelowGroundOrgan : GenericOrgan
     {
         /// <summary>
         /// Execute Harvesting logic for below ground organ
