@@ -888,6 +888,15 @@
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </Nodule>
