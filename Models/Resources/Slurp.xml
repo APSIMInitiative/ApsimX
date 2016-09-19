@@ -222,11 +222,19 @@ This is important in SLURP as it is set for each species to represent their diff
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Constant>
+        <MultiplyFunction>
           <Name>InitialWtFunction</Name>
-          <Value>0.0</Value>
-          <Units>g/m2</Units>
-        </Constant>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+
         <Constant>
           <Name>LaiDeadFunction</Name>
           <Value>0.0</Value>

@@ -87,7 +87,7 @@ namespace Models.PMF.Organs
         /// <summary>The initial wt function</summary>
         [Link]
         [Units("g/m2")]
-        IFunction InitialWtFunction = null;
+        protected IFunction InitialWtFunction = null;
         /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]

@@ -200,11 +200,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction SVPFrac = null;
 
-        /// <summary>The initial leaf DM</summary>
-        [Link]
-        [Units("g/plant")]
-        IFunction InitialDM = null;
-
         #endregion
 
         #region States and variables
@@ -437,7 +432,7 @@ namespace Models.PMF.Organs
             {
                 if (!isInitialised)
                 {
-                    Live.StructuralWt = InitialDM.Value * Plant.Population;
+                    Live.StructuralWt = InitialWtFunction.Value;
                     Live.StructuralN = Live.StructuralWt * MaxNconc;
                     isInitialised = true;
                 }
