@@ -420,22 +420,28 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Description</Name>
           <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
         </Memo>
-        <Constant>
-          <Name>InitialDM</Name>
-          <Value>0.005</Value>
-          <Units>g/plant</Units>
-        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0.005</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
-    <Constant>
-      <Name>LaiDeadFunction</Name>
-      <Value>0.0</Value>
-      <Units>m^2/m^2</Units>
-    </Constant>
-
+        <Constant>
+          <Name>LaiDeadFunction</Name>
+          <Value>0</Value>
+          <Units>m^2/m^2</Units>
+        </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -787,9 +793,7 @@ DM demand is based on ...
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <K>0</K>
         <KDead>0</KDead>
-        <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
@@ -1007,18 +1011,18 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Inflorescence</Name>
@@ -1187,18 +1191,18 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -1620,18 +1624,18 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

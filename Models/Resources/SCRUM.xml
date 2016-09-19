@@ -365,12 +365,12 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
             <Value>0</Value>
             <Units>g/m^2</Units>
          </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-      </GenericOrgan>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <Value>1.0</Value>
+      <Units>0-1</Units>
+    </Constant>
+  </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
@@ -1198,6 +1198,21 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     </Folder>
     <BiomassRemovalDefaults />
     <NFixationOption>None</NFixationOption>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <Value>1.0</Value>
+      <Units>0-1</Units>
+    </Constant>
+    <Constant>
+      <Name>DMDemandFunction</Name>
+      <Value>0.0</Value>
+      <Units>g/m^2</Units>
+    </Constant>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <Value>0.0</Value>
+      <Units>g/m^2</Units>
+    </Constant>    
   </Nodule>
   <CompositeBiomass>
     <Name>Total</Name>

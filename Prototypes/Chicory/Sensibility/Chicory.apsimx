@@ -467,15 +467,18 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>1.0</Value>
           <Units>0-1</Units>
         </Constant>
-        <Constant>
-          <Name>InitialDM</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
-          </Memo>
-          <Value>0.005</Value>
-          <Units>g/plant</Units>
-        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0.005</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
     <Constant>
       <Name>LaiDeadFunction</Name>
       <Value>0.0</Value>
