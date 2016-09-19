@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
 {
 
     /// <summary>
-    ///   This organ is simulated using a generic organ type.
+    /// This organ is simulated using a generic organ type.
     ///   
     /// **Dry Matter Demands**
     /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
