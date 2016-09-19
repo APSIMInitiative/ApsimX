@@ -223,7 +223,7 @@ This is important in SLURP as it is set for each species to represent their diff
           <Name>Dead</Name>
         </Biomass>
         <Constant>
-          <Name>InitialDM</Name>
+          <Name>InitialDMFunction</Name>
           <Value>0.0</Value>
           <Units>g/plant</Units>
         </Constant>
