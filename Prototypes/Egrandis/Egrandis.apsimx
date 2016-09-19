@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -173,6 +173,22 @@
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
+    <Constant>
+      <Name>InitialDM</Name>
+      <Value>0.0</Value>
+      <Units>g/plant</Units>
+    </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
         <MultiplyFunction>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -447,7 +463,7 @@
         <ZoneRootDepths />
         <ZoneInitialDM />
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -497,7 +513,7 @@
         </Biomass>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Cultivar>
         <Name>EGrandis</Name>
         <Command />

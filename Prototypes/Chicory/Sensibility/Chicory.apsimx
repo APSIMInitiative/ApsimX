@@ -463,6 +463,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
         </Memo>
         <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
           <Name>InitialDM</Name>
           <Memo>
             <Name>Description</Name>
@@ -471,6 +476,12 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>0.005</Value>
           <Units>g/plant</Units>
         </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -838,7 +849,7 @@ DM demand is based on ...
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Description</Name>
@@ -1067,8 +1078,8 @@ DM demand is based on ...
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Inflorescence</Name>
         <Memo>
           <Name>Description</Name>
@@ -1246,7 +1257,7 @@ DM demand is based on ...
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <Memo>
@@ -1534,7 +1545,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
-      <GenericBelowGroundOrgan>
+      <GenericOrgan>
         <Name>Taproot</Name>
         <Memo>
           <Name>Description</Name>
@@ -1699,7 +1710,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericBelowGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
         <Propertys>

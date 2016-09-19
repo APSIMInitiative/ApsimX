@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -372,7 +372,6 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -413,6 +412,7 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -555,6 +555,7 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -2825,7 +2826,6 @@ This model has been built to simulate a range of different crops in simulations 
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -2866,6 +2866,7 @@ This model has been built to simulate a range of different crops in simulations 
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -3008,6 +3009,7 @@ This model has been built to simulate a range of different crops in simulations 
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -4873,7 +4875,6 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -4914,6 +4915,7 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5056,6 +5058,7 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -7558,7 +7561,6 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
           <Name>paparoa_silt_loam</Name>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -7595,6 +7597,7 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7851,6 +7854,7 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
           <State>Canterbury</State>
           <Latitude>999999</Latitude>
           <Longitude>999999</Longitude>
+          <Area>0</Area>
           <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         </Soil>
         <Plant>
@@ -11971,7 +11975,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-oct</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -12008,6 +12011,7 @@ namespace Models
               <double>0.9</double>
               <double>0.9</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -12163,6 +12167,7 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>

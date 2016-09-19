@@ -85,7 +85,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, AboveGround, ICanopy, ILeaf
+    public class Leaf : BaseOrgan, ICanopy, ILeaf
     {
         #region Canopy interface
 

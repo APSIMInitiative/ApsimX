@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, BelowGround
+    public class Root : BaseOrgan
     {
         #region Links
         /// <summary>The arbitrator</summary>

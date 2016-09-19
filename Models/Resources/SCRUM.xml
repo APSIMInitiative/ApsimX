@@ -203,7 +203,7 @@ During this phase the plant has completed its growth and is drying ready for har
     <NArbitrationOption>RelativeAllocation</NArbitrationOption>
     <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
   </OrganArbitrator>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Product</Name>
     <Memo>
       <Name>Description</Name>
@@ -360,7 +360,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
@@ -376,6 +376,22 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
     <Biomass>
       <Name>Dead</Name>
     </Biomass>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+    <Constant>
+      <Name>InitialDM</Name>
+      <Value>0.0</Value>
+      <Units>g/plant</Units>
+    </Constant>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+
     <MultiplyFunction>
       <Name>Photosynthesis</Name>
       <DeltaFunction>
