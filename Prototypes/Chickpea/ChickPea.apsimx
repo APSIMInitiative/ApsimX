@@ -1426,7 +1426,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <Value>0.7</Value>
           <Units>g/g</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
