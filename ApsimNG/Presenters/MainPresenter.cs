@@ -504,7 +504,8 @@ namespace UserInterface.Presenters
                 // ensure that they are saved in another file before running by opening them in memory
                 StreamReader reader = new StreamReader(fileName);
                 bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                this.OpenApsimXFromMemoryInTab(string.Empty, reader.ReadToEnd(), onLeftTabControl);
+                string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
+                this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
             }
         }
