@@ -104,10 +104,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
-        /// <summary>The initial structural fraction</summary>
-        [Units("g/g")]
-        [Link(IsOptional = true)]
-        IFunction InitialStructuralFraction = null;
         /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
@@ -118,7 +114,7 @@ namespace Models.PMF.Organs
         public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
-        [Link(IsOptional = true)]
+        [Link]
         public IFunction MinimumNConc = null;
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
@@ -149,8 +145,6 @@ namespace Models.PMF.Organs
         protected double NonStructuralDMDemand = 0;
         /// <summary>The initial wt</summary>
         protected double InitialWt = 0;
-        /// <summary>The initialize stut fraction</summary>
-        private double InitStutFraction = 1;
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
@@ -166,7 +160,6 @@ namespace Models.PMF.Organs
             StructuralDMDemand = 0;
             NonStructuralDMDemand = 0;
             InitialWt = 0;
-            InitStutFraction = 1;
             LiveFWt = 0;
         }
         #endregion
@@ -451,18 +444,16 @@ namespace Models.PMF.Organs
                 _StructuralFraction = 1;
                 if (StructuralFraction != null) //Default of 1 means all biomass is structural
                     _StructuralFraction = StructuralFraction.Value;
+
                 InitialWt = 0; //Default of zero means no initial Wt
                 if (InitialWtFunction != null)
                     InitialWt = InitialWtFunction.Value;
-                InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
-                if (InitialStructuralFraction != null)
-                    InitStutFraction = InitialStructuralFraction.Value;
 
                 //Initialise biomass and nitrogen
                 if (Live.Wt == 0)
                 {
-                    Live.StructuralWt = InitialWt * InitStutFraction;
-                    Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
+                    Live.StructuralWt = InitialWt;
+                    Live.NonStructuralWt = 0.0;
                     Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
                     Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
                 }
