@@ -360,7 +360,17 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-  </GenericOrgan>
+     <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+      </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
