@@ -1295,7 +1295,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Husk</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1369,7 +1369,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.1</Value>
         </Constant>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
@@ -1476,7 +1476,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -3953,7 +3953,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Spike</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -4058,7 +4058,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </OrganBiomassRemovalType>
         </Folder>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>

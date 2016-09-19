@@ -849,7 +849,7 @@ DM demand is based on ...
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Description</Name>
@@ -1079,7 +1079,7 @@ DM demand is based on ...
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Inflorescence</Name>
         <Memo>
           <Name>Description</Name>

@@ -878,7 +878,7 @@
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </Nodule>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Shell</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1542,7 +1542,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Memo</Name>

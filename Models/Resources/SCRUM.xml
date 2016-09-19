@@ -203,7 +203,7 @@ During this phase the plant has completed its growth and is drying ready for har
     <NArbitrationOption>RelativeAllocation</NArbitrationOption>
     <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
   </OrganArbitrator>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Product</Name>
     <Memo>
       <Name>Description</Name>

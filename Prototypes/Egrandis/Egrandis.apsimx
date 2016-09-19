@@ -463,7 +463,7 @@
         <ZoneRootDepths />
         <ZoneInitialDM />
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>

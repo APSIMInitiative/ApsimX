@@ -288,7 +288,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>2.2</PrimaryBudNo>
       </Structure>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Tuber</Name>
         <LinearInterpolationFunction>
           <Name>NitrogenDemandSwitch</Name>
@@ -1080,7 +1080,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <KDead>0.03</KDead>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>

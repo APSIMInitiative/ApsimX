@@ -1467,7 +1467,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     <TipsAtEmergence>0</TipsAtEmergence>
     <FractionDied>0</FractionDied>
   </Leaf>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Husk</Name>
     <PopulationBasedDemandFunction>
       <Name>DMDemandFunction</Name>
@@ -1572,7 +1572,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
     </Folder>
   </GenericOrgan>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Rachis</Name>
     <MultiplyFunction>
       <Name>CobNumber</Name>
@@ -1710,7 +1710,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
     </Folder>
   </GenericOrgan>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Stem</Name>
     <Biomass>
       <Name>Live</Name>

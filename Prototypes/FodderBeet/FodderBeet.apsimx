@@ -921,7 +921,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <ZoneRootDepths />
         <ZoneInitialDM />
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Bulb</Name>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -992,7 +992,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Petiole</Name>
         <Constant>
           <Name>StructuralFraction</Name>

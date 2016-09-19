@@ -1512,7 +1512,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
@@ -1615,7 +1615,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>

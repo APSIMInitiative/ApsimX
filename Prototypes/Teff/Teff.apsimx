@@ -1776,7 +1776,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Panicle</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1877,7 +1877,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </GenericOrgan>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
