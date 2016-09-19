@@ -223,20 +223,14 @@ This is important in SLURP as it is set for each species to represent their diff
           <Name>Dead</Name>
         </Biomass>
         <Constant>
-          <Name>InitialDMFunction</Name>
+          <Name>InitialWtFunction</Name>
           <Value>0.0</Value>
-          <Units>g/plant</Units>
+          <Units>g/m2</Units>
         </Constant>
         <Constant>
           <Name>LaiDeadFunction</Name>
           <Value>0.0</Value>
           <Units>m^2/m^2</Units>
-        </Constant>
-
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1.0</Value>
-          <Units>0-1</Units>
         </Constant>
 
         <Constant>
