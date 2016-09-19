@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Nodule : GenericOrgan, BelowGround
+    public class Nodule : GenericOrgan
     {
         #region Paramater Input Classes
         /// <summary>The method used to determine N fixation</summary>

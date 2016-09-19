@@ -203,7 +203,7 @@ During this phase the plant has completed its growth and is drying ready for har
     <NArbitrationOption>RelativeAllocation</NArbitrationOption>
     <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
   </OrganArbitrator>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Product</Name>
     <Memo>
       <Name>Description</Name>
@@ -360,7 +360,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-  </GenericAboveGroundOrgan>
+  </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
