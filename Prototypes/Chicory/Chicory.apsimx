@@ -1450,7 +1450,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <ZoneRootDepths />
         <ZoneInitialDM />
       </Root>
-      <GenericBelowGroundOrgan>
+      <GenericOrgan>
         <Name>Taproot</Name>
         <Memo>
           <Name>Description</Name>
@@ -1602,7 +1602,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericBelowGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>
