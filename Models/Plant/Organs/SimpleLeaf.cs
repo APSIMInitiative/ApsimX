@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, AboveGround, ICanopy, ILeaf
+    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
     {
         #region Leaf Interface
         /// <summary>

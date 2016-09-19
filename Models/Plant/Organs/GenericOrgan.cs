@@ -13,13 +13,13 @@ namespace Models.PMF.Organs
 {
 
     /// <summary>
-    ///   This organ is simulated using a generic organ type.
+    /// This organ is simulated using a generic organ type.
     ///   
     /// **Dry Matter Demands**
     /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
     /// 
     /// **Dry Matter Supplies**
-    /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply
+    /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply.
     /// 
     /// **Nitrogen Demands**
     /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
@@ -34,7 +34,7 @@ namespace Models.PMF.Organs
     /// Senescence is calculated as a proportion of the live dry matter.
     /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
     /// 
-    /// ** Canopy**
+    /// **Canopy**
     /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
     /// 
     /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
@@ -57,7 +57,6 @@ namespace Models.PMF.Organs
     /// \param MinimumNConc MaximumNConc Maximum nitrogen concentration.
     /// \retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
     /// <remarks>
-
     /// </remarks>
     [Serializable]
     public class GenericOrgan : BaseOrgan, IArbitration
@@ -105,10 +104,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
-        /// <summary>The initial structural fraction</summary>
-        [Units("g/g")]
-        [Link(IsOptional = true)]
-        IFunction InitialStructuralFraction = null;
         /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
         [Units("g/g")]
@@ -119,7 +114,7 @@ namespace Models.PMF.Organs
         public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
-        [Link(IsOptional = true)]
+        [Link]
         public IFunction MinimumNConc = null;
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
@@ -150,8 +145,6 @@ namespace Models.PMF.Organs
         protected double NonStructuralDMDemand = 0;
         /// <summary>The initial wt</summary>
         protected double InitialWt = 0;
-        /// <summary>The initialize stut fraction</summary>
-        private double InitStutFraction = 1;
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
@@ -167,7 +160,6 @@ namespace Models.PMF.Organs
             StructuralDMDemand = 0;
             NonStructuralDMDemand = 0;
             InitialWt = 0;
-            InitStutFraction = 1;
             LiveFWt = 0;
         }
         #endregion
@@ -452,18 +444,16 @@ namespace Models.PMF.Organs
                 _StructuralFraction = 1;
                 if (StructuralFraction != null) //Default of 1 means all biomass is structural
                     _StructuralFraction = StructuralFraction.Value;
+
                 InitialWt = 0; //Default of zero means no initial Wt
                 if (InitialWtFunction != null)
                     InitialWt = InitialWtFunction.Value;
-                InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
-                if (InitialStructuralFraction != null)
-                    InitStutFraction = InitialStructuralFraction.Value;
 
                 //Initialise biomass and nitrogen
                 if (Live.Wt == 0)
                 {
-                    Live.StructuralWt = InitialWt * InitStutFraction;
-                    Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
+                    Live.StructuralWt = InitialWt;
+                    Live.NonStructuralWt = 0.0;
                     Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
                     Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
                 }
