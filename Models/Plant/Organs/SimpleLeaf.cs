@@ -278,9 +278,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Flag whether leaf DM has been initialised</summary>
-        private bool isInitialised = false;
-
         #endregion
 
         #region Arbitrator Methods
@@ -367,8 +364,14 @@ namespace Models.PMF.Organs
         {
             set
             {
-                Live.StructuralN += value.Structural;
-                Live.NonStructuralN += value.NonStructural;
+                // Allocation
+                if (value.Structural > 0)
+                {
+                    Live.StructuralN += value.Structural;
+                }
+                if (value.NonStructural > 0)
+                    Live.NonStructuralN += value.NonStructural;
+
             }
         }
 
@@ -430,12 +433,6 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
-                if (!isInitialised)
-                {
-                    Live.StructuralWt = InitialWtFunction.Value;
-                    Live.StructuralN = Live.StructuralWt * MaxNconc;
-                    isInitialised = true;
-                }
 
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)
