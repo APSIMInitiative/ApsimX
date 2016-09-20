@@ -163,7 +163,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Structure.Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+        public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
@@ -172,11 +172,6 @@ namespace Models.PMF.Organs
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP { get;  set; }
-
-        /// <summary>
-        /// This paramater is applied to ETDemand.  It is a fudge for testing
-        /// </summary>
-        public double FudgeToGetETDemandRight { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
@@ -189,9 +184,7 @@ namespace Models.PMF.Organs
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-        /// <summary>The phenology</summary>
-        [Link]
-        public Phenology Phenology = null;
+
         #endregion
 
     
@@ -293,11 +286,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Parameters
-        // DeanH: I have removed DroughtInducedSenAcceleration - it can be incorported into the ThermalTime function
-        // in the XML. No need for it to be in leaf.
-
-        // Hamish:  We need to put this back in.  putting it in tt will acellerate development.  
-        // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
         /// <summary>The initial leaves</summary>
         [DoNotDocument]
@@ -318,10 +306,7 @@ namespace Models.PMF.Organs
         /// <summary>The frost fraction</summary>
         [Link]
         IFunction FrostFraction = null;
-        //[Link] Function ExpansionStress = null;
-        //[Link] Function CriticalNConc = null;
-        //[Link] Function MaximumNConc = null;
-        //[Link] Function MinimumNConc = null;
+
         /// <summary>The structural fraction</summary>
         [Link]
         IFunction StructuralFraction = null;
@@ -414,11 +399,11 @@ namespace Models.PMF.Organs
         public double MaxCover;
 
         /// <summary>Gets the initialised cohort no.</summary>
-        [Description("Number of leaf cohort objects that have been initialised")] //Note:  InitialisedCohortNo is an interger of Primordia Number, increasing every time primordia increses by one and a new cohort is initialised
+        [Description("Number of leaf cohort objects that have been initialised")] 
         public double InitialisedCohortNo { get { return CohortCounter("IsInitialised"); } }
 
         /// <summary>Gets the appeared cohort no.</summary>
-        [Description("Number of leaf cohort that have appeared")] //Note:  AppearedCohortNo is an interger of AppearedNodeNo, increasing every time AppearedNodeNo increses by one and a new cohort is appeared
+        [Description("Number of leaf cohort that have appeared")] 
         public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
 
         /// <summary>Gets the expanding cohort no.</summary>
@@ -1431,7 +1416,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP * FudgeToGetETDemandRight;
+                return PotentialEP;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1673,7 +1658,6 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-                FudgeToGetETDemandRight = 1.0;
             }
         }
 
