@@ -1927,12 +1927,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>0</Value>
             <Units>/d</Units>
          </Constant>
-      </GenericOrgan>
-      <Constant>
-        <Name>SenescenceRate</Name>
-        <Value>0</Value>
-	<Units>/d</Units>
-      </Constant>
+		  <Constant>
+			<Name>SenescenceRate</Name>
+			<Value>0</Value>
+			<Units>/d</Units>
+		  </Constant>
     </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
