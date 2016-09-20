@@ -368,7 +368,6 @@
     <Compile Include="Plant\Organs\Nodule.cs" />
     <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
-    <Compile Include="Plant\Organs\ReserveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
     <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />

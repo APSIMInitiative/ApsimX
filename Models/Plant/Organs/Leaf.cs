@@ -336,6 +336,7 @@ namespace Models.PMF.Organs
         [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }
 
+        /// <summary>Gets or sets the maximum number of leaves on the main stem</summary>
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
