@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -86,81 +86,26 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Value>2</Value>
           </Constant>
         </DivideFunction>
-        <AddFunction>
+        <AirTemperatureFunction>
           <Name>ThermalTime</Name>
-          <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>26</double>
-                <double>37</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>26</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
-            </Memo>
-          </AirTemperatureFunction>
-          <PhaseLookup>
-            <Name>SoilTemperatureCorrection</Name>
-            <PhaseLookupValue>
-              <Name>ApexBelowGround</Name>
-              <MultiplyFunction>
-                <Name>NetDailyRadiativeHeating</Name>
-                <LinearInterpolationFunction>
-                  <Name>DaylengthRadiationFactor</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>4</double>
-                      <double>12</double>
-                      <double>20</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>0</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
-                </LinearInterpolationFunction>
-                <LinearInterpolationFunction>
-                  <Name>CanopyInsulationEffect</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>0</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>1</double>
-                      <double>0.3</double>
-                    </Y>
-                  </XYPairs>
-                  <XProperty>[Leaf].RadIntTot</XProperty>
-                </LinearInterpolationFunction>
-              </MultiplyFunction>
-              <Start>Germination</Start>
-              <End>TerminalSpikelet</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
-        </AddFunction>
-        <MovingAverageFunction>
-          <Name>MeanThermalTime</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-          <NumberOfDays>10</NumberOfDays>
-          <InitialValue>15</InitialValue>
-        </MovingAverageFunction>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>37</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>26</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+          </Memo>
+        </AirTemperatureFunction>
         <MultiplyFunction>
           <Name>DailyVernalisation</Name>
           <Memo>
@@ -2229,23 +2174,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2449,23 +2394,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -5508,6 +5453,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
               <Name>Calculations</Name>
@@ -7164,6 +7110,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -9496,6 +9443,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
               <Name>FertiliserSchedule</Name>
@@ -10523,6 +10471,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -11583,6 +11532,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
               <Name>Automatic irrigation based on water deficit</Name>
@@ -12818,6 +12768,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -13572,6 +13523,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -14532,6 +14484,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -15248,6 +15201,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -15964,6 +15918,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
                 <Name>DailyReport</Name>
@@ -17000,6 +16955,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -17144,6 +17100,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -17885,6 +17842,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -19278,6 +19236,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
               <Name>SowingSchedule</Name>
@@ -21559,6 +21518,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
               <Name>SowingSchedule</Name>
@@ -22657,6 +22617,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
               <Name>Calculations</Name>
@@ -23734,6 +23695,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
               <Name>Calculations</Name>
@@ -26275,6 +26237,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -29898,6 +29861,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -34004,6 +33968,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -37337,6 +37302,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -39764,6 +39730,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -42929,6 +42896,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -43522,6 +43490,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -44063,6 +44032,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -44966,6 +44936,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -45507,6 +45478,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -46151,6 +46123,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -46692,6 +46665,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -47233,6 +47207,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -47774,6 +47749,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -48315,6 +48291,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -48856,6 +48833,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -49397,6 +49375,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -49938,6 +49917,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
                 <Name>Wheat</Name>
@@ -50328,6 +50308,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
                 <Name>Calculations</Name>
@@ -51714,6 +51695,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Soil>
                 <Name>Soil</Name>
@@ -53353,6 +53335,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
                 <Name>Calculations</Name>
@@ -54055,6 +54038,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
                 <Name>Calculations</Name>
@@ -55335,6 +55319,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>SupReport</Name>
@@ -57340,6 +57325,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
               <Name>SowingSchedule</Name>
@@ -58410,6 +58396,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>Report</Name>
@@ -59165,6 +59152,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>Report</Name>
@@ -59920,6 +59908,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -60636,6 +60625,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
               <Name>DailyReport</Name>
@@ -61020,7 +61010,7 @@ namespace Models
         <Name>Belgium</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[This trial was conducted on a Vertosol soil on the Liverpool Plains, central-eastern Australia in 2001.  Hybrid Mercury was sown on 19th of June and biomass, leaf area, phenology, soil water (Neutron Moisture Meter) and water use (Bowen Ratio method) were monitored.  More information can be found in [Young2008].]]></MemoText>
+          <MemoText><![CDATA[This trial was conducted at Lonzee near Gembuloux in Belgium and is described in detail by [Dufranne_Belgium_2011].  The trial  was run to measure carbon flux from wheat crops using eddy covariance but sufficient crop information was collected to make it suitable as a model validataion dataset also.  Crops of wheat (cultivars 'Dekan', 'Rosario', 'Ararat' for the three respective sowing dates) were sown on 14/10/2004, 13/10/2004 and 13/11/2004.  Standard management practices for winter wheat in this area were followed.  Dates for the timing of key phenological events were used to determine the developmental coefficients for each of the cultivars.]]></MemoText>
         </Memo>
         <Simulation>
           <Name>Lonzee04</Name>
@@ -61129,6 +61119,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -61774,6 +61765,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -62419,6 +62411,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -63023,7 +63016,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>LAI</Name>
@@ -63087,7 +63080,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Biomass</Name>
@@ -63193,7 +63186,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>WaterStress</Name>
@@ -63236,7 +63229,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NStress</Name>
@@ -63307,7 +63300,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
     </Folder>
@@ -64181,6 +64174,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Operations>
                 <Name>IrrigationSchedule</Name>
@@ -65545,6 +65539,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Operations>
                 <Name>IrrigationSchedule</Name>
@@ -66234,6 +66229,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -66897,6 +66893,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -67560,6 +67557,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
               <Name>Soil</Name>
@@ -68621,6 +68619,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Soil</Name>
@@ -69547,6 +69546,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
