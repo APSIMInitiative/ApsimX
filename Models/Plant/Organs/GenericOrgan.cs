@@ -150,7 +150,6 @@ namespace Models.PMF.Organs
         #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
-        /// <value>The live f wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
@@ -164,7 +163,6 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         [Units("g/m^2")]
         public override BiomassPoolType DMDemand
         {
@@ -180,8 +178,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
-        /// <exception cref="System.Exception">Invalid allocation of potential DM in  + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -197,7 +193,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the dm supply.</summary>
-        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -224,7 +219,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the N demand.</summary>
-        /// <value>The N demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -240,7 +234,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the N supply.</summary>
-        /// <value>The N supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
@@ -283,14 +276,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        /// <exception cref="System.Exception">
-        /// -ve NonStructuralDM Allocation to  + Name
-        /// or
-        /// StructuralDM Allocation to  + Name +  is in excess of its Capacity
-        /// or
-        /// Retranslocation exceeds nonstructural biomass in organ:  + Name
-        /// </exception>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -316,27 +301,12 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// N Retranslocation exceeds nonstructural nitrogen in organ:  + Name
-        /// or
-        /// -ve N Retranslocation requested from  + Name
-        /// or
-        /// N Reallocation exceeds nonstructural nitrogen in organ:  + Name
-        /// or
-        /// -ve N Reallocation requested from  + Name
-        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
             {
-                // Allocation
-                if (value.Structural > 0)
-                {
-                    Live.StructuralN += value.Structural;
-                }
-                if (value.NonStructural > 0)
-                    Live.NonStructuralN += value.NonStructural;
+                Live.StructuralN += value.Structural;
+                Live.NonStructuralN += value.NonStructural;
 
                 // Retranslocation
                 if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
@@ -355,23 +325,9 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        public double MaxNconc
-        {
-            get
-            {
-                return MaximumNConc.Value;
-            }
-        }
+        public double MaxNconc { get { return MaximumNConc.Value; } }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
-        public override double MinNconc
-        {
-            get
-            {
-                return MinimumNConc.Value;
-            }
-        }
+        public override double MinNconc { get { return MinimumNConc.Value; } }
         #endregion
 
         #region Events and Event Handlers
@@ -379,7 +335,6 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// 
-
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {

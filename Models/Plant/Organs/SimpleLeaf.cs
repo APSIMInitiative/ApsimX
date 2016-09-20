@@ -274,6 +274,8 @@ namespace Models.PMF.Organs
                 // What is going on here?  Why no non-structural???
                 // This needs to be checked!
                 Live.StructuralWt += value.Structural;
+                if (value.NonStructural > 0)
+                    throw new Exception("Whoops - why is non structural DM allocation non zero");
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
