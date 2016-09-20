@@ -10,6 +10,8 @@ namespace Models.Soils
     /// <summary>
     /// Calculates Penman Evaporation to drive potential evaporation from soil model
     /// </summary>
+    [Serializable]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Evapotranspiration : Model
     {
         /// <summary>Penman Evapotranspiration potential (mm/day)
@@ -26,12 +28,12 @@ namespace Models.Soils
         /// <param name="Lattitude"></param>
         public double PenmanEO(double Radiation, double Temperature, double Windrun, double VaporPressure, double Albedo, double Lattitude, double DayOfYear)
         {
-            double D = SatVaporPressureSlope(Temperature);
+            double D = SatVaporPressureSlope(Temperature)/10; //Function returns kPa, /10 to convert to mbar
             double l = lamda(Temperature);
-            double G = gama(Temperature);
+            double G = gama(Temperature)/10;  //Function returns kPa, /10 to convert to mbar
             double p = AirDensity(Temperature);
-            double Rad = NetRadiation(Radiation, Temperature, VaporPressure, Lattitude, DayOfYear, Albedo);
-            double VPD = VaporPressureDeficit(Temperature, VaporPressure);
+            double Rad = NetRadiation(Radiation, Temperature, VaporPressure/10, Lattitude, DayOfYear, Albedo); //Function uses VP in kPa, /10 to convert from mbar
+            double VPD = VaporPressureDeficit(Temperature, VaporPressure); //This function returns mbar
             double Ea = 0.27 * VPD * (1 + Windrun / 160);
             return (D * Rad / l + G * Ea) / (D + G);
         }
@@ -58,10 +60,10 @@ namespace Models.Soils
         {
             return (4098 * 0.6108 * Math.Exp((17.27 * Temperature) / (Temperature + 237.3))) / Math.Pow(Temperature + 237.3, 2);
         }
-        ///<summary>This is the difference (in kPa) between the current vapour presure and the saturated vapor pressure
+        ///<summary>This is the difference (in mbar) between the current vapour presure and the saturated vapor pressure
         ///at the current air temperature</summary>
         ///<param name="Temperature">Temperature is Air temperature(units degrees C)</param>
-        ///<param name="VaporPressure">Vapor pressure in kPa</param>
+        ///<param name="VaporPressure">Vapor pressure in mbar</param>
         public double VaporPressureDeficit(double Temperature, double VaporPressure)
         {
             double saturated_vp = SatVaporPressure(Temperature);
@@ -75,7 +77,7 @@ namespace Models.Soils
         ///<param name = "Temperature"> temperature of the air (units degrees C)</param>
         public double SatVaporPressure(double Temperature)
         {
-            return 0.611 * Math.Exp((17.27 * Temperature) / (Temperature + 237.3)) * 10;
+            return 6.11 * Math.Exp((17.27 * Temperature) / (Temperature + 237.3));
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="Radiation">is the total incomming solar radiation measured by a pyranometer for the period (Units MJ/m2)</param>
         /// <param name="Tmean">is the mean temperature for the period measured in a Stevenson screen at 1.2 m height(degrees C)</param>
-        /// <param name="VapourPressure">is the mean vapor pressure for the period measured in a Stevenson screen at 1.2 m height(Units kPa</param>
+        /// <param name="VapourPressure">is the mean vapor pressure for the period measured in a Stevenson screen at 1.2 m height(Units kPa)</param>
         /// <param name="Lattitude">(units degrees)</param>
         /// <param name="DOY">is day of year 1 Jan = 1</param>
         /// <param name="albedo">is the proportion of radiation that the surface reflects back to the sky</param>
