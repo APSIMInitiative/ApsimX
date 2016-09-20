@@ -21,58 +21,58 @@
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>672</n>
-            <Slope>0.75242711685941721</Slope>
-            <Intercept>33.363943274359784</Intercept>
-            <SEslope>0.018687758741144232</SEslope>
-            <SEintercept>2.9114887806263097</SEintercept>
-            <R2>0.70756626019016589</R2>
-            <RMSE>15.531019180038399</RMSE>
-            <NSE>0.676184841269936</NSE>
-            <ME>-4.6105931337514781</ME>
-            <MAE>10.532882500477635</MAE>
-            <RSR>0.56862403302563169</RSR>
+            <Slope>0.75122213929934134</Slope>
+            <Intercept>33.452827939328515</Intercept>
+            <SEslope>0.018634719097762969</SEslope>
+            <SEintercept>2.9032253859211452</SEintercept>
+            <R2>0.708078941474316</R2>
+            <RMSE>15.542329873378032</RMSE>
+            <NSE>0.67571302321622728</NSE>
+            <ME>-4.7065367247919632</ME>
+            <MAE>10.548889036487031</MAE>
+            <RSR>0.5690381418480176</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SWmm(1)</Name>
             <n>672</n>
-            <Slope>0.11686262444265551</Slope>
-            <Intercept>-2.0070740995296026</Intercept>
-            <SEslope>0.0056816885574673751</SEslope>
-            <SEintercept>0.29727286426174182</SEintercept>
-            <R2>0.3870388545751402</R2>
-            <RMSE>48.2061585250269</RMSE>
-            <NSE>-37.733403126687669</NSE>
-            <ME>-47.704754797540978</ME>
-            <MAE>47.704754797540978</MAE>
-            <RSR>6.2189841721891863</RSR>
+            <Slope>0.11688334715140099</Slope>
+            <Intercept>-2.007614843905146</Intercept>
+            <SEslope>0.0056829097558734514</SEslope>
+            <SEintercept>0.29733675884947475</SEintercept>
+            <R2>0.38702101283744672</R2>
+            <RMSE>48.205615517450276</RMSE>
+            <NSE>-37.732530523951766</NSE>
+            <ME>-47.704223251519053</ME>
+            <MAE>47.704223251519053</MAE>
+            <RSR>6.21891411982186</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SWmm(2)</Name>
             <n>672</n>
-            <Slope>0.57990138497486221</Slope>
-            <Intercept>16.142967713903868</Intercept>
-            <SEslope>0.02053311535440679</SEslope>
-            <SEintercept>1.0312049341538334</SEintercept>
-            <R2>0.54348002118504746</R2>
-            <RMSE>7.9521491761948022</RMSE>
-            <NSE>0.31543921901456995</NSE>
-            <ME>-4.5650767055947661</ME>
-            <MAE>6.0597017679364837</MAE>
-            <RSR>0.82676604269107412</RSR>
+            <Slope>0.58010381887618934</Slope>
+            <Intercept>16.1249724661967</Intercept>
+            <SEslope>0.020508536579742977</SEslope>
+            <SEintercept>1.0299705499276064</SEintercept>
+            <R2>0.544247454157858</R2>
+            <RMSE>7.9518420797901932</RMSE>
+            <NSE>0.31549209078310891</NSE>
+            <ME>-4.5730933195460235</ME>
+            <MAE>6.0603639598114976</MAE>
+            <RSR>0.82673411460804425</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SWmm(3)</Name>
             <n>672</n>
-            <Slope>0.49220214886258679</Slope>
-            <Intercept>23.041147879015472</Intercept>
-            <SEslope>0.014542977075504742</SEslope>
-            <SEintercept>0.77969025304212136</SEintercept>
-            <R2>0.63094776637572891</R2>
-            <RMSE>8.1264849907297751</RMSE>
-            <NSE>0.50674803110254718</NSE>
-            <ME>-3.5417169677629974</ME>
-            <MAE>5.623594556515255</MAE>
-            <RSR>0.701796240365646</RSR>
+            <Slope>0.48886463328511059</Slope>
+            <Intercept>23.1549171634554</Intercept>
+            <SEslope>0.014551163314733877</SEslope>
+            <SEintercept>0.78012914054795246</SEintercept>
+            <R2>0.6275105237818962</R2>
+            <RMSE>8.1824117875160827</RMSE>
+            <NSE>0.49993550966166667</NSE>
+            <ME>-3.60266430593449</ME>
+            <MAE>5.6906674319070536</MAE>
+            <RSR>0.70662603033819837</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
