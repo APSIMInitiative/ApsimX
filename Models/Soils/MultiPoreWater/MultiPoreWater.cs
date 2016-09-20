@@ -908,7 +908,6 @@ namespace Models.Soils
         /// </summary>
         private void doDiffusion()
         {
-
             for (int l = 0; l < ProfileLayers-1; l++)
             {//Step through each layer from the top down
                 double DownwardDiffusion = 0;
