@@ -278,6 +278,17 @@ namespace Models.Soils
                                              /// </summary>
         [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
         public bool IncludeSorption { get; set; }
+        /// <summary>
+        /// Allows Evaporation to be switched off
+        /// </summary>
+        [Description("Calculation evaporation from surface.  Normally yes, this is for testing")]
+        public bool CalculateEvaporation { get; set; }
+        /// <summary>
+        /// Allows diffusion between layers to be switched off
+        /// </summary>
+        [Description("Calculation unsaturated diffusion.  Normally yes, this is for testing")]
+        public bool CalculateDiffusion { get; set; }
+
         #endregion
 
         #region Outputs
@@ -534,8 +545,10 @@ namespace Models.Soils
                         doDrainage(h, TimeStepSplits, Subh);
                 }
                 doTranspiration();
-                doEvaporation(h);
-                doDiffusion();
+                if(CalculateEvaporation)
+                    doEvaporation(h);
+                if(CalculateDiffusion)
+                    doDiffusion();
                 ClearSubHourlyData();
             }
             EODPondDepth = pond;
@@ -914,9 +927,9 @@ namespace Models.Soils
                 double UpwardDiffusion = 0;
                 for (int c = 0; c < PoreCompartments; c++)
                 {//Step through each pore and calculate diffusion in and out
-                    DownwardDiffusion += Pores[l][c].Diffusivity;//Diffusion out of this layer to layer below
+                    DownwardDiffusion += Pores[l][c].Diffusivity*10000;//Diffusion out of this layer to layer below
                     if (l <= ProfileLayers - 1)
-                        UpwardDiffusion = Pores[l + 1][c].Diffusivity;//Diffusion into this layer from layer below
+                        UpwardDiffusion += Pores[l + 1][c].Diffusivity*1000;//Diffusion into this layer from layer below
                     else
                         UpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
                 }
