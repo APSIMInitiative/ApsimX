@@ -370,13 +370,27 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add...")]
+        [ContextMenu(MenuName = "Add model...")]
         public void AddModel(object sender, EventArgs e)
         {
             object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
             explorerPresenter.ShowInRightHandPanel(model,
                                                    "UserInterface.Views.ListButtonView",
                                                    "UserInterface.Presenters.AddModelPresenter");
+        }
+
+        /// <summary>
+        /// Event handler for a Add function action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Add function...")]
+        public void AddFunction(object sender, EventArgs e)
+        {
+            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+            explorerPresenter.ShowInRightHandPanel(model,
+                                                   "UserInterface.Views.ListButtonView",
+                                                   "UserInterface.Presenters.AddFunctionPresenter");
         }
 
         /// <summary>

@@ -683,10 +683,6 @@ namespace Models.Core
                 parent.GetType() == typeof(Replacements))
                 return true;
 
-            // Is allowable if this type (t) is an IFunction and the parent is in the PMF namespace.
-            if (parent.GetType().FullName.Contains("PMF") && childType.GetInterface("IFunction") != null)
-                return true;
-
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
@@ -699,7 +695,6 @@ namespace Models.Core
                         return true;
                 }
             }
-
             return false;
         }
 
@@ -720,6 +715,21 @@ namespace Models.Core
             return allowableModels;
         }
 
+        /// <summary>Get a list of allowable child functions for the specified parent.</summary>
+        /// <param name="parent">The parent model.</param>
+        /// <returns>A list of allowable child functions.</returns>
+        public static List<Type> GetAllowableChildFunctions(object parent)
+        {
+            // For now, we allow all functions to be added anywhere
+            List<Type> allowableFunctions = new List<Type>();
+            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IFunction)))
+            {
+                allowableFunctions.Add(t);
+            }
+
+            allowableFunctions.Sort(new ReflectionUtilities.TypeComparer());
+            return allowableFunctions;
+        }
         /// <summary>
         /// Gets the locater model for the specified model.
         /// </summary>
