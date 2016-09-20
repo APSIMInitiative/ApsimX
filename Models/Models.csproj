@@ -142,7 +142,6 @@
     <Compile Include="Core\APSIMFileWriter.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
-    <Compile Include="Core\Converter.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
@@ -245,6 +244,7 @@
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\SubHourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\ProfileParameters.cs" />
@@ -363,7 +363,6 @@
     <Compile Include="Plant\OldPlant\Stem1.cs" />
     <Compile Include="Plant\OldPlant\SWStress.cs" />
     <Compile Include="Plant\Organs\BaseOrgan.cs" />
-    <Compile Include="Plant\Organs\BelowGroundOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />
@@ -371,7 +370,6 @@
     <Compile Include="Plant\Organs\Nodule.cs" />
     <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
-    <Compile Include="Plant\Organs\ReserveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
     <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />
