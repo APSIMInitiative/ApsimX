@@ -26,9 +26,9 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
-    //    /// <summary>Gets or sets the version.</summary>
-    //    [XmlAttribute("Version")]
-    //    public int Version { get; set; }
+        /// <summary>Gets or sets the version.</summary>
+        [XmlAttribute("Version")]
+        public int Version { get; set; }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
@@ -59,7 +59,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            Converter.ConvertToLatestVersion(FileName);
+            APSIMFileConverter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -109,7 +109,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            Converter.ConvertToLatestVersion(node);
+            APSIMFileConverter.ConvertToLatestVersion(node);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
