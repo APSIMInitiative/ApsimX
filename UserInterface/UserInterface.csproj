@@ -763,6 +763,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Lifecycle.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Lifestage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
     <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />

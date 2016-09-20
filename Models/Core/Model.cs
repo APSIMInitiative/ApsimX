@@ -247,6 +247,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.RuminantHerd))]
         [XmlElement(typeof(Models.WholeFarm.RuminantType))]
         [XmlElement(typeof(Models.WholeFarm.RuminantTypeCohort))]
+        [XmlElement(typeof(Models.Lifecycle.Lifecycle))]
+        [XmlElement(typeof(Models.Lifecycle.Lifestage))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
