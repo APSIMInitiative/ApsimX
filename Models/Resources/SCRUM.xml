@@ -391,6 +391,11 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
     <Biomass>
       <Name>Dead</Name>
     </Biomass>
+            <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1.0</Value>

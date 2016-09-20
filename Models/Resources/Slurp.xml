@@ -222,6 +222,11 @@ This is important in SLURP as it is set for each species to represent their diff
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
