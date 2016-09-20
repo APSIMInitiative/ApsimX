@@ -131,8 +131,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double Runoff { get; set; }
-        ///<summary> Who knows</summary>
-        [XmlIgnore]
+        ///<summary>Soil Albedo</summary>
+        [Units("0-1")]
+        [Description("The proportion of incoming radiation that is reflected by the soil surface")]
         public double Salb { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
@@ -206,6 +207,12 @@ namespace Models.Soils
         private Weather Met = null;
         [Link]
         private HydraulicProperties HyProps = null;
+        [Link]
+        private Evapotranspiration ET = null;
+        [Link]
+        private Clock Clock = null;
+        [Link]
+        private MicroClimate MicroClimate = null;
         #endregion
 
         #region Class Events
@@ -274,6 +281,10 @@ namespace Models.Soils
         #endregion
 
         #region Outputs
+        /// <summary>
+        /// The amount of cover from crops and surface organic matter.
+        /// </summary>
+        public double TotalCover { get; set; }
         /// <summary>
         /// The amount of water stored in the surface residue
         /// </summary>
@@ -388,7 +399,8 @@ namespace Models.Soils
         /// </summary>
         [Units("m")]
         private double ProfileDepth { get; set; }
-
+        [Units("mm/h")]
+        private double EvaporationHourly { get; set; }
         #endregion
 
         #region Event Handlers
@@ -463,6 +475,12 @@ namespace Models.Soils
             Rainfall = 0;
             Drainage = 0;
             Infiltration = 0;
+            pond_evap = 0;
+            Es = 0;
+            TotalCover = Math.Min(1, SurfaceOM.Cover + MicroClimate.RadIntTotal);
+            double SoilRadn = Met.Radn * (1-TotalCover);
+            double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
+            Eos = ET.PenmanEO(SoilRadn, Met.MeanT, WindRun, Met.VP, Salb, Met.Latitude, Clock.Today.DayOfYear);
             Array.Clear(Hourly.Irrigation, 0, 24);
             Array.Clear(Hourly.Rainfall, 0, 24);
             Array.Clear(Hourly.Drainage, 0, 24);
@@ -515,10 +533,9 @@ namespace Models.Soils
                     if (CalculateDrainage)
                         doDrainage(h, TimeStepSplits, Subh);
                 }
-                doEvaporation();
                 doTranspiration();
-                doDownwardDiffusion();
-                doUpwardDiffusion();
+                doEvaporation(h);
+                doDiffusion();
                 ClearSubHourlyData();
             }
             EODPondDepth = pond;
@@ -526,7 +543,7 @@ namespace Models.Soils
             Drainage = MathUtilities.Sum(Hourly.Drainage);
             double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
             double DeltaSWC = SoilWaterContentSOD - SoilWaterContentEOD;
-            double CheckMass = DeltaSWC + Infiltration - Drainage;
+            double CheckMass = DeltaSWC + Infiltration - Drainage - Es;
             if (Math.Abs(CheckMass) > FloatingPointTolerance)
                 throw new Exception(this + " Mass balance violated");
         }
@@ -859,9 +876,23 @@ namespace Models.Soils
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
-        private void doEvaporation()
+        private void doEvaporation(int h)
         {
-            //Evaporate water from top layer
+            double EvaporationSupplyHourly = SWmm[0] + pond; //Water can evaporation from the surface layer or the pond
+            EvaporationHourly = Math.Min(Eos/24, EvaporationSupplyHourly);  //Actual evaporation from the soil is constrained by supply from soil and pond and by demand from the atmosphere
+            double PondEvapHourly = Math.Min(EvaporationHourly, pond); //Evaporate from the pond first
+            pond_evap += PondEvapHourly;
+            pond -= PondEvapHourly;
+            EvaporationHourly -= PondEvapHourly;
+            Es += EvaporationHourly;
+            double EsRemaining = EvaporationHourly;
+            for (int c = 0; (c < PoreCompartments &&  EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first
+            {
+                double PoreEvapHourly = Math.Min(EsRemaining, Pores[0][c].WaterDepth);
+                EsRemaining -= PoreEvapHourly;
+                Pores[0][c].WaterDepth -= PoreEvapHourly;
+            }
+            UpdateProfileValues();
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -873,16 +904,9 @@ namespace Models.Soils
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
-        private void doDownwardDiffusion()
+        private void doDiffusion()
         {
             //Move water down into lower layers if they are dryer than above
-        }
-        /// <summary>
-        /// Potential gradients moves water out of layers each time step
-        /// </summary>
-        private void doUpwardDiffusion()
-        {
-            //Move water up into lower layers if they are dryer than below
         }
         /// <summary>
         /// Utility to sum the specified propertie from all pore compartments in the pore layer input 
