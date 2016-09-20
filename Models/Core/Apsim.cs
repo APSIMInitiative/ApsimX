@@ -683,6 +683,10 @@ namespace Models.Core
                 parent.GetType() == typeof(Replacements))
                 return true;
 
+            // Functions are currently allowable anywhere
+            if (childType.GetInterface("IFunction") != null)
+                return true;
+
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
