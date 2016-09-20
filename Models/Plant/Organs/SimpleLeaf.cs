@@ -287,16 +287,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
-        {
-            set
-            {
-                Live.StructuralN += value.Structural;
-                Live.NonStructuralN += value.NonStructural;
-            }
-        }
-
         #endregion
 
         #region Events
