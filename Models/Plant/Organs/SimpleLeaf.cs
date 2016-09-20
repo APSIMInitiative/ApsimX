@@ -265,24 +265,13 @@ namespace Models.PMF.Organs
         public override double WaterAllocation { get { return EP; } set { EP += value; } }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double Demand = DMDemandFunction.Value;
-                if (Math.Round(Demand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
+        public override BiomassPoolType DMDemand { get { return new BiomassPoolType { Structural = DMDemandFunction.Value }; } }
 
         /// <summary>Gets or sets the dm supply.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                if (Math.Round(Photosynthesis.Value + AvailableDMRetranslocation(), 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
@@ -295,7 +284,6 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dm allocation.</summary>
         public override BiomassAllocationType DMAllocation
         {
-
             set
             {
                 // What is going on here?  Why no non-structural???
@@ -310,11 +298,6 @@ namespace Models.PMF.Organs
             {
                 double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                
-                if (Math.Round(StructuralDemand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
-                if (Math.Round(NDeficit, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative Non structural N Demand.  Check your parameterisation");
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
         }
