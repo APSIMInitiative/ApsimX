@@ -1094,11 +1094,18 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>1.0</Value>
           <Units>0-1</Units>
         </Constant>
-		<Constant>
-          <Name>InitialDM</Name>
-          <Value>0.0</Value>
-          <Units>g/plant</Units>
-        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
     <Constant>
       <Name>LaiDeadFunction</Name>
       <Value>0.0</Value>
@@ -1614,6 +1621,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </PhaseLookup>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1697,6 +1714,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </MaximumFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
       </GenericOrgan>
       <Cultivar>
         <Name>Buster</Name>

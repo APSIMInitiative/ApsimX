@@ -41,23 +41,7 @@ namespace Models.PMF.Organs
     /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
     ///
     /// </summary>
-    /// \param <b>(IFunction, Optional)</b> SenescenceRate Rate of organ senescence 
-    ///     (default 0 if this parameter does not exist, i.e no senescence).
-    /// \param <b>(IFunction, Optional)</b> StructuralFraction Fraction of organ structural component 
-    ///     (default 1 if this parameter does not exist, i.e all biomass is structural).
-    /// \param <b>(IFunction, Optional)</b> InitialWtFunction Initial weight of organ 
-    ///      (default 0 if this parameter does not exist, i.e. no initial weight).
-    /// \param <b>(IFunction, Optional)</b> InitialStructuralFraction Fraction of initial weight of organ 
-    ///      (default 1 if this parameter does not exist, i.e. all initial biomass is structural).
-    /// \param <b>(IFunction, Optional)</b> NReallocationFactor Factor of nitrogen reallocation  
-    ///      (0-1; default 0 if this parameter does not exist, i.e. no nitrogen reallocation).
-    /// \param <b>(IFunction, Optional)</b> NRetranslocationFactor Factor of nitrogen retranslocation  
-    ///       (0-1; default 0 if this parameter does not exist, i.e. no nitrogen retranslocation).
-    /// \param MinimumNConc MinimumNConc Minimum nitrogen concentration
-    /// \param MinimumNConc MaximumNConc Maximum nitrogen concentration.
-    /// \retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
-    /// <remarks>
-    /// </remarks>
+
     [Serializable]
     public class GenericOrgan : BaseOrgan, IArbitration
     {
@@ -93,15 +77,15 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
         /// <summary>The structural fraction</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         IFunction StructuralFraction = null;
         /// <summary>The dm demand Function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
         /// <summary>The initial wt function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
         /// <summary>The dry matter content</summary>
@@ -127,8 +111,6 @@ namespace Models.PMF.Organs
         #region States
         /// <summary>The senescence rate</summary>
         private double mySenescenceRate = 0;
-        /// <summary>The _ structural fraction</summary>
-        private double _StructuralFraction = 1;
         /// <summary>The start n retranslocation supply</summary>
         private double StartNRetranslocationSupply = 0;
         /// <summary>The start n reallocation supply</summary>
@@ -143,15 +125,13 @@ namespace Models.PMF.Organs
         protected double StructuralDMDemand = 0;
         /// <summary>The non structural dm demand</summary>
         protected double NonStructuralDMDemand = 0;
-        /// <summary>The initial wt</summary>
-        protected double InitialWt = 0;
+
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
         {
             base.Clear();
             mySenescenceRate = 0;
-            _StructuralFraction = 1;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             PotentialDMAllocation = 0;
@@ -159,7 +139,6 @@ namespace Models.PMF.Organs
             PotentialMetabolicDMAllocation = 0;
             StructuralDMDemand = 0;
             NonStructuralDMDemand = 0;
-            InitialWt = 0;
             LiveFWt = 0;
         }
         #endregion
@@ -191,15 +170,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (DMDemandFunction != null)
-                {
-                    StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
-
-                    StructuralDMDemand /= DMConversionEfficiency;
-                }
-                else
-                    StructuralDMDemand = 0;
-                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
+                StructuralDMDemand = DMDemandFunction.Value * StructuralFraction.Value/DMConversionEfficiency;
+                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / StructuralFraction.Value;
                 MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
                 NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
                 NonStructuralDMDemand /= DMConversionEfficiency;
@@ -445,21 +417,14 @@ namespace Models.PMF.Organs
                 mySenescenceRate = 0;
                 if (SenescenceRate != null) //Default of zero means no senescence
                     mySenescenceRate = SenescenceRate.Value;
-                _StructuralFraction = 1;
-                if (StructuralFraction != null) //Default of 1 means all biomass is structural
-                    _StructuralFraction = StructuralFraction.Value;
-
-                InitialWt = 0; //Default of zero means no initial Wt
-                if (InitialWtFunction != null)
-                    InitialWt = InitialWtFunction.Value;
 
                 //Initialise biomass and nitrogen
                 if (Live.Wt == 0)
                 {
-                    Live.StructuralWt = InitialWt;
+                    Live.StructuralWt = InitialWtFunction.Value;
                     Live.NonStructuralWt = 0.0;
                     Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-                    Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
+                    Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Live.StructuralN;
                 }
 
                 StartLive = Live;
