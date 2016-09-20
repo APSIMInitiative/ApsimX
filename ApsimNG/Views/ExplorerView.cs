@@ -94,6 +94,7 @@ namespace UserInterface.Views
             column.SetAttributes(textRender, "text", 0);
 //            column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
+            treeview1.TooltipColumn = 2;
 
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
