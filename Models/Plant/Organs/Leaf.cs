@@ -173,6 +173,11 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double PotentialEP { get;  set; }
 
+        /// <summary>
+        /// This paramater is applied to ETDemand.  It is a fudge for testing
+        /// </summary>
+        public double FudgeToGetETDemandRight { get; set; }
+
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
@@ -1416,7 +1421,7 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return PotentialEP;
+                return PotentialEP * FudgeToGetETDemandRight;
             }
         }
         /// <summary>Gets or sets the water allocation.</summary>
@@ -1658,6 +1663,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                FudgeToGetETDemandRight = 1.0;
             }
         }
 
