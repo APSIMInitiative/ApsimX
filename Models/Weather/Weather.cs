@@ -224,11 +224,17 @@ namespace Models
                 this.todaysMetData.Mint = value;
             }
         }
-
         /// <summary>
-        /// Gets or sets the rainfall (mm)
+        /// Daily Mean temperature (oC)
         /// </summary>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
+        public double MeanT { get { return (MaxT + MinT) / 2; } }
+
+            /// <summary>
+            /// Gets or sets the rainfall (mm)
+            /// </summary>
+            [XmlIgnore]
         public double Rain
         {
             get
