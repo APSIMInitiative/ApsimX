@@ -313,8 +313,6 @@ namespace Models.PMF.Organs
                 if (value.Retranslocation - StartLive.NonStructuralWt > 0.0000000001)
                     throw new Exception("Retranslocation exceeds nonstructural biomass in organ: " + Name);
                 Live.NonStructuralWt -= value.Retranslocation;
-
-                AllocatedWt = value.Structural + value.NonStructural - value.Retranslocation;
             }
         }
         /// <summary>Sets the n allocation.</summary>
@@ -353,8 +351,6 @@ namespace Models.PMF.Organs
                 if (value.Reallocation < -0.000000001)
                     throw new Exception("-ve N Reallocation requested from " + Name);
                 Live.NonStructuralN -= value.Reallocation;
-
-                AllocatedN = value.Structural + value.NonStructural - value.Retranslocation - value.Reallocation;
             }
         }
 
@@ -456,9 +452,6 @@ namespace Models.PMF.Organs
                 Dead.NonStructuralWt += Loss.NonStructuralWt;
                 Dead.StructuralN += Loss.StructuralN;
                 Dead.NonStructuralN += Loss.NonStructuralN;
-
-                SenescedWt = Loss.Wt;
-                SenescedN = Loss.N;
 
                 double DetachedFrac = 0;
                 if (DetachmentRateFunction != null)
