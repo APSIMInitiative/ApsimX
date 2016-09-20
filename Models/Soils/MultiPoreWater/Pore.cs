@@ -144,6 +144,14 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm/h")]
         public double Capillarity { get { return VolumetricFlowRate/1000*3600; } }
+        /// <summary>The potential diffusion out of this pore</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double Diffusivity { get { return Capillarity * RelativeWaterContent * (1- TensionFactor); } }
+        /// <summary>The potential diffusion into this pore</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double DiffusionCapacity { get { return AirDepth * (1 - TensionFactor); } }
         /// <summary>
         /// The rate of water movement into a pore space due to the chemical attraction from the matris
         /// </summary>
