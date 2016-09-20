@@ -2928,11 +2928,18 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>1</Value>
               <Units>0-1</Units>
             </Constant>
-            <Constant>
-              <Name>InitialDM</Name>
-              <Value>0</Value>
-              <Units>g/plant</Units>
-            </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
               <Value>0</Value>
@@ -3360,11 +3367,18 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>1</Value>
               <Units>0-1</Units>
             </Constant>
-            <Constant>
-              <Name>InitialDM</Name>
-              <Value>0</Value>
-              <Units>g/plant</Units>
-            </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
               <Value>0</Value>

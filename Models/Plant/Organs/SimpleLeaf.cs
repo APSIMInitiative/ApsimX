@@ -200,11 +200,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction SVPFrac = null;
 
-        /// <summary>The initial leaf DM</summary>
-        [Link]
-        [Units("g/plant")]
-        IFunction InitialDM = null;
-
         #endregion
 
         #region States and variables
@@ -282,9 +277,6 @@ namespace Models.PMF.Organs
                 return CoverGreen * MetData.Radn;
             }
         }
-
-        /// <summary>Flag whether leaf DM has been initialised</summary>
-        private bool isInitialised = false;
 
         #endregion
 
@@ -372,8 +364,14 @@ namespace Models.PMF.Organs
         {
             set
             {
-                Live.StructuralN += value.Structural;
-                Live.NonStructuralN += value.NonStructural;
+                // Allocation
+                if (value.Structural > 0)
+                {
+                    Live.StructuralN += value.Structural;
+                }
+                if (value.NonStructural > 0)
+                    Live.NonStructuralN += value.NonStructural;
+
             }
         }
 
@@ -435,12 +433,6 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
-                if (!isInitialised)
-                {
-                    Live.StructuralWt = InitialDM.Value * Plant.Population;
-                    Live.StructuralN = Live.StructuralWt * MaxNconc;
-                    isInitialised = true;
-                }
 
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null & ExtinctionCoefficientFunction == null)

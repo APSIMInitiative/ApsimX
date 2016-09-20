@@ -457,6 +457,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -1160,6 +1170,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
