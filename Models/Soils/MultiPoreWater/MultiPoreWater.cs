@@ -716,7 +716,9 @@ namespace Models.Soils
             }
             if (Met.Rain > 0)
             {  //On days when rainfall occurs put it into hourly increments
-                int RainHours = (int)Math.Ceiling(Met.RainfallHours);
+                int RainHours = 4;
+                if ((Met.RainfallHours != double.NaN) && (Met.RainfallHours > 0)) //Set rainfall hours to value for met file if it is there.
+                    RainHours = (int)Math.Ceiling(Met.RainfallHours);
                 double RainRate = Math.Min(Met.Rain / RainHours,Met.Rain);
                 for (int h = 0; h < RainHours; h++)
                 {
@@ -906,8 +908,38 @@ namespace Models.Soils
         /// </summary>
         private void doDiffusion()
         {
-            //Move water down into lower layers if they are dryer than above
+
+            for (int l = 0; l < ProfileLayers-1; l++)
+            {//Step through each layer from the top down
+                double DownwardDiffusion = 0;
+                double UpwardDiffusion = 0;
+                for (int c = 0; c < PoreCompartments; c++)
+                {//Step through each pore and calculate diffusion in and out
+                    DownwardDiffusion += Pores[l][c].Diffusivity;//Diffusion out of this layer to layer below
+                    if (l <= ProfileLayers - 1)
+                        UpwardDiffusion = Pores[l + 1][c].Diffusivity;//Diffusion into this layer from layer below
+                    else
+                        UpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
+                }
+                double NetDiffusion = UpwardDiffusion - DownwardDiffusion;
+                if (NetDiffusion > 0)
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {//Step through each pore, from smallest to largest and distribute inward diffusion
+                    double PoreDiffusion = Math.Min(Pores[l][c].AirDepth, NetDiffusion);
+                    Pores[l][c].WaterDepth += PoreDiffusion;
+                    NetDiffusion -= PoreDiffusion;
+                }
+                if (NetDiffusion < 0)
+                for (int c = 0; c < PoreCompartments; c++)
+                {//Step through each pore, from largest to smallest and remove outward diffusion
+                    double Porediffusion = Math.Min(Pores[l][c].WaterDepth, NetDiffusion);
+                    Pores[l][c].WaterDepth -= Porediffusion;
+                    NetDiffusion -= Porediffusion;
+                }
+            }
+            UpdateProfileValues();
         }
+
         /// <summary>
         /// Utility to sum the specified propertie from all pore compartments in the pore layer input 
         /// </summary>
@@ -979,7 +1011,6 @@ namespace Models.Soils
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
             }
         }
-
         private void DoDetailReport(string CallingProcess,int Layer,int hour)
         {
             if (ReportDetail)
