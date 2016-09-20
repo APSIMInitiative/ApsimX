@@ -288,6 +288,11 @@ namespace Models.Soils
         /// </summary>
         [Description("Calculation unsaturated diffusion.  Normally yes, this is for testing")]
         public bool CalculateDiffusion { get; set; }
+        /// <summary>
+        /// Factor to scale Diffusivity
+        /// </summary>
+        [Description("Factor to scale Diffusivity")]
+        public double DiffusivityMultiplier { get; set; }
 
         #endregion
 
@@ -923,16 +928,30 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers-1; l++)
             {//Step through each layer from the top down
+                double PotentialDownwardDiffusion = 0;
+                double PotentialUpwardDiffusion = 0;
+                double UpwardDiffusionCapacity = 0;
+                double DownwardDiffusionCapacity = 0;
                 double DownwardDiffusion = 0;
                 double UpwardDiffusion = 0;
                 for (int c = 0; c < PoreCompartments; c++)
                 {//Step through each pore and calculate diffusion in and out
-                    DownwardDiffusion += Pores[l][c].Diffusivity*10000;//Diffusion out of this layer to layer below
+
+                    PotentialDownwardDiffusion += Pores[l][c].Diffusivity* DiffusivityMultiplier;//Diffusion out of this layer to layer below
+                    UpwardDiffusionCapacity += Pores[l][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb upward diffusion
                     if (l <= ProfileLayers - 1)
-                        UpwardDiffusion += Pores[l + 1][c].Diffusivity*1000;//Diffusion into this layer from layer below
+                    {
+                        PotentialUpwardDiffusion += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
+                        DownwardDiffusionCapacity += Pores[l][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb downward diffusion
+                    }
                     else
-                        UpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
+                    {
+                        PotentialUpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
+                        DownwardDiffusionCapacity = 0;
+                    }
                 }
+                UpwardDiffusion = Math.Min(PotentialUpwardDiffusion, UpwardDiffusionCapacity);
+                DownwardDiffusion = Math.Min(PotentialDownwardDiffusion, DownwardDiffusionCapacity);
                 double NetDiffusion = UpwardDiffusion - DownwardDiffusion;
                 if (NetDiffusion > 0) //Bring water into current layer and remove from layer below
                 {
