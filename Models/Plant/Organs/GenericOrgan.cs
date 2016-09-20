@@ -321,9 +321,9 @@ namespace Models.PMF.Organs
                 if (value.Reallocation < -0.000000001)
                     throw new Exception("-ve N Reallocation requested from " + Name);
                 Live.NonStructuralN -= value.Reallocation;
-
             }
         }
+
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc { get { return MaximumNConc.Value; } }
         /// <summary>Gets or sets the minimum nconc.</summary>
