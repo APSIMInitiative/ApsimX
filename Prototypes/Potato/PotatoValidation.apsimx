@@ -443,6 +443,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -1222,6 +1227,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>
@@ -26600,6 +26610,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -27235,6 +27250,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
           <CompositeBiomass>
@@ -32012,6 +32032,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -32625,6 +32650,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
           <CompositeBiomass>

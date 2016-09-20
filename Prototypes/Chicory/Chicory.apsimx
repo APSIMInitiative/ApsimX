@@ -1021,6 +1021,11 @@ DM demand is based on ...
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
       </GenericOrgan>
@@ -1200,6 +1205,11 @@ DM demand is based on ...
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1633,6 +1643,11 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
@@ -3232,6 +3247,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
@@ -7538,6 +7554,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
@@ -11774,6 +11791,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Chicory</Name>
@@ -16157,6 +16175,7 @@ namespace Models
                 <emissivity>0.96</emissivity>
                 <gsmax>0.01</gsmax>
                 <r50>200</r50>
+                <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Irrigation>
                 <Name>Irrigation</Name>
@@ -20640,6 +20659,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -25136,6 +25156,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -29685,6 +29706,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Plant>
             <Name>Chicory</Name>
@@ -33936,6 +33958,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
@@ -38692,6 +38715,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
@@ -42917,6 +42941,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>

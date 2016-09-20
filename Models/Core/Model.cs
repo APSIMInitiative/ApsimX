@@ -119,7 +119,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Biomass))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]
-        [XmlElement(typeof(Models.PMF.Organs.BelowGroundOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.GenericOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.HIReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Leaf))]

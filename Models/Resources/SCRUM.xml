@@ -370,7 +370,12 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Value>1.0</Value>
       <Units>0-1</Units>
     </Constant>
-  </GenericOrgan>
+     <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
@@ -386,6 +391,11 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
     <Biomass>
       <Name>Dead</Name>
     </Biomass>
+            <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1.0</Value>
@@ -1213,7 +1223,12 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Value>0.0</Value>
       <Units>g/m^2</Units>
     </Constant>    
-  </Nodule>
+     <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </Nodule>
   <CompositeBiomass>
     <Name>Total</Name>
     <Propertys>

@@ -2928,7 +2928,13 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>1</Value>
               <Units>0-1</Units>
             </Constant>
-        <MultiplyFunction>
+            <Constant>
+              <Name>DetachmentRateFunction</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>
+
+			<MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
@@ -3367,7 +3373,13 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>1</Value>
               <Units>0-1</Units>
             </Constant>
-        <MultiplyFunction>
+            <Constant>
+              <Name>DetachmentRateFunction</Name>
+              <Value>0</Value>
+              <Units>/d</Units>
+            </Constant>
+
+			<MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>

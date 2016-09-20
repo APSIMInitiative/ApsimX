@@ -100,7 +100,6 @@ namespace Models.PMF.Organs
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         
         /// <summary>Gets or sets the water allocation.</summary>
-        /// <exception cref="System.Exception">Cannot set water allocation for  + Name</exception>
         [XmlIgnore]
         virtual public double WaterAllocation
         {

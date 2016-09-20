@@ -226,25 +226,10 @@ namespace Models.PMF.Organs
         public double Transpiration { get { return EP; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw
-        {
-            get
-            {
-                if (WaterDemand > 0)
-                    return EP / WaterDemand;
-                else
-                    return 1;
-            }
-        }
+        public double Fw { get { return MathUtilities.Divide(EP, WaterDemand, 1); } }
+
         /// <summary>Gets the function.</summary>
-        public double Fn
-        {
-            get
-            {
-                double MaxNContent = Live.Wt * MaximumNConc.Value;
-                return Live.N / MaxNContent;
-            }
-        }
+        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
@@ -289,6 +274,8 @@ namespace Models.PMF.Organs
                 // What is going on here?  Why no non-structural???
                 // This needs to be checked!
                 Live.StructuralWt += value.Structural;
+                if (value.NonStructural > 0)
+                    throw new Exception("Whoops - why is non structural DM allocation non zero");
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
@@ -299,16 +286,6 @@ namespace Models.PMF.Organs
                 double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
-            }
-        }
-
-        /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
-        {
-            set
-            {
-                Live.StructuralN += value.Structural;
-                Live.NonStructuralN += value.NonStructural;
             }
         }
 
