@@ -70,6 +70,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\Bin\</OutputPath>
@@ -124,10 +125,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPastureProto.cs" />
     <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
-    <Compile Include="AgPasture\AgPasture.SwardProto.cs" />
-    <Compile Include="AgPasture\AgPasture.PastureSpeciesSwd.cs" />
+    <Compile Include="AgPasture\AgPasture.PastureSpecies.Organs.cs" />
     <Compile Include="AgPasture\AgPasture.Sward.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
@@ -174,6 +173,7 @@
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
     <Compile Include="Lifecycle\Lifestage.cs" />
+    <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\MovingAverage.cs" />
@@ -364,8 +364,6 @@
     <Compile Include="Plant\OldPlant\SWStress.cs" />
     <Compile Include="Plant\Organs\BaseOrgan.cs" />
     <Compile Include="Plant\Organs\BelowGroundOrgan.cs" />
-    <Compile Include="Plant\Organs\GenericAboveGroundOrgan.cs" />
-    <Compile Include="Plant\Organs\GenericBelowGroundOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />

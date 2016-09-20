@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.Lifecycle
 {
@@ -16,20 +17,63 @@ namespace Models.Lifecycle
         /// <summary>
         /// Reference to the current cohort
         /// </summary>
-        public Cohort CurrentCohort;
+        [XmlIgnore]
+        public Cohort CurrentCohort { get; set; }
 
-        private Lifecycle OwningCycle;
+        /// <summary>
+        /// Owning lifecycle
+        /// </summary>
+        public Lifecycle OwningCycle;
+
+        [NonSerialized]
         private List<Cohort> CohortList;
-        private List<Lifestage> StageLinks;
+
+        [NonSerialized]
+        private List<LifestageProcess> ProcessList;
 
         /// <summary>
         /// 
         /// </summary>
-        public Lifestage(Lifecycle owner)
+        public Lifestage()
         {
-            OwningCycle = owner;
-            CohortList = new List<Cohort>();
-            StageLinks = new List<Lifestage>();
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CohortCount
+        {
+            get
+            {
+                if (CohortList != null)
+                {
+                    return CohortList.Count;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Population of all the cohorts in this lifestage
+        /// </summary>
+        public double TotalPopulation
+        {
+            get
+            {
+                double sum = 0;
+                if (CohortList != null)
+                {
+                    foreach (Cohort aCohort in CohortList)
+                    {
+                        sum += aCohort.Count;
+                    }
+                }
+                return sum;
+            }
         }
 
         /// <summary>
@@ -37,64 +81,92 @@ namespace Models.Lifecycle
         /// </summary>
         public void Process()
         {
-            //process this stage
-            foreach (Cohort currentCohort in CohortList)
+            if (CohortList != null)
             {
-                //apply functions to cohort
+                Cohort aCohort;
+                int count = CohortList.Count;
 
-                currentCohort.AgeCohort();
+                // for each cohort in the lifestage
+                for (int i = 0; i < count; i++)
+                {
+                    aCohort = CohortList[i];
+                    //apply functions to cohort
+                    CurrentCohort = aCohort;
+                    //iterate throught the process children of this lifestage
+                    foreach (LifestageProcess proc in ProcessList)
+                    {
+                        proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
+                    }
+                    aCohort.AgeCohort();                // finally age the creatures in the cohort
+                }
+                RemoveEmptyCohorts();                   // remove any empty cohorts from the cohortlist
             }
-
-            PromoteGraduates();
         }
 
         /// <summary>
-        /// 
+        /// Move cohort on to the next stage
         /// </summary>
-        /// <returns></returns>
-        public Lifestage NextLifeStage()
+        public void PromoteGraduates(Cohort srcCohort, Lifestage destStage, double count)
         {
-            if (StageLinks.Count > 0)
-                return StageLinks[0];
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Link to another stage
-        /// </summary>
-        /// <param name="link"></param>
-        public void LinkNext(Lifestage link)
-        {
-            StageLinks.Add(link);
-        }
-
-        /// <summary>
-        /// Move cohort(s) on to the next stage
-        /// </summary>
-        public void PromoteGraduates()
-        {
-            //some logic required here to determine what gets promoted to the next stage
-
-
-            if (StageLinks[0] != null)
+            if (destStage != null)
             {
-                //move the first arrived cohort to the next lifestage
-                Cohort current = CohortList[0];
-                Cohort newCohort = StageLinks[0].NewCohort();
-                newCohort.ChronoAge = current.ChronoAge;
+                //move the count creatures into a new cohort
+                Cohort newCohort = destStage.NewCohort();
+                newCohort.ChronoAge = srcCohort.ChronoAge;
                 newCohort.PhenoAge = 0;
-                newCohort.Count = current.Count;
-                CohortList.RemoveAt(0);
+                newCohort.Count = count;
+                srcCohort.Count = srcCohort.Count - count;
+            }
+            else
+            {
+                throw new Exception("Destination stage is incorrectly specified");
             }
         }
 
+        /// <summary>
+        /// The source cohort reproduces and sends count creatures to the destination stage.
+        /// </summary>
+        /// <param name="srcCohort"></param>
+        /// <param name="destStage"></param>
+        /// <param name="count"></param>
+        public void Reproduce(Cohort srcCohort, Lifestage destStage, double count)
+        {
+            if (destStage != null)
+            {
+                // move the count creatures into a new cohort
+                Cohort newCohort = null;
+                // find a cohort in the destStage that has PhenoAge = 0
+                int i = 0;
+                while (i < destStage.CohortList.Count)
+                {
+                    if (destStage.CohortList[i].PhenoAge == 0)
+                    {
+                        newCohort = destStage.CohortList[i];
+                        i = destStage.CohortList.Count; // terminate loop
+                    }
+                    i++;
+                }
+
+                if (newCohort == null)
+                    newCohort = destStage.NewCohort();
+                newCohort.ChronoAge = 0;
+                newCohort.PhenoAge = 0;
+                newCohort.Count += count;
+            }
+            else
+            {
+                throw new Exception("Destination stage is incorrectly specified");
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public Cohort NewCohort()
         {
+            if (CohortList == null)
+                CohortList = new List<Cohort>();
+
             Cohort a = new Cohort(this);
             CohortList.Add(a);
             return a;
@@ -111,10 +183,47 @@ namespace Models.Lifecycle
         /// <summary>
         /// 
         /// </summary>
+        public void RemoveEmptyCohorts()
+        {
+            int i = CohortList.Count - 1;
+            while (i >= 0)
+            {
+                if (CohortList[i].Count < 0.001)
+                    CohortList.RemoveAt(i);
+                i--;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aCohort"></param>
+        public void Remove(Cohort aCohort)
+        {
+            CohortList.Remove(aCohort);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clear()
         {
             CohortList.Clear();
-            StageLinks.Clear();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            ProcessList = new List<LifestageProcess>();
+            foreach (LifestageProcess proc in Apsim.Children(this, typeof(LifestageProcess)))
+            {
+                ProcessList.Add(proc);
+            }
         }
     }
 }

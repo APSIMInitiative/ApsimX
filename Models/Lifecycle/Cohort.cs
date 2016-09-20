@@ -7,6 +7,7 @@ namespace Models.Lifecycle
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class Cohort
     {
         /// <summary>
@@ -17,22 +18,30 @@ namespace Models.Lifecycle
         /// <summary>
         /// Developmental level (which lifestage)
         /// </summary>
-        public int PhenoAge;
+        public double PhenoAge { get; set; }
 
         /// <summary>
         /// Days of existence
         /// </summary>
-        public int ChronoAge;
+        public double ChronoAge { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public double Count;
+        public double Count { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        private Lifestage OwningStage;
+        public Lifestage OwningStage;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Cohort()
+        {
+
+        }
 
         /// <summary>
         /// 

@@ -13,14 +13,23 @@ namespace Models.Lifecycle
     [ValidParent(ParentType = typeof(Zone))]
     public class Lifecycle : Model
     {
-        private List<Lifestage> ChildStages = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        [NonSerialized]
+        public List<Lifestage> ChildStages = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Lifestage CurrentLifestage { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public Lifecycle()
         {
-            ChildStages = new List<Lifestage>();
+            
         }
 
         /// <summary>
@@ -30,6 +39,22 @@ namespace Models.Lifecycle
         public double[] InitialPopulation { get; set; }
 
         /// <summary>
+        /// Total population of all the cohorts in this lifecycle
+        /// </summary>
+        public double TotalPopulation
+        {
+            get
+            {
+                double sum = 0;
+                foreach (Lifestage stage in ChildStages)
+                {
+                    sum += stage.TotalPopulation;
+                }
+                return sum;
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
@@ -37,16 +62,13 @@ namespace Models.Lifecycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            ChildStages = new List<Lifestage>();
             foreach (Lifestage stage in Apsim.Children(this, typeof(Lifestage)))
             {
+                stage.OwningCycle = this;
                 ChildStages.Add(stage);
             }
-            //dummy up some links
-            for (int s = 0; s < ChildStages.Count; s++)
-            {
-                ChildStages[s].LinkNext(ChildStages[(s+1) % (ChildStages.Count+1)]);
-            }
-
+            
             int i= 0;
             //create new cohorts from the InitialPopulation[]
             foreach (Lifestage stage in ChildStages)
@@ -65,6 +87,7 @@ namespace Models.Lifecycle
         {
             foreach (Lifestage stage in ChildStages)
             {
+                CurrentLifestage = stage;
                 stage.Process();
             }
         }
