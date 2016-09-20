@@ -861,7 +861,6 @@ namespace Models.PMF.Organs
         /// <summary>Cohorts the counter.</summary>
         /// <param name="Condition">The condition.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         private int CohortCounter(string Condition)
         {
             int Count = 0;

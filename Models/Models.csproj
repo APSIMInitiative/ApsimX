@@ -360,7 +360,6 @@
     <Compile Include="Plant\OldPlant\Stem1.cs" />
     <Compile Include="Plant\OldPlant\SWStress.cs" />
     <Compile Include="Plant\Organs\BaseOrgan.cs" />
-    <Compile Include="Plant\Organs\BelowGroundOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />
