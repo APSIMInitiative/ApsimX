@@ -1067,6 +1067,11 @@
           <Value>0</Value>
           <Units>g/m^2</Units>
         </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+	      <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
          <Constant>
@@ -1691,6 +1696,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>g/m^2</Units>
         </Constant>
+		<Constant>
+		  <Name>SenescenceRate</Name>
+		  <Value>0</Value>
+		  <Units>/d</Units>
+		</Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
          <Constant>

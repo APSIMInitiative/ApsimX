@@ -336,6 +336,11 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </Memo>
       <Value>0.46</Value>
     </Constant>
+    <Constant>
+      <Name>SenescenceRate</Name>
+      <Value>0</Value>
+	  <Units>/d</Units>
+    </Constant>
     <Folder>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>

@@ -1070,6 +1070,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <Value>0</Value>
             <Units>/d</Units>
          </Constant>
+	 <Constant>
+	   <Name>SenescenceRate</Name>
+	   <Value>0</Value>
+	   <Units>/d</Units>
+	 </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>

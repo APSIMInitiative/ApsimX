@@ -505,6 +505,11 @@
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+	      <Units>/d</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.0015</Value>
         </Constant>
