@@ -360,7 +360,6 @@
     <Compile Include="Plant\OldPlant\Stem1.cs" />
     <Compile Include="Plant\OldPlant\SWStress.cs" />
     <Compile Include="Plant\Organs\BaseOrgan.cs" />
-    <Compile Include="Plant\Organs\BelowGroundOrgan.cs" />
     <Compile Include="Plant\Organs\GenericOrgan.cs" />
     <Compile Include="Plant\Organs\HIReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\Leaf.cs" />
@@ -368,7 +367,6 @@
     <Compile Include="Plant\Organs\Nodule.cs" />
     <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
-    <Compile Include="Plant\Organs\ReserveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
     <Compile Include="Plant\Organs\RootSWIM.cs" />
     <Compile Include="Plant\Organs\SimpleLeaf.cs" />

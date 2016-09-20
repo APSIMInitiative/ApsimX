@@ -957,11 +957,6 @@ namespace Models.PMF.Organs
                 LeafStartNRetranslocationSupply = NRetranslocationSupply;
 
                 //zero locals variables
-                //StructuralDMDemand = 0;
-                //MetabolicDMDemand = 0;
-                //StructuralNDemand = 0;
-                //MetabolicNDemand = 0;
-                //NonStructuralNDemand = 0;
                 PotentialStructuralDMAllocation = 0;
                 PotentialMetabolicDMAllocation = 0;
                 DMRetranslocated = 0;
