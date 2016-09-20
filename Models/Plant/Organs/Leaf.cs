@@ -450,7 +450,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
-        public double SpecificArea { get { return MathUtilities.Divide(LAI, Live.Wt * 1000000, 0); } }
+        public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
 
         /// <summary>Gets the growth duration of the cohort.</summary>
         [XmlIgnore]
