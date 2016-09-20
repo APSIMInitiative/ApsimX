@@ -2448,7 +2448,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-        <NFixationOption>Majic</NFixationOption>
+        <NFixationOption>Magic</NFixationOption>
          <Constant>
             <Name>DetachmentRateFunction</Name>
             <Value>0</Value>
