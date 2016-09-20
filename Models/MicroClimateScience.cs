@@ -254,6 +254,7 @@ namespace Models
                 }
                 Rin -= Rint;
             }
+            RadIntTotal = 1 - weather.Radn / Rin;
         }
 
         /// <summary>

@@ -31,6 +31,11 @@ namespace Models.PMF.Interfaces
     /// </remarks>
     public interface IArbitration
     {
+        /// <summary>
+        /// Name of this Organ
+        /// </summary>
+        string Name { get;}
+
         /// <summary>Sets the dm potential allocation.</summary>
         BiomassPoolType DMPotentialAllocation { set; }
 

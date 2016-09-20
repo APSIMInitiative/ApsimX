@@ -1295,7 +1295,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Husk</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1368,8 +1368,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMRetranslocationFactor</Name>
           <Value>0.1</Value>
         </Constant>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
@@ -1475,8 +1490,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1607,7 +1637,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Memo>
@@ -3953,7 +3998,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <TipsAtEmergence>0</TipsAtEmergence>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Spike</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -4057,8 +4102,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -4215,7 +4275,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

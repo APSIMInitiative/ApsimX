@@ -11,7 +11,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
-    public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class HIReproductiveOrgan : BaseOrgan
     {
         /// <summary>Gets or sets the above ground.</summary>
         [Link]

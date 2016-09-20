@@ -1776,7 +1776,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Panicle</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1876,8 +1876,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -2032,7 +2047,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Memo>

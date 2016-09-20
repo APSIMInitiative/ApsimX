@@ -45,6 +45,8 @@
           <string>[Soil].MultiPoreWater.Infiltration</string>
           <string>[Soil].MultiPoreWater.pond</string>
           <string>[Irrigation].IrrigationApplied</string>
+          <string>[Soil].MultiPoreWater.Eos</string>
+          <string>[Soil].MultiPoreWater.Es</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -164,6 +166,7 @@
               <double>1</double>
             </Y>
           </XYPairs>
+          <Salb>0.15</Salb>
           <PoreBounds>
             <double>3500</double>
             <double>2000</double>
@@ -181,6 +184,7 @@
           <CalculateDrainage>true</CalculateDrainage>
           <ReportDetail>false</ReportDetail>
           <IncludeSorption>true</IncludeSorption>
+          <TotalCover>0</TotalCover>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>
@@ -533,6 +537,9 @@
             <double>1</double>
           </kdul>
         </HydraulicProperties>
+        <Evapotranspiration>
+          <Name>Evapotranspiration</Name>
+        </Evapotranspiration>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -605,6 +612,7 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -1230,6 +1238,68 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>ES</Name>
+        <Series>
+          <Name>Eos</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.MultiPoreWater.Eos</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Es</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.MultiPoreWater.Es</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -1688,6 +1758,7 @@ namespace Models
                 <double>1</double>
               </Y>
             </XYPairs>
+            <Salb>0.15</Salb>
             <PoreBounds>
               <double>3500</double>
               <double>3059</double>
@@ -1705,6 +1776,7 @@ namespace Models
             <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <IncludeSorption>true</IncludeSorption>
+            <TotalCover>0</TotalCover>
             <ResidueWater>0</ResidueWater>
             <Hour>0</Hour>
             <ReportLayer>0</ReportLayer>
@@ -2057,6 +2129,9 @@ namespace Models
               <double>1</double>
             </kdul>
           </HydraulicProperties>
+          <Evapotranspiration>
+            <Name>Evapotranspiration</Name>
+          </Evapotranspiration>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -2129,6 +2204,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -3121,6 +3197,7 @@ namespace Models
                 <double>1</double>
               </Y>
             </XYPairs>
+            <Salb>0.15</Salb>
             <PoreBounds>
               <double>3500</double>
               <double>3059</double>
@@ -3138,6 +3215,7 @@ namespace Models
             <CalculateDrainage>true</CalculateDrainage>
             <ReportDetail>false</ReportDetail>
             <IncludeSorption>true</IncludeSorption>
+            <TotalCover>0</TotalCover>
             <ResidueWater>0</ResidueWater>
             <Hour>0</Hour>
             <ReportLayer>0</ReportLayer>
@@ -3490,6 +3568,9 @@ namespace Models
               <double>1</double>
             </kdul>
           </HydraulicProperties>
+          <Evapotranspiration>
+            <Name>Evapotranspiration</Name>
+          </Evapotranspiration>
           <RecordNumber>0</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Black</ASCSubOrder>
@@ -3562,6 +3643,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>

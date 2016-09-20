@@ -14,7 +14,7 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
-    public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class ReproductiveOrgan : BaseOrgan
     {
         #region Parameter Input Classes
         /// <summary>The phenology</summary>
@@ -90,7 +90,6 @@ namespace Models.PMF.Organs
         public double MaximumSize { get; set; }
 
         /// <summary>Gets the live f wt.</summary>
-        /// <value>The live f wt.</value>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -104,7 +103,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the size.</summary>
-        /// <value>The size.</value>
         [Units("g")]
         public double Size
         {
@@ -118,7 +116,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the size of the f.</summary>
-        /// <value>The size of the f.</value>
         [Units("g")]
         private double FSize
         {
@@ -137,7 +134,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the ready for harvest.</summary>
-        /// <value>The ready for harvest.</value>
         public int ReadyForHarvest
         {
             get
@@ -256,7 +252,6 @@ namespace Models.PMF.Organs
 
         }
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -265,8 +260,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
-        /// <exception cref="System.Exception">Invalid allocation of potential DM in + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -280,7 +273,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -291,7 +283,6 @@ namespace Models.PMF.Organs
                 GrowthRespiration += value.Structural *(1- DMConversionEfficiency);
                 Live.StructuralWt += value.Structural * DMConversionEfficiency; } }
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -302,7 +293,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -311,7 +301,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
         public double MaxNconc
         {
             get
@@ -320,7 +309,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
         public override double MinNconc
         {
             get

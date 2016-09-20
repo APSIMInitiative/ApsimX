@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -313,6 +313,7 @@ The model predicts development of primordia on the apex of the main stem and app
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <OnEventFunction>
           <Name>FloweringDAS</Name>
@@ -483,6 +484,7 @@ A function is used to provide maturity date as days after sowing(DAS).
             <VariableName>[Phenology].JuvenileToFloralInit.Target.Value</VariableName>
           </VariableReference>
         </AddFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -956,10 +958,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-So
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
           <XYPairs>
@@ -1079,7 +1081,9 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>m/g</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <SimpleLeaf>
         <Name>Leaf</Name>
@@ -1091,20 +1095,26 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1.0</Value>
+          <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
-		<Constant>
-          <Name>InitialDM</Name>
-          <Value>0.0</Value>
-          <Units>g/plant</Units>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <Constant>
+          <Name>LaiDeadFunction</Name>
+          <Value>0</Value>
+          <Units>m^2/m^2</Units>
         </Constant>
-    <Constant>
-      <Name>LaiDeadFunction</Name>
-      <Value>0.0</Value>
-      <Units>m^2/m^2</Units>
-    </Constant>
-
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -1492,7 +1502,6 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-        <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1506,13 +1515,15 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <K>0</K>
         <KDead>0.03</KDead>
-        <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
+		        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+        </Constant>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Rachis</Name>
         <MultiplyFunction>
           <Name>CobNumber</Name>
@@ -1612,10 +1623,25 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <End>Flowering</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1695,9 +1721,24 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Value>0</Value>
           </Constant>
         </MaximumFunction>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Cultivar>
         <Name>Buster</Name>
         <Command />
@@ -2229,7 +2270,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>1.5</SummerU>
               <SummerCona>6.5</SummerCona>
@@ -2270,6 +2310,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -2508,6 +2549,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Plant>
             <Name>Sorghum</Name>

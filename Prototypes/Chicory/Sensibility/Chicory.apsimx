@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -85,6 +85,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <Model xsi:type="VernalisationC">
           <Name>Vernalisation</Name>
@@ -250,6 +251,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <FractionComplete>0</FractionComplete>
           <PhaseNameToGoto>Vegetative</PhaseNameToGoto>
         </GotoPhase>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <MultiplyFunction>
         <Name>MortalityRate</Name>
@@ -464,24 +466,26 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Memo>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1.0</Value>
+          <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0.005</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <Constant>
-          <Name>InitialDM</Name>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[Represents all leaves in the plant.]]></MemoText>
-          </Memo>
-          <Value>0.005</Value>
-          <Units>g/plant</Units>
+          <Name>LaiDeadFunction</Name>
+          <Value>0</Value>
+          <Units>m^2/m^2</Units>
         </Constant>
-    <Constant>
-      <Name>LaiDeadFunction</Name>
-      <Value>0.0</Value>
-      <Units>m^2/m^2</Units>
-    </Constant>
-
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -829,7 +833,6 @@ DM demand is based on ...
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-        <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -843,13 +846,11 @@ DM demand is based on ...
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <K>0</K>
         <KDead>0</KDead>
-        <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </SimpleLeaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Description</Name>
@@ -1076,10 +1077,25 @@ DM demand is based on ...
           </Memo>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Inflorescence</Name>
         <Memo>
           <Name>Description</Name>
@@ -1255,9 +1271,24 @@ DM demand is based on ...
           </Memo>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <Memo>
@@ -1543,9 +1574,11 @@ No effect of soil water content on root growth is currently captured in the mode
           <Value>0</Value>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
-      <GenericBelowGroundOrgan>
+      <GenericOrgan>
         <Name>Taproot</Name>
         <Memo>
           <Name>Description</Name>
@@ -1708,9 +1741,24 @@ No effect of soil water content on root growth is currently captured in the mode
           </Memo>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericBelowGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
         <Propertys>
@@ -3307,6 +3355,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -3532,7 +3581,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>21-Sep</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -3567,6 +3615,7 @@ namespace Models
               <double>0.8</double>
               <double>0.8</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -3711,6 +3760,7 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
           <DataSource>Based primarily on Close et al, 2003</DataSource>
         </Soil>
         <Report>
@@ -8546,6 +8596,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -8731,7 +8782,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>21-Mar</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -8762,6 +8812,7 @@ namespace Models
               <double>0.5</double>
               <double>0.5</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8890,6 +8941,7 @@ namespace Models
           <NaturalVegetation>Forest</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
           <DataSource>National Cooperative Soil Survey, US</DataSource>
           <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
         </Soil>
@@ -10200,6 +10252,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
@@ -10385,7 +10438,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -10416,6 +10468,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -10544,6 +10597,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>
@@ -14636,6 +14690,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
@@ -14821,7 +14876,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -14852,6 +14906,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -14980,6 +15035,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>
@@ -15563,6 +15619,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <SurfaceOrganicMatter>
               <Name>SurfaceOrganicMatter</Name>
@@ -15748,7 +15805,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Mar</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -15779,6 +15835,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -15907,6 +15964,7 @@ namespace Models
               <NaturalVegetation>Forest</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
               <DataSource>National Cooperative Soil Survey, US</DataSource>
               <Comments>Generic soil description based on data of the same sol type from different locations</Comments>
             </Soil>

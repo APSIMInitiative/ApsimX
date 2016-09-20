@@ -335,6 +335,10 @@ namespace Models
             get { return netLongWave; }
         }
 
+        /// <summary>The proportion of radiation that is intercepted by all canopies</summary>
+        [Description("The proportion of radiation that is intercepted by all canopies")]
+        [Units("0-1")]
+        public double RadIntTotal { get; set; }
 
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
