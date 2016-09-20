@@ -921,22 +921,42 @@ namespace Models.Soils
                         UpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
                 }
                 double NetDiffusion = UpwardDiffusion - DownwardDiffusion;
-                if (NetDiffusion > 0)
-                for (int c = PoreCompartments - 1; c >= 0; c--)
-                {//Step through each pore, from smallest to largest and distribute inward diffusion
-                    double PoreDiffusion = Math.Min(Pores[l][c].AirDepth, NetDiffusion);
-                    Pores[l][c].WaterDepth += PoreDiffusion;
-                    NetDiffusion -= PoreDiffusion;
+                if (NetDiffusion > 0) //Bring water into current layer and remove from layer below
+                {
+                    DistributeInwardDiffusion(l, NetDiffusion);
+                    if (l <= ProfileLayers - 1)
+                        DistributeOutwardDiffusion(l + 1, NetDiffusion);
                 }
-                if (NetDiffusion < 0)
-                for (int c = 0; c < PoreCompartments; c++)
-                {//Step through each pore, from largest to smallest and remove outward diffusion
-                    double Porediffusion = Math.Min(Pores[l][c].WaterDepth, NetDiffusion);
-                    Pores[l][c].WaterDepth -= Porediffusion;
-                    NetDiffusion -= Porediffusion;
+                if (NetDiffusion < 0) //Take water out of current layer and place into layer below.
+                {
+                    if (l <= ProfileLayers - 1)
+                        DistributeOutwardDiffusion(l + 1, NetDiffusion);
+                    DistributeInwardDiffusion(l, NetDiffusion);
                 }
             }
             UpdateProfileValues();
+        }
+        private void DistributeInwardDiffusion(int l, double WaterToDiffuseIn)
+        {
+            for (int c = PoreCompartments - 1; (c >= 0 && WaterToDiffuseIn > 0); c--)
+            {//Step through each pore, from smallest to largest and distribute inward diffusion
+                double PoreDiffusionIn = Math.Min(Pores[l][c].AirDepth, WaterToDiffuseIn);
+                Pores[l][c].WaterDepth += PoreDiffusionIn;
+                WaterToDiffuseIn -= PoreDiffusionIn;
+            }
+            if (WaterToDiffuseIn > 0)
+                throw new Exception(this + " Error in diffusion in layer " + l);
+        }
+        private void DistributeOutwardDiffusion(int l, double WaterToDiffuseOut)
+        {
+            for (int c = 0; (c < PoreCompartments && WaterToDiffuseOut > 0); c++)
+            {//Step through each pore in the layer below from largest to smallest and remove upward diffusion
+                double PoreDiffusionOut = Math.Min(Pores[l][c].WaterDepth, WaterToDiffuseOut);
+                Pores[l][c].WaterDepth -= PoreDiffusionOut;
+                WaterToDiffuseOut -= PoreDiffusionOut;
+            }
+            if (WaterToDiffuseOut > 0)
+                throw new Exception(this + " Error in diffusion in layer " + l);
         }
 
         /// <summary>
