@@ -160,6 +160,7 @@
               <double>1</double>
             </Y>
           </XYPairs>
+          <Salb>0.15</Salb>
           <PoreBounds>
             <double>30598</double>
             <double>3059</double>
@@ -176,8 +177,8 @@
           <CalculateInfiltration>true</CalculateInfiltration>
           <CalculateDrainage>true</CalculateDrainage>
           <ReportDetail>true</ReportDetail>
-          <TimeSteps>0</TimeSteps>
           <IncludeSorption>false</IncludeSorption>
+          <TotalCover>0</TotalCover>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>
@@ -532,6 +533,9 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <Evapotranspiration>
+          <Name>Evapotranspiration</Name>
+        </Evapotranspiration>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -604,6 +608,7 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
