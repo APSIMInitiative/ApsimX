@@ -218,6 +218,7 @@ namespace Models.Core
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
         public Simulations()
         {
+            Version = APSIMFileConverter.LastestVersion;
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
