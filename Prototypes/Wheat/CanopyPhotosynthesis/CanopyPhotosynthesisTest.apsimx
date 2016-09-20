@@ -2020,7 +2020,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Spike</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -2151,8 +2151,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -2345,7 +2345,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

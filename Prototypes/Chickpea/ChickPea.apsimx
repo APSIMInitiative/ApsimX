@@ -1290,7 +1290,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Shell</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1421,7 +1421,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
         <CompositeBiomass>
@@ -2073,7 +2073,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Memo</Name>
@@ -2217,7 +2217,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PartitionFractionDemandFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+      </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
         <Biomass>

@@ -165,11 +165,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot.WindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0-unstable2100\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PdfSharp-gdi">
@@ -227,6 +227,7 @@
       <DependentUpon>UpgradeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
