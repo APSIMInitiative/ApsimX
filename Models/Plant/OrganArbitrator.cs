@@ -967,6 +967,8 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].DMSupply;
+                if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation+Supply.Retranslocation+Supply.Uptake, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative DM supply.  Check your parameterisation");
                 DM.ReallocationSupply[i] = Supply.Reallocation;
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
@@ -984,6 +986,12 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].DMDemand;
+                if (MathUtilities.IsLessThan(Demand.Structural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Structural DM demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural DM demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic DM demand.  Check your parameterisation");
                 DM.StructuralDemand[i] = Demand.Structural;
                 DM.MetabolicDemand[i] = Demand.Metabolic;
                 DM.NonStructuralDemand[i] = Demand.NonStructural;
@@ -1083,6 +1091,12 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
+                if (MathUtilities.IsLessThan(Demand.Structural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Structural N demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural N demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic N demand.  Check your parameterisation");
                 N.StructuralDemand[i] = Organs[i].NDemand.Structural;
                 N.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
                 N.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
