@@ -57,7 +57,7 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The detachment rate function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
@@ -453,28 +453,24 @@ namespace Models.PMF.Organs
                 Dead.StructuralN += Loss.StructuralN;
                 Dead.NonStructuralN += Loss.NonStructuralN;
 
-                double DetachedFrac = 0;
-                if (DetachmentRateFunction != null)
-                    DetachedFrac = DetachmentRateFunction.Value;
-                if (DetachedFrac > 0.0)
+                double DetachedFrac = DetachmentRateFunction.Value;
+                double detachingWt = Dead.Wt * DetachedFrac;
+                double detachingN = Dead.N * DetachedFrac;
+
+                Dead.StructuralWt *= (1 - DetachedFrac);
+                Dead.StructuralN *= (1 - DetachedFrac);
+                Dead.NonStructuralWt *= (1 - DetachedFrac);
+                Dead.NonStructuralN *= (1 - DetachedFrac);
+                Dead.MetabolicWt *= (1 - DetachedFrac);
+                Dead.MetabolicN *= (1 - DetachedFrac);
+
+                if (detachingWt > 0.0)
                 {
-                    double detachingWt = Dead.Wt * DetachedFrac;
-                    double detachingN = Dead.N * DetachedFrac;
-
-                    Dead.StructuralWt *= (1 - DetachedFrac);
-                    Dead.StructuralN *= (1 - DetachedFrac);
-                    Dead.NonStructuralWt *= (1 - DetachedFrac);
-                    Dead.NonStructuralN *= (1 - DetachedFrac);
-                    Dead.MetabolicWt *= (1 - DetachedFrac);
-                    Dead.MetabolicN *= (1 - DetachedFrac);
-
-                    if (detachingWt > 0.0)
-                    {
-                        DetachedWt += detachingWt;
-                        DetachedN += detachingN;
-                        SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
-                    }
+                    DetachedWt += detachingWt;
+                    DetachedN += detachingN;
+                    SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
                 }
+                
 
                 MaintenanceRespiration = 0;
                 //Do Maintenance respiration

@@ -1886,6 +1886,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2051,6 +2056,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>

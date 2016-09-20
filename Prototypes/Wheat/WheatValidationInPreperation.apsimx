@@ -1378,6 +1378,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Rachis</Name>
@@ -1494,6 +1499,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <GenericOrgan>
@@ -1636,6 +1646,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>
@@ -4097,6 +4112,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -4264,6 +4284,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>

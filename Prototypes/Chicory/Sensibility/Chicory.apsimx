@@ -1091,6 +1091,11 @@ DM demand is based on ...
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Inflorescence</Name>
@@ -1279,6 +1284,11 @@ DM demand is based on ...
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <Root>
@@ -1742,6 +1752,11 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>

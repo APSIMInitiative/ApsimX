@@ -2161,6 +2161,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2364,6 +2369,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>

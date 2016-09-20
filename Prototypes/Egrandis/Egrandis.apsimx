@@ -339,6 +339,10 @@
         <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+        </Constant>		
       </SimpleLeaf>
       <Root>
         <Name>Root</Name>
@@ -508,10 +512,6 @@
           <Name>MinimumNConc</Name>
           <Value>0.0014</Value>
         </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-        </Constant>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -529,6 +529,11 @@
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <Cultivar>
