@@ -164,9 +164,6 @@ namespace Models.PMF.Organs
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
         IFunction CoverFunction = null;
-        /// <summary>The nitrogen demand switch</summary>
-        [Link(IsOptional = true)]
-        IFunction NitrogenDemandSwitch = null;
 
         /// <summary>The lai function</summary>
         [Link(IsOptional = true)]
@@ -205,13 +202,10 @@ namespace Models.PMF.Organs
         #region States and variables
 
         /// <summary>Gets or sets the ep.</summary>
-        /// <value>The ep.</value>
         private double EP { get; set; }
         /// <summary>Gets or sets the k dead.</summary>
-        /// <value>The k dead.</value>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Gets or sets the water demand.</summary>
-        /// <value>The water demand.</value>
         [Units("mm")]
         public override double WaterDemand
         {
@@ -229,11 +223,9 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets the transpiration.</summary>
-        /// <value>The transpiration.</value>
         public double Transpiration { get { return EP; } }
 
         /// <summary>Gets the fw.</summary>
-        /// <value>The fw.</value>
         public double Fw
         {
             get
@@ -245,7 +237,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets the function.</summary>
-        /// <value>The function.</value>
         public double Fn
         {
             get
@@ -256,56 +247,31 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the lai dead.</summary>
-        /// <value>The lai dead.</value>
         public double LAIDead { get; set; }
 
 
         /// <summary>Gets the cover dead.</summary>
-        /// <value>The cover dead.</value>
-        public double CoverDead
-        {
-            get { return 1.0 - Math.Exp(-KDead * LAIDead); }
-        }
+        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+
         /// <summary>Gets the RAD int tot.</summary>
-        /// <value>The RAD int tot.</value>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
-        {
-            get
-            {
-                return CoverGreen * MetData.Radn;
-            }
-        }
+        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
         #endregion
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        /// <value>The water allocation.</value>
         public override double WaterAllocation { get { return EP; } set { EP += value; } }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                double Demand = DMDemandFunction.Value;
-                if (Math.Round(Demand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
-                return new BiomassPoolType { Structural = Demand };
-            }
-        }
+        public override BiomassPoolType DMDemand { get { return new BiomassPoolType { Structural = DMDemandFunction.Value }; } }
 
         /// <summary>Gets or sets the dm supply.</summary>
-        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                if (Math.Round(Photosynthesis.Value + AvailableDMRetranslocation(), 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
@@ -316,10 +282,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
-
             set
             {
                 // What is going on here?  Why no non-structural???
@@ -328,50 +292,23 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
             {
-                double StructuralDemand = 0;
-                double NDeficit = 0;
-
-                if (NitrogenDemandSwitch != null)
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-
-                StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                
-                if (Math.Round(StructuralDemand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
-                if (Math.Round(NDeficit, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative Non structural N Demand.  Check your parameterisation");
+                double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
+                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
         }
 
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// Invalid allocation of N
-        /// or
-        /// N allocated to Leaf left over after allocation
-        /// or
-        /// UnKnown Leaf N allocation problem
-        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
             {
-                // Allocation
-                if (value.Structural > 0)
-                {
-                    Live.StructuralN += value.Structural;
-                }
-                if (value.NonStructural > 0)
-                    Live.NonStructuralN += value.NonStructural;
-
+                Live.StructuralN += value.Structural;
+                Live.NonStructuralN += value.NonStructural;
             }
         }
 
