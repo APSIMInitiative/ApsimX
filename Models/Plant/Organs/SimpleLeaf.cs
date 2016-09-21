@@ -297,6 +297,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected override void OnDoDailyInitialisation(object sender, EventArgs e)
         {
+            base.DoDailyCleanup();
+
             if (Phenology != null)
                 if (Phenology.OnDayOf("Emergence"))
                    if (Structure != null)
