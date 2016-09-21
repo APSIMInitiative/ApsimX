@@ -264,12 +264,12 @@ namespace Models.PMF
         /// <param name="scalar">a.</param>
         public void Multiply(double scalar)
         {
-            _StructuralWt += scalar;
-            _NonStructuralWt += scalar;
-            _MetabolicWt += scalar;
-            _StructuralN += scalar;
-            _NonStructuralN += scalar;
-            _MetabolicN += scalar;
+            _StructuralWt *= scalar;
+            _NonStructuralWt *= scalar;
+            _MetabolicWt *= scalar;
+            _StructuralN *= scalar;
+            _NonStructuralN *= scalar;
+            _MetabolicN *= scalar;
         }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
