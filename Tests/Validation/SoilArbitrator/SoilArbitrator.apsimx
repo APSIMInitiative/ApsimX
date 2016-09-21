@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -506,6 +506,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
@@ -996,6 +997,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
@@ -1526,6 +1528,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
@@ -2705,6 +2708,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Slurp1</Name>
@@ -2941,18 +2945,18 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>SenescenceRate</Name>
               <Value>0</Value>
             </Constant>
-			<MultiplyFunction>
-          <Name>InitialWtFunction</Name>
-          <Constant>
-            <Name>InitialPlantWt</Name>
-            <Value>0</Value>
-            <Units>g/plant</Units>
-          </Constant>
-          <VariableReference>
-            <Name>Population</Name>
-            <VariableName>[Plant].Population</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>InitialWtFunction</Name>
+              <Constant>
+                <Name>InitialPlantWt</Name>
+                <Value>0</Value>
+                <Units>g/plant</Units>
+              </Constant>
+              <VariableReference>
+                <Name>Population</Name>
+                <VariableName>[Plant].Population</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
               <Value>0</Value>
@@ -3385,19 +3389,18 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-
-			<MultiplyFunction>
-          <Name>InitialWtFunction</Name>
-          <Constant>
-            <Name>InitialPlantWt</Name>
-            <Value>0</Value>
-            <Units>g/plant</Units>
-          </Constant>
-          <VariableReference>
-            <Name>Population</Name>
-            <VariableName>[Plant].Population</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
+            <MultiplyFunction>
+              <Name>InitialWtFunction</Name>
+              <Constant>
+                <Name>InitialPlantWt</Name>
+                <Value>0</Value>
+                <Units>g/plant</Units>
+              </Constant>
+              <VariableReference>
+                <Name>Population</Name>
+                <VariableName>[Plant].Population</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
             <Constant>
               <Name>LaiDeadFunction</Name>
               <Value>0</Value>
