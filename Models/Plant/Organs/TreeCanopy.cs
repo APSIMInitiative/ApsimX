@@ -15,6 +15,11 @@ namespace Models.PMF.Organs
     [Serializable]
     public class TreeCanopy : GenericOrgan, AboveGround, ICanopy
     {
+
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
+
         #region Canopy interface
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }

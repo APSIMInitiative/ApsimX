@@ -23,6 +23,10 @@ namespace Models.PMF.Organs
     [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : BaseOrgan, ICanopy, ILeaf
     {
+
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>

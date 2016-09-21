@@ -51,6 +51,10 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
     {
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
+
         #region Leaf Interface
         /// <summary>
         /// 
@@ -297,7 +301,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected override void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            base.DoDailyCleanup();
+            base.OnDoDailyInitialisation(sender,e);
 
             if (Phenology != null)
                 if (Phenology.OnDayOf("Emergence"))
