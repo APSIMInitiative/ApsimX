@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using Models.PMF.Functions;
-using Models.PMF.Functions.SupplyFunctions;
-using System.Xml.Serialization;
-using Models.PMF.Interfaces;
-using Models.Interfaces;
-using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
+using System;
 
 namespace Models.PMF.Organs
 {
@@ -203,8 +198,6 @@ namespace Models.PMF.Organs
 
         #region States and variables
 
-        /// <summary>Gets or sets the ep.</summary>
-        private double EP { get; set; }
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Gets or sets the water demand.</summary>
@@ -220,10 +213,10 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets the transpiration.</summary>
-        public double Transpiration { get { return EP; } }
+        public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(EP, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -244,7 +237,7 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public override double WaterAllocation { get { return EP; } set { EP += value; } }
+        public override double WaterAllocation { get; set; }
         
         /// <summary>Gets or sets the dm demand.</summary>
         public override BiomassPoolType DMDemand
@@ -286,42 +279,10 @@ namespace Models.PMF.Organs
 
         #region Events
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            base.OnDoDailyInitialisation(sender,e);
-
-            if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
-                   if (Structure != null)
-                        Structure.LeafTipsAppeared = 1.0;
-            EP = 0;
-        }
         #endregion
 
         #region Component Process Functions
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private new void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == Plant)
-                Clear();
-        }
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
