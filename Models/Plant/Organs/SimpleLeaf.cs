@@ -190,12 +190,10 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-        /// <summary>TE Function</summary>
+        /// <summary>Water Demand Function</summary>
         [Link(IsOptional = true)]
-        IFunction TranspirationEfficiency = null;
-        /// <summary></summary>
-        [Link(IsOptional = true)]
-        IFunction SVPFrac = null;
+        IFunction WaterDemandFunction = null;
+
 
         #endregion
 
@@ -211,15 +209,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (SVPFrac != null && TranspirationEfficiency != null)
-                {
-                    double svpMax = MetUtilities.svp(MetData.MaxT) * 0.1;
-                    double svpMin = MetUtilities.svp(MetData.MinT) * 0.1;
-                    double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
-
-                    return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001);
-                }
-                return PotentialEP;
+                if (WaterDemandFunction != null)
+                    return WaterDemandFunction.Value;
+                else
+                    return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
@@ -250,7 +243,15 @@ namespace Models.PMF.Organs
         public override double WaterAllocation { get { return EP; } set { EP += value; } }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand { get { return new BiomassPoolType { Structural = DMDemandFunction.Value }; } }
+        public override BiomassPoolType DMDemand
+        {
+            get
+            {
+                StructuralDMDemand = DMDemandFunction.Value;
+                NonStructuralDMDemand = 0;
+                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
+            }
+        }
 
         /// <summary>Gets or sets the dm supply.</summary>
         public override BiomassSupplyType DMSupply
@@ -266,18 +267,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                // What is going on here?  Why no non-structural???
-                // This needs to be checked!
-                Live.StructuralWt += value.Structural;
-                if (value.NonStructural > 0)
-                    throw new Exception("Whoops - why is non structural DM allocation non zero");
-            }
-        }
         /// <summary>Gets or sets the n demand.</summary>
         public override BiomassPoolType NDemand
         {
