@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
-using System.Reflection;
-
 using Models.Core;
 using System.Xml.Serialization;
 
@@ -23,13 +19,6 @@ namespace Models.PMF
         public string[] Propertys {get; set;}
 
         /// <summary>Update this biomass object.</summary>
-        /// <exception cref="System.Exception">
-        /// Cannot find:  + PropertyName +  in composite biomass:  + this.Name
-        /// or
-        /// Elements in the array:  + PropertyName +  are not Biomass objects in composition biomass:  + this.Name
-        /// or
-        /// Property:  + PropertyName +  is not a Biomass object in composition biomass:  + this.Name
-        /// </exception>
         public void Update()
         {
             base.Clear();
