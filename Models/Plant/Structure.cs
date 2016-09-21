@@ -210,6 +210,10 @@ namespace Models.PMF
         /// <summary>The leaf</summary>
         [Link]
         ILeaf Leaf = null;
+        /// <summary> Phenology model</summary>
+        [Link]
+        Phenology Phenology = null;
+
         #endregion
 
         #region Parameters
@@ -381,6 +385,16 @@ namespace Models.PMF
         {
             DeltaPlantPopulation = 0;
             ProportionPlantMortality = 0;
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Phenology != null && Phenology.OnDayOf("Emergence"))
+                     LeafTipsAppeared = 1.0;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

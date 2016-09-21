@@ -23,6 +23,10 @@ namespace Models.PMF.Organs
     [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : BaseOrgan, ICanopy, ILeaf
     {
+
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
@@ -320,13 +324,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets a value indicating whether [cohorts initialised].
         /// </summary>
-        public bool CohortsInitialised
-        {
-            get
-            {
-                return Leaves.Count > 0;
-            }
-        }
+        public bool CohortsInitialised { get { return Leaves.Count > 0; } }
 
         /// <summary>The maximum cover</summary>
         [Description("Max cover")]
@@ -456,16 +454,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
-        public double SpecificArea
-        {
-            get
-            {
-                if (Live.Wt > 0)
-                    return LAI / Live.Wt * 1000000;
-                else
-                    return 0;
-            }
-        }
+        public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
 
         /// <summary>Gets the growth duration of the cohort.</summary>
         [XmlIgnore]
@@ -613,10 +602,7 @@ namespace Models.PMF.Organs
             {
                 double LLA = 0;
                 foreach (LeafCohort L in Leaves)
-                {
                     LLA = Math.Max(LLA, L.MaxArea);
-                }
-
                 return LLA;
             }
         }
@@ -787,13 +773,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
-        public double LiveNConc
-        {
-            get
-            {
-                return Live.NConc;
-            }
-        }
+        public double LiveNConc { get { return Live.NConc; } }
 
         /// <summary>Gets the potential growth.</summary>
         [Units("g/m^2")]
@@ -818,18 +798,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw
-        {
-            get
-            {
-                double F = 0;
-                if (WaterDemand > 0)
-                    F = WaterAllocation / WaterDemand;
-                else
-                    F = 1;
-                return F;
-            }
-        }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]

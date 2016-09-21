@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
@@ -185,15 +185,14 @@
             <VariableName>[Plant].Population</VariableName>
           </VariableReference>
         </MultiplyFunction>
-    <Constant>
-      <Name>LaiDeadFunction</Name>
-      <Value>0.0</Value>
-      <Units>m^2/m^2</Units>
-    </Constant>
-
+        <Constant>
+          <Name>LaiDeadFunction</Name>
+          <Value>0</Value>
+          <Units>m^2/m^2</Units>
+        </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1.0</Value>
+          <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
@@ -287,6 +286,14 @@
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+        </Constant>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -318,9 +325,12 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-        <BiomassYesterday>0</BiomassYesterday>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -334,15 +344,9 @@
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <K>0</K>
         <KDead>0</KDead>
-        <DeltaBiomass>0</DeltaBiomass>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-        </Constant>		
       </SimpleLeaf>
       <Root>
         <Name>Root</Name>
@@ -505,6 +509,11 @@
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.0015</Value>
         </Constant>
@@ -518,23 +527,23 @@
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <Cultivar>
         <Name>EGrandis</Name>
@@ -913,6 +922,7 @@
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -977,6 +987,7 @@
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
@@ -2122,6 +2133,7 @@
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -2186,6 +2198,7 @@
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
@@ -4746,6 +4759,7 @@
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -4810,6 +4824,7 @@
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
