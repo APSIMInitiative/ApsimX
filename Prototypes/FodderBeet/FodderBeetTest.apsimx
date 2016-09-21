@@ -963,6 +963,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>

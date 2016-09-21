@@ -2933,7 +2933,14 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-
+            <Constant>
+              <Name>NReallocationFactor</Name>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>SenescenceRate</Name>
+              <Value>0</Value>
+            </Constant>
 			<MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>

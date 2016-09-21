@@ -313,6 +313,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
         <PotentialSizeDemandFunction>
           <Name>DMDemandFunction</Name>
           <LinearInterpolationFunction>
