@@ -70,7 +70,8 @@ namespace Models.PMF.Organs
 
         #region Class Fields
         /// <summary>The ripe stage</summary>
-        public string RipeStage = "";
+        [Description("Stage at which this organ becomes ripe")]
+        public string RipeStage { get; set; }
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
         /// <summary>The potential dm allocation</summary>
@@ -200,15 +201,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event handlers
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
 
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
