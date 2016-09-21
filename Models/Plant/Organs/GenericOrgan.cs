@@ -382,16 +382,38 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
+                Biomass Loss = new Biomass();
+                Loss.StructuralWt = Live.StructuralWt * SenescenceRate.Value;
+                Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate.Value;
+                Loss.StructuralN = Live.StructuralN * SenescenceRate.Value;
+                Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate.Value;
+
+                Live.StructuralWt -= Loss.StructuralWt;
+                Live.NonStructuralWt -= Loss.NonStructuralWt;
+                Live.StructuralN -= Loss.StructuralN;
+                Live.NonStructuralN -= Loss.NonStructuralN;
+
+                Dead.StructuralWt += Loss.StructuralWt;
+                Dead.NonStructuralWt += Loss.NonStructuralWt;
+                Dead.StructuralN += Loss.StructuralN;
+                Dead.NonStructuralN += Loss.NonStructuralN;
                 
-                Biomass Loss = Live * SenescenceRate.Value;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
+                //Biomass Loss = Live * SenescenceRate.Value;
+                //Live.Subtract(Loss);
+                //Dead.Add(Loss);
 
                 double DetachedFrac = DetachmentRateFunction.Value;
                 double detachingWt = Dead.Wt * DetachedFrac;
                 double detachingN = Dead.N * DetachedFrac;
 
-                Dead.Multiply(1 - DetachedFrac);
+                Dead.StructuralWt *= (1 - DetachedFrac);
+                Dead.StructuralN *= (1 - DetachedFrac);
+                Dead.NonStructuralWt *= (1 - DetachedFrac);
+                Dead.NonStructuralN *= (1 - DetachedFrac);
+                Dead.MetabolicWt *= (1 - DetachedFrac);
+                Dead.MetabolicN *= (1 - DetachedFrac);
+				
+                //Dead.Multiply(1 - DetachedFrac);
 
                 if (detachingWt > 0.0)
                 {
