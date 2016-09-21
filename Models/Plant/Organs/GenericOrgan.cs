@@ -53,18 +53,20 @@ namespace Models.PMF.Organs
 
         #region Class Parameter Function Links
         /// <summary>The senescence rate function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
+
         /// <summary>The detachment rate function</summary>
         [Link]
         [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
         /// <summary>The n reallocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction NReallocationFactor = null;
+
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
@@ -109,8 +111,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States
-        /// <summary>The senescence rate</summary>
-        private double mySenescenceRate = 0;
         /// <summary>The start n retranslocation supply</summary>
         private double StartNRetranslocationSupply = 0;
         /// <summary>The start n reallocation supply</summary>
@@ -131,7 +131,6 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             base.Clear();
-            mySenescenceRate = 0;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             PotentialDMAllocation = 0;
@@ -267,12 +266,7 @@ namespace Models.PMF.Organs
         /// <returns>DM available to reallocate</returns>
         public double AvailableNReallocation()
         {
-            if (NReallocationFactor != null)
-                return mySenescenceRate * StartLive.NonStructuralN * NReallocationFactor.Value;
-            else
-            { //Default of 0 means reallocation is always turned off!!!!
-                return 0.0;
-            }
+            return SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
         }
 
         /// <summary>Sets the dm allocation.</summary>
@@ -365,10 +359,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                mySenescenceRate = 0;
-                if (SenescenceRate != null) //Default of zero means no senescence
-                    mySenescenceRate = SenescenceRate.Value;
-
                 //Initialise biomass and nitrogen
                 if (Live.Wt == 0)
                 {
@@ -393,10 +383,10 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 Biomass Loss = new Biomass();
-                Loss.StructuralWt = Live.StructuralWt * mySenescenceRate;
-                Loss.NonStructuralWt = Live.NonStructuralWt * mySenescenceRate;
-                Loss.StructuralN = Live.StructuralN * mySenescenceRate;
-                Loss.NonStructuralN = Live.NonStructuralN * mySenescenceRate;
+                Loss.StructuralWt = Live.StructuralWt * SenescenceRate.Value;
+                Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate.Value;
+                Loss.StructuralN = Live.StructuralN * SenescenceRate.Value;
+                Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate.Value;
 
                 Live.StructuralWt -= Loss.StructuralWt;
                 Live.NonStructuralWt -= Loss.NonStructuralWt;
