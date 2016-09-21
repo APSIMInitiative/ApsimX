@@ -383,7 +383,12 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 Biomass Loss = Live * SenescenceRate.Value;
-                Live.Subtract(Loss);
+                //Live.Subtract(Loss);
+
+                Live.StructuralWt -= Loss.StructuralWt;
+                Live.NonStructuralWt -= Loss.NonStructuralWt;
+                Live.StructuralN -= Loss.StructuralN;
+                Live.NonStructuralN -= Loss.NonStructuralN;
 
                 Dead.StructuralWt += Loss.StructuralWt;
                 Dead.NonStructuralWt += Loss.NonStructuralWt;
