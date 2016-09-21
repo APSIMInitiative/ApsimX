@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1325,7 +1325,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
-	      <Units>/d</Units>
+          <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -1434,13 +1434,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0.7</Value>
           <Units>g/g</Units>
         </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -2250,15 +2250,15 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
-	      <Units>/d</Units>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -2406,6 +2406,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Memo>
@@ -2456,14 +2460,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>g/m^2</Units>
         </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <NFixationOption>Magic</NFixationOption>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -3324,6 +3328,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -4329,6 +4334,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -6670,6 +6676,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -7932,6 +7939,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -8732,6 +8740,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -9539,6 +9548,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -10312,6 +10322,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -11072,6 +11083,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -12156,6 +12168,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -13039,6 +13052,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -13693,6 +13707,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -14496,6 +14511,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -16018,6 +16034,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -17504,6 +17521,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -18965,6 +18983,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -20377,6 +20396,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -21357,6 +21377,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -22392,6 +22413,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -23401,6 +23423,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -24498,6 +24521,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -25446,6 +25470,7 @@ Several minimal datasets are available with only flowering dates for a ranges of
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -26178,6 +26203,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -26903,6 +26929,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -27628,6 +27655,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -28551,6 +28579,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -29321,6 +29350,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -30027,6 +30057,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -30839,6 +30870,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -31651,6 +31683,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -32463,6 +32496,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -33254,6 +33288,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -34573,6 +34608,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -36476,6 +36512,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -37617,6 +37654,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -39003,6 +39041,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
