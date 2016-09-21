@@ -1491,6 +1491,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>OrganPopulation</Name>
         <VariableName>[Rachis].CobNumber.Value</VariableName>
       </VariableReference>
+      <Constant>
+        <Name>SenescenceRate</Name>
+        <Value>0</Value>
+		<Units>/d</Units>
+      </Constant>	  
       <LinearInterpolationFunction>
         <Name>ExpansionStress</Name>
         <XYPairs>
@@ -1673,6 +1678,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Value>1</Value>
       <Units>g/g</Units>
     </Constant>
+    <Constant>
+      <Name>SenescenceRate</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
+    </Constant>	  
     <Constant>
       <Name>MinimumNConc</Name>
       <Value>0.003</Value>
@@ -1917,7 +1927,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>0</Value>
             <Units>/d</Units>
          </Constant>
-      </GenericOrgan>
+		  <Constant>
+			<Name>SenescenceRate</Name>
+			<Value>0</Value>
+			<Units>/d</Units>
+		  </Constant>
+    </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <Memo>
