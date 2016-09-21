@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Models.Lifecycle
 {
     /// <summary>
-    /// 
+    /// A lifestage is a developmental segment of a lifecycle. It contains cohorts.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -40,7 +40,7 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// Return the count of cohorts in this Lifestage
         /// </summary>
         public int CohortCount
         {
@@ -114,6 +114,7 @@ namespace Models.Lifecycle
                 Cohort newCohort = destStage.NewCohort();
                 newCohort.ChronoAge = srcCohort.ChronoAge;
                 newCohort.PhenoAge = 0;
+                newCohort.PhysiologicalAge = 0;
                 newCohort.Count = count;
                 srcCohort.Count = srcCohort.Count - count;
             }
@@ -151,6 +152,7 @@ namespace Models.Lifecycle
                     newCohort = destStage.NewCohort();
                 newCohort.ChronoAge = 0;
                 newCohort.PhenoAge = 0;
+                newCohort.PhysiologicalAge = 0;
                 newCohort.Count += count;
             }
             else
@@ -159,7 +161,7 @@ namespace Models.Lifecycle
             }
         }
         /// <summary>
-        /// 
+        /// Construct a new cohort, add it to the list and return a reference to it.
         /// </summary>
         /// <returns></returns>
         public Cohort NewCohort()
@@ -181,7 +183,7 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// Cleanup the list of cohorts by removing any that have no population.
         /// </summary>
         public void RemoveEmptyCohorts()
         {

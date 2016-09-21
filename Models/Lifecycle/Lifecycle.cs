@@ -5,7 +5,7 @@ using Models.Core;
 namespace Models.Lifecycle
 {
     /// <summary>
-    /// A lifecycle that contains lifestages. This lifecycle manages a list of cohorts.
+    /// A lifecycle that contains lifestages. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -20,7 +20,7 @@ namespace Models.Lifecycle
         public List<Lifestage> ChildStages = null;
 
         /// <summary>
-        /// 
+        /// Current Lifestage being processed.
         /// </summary>
         public Lifestage CurrentLifestage { get; set; }
 
@@ -33,9 +33,9 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
-        /// 
+        /// Population of the initial cohort at each lifestage. e.g. [2,6,3]
         /// </summary>
-        [Description("init stages")]
+        [Description("Initial population at each lifestage")]
         public double[] InitialPopulation { get; set; }
 
         /// <summary>
