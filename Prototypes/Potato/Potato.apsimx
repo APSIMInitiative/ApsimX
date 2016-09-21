@@ -288,7 +288,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <InitialiseStage>Emergence</InitialiseStage>
         <PrimaryBudNo>2.2</PrimaryBudNo>
       </Structure>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Tuber</Name>
         <LinearInterpolationFunction>
           <Name>NitrogenDemandSwitch</Name>
@@ -313,6 +313,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
         <PotentialSizeDemandFunction>
           <Name>DMDemandFunction</Name>
           <LinearInterpolationFunction>
@@ -457,7 +461,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+	<Constant>
+	  <Name>SenescenceRate</Name>
+	  <Value>0</Value>
+	  <Units>/d</Units>
+	</Constant>
+      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
@@ -523,6 +547,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>MaxDailyNUptake</Name>
           <XYPairs>
@@ -1076,7 +1104,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <KDead>0.03</KDead>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
@@ -1156,7 +1184,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+	<Constant>
+	  <Name>SenescenceRate</Name>
+	  <Value>0</Value>
+	  <Units>/d</Units>
+	</Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

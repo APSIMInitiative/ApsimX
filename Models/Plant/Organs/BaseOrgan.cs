@@ -24,14 +24,6 @@ namespace Models.PMF.Organs
         
         /// <summary>The dead</summary>
         [Link] [DoNotDocument] public Biomass Dead = null;
-        
-        /// <summary>The clock</summary>
-        [Link]
-        public Clock Clock = null;
-
-        /// <summary>The met data</summary>
-        [Link]
-        public IWeather MetData = null;
 
         /// <summary>The plant</summary>
         [Link]
@@ -48,93 +40,58 @@ namespace Models.PMF.Organs
 
         #region Arbitration methods
         /// <summary>Gets or sets the dm supply.</summary>
-        /// <value>The dm supply.</value>
         [XmlIgnore]
         virtual public BiomassSupplyType DMSupply { get { return new BiomassSupplyType(); } set { } }
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
         [XmlIgnore]
         virtual public BiomassPoolType DMPotentialAllocation { set { } }
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
         [XmlIgnore]
         virtual public BiomassAllocationType DMAllocation { set { } }
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType DMDemand { get { return new BiomassPoolType(); } set { } }
         /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
-        /// <value>The efficiency.</value>
         [XmlIgnore]
         virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
         /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
         [XmlIgnore]
         virtual public BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } set { } }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
         [XmlIgnore]
         virtual public BiomassAllocationType NAllocation { set { } }
         /// <summary>Gets or sets the n fixation cost.</summary>
-        /// <value>The n fixation cost.</value>
         [XmlIgnore]
         virtual public double NFixationCost { get { return 0; } set { } }
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        [XmlIgnore]
-        virtual public double MaxNconc { get { return 0; } set { } }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
         [XmlIgnore]
-        virtual public double MinNconc { get { return 0; } set { } }
+        virtual public double MinNconc { get { return 0; } }
         #endregion
 
         #region Soil Arbitrator interface
-        /// <summary>Gets the nitrogne supply from the specified zone.</summary>
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
-        virtual public double[] NO3NSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets the ammonium uptake supply for the given nitrogen state.</summary>
-        /// <param name="zone">The zone</param>
-        virtual public double[] NH4NSupply(ZoneWaterAndN zone) { return null; }
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        {
+            NO3Supply = null;
+            NH4Supply = null;
+        }
 
         /// <summary>Gets or sets the water demand.</summary>
-        /// <value>The water demand.</value>
         [XmlIgnore]
         virtual public double WaterDemand { get { return 0; } set { } }
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
-        virtual public double WaterUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
-
-        /// <summary>Gets or sets the water uptake.</summary>
-        /// <value>The water uptake.</value>
-        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
-        [XmlIgnore]
-        virtual public double NUptake
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water uptake for " + Name); }
-        }
         
         /// <summary>Gets or sets the water allocation.</summary>
-        /// <value>The water allocation.</value>
-        /// <exception cref="System.Exception">Cannot set water allocation for  + Name</exception>
         [XmlIgnore]
         virtual public double WaterAllocation
         {
@@ -147,13 +104,10 @@ namespace Models.PMF.Organs
         virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="NO3NAmount">The NO3NAmount.</param>
-        /// <param name="NH4NAmount">The NH4NAmount.</param>
-        /// <param name="zoneName">zone name</param>
-        virtual public void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount, string zoneName) { }
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
 
         /// <summary>Gets the n supply uptake.</summary>
-        /// <value>The n supply uptake.</value>
         [Units("g/m^2")]
         virtual public double NSupplyUptake { get { return NSupply.Uptake; } }
         #endregion
@@ -168,25 +122,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
         public double Nconc { get { return N / Wt; } }
-
-        /// <summary>Gets the live structural dm (g/m2)</summary>
-        public double StructuralWt { get { return Live.StructuralWt; } }
-
-        /// <summary>Gets the live structural n (g/m2)</summary>
-        public double StructuralN { get { return Live.StructuralN; } }
-
-        /// <summary>Gets the live structural n conc (g/g)</summary>
-        public double StructuralNconc { get { return StructuralN / StructuralWt; } }
-
-        /// <summary>Gets the live NonStructural dm (g/m2)</summary>
-        public double NonStructuralWt { get { return Live.NonStructuralWt; } }
-
-        /// <summary>Gets the live NonStructural n (g/m2)</summary>
-        public double NonStructuralN { get { return Live.NonStructuralN; } }
-
-        /// <summary>Gets the live NonStructural n conc (g/g)</summary>
-        public double NonStructuralNconc { get { return NonStructuralN / NonStructuralWt; } }
-
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
@@ -205,12 +140,10 @@ namespace Models.PMF.Organs
         public double RemovedN { get; set; }
 
         /// <summary>Gets the dm supply photosynthesis.</summary>
-        /// <value>The dm supply photosynthesis.</value>
         [Units("g/m^2")]
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
-        /// <summary>
-        /// The amount of mass lost each day from maintenance respiration
-        /// </summary>
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         virtual public double MaintenanceRespiration { get { return 0; }  set { } }
 
         #endregion
@@ -295,19 +228,13 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>
-        /// Do harvest logic for this organ
-        /// </summary>
+        /// <summary>Do harvest logic for this organ</summary>
         virtual public void DoHarvest() { }
 
-        /// <summary>
-        /// Do Cutting logic for this organ
-        /// </summary>
+        /// <summary>Do Cutting logic for this organ</summary>
         virtual public void DoCut() { }
 
-        /// <summary>
-        /// Do Graze logic for this organ
-        /// </summary>
+        /// <summary>Do Graze logic for this organ</summary>
         virtual public void DoGraze() { }
 
         /// <summary>
@@ -337,9 +264,7 @@ namespace Models.PMF.Organs
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
                 if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
-                {
-                    // don't document.
-                }
+                { } // don't document.
                 else
                     child.Document(tags, headingLevel + 1, indent);
             }

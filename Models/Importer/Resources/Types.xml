@@ -1303,6 +1303,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="TEWaterDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="InternodeDemandFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

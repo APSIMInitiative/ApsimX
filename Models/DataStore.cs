@@ -960,14 +960,29 @@ namespace Models
         /// <exception cref="Models.Core.ApsimXException">Cannot find Simulations table</exception>
         private void AddSimulationIDColumnToTable(DataTable table)
         {
-            DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
-            if (idTable == null)
-                throw new ApsimXException(this, "Cannot find Simulations table");
-            List<double> ids = new List<double>();
-            ids.AddRange(DataTableUtilities.GetColumnAsDoubles(idTable, "ID"));
+            // Get a list of simulations that are in the DB
+            DataTable DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
+            List<string> simulationNamesInDB = DataTableUtilities.GetColumnAsStrings(DB, "Name").ToList();
 
-            List<string> simulationNames = new List<string>();
-            simulationNames.AddRange(DataTableUtilities.GetColumnAsStrings(idTable, "Name"));
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("BEGIN");
+
+            // For those simulations in 'table' that aren't in the DB, add them
+            // to the simulations table
+            List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
+            foreach (string simulationNameInTable in simulationNamesInTable)
+            {
+                if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+            }
+
+            // Tell SQLite that we're ending a transaction.
+            Connection.ExecuteNonQuery("END");
+
+            // Get a list of simulation names and IDs from DB
+            DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
+            List<double> ids = DataTableUtilities.GetColumnAsDoubles(DB, "ID").ToList();
+            simulationNamesInDB = DataTableUtilities.GetColumnAsStrings(DB, "Name").ToList();
 
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
             foreach (DataRow row in table.Rows)
@@ -975,16 +990,11 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = StringUtilities.IndexOfCaseInsensitive(simulationNames, simulationName);
-                    if (index != -1)
-                        row["SimulationID"] = ids[index];
+                    int index = StringUtilities.IndexOfCaseInsensitive(simulationNamesInDB, simulationName);
+                    if (index == -1)
+                        throw new Exception("Cannot find simulation name: " + simulationName);
                     else
-                    {
-                        int id = GetSimulationID(simulationName);
-                        ids.Add(id);
-                        simulationNames.Add(simulationName);
-                        row["SimulationID"] = id;
-                    }
+                        row["SimulationID"] = ids[index];
                 }
             }
         }

@@ -203,7 +203,7 @@ During this phase the plant has completed its growth and is drying ready for har
     <NArbitrationOption>RelativeAllocation</NArbitrationOption>
     <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
   </OrganArbitrator>
-  <GenericAboveGroundOrgan>
+  <GenericOrgan>
     <Name>Product</Name>
     <Memo>
       <Name>Description</Name>
@@ -223,6 +223,10 @@ During this phase the plant has completed its growth and is drying ready for har
       <Name>MinimumNConc</Name>
       <Value>0.008</Value>
     </Constant>
+    <Constant>
+      <Name>NReallocationFactor</Name>
+      <Value>0</Value>
+    </Constant>	
     <PartitionFractionDemandFunction>
       <Name>DMDemandFunction</Name>
       <PhaseLookup>
@@ -336,6 +340,11 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </Memo>
       <Value>0.46</Value>
     </Constant>
+    <Constant>
+      <Name>SenescenceRate</Name>
+      <Value>0</Value>
+	  <Units>/d</Units>
+    </Constant>
     <Folder>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -360,7 +369,30 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       </OrganBiomassRemovalType>
     </Folder>
     <BiomassRemovalDefaults />
-  </GenericAboveGroundOrgan>
+     <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <Value>1.0</Value>
+      <Units>0-1</Units>
+    </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
+		<Constant>
+		  <Name>SenescenceRate</Name>
+		  <Value>0</Value>
+		</Constant>    
+     <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
     <Memo>
@@ -376,6 +408,45 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
     <Biomass>
       <Name>Dead</Name>
     </Biomass>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
+		<Constant>
+		  <Name>SenescenceRate</Name>
+		  <Value>0</Value>
+		</Constant>     
+            <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1.0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+    <Constant>
+      <Name>LaiDeadFunction</Name>
+      <Value>0.0</Value>
+      <Units>m^2/m^2</Units>
+    </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
     <MultiplyFunction>
       <Name>Photosynthesis</Name>
       <DeltaFunction>
@@ -1140,6 +1211,14 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Name>MinimumNConc</Name>
       <Value>0</Value>
     </Constant>
+    <Constant>
+  <Name>NReallocationFactor</Name>
+  <Value>0</Value>
+</Constant>
+<Constant>
+  <Name>SenescenceRate</Name>
+  <Value>0</Value>
+</Constant> 
     <Folder>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1165,7 +1244,27 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     </Folder>
     <BiomassRemovalDefaults />
     <NFixationOption>None</NFixationOption>
-  </Nodule>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <Value>1.0</Value>
+      <Units>0-1</Units>
+    </Constant>
+    <Constant>
+      <Name>DMDemandFunction</Name>
+      <Value>0.0</Value>
+      <Units>g/m^2</Units>
+    </Constant>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <Value>0.0</Value>
+      <Units>g/m^2</Units>
+    </Constant>    
+     <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </Nodule>
   <CompositeBiomass>
     <Name>Total</Name>
     <Propertys>
@@ -1485,7 +1584,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Clover_1styear</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 2141.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 1159.0</Command>
@@ -1509,7 +1608,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Clover_2ndyear</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 1249.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 551.0</Command>
@@ -1533,7 +1632,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Dried_Beans</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 755.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 595.0</Command>
@@ -1557,7 +1656,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Dried_Peas</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 755.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 595.0</Command>
@@ -1581,7 +1680,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Green_Beans</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 782.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 568.0</Command>
@@ -1605,7 +1704,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Green_Peas</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 782.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 568.0</Command>
@@ -1677,7 +1776,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Lentils</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 755.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 595.0</Command>
@@ -1725,7 +1824,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Lupins</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = nan</Command>
     <Command>[Phenology].Senescing.Target.Value = 0</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = nan</Command>
@@ -1917,7 +2016,7 @@ The AboveGround composite biomass object includes Stover and Product organs.
   </Cultivar>
   <Cultivar>
     <Name>Oats_AutumnForage</Name>
-    <Command>[Nodule].NFixationOption = Majic</Command>
+    <Command>[Nodule].NFixationOption = Magic</Command>
     <Command>[Phenology].CanopyExpanding.Target.Value = 543.0</Command>
     <Command>[Phenology].Senescing.Target.Value = 600</Command>
     <Command>[Phenology].YieldIncreasing.Target.Value = 1857.0</Command>

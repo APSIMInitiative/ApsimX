@@ -9,13 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ApsimNG</RootNamespace>
     <AssemblyName>ApsimNG</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,9 +64,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\TreeProxyView.resx">
-      <DependentUpon>TreeProxyView.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
@@ -102,6 +99,7 @@
     <EmbeddedResource Include="Resources\Glade\FindAndReplace.glade" />
     <EmbeddedResource Include="Resources\Glade\MainView.glade" />
     <EmbeddedResource Include="Resources\Glade\UpgradeForm.glade" />
+    <EmbeddedResource Include="Resources\Glade\TreeProxyView.glade" />
     <None Include="Resources\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
@@ -130,7 +128,9 @@
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
+    <Compile Include="Commands\SaveApsimJob.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
+    <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\HoverPointArgs.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
@@ -230,9 +231,6 @@
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
-    <Compile Include="Views\TreeProxyView.Designer.cs">
-      <DependentUpon>TreeProxyView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\ViewBase.cs" />
     <Compile Include="Views\XYPairsView.cs" />
   </ItemGroup>
@@ -361,6 +359,7 @@
     <EmbeddedResource Include="Resources\Function.png" />
     <EmbeddedResource Include="Resources\Property.png" />
     <EmbeddedResource Include="Resources\help.png" />
+    <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -602,11 +601,11 @@
       <HintPath>Assemblies\Mono.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot.GtkSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.GtkSharp.1.0.0-unstable2100\lib\net45\OxyPlot.GtkSharp.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.GtkSharp.1.0.0\lib\net45\OxyPlot.GtkSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
@@ -625,12 +624,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\webkit-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

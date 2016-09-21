@@ -1284,6 +1284,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -2016,7 +2020,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Spike</Name>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -2067,6 +2071,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
+		<Constant>
+		  <Name>SenescenceRate</Name>
+		  <Value>0</Value>
+		  <Units>/d</Units>
+		</Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.003</Value>
@@ -2147,8 +2156,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Biomass>
           <Name>Live</Name>
@@ -2160,6 +2184,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
+		<Constant>
+		  <Name>SenescenceRate</Name>
+		  <Value>0</Value>
+		  <Units>/d</Units>
+		</Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -2341,7 +2370,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

@@ -765,10 +765,21 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </Leaf>
       <Root>
         <Name>Root</Name>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
@@ -813,6 +824,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>MinimumNConc</Name>
           <Value>0.005</Value>
         </Constant>
+		<Constant>
+		  <Name>MaximumRootDepth</Name>
+		  <Value>1000000</Value>
+		</Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>PreEmerge</Start>
@@ -942,12 +957,16 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <NuptakeSupply>0</NuptakeSupply>
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Bulb</Name>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
@@ -1040,8 +1059,28 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
-      <GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+	 <Constant>
+	   <Name>SenescenceRate</Name>
+	   <Value>0</Value>
+	   <Units>/d</Units>
+	 </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
         <Name>Petiole</Name>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -1147,7 +1186,22 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         </Folder>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+         <Constant>
+            <Name>InitialWtFunction</Name>
+            <Value>0</Value>
+            <Units>g/m^2</Units>
+         </Constant>
+         <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>1</Value>
+            <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+      </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
         <Propertys>

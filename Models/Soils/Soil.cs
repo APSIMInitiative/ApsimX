@@ -1469,6 +1469,38 @@ namespace Models.Soils
             }
             return CumThickness;
         }
+
+        /// <summary>Layers the index.</summary>
+        /// <param name="depth">The depth.</param>
+        /// <param name="thickness">Layer thicknesses</param>
+        public static int LayerIndexOfDepth(double depth, double[] thickness)
+        {
+            double CumDepth = 0;
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                CumDepth = CumDepth + thickness[i];
+                if (CumDepth >= depth) { return i; }
+            }
+            throw new Exception("Depth deeper than bottom of soil profile");
+        }
+
+        /// <summary>Returns the proportion that 'depth' is through the layer.</summary>
+        /// <param name="layerIndex">The layer index</param>
+        /// <param name="depth">The depth</param>
+        /// <param name="thickness">Layer thicknesses</param>
+        public static double ProportionThroughLayer(int layerIndex, double depth, double[] thickness)
+        {
+            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+            for (int i = 0; i <= layerIndex; i++)
+                depth_to_layer_bottom += thickness[i];
+
+            double depth_to_layer_top = depth_to_layer_bottom - thickness[layerIndex];
+            double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
+            double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
+
+            return depth_of_root_in_layer / thickness[layerIndex];
+        }
+
         /// <summary>Codes to meta data.</summary>
         /// <param name="Codes">The codes.</param>
         /// <returns></returns>

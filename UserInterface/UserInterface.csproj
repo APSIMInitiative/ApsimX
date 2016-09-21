@@ -75,7 +75,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\Bin\</OutputPath>
@@ -96,7 +96,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
@@ -173,11 +173,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OxyPlot.WindowsForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
-      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0-unstable2100\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.WindowsForms.1.0.0\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PdfSharp-gdi">
@@ -213,6 +213,7 @@
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
+    <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Commands\DeleteModelCommand.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
+    <Compile Include="Commands\SaveApsimJob.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
@@ -234,6 +236,7 @@
       <DependentUpon>UpgradeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
@@ -915,6 +918,7 @@
     <EmbeddedResource Include="Resources\LargeImages\BiomassRemoval.png" />
     <EmbeddedResource Include="Resources\LargeImages\EGrandis.png" />
     <EmbeddedResource Include="Resources\LargeImages\Fieldpea.png" />
+    <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>

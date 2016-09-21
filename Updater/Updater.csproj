@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>..\Bin\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,7 +59,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAnyCPU|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>..\Bin\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
