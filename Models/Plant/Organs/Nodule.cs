@@ -49,10 +49,6 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double RespiredWt { get; set; }
-        /// <summary>The property fixation demand</summary>
-        [Units("0-1")]
-        [XmlIgnore]
-        public double PropFixationDemand { get; set; }
         /// /// <summary>Gets the n fixed.</summary>
         /// <value>The n fixed.</value>
         [Units("g/m2")]

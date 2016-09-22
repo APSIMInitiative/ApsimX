@@ -293,8 +293,6 @@ namespace Models.PMF.Organs
             RemovedN = 0.0;
         }
 
-        /// <summary>Does the potential nutrient.</summary>
-        virtual public void DoPotentialNutrient() { }
         #endregion
     }
 }
