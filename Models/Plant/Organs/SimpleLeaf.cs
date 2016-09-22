@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using Models.PMF.Functions;
-using Models.PMF.Functions.SupplyFunctions;
-using System.Xml.Serialization;
-using Models.PMF.Interfaces;
-using Models.Interfaces;
-using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
+using System;
 
 namespace Models.PMF.Organs
 {
@@ -51,6 +46,10 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
     {
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
+
         #region Leaf Interface
         /// <summary>
         /// 
@@ -190,19 +189,15 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-        /// <summary>TE Function</summary>
+        /// <summary>Water Demand Function</summary>
         [Link(IsOptional = true)]
-        IFunction TranspirationEfficiency = null;
-        /// <summary></summary>
-        [Link(IsOptional = true)]
-        IFunction SVPFrac = null;
+        IFunction WaterDemandFunction = null;
+
 
         #endregion
 
         #region States and variables
 
-        /// <summary>Gets or sets the ep.</summary>
-        private double EP { get; set; }
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Gets or sets the water demand.</summary>
@@ -211,22 +206,17 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (SVPFrac != null && TranspirationEfficiency != null)
-                {
-                    double svpMax = MetUtilities.svp(MetData.MaxT) * 0.1;
-                    double svpMin = MetUtilities.svp(MetData.MinT) * 0.1;
-                    double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
-
-                    return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001);
-                }
-                return PotentialEP;
+                if (WaterDemandFunction != null)
+                    return WaterDemandFunction.Value;
+                else
+                    return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
-        public double Transpiration { get { return EP; } }
+        public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(EP, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -247,10 +237,18 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public override double WaterAllocation { get { return EP; } set { EP += value; } }
+        public override double WaterAllocation { get; set; }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand { get { return new BiomassPoolType { Structural = DMDemandFunction.Value }; } }
+        public override BiomassPoolType DMDemand
+        {
+            get
+            {
+                StructuralDMDemand = DMDemandFunction.Value;
+                NonStructuralDMDemand = 0;
+                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
+            }
+        }
 
         /// <summary>Gets or sets the dm supply.</summary>
         public override BiomassSupplyType DMSupply
@@ -266,18 +264,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
-        {
-            set
-            {
-                // What is going on here?  Why no non-structural???
-                // This needs to be checked!
-                Live.StructuralWt += value.Structural;
-                if (value.NonStructural > 0)
-                    throw new Exception("Whoops - why is non structural DM allocation non zero");
-            }
-        }
         /// <summary>Gets or sets the n demand.</summary>
         public override BiomassPoolType NDemand
         {
@@ -293,40 +279,10 @@ namespace Models.PMF.Organs
 
         #region Events
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
-                   if (Structure != null)
-                        Structure.LeafTipsAppeared = 1.0;
-            EP = 0;
-        }
         #endregion
 
         #region Component Process Functions
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private new void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == Plant)
-                Clear();
-        }
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
@@ -349,7 +305,7 @@ namespace Models.PMF.Organs
             {
 
                 FRGR = FRGRFunction.Value;
-                if (CoverFunction == null & ExtinctionCoefficientFunction == null)
+                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (CoverFunction != null)
                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));

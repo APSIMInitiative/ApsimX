@@ -249,6 +249,28 @@ namespace Models.PMF
             _NonStructuralN += a._NonStructuralN;
             _MetabolicN += a._MetabolicN;
         }
+        /// <summary>Subtracts the specified a.</summary>
+        /// <param name="a">a.</param>
+        public void Subtract(Biomass a)
+        {
+            _StructuralWt -= a._StructuralWt;
+            _NonStructuralWt -= a._NonStructuralWt;
+            _MetabolicWt -= a._MetabolicWt;
+            _StructuralN -= a._StructuralN;
+            _NonStructuralN -= a._NonStructuralN;
+            _MetabolicN -= a._MetabolicN;
+        }
+        /// <summary>Multiplies a biomass object by a given scalar</summary>
+        /// <param name="scalar">a.</param>
+        public void Multiply(double scalar)
+        {
+            _StructuralWt *= scalar;
+            _NonStructuralWt *= scalar;
+            _MetabolicWt *= scalar;
+            _StructuralN *= scalar;
+            _NonStructuralN *= scalar;
+            _MetabolicN *= scalar;
+        }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
         public void SetTo(Biomass a)

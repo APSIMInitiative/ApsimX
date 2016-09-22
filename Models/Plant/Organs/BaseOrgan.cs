@@ -24,14 +24,6 @@ namespace Models.PMF.Organs
         
         /// <summary>The dead</summary>
         [Link] [DoNotDocument] public Biomass Dead = null;
-        
-        /// <summary>The clock</summary>
-        [Link]
-        public Clock Clock = null;
-
-        /// <summary>The met data</summary>
-        [Link]
-        public IWeather MetData = null;
 
         /// <summary>The plant</summary>
         [Link]
@@ -122,6 +114,9 @@ namespace Models.PMF.Organs
 
         #region Organ properties
 
+        /// <summary>Growth Respiration</summary>
+        public double GrowthRespiration { get; set; }
+
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
@@ -130,25 +125,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
         public double Nconc { get { return N / Wt; } }
-
-        /// <summary>Gets the live structural dm (g/m2)</summary>
-        public double StructuralWt { get { return Live.StructuralWt; } }
-
-        /// <summary>Gets the live structural n (g/m2)</summary>
-        public double StructuralN { get { return Live.StructuralN; } }
-
-        /// <summary>Gets the live structural n conc (g/g)</summary>
-        public double StructuralNconc { get { return StructuralN / StructuralWt; } }
-
-        /// <summary>Gets the live NonStructural dm (g/m2)</summary>
-        public double NonStructuralWt { get { return Live.NonStructuralWt; } }
-
-        /// <summary>Gets the live NonStructural n (g/m2)</summary>
-        public double NonStructuralN { get { return Live.NonStructuralN; } }
-
-        /// <summary>Gets the live NonStructural n conc (g/g)</summary>
-        public double NonStructuralNconc { get { return NonStructuralN / NonStructuralWt; } }
-
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
@@ -169,9 +145,8 @@ namespace Models.PMF.Organs
         /// <summary>Gets the dm supply photosynthesis.</summary>
         [Units("g/m^2")]
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
-        /// <summary>
-        /// The amount of mass lost each day from maintenance respiration
-        /// </summary>
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         virtual public double MaintenanceRespiration { get { return 0; }  set { } }
 
         #endregion
@@ -232,6 +207,14 @@ namespace Models.PMF.Organs
 
         #region Management event methods
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -256,19 +239,13 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>
-        /// Do harvest logic for this organ
-        /// </summary>
+        /// <summary>Do harvest logic for this organ</summary>
         virtual public void DoHarvest() { }
 
-        /// <summary>
-        /// Do Cutting logic for this organ
-        /// </summary>
+        /// <summary>Do Cutting logic for this organ</summary>
         virtual public void DoCut() { }
 
-        /// <summary>
-        /// Do Graze logic for this organ
-        /// </summary>
+        /// <summary>Do Graze logic for this organ</summary>
         virtual public void DoGraze() { }
 
         /// <summary>
@@ -298,9 +275,7 @@ namespace Models.PMF.Organs
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
                 if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
-                {
-                    // don't document.
-                }
+                { } // don't document.
                 else
                     child.Document(tags, headingLevel + 1, indent);
             }
@@ -321,8 +296,6 @@ namespace Models.PMF.Organs
             RemovedN = 0.0;
         }
 
-        /// <summary>Does the potential nutrient.</summary>
-        virtual public void DoPotentialNutrient() { }
         #endregion
     }
 }

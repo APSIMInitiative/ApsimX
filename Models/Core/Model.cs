@@ -188,6 +188,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.Zadok))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.CanopyPhotosynthesis))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.TEWaterDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PartitionFractionDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
