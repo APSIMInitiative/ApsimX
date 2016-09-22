@@ -64120,7 +64120,7 @@ namespace Models
               <YFieldName>Wheat.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
+              <Cumulative>true</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
             <Axis>
@@ -65745,7 +65745,7 @@ namespace Models
               <YFieldName>Wheat.Leaf.Transpiration</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
+              <Cumulative>true</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
             <Axis>
@@ -70369,5 +70369,5 @@ namespace Models
   <Folder>
     <Name>Sensibility</Name>
   </Folder>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>446</ExplorerWidth>
 </Simulations>
