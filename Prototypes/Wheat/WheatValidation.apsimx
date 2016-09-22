@@ -3417,16 +3417,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>882</n>
-            <Slope>0.53506099480114111</Slope>
-            <Intercept>189.5351680166782</Intercept>
-            <SEslope>0.027485569944243879</SEslope>
-            <SEintercept>34.68719918832187</SEintercept>
-            <R2>0.3010121598235993</R2>
-            <RMSE>723.99313829903224</RMSE>
-            <NSE>-0.060264612633078363</NSE>
-            <ME>-297.72196719620166</ME>
-            <MAE>406.67168602305509</MAE>
-            <RSR>1.0291076224379052</RSR>
+            <Slope>0.54618225699363809</Slope>
+            <Intercept>195.85702800620777</Intercept>
+            <SEslope>0.028146501133983183</SEslope>
+            <SEintercept>35.521304206874085</SEintercept>
+            <R2>0.29967151473000253</R2>
+            <RMSE>724.3823991847305</RMSE>
+            <NSE>-0.061405039168589193</NSE>
+            <ME>-279.74499912738838</ME>
+            <MAE>410.17813694501029</MAE>
+            <RSR>1.0296609306440163</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
@@ -3487,30 +3487,30 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>130</n>
-            <Slope>0.81900398497666349</Slope>
-            <Intercept>2252.0877236928518</Intercept>
-            <SEslope>0.033045521330692849</SEslope>
-            <SEintercept>550.0794304101463</SEintercept>
-            <R2>0.827551905998771</R2>
-            <RMSE>2680.5813670132648</RMSE>
-            <NSE>0.82030773858930051</NSE>
-            <ME>-534.92841188236173</ME>
-            <MAE>2056.3239958990944</MAE>
-            <RSR>0.4222677032949616</RSR>
+            <Slope>0.82208439809659362</Slope>
+            <Intercept>2305.170486222738</Intercept>
+            <SEslope>0.032516556577816359</SEslope>
+            <SEintercept>541.27422418998947</SEintercept>
+            <R2>0.83315536373834331</R2>
+            <RMSE>2620.3747848993467</RMSE>
+            <NSE>0.82828896388942308</NSE>
+            <ME>-434.41277593602786</ME>
+            <MAE>1998.5670032756132</MAE>
+            <RSR>0.41278345653217424</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>444</n>
-            <Slope>0.20317688854526275</Slope>
-            <Intercept>37.469571034031134</Intercept>
-            <SEslope>0.026158384101446094</SEslope>
-            <SEintercept>11.534817840081312</SEintercept>
-            <R2>0.12009874111865526</R2>
-            <RMSE>371.01798263699129</RMSE>
-            <NSE>-0.34633290712320175</NSE>
-            <ME>-204.48452413969443</ME>
-            <MAE>220.88156665735613</MAE>
-            <RSR>1.1590084666648697</RSR>
+            <Slope>0.21936216116897925</Slope>
+            <Intercept>39.286451680433004</Intercept>
+            <SEslope>0.027649859085633104</SEslope>
+            <SEintercept>12.192499606237664</SEintercept>
+            <R2>0.12465119882102005</R2>
+            <RMSE>368.73164950049494</RMSE>
+            <NSE>-0.32979095306843442</NSE>
+            <ME>-197.75301070150283</ME>
+            <MAE>215.39083199215114</MAE>
+            <RSR>1.1518662806069815</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
@@ -3585,16 +3585,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>655</n>
-            <Slope>0.806590453594593</Slope>
-            <Intercept>0.74409812838733291</Intercept>
-            <SEslope>0.017649230441211177</SEslope>
-            <SEintercept>0.071245621789122318</SEintercept>
-            <R2>0.76181763842256889</R2>
-            <RMSE>1.1526781372409869</RMSE>
-            <NSE>0.75706468159310647</NSE>
-            <ME>0.10771983972825709</ME>
-            <MAE>0.84433451334533849</MAE>
-            <RSR>0.49250829921028244</RSR>
+            <Slope>0.81300017665355806</Slope>
+            <Intercept>0.80187105071337372</Intercept>
+            <SEslope>0.017497134509279925</SEslope>
+            <SEintercept>0.070631647753362919</SEintercept>
+            <R2>0.7677787944499066</R2>
+            <RMSE>1.1486728864400995</RMSE>
+            <NSE>0.75875002004005321</NSE>
+            <ME>0.18658276855528586</ME>
+            <MAE>0.84045270061348887</MAE>
+            <RSR>0.49079696349901675</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
@@ -3632,11 +3632,11 @@ namespace Models
             <SEslope>0.011527852427527088</SEslope>
             <SEintercept>163.78622746900123</SEintercept>
             <R2>0.082539767096971528</R2>
-            <RMSE>15564.286719586104</RMSE>
-            <NSE>-1.2899969438430352</NSE>
+            <RMSE>15564.286719586102</RMSE>
+            <NSE>-1.2899969438430348</NSE>
             <ME>11974.251212614854</ME>
             <MAE>12640.829525488489</MAE>
-            <RSR>1.5088423207379231</RSR>
+            <RSR>1.5088423207379229</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
@@ -3780,16 +3780,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>195</n>
-            <Slope>1.1143641896249845</Slope>
-            <Intercept>-6.9763440288272704</Intercept>
-            <SEslope>0.027715867917000786</SEslope>
-            <SEintercept>39.986896200379391</SEintercept>
-            <R2>0.89334544513738967</R2>
-            <RMSE>285.4900111868206</RMSE>
-            <NSE>0.78542092665690733</NSE>
-            <ME>142.20976121347854</ME>
-            <MAE>205.01274098789048</MAE>
-            <RSR>0.46203751778266788</RSR>
+            <Slope>1.1259594355408935</Slope>
+            <Intercept>-6.7352981443759745</Intercept>
+            <SEslope>0.028054271105787888</SEslope>
+            <SEintercept>40.47512529803673</SEintercept>
+            <R2>0.893004954629872</R2>
+            <RMSE>297.57905836449919</RMSE>
+            <NSE>0.76686350625644162</NSE>
+            <ME>157.57660463292402</ME>
+            <MAE>213.9027611652248</MAE>
+            <RSR>0.48160245221631803</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
@@ -3822,16 +3822,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>181</n>
-            <Slope>0.86021308796098783</Slope>
-            <Intercept>1372.1388921955604</Intercept>
-            <SEslope>0.026083058477780051</SEslope>
-            <SEintercept>384.82098338579749</SEintercept>
-            <R2>0.85868399894517833</R2>
-            <RMSE>2515.7981016813942</RMSE>
-            <NSE>0.85347334984862022</NSE>
-            <ME>-474.29646192053548</ME>
-            <MAE>1915.3411509881048</MAE>
-            <RSR>0.38172910636704283</RSR>
+            <Slope>0.86664268784170473</Slope>
+            <Intercept>1364.0275444938197</Intercept>
+            <SEslope>0.025866839191151781</SEslope>
+            <SEintercept>381.630954172845</SEintercept>
+            <R2>0.862468318170873</R2>
+            <RMSE>2469.7295260461869</RMSE>
+            <NSE>0.85879052495589792</NSE>
+            <ME>-397.479683237573</ME>
+            <MAE>1873.3197046834705</MAE>
+            <RSR>0.37473899209790607</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
@@ -3850,16 +3850,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>217</n>
-            <Slope>1.0508387841919686</Slope>
-            <Intercept>4.886620649620113</Intercept>
-            <SEslope>0.037017937162570812</SEslope>
-            <SEintercept>19.768149185278119</SEintercept>
-            <R2>0.78938872391823567</R2>
-            <RMSE>132.16465441858304</RMSE>
-            <NSE>0.68751053069629142</NSE>
-            <ME>29.22956601800179</ME>
-            <MAE>108.09717163294182</MAE>
-            <RSR>0.55771805212523329</RSR>
+            <Slope>1.0750071161739185</Slope>
+            <Intercept>-1.4988097435468717</Intercept>
+            <SEslope>0.034896458359730487</SEslope>
+            <SEintercept>18.63524679572097</SEintercept>
+            <R2>0.81528993268173955</R2>
+            <RMSE>127.02011678040635</RMSE>
+            <NSE>0.71136449506961508</NSE>
+            <ME>34.416567862001983</ME>
+            <MAE>103.61785759809776</MAE>
+            <RSR>0.53600875682785587</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -62631,150 +62631,158 @@ namespace Models
               <Operations>
                 <Name>Wet</Name>
                 <Operation>
-                  <Date>1993-01-30T00:00:00</Date>
+                  <Date>1992-12-18</Date>
+                  <Action>[Irrigation].Apply(amount:300);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1993-01-30</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-01-31T00:00:00</Date>
+                  <Date>1993-01-31</Date>
                   <Action>[Irrigation].Apply(amount:7);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-01T00:00:00</Date>
+                  <Date>1993-03-01</Date>
                   <Action>[Irrigation].Apply(amount:12);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-09T00:00:00</Date>
+                  <Date>1993-03-09</Date>
                   <Action>[Irrigation].Apply(amount:60);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-18T00:00:00</Date>
+                  <Date>1993-03-18</Date>
                   <Action>[Irrigation].Apply(amount:34);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-25T00:00:00</Date>
+                  <Date>1993-03-25</Date>
                   <Action>[Irrigation].Apply(amount:50);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-05T00:00:00</Date>
+                  <Date>1993-04-05</Date>
                   <Action>[Irrigation].Apply(amount:54);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-06T00:00:00</Date>
+                  <Date>1993-04-06</Date>
                   <Action>[Irrigation].Apply(amount:4);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-12T00:00:00</Date>
+                  <Date>1993-04-12</Date>
                   <Action>[Irrigation].Apply(amount:47);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-17T00:00:00</Date>
+                  <Date>1993-04-17</Date>
                   <Action>[Irrigation].Apply(amount:38);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-18T00:00:00</Date>
+                  <Date>1993-04-18</Date>
                   <Action>[Irrigation].Apply(amount:6);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-21T00:00:00</Date>
+                  <Date>1993-04-21</Date>
                   <Action>[Irrigation].Apply(amount:36);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-26T00:00:00</Date>
+                  <Date>1993-04-26</Date>
                   <Action>[Irrigation].Apply(amount:48);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-27T00:00:00</Date>
+                  <Date>1993-04-27</Date>
                   <Action>[Irrigation].Apply(amount:6);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-30T00:00:00</Date>
+                  <Date>1993-04-30</Date>
                   <Action>[Irrigation].Apply(amount:42);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-05T00:00:00</Date>
+                  <Date>1993-05-05</Date>
                   <Action>[Irrigation].Apply(amount:41);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-10T00:00:00</Date>
+                  <Date>1993-05-10</Date>
                   <Action>[Irrigation].Apply(amount:41);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-11T00:00:00</Date>
+                  <Date>1993-05-11</Date>
                   <Action>[Irrigation].Apply(amount:4);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-14T00:00:00</Date>
+                  <Date>1993-05-14</Date>
                   <Action>[Irrigation].Apply(amount:41);</Action>
                 </Operation>
               </Operations>
               <Operations>
                 <Name>Dry</Name>
                 <Operation>
-                  <Date>1993-01-30T00:00:00</Date>
+                  <Date>1992-12-18</Date>
+                  <Action>[Irrigation].Apply(amount:300);</Action>
+                </Operation>
+                <Operation>
+                  <Date>1993-01-30</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-01-31T00:00:00</Date>
+                  <Date>1993-01-31</Date>
                   <Action>[Irrigation].Apply(amount:7);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-18T00:00:00</Date>
+                  <Date>1993-03-18</Date>
                   <Action>[Irrigation].Apply(amount:17);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-03-25T00:00:00</Date>
+                  <Date>1993-03-25</Date>
                   <Action>[Irrigation].Apply(amount:15);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-05T00:00:00</Date>
+                  <Date>1993-04-05</Date>
                   <Action>[Irrigation].Apply(amount:27);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-06T00:00:00</Date>
+                  <Date>1993-04-06</Date>
                   <Action>[Irrigation].Apply(amount:4);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-12T00:00:00</Date>
+                  <Date>1993-04-12</Date>
                   <Action>[Irrigation].Apply(amount:18);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-17T00:00:00</Date>
+                  <Date>1993-04-17</Date>
                   <Action>[Irrigation].Apply(amount:16);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-18T00:00:00</Date>
+                  <Date>1993-04-18</Date>
                   <Action>[Irrigation].Apply(amount:6);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-21T00:00:00</Date>
+                  <Date>1993-04-21</Date>
                   <Action>[Irrigation].Apply(amount:18);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-26T00:00:00</Date>
+                  <Date>1993-04-26</Date>
                   <Action>[Irrigation].Apply(amount:24);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-27T00:00:00</Date>
+                  <Date>1993-04-27</Date>
                   <Action>[Irrigation].Apply(amount:6);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-04-30T00:00:00</Date>
+                  <Date>1993-04-30</Date>
                   <Action>[Irrigation].Apply(amount:21);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-05T00:00:00</Date>
+                  <Date>1993-05-05</Date>
                   <Action>[Irrigation].Apply(amount:20);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-10T00:00:00</Date>
+                  <Date>1993-05-10</Date>
                   <Action>[Irrigation].Apply(amount:20);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-11T00:00:00</Date>
+                  <Date>1993-05-11</Date>
                   <Action>[Irrigation].Apply(amount:4);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-05-14T00:00:00</Date>
+                  <Date>1993-05-14</Date>
                   <Action>[Irrigation].Apply(amount:20);</Action>
                 </Operation>
               </Operations>
@@ -64230,6 +64238,49 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>SoilWater</Name>
+            <Series>
+              <Name>Predicted1</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16747854</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title>Date</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
         </Experiment>
         <Experiment>
           <Name>ArizonaFACE93</Name>
@@ -64326,75 +64377,75 @@ namespace Models
               <Operations>
                 <Name>Wet</Name>
                 <Operation>
-                  <Date>1993-12-13T00:00:00</Date>
+                  <Date>1993-12-13</Date>
                   <Action>[Irrigation].Apply(amount:13);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1993-12-17T00:00:00</Date>
+                  <Date>1993-12-17</Date>
                   <Action>[Irrigation].Apply(amount:17);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-01-21T00:00:00</Date>
+                  <Date>1994-01-21</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-02-03T00:00:00</Date>
+                  <Date>1994-02-03</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-02-23T00:00:00</Date>
+                  <Date>1994-02-23</Date>
                   <Action>[Irrigation].Apply(amount:35);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-03-04T00:00:00</Date>
+                  <Date>1994-03-04</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-03-16T00:00:00</Date>
+                  <Date>1994-03-16</Date>
                   <Action>[Irrigation].Apply(amount:36);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-03-21T00:00:00</Date>
+                  <Date>1994-03-21</Date>
                   <Action>[Irrigation].Apply(amount:25);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-03-28T00:00:00</Date>
+                  <Date>1994-03-28</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-04T00:00:00</Date>
+                  <Date>1994-04-04</Date>
                   <Action>[Irrigation].Apply(amount:30);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-08T00:00:00</Date>
+                  <Date>1994-04-08</Date>
                   <Action>[Irrigation].Apply(amount:50);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-14T00:00:00</Date>
+                  <Date>1994-04-14</Date>
                   <Action>[Irrigation].Apply(amount:50);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-19T00:00:00</Date>
+                  <Date>1994-04-19</Date>
                   <Action>[Irrigation].Apply(amount:50);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-25T00:00:00</Date>
+                  <Date>1994-04-25</Date>
                   <Action>[Irrigation].Apply(amount:50);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-04-30T00:00:00</Date>
+                  <Date>1994-04-30</Date>
                   <Action>[Irrigation].Apply(amount:7);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-05-04T00:00:00</Date>
+                  <Date>1994-05-04</Date>
                   <Action>[Irrigation].Apply(amount:60);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-05-10T00:00:00</Date>
+                  <Date>1994-05-10</Date>
                   <Action>[Irrigation].Apply(amount:48);</Action>
                 </Operation>
                 <Operation>
-                  <Date>1994-05-16T00:00:00</Date>
+                  <Date>1994-05-16</Date>
                   <Action>[Irrigation].Apply(amount:38);</Action>
                 </Operation>
               </Operations>
