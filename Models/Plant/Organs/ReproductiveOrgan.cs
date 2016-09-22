@@ -45,6 +45,7 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+
         /// <summary>The dm demand function</summary>
         [Link]
         [Units("g/m2/d")]
@@ -54,15 +55,9 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public IFunction DMConversionEfficiencyFunction = null;
 
-  
-
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
-
-
-        /// <summary>Growth Respiration</summary>
-        public double GrowthRespiration { get; set; }
 
         #endregion
 
@@ -266,12 +261,11 @@ namespace Models.PMF.Organs
         public override BiomassAllocationType DMAllocation
         {
             set
-        
-
             {
-                GrowthRespiration = 0;
-                GrowthRespiration += value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency; } }
+                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
+                Live.StructuralWt += value.Structural * DMConversionEfficiency;
+            }
+        }
         /// <summary>Gets or sets the n demand.</summary>
         public override BiomassPoolType NDemand
         {
