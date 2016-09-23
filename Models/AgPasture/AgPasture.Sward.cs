@@ -31,11 +31,11 @@ namespace Models.AgPasture
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to apsim's Resource Arbitrator module.</summary>
+        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
         private Arbitrator.Arbitrator apsimArbitrator = null;
 
-        /// <summary>Link to apsim's Resource Arbitrator module.</summary>
+        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
@@ -1297,7 +1297,7 @@ namespace Models.AgPasture
             }
         }
 
-        #region - Water uptake processes - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -
+        #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the water uptake calculations.</summary>
         private void DoWaterCalculations()
@@ -1411,7 +1411,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Nitrogen uptake processes  - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - -
+        #region - Nitrogen uptake processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the nitrogen uptake calculations.</summary>
         private void DoNitrogenCalculations()
@@ -1545,7 +1545,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Organic matter processes - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -
+        #region - Organic matter processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Adds a given amount of detached plant material (DM and N) to the surface organic matter.</summary>
         /// <param name="amountDM">DM amount to return (kg/ha)</param>

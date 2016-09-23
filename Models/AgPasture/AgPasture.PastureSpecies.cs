@@ -3924,7 +3924,7 @@ namespace Models.AgPasture
             //else { // Growth is controlled by Sward (all species) }
         }
 
-        #region - Plant growth processes - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -
+        #region - Plant growth processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Computes the daily progress through germination.</summary>
         /// <returns>Fraction of germination phase completed (0-1)</returns>
@@ -4452,7 +4452,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Water uptake processes - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -
+        #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the water uptake calculations.</summary>
         internal void DoWaterCalculations()
@@ -4655,7 +4655,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Nitrogen uptake processes  - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - -
+        #region - Nitrogen uptake processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the nitrogen uptake calculations.</summary>
         internal void DoNitrogenCalculations()
@@ -5080,7 +5080,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Organic matter processes - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - -
+        #region - Organic matter processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Adds a given amount of detached plant material (DM and N) to the surface organic matter.</summary>
         /// <param name="amountDM">DM amount to return (kg/ha)</param>
@@ -5144,7 +5144,7 @@ namespace Models.AgPasture
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - DM allocation and related processes  - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - -
+        #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the allocations into shoot and leaves of today's growth.</summary>
         internal void GetAllocationFractions()
@@ -6122,7 +6122,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the ground cover for the plant, or plant part.</summary>
         /// <param name="givenLAI">The LAI for this plant</param>
-        /// <returns>Fraction of ground effectively covered (0-1)</returns>
+        /// <returns>Fraction of light effectively intercepted (MJ/MJ)</returns>
         private double CalcPlantCover(double givenLAI)
         {
             if (givenLAI < Epsilon) return 0.0;
