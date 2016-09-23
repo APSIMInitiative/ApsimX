@@ -114,6 +114,9 @@ namespace Models.PMF.Organs
 
         #region Organ properties
 
+        /// <summary>Growth Respiration</summary>
+        public double GrowthRespiration { get; set; }
+
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
@@ -293,8 +296,6 @@ namespace Models.PMF.Organs
             RemovedN = 0.0;
         }
 
-        /// <summary>Does the potential nutrient.</summary>
-        virtual public void DoPotentialNutrient() { }
         #endregion
     }
 }

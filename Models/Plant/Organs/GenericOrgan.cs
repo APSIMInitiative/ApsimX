@@ -142,8 +142,7 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        /// <summary>Growth Respiration</summary>
-        public double GrowthRespiration { get; set; }
+
 
 
         #region Class properties
