@@ -1262,10 +1262,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0</Value>
+              <Value>0.2</Value>
             </Constant>
-            <Start>Emergence</Start>
-            <End>Flowering</End>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
@@ -62535,12 +62535,35 @@ namespace Models
       <Name>NorthAmerica</Name>
       <Folder>
         <Name>Arizona</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[These FACE trials were conducted to investigate the effects of atmospheric CO2 concentrations and water stress on wheat growth and development [Hanksar_1996_FACE].  It was conducted at Maricopa, Arazona using Free Air Carbon Enrichment to create elevated CO2 treatments: 
+ 
+1. Normal CO2  (370 ppm) (that is no longer normal)
+2. High CO2 (550 ppm)
+
+Irrigation treatmetnts were also applied with:
+
+1. High Irrigation (~600 mm)  
+2. Low irrigation (~265 mm)
+
+Crop development, Biomass production and soil moisture were monitored throughout the crops duration.]]></MemoText>
+        </Memo>
         <Experiment>
           <Name>ArizonaFACE92</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[This trial was conducted to investigate the effects of atmospheric CO2 concentrations and water stress on wheat growth and development [].  It was conducted at Maricopa, Arazona using Free Air Carbon Enrichment to create elevated CO2 treatments:
-1. Normal CO2]]></MemoText>
+            <MemoText><![CDATA[This trial was conducted to investigate the effects of atmospheric CO2 concentrations and water stress on wheat growth and development [Hanksar_1996_FACE].  It was conducted at Maricopa, Arazona using Free Air Carbon Enrichment to create elevated CO2 treatments: 
+ 
+1. Normal CO2  (370 ppm) (that is no longer normal)
+2. High CO2 (550 ppm)
+
+Irrigation treatmetnts were also applied with:
+
+1. High Irrigation (~600 mm)  
+2. Low irrigation (~265 mm)
+
+Crop development, Biomass production and soil moisture were monitored throughout the crops duration.]]></MemoText>
           </Memo>
           <Factors>
             <Name>Factors</Name>
@@ -62823,13 +62846,13 @@ namespace Models
                   <SoilCrop>
                     <Name>WheatSoil</Name>
                     <LL>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.19</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
                       <double>0.16</double>
                       <double>0.16</double>
                       <double>0.16</double>
@@ -62906,27 +62929,27 @@ namespace Models
                   <AirDry>
                     <double>0.03</double>
                     <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                    <double>0.13</double>
+                    <double>0.13</double>
                   </AirDry>
                   <LL15>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.19</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                     <double>0.16</double>
                     <double>0.16</double>
                     <double>0.16</double>
@@ -62936,12 +62959,12 @@ namespace Models
                     <double>0.13</double>
                   </LL15>
                   <DUL>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
                     <double>0.3</double>
                     <double>0.28</double>
                     <double>0.28</double>
@@ -63511,6 +63534,7 @@ namespace Models
                 <VariableNames>
                   <string>[Clock].Today</string>
                   <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:7]) as TopSoilWater</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -64241,7 +64265,7 @@ namespace Models
           <Graph>
             <Name>SoilWater</Name>
             <Series>
-              <Name>Predicted1</Name>
+              <Name>Predicted</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -64253,9 +64277,30 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>SupReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
+              <YFieldName>TopSoilWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16744448</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>TopSoilWater</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -64284,10 +64329,6 @@ namespace Models
         </Experiment>
         <Experiment>
           <Name>ArizonaFACE93</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[This simple experiment was conducted to investigate the impact of time of sowing on canopy development and growth of wheat.  Wheat (cv. Hartog) was sown at Gatton on 30th of May and 30th of July in 1991.  Data were collected on canopy development, biomass accumulation and yield.]]></MemoText>
-          </Memo>
           <Factors>
             <Name>Factors</Name>
             <Factor>
@@ -64525,13 +64566,13 @@ namespace Models
                   <SoilCrop>
                     <Name>WheatSoil</Name>
                     <LL>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.2</double>
-                      <double>0.19</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
+                      <double>0.15</double>
                       <double>0.16</double>
                       <double>0.16</double>
                       <double>0.16</double>
@@ -64608,27 +64649,27 @@ namespace Models
                   <AirDry>
                     <double>0.03</double>
                     <double>0.03</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                    <double>0.01</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
-                    <double>0</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.16</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                    <double>0.13</double>
+                    <double>0.13</double>
                   </AirDry>
                   <LL15>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.2</double>
-                    <double>0.19</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                     <double>0.16</double>
                     <double>0.16</double>
                     <double>0.16</double>
@@ -64638,12 +64679,12 @@ namespace Models
                     <double>0.13</double>
                   </LL15>
                   <DUL>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
-                    <double>0.32</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
+                    <double>0.3</double>
                     <double>0.3</double>
                     <double>0.28</double>
                     <double>0.28</double>
@@ -64673,8 +64714,8 @@ namespace Models
                 <SoilWater>
                   <Name>SoilWater</Name>
                   <SummerDate>1-Nov</SummerDate>
-                  <SummerU>6</SummerU>
-                  <SummerCona>2</SummerCona>
+                  <SummerU>12</SummerU>
+                  <SummerCona>4</SummerCona>
                   <WinterDate>1-Apr</WinterDate>
                   <WinterU>6</WinterU>
                   <WinterCona>2</WinterCona>
@@ -65255,6 +65296,7 @@ namespace Models
                 <VariableNames>
                   <string>[Clock].Today</string>
                   <string>([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:7]) as TopSoilWater</string>
                 </VariableNames>
                 <EventNames>
                   <string>[Clock].DoReport</string>
@@ -65985,7 +66027,7 @@ namespace Models
           <Graph>
             <Name>SoilWater</Name>
             <Series>
-              <Name>Predicted1</Name>
+              <Name>Predicted</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -65997,9 +66039,30 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>SupReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
+              <YFieldName>TopSoilWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16744448</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>TopSoilWater</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
