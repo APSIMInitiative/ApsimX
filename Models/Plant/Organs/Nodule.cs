@@ -12,7 +12,7 @@ namespace Models.PMF.Organs
     /// Nodule organ
     /// Has three options for N fixation methods set by the NFixation property
     /// 1. None means the nodule will fix no N 
-    /// 2. Majic means the nodule will fix as much N as the plant demands at no DM cost
+    /// 2. Magic means the nodule will fix as much N as the plant demands at no DM cost
     /// 3. FullCost requires parameters additional parameters of FixationMetabolicCost, SpecificNitrogenaseActivity
     ///    FT, FW, FWlog and a DMDemandFunction.  This calculates N fixation supply from the wt of the nodules
     ///    and these parameters at a cost specified by the FixationMetabolicCost parameter
@@ -24,7 +24,7 @@ namespace Models.PMF.Organs
     {
         #region Paramater Input Classes
         /// <summary>The method used to determine N fixation</summary>
-        [Description("NFixationOption can be FullCost, Majic or None")]
+        [Description("NFixationOption can be FullCost, Magic or None")]
         public string NFixationOption { get; set; }
         
         /// <summary>The fixation metabolic cost</summary>
@@ -49,10 +49,6 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double RespiredWt { get; set; }
-        /// <summary>The property fixation demand</summary>
-        [Units("0-1")]
-        [XmlIgnore]
-        public double PropFixationDemand { get; set; }
         /// /// <summary>Gets the n fixed.</summary>
         /// <value>The n fixed.</value>
         [Units("g/m2")]
@@ -68,7 +64,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((NFixationOption == "Majic")||(NFixationOption == "None"))
+                if ((NFixationOption == "Magic")||(NFixationOption == "None"))
                     return 0;
                 else
                 return FixationMetabolicCost.Value;
@@ -102,7 +98,7 @@ namespace Models.PMF.Organs
             get
             {
                 BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                if (NFixationOption == "Majic")
+                if (NFixationOption == "Magic")
                     Supply.Fixation = 10000; //the plant can fix all the N it will ever need
                 else if (NFixationOption == "None")
                     Supply.Fixation = 0; //the plant will fix no N
@@ -145,7 +141,7 @@ namespace Models.PMF.Organs
         {
             // Describe the function
             if(NFixationOption != "FullCost")
-                tags.Add(new AutoDocumentation.Paragraph(Name + " is a simple parameterisation which provides all the N the crop demands with not DM cost if NFixationOption for the cultivar is set to Majic and fixies no nitrogen of NFixationOption is set to None", indent));
+                tags.Add(new AutoDocumentation.Paragraph(Name + " is a simple parameterisation which provides all the N the crop demands with not DM cost if NFixationOption for the cultivar is set to Magic and fixies no nitrogen of NFixationOption is set to None", indent));
             else
                 tags.Add(new AutoDocumentation.Paragraph(Name + " NEEDS Auto docummentation function completed", indent));
         }

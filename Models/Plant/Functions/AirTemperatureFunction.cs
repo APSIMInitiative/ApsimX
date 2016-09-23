@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Interfaces;
 
@@ -46,7 +45,6 @@ namespace Models.PMF.Functions
 
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         [Units("deg.day")]
         public double Value
         {
@@ -59,7 +57,6 @@ namespace Models.PMF.Functions
         /// <param name="tmax">The tmax.</param>
         /// <param name="tmin">The tmin.</param>
         /// <param name="ttFn">The tt function.</param>
-        /// <returns></returns>
         public double Linint3hrlyTemp(double tmax, double tmin, XYPairs ttFn)
         {
             // --------------------------------------------------------------------------
@@ -86,12 +83,6 @@ namespace Models.PMF.Functions
         /// <param name="tmax">The tmax.</param>
         /// <param name="tmin">The tmin.</param>
         /// <param name="period">The period.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">
-        /// 3 hr. period number is below 1
-        /// or
-        /// 3 hr. period number is above 8
-        /// </exception>
         private double temp_3hr(double tmax, double tmin, int period)
         {
             // --------------------------------------------------------------------------

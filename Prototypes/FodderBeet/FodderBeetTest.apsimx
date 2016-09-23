@@ -963,6 +963,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
+		<Constant>
+		  <Name>NReallocationFactor</Name>
+		  <Value>0</Value>
+		</Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
@@ -1065,6 +1069,16 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <Value>1</Value>
             <Units>g/g</Units>
          </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
+         </Constant>
+	 <Constant>
+	   <Name>SenescenceRate</Name>
+	   <Value>0</Value>
+	   <Units>/d</Units>
+	 </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1181,6 +1195,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <Name>StructuralFraction</Name>
             <Value>1</Value>
             <Units>g/g</Units>
+         </Constant>
+         <Constant>
+            <Name>DetachmentRateFunction</Name>
+            <Value>0</Value>
+            <Units>/d</Units>
          </Constant>
       </GenericOrgan>
       <CompositeBiomass>

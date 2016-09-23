@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using Models.PMF.Functions;
-using Models.PMF.Functions.SupplyFunctions;
-using System.Xml.Serialization;
-using Models.PMF.Interfaces;
-using Models.Interfaces;
-using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
+using System;
 
 namespace Models.PMF.Organs
 {
@@ -51,6 +46,10 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
     {
+        /// <summary>The met data</summary>
+        [Link]
+        public IWeather MetData = null;
+
         #region Leaf Interface
         /// <summary>
         /// 
@@ -164,9 +163,6 @@ namespace Models.PMF.Organs
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
         IFunction CoverFunction = null;
-        /// <summary>The nitrogen demand switch</summary>
-        [Link(IsOptional = true)]
-        IFunction NitrogenDemandSwitch = null;
 
         /// <summary>The lai function</summary>
         [Link(IsOptional = true)]
@@ -193,119 +189,72 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-        /// <summary>TE Function</summary>
+        /// <summary>Water Demand Function</summary>
         [Link(IsOptional = true)]
-        IFunction TranspirationEfficiency = null;
-        /// <summary></summary>
-        [Link(IsOptional = true)]
-        IFunction SVPFrac = null;
+        IFunction WaterDemandFunction = null;
+
 
         #endregion
 
         #region States and variables
 
-        /// <summary>Gets or sets the ep.</summary>
-        /// <value>The ep.</value>
-        private double EP { get; set; }
         /// <summary>Gets or sets the k dead.</summary>
-        /// <value>The k dead.</value>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Gets or sets the water demand.</summary>
-        /// <value>The water demand.</value>
         [Units("mm")]
         public override double WaterDemand
         {
             get
             {
-                if (SVPFrac != null && TranspirationEfficiency != null)
-                {
-                    double svpMax = MetUtilities.svp(MetData.MaxT) * 0.1;
-                    double svpMin = MetUtilities.svp(MetData.MinT) * 0.1;
-                    double vpd = Math.Max(SVPFrac.Value * (svpMax - svpMin), 0.01);
-
-                    return Photosynthesis.Value / (TranspirationEfficiency.Value / vpd / 0.001);
-                }
-                return PotentialEP;
+                if (WaterDemandFunction != null)
+                    return WaterDemandFunction.Value;
+                else
+                    return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
-        /// <value>The transpiration.</value>
-        public double Transpiration { get { return EP; } }
+        public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        /// <value>The fw.</value>
-        public double Fw
-        {
-            get
-            {
-                if (WaterDemand > 0)
-                    return EP / WaterDemand;
-                else
-                    return 1;
-            }
-        }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+
         /// <summary>Gets the function.</summary>
-        /// <value>The function.</value>
-        public double Fn
-        {
-            get
-            {
-                double MaxNContent = Live.Wt * MaximumNConc.Value;
-                return Live.N / MaxNContent;
-            }
-        }
+        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
 
         /// <summary>Gets or sets the lai dead.</summary>
-        /// <value>The lai dead.</value>
         public double LAIDead { get; set; }
 
 
         /// <summary>Gets the cover dead.</summary>
-        /// <value>The cover dead.</value>
-        public double CoverDead
-        {
-            get { return 1.0 - Math.Exp(-KDead * LAIDead); }
-        }
+        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+
         /// <summary>Gets the RAD int tot.</summary>
-        /// <value>The RAD int tot.</value>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
-        {
-            get
-            {
-                return CoverGreen * MetData.Radn;
-            }
-        }
+        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
         #endregion
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        /// <value>The water allocation.</value>
-        public override double WaterAllocation { get { return EP; } set { EP += value; } }
+        public override double WaterAllocation { get; set; }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
             {
-                double Demand = DMDemandFunction.Value;
-                if (Math.Round(Demand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM demand.  Check your parameterisation");
-                return new BiomassPoolType { Structural = Demand };
+                StructuralDMDemand = DMDemandFunction.Value;
+                NonStructuralDMDemand = 0;
+                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
             }
         }
 
         /// <summary>Gets or sets the dm supply.</summary>
-        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
             {
-                if (Math.Round(Photosynthesis.Value + AvailableDMRetranslocation(), 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative DM supply.  Check your parameterisation");
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
@@ -315,63 +264,14 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        public override BiomassAllocationType DMAllocation
-        {
-
-            set
-            {
-                // What is going on here?  Why no non-structural???
-                // This needs to be checked!
-                Live.StructuralWt += value.Structural;
-            }
-        }
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
             {
-                double StructuralDemand = 0;
-                double NDeficit = 0;
-
-                if (NitrogenDemandSwitch != null)
-                    if (NitrogenDemandSwitch.Value == 0)
-                        NDeficit = 0;
-
-                StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                
-                if (Math.Round(StructuralDemand, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative structural N Demand.  Check your parameterisation");
-                if (Math.Round(NDeficit, 8) < 0)
-                    throw new Exception(this.Name + " organ is returning a negative Non structural N Demand.  Check your parameterisation");
+                double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
+                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
-            }
-        }
-
-        /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// Invalid allocation of N
-        /// or
-        /// N allocated to Leaf left over after allocation
-        /// or
-        /// UnKnown Leaf N allocation problem
-        /// </exception>
-        public override BiomassAllocationType NAllocation
-        {
-            set
-            {
-                // Allocation
-                if (value.Structural > 0)
-                {
-                    Live.StructuralN += value.Structural;
-                }
-                if (value.NonStructural > 0)
-                    Live.NonStructuralN += value.NonStructural;
-
             }
         }
 
@@ -379,40 +279,10 @@ namespace Models.PMF.Organs
 
         #region Events
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
-                   if (Structure != null)
-                        Structure.LeafTipsAppeared = 1.0;
-            EP = 0;
-        }
         #endregion
 
         #region Component Process Functions
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private new void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            if (data.Plant == Plant)
-                Clear();
-        }
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
@@ -435,7 +305,7 @@ namespace Models.PMF.Organs
             {
 
                 FRGR = FRGRFunction.Value;
-                if (CoverFunction == null & ExtinctionCoefficientFunction == null)
+                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (CoverFunction != null)
                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));

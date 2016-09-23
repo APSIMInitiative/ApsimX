@@ -53,18 +53,20 @@ namespace Models.PMF.Organs
 
         #region Class Parameter Function Links
         /// <summary>The senescence rate function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
+
         /// <summary>The detachment rate function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
         /// <summary>The n reallocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction NReallocationFactor = null;
+
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
@@ -109,8 +111,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States
-        /// <summary>The senescence rate</summary>
-        private double mySenescenceRate = 0;
         /// <summary>The start n retranslocation supply</summary>
         private double StartNRetranslocationSupply = 0;
         /// <summary>The start n reallocation supply</summary>
@@ -131,7 +131,6 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             base.Clear();
-            mySenescenceRate = 0;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             PotentialDMAllocation = 0;
@@ -143,14 +142,12 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        /// <summary>Growth Respiration</summary>
-        public double GrowthRespiration { get; set; }
+
 
 
         #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
-        /// <value>The live f wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
@@ -164,7 +161,6 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         [Units("g/m^2")]
         public override BiomassPoolType DMDemand
         {
@@ -180,8 +176,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
-        /// <exception cref="System.Exception">Invalid allocation of potential DM in  + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -197,7 +191,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the dm supply.</summary>
-        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -224,7 +217,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the N demand.</summary>
-        /// <value>The N demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -240,7 +232,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the N supply.</summary>
-        /// <value>The N supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
@@ -274,23 +265,10 @@ namespace Models.PMF.Organs
         /// <returns>DM available to reallocate</returns>
         public double AvailableNReallocation()
         {
-            if (NReallocationFactor != null)
-                return mySenescenceRate * StartLive.NonStructuralN * NReallocationFactor.Value;
-            else
-            { //Default of 0 means reallocation is always turned off!!!!
-                return 0.0;
-            }
+            return SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
         }
 
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
-        /// <exception cref="System.Exception">
-        /// -ve NonStructuralDM Allocation to  + Name
-        /// or
-        /// StructuralDM Allocation to  + Name +  is in excess of its Capacity
-        /// or
-        /// Retranslocation exceeds nonstructural biomass in organ:  + Name
-        /// </exception>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -316,27 +294,12 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
-        /// <exception cref="System.Exception">
-        /// N Retranslocation exceeds nonstructural nitrogen in organ:  + Name
-        /// or
-        /// -ve N Retranslocation requested from  + Name
-        /// or
-        /// N Reallocation exceeds nonstructural nitrogen in organ:  + Name
-        /// or
-        /// -ve N Reallocation requested from  + Name
-        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
             {
-                // Allocation
-                if (value.Structural > 0)
-                {
-                    Live.StructuralN += value.Structural;
-                }
-                if (value.NonStructural > 0)
-                    Live.NonStructuralN += value.NonStructural;
+                Live.StructuralN += value.Structural;
+                Live.NonStructuralN += value.NonStructural;
 
                 // Retranslocation
                 if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
@@ -351,27 +314,13 @@ namespace Models.PMF.Organs
                 if (value.Reallocation < -0.000000001)
                     throw new Exception("-ve N Reallocation requested from " + Name);
                 Live.NonStructuralN -= value.Reallocation;
+            }
+        }
 
-            }
-        }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
-        public double MaxNconc
-        {
-            get
-            {
-                return MaximumNConc.Value;
-            }
-        }
+        public double MaxNconc { get { return MaximumNConc.Value; } }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
-        public override double MinNconc
-        {
-            get
-            {
-                return MinimumNConc.Value;
-            }
-        }
+        public override double MinNconc { get { return MinimumNConc.Value; } }
         #endregion
 
         #region Events and Event Handlers
@@ -379,7 +328,6 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// 
-
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -410,10 +358,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                mySenescenceRate = 0;
-                if (SenescenceRate != null) //Default of zero means no senescence
-                    mySenescenceRate = SenescenceRate.Value;
-
                 //Initialise biomass and nitrogen
                 if (Live.Wt == 0)
                 {
@@ -437,11 +381,8 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                Biomass Loss = new Biomass();
-                Loss.StructuralWt = Live.StructuralWt * mySenescenceRate;
-                Loss.NonStructuralWt = Live.NonStructuralWt * mySenescenceRate;
-                Loss.StructuralN = Live.StructuralN * mySenescenceRate;
-                Loss.NonStructuralN = Live.NonStructuralN * mySenescenceRate;
+                Biomass Loss = Live * SenescenceRate.Value;
+                //Live.Subtract(Loss);
 
                 Live.StructuralWt -= Loss.StructuralWt;
                 Live.NonStructuralWt -= Loss.NonStructuralWt;
@@ -452,29 +393,31 @@ namespace Models.PMF.Organs
                 Dead.NonStructuralWt += Loss.NonStructuralWt;
                 Dead.StructuralN += Loss.StructuralN;
                 Dead.NonStructuralN += Loss.NonStructuralN;
+                
+                
+                //Live.Subtract(Loss);
+                //Dead.Add(Loss);
 
-                double DetachedFrac = 0;
-                if (DetachmentRateFunction != null)
-                    DetachedFrac = DetachmentRateFunction.Value;
-                if (DetachedFrac > 0.0)
+                double DetachedFrac = DetachmentRateFunction.Value;
+                double detachingWt = Dead.Wt * DetachedFrac;
+                double detachingN = Dead.N * DetachedFrac;
+
+                Dead.StructuralWt *= (1 - DetachedFrac);
+                Dead.StructuralN *= (1 - DetachedFrac);
+                Dead.NonStructuralWt *= (1 - DetachedFrac);
+                Dead.NonStructuralN *= (1 - DetachedFrac);
+                Dead.MetabolicWt *= (1 - DetachedFrac);
+                Dead.MetabolicN *= (1 - DetachedFrac);
+				
+                //Dead.Multiply(1 - DetachedFrac);
+
+                if (detachingWt > 0.0)
                 {
-                    double detachingWt = Dead.Wt * DetachedFrac;
-                    double detachingN = Dead.N * DetachedFrac;
-
-                    Dead.StructuralWt *= (1 - DetachedFrac);
-                    Dead.StructuralN *= (1 - DetachedFrac);
-                    Dead.NonStructuralWt *= (1 - DetachedFrac);
-                    Dead.NonStructuralN *= (1 - DetachedFrac);
-                    Dead.MetabolicWt *= (1 - DetachedFrac);
-                    Dead.MetabolicN *= (1 - DetachedFrac);
-
-                    if (detachingWt > 0.0)
-                    {
-                        DetachedWt += detachingWt;
-                        DetachedN += detachingN;
-                        SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
-                    }
+                    DetachedWt += detachingWt;
+                    DetachedN += detachingN;
+                    SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
                 }
+                
 
                 MaintenanceRespiration = 0;
                 //Do Maintenance respiration
