@@ -28,7 +28,7 @@ namespace Models.PMF.Organs
         public string NFixationOption { get; set; }
         
         /// <summary>The fixation metabolic cost</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction FixationMetabolicCost = null;
         /// <summary>The specific nitrogenase activity</summary>
         [Link(IsOptional = true)]
@@ -64,9 +64,6 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((NFixationOption == "Magic")||(NFixationOption == "None"))
-                    return 0;
-                else
                 return FixationMetabolicCost.Value;
             }
         }
