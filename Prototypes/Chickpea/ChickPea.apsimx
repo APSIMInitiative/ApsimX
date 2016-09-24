@@ -2403,8 +2403,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MultiplyFunction>
+        <Constant>
           <Name>FixationRate</Name>
+          <Value>10000</Value>
+          <Units>g/m^2/d</Units>
+        </Constant>
+
+        <MultiplyFunction>
+          <Name>FixationRate2</Name>
           <Memo>
             <Name>Memo1</Name>
             <MemoText><![CDATA[
@@ -2413,7 +2419,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <VariableReference>
             <Name>NoduleWt</Name>
             <VariableName>[Nodule].Live.Wt</VariableName>
-          </VariableReference>		  
+          </VariableReference>
           <Constant>
             <Name>SpecificNitrogenaseActivity</Name>
             <Memo>
@@ -2484,7 +2490,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NFixationOption>Magic</NFixationOption>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
