@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
@@ -9,13 +7,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// Nodule organ
-    /// Has three options for N fixation methods set by the NFixation property
-    /// 1. None means the nodule will fix no N 
-    /// 2. Magic means the nodule will fix as much N as the plant demands at no DM cost
-    /// 3. FullCost requires parameters additional parameters of FixationMetabolicCost, SpecificNitrogenaseActivity
-    ///    FT, FW, FWlog and a DMDemandFunction.  This calculates N fixation supply from the wt of the nodules
-    ///    and these parameters at a cost specified by the FixationMetabolicCost parameter
+    /// This organ simulates the N fixation supply, and respiration cost, of N fixing nodules.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -68,11 +60,7 @@ namespace Models.PMF.Organs
             get
             {
                 BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                if (Live != null)
-                {
-                    // Now add in our fixation calculated mechanisticaly
-                    Supply.Fixation = FixationRate.Value;
-                }
+                Supply.Fixation = FixationRate.Value;
                 return Supply;
             }
         }
