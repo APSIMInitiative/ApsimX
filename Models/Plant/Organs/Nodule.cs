@@ -23,16 +23,13 @@ namespace Models.PMF.Organs
     public class Nodule : GenericOrgan
     {
         #region Paramater Input Classes
-        /// <summary>The method used to determine N fixation</summary>
-        [Description("NFixationOption can be FullCost, Magic or None")]
-        public string NFixationOption { get; set; }
-        
+       
         /// <summary>The fixation metabolic cost</summary>
         [Link]
         IFunction FixationMetabolicCost = null;
         /// <summary>The specific nitrogenase activity</summary>
-        [Link(IsOptional = true)]
-        IFunction SpecificNitrogenaseActivity = null;
+        [Link]
+        IFunction FixationRate = null;
         #endregion
 
         #region Class Fields
@@ -40,8 +37,7 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         [XmlIgnore]
         public double RespiredWt { get; set; }
-        /// /// <summary>Gets the n fixed.</summary>
-        /// <value>The n fixed.</value>
+        /// <summary>Gets the n fixed.</summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double NFixed { get; set; }
@@ -50,16 +46,9 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Gets or sets the n fixation cost.</summary>
-        /// <value>The n fixation cost.</value>
-        public override double NFixationCost
-        {
-            get
-            {
-                return FixationMetabolicCost.Value;
-            }
-        }
+        public override double NFixationCost { get { return FixationMetabolicCost.Value; } }
+
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
         [XmlIgnore]
         public override BiomassAllocationType NAllocation
         {
@@ -71,35 +60,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the respired wt fixation.</summary>
-        /// <value>The respired wt fixation.</value>
-        public double RespiredWtFixation
-        {
-            get
-            {
-                return RespiredWt;
-            }
-        }
+        public double RespiredWtFixation { get { return RespiredWt; } }
+
         /// <summary>Gets or sets the n supply.</summary>
-        /// <value>The n supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
             {
                 BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                if (NFixationOption == "Magic")
-                    Supply.Fixation = 10000; //the plant can fix all the N it will ever need
-                else if (NFixationOption == "None")
-                    Supply.Fixation = 0; //the plant will fix no N
-                else if (Live != null)
+                if (Live != null)
                 {
                     // Now add in our fixation calculated mechanisticaly
-                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.Value;
+                    Supply.Fixation = FixationRate.Value;
                 }
                 return Supply;
             }
         }
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -120,18 +97,6 @@ namespace Models.PMF.Organs
         {
             NFixed = 0;
             RespiredWt = 0;
-        }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // Describe the function
-            if(NFixationOption != "FullCost")
-                tags.Add(new AutoDocumentation.Paragraph(Name + " is a simple parameterisation which provides all the N the crop demands with not DM cost if NFixationOption for the cultivar is set to Magic and fixies no nitrogen of NFixationOption is set to None", indent));
-            else
-                tags.Add(new AutoDocumentation.Paragraph(Name + " NEEDS Auto docummentation function completed", indent));
         }
     }
 }

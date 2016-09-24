@@ -2404,14 +2404,18 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Units>/d</Units>
         </Constant>
         <MultiplyFunction>
-          <Name>SpecificNitrogenaseActivity</Name>
+          <Name>FixationRate</Name>
           <Memo>
             <Name>Memo1</Name>
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
+          <VariableReference>
+            <Name>NoduleWt</Name>
+            <VariableName>[Nodule].Live.Wt</VariableName>
+          </VariableReference>		  
           <Constant>
-            <Name>PotentialActivity</Name>
+            <Name>SpecificNitrogenaseActivity</Name>
             <Memo>
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
