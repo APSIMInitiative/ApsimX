@@ -33,15 +33,6 @@ namespace Models.PMF.Organs
         /// <summary>The specific nitrogenase activity</summary>
         [Link(IsOptional = true)]
         IFunction SpecificNitrogenaseActivity = null;
-        /// <summary>The ft</summary>
-        [Link(IsOptional = true)]
-        IFunction FT = null;
-        /// <summary>The fw</summary>
-        [Link(IsOptional = true)]
-        IFunction FW = null;
-        /// <summary>The f wlog</summary>
-        [Link(IsOptional = true)]
-        IFunction FWlog = null;
         #endregion
 
         #region Class Fields
@@ -102,7 +93,7 @@ namespace Models.PMF.Organs
                 else if (Live != null)
                 {
                     // Now add in our fixation calculated mechanisticaly
-                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.Value * Math.Min(FT.Value, Math.Min(FW.Value, FWlog.Value));
+                    Supply.Fixation = Live.StructuralWt * SpecificNitrogenaseActivity.Value;
                 }
                 return Supply;
             }
