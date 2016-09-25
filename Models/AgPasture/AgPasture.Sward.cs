@@ -1,8 +1,8 @@
-﻿//-----------------------------------------------------------------------
+﻿//--------------------------------------------------------------------------------------------------------------------------
 // <copyright file="AgPasture.Sward.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
 //     Copyright (c) APSIM initiative. All rights reserved.
 // </copyright>
-//-----------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------
 
 using System;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Models.AgPasture
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
-        //- Links  ----------------------------------------------------------------------------------------------------
+        ////- Links >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Link to the Soil (provides the soil information).</summary>
         [Link]
@@ -39,7 +39,7 @@ namespace Models.AgPasture
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
-        //- Events  ---------------------------------------------------------------------------------------------------
+        ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
         /// <param name="Data">The data about biomass deposited by this plant into the soil FOM</param>
@@ -80,12 +80,12 @@ namespace Models.AgPasture
         }
 
         /// <summary>Sows the plants.</summary>
-        /// <param name="cultivar">Cultivar type</param>
-        /// <param name="population">Plants per area</param>
-        /// <param name="depth">Sowing depth</param>
-        /// <param name="rowSpacing">space between rows</param>
-        /// <param name="maxCover">maximum ground cover</param>
-        /// <param name="budNumber">Number of buds</param>
+        /// <param name="cultivar">The cultivar type</param>
+        /// <param name="population">The number of plants per area</param>
+        /// <param name="depth">The sowing depth</param>
+        /// <param name="rowSpacing">The space between rows</param>
+        /// <param name="maxCover">The maximum ground cover (optional)</param>
+        /// <param name="budNumber">The number of buds (optional)</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             // sward being sown, sow each species available
@@ -113,13 +113,11 @@ namespace Models.AgPasture
 
         #region Model parameters  ------------------------------------------------------------------------------------------
 
-        ////- Species definitions  --------------------------------------------------------------------------------------
-        
         /// <summary>Gets the reference to the species present in the sward.</summary>
         [XmlIgnore]
         public PastureSpecies[] mySpecies { get; private set; }
 
-        ////- Parameters set via user interface  ----------------------------------------------------------------------
+        ////- Parameters defining controls >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Flag whether the sward controls the species routines.</summary>
         private bool isSwardControlled = true;
@@ -175,13 +173,18 @@ namespace Models.AgPasture
 
         #region Private variables  -----------------------------------------------------------------------------------------
 
+        ////- General variables >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
         /// <summary>Flag whether there is at least on plant alive in the sward.</summary>
         private bool swardIsAlive = true;
 
-        /// <summary>The number of species in the sward</summary>
+        /// <summary>Number of species in the sward</summary>
         private int numSpecies = 1;
 
-        // -- Water variables  ----------------------------------------------------------------------------------------
+        /// <summary>Number of soil layers.</summary>
+        private int nLayers;
+
+        ////- Water uptake >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of soil water available to the sward, from each soil layer (mm).</summary>
         private double[] swardSoilWaterAvailable;
@@ -189,7 +192,7 @@ namespace Models.AgPasture
         /// <summary>Soil water uptake for the whole sward, from each soil layer (mm).</summary>
         private double[] swardSoilWaterUptake;
 
-        // -- Nitrogen variables  -------------------------------------------------------------------------------------
+        ////- N demand and uptake >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of NH4-N available for uptake to the whole sward (kg/ha).</summary>
         private double[] swardSoilNH4Available;
@@ -202,11 +205,6 @@ namespace Models.AgPasture
 
         /// <summary>Amount of NO3-N taken up by the whole sward (kg/ha).</summary>
         private double[] swardSoilNO3Uptake;
-
-        // - General variables  ---------------------------------------------------------------------------------------
-
-        /// <summary>Number of soil layers.</summary>
-        private int nLayers;
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -225,7 +223,7 @@ namespace Models.AgPasture
 
         #region Model outputs  ---------------------------------------------------------------------------------------------
 
-        ////- General properties >>> ----------------------------------------------------------------------------------
+        ////- General properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets a value indicating whether the plant is alive.</summary>
         [Description("Flag whether any plant in the sward is alive")]
@@ -257,7 +255,7 @@ namespace Models.AgPasture
             get { return numSpecies; }
         }
 
-        ////- DM and C outputs >>> ------------------------------------------------------------------------------------
+        ////- DM and C outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the total plant C content (kg/ha).</summary>
         [Description("Total amount of C in plants")]
@@ -268,7 +266,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the plant total dry matter weight (kg/ha).</summary>
-        /// <value>The total DM weight.</value>
         [Description("Total dry matter weight of plants")]
         [Units("kg/ha")]
         public double TotalWt
@@ -379,7 +376,7 @@ namespace Models.AgPasture
             }
         }
 
-        ////- N amount outputs >>> ------------------------------------------------------------------------------------
+        ////- N amount outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the plant total N content (kg/ha).</summary>
         [Description("Total amount of N in plants")]
@@ -477,7 +474,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RootN); }
         }
 
-        ////- N concentration outputs >>> -----------------------------------------------------------------------------
+        ////- N concentration outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the average N concentration of standing plant material (kg/kg).</summary>
         [Description("Average N concentration of standing plants")]
@@ -519,7 +516,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(RootN, RootWt, 0.0); }
         }
 
-        ////- DM growth and senescence outputs >>> --------------------------------------------------------------------
+        ////- DM growth and senescence outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the gross potential growth rate (kg/ha).</summary>
         [Description("Gross potential plant growth (potential C assimilation)")]
@@ -649,7 +646,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NBPP); }
         }
 
-        ////- N flows outputs >>> -------------------------------------------------------------------------------------
+        ////- N flows outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the amount of N remobilised from senesced tissue (kg/ha).</summary>
         [Description("Amount of N potentially remobilisable from senescing tissue")]
@@ -769,7 +766,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.ActualGrowthN); }
         }
 
-        ////- Growth limiting factors >>> -----------------------------------------------------------------------------
+        ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the growth factor due to variations in intercepted radiation (0-1).</summary>
         [Description("Growth factor due to variations in intercepted radiation")]
@@ -861,7 +858,7 @@ namespace Models.AgPasture
         {
             get
             {
-                return MathUtilities.Divide(mySpecies.Sum(species => species.GlfWaterSupply * species.LAIGreen), LAIGreen, 0.0);
+                return MathUtilities.Divide(mySpecies.Sum(species => species.GlfWaterDeficitSupply * species.LAIGreen), LAIGreen, 0.0);
             }
         }
 
@@ -901,9 +898,9 @@ namespace Models.AgPasture
             }
         }
 
-        ////- DM allocation and turnover rates >>> --------------------------------------------------------------------
+        ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        ////- LAI and cover outputs >>> -------------------------------------------------------------------------------
+        ////- LAI and cover outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the total plant LAI, leaf area index (m^2/m^2).</summary>
         [Description("Total leaf area index")]
@@ -979,7 +976,7 @@ namespace Models.AgPasture
             }
         }
 
-        ////- Height root depth and distribution >>> ------------------------------------------------------------------
+        ////- Height root depth and distribution >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the sward's average height (mm).</summary>
         [Description("Average height of sward")]
@@ -1010,7 +1007,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the root frontier (layer at bottom of root zone).</summary>
-        /// <value>The layer at bottom of root zone.</value>
         [Description("Layer at bottom of root zone")]
         [Units("mm")]
         public int RootFrontier
@@ -1019,7 +1015,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the fraction of root dry matter for each soil layer (0-1).</summary>
-        /// <value>The root fraction.</value>
         [Description("Fraction of root dry matter for each soil layer")]
         [Units("0-1")]
         public double[] RootWtFraction
@@ -1036,7 +1031,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the sward's average root length density for each soil layer (mm/mm^3).</summary>
-        /// <value>The root length density.</value>
         [Description("Root length density")]
         [Units("mm/mm^3")]
         public double[] RLD
@@ -1050,10 +1044,9 @@ namespace Models.AgPasture
             }
         }
 
-        ////- Water related outputs >>> -------------------------------------------------------------------------------
+        ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the amount of water demanded by plants (mm).</summary>
-        /// <value>The water demand.</value>
         [Description("Plant water demand")]
         [Units("mm")]
         public double WaterDemand
@@ -1062,7 +1055,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the amount of soil water available for uptake (mm).</summary>
-        /// <value>The soil available water.</value>
         [Description("Plant available water in soil")]
         [Units("mm")]
         public double[] SoilAvailableWater
@@ -1077,7 +1069,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the amount of water taken up by the plants (mm).</summary>
-        /// <value>The water uptake.</value>
         [Description("Plant water uptake from soil")]
         [Units("mm")]
         public double[] WaterUptake
@@ -1091,10 +1082,9 @@ namespace Models.AgPasture
             }
         }
 
-        ////- Harvest outputs >>> -------------------------------------------------------------------------------------
+        ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the amount of dry matter available for harvesting (kg/ha).</summary>
-        /// <value>The harvestable DM weight.</value>
         [Description("Total dry matter amount available for harvesting")]
         [Units("kg/ha")]
         public double HarvestableWt
@@ -1138,7 +1128,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the average ME (metabolisable energy) of harvested DM (MJ/ha).</summary>
-        /// <value>The harvested ME.</value>
         [Description("Average ME of harvested material")]
         [Units("MJ/ha")]
         public double HarvestedME
@@ -1182,7 +1171,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Called when the simulation is commencing.</summary>
-        /// <param name="sender">The sender</param>
+        /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -1234,7 +1223,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the calculations for potential growth.</summary>
-        /// <param name="sender">The sender</param>
+        /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/>instance containing the event data</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
@@ -1269,7 +1258,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the calculations for actual growth.</summary>
-        /// <param name="sender">The sender</param>
+        /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/>instance containing the event data</param>
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
@@ -1340,7 +1329,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Finds out the amount of plant available water in the soil, consider all species.</summary>
-        /// <param name="myZone">Soil information</param>
+        /// <param name="myZone">The soil information</param>
         private void GetSoilAvailableWater(ZoneWaterAndN myZone)
         {
             double totalPlantWater;
@@ -1471,7 +1460,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil, consider all species.</summary>
-        /// <param name="myZone">Soil information</param>
+        /// <param name="myZone">The soil information</param>
         private void GetSoilAvailableN(ZoneWaterAndN myZone)
         {
             double totalSoilNH4;
@@ -1548,8 +1537,8 @@ namespace Models.AgPasture
         #region - Organic matter processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Adds a given amount of detached plant material (DM and N) to the surface organic matter.</summary>
-        /// <param name="amountDM">DM amount to return (kg/ha)</param>
-        /// <param name="amountN">N amount to return (kg/ha)</param>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
         private void DoAddDetachedShootToSurfaceOM(double amountDM, double amountN)
         {
             if (BiomassRemoved != null)
@@ -1572,8 +1561,8 @@ namespace Models.AgPasture
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool</summary>
-        /// <param name="amountDM">DM amount to return (kg/ha)</param>
-        /// <param name="amountN">N amount to return (kg/ha)</param>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
         private void DoAddDetachedRootToSoilFOM(double amountDM, double amountN)
         {
             FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
@@ -1610,7 +1599,7 @@ namespace Models.AgPasture
         #region Intermittent processes  ------------------------------------------------------------------------------------
 
         /// <summary>Kills a fraction of all plants in the sward.</summary>
-        /// <param name="fractionToKill">Fraction of crop to kill (0-1)</param>
+        /// <param name="fractionToKill">The fraction of crop to kill (0-1)</param>
         public void KillCrop(double fractionToKill)
         {
             foreach (PastureSpecies species in mySpecies)
@@ -1618,7 +1607,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Removes plant material simulating a graze event.</summary>
-        /// <param name="amount">DM amount (kg/ha)</param>
+        /// <param name="amount">The DM amount (kg/ha)</param>
         /// <param name="type">How the amount is interpreted (SetResidueAmount or SetRemoveAmount).</param>
         public void Graze(double amount, string type)
         {
@@ -1642,10 +1631,10 @@ namespace Models.AgPasture
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
                 }
                 // Get the actual amount to remove
-                double amountToRemove = Math.Min(amountRequired, amountAvailable);
+                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));
 
                 // Get the amounts to remove by mySpecies:
-                if (amountRequired > 0.0)
+                if (amountToRemove > Epsilon)
                 {
                     double[] fractionToRemove = new double[numSpecies];
                     for (int s = 0; s < numSpecies; s++)

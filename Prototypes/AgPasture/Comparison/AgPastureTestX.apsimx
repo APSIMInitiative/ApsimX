@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
@@ -685,6 +685,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -1367,7 +1368,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -1471,7 +1472,7 @@ namespace Models
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].Ryegrass.IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
+            <string>[Sward].Ryegrass.InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
             <string>[Sward].Ryegrass.HarvestedFraction as Ryegrass.HarvestedFraction</string>
@@ -4278,6 +4279,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -4986,7 +4988,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
@@ -5086,7 +5088,7 @@ namespace Models
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Ryegrass].IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
+            <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
             <string>[Ryegrass].HarvestedFraction as Ryegrass.HarvestedFraction</string>
@@ -8092,6 +8094,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -8774,7 +8777,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -8878,7 +8881,7 @@ namespace Models
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].Ryegrass.IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
+            <string>[Sward].Ryegrass.InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
             <string>[Sward].Ryegrass.HarvestedFraction as Ryegrass.HarvestedFraction</string>
@@ -11646,6 +11649,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -12354,7 +12358,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
@@ -12454,7 +12458,7 @@ namespace Models
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Ryegrass].IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
+            <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
             <string>[Ryegrass].HarvestedFraction as Ryegrass.HarvestedFraction</string>
@@ -15311,6 +15315,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -16024,7 +16029,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
@@ -16124,7 +16129,7 @@ namespace Models
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
             <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
             <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Ryegrass].IrradianceTopCanopy as Ryegrass.IrradianceTopCanopy</string>
+            <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
             <string>[Ryegrass].HarvestedFraction as Ryegrass.HarvestedFraction</string>
@@ -18364,7 +18369,9 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>RyegrassArbitrator</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
