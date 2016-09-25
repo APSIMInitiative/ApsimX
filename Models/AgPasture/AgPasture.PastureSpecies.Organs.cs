@@ -1,8 +1,8 @@
-﻿//--------------------------------------------------------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright file="AgPasture.PastureSpecies.Organs.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
 //     Copyright (c) APSIM initiative. All rights reserved.
 // </copyright>
-//--------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Models.AgPasture
         /// <summary>The collection of tissues for this organ</summary>
         internal GenericTissue[] Tissue { get; set; }
 
-        #region Organ specific characteristics  ----------------------------------------------------------------------------
+        #region Organ specific characteristics  -----------------------------------------------------------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
         internal double NConcOptimum = 0.04;
@@ -51,9 +51,9 @@ namespace Models.AgPasture
         /// <summary>List of BiomassRemovalTypes with default biomass removal fractions for given removal types</summary>
         private Dictionary<string, OrganBiomassRemovalType> defaultRemovalFractions = new Dictionary<string, OrganBiomassRemovalType>();
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
+        #region Organ properties (summary of tissues)  ----------------------------------------------------------------
 
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
@@ -261,9 +261,9 @@ namespace Models.AgPasture
             get { return Tissue[TissueCount - 1].Digestibility; }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Organ methods  ---------------------------------------------------------------------------------------------
+        #region Organ methods  ----------------------------------------------------------------------------------------
 
         /// <summary>Reset all amounts to zero in all tissues of this organ</summary>
         internal void DoResetOrgan()
@@ -319,7 +319,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues</summary>
-        /// <param name="turnoverRate">The turnover rate for each tissue</param>
+        /// <param name="turnoverRate">The tunover rate for each tissue</param>
         /// <returns>The DM and N amount detached from this organ</returns>
         internal void DoTissueTurnover(double[] turnoverRate)
         {
@@ -390,7 +390,7 @@ namespace Models.AgPasture
                 return null;
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
         /// <summary>Minimum significant difference between two values</summary>
         const double Epsilon = 0.000000001;
@@ -413,7 +413,7 @@ namespace Models.AgPasture
         /// <summary>The collection of tissues for this organ</summary>
         internal RootTissue[] Tissue { get; set; }
 
-        #region Root specific characteristics  -----------------------------------------------------------------------------
+        #region Root specific characteristics  ------------------------------------------------------------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth [kg/kg]</summary>
         internal double NConcOptimum = 2.0;
@@ -436,9 +436,9 @@ namespace Models.AgPasture
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer [0-1]</summary>
         internal double[] TargetDistribution { get; set; }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Organ Properties (summary of tissues)  ---------------------------------------------------------------------
+        #region Organ Properties (summary of tissues)  ----------------------------------------------------------------
 
         /// <summary>The number of tissue pools in this organ</summary>
         internal int TissueCount;
@@ -601,9 +601,9 @@ namespace Models.AgPasture
             get { return Tissue[TissueCount - 1].NTransferedOut; }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Organ methods  ---------------------------------------------------------------------------------------------
+        #region Organ methods  ----------------------------------------------------------------------------------------
 
         /// <summary>Reset all amounts to zero in all tissues of this organ</summary>
         internal void DoResetOrgan()
@@ -667,7 +667,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues</summary>
-        /// <param name="turnoverRate">The turnover rate for each tissue</param>
+        /// <param name="turnoverRate">The tunover rate for each tissue</param>
         /// <returns>The DM and N amount detached from this organ</returns>
         internal void DoTissueTurnover(double[] turnoverRate)
         {
@@ -725,7 +725,7 @@ namespace Models.AgPasture
             return (dmIsOk || nIsOk);
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
         /// <summary>Minimum significant difference between two values</summary>
         const double Epsilon = 0.000000001;
@@ -735,9 +735,40 @@ namespace Models.AgPasture
     [Serializable]
     public class GenericTissue
     {
-        #region Basic properties  ------------------------------------------------------------------------------------------
+        #region Basic properties  -------------------------------------------------------------------------------------
 
-        ////- Characteristics (parameters) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // >> State amounts .......................................................................
+
+        /// <summary>Gets or sets the dry matter weight [kg/ha]</summary>
+        internal virtual double DM { get; set; }
+
+        /// <summary>Gets or sets the nitrogen content [kg/ha]</summary>
+        internal virtual double Namount { get; set; }
+
+        /// <summary>Gets or sets the phosphorus content [kg/ha]</summary>
+        internal virtual double Pamount { get; set; }
+
+        // >> Amounts in and out ..................................................................
+
+        /// <summary>Gets or sets the DM amount transfered into this tissue [kg/ha]</summary>
+        internal double DMTransferedIn { get; set; }
+
+        /// <summary>Gets or sets the DM amount transfered out of this tissue [kg/ha]</summary>
+        internal double DMTransferedOut { get; set; }
+
+        /// <summary>Gets or sets the amount of N transfered into this tissue [kg/ha]</summary>
+        internal double NTransferedIn { get; set; }
+
+        /// <summary>Gets or sets the amount of N transfered out of this tissue [kg/ha]</summary>
+        internal double NTransferedOut { get; set; }
+
+        /// <summary>Gets or sets the amount of N available for remobilisation [kg/ha]</summary>
+        internal double NRemobilisable { get; set; }
+
+        /// <summary>Gets or sets the amount of N remobilised into new growth [kg/ha]</summary>
+        internal double NRemobilised { get; set; }
+
+        // >> Characteristics (parameters)  .......................................................
 
         /// <summary>Gets or sets the fraction of luxury N remobilisable per day [0-1]</summary>
         internal double FractionNLuxuryRemobilisable = 0.0;
@@ -751,40 +782,9 @@ namespace Models.AgPasture
         /// <summary>Gets or sets the digestibility of proteins [0-1]</summary>
         internal double DigestibilityProtein = 1.0;
 
-        ////- State properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        /// <summary>Gets or sets the dry matter weight [kg/ha]</summary>
-        internal virtual double DM { get; set; }
-
-        /// <summary>Gets or sets the nitrogen content [kg/ha]</summary>
-        internal virtual double Namount { get; set; }
-
-        /// <summary>Gets or sets the phosphorus content [kg/ha]</summary>
-        internal virtual double Pamount { get; set; }
-
-        ////- Amounts in and out >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Gets or sets the DM amount transferred into this tissue [kg/ha]</summary>
-        internal double DMTransferedIn { get; set; }
-
-        /// <summary>Gets or sets the DM amount transferred out of this tissue [kg/ha]</summary>
-        internal double DMTransferedOut { get; set; }
-
-        /// <summary>Gets or sets the amount of N transferred into this tissue [kg/ha]</summary>
-        internal double NTransferedIn { get; set; }
-
-        /// <summary>Gets or sets the amount of N transferred out of this tissue [kg/ha]</summary>
-        internal double NTransferedOut { get; set; }
-
-        /// <summary>Gets or sets the amount of N available for remobilisation [kg/ha]</summary>
-        internal double NRemobilisable { get; set; }
-
-        /// <summary>Gets or sets the amount of N remobilised into new growth [kg/ha]</summary>
-        internal double NRemobilised { get; set; }
-
-        #endregion ---------------------------------------------------------------------------------------------------------
-
-        #region Derived properties (outputs)  ------------------------------------------------------------------------------
+        #region Derived properties (get only)  ------------------------------------------------------------------------
 
         /// <summary>Gets the nitrogen concentration [kg/kg]</summary>
         internal double Nconc
@@ -822,9 +822,9 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Tissue methods  --------------------------------------------------------------------------------------------
+        #region Tissue methods  ---------------------------------------------------------------------------------------
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth</summary>
         /// <param name="fraction">fraction to remove [0-1]</param>
@@ -840,9 +840,9 @@ namespace Models.AgPasture
             Namount += NTransferedIn - (NTransferedOut + NRemobilised);
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
 
-        #region Constants  -------------------------------------------------------------------------------------------------
+        #region Constants  --------------------------------------------------------------------------------------------
 
         /// <summary>Average carbon content in plant dry matter</summary>
         const double CarbonFractionInDM = 0.4;
@@ -856,7 +856,7 @@ namespace Models.AgPasture
         /// <summary>Minimum significant difference between two values</summary>
         internal const double MyPrecision = 0.000000001;
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
     }
 
     /// <summary>Describes a root tissue of a pasture species</summary>
@@ -878,9 +878,7 @@ namespace Models.AgPasture
         /// <summary>The number of layers in the soil</summary>
         private int nLayers;
 
-        #region Basic properties  ------------------------------------------------------------------------------------------
-
-        ////- State properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        #region Basic properties  -------------------------------------------------------------------------------------
 
         /// <summary>Gets or sets the dry matter weight [kg/ha]</summary>
         internal override double DM
@@ -925,18 +923,6 @@ namespace Models.AgPasture
         /// <summary>Gets or sets the P content for each layer [kg/ha]</summary>
         internal double[] PamountLayer { get; set; }
 
-        ////- Amounts in and out >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Gets or sets the DM amount transferred into this tissue, for each layer [kg/ha]</summary>
-        internal double[] DMLayersTransferedIn { get; set; }
-
-        /// <summary>Gets or sets the amount of N transferred into this tissue, for each layer [kg/ha]</summary>
-        internal double[] NLayersTransferedIn { get; set; }
-
-        #endregion ---------------------------------------------------------------------------------------------------------
-
-        #region Derived properties (outputs)  ------------------------------------------------------------------------------
-
         /// <summary>Gets the dry matter fraction for each layer [0-1]</summary>
         internal double[] FractionWt
         {
@@ -949,9 +935,15 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        /// <summary>Gets or sets the DM amount transfered into this tissue, for eac layer [kg/ha]</summary>
+        internal double[] DMLayersTransferedIn { get; set; }
 
-        #region Tissue methods  --------------------------------------------------------------------------------------------
+        /// <summary>Gets or sets the amount of N transfered into this tissue, for eac layer [kg/ha]</summary>
+        internal double[] NLayersTransferedIn { get; set; }
+
+        #endregion ----------------------------------------------------------------------------------------------------
+
+        #region Tissue methods  ---------------------------------------------------------------------------------------
 
         /// <summary>Updates the tissue state, make changes in DM and N effective</summary>
         internal override void DoUpdateTissue()
@@ -973,6 +965,6 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        #endregion ----------------------------------------------------------------------------------------------------
     }
 }

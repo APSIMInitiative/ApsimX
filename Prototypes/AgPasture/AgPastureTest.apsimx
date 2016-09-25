@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
@@ -657,6 +657,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -1279,7 +1280,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <PastureSpecies>
@@ -1390,7 +1391,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -3561,6 +3562,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -4183,7 +4185,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <PastureSpecies>
@@ -4294,7 +4296,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+            <WaterAvailableMethod>Default</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -6757,6 +6759,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -7378,7 +7381,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <PastureSpecies>
@@ -7489,7 +7492,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
@@ -9427,6 +9430,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -10048,7 +10052,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <PastureSpecies>
@@ -10159,7 +10163,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
+          <WaterAvailableMethod>Default</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
