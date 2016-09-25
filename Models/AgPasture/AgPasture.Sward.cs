@@ -1630,7 +1630,7 @@ namespace Models.AgPasture
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
                 }
                 // Get the actual amount to remove
-                double amountToRemove = Math.Min(amountRequired, amountAvailable);
+                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));
 
                 // Get the amounts to remove by mySpecies:
                 if (amountToRemove > Epsilon)
