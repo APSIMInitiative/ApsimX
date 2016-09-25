@@ -1640,7 +1640,7 @@ namespace Models.AgPasture
         internal string MyWaterUptakeSource = "species";
 
         /// <summary>Flag which method for computing soil available water will be used</summary>
-        private PlantAvailableWaterMethod myWaterAvailableMethod = PlantAvailableWaterMethod.Default;
+        private PlantAvailableWaterMethod myWaterAvailableMethod = PlantAvailableWaterMethod.DefaultAPSIM;
 
         /// <summary>Flag which method for computing soil available water will be used</summary>
         [Description("Choose the method for computing soil available water:")]
@@ -2047,7 +2047,7 @@ namespace Models.AgPasture
         public enum PlantAvailableWaterMethod
         {
             /// <summary>The APSIM default, using kL</summary>
-            Default,
+            DefaultAPSIM,
 
             /// <summary>Alternative, using root length and modified kL</summary>
             AlternativeKL,
@@ -4431,7 +4431,7 @@ namespace Models.AgPasture
         /// <param name="myZone">Soil information</param>
         internal void EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
         {
-            if (myWaterAvailableMethod == PlantAvailableWaterMethod.Default)
+            if (myWaterAvailableMethod == PlantAvailableWaterMethod.DefaultAPSIM)
                 mySoilWaterAvailable = PlantAvailableSoilWaterDefault(myZone);
             else if (myWaterAvailableMethod == PlantAvailableWaterMethod.AlternativeKL)
                 mySoilWaterAvailable = PlantAvailableSoilWaterAlternativeKL(myZone);

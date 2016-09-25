@@ -1280,7 +1280,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <PastureSpecies>
@@ -1391,7 +1391,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -4185,7 +4185,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <PastureSpecies>
@@ -4296,7 +4296,7 @@ namespace Models
             <FractionStolonStanding>0</FractionStolonStanding>
             <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
             <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-            <WaterAvailableMethod>Default</WaterAvailableMethod>
+            <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
             <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
           </PastureSpecies>
           <ControlledBySward>yes</ControlledBySward>
@@ -7381,7 +7381,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <PastureSpecies>
@@ -7492,7 +7492,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
@@ -10052,7 +10052,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <PastureSpecies>
@@ -10163,7 +10163,7 @@ namespace Models
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
-          <WaterAvailableMethod>Default</WaterAvailableMethod>
+          <WaterAvailableMethod>DefaultAPSIM</WaterAvailableMethod>
           <NitrogenAvailableMethod>BasicAgPasture</NitrogenAvailableMethod>
         </PastureSpecies>
         <Report>
