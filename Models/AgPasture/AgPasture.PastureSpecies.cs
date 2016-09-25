@@ -3856,7 +3856,7 @@ namespace Models.AgPasture
                     CalcDailyPotentialGrowth();
 
                     // Evaluate potential allocation of today's growth
-                    EvaluateGrowthAllocation();
+                    GetAllocationFractions();
 
                     // Evaluate the water supply, demand & uptake
                     DoWaterCalculations();
@@ -3891,7 +3891,7 @@ namespace Models.AgPasture
                     EvaluateNewGrowthAllocation();
 
                     // Get the effective growth, after all limitations and senescence
-                    DoEffectiveGrowth();
+                    DoActualGrowthAndAllocation();
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoSurfaceOMReturn(detachedShootDM, detachedShootN);
@@ -4029,7 +4029,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Calculates the plant effective growth and update DM, N, LAI and digestibility.</summary>
-        internal void DoEffectiveGrowth()
+        internal void DoActualGrowthAndAllocation()
         {
             // Effective, or net, growth
             dGrowthEff = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
@@ -4623,7 +4623,7 @@ namespace Models.AgPasture
                 EvaluateSoilNitrogenUptake();
 
                 // Evaluate whether remobilisation of luxury N is needed
-                EvaluateNLuxuryRemobilisation();
+                EvaluateLuxuryNRemobilisation();
 
                 // Send delta N to the soil model
                 DoSoilNitrogenUptake();
@@ -4633,7 +4633,7 @@ namespace Models.AgPasture
                 // Nitrogen uptake was computed by the resource arbitrator
 
                 // Evaluate whether remobilisation of luxury N is needed
-                EvaluateNLuxuryRemobilisation();
+                EvaluateLuxuryNRemobilisation();
 
                 // Send delta N to the soil model
                 DoSoilNitrogenUptake();
@@ -4653,7 +4653,7 @@ namespace Models.AgPasture
                 }
 
                 // Evaluate whether remobilisation of luxury N is needed
-                EvaluateNLuxuryRemobilisation();
+                EvaluateLuxuryNRemobilisation();
             }
             else
             {
@@ -4941,7 +4941,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the amount of nitrogen remobilised from tissues with N content above optimum.</summary>
-        internal void EvaluateNLuxuryRemobilisation()
+        internal void EvaluateLuxuryNRemobilisation()
         {
             // check whether there is still demand for N (only match demand for growth at optimum N conc.)
             // check whether there is any luxury N remobilisable
@@ -5180,7 +5180,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the allocations into shoot and leaves of todays growth.</summary>
-        internal void EvaluateGrowthAllocation()
+        internal void GetAllocationFractions()
         {
             EvaluateAllocationToShoot();
             EvaluateAllocationToLeaf();
