@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Replacements>
@@ -461,9 +461,9 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
-        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -689,6 +689,7 @@
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -707,14 +708,6 @@
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <Constant>
-          <Name>SpecificNitrogenaseActivity</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Value>4.5</Value>
-        </Constant>
-        <Constant>
           <Name>FixationMetabolicCost</Name>
           <Memo>
             <Name>Memo</Name>
@@ -722,62 +715,6 @@
           </Memo>
           <Value>7</Value>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>FT</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>20</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
-        <LinearInterpolationFunction>
-          <Name>FW</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>FWlog</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -901,13 +838,93 @@
           <Value>0</Value>
           <Units>g/m^2</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
+        <MultiplyFunction>
+          <Name>FixationRate</Name>
+          <Memo>
+            <Name>Memo1</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>NoduleWt</Name>
+            <VariableName>[Nodule].Live.Wt</VariableName>
+          </VariableReference>
+
+          <Constant>
+            <Name>SpecificNitrogenaseActivity</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <Value>4.5</Value>
+          </Constant>
+          <MinimumFunction>
+            <Name>MinimumFunction</Name>
+            <AirTemperatureFunction>
+              <Name>FT</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <LinearInterpolationFunction>
+              <Name>FW</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>FWlog</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+          </MinimumFunction>
+        </MultiplyFunction>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </Nodule>
       <GenericOrgan>
         <Name>Shell</Name>
@@ -1076,13 +1093,13 @@
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1572,6 +1589,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -1587,7 +1605,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1705,13 +1722,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2434,6 +2451,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6178,6 +6196,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -8835,6 +8854,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -12331,6 +12351,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>

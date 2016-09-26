@@ -169,6 +169,10 @@
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
+    <Compile Include="Lifecycle\Cohort.cs" />
+    <Compile Include="Lifecycle\Lifecycle.cs" />
+    <Compile Include="Lifecycle\Lifestage.cs" />
+    <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
