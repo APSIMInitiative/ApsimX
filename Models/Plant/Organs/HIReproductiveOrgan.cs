@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
@@ -11,7 +9,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
-    public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class HIReproductiveOrgan : BaseOrgan
     {
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -122,15 +120,6 @@ namespace Models.PMF.Organs
             {
                 Live.StructuralN += value.Structural;
             }
-        }
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
         }
 
     }
