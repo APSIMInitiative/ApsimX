@@ -1425,6 +1425,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="PerennialLeaf">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>  
   <Type name="SimpleRoot">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
