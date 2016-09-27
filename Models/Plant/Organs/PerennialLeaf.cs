@@ -52,16 +52,11 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsAlive)
                 {
-                    double greenCover = 0.0;
-                    if (CoverFunction == null)
-                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value * LAI);
-                    else
-                        greenCover = CoverFunction.Value;
+                    double greenCover = 1.0 - Math.Exp(-ExtinctionCoefficient.Value * LAI);
                     return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
                     return 0.0;
-
             }
         }
 
@@ -97,16 +92,13 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
-        /// <summary>The cover function</summary>
-        [Link(IsOptional = true)]
-        IFunction CoverFunction = null;
 
         /// <summary>The lai function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
-        [Link(IsOptional = true)]
-        IFunction ExtinctionCoefficientFunction = null;
+        [Link]
+        IFunction ExtinctionCoefficient = null;
         /// <summary>The photosynthesis</summary>
         [Link]
         IFunction Photosynthesis = null;
@@ -251,19 +243,10 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
-
                 FRGR = FRGRFunction.Value;
-                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
-                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
-                if (LAIFunction != null)
-                    LAI = LAIFunction.Value;
-
+                LAI = LAIFunction.Value;
                 Height = HeightFunction.Value;
-
                 LAIDead = LaiDeadFunction.Value;
-
             }
         }
 
