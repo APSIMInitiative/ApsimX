@@ -728,6 +728,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -743,7 +744,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -920,6 +920,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </XYPairs>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -1017,8 +1018,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1116,8 +1117,8 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
