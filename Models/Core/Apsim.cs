@@ -448,7 +448,7 @@ namespace Models.Core
                 {
                     object linkedObject = null;
 
-                    List<IModel> allMatches = FindAll(model, field.FieldType);
+                    List<IModel> allMatches = null;
 
                     // Special cases: 
                     //   if the type is an IFunction then must match on name and type.
@@ -459,13 +459,18 @@ namespace Models.Core
                         typeof(Biomass).IsAssignableFrom(field.FieldType) ||
                         field.FieldType.Name == "Object")
                     {
+                        allMatches = Children(model, field.FieldType);
                         linkedObject = allMatches.Find(m => m.Name == field.Name);
                         if (linkedObject == null)
                             allMatches.Clear();
                     }
 
-                    else if (allMatches.Count >= 1)
-                        linkedObject = allMatches[0];     // choose closest match.
+                    else 
+                    {
+                        allMatches = FindAll(model, field.FieldType);
+                        if (allMatches.Count >= 1)
+                            linkedObject = allMatches[0];     // choose closest match.
+                    }
 
                     if ((linkedObject == null) && (!link.IsOptional))
                         errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
@@ -476,7 +481,7 @@ namespace Models.Core
                     else if (!link.IsOptional)
                         throw new ApsimXException(
                                     model,
-                                    "Cannot resolve [Link] '" + field.ToString() + errorMsg);
+                                    "Cannot resolve [Link] '" + field.ToString() + " in class " + Apsim.FullPath(model) + ". " + errorMsg);
 
                 }
             }

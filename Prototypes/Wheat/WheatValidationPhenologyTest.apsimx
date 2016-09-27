@@ -264,6 +264,10 @@ The model consists of:
             <Name>ExpressionTarget</Name>
             <VariableName>[Phenology].MolecularPhenology.Vrn1Target</VariableName>
           </VariableReference>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Emergence</Start>
           <End>FloralInitiation</End>
         </ExpressionPhase>
@@ -277,6 +281,10 @@ The model consists of:
             <Name>ExpressionTarget</Name>
             <Value>1</Value>
           </Constant>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>FloralInitiation</Start>
           <End>TerminalSpikelet</End>
         </ExpressionPhase>
@@ -1840,6 +1848,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Operations>
             <Name>Sowing</Name>
@@ -1903,6 +1912,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -3095,6 +3105,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -3155,6 +3166,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -3810,6 +3822,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -3870,6 +3883,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -4525,6 +4539,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -4585,6 +4600,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -5240,6 +5256,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -5300,6 +5317,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -5950,6 +5968,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Manager>
             <Name>SowingRule</Name>
@@ -6053,6 +6072,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -6850,6 +6870,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>Surface Organic Matter</Name>
@@ -6907,6 +6928,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Plant>
             <Name>Wheat</Name>
@@ -7667,6 +7689,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -7724,6 +7747,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -8207,6 +8231,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -8264,6 +8289,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -9109,6 +9135,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -9166,6 +9193,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -9649,6 +9677,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -9706,6 +9735,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -10292,6 +10322,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -10349,6 +10380,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -10832,6 +10864,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -10889,6 +10922,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -11488,6 +11522,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -11545,6 +11580,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -12028,6 +12064,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -12085,6 +12122,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -12568,6 +12606,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -12625,6 +12664,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -13108,6 +13148,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -13165,6 +13206,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -13648,6 +13690,7 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -13705,6 +13748,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Wheat</Name>
@@ -14175,6 +14219,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -14235,6 +14280,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -14929,6 +14975,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -14989,6 +15036,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -15683,6 +15731,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -15743,6 +15792,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>
@@ -16398,6 +16448,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -16458,6 +16509,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>DailyReport</Name>

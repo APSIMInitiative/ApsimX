@@ -990,7 +990,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -1021,7 +1021,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -1092,7 +1092,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <AddFunction>
@@ -2019,6 +2019,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0.5</Value>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>

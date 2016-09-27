@@ -37,6 +37,23 @@
       </Population1>
       <Phenology>
         <Name>Phenology</Name>
+        <LinearInterpolationFunction>
+          <Name>ThermalTime</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>34</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>26</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Vernalisation].CrownTemperature</XProperty>
+        </LinearInterpolationFunction>
         <GerminatingPhase>
           <Name>SowingToGermination</Name>
           <Start>Sowing</Start>
@@ -753,6 +770,25 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
             <Name>RUEModifier</Name>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
+          <LinearInterpolationFunction>
+            <Name>TempStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>10</double>
+                <double>25</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Environment].MeanT</XProperty>
+          </LinearInterpolationFunction>
         </RUEModel1>
         <StageBasedInterpolation>
           <Name>TE</Name>
@@ -1523,6 +1559,25 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Dead>
           <Name>Dead</Name>
         </Dead>
+        <LinearInterpolationFunction>
+          <Name>TempStress</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>25</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Environment].MeanT</XProperty>
+        </LinearInterpolationFunction>        
         <dlt_dm_pot_rue>0</dlt_dm_pot_rue>
         <dlt_n_senesced_retrans>0</dlt_n_senesced_retrans>
         <dlt_n_senesced_trans>0</dlt_n_senesced_trans>
