@@ -223,6 +223,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <OnEventFunction>
           <Name>FloweringDAS</Name>
@@ -261,6 +262,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -605,6 +607,8 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <VariableName>[Maize].Population</VariableName>
           </VariableReference>
         </DivideFunction>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
       </ReproductiveOrgan>
       <Root>
@@ -698,10 +702,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Value>0.01</Value>
           <Units>g/g</Units>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
           <XYPairs>
@@ -767,39 +771,61 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
-        <NuptakeSupply>0</NuptakeSupply>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>380</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[3]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>3</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[4]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>4</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[5]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>5</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[6]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>6</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -1280,6 +1306,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
           </VariableReference>
         </MinimumFunction>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1290,9 +1318,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
@@ -1359,11 +1390,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.3</Value>
           <Units>g/g</Units>
         </Constant>
-		<Constant>
-		  <Name>SenescenceRate</Name>
-		  <Value>0</Value>
-		  <Units>/d</Units>
-		</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
@@ -1373,21 +1404,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMRetranslocationFactor</Name>
           <Value>0.1</Value>
         </Constant>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Rachis</Name>
@@ -1475,11 +1508,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
-		<Constant>
-		  <Name>SenescenceRate</Name>
-		  <Value>0</Value>
-		  <Units>/d</Units>
-		</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.003</Value>
@@ -1500,21 +1533,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </XYPairs>
           <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
         </LinearInterpolationFunction>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1647,26 +1682,28 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
-	<Constant>
-	  <Name>SenescenceRate</Name>
-	  <Value>0</Value>
-	  <Units>/d</Units>
-	</Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2281,6 +2318,7 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
       </Cultivar>
       <CropType>Maize</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
       <Name>Wheat</Name>
@@ -2495,6 +2533,7 @@ The model consists of:
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <VernalisationCW>
           <Name>Vernalisation</Name>
@@ -2521,6 +2560,7 @@ The model consists of:
           <PhotoperiodFunction>
             <Name>Photoperiod</Name>
             <Twilight>-6</Twilight>
+            <DayLength>0</DayLength>
           </PhotoperiodFunction>
           <VernSens>2.5</VernSens>
           <PhotopSens>2</PhotopSens>
@@ -2735,6 +2775,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>1.1</Value>
           </Constant>
         </DivideFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -3055,7 +3096,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -3086,7 +3127,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -3169,7 +3210,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <AddFunction>
@@ -3242,6 +3283,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
       <Root>
@@ -3343,10 +3386,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -3468,19 +3511,29 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
-        <NuptakeSupply>0</NuptakeSupply>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>200</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>2</Rank>
           <Area>0</Area>
+          <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
@@ -3998,6 +4051,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -4008,9 +4067,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <R50>150</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
+        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+        <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
@@ -4064,11 +4126,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
-		<Constant>
-		  <Name>SenescenceRate</Name>
-		  <Value>0</Value>
-		  <Units>/d</Units>
-		</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.003</Value>
@@ -4122,21 +4184,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -4150,11 +4214,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
-	<Constant>
-	  <Name>SenescenceRate</Name>
-	  <Value>0</Value>
-	  <Units>/d</Units>
-	</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -4300,21 +4364,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Stem].Live.Wt</VariableName>
           </VariableReference>
         </DivideFunction>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4822,6 +4888,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         </CultivarFolder>
       </CultivarFolder>
       <CropType>Wheat</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
   <DataStore>
@@ -5135,7 +5202,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -5170,6 +5236,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5329,6 +5396,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <ApsoilNumber>38</ApsoilNumber>
           <Latitude>-27.537</Latitude>
           <Longitude>152.336</Longitude>
+          <Area>0</Area>
           <LocationAccuracy>+-20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
           <Comments>Soil naming structure: \State\Region\Classification-Local Name (Site/district and locator number); oc and ph estimated</Comments>
@@ -5372,6 +5440,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Name>wheat</Name>
           <ResourceName>wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <Operations>
           <Name>Sowing</Name>
@@ -5398,6 +5467,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Operations>
           <Name>Management</Name>
@@ -5559,7 +5629,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -5603,6 +5672,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5794,6 +5864,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Manager>
           <Name>SowingRule</Name>
@@ -5870,6 +5941,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -5889,6 +5961,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -6066,7 +6139,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -6110,6 +6182,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6301,6 +6374,7 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -6341,6 +6415,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -6360,6 +6435,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Operations>
           <Name>IrrigationSchedule</Name>
@@ -6477,7 +6553,6 @@ namespace Models
           <Name>CSIROField</Name>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -6521,6 +6596,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6799,6 +6875,7 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -6839,6 +6916,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -6858,6 +6936,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Manager>
           <Name>SowingRule</Name>
@@ -6961,7 +7040,6 @@ namespace Models
           <Name>HRSField</Name>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -7005,6 +7083,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7283,6 +7362,7 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7323,6 +7403,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -7342,6 +7423,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Manager>
           <Name>SowingRule</Name>
@@ -7550,7 +7632,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -7594,6 +7675,7 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7785,6 +7867,7 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Manager>
           <Name>SowingRule</Name>
@@ -7868,6 +7951,7 @@ namespace Models
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
           <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -7887,6 +7971,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
