@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -724,6 +724,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -769,10 +773,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>PartitionFraction</Name>
           <Value>0.05</Value>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -927,11 +931,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
-		<Constant>
-		  <Name>SenescenceRate</Name>
-		  <Value>0</Value>
-		  <Units>/d</Units>
-		</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
@@ -940,10 +944,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>Germination</Start>
@@ -998,23 +1002,23 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1022,11 +1026,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
-		<Constant>
-		  <Name>SenescenceRate</Name>
-		  <Value>0</Value>
-		  <Units>/d</Units>
-		</Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.02</Value>
@@ -1097,23 +1101,23 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2288,6 +2292,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6011,6 +6016,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8506,6 +8512,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>

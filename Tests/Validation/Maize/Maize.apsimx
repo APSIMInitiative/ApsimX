@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -343,6 +343,7 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -1419,6 +1420,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -11937,6 +11939,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -13511,6 +13514,7 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -14659,6 +14663,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -15803,6 +15808,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -16746,6 +16752,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -17609,6 +17616,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -18560,6 +18568,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -19990,6 +19999,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -21319,6 +21329,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -22705,6 +22716,7 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -23503,6 +23515,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -24511,6 +24524,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -26022,6 +26036,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -32556,6 +32571,7 @@ TreatNo = 2
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Maize</Name>
@@ -35380,6 +35396,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Maize</Name>
@@ -36713,6 +36730,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
               <Name>Maize</Name>
@@ -38786,6 +38804,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>
             <Name>SowingFertiliser</Name>

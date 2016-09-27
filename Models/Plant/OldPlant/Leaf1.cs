@@ -204,10 +204,6 @@ namespace Models.PMF.OldPlant
         [Link]
         IFunction DMSenescenceFraction = null;
 
-        /// <summary>The total live</summary>
-        [Link]
-        CompositeBiomass TotalLive = null;
-
         /// <summary>The growth structural fraction stage</summary>
         [Link]
         IFunction GrowthStructuralFractionStage = null;
@@ -620,7 +616,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Leaf.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
