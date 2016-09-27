@@ -646,7 +646,7 @@ namespace Models
           <string>[Root].Dead</string>
         </Propertys>
       </CompositeBiomass>
-      <SimpleLeaf>
+      <PerennialLeaf>
         <Name>Leaf</Name>
         <Memo>
           <Name>Description</Name>
@@ -739,11 +739,7 @@ namespace Models
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
-          <Name>CoverFunction</Name>
-          <Value>0.5</Value>
-        </Constant>
-        <Constant>
-          <Name>ExtinctionCoefficientFunction</Name>
+          <Name>ExtinctionCoefficient</Name>
           <Value>0.5</Value>
         </Constant>
         <LinearInterpolationFunction>
@@ -814,14 +810,20 @@ namespace Models
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
         </Constant>
+        <MultiplyFunction>
+          <Name>LAIFunction</Name>
+          <Constant>
+            <Name>SLA</Name>
+            <Value>0.002</Value>
+            <Units>m^2/g</Units>
+          </Constant>
+          <VariableReference>
+            <Name>LeafWt</Name>
+            <VariableName>[Leaf].Live.Wt</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <CohortsInitialised>false</CohortsInitialised>
-        <TipsAtEmergence>0</TipsAtEmergence>
-        <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <InitialisedCohortNo>0</InitialisedCohortNo>
-        <AppearedCohortNo>0</AppearedCohortNo>
-        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
@@ -832,7 +834,7 @@ namespace Models
         <KDead>0</KDead>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
-      </SimpleLeaf>
+      </PerennialLeaf>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
@@ -866,7 +868,7 @@ namespace Models
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.2</Value>
+              <Value>0.3</Value>
             </Constant>
             <Start>Emergence</Start>
             <End>Old</End>
@@ -1031,6 +1033,129 @@ namespace Models
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
+      <Nodule>
+        <Name>Nodule</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[]]></MemoText>
+        </Memo>
+        <Constant>
+          <Name>FixationMetabolicCost</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <Value>0</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0.02</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Start>Emergence</Start>
+          <End>Maturity</End>
+        </PhaseBasedSwitch>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>FixationRate</Name>
+          <Value>10000</Value>
+          <Units>g/m^2/d</Units>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+      </Nodule>
       <Cultivar>
         <Name>Gliricidia</Name>
         <Command />
@@ -2480,6 +2605,7 @@ namespace Models
             <string>[Gliricidia].Leaf.LAI</string>
             <string>[Gliricidia].Leaf.Live.Wt</string>
             <string>[Gliricidia].Stem.Live.Wt</string>
+            <string>[Gliricidia].Root.Live.Wt</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2587,9 +2713,51 @@ namespace Models
         <Slope>0</Slope>
       </Zone>
       <Graph>
-        <Name>LeafWt</Name>
+        <Name>Biomass</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Leaf</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Stem</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Root</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2603,7 +2771,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
           <XFieldName>Date</XFieldName>
-          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <YFieldName>Gliricidia.Root.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
