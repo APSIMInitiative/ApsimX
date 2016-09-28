@@ -215,7 +215,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -287,7 +287,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -315,13 +315,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -1387,9 +1387,9 @@ namespace Models
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
             <string>[Sward].Ryegrass.AboveGroundWt as Ryegrass.AboveGroundWt</string>
             <string>[Sward].Ryegrass.BelowGroundWt as Ryegrass.BelowGroundWt</string>
-            <string>[Sward].Ryegrass.StandingWt as Ryegrass.StandingWt</string>
-            <string>[Sward].Ryegrass.StandingLiveWt as Ryegrass.StandingLiveWt</string>
-            <string>[Sward].Ryegrass.StandingDeadWt as Ryegrass.StandingDeadWt</string>
+            <string>[Sward].Ryegrass.StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Sward].Ryegrass.StandingLiveHerbageWt as Ryegrass.StandingLiveHerbageWt</string>
+            <string>[Sward].Ryegrass.StandingDeadHerbageWt as Ryegrass.StandingDeadHerbageWt</string>
             <string>[Sward].Ryegrass.LeafWt as Ryegrass.LeafWt</string>
             <string>[Sward].Ryegrass.StemWt as Ryegrass.StemWt</string>
             <string>[Sward].Ryegrass.StolonWt as Ryegrass.StolonWt</string>
@@ -1405,20 +1405,20 @@ namespace Models
             <string>[Sward].Ryegrass.StolonStage1Wt as Ryegrass.StolonStage1Wt</string>
             <string>[Sward].Ryegrass.StolonStage2Wt as Ryegrass.StolonStage2Wt</string>
             <string>[Sward].Ryegrass.StolonStage3Wt as Ryegrass.StolonStage3Wt</string>
-            <string>[Sward].Ryegrass.PotCarbonAssimilation as Ryegrass.PotCarbonAssimilation</string>
-            <string>[Sward].Ryegrass.CarbonLossRespiration as Ryegrass.CarbonLossRespiration</string>
+            <string>[Sward].Ryegrass.GrossPotentialPhotosynthesisC as Ryegrass.GrossPotentialPhotosynthesisC</string>
+            <string>[Sward].Ryegrass.RespirationLossC as Ryegrass.RespirationLossC</string>
             <string>[Sward].Ryegrass.GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Sward].Ryegrass.NetPotentialGrowthWt as Ryegrass.NetPotentialGrowthWt</string>
-            <string>[Sward].Ryegrass.PotGrowthWt_Wstress as Ryegrass.PotGrowthWt_Wstress</string>
-            <string>[Sward].Ryegrass.ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Sward].Ryegrass.EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
+            <string>[Sward].Ryegrass.NetPotentialGrowthAfterWaterWt as Ryegrass.NetPotentialGrowthAfterWaterWt</string>
+            <string>[Sward].Ryegrass.NetPotentialGrowthAfterNutrientWt as Ryegrass.NetPotentialGrowthAfterNutrientWt</string>
+            <string>[Sward].Ryegrass.NetGrowthWt as Ryegrass.NetGrowthWt</string>
             <string>[Sward].Ryegrass.HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
-            <string>[Sward].Ryegrass.ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
-            <string>[Sward].Ryegrass.LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
-            <string>[Sward].Ryegrass.LitterWt as Ryegrass.LitterWt</string>
-            <string>[Sward].Ryegrass.RootSenescedWt as Ryegrass.RootSenescedWt</string>
+            <string>[Sward].Ryegrass.FractionGrowthToShoot as Ryegrass.FractionGrowthToShoot</string>
+            <string>[Sward].Ryegrass.FractionGrowthToLeaf as Ryegrass.FractionGrowthToLeaf</string>
+            <string>[Sward].Ryegrass.LitterDepositionWt as Ryegrass.LitterDepositionWt</string>
+            <string>[Sward].Ryegrass.RootDetachedWt as Ryegrass.RootDetachedWt</string>
             <string>[Sward].Ryegrass.TotalN as Ryegrass.TotalN</string>
-            <string>[Sward].Ryegrass.StandingN as Ryegrass.StandingN</string>
+            <string>[Sward].Ryegrass.StandingHerbageN as Ryegrass.StandingHerbageN</string>
             <string>[Sward].Ryegrass.LeafN as Ryegrass.LeafN</string>
             <string>[Sward].Ryegrass.StemN as Ryegrass.StemN</string>
             <string>[Sward].Ryegrass.StolonN as Ryegrass.StolonN</string>
@@ -1443,35 +1443,35 @@ namespace Models
             <string>[Sward].Ryegrass.RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Sward].Ryegrass.RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Sward].Ryegrass.FixedN as Ryegrass.FixedN</string>
-            <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
-            <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
-            <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
-            <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
-            <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
-            <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
+            <string>[Sward].Ryegrass.DemandAtLuxuryN as Ryegrass.DemandAtLuxuryN</string>
+            <string>[Sward].Ryegrass.DemandAtOptimumN as Ryegrass.DemandAtOptimumN</string>
+            <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Sward].Ryegrass.LitterDepositionN as Ryegrass.LitterDepositionN</string>
+            <string>[Sward].Ryegrass.RootDetachedN as Ryegrass.RootDetachedN</string>
+            <string>[Sward].Ryegrass.NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
-            <string>[Sward].Ryegrass.LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
-            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
-            <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
+            <string>[Sward].Ryegrass.TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
+            <string>[Sward].Ryegrass.TurnoverRateStolons as Ryegrass.TurnoverRateStolons</string>
+            <string>[Sward].Ryegrass.TurnoverRateRoots as Ryegrass.TurnoverRateRoots</string>
+            <string>[Sward].Ryegrass.LAITotal as Ryegrass.LAITotal</string>
+            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.LAIGreen</string>
+            <string>[Sward].Ryegrass.LAIDead as Ryegrass.LAIDead</string>
             <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
-            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
+            <string>[Sward].Ryegrass.RootingDepth as Ryegrass.RootingDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNContent</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
-            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeat</string>
-            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfCold</string>
+            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeatDamage</string>
+            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfColdDamage</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
+            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Sward].Ryegrass.InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -1494,8 +1494,8 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Sward].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Sward].RLD as Ryegrass.RLD</string>
-            <string>[Sward].NitrogenAvailable as Ryegrass.NitrogenAvailable</string>
-            <string>[Sward].NitrogenUptake as Ryegrass.NitrogenUptake</string>
+            <string>[Sward].AvailableSoilN as Ryegrass.AvailableSoilN</string>
+            <string>[Sward].UptakeSoilN as Ryegrass.UptakeSoilN</string>
             <string>[Sward].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Sward].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
@@ -1523,12 +1523,12 @@ namespace Models
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].NitrogenUptake) as UptakeN</string>
-            <string>[Sward].RemobilisedN as NitrogenRemobilisedSenescence</string>
-            <string>[Sward].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
-            <string>[Sward].ActualGrowthN as ActualGrowthN</string>
+            <string>sum([Sward].UptakeSoilN) as SoilUptakeN</string>
+            <string>[Sward].RemobilisedSenescedN as RemobilisedSenescedN</string>
+            <string>[Sward].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
+            <string>[Sward].NetGrowthN as NetGrowthN</string>
             <string>[Sward].LitterDepositionN as LitterDepositionN</string>
-            <string>[Sward].RootSenescenceN as RootSenescenceN</string>
+            <string>[Sward].RootDetachedN as RootDetachedN</string>
             <string />
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Weather].Rain as Rain</string>
@@ -1538,7 +1538,7 @@ namespace Models
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Sward].WaterUptake) as WaterUptake</string>
             <string />
-            <string>[Sward].StandingWt as Pasture.StandingWt</string>
+            <string>[Sward].StandingHerbageWt as Pasture.StandingHerbageWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -1564,7 +1564,7 @@ namespace Models
         <Graph>
           <Name>PlantWt</Name>
           <Series>
-            <Name>TotalPlantWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -1648,7 +1648,7 @@ namespace Models
         <Graph>
           <Name>PlantN</Name>
           <Series>
-            <Name>TotalPlantN</Name>
+            <Name>TotalN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -1751,7 +1751,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StandingWt</Name>
+          <Name>StandingHerbageWt</Name>
           <Series>
             <Name>LiveWt</Name>
             <Type>Scatter</Type>
@@ -1767,7 +1767,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingLiveWt</YFieldName>
+            <YFieldName>Ryegrass.StandingLiveHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -1788,7 +1788,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDeadWt</YFieldName>
+            <YFieldName>Ryegrass.StandingDeadHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -1830,7 +1830,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.TotalLAI</YFieldName>
+            <YFieldName>Ryegrass.LAITotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -1851,7 +1851,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GreenLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -1872,7 +1872,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DeadLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -1903,7 +1903,7 @@ namespace Models
         <Graph>
           <Name>PlantDM</Name>
           <Series>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -1917,7 +1917,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Pasture.StandingWt</YFieldName>
+            <YFieldName>Pasture.StandingHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2358,7 +2358,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2379,7 +2379,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2421,7 +2421,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2442,7 +2442,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2463,7 +2463,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2505,7 +2505,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2526,7 +2526,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2589,7 +2589,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2610,7 +2610,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.LeafDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToLeaf</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2641,7 +2641,7 @@ namespace Models
         <Graph>
           <Name>GLFTdamage</Name>
           <Series>
-            <Name>GLFCold</Name>
+            <Name>GlfColdDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2655,14 +2655,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <YFieldName>Ryegrass.GlfColdDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>GLFHeat</Name>
+            <Name>GlfHeatDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2676,7 +2676,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <YFieldName>Ryegrass.GlfHeatDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2718,7 +2718,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
+            <YFieldName>Ryegrass.GlfNContent</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2760,7 +2760,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfWater</YFieldName>
+            <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2807,7 +2807,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>GLFN</Name>
+          <Name>GlfNSupply</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -2823,7 +2823,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfN</YFieldName>
+            <YFieldName>Ryegrass.GlfNSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3389,9 +3389,9 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>PlantNuptake</Name>
+          <Name>PlantNDemand</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>DemandNLux</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3401,18 +3401,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.RequiredOptimumN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>DemandNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3426,28 +3426,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DemandSoilN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>UptakeN</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Results_Species</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.UptakeN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtOptimumN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3474,9 +3453,114 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>SoilDemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNUptake</Name>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilDemandN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Water demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -3810,7 +3894,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -3881,7 +3965,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -3909,13 +3993,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -5003,9 +5087,9 @@ namespace Models
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
             <string>[Ryegrass].AboveGroundWt as Ryegrass.AboveGroundWt</string>
             <string>[Ryegrass].BelowGroundWt as Ryegrass.BelowGroundWt</string>
-            <string>[Ryegrass].StandingWt as Ryegrass.StandingWt</string>
-            <string>[Ryegrass].StandingLiveWt as Ryegrass.StandingLiveWt</string>
-            <string>[Ryegrass].StandingDeadWt as Ryegrass.StandingDeadWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Ryegrass].StandingLiveHerbageWt as Ryegrass.StandingLiveHerbageWt</string>
+            <string>[Ryegrass].StandingDeadHerbageWt as Ryegrass.StandingDeadHerbageWt</string>
             <string>[Ryegrass].LeafWt as Ryegrass.LeafWt</string>
             <string>[Ryegrass].StemWt as Ryegrass.StemWt</string>
             <string>[Ryegrass].StolonWt as Ryegrass.StolonWt</string>
@@ -5021,20 +5105,20 @@ namespace Models
             <string>[Ryegrass].StolonStage1Wt as Ryegrass.StolonStage1Wt</string>
             <string>[Ryegrass].StolonStage2Wt as Ryegrass.StolonStage2Wt</string>
             <string>[Ryegrass].StolonStage3Wt as Ryegrass.StolonStage3Wt</string>
-            <string>[Ryegrass].PotCarbonAssimilation as Ryegrass.PotCarbonAssimilation</string>
-            <string>[Ryegrass].CarbonLossRespiration as Ryegrass.CarbonLossRespiration</string>
+            <string>[Ryegrass].GrossPotentialPhotosynthesisC as Ryegrass.GrossPotentialPhotosynthesisC</string>
+            <string>[Ryegrass].RespirationLossC as Ryegrass.RespirationLossC</string>
             <string>[Ryegrass].GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Ryegrass].NetPotentialGrowthWt as Ryegrass.NetPotentialGrowthWt</string>
-            <string>[Ryegrass].PotGrowthWt_Wstress as Ryegrass.PotGrowthWt_Wstress</string>
-            <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Ryegrass].EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterWaterWt as Ryegrass.NetPotentialGrowthAfterWaterWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterNutrientWt as Ryegrass.NetPotentialGrowthAfterNutrientWt</string>
+            <string>[Ryegrass].NetGrowthWt as Ryegrass.NetGrowthWt</string>
             <string>[Ryegrass].HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
-            <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
-            <string>[Ryegrass].LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
-            <string>[Ryegrass].LitterWt as Ryegrass.LitterWt</string>
-            <string>[Ryegrass].RootSenescedWt as Ryegrass.RootSenescedWt</string>
+            <string>[Ryegrass].FractionGrowthToShoot as Ryegrass.FractionGrowthToShoot</string>
+            <string>[Ryegrass].FractionGrowthToLeaf as Ryegrass.FractionGrowthToLeaf</string>
+            <string>[Ryegrass].LitterDepositionWt as Ryegrass.LitterDepositionWt</string>
+            <string>[Ryegrass].RootDetachedWt as Ryegrass.RootDetachedWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
-            <string>[Ryegrass].StandingN as Ryegrass.StandingN</string>
+            <string>[Ryegrass].StandingHerbageN as Ryegrass.StandingHerbageN</string>
             <string>[Ryegrass].LeafN as Ryegrass.LeafN</string>
             <string>[Ryegrass].StemN as Ryegrass.StemN</string>
             <string>[Ryegrass].StolonN as Ryegrass.StolonN</string>
@@ -5059,35 +5143,35 @@ namespace Models
             <string>[Ryegrass].RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Ryegrass].RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Ryegrass].FixedN as Ryegrass.FixedN</string>
-            <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
-            <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
-            <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
-            <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
-            <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
-            <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
+            <string>[Ryegrass].DemandAtLuxuryN as Ryegrass.DemandAtLuxuryN</string>
+            <string>[Ryegrass].DemandAtOptimumN as Ryegrass.DemandAtOptimumN</string>
+            <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Ryegrass].LitterDepositionN as Ryegrass.LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
+            <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
-            <string>[Ryegrass].LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
-            <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
-            <string>[Ryegrass].StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
-            <string>[Ryegrass].RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
-            <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
-            <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
+            <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
+            <string>[Ryegrass].TurnoverRateStolons as Ryegrass.TurnoverRateStolons</string>
+            <string>[Ryegrass].TurnoverRateRoots as Ryegrass.TurnoverRateRoots</string>
+            <string>[Ryegrass].LAITotal as Ryegrass.LAITotal</string>
+            <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
+            <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
+            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
-            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeat</string>
-            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfCold</string>
+            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeatDamage</string>
+            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfColdDamage</string>
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
-            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
+            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -5142,12 +5226,12 @@ namespace Models
             <string>[Ryegrass].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>[Ryegrass].UptakeN as UptakeN</string>
-            <string>[Ryegrass].RemobilisedSenescedN as NitrogenRemobilisedSenescence</string>
-            <string>[Ryegrass].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
-            <string>[Ryegrass].ActualGrowthN as ActualGrowthN</string>
-            <string>[Ryegrass].LitterN as LitterDepositionN</string>
-            <string>[Ryegrass].SenescedRootN as RootSenescenceN</string>
+            <string>[Ryegrass].SoilUptakeN as SoilUptakeN</string>
+            <string>[Ryegrass].RemobilisedSenescedN as RemobilisedSenescedN</string>
+            <string>[Ryegrass].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
+            <string>[Ryegrass].NetGrowthN as NetGrowthN</string>
+            <string>[Ryegrass].LitterDepositionN as LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as RootDetachedN</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Weather].Rain as Rain</string>
             <string>[Irrigation].IrrigationApplied as Irrigation</string>
@@ -5155,7 +5239,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as Drainage</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Ryegrass].WaterUptake) as WaterUptake</string>
-            <string>[Ryegrass].StandingWt as Pasture.StandingWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Pasture.StandingHerbageWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -5337,7 +5421,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>UptakeN</YFieldName>
+            <YFieldName>SoilUptakeN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -5376,7 +5460,7 @@ namespace Models
         <Graph>
           <Name>PlantWt</Name>
           <Series>
-            <Name>TotalPlantWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5460,7 +5544,7 @@ namespace Models
         <Graph>
           <Name>PlantN</Name>
           <Series>
-            <Name>TotalPlantN</Name>
+            <Name>TotalN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5563,7 +5647,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StandingWt</Name>
+          <Name>StandingHerbageWt</Name>
           <Series>
             <Name>LiveWt</Name>
             <Type>Scatter</Type>
@@ -5579,7 +5663,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingLiveWt</YFieldName>
+            <YFieldName>Ryegrass.StandingLiveHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5600,7 +5684,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDeadWt</YFieldName>
+            <YFieldName>Ryegrass.StandingDeadHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5642,7 +5726,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.TotalLAI</YFieldName>
+            <YFieldName>Ryegrass.LAITotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5663,7 +5747,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GreenLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5684,7 +5768,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DeadLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5715,7 +5799,7 @@ namespace Models
         <Graph>
           <Name>PlantDM</Name>
           <Series>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -5729,7 +5813,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Pasture.StandingWt</YFieldName>
+            <YFieldName>Pasture.StandingHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6170,7 +6254,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6191,7 +6275,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6233,7 +6317,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6254,7 +6338,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6275,7 +6359,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6317,7 +6401,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6338,7 +6422,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6401,7 +6485,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6422,7 +6506,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.LeafDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToLeaf</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6453,7 +6537,7 @@ namespace Models
         <Graph>
           <Name>GLFTdamage</Name>
           <Series>
-            <Name>GLFCold</Name>
+            <Name>GlfColdDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -6467,14 +6551,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <YFieldName>Ryegrass.GlfColdDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>GLFHeat</Name>
+            <Name>GlfHeatDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -6488,7 +6572,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <YFieldName>Ryegrass.GlfHeatDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6530,7 +6614,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
+            <YFieldName>Ryegrass.GlfNContent</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6572,7 +6656,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfWater</YFieldName>
+            <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6619,7 +6703,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>GLFN</Name>
+          <Name>GlfNSupply</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -6635,7 +6719,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfN</YFieldName>
+            <YFieldName>Ryegrass.GlfNSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7201,9 +7285,9 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>PlantNuptake</Name>
+          <Name>PlantNDemand</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>DemandNLux</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7213,18 +7297,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.RequiredOptimumN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>DemandNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7238,28 +7322,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DemandSoilN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>UptakeN</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Results_Species</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.UptakeN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtOptimumN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7286,9 +7349,114 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>SoilDemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNUptake</Name>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilDemandN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Water demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -7624,7 +7792,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -7696,7 +7864,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -7724,13 +7892,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -8796,9 +8964,9 @@ namespace Models
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
             <string>[Sward].Ryegrass.AboveGroundWt as Ryegrass.AboveGroundWt</string>
             <string>[Sward].Ryegrass.BelowGroundWt as Ryegrass.BelowGroundWt</string>
-            <string>[Sward].Ryegrass.StandingWt as Ryegrass.StandingWt</string>
-            <string>[Sward].Ryegrass.StandingLiveWt as Ryegrass.StandingLiveWt</string>
-            <string>[Sward].Ryegrass.StandingDeadWt as Ryegrass.StandingDeadWt</string>
+            <string>[Sward].Ryegrass.StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Sward].Ryegrass.StandingLiveHerbageWt as Ryegrass.StandingLiveHerbageWt</string>
+            <string>[Sward].Ryegrass.StandingDeadHerbageWt as Ryegrass.StandingDeadHerbageWt</string>
             <string>[Sward].Ryegrass.LeafWt as Ryegrass.LeafWt</string>
             <string>[Sward].Ryegrass.StemWt as Ryegrass.StemWt</string>
             <string>[Sward].Ryegrass.StolonWt as Ryegrass.StolonWt</string>
@@ -8814,20 +8982,20 @@ namespace Models
             <string>[Sward].Ryegrass.StolonStage1Wt as Ryegrass.StolonStage1Wt</string>
             <string>[Sward].Ryegrass.StolonStage2Wt as Ryegrass.StolonStage2Wt</string>
             <string>[Sward].Ryegrass.StolonStage3Wt as Ryegrass.StolonStage3Wt</string>
-            <string>[Sward].Ryegrass.PotCarbonAssimilation as Ryegrass.PotCarbonAssimilation</string>
-            <string>[Sward].Ryegrass.CarbonLossRespiration as Ryegrass.CarbonLossRespiration</string>
+            <string>[Sward].Ryegrass.GrossPotentialPhotosynthesisC as Ryegrass.GrossPotentialPhotosynthesisC</string>
+            <string>[Sward].Ryegrass.RespirationLossC as Ryegrass.RespirationLossC</string>
             <string>[Sward].Ryegrass.GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Sward].Ryegrass.NetPotentialGrowthWt as Ryegrass.NetPotentialGrowthWt</string>
-            <string>[Sward].Ryegrass.PotGrowthWt_Wstress as Ryegrass.PotGrowthWt_Wstress</string>
-            <string>[Sward].Ryegrass.ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Sward].Ryegrass.EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
+            <string>[Sward].Ryegrass.NetPotentialGrowthAfterWaterWt as Ryegrass.NetPotentialGrowthAfterWaterWt</string>
+            <string>[Sward].Ryegrass.NetPotentialGrowthAfterNutrientWt as Ryegrass.NetPotentialGrowthAfterNutrientWt</string>
+            <string>[Sward].Ryegrass.NetGrowthWt as Ryegrass.NetGrowthWt</string>
             <string>[Sward].Ryegrass.HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
-            <string>[Sward].Ryegrass.ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
-            <string>[Sward].Ryegrass.LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
-            <string>[Sward].Ryegrass.LitterWt as Ryegrass.LitterWt</string>
-            <string>[Sward].Ryegrass.RootSenescedWt as Ryegrass.RootSenescedWt</string>
+            <string>[Sward].Ryegrass.FractionGrowthToShoot as Ryegrass.FractionGrowthToShoot</string>
+            <string>[Sward].Ryegrass.FractionGrowthToLeaf as Ryegrass.FractionGrowthToLeaf</string>
+            <string>[Sward].Ryegrass.LitterDepositionWt as Ryegrass.LitterDepositionWt</string>
+            <string>[Sward].Ryegrass.RootDetachedWt as Ryegrass.RootDetachedWt</string>
             <string>[Sward].Ryegrass.TotalN as Ryegrass.TotalN</string>
-            <string>[Sward].Ryegrass.StandingN as Ryegrass.StandingN</string>
+            <string>[Sward].Ryegrass.StandingHerbageN as Ryegrass.StandingHerbageN</string>
             <string>[Sward].Ryegrass.LeafN as Ryegrass.LeafN</string>
             <string>[Sward].Ryegrass.StemN as Ryegrass.StemN</string>
             <string>[Sward].Ryegrass.StolonN as Ryegrass.StolonN</string>
@@ -8852,35 +9020,35 @@ namespace Models
             <string>[Sward].Ryegrass.RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Sward].Ryegrass.RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Sward].Ryegrass.FixedN as Ryegrass.FixedN</string>
-            <string>[Sward].Ryegrass.RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
-            <string>[Sward].Ryegrass.RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
-            <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
-            <string>[Sward].Ryegrass.LitterN as Ryegrass.LitterN</string>
-            <string>[Sward].Ryegrass.SenescedRootN as Ryegrass.SenescedRootN</string>
-            <string>[Sward].Ryegrass.ActualGrowthN as Ryegrass.ActualGrowthN</string>
+            <string>[Sward].Ryegrass.DemandAtLuxuryN as Ryegrass.DemandAtLuxuryN</string>
+            <string>[Sward].Ryegrass.DemandAtOptimumN as Ryegrass.DemandAtOptimumN</string>
+            <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Sward].Ryegrass.LitterDepositionN as Ryegrass.LitterDepositionN</string>
+            <string>[Sward].Ryegrass.RootDetachedN as Ryegrass.RootDetachedN</string>
+            <string>[Sward].Ryegrass.NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
-            <string>[Sward].Ryegrass.LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Sward].Ryegrass.LAITotal as Ryegrass.TotalLAI</string>
-            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
-            <string>[Sward].Ryegrass.LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Sward].Ryegrass.TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
+            <string>[Sward].Ryegrass.TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
+            <string>[Sward].Ryegrass.TurnoverRateStolons as Ryegrass.TurnoverRateStolons</string>
+            <string>[Sward].Ryegrass.TurnoverRateRoots as Ryegrass.TurnoverRateRoots</string>
+            <string>[Sward].Ryegrass.LAITotal as Ryegrass.LAITotal</string>
+            <string>[Sward].Ryegrass.LAIGreen as Ryegrass.LAIGreen</string>
+            <string>[Sward].Ryegrass.LAIDead as Ryegrass.LAIDead</string>
             <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
-            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
+            <string>[Sward].Ryegrass.RootingDepth as Ryegrass.RootingDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNContent</string>
             <string>[Sward].Ryegrass.GlfTemperature as Ryegrass.GlfTemperature</string>
-            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeat</string>
-            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfCold</string>
+            <string>[Sward].Ryegrass.GlfHeatDamage as Ryegrass.GlfHeatDamage</string>
+            <string>[Sward].Ryegrass.GlfColdDamage as Ryegrass.GlfColdDamage</string>
             <string>[Sward].Ryegrass.GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
+            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Sward].Ryegrass.InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Sward].Ryegrass.HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Sward].Ryegrass.HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -8903,8 +9071,8 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Sward].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Sward].RLD as Ryegrass.RLD</string>
-            <string>[Sward].NitrogenAvailable as Ryegrass.NitrogenAvailable</string>
-            <string>[Sward].NitrogenUptake as Ryegrass.NitrogenUptake</string>
+            <string>[Sward].AvailableSoilN as Ryegrass.AvailableSoilN</string>
+            <string>[Sward].UptakeSoilN as Ryegrass.UptakeSoilN</string>
             <string>[Sward].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
             <string>[Sward].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
@@ -8932,12 +9100,12 @@ namespace Models
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].NitrogenUptake) as UptakeN</string>
-            <string>[Sward].RemobilisedN as NitrogenRemobilisedSenescence</string>
-            <string>[Sward].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
-            <string>[Sward].ActualGrowthN as ActualGrowthN</string>
+            <string>sum([Sward].UptakeSoilN) as SoilUptakeN</string>
+            <string>[Sward].RemobilisedSenescedN as RemobilisedSenescedN</string>
+            <string>[Sward].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
+            <string>[Sward].NetGrowthN as NetGrowthN</string>
             <string>[Sward].LitterDepositionN as LitterDepositionN</string>
-            <string>[Sward].RootSenescenceN as RootSenescenceN</string>
+            <string>[Sward].RootDetachedN as RootDetachedN</string>
             <string />
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Weather].Rain as Rain</string>
@@ -8947,7 +9115,7 @@ namespace Models
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Sward].WaterUptake) as WaterUptake</string>
             <string />
-            <string>[Sward].StandingWt as Pasture.StandingWt</string>
+            <string>[Sward].StandingHerbageWt as Pasture.StandingHerbageWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -8973,7 +9141,7 @@ namespace Models
         <Graph>
           <Name>PlantWt</Name>
           <Series>
-            <Name>TotalPlantWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9057,7 +9225,7 @@ namespace Models
         <Graph>
           <Name>PlantN</Name>
           <Series>
-            <Name>TotalPlantN</Name>
+            <Name>TotalN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9160,7 +9328,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StandingWt</Name>
+          <Name>StandingHerbageWt</Name>
           <Series>
             <Name>LiveWt</Name>
             <Type>Scatter</Type>
@@ -9176,7 +9344,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingLiveWt</YFieldName>
+            <YFieldName>Ryegrass.StandingLiveHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9197,7 +9365,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDeadWt</YFieldName>
+            <YFieldName>Ryegrass.StandingDeadHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9239,7 +9407,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.TotalLAI</YFieldName>
+            <YFieldName>Ryegrass.LAITotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9260,7 +9428,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GreenLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9281,7 +9449,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DeadLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9312,7 +9480,7 @@ namespace Models
         <Graph>
           <Name>PlantDM</Name>
           <Series>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -9326,7 +9494,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Pasture.StandingWt</YFieldName>
+            <YFieldName>Pasture.StandingHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9767,7 +9935,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9788,7 +9956,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9830,7 +9998,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9851,7 +10019,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9872,7 +10040,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9914,7 +10082,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9935,7 +10103,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9998,7 +10166,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10029,7 +10197,7 @@ namespace Models
         <Graph>
           <Name>GLFTdamage</Name>
           <Series>
-            <Name>GLFCold</Name>
+            <Name>GlfColdDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -10043,14 +10211,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <YFieldName>Ryegrass.GlfColdDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>GLFHeat</Name>
+            <Name>GlfHeatDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -10064,7 +10232,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <YFieldName>Ryegrass.GlfHeatDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10106,7 +10274,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
+            <YFieldName>Ryegrass.GlfNContent</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10148,7 +10316,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfWater</YFieldName>
+            <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10195,7 +10363,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>GLFN</Name>
+          <Name>GlfNSupply</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -10211,7 +10379,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfN</YFieldName>
+            <YFieldName>Ryegrass.GlfNSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10716,6 +10884,27 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.WaterAvailable</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -10756,9 +10945,9 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>PlantNuptake</Name>
+          <Name>PlantNDemand</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>DemandNLux</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -10768,18 +10957,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.RequiredOptimumN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>DemandNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -10793,28 +10982,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DemandSoilN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>UptakeN</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Results_Species</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.UptakeN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtOptimumN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10841,9 +11009,114 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>SoilDemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNUptake</Name>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilDemandN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Water demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -11180,7 +11453,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -11251,7 +11524,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -11279,13 +11552,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -12373,9 +12646,9 @@ namespace Models
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
             <string>[Ryegrass].AboveGroundWt as Ryegrass.AboveGroundWt</string>
             <string>[Ryegrass].BelowGroundWt as Ryegrass.BelowGroundWt</string>
-            <string>[Ryegrass].StandingWt as Ryegrass.StandingWt</string>
-            <string>[Ryegrass].StandingLiveWt as Ryegrass.StandingLiveWt</string>
-            <string>[Ryegrass].StandingDeadWt as Ryegrass.StandingDeadWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Ryegrass].StandingLiveHerbageWt as Ryegrass.StandingLiveHerbageWt</string>
+            <string>[Ryegrass].StandingDeadHerbageWt as Ryegrass.StandingDeadHerbageWt</string>
             <string>[Ryegrass].LeafWt as Ryegrass.LeafWt</string>
             <string>[Ryegrass].StemWt as Ryegrass.StemWt</string>
             <string>[Ryegrass].StolonWt as Ryegrass.StolonWt</string>
@@ -12391,20 +12664,20 @@ namespace Models
             <string>[Ryegrass].StolonStage1Wt as Ryegrass.StolonStage1Wt</string>
             <string>[Ryegrass].StolonStage2Wt as Ryegrass.StolonStage2Wt</string>
             <string>[Ryegrass].StolonStage3Wt as Ryegrass.StolonStage3Wt</string>
-            <string>[Ryegrass].PotCarbonAssimilation as Ryegrass.PotCarbonAssimilation</string>
-            <string>[Ryegrass].CarbonLossRespiration as Ryegrass.CarbonLossRespiration</string>
+            <string>[Ryegrass].GrossPotentialPhotosynthesisC as Ryegrass.GrossPotentialPhotosynthesisC</string>
+            <string>[Ryegrass].RespirationLossC as Ryegrass.RespirationLossC</string>
             <string>[Ryegrass].GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Ryegrass].NetPotentialGrowthWt as Ryegrass.NetPotentialGrowthWt</string>
-            <string>[Ryegrass].PotGrowthWt_Wstress as Ryegrass.PotGrowthWt_Wstress</string>
-            <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Ryegrass].EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterWaterWt as Ryegrass.NetPotentialGrowthAfterWaterWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterNutrientWt as Ryegrass.NetPotentialGrowthAfterNutrientWt</string>
+            <string>[Ryegrass].NetGrowthWt as Ryegrass.NetGrowthWt</string>
             <string>[Ryegrass].HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
-            <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
-            <string>[Ryegrass].LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
-            <string>[Ryegrass].LitterWt as Ryegrass.LitterWt</string>
-            <string>[Ryegrass].RootSenescedWt as Ryegrass.RootSenescedWt</string>
+            <string>[Ryegrass].FractionGrowthToShoot as Ryegrass.FractionGrowthToShoot</string>
+            <string>[Ryegrass].FractionGrowthToLeaf as Ryegrass.FractionGrowthToLeaf</string>
+            <string>[Ryegrass].LitterDepositionWt as Ryegrass.LitterDepositionWt</string>
+            <string>[Ryegrass].RootDetachedWt as Ryegrass.RootDetachedWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
-            <string>[Ryegrass].StandingN as Ryegrass.StandingN</string>
+            <string>[Ryegrass].StandingHerbageN as Ryegrass.StandingHerbageN</string>
             <string>[Ryegrass].LeafN as Ryegrass.LeafN</string>
             <string>[Ryegrass].StemN as Ryegrass.StemN</string>
             <string>[Ryegrass].StolonN as Ryegrass.StolonN</string>
@@ -12429,35 +12702,35 @@ namespace Models
             <string>[Ryegrass].RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Ryegrass].RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Ryegrass].FixedN as Ryegrass.FixedN</string>
-            <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
-            <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
-            <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
-            <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
-            <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
-            <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
+            <string>[Ryegrass].DemandAtLuxuryN as Ryegrass.DemandAtLuxuryN</string>
+            <string>[Ryegrass].DemandAtOptimumN as Ryegrass.DemandAtOptimumN</string>
+            <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Ryegrass].LitterDepositionN as Ryegrass.LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
+            <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
-            <string>[Ryegrass].LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
-            <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
-            <string>[Ryegrass].StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
-            <string>[Ryegrass].RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
-            <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
-            <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
+            <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
+            <string>[Ryegrass].TurnoverRateStolons as Ryegrass.TurnoverRateStolons</string>
+            <string>[Ryegrass].TurnoverRateRoots as Ryegrass.TurnoverRateRoots</string>
+            <string>[Ryegrass].LAITotal as Ryegrass.LAITotal</string>
+            <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
+            <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
+            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
-            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeat</string>
-            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfCold</string>
+            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeatDamage</string>
+            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfColdDamage</string>
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
-            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
+            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -12513,12 +12786,12 @@ namespace Models
             <string>[Ryegrass].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>[Ryegrass].UptakeN as UptakeN</string>
-            <string>[Ryegrass].RemobilisedSenescedN as NitrogenRemobilisedSenescence</string>
-            <string>[Ryegrass].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
-            <string>[Ryegrass].ActualGrowthN as ActualGrowthN</string>
-            <string>[Ryegrass].LitterN as LitterDepositionN</string>
-            <string>[Ryegrass].SenescedRootN as RootSenescenceN</string>
+            <string>[Ryegrass].SoilUptakeN as SoilUptakeN</string>
+            <string>[Ryegrass].RemobilisedSenescedN as RemobilisedSenescedN</string>
+            <string>[Ryegrass].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
+            <string>[Ryegrass].NetGrowthN as NetGrowthN</string>
+            <string>[Ryegrass].LitterDepositionN as LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as RootDetachedN</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Weather].Rain as Rain</string>
             <string>[Irrigation].IrrigationApplied as Irrigation</string>
@@ -12526,7 +12799,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as Drainage</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Ryegrass].WaterUptake) as WaterUptake</string>
-            <string>[Ryegrass].StandingWt as Pasture.StandingWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Pasture.StandingHerbageWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -12603,7 +12876,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>UptakeN</YFieldName>
+            <YFieldName>SoilUptakeN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -12642,7 +12915,7 @@ namespace Models
         <Graph>
           <Name>PlantWt</Name>
           <Series>
-            <Name>TotalPlantWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -12726,7 +12999,7 @@ namespace Models
         <Graph>
           <Name>PlantN</Name>
           <Series>
-            <Name>TotalPlantN</Name>
+            <Name>TotalN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -12829,7 +13102,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StandingWt</Name>
+          <Name>StandingHerbageWt</Name>
           <Series>
             <Name>LiveWt</Name>
             <Type>Scatter</Type>
@@ -12845,7 +13118,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingLiveWt</YFieldName>
+            <YFieldName>Ryegrass.StandingLiveHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12866,7 +13139,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDeadWt</YFieldName>
+            <YFieldName>Ryegrass.StandingDeadHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12908,7 +13181,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.TotalLAI</YFieldName>
+            <YFieldName>Ryegrass.LAITotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12929,7 +13202,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GreenLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12950,7 +13223,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DeadLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12981,7 +13254,7 @@ namespace Models
         <Graph>
           <Name>PlantDM</Name>
           <Series>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -12995,7 +13268,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Pasture.StandingWt</YFieldName>
+            <YFieldName>Pasture.StandingHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13436,7 +13709,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13457,7 +13730,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13499,7 +13772,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13520,7 +13793,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13541,7 +13814,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13583,7 +13856,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13604,7 +13877,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13667,7 +13940,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13698,7 +13971,7 @@ namespace Models
         <Graph>
           <Name>GLFTdamage</Name>
           <Series>
-            <Name>GLFCold</Name>
+            <Name>GlfColdDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -13712,14 +13985,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <YFieldName>Ryegrass.GlfColdDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>GLFHeat</Name>
+            <Name>GlfHeatDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -13733,7 +14006,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <YFieldName>Ryegrass.GlfHeatDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13775,7 +14048,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
+            <YFieldName>Ryegrass.GlfNContent</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13817,7 +14090,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfWater</YFieldName>
+            <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13864,7 +14137,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>GLFN</Name>
+          <Name>GlfNSupply</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -13880,7 +14153,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfN</YFieldName>
+            <YFieldName>Ryegrass.GlfNSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14385,6 +14658,27 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.WaterAvailable</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -14425,9 +14719,9 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>PlantNuptake</Name>
+          <Name>PlantNDemand</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>DemandNLux</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14437,18 +14731,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.RequiredOptimumN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>DemandNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14462,28 +14756,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DemandSoilN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>UptakeN</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Results_Species</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.UptakeN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtOptimumN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14510,9 +14783,114 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>SoilDemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNUptake</Name>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilDemandN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Water demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -14846,7 +15224,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -14917,7 +15295,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -14945,13 +15323,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -16044,9 +16422,9 @@ namespace Models
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
             <string>[Ryegrass].AboveGroundWt as Ryegrass.AboveGroundWt</string>
             <string>[Ryegrass].BelowGroundWt as Ryegrass.BelowGroundWt</string>
-            <string>[Ryegrass].StandingWt as Ryegrass.StandingWt</string>
-            <string>[Ryegrass].StandingLiveWt as Ryegrass.StandingLiveWt</string>
-            <string>[Ryegrass].StandingDeadWt as Ryegrass.StandingDeadWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Ryegrass].StandingLiveHerbageWt as Ryegrass.StandingLiveHerbageWt</string>
+            <string>[Ryegrass].StandingDeadHerbageWt as Ryegrass.StandingDeadHerbageWt</string>
             <string>[Ryegrass].LeafWt as Ryegrass.LeafWt</string>
             <string>[Ryegrass].StemWt as Ryegrass.StemWt</string>
             <string>[Ryegrass].StolonWt as Ryegrass.StolonWt</string>
@@ -16062,20 +16440,20 @@ namespace Models
             <string>[Ryegrass].StolonStage1Wt as Ryegrass.StolonStage1Wt</string>
             <string>[Ryegrass].StolonStage2Wt as Ryegrass.StolonStage2Wt</string>
             <string>[Ryegrass].StolonStage3Wt as Ryegrass.StolonStage3Wt</string>
-            <string>[Ryegrass].PotCarbonAssimilation as Ryegrass.PotCarbonAssimilation</string>
-            <string>[Ryegrass].CarbonLossRespiration as Ryegrass.CarbonLossRespiration</string>
+            <string>[Ryegrass].GrossPotentialPhotosynthesisC as Ryegrass.GrossPotentialPhotosynthesisC</string>
+            <string>[Ryegrass].RespirationLossC as Ryegrass.RespirationLossC</string>
             <string>[Ryegrass].GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Ryegrass].NetPotentialGrowthWt as Ryegrass.NetPotentialGrowthWt</string>
-            <string>[Ryegrass].PotGrowthWt_Wstress as Ryegrass.PotGrowthWt_Wstress</string>
-            <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Ryegrass].EffectiveGrowthWt as Ryegrass.EffectiveGrowthWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterWaterWt as Ryegrass.NetPotentialGrowthAfterWaterWt</string>
+            <string>[Ryegrass].NetPotentialGrowthAfterNutrientWt as Ryegrass.NetPotentialGrowthAfterNutrientWt</string>
+            <string>[Ryegrass].NetGrowthWt as Ryegrass.NetGrowthWt</string>
             <string>[Ryegrass].HerbageGrowthWt as Ryegrass.HerbageGrowthWt</string>
-            <string>[Ryegrass].ShootDMAllocation as Ryegrass.ShootDMAllocation</string>
-            <string>[Ryegrass].LeafDMAllocation as Ryegrass.LeafDMAllocation</string>
-            <string>[Ryegrass].LitterWt as Ryegrass.LitterWt</string>
-            <string>[Ryegrass].RootSenescedWt as Ryegrass.RootSenescedWt</string>
+            <string>[Ryegrass].FractionGrowthToShoot as Ryegrass.FractionGrowthToShoot</string>
+            <string>[Ryegrass].FractionGrowthToLeaf as Ryegrass.FractionGrowthToLeaf</string>
+            <string>[Ryegrass].LitterDepositionWt as Ryegrass.LitterDepositionWt</string>
+            <string>[Ryegrass].RootDetachedWt as Ryegrass.RootDetachedWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
-            <string>[Ryegrass].StandingN as Ryegrass.StandingN</string>
+            <string>[Ryegrass].StandingHerbageN as Ryegrass.StandingHerbageN</string>
             <string>[Ryegrass].LeafN as Ryegrass.LeafN</string>
             <string>[Ryegrass].StemN as Ryegrass.StemN</string>
             <string>[Ryegrass].StolonN as Ryegrass.StolonN</string>
@@ -16100,35 +16478,35 @@ namespace Models
             <string>[Ryegrass].RemobilisableLuxuryN as Ryegrass.RemobilisableLuxuryN</string>
             <string>[Ryegrass].RemobilisedLuxuryN as Ryegrass.RemobilisedLuxuryN</string>
             <string>[Ryegrass].FixedN as Ryegrass.FixedN</string>
-            <string>[Ryegrass].RequiredLuxuryN as Ryegrass.RequiredLuxuryN</string>
-            <string>[Ryegrass].RequiredOptimumN as Ryegrass.RequiredOptimumN</string>
-            <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
-            <string>[Ryegrass].LitterN as Ryegrass.LitterN</string>
-            <string>[Ryegrass].SenescedRootN as Ryegrass.SenescedRootN</string>
-            <string>[Ryegrass].ActualGrowthN as Ryegrass.ActualGrowthN</string>
+            <string>[Ryegrass].DemandAtLuxuryN as Ryegrass.DemandAtLuxuryN</string>
+            <string>[Ryegrass].DemandAtOptimumN as Ryegrass.DemandAtOptimumN</string>
+            <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Ryegrass].LitterDepositionN as Ryegrass.LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
+            <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
-            <string>[Ryegrass].LiveDMTurnoverRate as Ryegrass.LiveDMTurnoverRate</string>
-            <string>[Ryegrass].DeadDMTurnoverRate as Ryegrass.DeadDMTurnoverRate</string>
-            <string>[Ryegrass].StolonDMTurnoverRate as Ryegrass.StolonDMTurnoverRate</string>
-            <string>[Ryegrass].RootDMTurnoverRate as Ryegrass.RootDMTurnoverRate</string>
-            <string>[Ryegrass].LAITotal as Ryegrass.TotalLAI</string>
-            <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
-            <string>[Ryegrass].LAIDead as Ryegrass.DeadLAI</string>
+            <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
+            <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
+            <string>[Ryegrass].TurnoverRateStolons as Ryegrass.TurnoverRateStolons</string>
+            <string>[Ryegrass].TurnoverRateRoots as Ryegrass.TurnoverRateRoots</string>
+            <string>[Ryegrass].LAITotal as Ryegrass.LAITotal</string>
+            <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
+            <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
+            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
-            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNConcentration</string>
+            <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
             <string>[Ryegrass].GlfTemperature as Ryegrass.GlfTemperature</string>
-            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeat</string>
-            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfCold</string>
+            <string>[Ryegrass].GlfHeatDamage as Ryegrass.GlfHeatDamage</string>
+            <string>[Ryegrass].GlfColdDamage as Ryegrass.GlfColdDamage</string>
             <string>[Ryegrass].GlfWaterLogging as Ryegrass.GlfWaterLogging</string>
-            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfN</string>
+            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Ryegrass].InterceptedRadn as Ryegrass.InterceptedRadn</string>
             <string>[Ryegrass].HarvestableWt as Ryegrass.HarvestableWt</string>
             <string>[Ryegrass].HarvestedWt as Ryegrass.HarvestedWt</string>
@@ -16184,12 +16562,12 @@ namespace Models
             <string>[Ryegrass].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>[Ryegrass].UptakeN as UptakeN</string>
-            <string>[Ryegrass].RemobilisedSenescedN as NitrogenRemobilisedSenescence</string>
-            <string>[Ryegrass].RemobilisedLuxuryN as NitrogenRemobilisedLuxury</string>
-            <string>[Ryegrass].ActualGrowthN as ActualGrowthN</string>
-            <string>[Ryegrass].LitterN as LitterDepositionN</string>
-            <string>[Ryegrass].SenescedRootN as RootSenescenceN</string>
+            <string>[Ryegrass].SoilUptakeN as SoilUptakeN</string>
+            <string>[Ryegrass].RemobilisedSenescedN as RemobilisedSenescedN</string>
+            <string>[Ryegrass].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
+            <string>[Ryegrass].NetGrowthN as NetGrowthN</string>
+            <string>[Ryegrass].LitterDepositionN as LitterDepositionN</string>
+            <string>[Ryegrass].RootDetachedN as RootDetachedN</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Weather].Rain as Rain</string>
             <string>[Irrigation].IrrigationApplied as Irrigation</string>
@@ -16197,7 +16575,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as Drainage</string>
             <string>[Soil].SoilWater.Es as Evaporation</string>
             <string>sum([Ryegrass].WaterUptake) as WaterUptake</string>
-            <string>[Ryegrass].StandingWt as Pasture.StandingWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Pasture.StandingHerbageWt</string>
             <string>[CutRotation].Script.PreHarvestDM as PreHarvestDM</string>
             <string>[CutRotation].Script.PostHarvestDM as PostHarvestDM</string>
             <string>[CutRotation].Script.DefoliatedWt as DefoliatedWt</string>
@@ -16274,7 +16652,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>UptakeN</YFieldName>
+            <YFieldName>SoilUptakeN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -16313,7 +16691,7 @@ namespace Models
         <Graph>
           <Name>PlantWt</Name>
           <Series>
-            <Name>TotalPlantWt</Name>
+            <Name>TotalWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -16397,7 +16775,7 @@ namespace Models
         <Graph>
           <Name>PlantN</Name>
           <Series>
-            <Name>TotalPlantN</Name>
+            <Name>TotalN</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -16500,7 +16878,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>StandingWt</Name>
+          <Name>StandingHerbageWt</Name>
           <Series>
             <Name>LiveWt</Name>
             <Type>Scatter</Type>
@@ -16516,7 +16894,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingLiveWt</YFieldName>
+            <YFieldName>Ryegrass.StandingLiveHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16537,7 +16915,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.StandingDeadWt</YFieldName>
+            <YFieldName>Ryegrass.StandingDeadHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16579,7 +16957,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.TotalLAI</YFieldName>
+            <YFieldName>Ryegrass.LAITotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16600,7 +16978,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GreenLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16621,7 +16999,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DeadLAI</YFieldName>
+            <YFieldName>Ryegrass.LAIDead</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16652,7 +17030,7 @@ namespace Models
         <Graph>
           <Name>PlantDM</Name>
           <Series>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -16666,7 +17044,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_MassBalance</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Pasture.StandingWt</YFieldName>
+            <YFieldName>Pasture.StandingHerbageWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17107,7 +17485,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17128,7 +17506,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17170,7 +17548,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.PotGrowthWt_Wstress</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterWaterWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17191,7 +17569,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17212,7 +17590,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17254,7 +17632,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetPotentialGrowthAfterNutrientWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17275,7 +17653,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.EffectiveGrowthWt</YFieldName>
+            <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17338,7 +17716,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+            <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17369,7 +17747,7 @@ namespace Models
         <Graph>
           <Name>GLFTdamage</Name>
           <Series>
-            <Name>GLFCold</Name>
+            <Name>GlfColdDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -17383,14 +17761,14 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfCold</YFieldName>
+            <YFieldName>Ryegrass.GlfColdDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>GLFHeat</Name>
+            <Name>GlfHeatDamage</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -17404,7 +17782,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfHeat</YFieldName>
+            <YFieldName>Ryegrass.GlfHeatDamage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17446,7 +17824,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfNConcentration</YFieldName>
+            <YFieldName>Ryegrass.GlfNContent</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17488,7 +17866,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfWater</YFieldName>
+            <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17535,7 +17913,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>GLFN</Name>
+          <Name>GlfNSupply</Name>
           <Series>
             <Name>GLF</Name>
             <Type>Scatter</Type>
@@ -17551,7 +17929,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.GlfN</YFieldName>
+            <YFieldName>Ryegrass.GlfNSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -18056,6 +18434,27 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.WaterAvailable</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -18096,9 +18495,9 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>PlantNuptake</Name>
+          <Name>PlantNDemand</Name>
           <Series>
-            <Name>RequiredN</Name>
+            <Name>DemandNLux</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18108,18 +18507,18 @@ namespace Models
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>Dot</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.RequiredOptimumN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtLuxuryN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>DemandN</Name>
+            <Name>DemandNOpt</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18133,28 +18532,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Results_Species</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.DemandSoilN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>UptakeN</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Dash</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Results_Species</TableName>
-            <XFieldName>Date</XFieldName>
-            <YFieldName>Ryegrass.UptakeN</YFieldName>
+            <YFieldName>Ryegrass.DemandAtOptimumN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -18181,9 +18559,114 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>SoilDemand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <Axis>
             <Type>Left</Type>
             <Title>N demand, uptake (kg/ha/day)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>PlantNUptake</Name>
+          <Series>
+            <Name>Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilDemandN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Available</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-11094807</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dot</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Dash</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Results_Species</TableName>
+            <XFieldName>Date</XFieldName>
+            <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Water demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -18459,7 +18942,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Results_Species</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.GlfWater</YFieldName>
+        <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -18485,7 +18968,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>GLFN</Name>
+      <Name>GlfNSupply</Name>
       <Series>
         <Name>Nsupply</Name>
         <Type>Scatter</Type>
@@ -18501,7 +18984,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Results_Species</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.GlfN</YFieldName>
+        <YFieldName>Ryegrass.GlfNSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -18627,7 +19110,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Results_Species</TableName>
         <XFieldName>Date</XFieldName>
-        <YFieldName>Ryegrass.ShootDMAllocation</YFieldName>
+        <YFieldName>Ryegrass.FractionGrowthToShoot</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>

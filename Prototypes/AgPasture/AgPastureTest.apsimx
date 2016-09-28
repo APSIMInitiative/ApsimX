@@ -187,7 +187,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -259,7 +259,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -287,13 +287,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -1408,32 +1408,32 @@ namespace Models
             <string>[Sward].TotalWt as Sward.TotalWt</string>
             <string>[Sward].AboveGroundWt as Sward.AboveGroundWt</string>
             <string>[Sward].BelowGroundWt as Sward.BelowGroundWt</string>
-            <string>[Sward].StandingWt as Sward.StandingWt</string>
-            <string>[Sward].HarvestableWt as Sward.Harvestable</string>
-            <string>[Sward].HarvestedWt as Sward.Harvested</string>
+            <string>[Sward].StandingHerbageWt as Sward.StandingHerbageWt</string>
+            <string>[Sward].HarvestableWt as Sward.HarvestableWt</string>
+            <string>[Sward].HarvestedWt as Sward.HarvestedWt</string>
             <string>[Sward].GrossPotentialGrowthWt as Sward.GrossPotentialGrowthWt</string>
-            <string>[Sward].ActualGrowthWt as Sward.ActualGrowthWt</string>
+            <string>[Sward].NetGrowthWt as Sward.NetGrowthWt</string>
             <string>[Sward].TotalN as Sward.TotalN</string>
             <string>[Sward].LAIGreen as Sward.LAIGreen</string>
             <string>[Sward].LAIDead as Sward.LAIDead</string>
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
             <string>[Sward].WhiteClover.TotalWt as WhiteClover.TotalWt</string>
-            <string>[Sward].Ryegrass.StandingWt as Ryegrass.StandingWt</string>
-            <string>[Sward].WhiteClover.StandingWt as WhiteClover.StandingWt</string>
+            <string>[Sward].Ryegrass.StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Sward].WhiteClover.StandingHerbageWt as WhiteClover.StandingHerbageWt</string>
             <string>[Sward].Ryegrass.GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Sward].WhiteClover.GrossPotentialGrowthWt as WhiteClover.GrossPotentialGrowthWt</string>
-            <string>[Sward].Ryegrass.ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Sward].WhiteClover.ActualGrowthWt as WhiteClover.ActualGrowthWt</string>
+            <string>[Sward].Ryegrass.NetGrowthWt as Ryegrass.NetGrowthWt</string>
+            <string>[Sward].WhiteClover.NetGrowthWt as WhiteClover.NetGrowthWt</string>
             <string>[Sward].Ryegrass.TotalN as Ryegrass.TotalN</string>
             <string>[Sward].WhiteClover.TotalN as WhiteClover.TotalN</string>
             <string>[Sward].Ryegrass.LeafNConc as Ryegrass.LeafNConc</string>
             <string>[Sward].WhiteClover.LeafNConc as WhiteClover.LeafNConc</string>
-            <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Sward].WhiteClover.DemandSoilN as WhiteClover.DemandSoilN</string>
+            <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Sward].WhiteClover.SoilDemandN as WhiteClover.SoilDemandN</string>
             <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
             <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.AvailableSoilN</string>
-            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
-            <string>[Sward].WhiteClover.UptakeN as WhiteClover.UptakeN</string>
+            <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Sward].WhiteClover.SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>[Sward].WhiteClover.WaterDemand as WhiteClover.WaterDemand</string>
             <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
@@ -1454,10 +1454,10 @@ namespace Models
             <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
             <string>sum([Soil].SoilNitrogen.NH4)+sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
             <string>[Fertiliser].NitrogenApplied as NitrogenApplied</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfN</string>
+            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWaterSupply</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfNSupply</string>
+            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfNSupply</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -1697,7 +1697,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -1713,7 +1713,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.StandingWt</YFieldName>
+              <YFieldName>Ryegrass.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -1734,7 +1734,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.StandingWt</YFieldName>
+              <YFieldName>WhiteClover.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -1779,7 +1779,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.Harvestable</YFieldName>
+              <YFieldName>Sward.HarvestableWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -1863,7 +1863,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.Harvested</YFieldName>
+              <YFieldName>Sward.HarvestedWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>true</Cumulative>
@@ -2095,7 +2095,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.ActualGrowthWt</YFieldName>
+              <YFieldName>Sward.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2116,7 +2116,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+              <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2137,7 +2137,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.ActualGrowthWt</YFieldName>
+              <YFieldName>WhiteClover.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2566,7 +2566,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -2582,7 +2582,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfWater</YFieldName>
+              <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2603,7 +2603,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfWater</YFieldName>
+              <YFieldName>WhiteClover.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2711,7 +2711,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.DemandSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2753,7 +2753,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.UptakeN</YFieldName>
+              <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2795,7 +2795,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.DemandSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2837,7 +2837,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.UptakeN</YFieldName>
+              <YFieldName>WhiteClover.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2863,7 +2863,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -2879,7 +2879,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfN</YFieldName>
+              <YFieldName>Ryegrass.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2900,7 +2900,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfN</YFieldName>
+              <YFieldName>WhiteClover.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -3093,7 +3093,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture.StandingWt;
+					PostHarvestDM = Pasture.StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -3165,7 +3165,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture.StandingWt;
+			PreHarvestDM = Pasture.StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -3193,13 +3193,13 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture.StandingWt;
+				PostHarvestDM = Pasture.StandingHerbageWt;
 		}
 
 		// Do the DM removal
 		private void removeDM(double removeAmount)
 		{
-			double existingWt = Pasture.StandingWt;
+			double existingWt = Pasture.StandingHerbageWt;
 
 			// Check whether we harvest anything
 			if (existingWt >= removeAmount)
@@ -4313,32 +4313,32 @@ namespace Models
             <string>[Sward].TotalWt as Sward.TotalWt</string>
             <string>[Sward].AboveGroundWt as Sward.AboveGroundWt</string>
             <string>[Sward].BelowGroundWt as Sward.BelowGroundWt</string>
-            <string>[Sward].StandingWt as Sward.StandingWt</string>
-            <string>[Sward].HarvestableWt as Sward.Harvestable</string>
-            <string>[Sward].HarvestedWt as Sward.Harvested</string>
+            <string>[Sward].StandingHerbageWt as Sward.StandingHerbageWt</string>
+            <string>[Sward].HarvestableWt as Sward.HarvestableWt</string>
+            <string>[Sward].HarvestedWt as Sward.HarvestedWt</string>
             <string>[Sward].GrossPotentialGrowthWt as Sward.GrossPotentialGrowthWt</string>
-            <string>[Sward].ActualGrowthWt as Sward.ActualGrowthWt</string>
+            <string>[Sward].NetGrowthWt as Sward.NetGrowthWt</string>
             <string>[Sward].TotalN as Sward.TotalN</string>
             <string>[Sward].LAIGreen as Sward.LAIGreen</string>
             <string>[Sward].LAIDead as Sward.LAIDead</string>
             <string>[Sward].Ryegrass.TotalWt as Ryegrass.TotalWt</string>
             <string>[Sward].WhiteClover.TotalWt as WhiteClover.TotalWt</string>
-            <string>[Sward].Ryegrass.StandingWt as Ryegrass.StandingWt</string>
-            <string>[Sward].WhiteClover.StandingWt as WhiteClover.StandingWt</string>
+            <string>[Sward].Ryegrass.StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[Sward].WhiteClover.StandingHerbageWt as WhiteClover.StandingHerbageWt</string>
             <string>[Sward].Ryegrass.GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[Sward].WhiteClover.GrossPotentialGrowthWt as WhiteClover.GrossPotentialGrowthWt</string>
-            <string>[Sward].Ryegrass.ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[Sward].WhiteClover.ActualGrowthWt as WhiteClover.ActualGrowthWt</string>
+            <string>[Sward].Ryegrass.NetGrowthWt as Ryegrass.NetGrowthWt</string>
+            <string>[Sward].WhiteClover.NetGrowthWt as WhiteClover.NetGrowthWt</string>
             <string>[Sward].Ryegrass.TotalN as Ryegrass.TotalN</string>
             <string>[Sward].WhiteClover.TotalN as WhiteClover.TotalN</string>
             <string>[Sward].Ryegrass.LeafNConc as Ryegrass.LeafNConc</string>
             <string>[Sward].WhiteClover.LeafNConc as WhiteClover.LeafNConc</string>
-            <string>[Sward].Ryegrass.DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[Sward].WhiteClover.DemandSoilN as WhiteClover.DemandSoilN</string>
+            <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[Sward].WhiteClover.SoilDemandN as WhiteClover.SoilDemandN</string>
             <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
             <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.AvailableSoilN</string>
-            <string>[Sward].Ryegrass.UptakeN as Ryegrass.UptakeN</string>
-            <string>[Sward].WhiteClover.UptakeN as WhiteClover.UptakeN</string>
+            <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[Sward].WhiteClover.SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>[Sward].WhiteClover.WaterDemand as WhiteClover.WaterDemand</string>
             <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
@@ -4359,10 +4359,10 @@ namespace Models
             <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
             <string>sum([Soil].SoilNitrogen.NH4)+sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
             <string>[Fertiliser].NitrogenApplied as NitrogenApplied</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfN</string>
+            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWaterSupply</string>
+            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfNSupply</string>
+            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfNSupply</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -4602,7 +4602,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -4618,7 +4618,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.StandingWt</YFieldName>
+              <YFieldName>Ryegrass.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4639,7 +4639,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.StandingWt</YFieldName>
+              <YFieldName>WhiteClover.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4684,7 +4684,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.Harvestable</YFieldName>
+              <YFieldName>Sward.HarvestableWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4768,7 +4768,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.Harvested</YFieldName>
+              <YFieldName>Sward.HarvestedWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>true</Cumulative>
@@ -5000,7 +5000,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Sward.ActualGrowthWt</YFieldName>
+              <YFieldName>Sward.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5021,7 +5021,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+              <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5042,7 +5042,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.ActualGrowthWt</YFieldName>
+              <YFieldName>WhiteClover.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5471,7 +5471,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -5487,7 +5487,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfWater</YFieldName>
+              <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5508,7 +5508,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfWater</YFieldName>
+              <YFieldName>WhiteClover.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5616,7 +5616,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.DemandSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5658,7 +5658,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.UptakeN</YFieldName>
+              <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5700,7 +5700,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.DemandSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5742,7 +5742,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.UptakeN</YFieldName>
+              <YFieldName>WhiteClover.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5768,7 +5768,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -5784,7 +5784,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfN</YFieldName>
+              <YFieldName>Ryegrass.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5805,7 +5805,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfN</YFieldName>
+              <YFieldName>WhiteClover.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -6283,7 +6283,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+					PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -6354,7 +6354,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+			PreHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -6382,7 +6382,7 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+				PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 		}
 
 		// Do the DM removal
@@ -7501,24 +7501,35 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>([Ryegrass].TotalWt + [WhiteClover].TotalWt) as Sward.TotalWt</string>
+            <string>([Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt) as Sward.AboveGroundWt</string>
+            <string>([Ryegrass].BelowGroundWt + [WhiteClover].BelowGroundWt) as Sward.BelowGroundWt</string>
+            <string>([Ryegrass].StandingHerbageWt + [WhiteClover].StandingHerbageWt) as Sward.StandingHerbageWt</string>
+            <string>([Ryegrass].HarvestableWt + [WhiteClover].HarvestableWt) as Sward.HarvestableWt</string>
+            <string>([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) as Sward.HarvestedWt</string>
+            <string>([Ryegrass].GrossPotentialGrowthWt + [WhiteClover].GrossPotentialGrowthWt) as Sward.GrossPotentialGrowthWt</string>
+            <string>([Ryegrass].NetGrowthWt + [WhiteClover].NetGrowthWt) as Sward.NetGrowthWt</string>
+            <string>([Ryegrass].TotalN + [WhiteClover].TotalN) as Sward.TotalN</string>
+            <string>([Ryegrass].LAIGreen + [WhiteClover].LAIGreen) as Sward.LAIGreen</string>
+            <string>([Ryegrass].LAIDead + [WhiteClover].LAIDead) as Sward.LAIDead</string>
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
             <string>[WhiteClover].TotalWt as WhiteClover.TotalWt</string>
-            <string>[Ryegrass].StandingWt as Ryegrass.StandingWt</string>
-            <string>[WhiteClover].StandingWt as WhiteClover.StandingWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[WhiteClover].StandingHerbageWt as WhiteClover.StandingHerbageWt</string>
             <string>[Ryegrass].GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[WhiteClover].GrossPotentialGrowthWt as WhiteClover.GrossPotentialGrowthWt</string>
-            <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[WhiteClover].ActualGrowthWt as WhiteClover.ActualGrowthWt</string>
+            <string>[Ryegrass].NetGrowthWt as Ryegrass.NetGrowthWt</string>
+            <string>[WhiteClover].NetGrowthWt as WhiteClover.NetGrowthWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
             <string>[WhiteClover].TotalN as WhiteClover.TotalN</string>
             <string>[Ryegrass].LeafNConc as Ryegrass.LeafNConc</string>
             <string>[WhiteClover].LeafNConc as WhiteClover.LeafNConc</string>
-            <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[WhiteClover].DemandSoilN as WhiteClover.DemandSoilN</string>
+            <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[WhiteClover].SoilDemandN as WhiteClover.SoilDemandN</string>
             <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
             <string>[WhiteClover].SoilAvailableN as WhiteClover.AvailableSoilN</string>
-            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
-            <string>[WhiteClover].UptakeN as WhiteClover.UptakeN</string>
+            <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[WhiteClover].SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>[WhiteClover].WaterDemand as WhiteClover.WaterDemand</string>
             <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
@@ -7539,10 +7550,10 @@ namespace Models
             <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
             <string>sum([Soil].SoilNitrogen.NH4)+sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
             <string>[Fertiliser].NitrogenApplied as NitrogenApplied</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfN</string>
+            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[WhiteClover].GlfWaterSupply as WhiteClover.GlfWaterSupply</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfNSupply</string>
+            <string>[WhiteClover].GlfNSupply as WhiteClover.GlfNSupply</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -7677,7 +7688,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -7693,7 +7704,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.StandingWt</YFieldName>
+              <YFieldName>Ryegrass.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -7714,7 +7725,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.StandingWt</YFieldName>
+              <YFieldName>WhiteClover.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8012,7 +8023,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+              <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8033,7 +8044,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.ActualGrowthWt</YFieldName>
+              <YFieldName>WhiteClover.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8420,7 +8431,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -8436,7 +8447,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfWater</YFieldName>
+              <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8457,7 +8468,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfWater</YFieldName>
+              <YFieldName>WhiteClover.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8565,7 +8576,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.DemandSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8607,7 +8618,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.UptakeN</YFieldName>
+              <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8649,7 +8660,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.DemandSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8691,7 +8702,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.UptakeN</YFieldName>
+              <YFieldName>WhiteClover.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8717,7 +8728,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -8733,7 +8744,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfN</YFieldName>
+              <YFieldName>Ryegrass.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8754,7 +8765,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfN</YFieldName>
+              <YFieldName>WhiteClover.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8954,7 +8965,7 @@ namespace Models
 				returnExcreta();
 				daysCutting += 1;
 				if (daysCutting == cuttingDuration)
-					PostHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+					PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 			}
 
 			// reset outputs
@@ -9025,7 +9036,7 @@ namespace Models
 		public void Graze(double amountDM, string amountType, int duration)
 		{
 			// Get the existing plant amount
-			PreHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+			PreHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 			
 			// Check the amount to remove and print some info
 			if ((amountType == "SetRemoveAmount") && (PreHarvestDM >= amountDM / duration))
@@ -9053,7 +9064,7 @@ namespace Models
 			daysCutting = 1;
 			DaysAfterCut = 0;
 			if (daysCutting == cuttingDuration)
-				PostHarvestDM = Pasture[0].StandingWt + Pasture[1].StandingWt;
+				PostHarvestDM = Pasture[0].StandingHerbageWt + Pasture[1].StandingHerbageWt;
 		}
 
 		// Do the DM removal
@@ -10172,24 +10183,35 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>([Ryegrass].TotalWt + [WhiteClover].TotalWt) as Sward.TotalWt</string>
+            <string>([Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt) as Sward.AboveGroundWt</string>
+            <string>([Ryegrass].BelowGroundWt + [WhiteClover].BelowGroundWt) as Sward.BelowGroundWt</string>
+            <string>([Ryegrass].StandingHerbageWt + [WhiteClover].StandingHerbageWt) as Sward.StandingHerbageWt</string>
+            <string>([Ryegrass].HarvestableWt + [WhiteClover].HarvestableWt) as Sward.HarvestableWt</string>
+            <string>([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) as Sward.HarvestedWt</string>
+            <string>([Ryegrass].GrossPotentialGrowthWt + [WhiteClover].GrossPotentialGrowthWt) as Sward.GrossPotentialGrowthWt</string>
+            <string>([Ryegrass].NetGrowthWt + [WhiteClover].NetGrowthWt) as Sward.NetGrowthWt</string>
+            <string>([Ryegrass].TotalN + [WhiteClover].TotalN) as Sward.TotalN</string>
+            <string>([Ryegrass].LAIGreen + [WhiteClover].LAIGreen) as Sward.LAIGreen</string>
+            <string>([Ryegrass].LAIDead + [WhiteClover].LAIDead) as Sward.LAIDead</string>
             <string>[Ryegrass].TotalWt as Ryegrass.TotalWt</string>
             <string>[WhiteClover].TotalWt as WhiteClover.TotalWt</string>
-            <string>[Ryegrass].StandingWt as Ryegrass.StandingWt</string>
-            <string>[WhiteClover].StandingWt as WhiteClover.StandingWt</string>
+            <string>[Ryegrass].StandingHerbageWt as Ryegrass.StandingHerbageWt</string>
+            <string>[WhiteClover].StandingHerbageWt as WhiteClover.StandingHerbageWt</string>
             <string>[Ryegrass].GrossPotentialGrowthWt as Ryegrass.GrossPotentialGrowthWt</string>
             <string>[WhiteClover].GrossPotentialGrowthWt as WhiteClover.GrossPotentialGrowthWt</string>
-            <string>[Ryegrass].ActualGrowthWt as Ryegrass.ActualGrowthWt</string>
-            <string>[WhiteClover].ActualGrowthWt as WhiteClover.ActualGrowthWt</string>
+            <string>[Ryegrass].NetGrowthWt as Ryegrass.NetGrowthWt</string>
+            <string>[WhiteClover].NetGrowthWt as WhiteClover.NetGrowthWt</string>
             <string>[Ryegrass].TotalN as Ryegrass.TotalN</string>
             <string>[WhiteClover].TotalN as WhiteClover.TotalN</string>
             <string>[Ryegrass].LeafNConc as Ryegrass.LeafNConc</string>
             <string>[WhiteClover].LeafNConc as WhiteClover.LeafNConc</string>
-            <string>[Ryegrass].DemandSoilN as Ryegrass.DemandSoilN</string>
-            <string>[WhiteClover].DemandSoilN as WhiteClover.DemandSoilN</string>
+            <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
+            <string>[WhiteClover].SoilDemandN as WhiteClover.SoilDemandN</string>
             <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
             <string>[WhiteClover].SoilAvailableN as WhiteClover.AvailableSoilN</string>
-            <string>[Ryegrass].UptakeN as Ryegrass.UptakeN</string>
-            <string>[WhiteClover].UptakeN as WhiteClover.UptakeN</string>
+            <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
+            <string>[WhiteClover].SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>[WhiteClover].WaterDemand as WhiteClover.WaterDemand</string>
             <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
@@ -10210,10 +10232,10 @@ namespace Models
             <string>[Irrigation].IrrigationApplied as IrrigationApplied</string>
             <string>sum([Soil].SoilNitrogen.NH4)+sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
             <string>[Fertiliser].NitrogenApplied as NitrogenApplied</string>
-            <string>[Sward].Ryegrass.GlfWaterSupply as Ryegrass.GlfWater</string>
-            <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWater</string>
-            <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfN</string>
-            <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfN</string>
+            <string>[Ryegrass].GlfWaterSupply as Ryegrass.GlfWaterSupply</string>
+            <string>[WhiteClover].GlfWaterSupply as WhiteClover.GlfWaterSupply</string>
+            <string>[Ryegrass].GlfNSupply as Ryegrass.GlfNSupply</string>
+            <string>[WhiteClover].GlfNSupply as WhiteClover.GlfNSupply</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -10348,7 +10370,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>StandingWt</Name>
+            <Name>StandingHerbageWt</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -10364,7 +10386,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.StandingWt</YFieldName>
+              <YFieldName>Ryegrass.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10385,7 +10407,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.StandingWt</YFieldName>
+              <YFieldName>WhiteClover.StandingHerbageWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10683,7 +10705,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.ActualGrowthWt</YFieldName>
+              <YFieldName>Ryegrass.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10704,7 +10726,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.ActualGrowthWt</YFieldName>
+              <YFieldName>WhiteClover.NetGrowthWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11091,7 +11113,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -11107,7 +11129,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfWater</YFieldName>
+              <YFieldName>Ryegrass.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11128,7 +11150,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfWater</YFieldName>
+              <YFieldName>WhiteClover.GlfWaterSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11236,7 +11258,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.DemandSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11278,7 +11300,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.UptakeN</YFieldName>
+              <YFieldName>Ryegrass.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11320,7 +11342,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.DemandSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilDemandN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11362,7 +11384,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.UptakeN</YFieldName>
+              <YFieldName>WhiteClover.SoilUptakeN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11388,7 +11410,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>GLFWater</Name>
+            <Name>GlfWaterSupply</Name>
             <Series>
               <Name>Ryegrass</Name>
               <Type>Scatter</Type>
@@ -11404,7 +11426,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.GlfN</YFieldName>
+              <YFieldName>Ryegrass.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11425,7 +11447,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.GlfN</YFieldName>
+              <YFieldName>WhiteClover.GlfNSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
