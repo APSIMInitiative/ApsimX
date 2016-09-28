@@ -264,6 +264,7 @@ namespace UserInterface.Views
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
                 toggleRender.Visible = false;
+                toggleRender.Toggled += ToggleRender_Toggled;
                 CellRendererCombo comboRender = new Gtk.CellRendererCombo();
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = 1.0f;
@@ -279,7 +280,7 @@ namespace UserInterface.Views
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = this.DataSource.Columns[i].ColumnName;
                 column.PackStart(textRender, true);     // 0
-                column.PackStart(toggleRender, false);  // 1
+                column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 //column.FixedWidth = 100;
@@ -333,6 +334,7 @@ namespace UserInterface.Views
             WaitCursor = false;
         }
 
+
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -365,7 +367,20 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
-                else 
+                else if (dataType == typeof(Boolean))
+                {
+                    CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                    if (toggleRend != null)
+                    {
+                        toggleRend.Active = (Boolean)dataVal;
+                        toggleRend.Activatable = true;
+                        cell.Visible = false;
+                        toggleRend.Visible = true;
+                        return;
+                    }
+
+                }
+                else
                 {   // This assumes that combobox grid cells are based on the "string" type
                     ListStore store; 
                     if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
@@ -832,6 +847,23 @@ namespace UserInterface.Views
                     }
                 }
                 dialog.Destroy();
+            }
+        }
+
+        private void ToggleRender_Toggled(object sender, ToggledArgs r)
+        {
+            IGridCell where = GetCurrentCell;
+            while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+            {
+                this.DataSource.Rows.Add(this.DataSource.NewRow());
+            }
+            this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
+            if (this.CellsChanged != null)
+            {
+                GridCellsChangedArgs args = new GridCellsChangedArgs();
+                args.ChangedCells = new List<IGridCell>();
+                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                this.CellsChanged(this, args);
             }
         }
 
