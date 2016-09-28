@@ -631,11 +631,11 @@ namespace Models
         <Name>IndividualTreeLiveWt</Name>
         <VariableReference>
           <Name>LiveWt</Name>
-          <VariableName>[Eucalyptus].TotalLive.Wt</VariableName>
+          <VariableName>[Gliricidia].TotalLive.Wt</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>Population</Name>
-          <VariableName>[Eucalyptus].Population</VariableName>
+          <VariableName>[Gliricidia].Population</VariableName>
         </VariableReference>
       </DivideFunction>
       <CompositeBiomass>
@@ -684,6 +684,13 @@ namespace Models
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Value of 1.06 for above ground growth from 
+Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
+Author(s): Robin A. Harrington and James H. Fownes
+Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></MemoText>
+            </Memo>
             <Value>1.3</Value>
           </Constant>
           <VariableReference>
@@ -740,7 +747,14 @@ namespace Models
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>ExtinctionCoefficient</Name>
-          <Value>0.5</Value>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Value of 0.57 from 
+Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
+Author(s): Robin A. Harrington and James H. Fownes
+Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></MemoText>
+          </Memo>
+          <Value>0.57</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -761,7 +775,12 @@ namespace Models
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.03</Value>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
+(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
+          </Memo>
+          <Value>0.043</Value>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -781,8 +800,8 @@ namespace Models
             <Name>Harvest</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.3</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
+            <FractionLiveToResidue>0.9</FractionLiveToResidue>
+            <FractionDeadToResidue>0.9</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
@@ -814,7 +833,17 @@ namespace Models
           <Name>LAIFunction</Name>
           <Constant>
             <Name>SLA</Name>
-            <Value>0.002</Value>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[0.0232 m2/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
+(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421
+
+Value of 0.0195 for whole leaf or 0.024 for leaf lamina from Leaf area index estimates obtained for clumped canopies
+using hemispherical photography
+P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
+Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
+            </Memo>
+            <Value>0.00232</Value>
             <Units>m^2/g</Units>
           </Constant>
           <VariableReference>
@@ -862,21 +891,14 @@ namespace Models
           <Name>SenescenceRate</Name>
           <Value>0.005</Value>
         </Constant>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>PhaseLookupValue</Name>
-            <Constant>
-              <Name>Constant</Name>
-              <Value>0.3</Value>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>Old</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0041</Value>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[0.02 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
+(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
+          </Memo>
+          <Value>0.02</Value>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
@@ -960,6 +982,48 @@ namespace Models
           <Value>100</Value>
           <Units>m/g</Units>
         </Constant>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0.3</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -1003,7 +1067,12 @@ namespace Models
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0015</Value>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[0.03 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
+(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
+          </Memo>
+          <Value>0.03</Value>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -1030,6 +1099,44 @@ namespace Models
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
+        <Folder>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.9</FractionLiveToRemove>
+            <FractionDeadToRemove>0.9</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0.9</FractionLiveToRemove>
+            <FractionDeadToRemove>0.9</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0.1</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </Folder>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
@@ -1160,7 +1267,7 @@ namespace Models
         <Name>Gliricidia</Name>
         <Command />
       </Cultivar>
-      <CropType>Eucalyptus</CropType>
+      <CropType>Gliricidia</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
   </Replacements>
@@ -2606,6 +2713,10 @@ namespace Models
             <string>[Gliricidia].Leaf.Live.Wt</string>
             <string>[Gliricidia].Stem.Live.Wt</string>
             <string>[Gliricidia].Root.Live.Wt</string>
+            <string>[Gliricidia].Root.TotalDMDemand</string>
+            <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+            <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+            <string>[Gliricidia].Root.PartitionFraction.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2704,6 +2815,40 @@ namespace Models
 			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
 			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
 			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>TreePruningRule</Name>
+          <Script>
+            <Date1>15-Aug</Date1>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Gliricidia;
+		[Link] Clock Clock;
+
+
+		[Description("First Cutting Date")]
+		public string Date1 { get; set; }
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(Date1, Clock.Today, Date1))
+				Gliricidia.Harvest();
 		}
 	}
 }
@@ -2815,6 +2960,91 @@ namespace Models
           <TableName>GliricidiaDailyReport</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>DMDemands</Name>
+        <Series>
+          <Name>Leaf</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.DMDemandFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Stem</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Stem.DMDemandFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Root</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Root.TotalDMDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
