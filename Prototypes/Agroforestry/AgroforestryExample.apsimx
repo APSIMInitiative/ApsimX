@@ -326,6 +326,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -467,7 +468,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -502,6 +502,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -732,6 +733,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -799,6 +801,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -956,7 +959,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -991,6 +993,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1221,6 +1224,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1294,6 +1298,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -1451,7 +1456,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -1486,6 +1490,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1716,6 +1721,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1789,6 +1795,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -1942,7 +1949,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -1977,6 +1983,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2207,6 +2214,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -2280,6 +2288,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -2434,7 +2443,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -2469,6 +2477,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2699,6 +2708,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -3766,6 +3776,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -3906,7 +3917,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -3941,6 +3951,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -4174,6 +4185,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -4241,6 +4253,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -4398,7 +4411,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -4433,6 +4445,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -4663,6 +4676,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -4736,6 +4750,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -4893,7 +4908,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -4928,6 +4942,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5158,6 +5173,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -5231,6 +5247,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -5384,7 +5401,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -5419,6 +5435,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5649,6 +5666,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -5722,6 +5740,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -5876,7 +5895,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -5911,6 +5929,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6141,6 +6160,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -6214,6 +6234,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -6368,7 +6389,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -6403,6 +6423,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6633,6 +6654,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -6706,6 +6728,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -6860,7 +6883,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -6895,6 +6917,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7125,6 +7148,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -7198,6 +7222,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -7352,7 +7377,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -7387,6 +7411,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7617,6 +7642,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -7690,6 +7716,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -7844,7 +7871,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -7879,6 +7905,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8109,6 +8136,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -8182,6 +8210,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -8336,7 +8365,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -8371,6 +8399,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8601,6 +8630,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -8674,6 +8704,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -8828,7 +8859,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -8863,6 +8893,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -9093,6 +9124,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -9166,6 +9198,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -9320,7 +9353,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -9355,6 +9387,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -9585,6 +9618,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -9658,6 +9692,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -9812,7 +9847,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -9847,6 +9881,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -10077,6 +10112,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -10150,6 +10186,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -10304,7 +10341,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -10339,6 +10375,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -10569,6 +10606,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -11394,6 +11432,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -11545,7 +11584,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -11580,6 +11618,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -11810,6 +11849,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -12015,7 +12055,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -12050,6 +12089,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -12280,6 +12320,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -12343,6 +12384,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Area>0.023561944901923447</Area>
         <Slope>0</Slope>
@@ -12504,7 +12546,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -12539,6 +12580,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -12769,6 +12811,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -12832,6 +12875,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Area>0.039269908169872414</Area>
         <Slope>0</Slope>
@@ -12861,6 +12905,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -13012,7 +13057,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -13047,6 +13091,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -13277,6 +13322,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -13350,6 +13396,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -13501,7 +13548,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>5</SummerU>
             <SummerCona>5</SummerCona>
@@ -13536,6 +13582,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -13766,6 +13813,7 @@ namespace Models
           <ApsoilNumber>900</ApsoilNumber>
           <Latitude>-27.581836</Latitude>
           <Longitude>151.320206</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -14291,6 +14339,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -14434,7 +14483,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -14467,6 +14515,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -14638,6 +14687,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -14670,6 +14720,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -14798,7 +14849,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -14831,6 +14881,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -14996,6 +15047,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -15028,6 +15080,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -15157,7 +15210,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -15190,6 +15242,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -15355,6 +15408,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -15387,6 +15441,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -15515,7 +15570,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -15548,6 +15602,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -15713,6 +15768,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -15745,6 +15801,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -15873,7 +15930,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -15906,6 +15962,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16071,6 +16128,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -16103,6 +16161,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -16231,7 +16290,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -16264,6 +16322,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16429,6 +16488,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -16461,6 +16521,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -16589,7 +16650,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -16622,6 +16682,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16787,6 +16848,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -16819,6 +16881,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -16947,7 +17010,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -16980,6 +17042,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -17145,6 +17208,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -17177,6 +17241,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -17305,7 +17370,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -17338,6 +17402,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -17503,6 +17568,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -17535,6 +17601,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -17663,7 +17730,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -17696,6 +17762,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -17861,6 +17928,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -17893,6 +17961,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -18021,7 +18090,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -18054,6 +18122,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -18219,6 +18288,7 @@ namespace Models
             <ApsoilNumber>19</ApsoilNumber>
             <Latitude>-26.897</Latitude>
             <Longitude>150.909</Longitude>
+            <Area>0</Area>
             <LocationAccuracy> +/- 20m</LocationAccuracy>
             <DataSource>0</DataSource>
             <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>

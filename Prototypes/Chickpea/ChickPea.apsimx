@@ -2082,6 +2082,15 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </OrganBiomassRemovalType>
         </Folder>
         <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <Value>0.7</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>

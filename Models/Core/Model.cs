@@ -129,6 +129,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Root))]
         [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
+        [XmlElement(typeof(Models.PMF.Organs.PerennialLeaf))]
         [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
@@ -242,6 +243,9 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.RuminantHerd))]
         [XmlElement(typeof(Models.WholeFarm.RuminantType))]
         [XmlElement(typeof(Models.WholeFarm.RuminantTypeCohort))]
+        [XmlElement(typeof(Models.Lifecycle.Lifecycle))]
+        [XmlElement(typeof(Models.Lifecycle.Lifestage))]
+        [XmlElement(typeof(Models.Lifecycle.LifestageProcess))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 

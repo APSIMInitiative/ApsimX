@@ -439,7 +439,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <FillingRateFunction>
           <Name>FillingRateFunction</Name>
           <VariableReference>
-            <Name>GrainNumber</Name>
+            <Name>NumberFunction</Name>
             <VariableName>[Grain].NumberFunction.Value</VariableName>
           </VariableReference>
           <VariableReference>
@@ -470,7 +470,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <FillingRateFunction>
           <Name>FillingRateFunction</Name>
           <VariableReference>
-            <Name>GrainNumber</Name>
+            <Name>NumberFunction</Name>
             <VariableName>[Grain].NumberFunction.Value</VariableName>
           </VariableReference>
           <VariableReference>
@@ -548,7 +548,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <FillingRateFunction>
           <Name>FillingRateFunction</Name>
           <VariableReference>
-            <Name>GrainNumber</Name>
+            <Name>NumberFunction</Name>
             <VariableName>[Grain].NumberFunction.Value</VariableName>
           </VariableReference>
           <AddFunction>
@@ -1421,6 +1421,10 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
       </VariableReference>
     </MinimumFunction>
+    <Constant>
+      <Name>StructuralFraction</Name>
+      <Value>0.7</Value>
+    </Constant>
     <Folder>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
@@ -1494,7 +1498,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Constant>
         <Name>SenescenceRate</Name>
         <Value>0</Value>
-		<Units>/d</Units>
+		    <Units>/d</Units>
       </Constant>	  
       <LinearInterpolationFunction>
         <Name>ExpansionStress</Name>
@@ -1535,6 +1539,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>StructuralFraction</Name>
       <Value>0.3</Value>
       <Units>g/g</Units>
+    </Constant>
+    <Constant>
+      <Name>SenescenceRate</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>

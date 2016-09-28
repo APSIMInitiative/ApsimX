@@ -183,7 +183,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <PhaseLookupValue>
             <Name>ApexBelowGround</Name>
             <Constant>
-              <Name>Constant</Name>
+              <Name>Photoperiod</Name>
               <Value>0</Value>
               <Units>h</Units>
             </Constant>
@@ -204,7 +204,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>Vrn1</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Vrn1 accumulation begins when Vrn4 experssion is down regulated to zero and stop, assuming vernalisation saturation, at a value of 1]]></MemoText>
+            <MemoText><![CDATA[Vrn1 accumulation begins when Vrn4 experssion is down regulated to zero and stops, assuming vernalisation saturation, at a value of 1]]></MemoText>
           </Memo>
           <Constant>
             <Name>Saturation</Name>
@@ -990,7 +990,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -1021,7 +1021,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -1092,7 +1092,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>GrainNumber</Name>
+                <Name>NumberFunction</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <AddFunction>
@@ -2019,6 +2019,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0.5</Value>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -4179,23 +4183,21 @@ namespace Models
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>3000</MaximumResultsPerPage>
   </DataStore>
-  <Map>
-    <Name>Map</Name>
-    <Center>
-      <Latitude>-29.878755346037963</Latitude>
-      <Longitude>134.384765625</Longitude>
-    </Center>
-    <Zoom>2</Zoom>
-  </Map>
   <Folder>
     <Name>Validation</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[#Model Testing
-
-A test dataset has been developed to test the APSIM Wheat model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates, row spacing, irrigation), genetic backgrounds (different regions, cultivar types) and for special considerations such as crop damage.  These tests have been groups into various geographical regions to allow the user to evaluate the suitability of the model for their particular region of interest.
+      <MemoText><![CDATA[A test dataset has been developed to test the APSIM Wheat model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates, row spacing, irrigation), genetic backgrounds (different regions, cultivar types) and for special considerations such as crop damage.  These tests have been groups into various geographical regions to allow the user to evaluate the suitability of the model for their particular region of interest.
 ]]></MemoText>
     </Memo>
+    <Map>
+      <Name>Map</Name>
+      <Center>
+        <Latitude>-29.878755346037963</Latitude>
+        <Longitude>134.384765625</Longitude>
+      </Center>
+      <Zoom>2</Zoom>
+    </Map>
     <Graph>
       <Name>Harvest Biomass</Name>
       <Series>
@@ -5930,7 +5932,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Folder>
@@ -7421,49 +7423,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
-            <Name>ArbitratorFn</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Arbitrator.FN</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>0</Minimum>
-              <Maximum>10</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Graph>
-          <Graph>
             <Name>MeanTillerGrowthRate</Name>
             <Series>
               <Name>Predicted</Name>
@@ -7919,7 +7878,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>GrainNumber</Name>
@@ -7983,7 +7942,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>SpikeWt</Name>
@@ -8030,7 +7989,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Folder>
@@ -8668,233 +8627,8 @@ namespace Models
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Folder>
-          <Name>Ncomponents</Name>
-          <Graph>
-            <Name>StemNconcCompartments</Name>
-            <Series>
-              <Name>NonStructural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-1663232</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.NonStructuralNConc</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[NRate] = '0'</Filter>
-            </Series>
-            <Series>
-              <Name>Structural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16736653</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.StructuralNConc</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[NRate] = '0'</Filter>
-            </Series>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-            <Name>StemDMComponents</Name>
-            <Series>
-              <Name>NonStructural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-1663232</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.NonStructuralWt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <Series>
-              <Name>Structural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16736653</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.StructuralWt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-            <Name>StemNComponents</Name>
-            <Series>
-              <Name>NonStructural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-1663232</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.NonStructuralN</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[NRate] = '0'</Filter>
-            </Series>
-            <Series>
-              <Name>Structural</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16736653</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.StructuralN</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter>[NRate] = '0'</Filter>
-            </Series>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </Graph>
-        </Folder>
       </Experiment>
       <Experiment>
         <Name>APS14</Name>
@@ -9853,7 +9587,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>BiomassN</Name>
@@ -10843,7 +10577,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>TillerNumber</Name>
@@ -10907,7 +10641,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>LeafSize</Name>
@@ -10970,7 +10704,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>CanopyCover</Name>
@@ -11013,7 +10747,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SLA</Name>
@@ -11829,7 +11563,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>LAI</Name>
@@ -13686,47 +13420,6 @@ namespace Models
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Graph</Name>
-          <Series>
-            <Name>Series</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>0</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Structure.HaunStage.ValueTerminalSpikelet.Value</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Experiment>
       <Graph>

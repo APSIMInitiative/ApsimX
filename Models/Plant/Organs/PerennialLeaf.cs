@@ -9,79 +9,16 @@ using System;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It is parameterised as follows.
-    /// 
-    /// **Dry Matter Supply**
-    /// 
-    /// DryMatter Fixation Supply (Photosynthesis) provided to the Organ Arbitrator (for partitioning between organs) is calculated each day as the product of a unstressed potential and a series of stress factors.
-    /// DM is not retranslocated out of this organ.
-    /// 
-    /// **Dry Matter Demands**
-    /// 
-    /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
-    /// 
-    /// **Nitrogen Demands**
-    /// 
-    /// The daily structural N demand of this organ is the product of Total DM demand and a maximum Nitrogen concentration.  The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
-    /// 
-    /// **Nitrogen Supplies**
-    /// 
-    /// N is not reallocated from  this organ.  Nonstructural N is not available for retranslocation to other organs.
-    /// 
-    /// **Biomass Senescence and Detachment**
-    /// 
-    /// No senescence occurs from this organ.  
-    /// No detachment occurs from this organ.
-    /// 
-    /// **Canopy**
-    /// 
-    /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
-    /// 
-    /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
-    /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
-    ///
+    /// This plant organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
+    public class PerennialLeaf : GenericOrgan, ICanopy
     {
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
-
-        #region Leaf Interface
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public double AppearedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-        #endregion
 
         #region Canopy interface
 
@@ -115,16 +52,11 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsAlive)
                 {
-                    double greenCover = 0.0;
-                    if (CoverFunction == null)
-                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value * LAI);
-                    else
-                        greenCover = CoverFunction.Value;
+                    double greenCover = 1.0 - Math.Exp(-ExtinctionCoefficient.Value * LAI);
                     return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
                     return 0.0;
-
             }
         }
 
@@ -160,16 +92,13 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
-        /// <summary>The cover function</summary>
-        [Link(IsOptional = true)]
-        IFunction CoverFunction = null;
 
         /// <summary>The lai function</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
-        [Link(IsOptional = true)]
-        IFunction ExtinctionCoefficientFunction = null;
+        [Link]
+        IFunction ExtinctionCoefficient = null;
         /// <summary>The photosynthesis</summary>
         [Link]
         IFunction Photosynthesis = null;
@@ -314,19 +243,10 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
-
                 FRGR = FRGRFunction.Value;
-                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
-                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
-                if (LAIFunction != null)
-                    LAI = LAIFunction.Value;
-
+                LAI = LAIFunction.Value;
                 Height = HeightFunction.Value;
-
                 LAIDead = LaiDeadFunction.Value;
-
             }
         }
 
