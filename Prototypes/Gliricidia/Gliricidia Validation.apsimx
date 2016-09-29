@@ -877,12 +877,6 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <CohortsInitialised>false</CohortsInitialised>
-        <TipsAtEmergence>0</TipsAtEmergence>
-        <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <InitialisedCohortNo>0</InitialisedCohortNo>
-        <AppearedCohortNo>0</AppearedCohortNo>
-        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
@@ -1308,13 +1302,8 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
-      </SheetNames>
-    </ExcelInput>
-    <ExcelInput>
-      <Name>OBSERVEDGrainWt</Name>
-      <FileName>Observed.xlsx</FileName>
-      <SheetNames>
-        <string>GrainWt</string>
+        <string>ObservedGliricidia</string>
+        <string>ObservedSoil</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
@@ -1322,6 +1311,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Year</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedSoil</Name>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>ObservedSoil</ObservedTableName>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -1850,7 +1845,7 @@ namespace Models
               <string>[Zone].Area</string>
               <string>[Maize].SowingData.Population</string>
               <string>[Maize].Phenology.CurrentStageName as Stage</string>
-              <string>[Maize].Grain.Live.Wt as GrainWt</string>
+              <string>[Maize].Grain.Wt</string>
               <string>[Maize].Stem.Live.Wt</string>
               <string>[Maize].EarLive.Wt</string>
               <string>[Maize].Leaf.Live.Wt</string>
@@ -1864,7 +1859,7 @@ namespace Models
               <string>[Maize].Root.Live.N</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].AboveGround.N</string>
-              <string>[Maize].AboveGround.Wt as Biomass</string>
+              <string>[Maize].AboveGround.Wt</string>
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
@@ -1888,6 +1883,8 @@ namespace Models
               <string>[Clock].Today as Date</string>
               <string>[Zone].Area</string>
               <string>[Soil].SoilWater.Es</string>
+              <string>([Soil].NO3N[1]+[Soil].NH4N[1]) as SurfaceMineralN</string>
+              <string>([Soil].NO3N[3]+[Soil].NH4N[3]+[Soil].NO3N[4]+[Soil].NH4N[4]+[Soil].NO3N[5]+[Soil].NH4N[5]) as SubsurfaceMineralN</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
               <string>sum([Soil].SoilWater.SWmm[1:10]) as SW200cm</string>
@@ -2217,8 +2214,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.GrainWt</XFieldName>
-          <YFieldName>Predicted.GrainWt</YFieldName>
+          <XFieldName>Observed.Maize.Grain.Wt</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2261,7 +2258,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Year</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
+          <YFieldName>Maize.Grain.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2282,7 +2279,229 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Year</XFieldName>
-          <YFieldName>GrainWt</YFieldName>
+          <YFieldName>Maize.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>AboveGroundWt PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>true</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Maize.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Maize.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SurfaceMineralN vs Year</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoil</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SurfaceMineralN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SurfaceMineralN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SurfaceMineralN PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>true</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.SurfaceMineralN</XFieldName>
+          <YFieldName>Predicted.SurfaceMineralN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SuburfaceMineralN vs Year</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoil</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SubsurfaceMineralN</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>SubsurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2875,6 +3094,7 @@ namespace Models
 	{
 		[Link] Plant Gliricidia;
 		[Link] Clock Clock;
+		[Link] Weather Weather;
 		[XmlIgnore] public double AnnualFoliageHarvest { get; set; }
 
 		[Description("First Cutting Date")]
@@ -2896,10 +3116,11 @@ namespace Models
 			{
 				if (Gliricidia.IsAlive)
 				{
-					AnnualFoliageHarvest = AnnualFoliageHarvest + 1; //Gliricidia.Leaf.Live.Wt;
+					AnnualFoliageHarvest = AnnualFoliageHarvest + 0; //Gliricidia.Leaf.Live.Wt;
 					Gliricidia.Harvest();
 				}
 			}
+			AnnualFoliageHarvest = AnnualFoliageHarvest + Weather.Rain;
 			if (DateUtilities.WithinDates("1-Jun", Clock.Today, "1-Jun"))
 				AnnualFoliageHarvest = 0;
 				
@@ -3130,7 +3351,7 @@ namespace Models
           <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
+          <YAxis>Right</YAxis>
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -3147,6 +3368,48 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>AnnualFoliageHarvest</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>AnnualFoliageHarvest2</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Axis>
           <Type>Bottom</Type>
           <Title />
@@ -3158,6 +3421,13 @@ namespace Models
         <Axis>
           <Type>Left</Type>
           <Title />
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
