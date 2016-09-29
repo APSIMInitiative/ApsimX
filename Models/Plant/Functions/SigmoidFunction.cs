@@ -75,7 +75,6 @@ namespace Models.PMF.Functions
             string XName = "";
             if (ChildFunctions.Count == 1)
             {
-                IFunction F = ChildFunctions[0] as IFunction;
                 XName = ChildFunctions[0].Name;               
             }
             tags.Add(new AutoDocumentation.Paragraph("Where " + this.Name + "is calculated using a sigmoid function of the form" +
