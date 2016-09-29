@@ -217,68 +217,71 @@ namespace Models
 
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
-            
-            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
-            // Simulations table.
-            string[] simulationNames = this.SimulationNames;
-            string sql = string.Empty;
-            foreach (string simulationNameToKeep in simulationNamesToKeep)
+
+            try
             {
-                if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
+                // Make sure that the list of simulations in 'simulationsToKeep' are in the 
+                // Simulations table.
+                string[] simulationNames = this.SimulationNames;
+                string sql = string.Empty;
+                foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
-                    if (sql != string.Empty)
-                        sql += ",";
-                    sql += "'" + simulationNameToKeep + "'";
-                }
-            }
-
-            if (sql != string.Empty)
-                RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
-
-            // Get a list of simulation IDs that we are to delete.
-            List<int> idsToDelete = new List<int>();
-            foreach (string simulationNameInDB in SimulationNames)
-                if (!simulationNamesToKeep.Contains(simulationNameInDB))
-                {
-                    idsToDelete.Add(GetSimulationID(simulationNameInDB));
+                    if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
+                    {
+                        if (sql != string.Empty)
+                            sql += "),(";
+                        sql += "'" + simulationNameToKeep + "'";
+                    }
                 }
 
-            // create an SQL WHERE clause with all IDs
-            string idString = "";
-            for (int i = 0; i < idsToDelete.Count; i++)
-            {
-                if (i > 0)
-                    idString += " OR ";
-                idString += "ID = " + idsToDelete[i].ToString();
+                if (sql != string.Empty)
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+
+                // Get a list of simulation IDs that we are to delete.
+                List<int> idsToDelete = new List<int>();
+                foreach (string simulationNameInDB in SimulationNames)
+                    if (!simulationNamesToKeep.Contains(simulationNameInDB))
+                    {
+                        idsToDelete.Add(GetSimulationID(simulationNameInDB));
+                    }
+
+                // create an SQL WHERE clause with all IDs
+                string idString = "";
+                for (int i = 0; i < idsToDelete.Count; i++)
+                {
+                    if (i > 0)
+                        idString += " OR ";
+                    idString += "ID = " + idsToDelete[i].ToString();
+                }
+
+                if (idString != string.Empty)
+                    RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+
+                // Now add to IDs to delete the simulations IDs of the simulations we are
+                // about to run i.e. remove the rows that we are about to regenerate.
+                idsToDelete.Clear();
+                foreach (string simulationNameToBeRun in simulationNamesToBeRun)
+                    idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
+
+                idString = "";
+                for (int i = 0; i < idsToDelete.Count; i++)
+                {
+                    if (i > 0)
+                        idString += " OR ";
+                    idString += "SimulationID = " + idsToDelete[i].ToString();
+                }
+
+                foreach (string tableName in TableNames)
+                {
+                    // delete this simulation
+                    RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+                }
             }
-
-            if (idString != string.Empty)
-                RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
-
-            // Now add to IDs to delete the simulations IDs of the simulations we are
-            // about to run i.e. remove the rows that we are about to regenerate.
-            idsToDelete.Clear();
-            foreach (string simulationNameToBeRun in simulationNamesToBeRun)
-                idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
-
-            idString = "";
-            for (int i = 0; i < idsToDelete.Count; i++)
+            finally
             {
-                if (i > 0)
-                    idString += " OR ";
-                idString += "SimulationID = " + idsToDelete[i].ToString();
+                // Tell SQLite that we're ending a transaction.
+                Connection.ExecuteNonQuery("END");
             }
-
-            foreach (string tableName in TableNames)
-            {
-                // delete this simulation
-                RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
-            }
-
-
-
-            // Tell SQLite that we're beginning a transaction.
-            Connection.ExecuteNonQuery("END");
 
         }
 
@@ -798,34 +801,39 @@ namespace Models
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
-            // Go through all tables and write the data.
-            foreach (TableToWrite table in tables)
+            try
             {
-                // Write each row to the .db
-                if (table.Data != null)
+                // Go through all tables and write the data.
+                foreach (TableToWrite table in tables)
                 {
-                    object[] values = new object[names.Count];
-                    foreach (DataRow row in table.Data.Rows)
+                    // Write each row to the .db
+                    if (table.Data != null)
                     {
-                        for (int i = 0; i < names.Count; i++)
+                        object[] values = new object[names.Count];
+                        foreach (DataRow row in table.Data.Rows)
                         {
-                            if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
-                                values[i] = table.SimulationID;
-                            else if (table.Data.Columns.Contains(names[i]))
-                                values[i] = row[names[i]];
-                        }
+                            for (int i = 0; i < names.Count; i++)
+                            {
+                                if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
+                                    values[i] = table.SimulationID;
+                                else if (table.Data.Columns.Contains(names[i]))
+                                    values[i] = row[names[i]];
+                            }
 
-                        // Write the row to the .db
-                        Connection.BindParametersAndRunQuery(query, values);
+                            // Write the row to the .db
+                            Connection.BindParametersAndRunQuery(query, values);
+                        }
                     }
                 }
             }
+            finally
+            {
+                // tell SQLite we're ending our transaction.
+                Connection.ExecuteNonQuery("END");
 
-            // tell SQLite we're ending our transaction.
-            Connection.ExecuteNonQuery("END");
-
-            // finalise our query.
-            Connection.Finalize(query);
+                // finalise our query.
+                Connection.Finalize(query);
+            }
         }
 
         /// <summary>
@@ -967,17 +975,22 @@ namespace Models
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
-            // For those simulations in 'table' that aren't in the DB, add them
-            // to the simulations table
-            List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
-            foreach (string simulationNameInTable in simulationNamesInTable)
+            try
             {
-                if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
-                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+                // For those simulations in 'table' that aren't in the DB, add them
+                // to the simulations table
+                List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
+                foreach (string simulationNameInTable in simulationNamesInTable)
+                {
+                    if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
+                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+                }
             }
-
-            // Tell SQLite that we're ending a transaction.
-            Connection.ExecuteNonQuery("END");
+            finally
+            {
+                // Tell SQLite that we're ending a transaction.
+                Connection.ExecuteNonQuery("END");
+            }
 
             // Get a list of simulation names and IDs from DB
             DB = Connection.ExecuteQuery("SELECT * FROM Simulations");
