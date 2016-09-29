@@ -30,7 +30,6 @@ namespace Models.Factorial
 
             Stream serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
 
-            List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
                 string newSimulationName = Name;

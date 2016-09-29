@@ -1115,7 +1115,6 @@ namespace Models.GrazPlan
             TCohortsInfo CohortsInfo = new TCohortsInfo();
             int birthDay;
             int replaceAge;
-            int ageOffset;
             int yngYrs = 0, oldYrs = 0;
             int i;
             TAnimalParamSet genoprms;
@@ -1135,7 +1134,6 @@ namespace Models.GrazPlan
 
                 //calc the birth date based on age at replacement
                 replaceAge = Convert.ToInt32(Math.Truncate(MONTH2DAY * curEnt.ReplaceAge + 0.5));
-                ageOffset = (replaceAge + DaysFromDOY(curEnt.ReplacementDay, currentDay)) % 366;
 
                 //get age range - from calc'd birth to CFA age
                 GetAgeRange(curEnt.ReplacementDay, replaceAge, curEnt.getFirstSaleYears(1), curEnt.getFirstSaleDay(1), currentDay, ref yngYrs, ref oldYrs);
@@ -1243,7 +1241,6 @@ namespace Models.GrazPlan
             int g, groups;
             int groupIdx;
             TPurchaseInfo AnimalInfo = new TPurchaseInfo();
-            int yrs;
             TAnimalParamSet genoprms;
             TEnterpriseInfo.TStockEnterprise stockEnt;
 
@@ -1297,7 +1294,6 @@ namespace Models.GrazPlan
                                 if (AnimalInfo.Number > 0)
                                 {
                                     groupIdx = Buy(AnimalInfo);
-                                    yrs = AnimalInfo.AgeDays / 365;
                                     TagGroup(curEnt, groupIdx, 1);        //tag the group
 
                                     // {TODO: before drafting, a request of forages should be done}

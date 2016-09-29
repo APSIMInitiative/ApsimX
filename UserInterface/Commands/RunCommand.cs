@@ -113,30 +113,30 @@
 
             if (numSimulations > 0)
             {
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" + 
+                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          (numSimulations) + ")", Models.DataStore.ErrorLevel.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
-                if (percentComplete == 100)
-                {
-                    timer.Stop();
-                    stopwatch.Stop();
+            }
+            if (percentComplete == 100)
+            {
+                timer.Stop();
+                stopwatch.Stop();
 
-                    string errorMessage = GetErrorsFromSimulations();
-                    if (errorMessage == null)
-                        explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                                + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
-                    else
-                        explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                string errorMessage = GetErrorsFromSimulations();
+                if (errorMessage == null)
+                    explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
+                            + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                else
+                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
 
-                    SoundPlayer player = new SoundPlayer();
-                    if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                        player.Stream = Properties.Resources.notes;
-                    else
-                        player.Stream = Properties.Resources.success;
-                    player.Play();
-                    IsRunning = false;
-                }
+                SoundPlayer player = new SoundPlayer();
+                if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
+                    player.Stream = Properties.Resources.notes;
+                else
+                    player.Stream = Properties.Resources.success;
+                player.Play();
+                IsRunning = false;
             }
         }
     }

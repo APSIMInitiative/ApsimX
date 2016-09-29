@@ -214,8 +214,6 @@ namespace Models.PMF.OldPlant
         /// <summary>Adjusts the morphology after a remove biomass.</summary>
         internal void AdjustMorphologyAfterARemoveBiomass()
         {
-            double dm_plant = MathUtilities.Divide(Live.Wt, Population.Density, 0.0);
-
             if (HeightFunction != null)
                 Height = HeightFunction.Value;
         }

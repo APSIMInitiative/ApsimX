@@ -2809,8 +2809,6 @@
                 removedFromStanding = 0,
                 removedFromLying = 0;
 
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-
             SOMNo = GetResidueNumber(surfomName);
 
             if (SOMNo < 0)
