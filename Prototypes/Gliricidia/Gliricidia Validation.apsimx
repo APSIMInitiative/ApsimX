@@ -4675,10 +4675,10 @@ namespace Models
         <Manager>
           <Name>TreeSowingRule</Name>
           <Script>
-            <RowSpace>3</RowSpace>
+            <RowSpace>0.7</RowSpace>
             <RowWidth>3</RowWidth>
             <CultivarName>Gliricidia</CultivarName>
-            <SowingDate>1988-05-22</SowingDate>
+            <SowingDate>1993-05-01</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
