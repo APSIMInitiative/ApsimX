@@ -128,6 +128,7 @@ namespace UserInterface.Presenters
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             HideRightHandPanel();
+            this.contextMenu = null;
             this.CommandHistory.Clear();
         }
 
