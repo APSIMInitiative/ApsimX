@@ -297,6 +297,7 @@ namespace UserInterface.Presenters
 
             //add missing data as 0 otherwise it will throw an exception
             //could make this work as an entire row, but will stick to X & Y columns for now
+            /*
             for (int Row = 0; Row != data.Rows.Count; Row++)
             {
                 if (data.Rows[Row]["Y"].ToString() == "" && data.Rows[Row]["X"].ToString() != "")
@@ -306,7 +307,7 @@ namespace UserInterface.Presenters
                 if (data.Rows[Row]["Y"].ToString() == "" && data.Rows[Row]["X"].ToString() == "")
                     break;
             }
-            
+            */
             // Loop through all non-readonly properties, get an array of values from the data table
             // for the property and then set the property value.
             for (int i = 0; i < this.propertiesInGrid.Count; i++)
