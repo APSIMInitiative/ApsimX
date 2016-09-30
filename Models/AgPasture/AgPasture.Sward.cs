@@ -225,8 +225,8 @@ namespace Models.AgPasture
 
         ////- General properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets a value indicating whether the plant is alive.</summary>
-        [Description("Flag whether any plant in the sward is alive")]
+        /// <summary>Gets the flag signalling whether plant is alive (true/false).</summary>
+        [Description("Flag signalling whether plant is alive")]
         [Units("true/false")]
         public bool IsAlive
         {
@@ -257,7 +257,7 @@ namespace Models.AgPasture
 
         ////- DM and C outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the total plant C content (kg/ha).</summary>
+        /// <summary>Gets the total amount of C in the plant (kgC/ha).</summary>
         [Description("Total amount of C in the plant")]
         [Units("kg/ha")]
         public double TotalC
@@ -265,7 +265,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.TotalWt * CarbonInDM); }
         }
 
-        /// <summary>Gets the plant total dry matter weight (kg/ha).</summary>
+        /// <summary>Gets the total dry matter weight of plant (kgDM/ha).</summary>
         [Description("Total dry matter weight of plant")]
         [Units("kg/ha")]
         public double TotalWt
@@ -273,15 +273,15 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.TotalWt); }
         }
 
-        /// <summary>Gets the plant DM weight above ground (kg/ha).</summary>
-        [Description("Dry matter weight of plant above ground")]
+        /// <summary>Gets the dry matter weight of the plant above ground (kgDM/ha).</summary>
+        [Description("Dry matter weight of the plant above ground")]
         [Units("kg/ha")]
         public double AboveGroundWt
         {
             get { return mySpecies.Sum(species => species.AboveGroundWt); }
         }
 
-        /// <summary>Gets the DM weight of live plant parts above ground (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of live tissues above ground (kgDM/ha).</summary>
         [Description("Dry matter weight of live tissues above ground")]
         [Units("kg/ha")]
         public double AboveGroundLiveWt
@@ -289,7 +289,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.AboveGroundLiveWt); }
         }
 
-        /// <summary>Gets the DM weight of dead plant parts above ground (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of dead tissues above ground (kgDM/ha).</summary>
         [Description("Dry matter weight of dead tissues above ground")]
         [Units("kg/ha")]
         public double AboveGroundDeadWt
@@ -297,15 +297,15 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.AboveGroundDeadWt); }
         }
 
-        /// <summary>Gets the DM weight of the plant below ground (kg/ha).</summary>
-        [Description("Dry matter weight of plant below ground")]
+        /// <summary>Gets the dry matter weight of the plant below ground (kgDM/ha).</summary>
+        [Description("Dry matter weight of the plant below ground")]
         [Units("kg/ha")]
         public double BelowGroundWt
         {
             get { return mySpecies.Sum(species => species.RootWt); }
         }
 
-        /// <summary>Gets the total standing DM weight (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
         [Description("Dry matter weight of standing herbage")]
         [Units("kg/ha")]
         public double StandingHerbageWt
@@ -313,7 +313,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StandingHerbageWt); }
         }
 
-        /// <summary>Gets the DM weight of standing live plant material (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of live standing herbage (kgDM/ha).</summary>
         [Description("Dry matter weight of live standing herbage")]
         [Units("kg/ha")]
         public double StandingLiveHerbageWt
@@ -321,7 +321,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StandingLiveHerbageWt); }
         }
 
-        /// <summary>Gets the DM weight of standing dead plant material (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of dead standing herbage (kgDM/ha).</summary>
         [Description("Dry matter weight of dead standing herbage")]
         [Units("kg/ha")]
         public double StandingDeadHerbageWt
@@ -329,7 +329,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StandingDeadHerbageWt); }
         }
 
-        /// <summary>Gets the total DM weight of leaves (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of plant's leaves (kgDM/ha).</summary>
         [Description("Dry matter weight of plant's leaves")]
         [Units("kg/ha")]
         public double LeafWt
@@ -337,7 +337,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LeafWt); }
         }
 
-        /// <summary>Gets the total DM weight of stems and sheath (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of plant's stems and sheath (kgDM/ha).</summary>
         [Description("Dry matter weight of plant's stems and sheath")]
         [Units("kg/ha")]
         public double StemWt
@@ -345,7 +345,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StemWt); }
         }
 
-        /// <summary>Gets the total DM weight of stolons (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of plant's stolons (kgDM/ha).</summary>
         [Description("Dry matter weight of plant's stolons")]
         [Units("kg/ha")]
         public double StolonWt
@@ -353,7 +353,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StolonWt); }
         }
 
-        /// <summary>Gets the total DM weight of roots (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of plant's roots (kgDM/ha).</summary>
         [Description("Dry matter weight of plant's roots")]
         [Units("kg/ha")]
         public double RootWt
@@ -361,7 +361,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RootWt); }
         }
 
-        /// <summary>Gets the root DM weight for each layer (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of roots in each soil layer ().</summary>
         [Description("Dry matter weight of roots in each soil layer")]
         [Units("kg/ha")]
         public double[] RootLayerWt
@@ -378,7 +378,7 @@ namespace Models.AgPasture
 
         ////- N amount outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the plant total N content (kg/ha).</summary>
+        /// <summary>Gets the total amount of N in the plant (kgN/ha).</summary>
         [Description("Total amount of N in the plant")]
         [Units("kg/ha")]
         public double TotalN
@@ -386,15 +386,15 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.TotalN); }
         }
 
-        /// <summary>Gets the N content in the plant above ground (kg/ha).</summary>
-        [Description("Amount of N in plant above ground")]
+        /// <summary>Gets the amount of N in the plant above ground (kgN/ha).</summary>
+        [Description("Amount of N in the plant above ground")]
         [Units("kg/ha")]
         public double AboveGroundN
         {
             get { return mySpecies.Sum(species => species.AboveGroundN); }
         }
 
-        /// <summary>Gets the N content in live plant material above ground (kg/ha).</summary>
+        /// <summary>Gets the amount of N in live tissues above ground (kgN/ha).</summary>
         [Description("Amount of N in live tissues above ground")]
         [Units("kg/ha")]
         public double AboveGroundLiveN
@@ -402,7 +402,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.AboveGroundLiveN); }
         }
 
-        /// <summary>Gets the N content of dead plant material above ground (kg/ha).</summary>
+        /// <summary>Gets the amount of N in dead tissues above ground (kgN/ha).</summary>
         [Description("Amount of N in dead tissues above ground")]
         [Units("kg/ha")]
         public double AboveGroundDeadN
@@ -410,15 +410,15 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.AboveGroundDeadN); }
         }
 
-        /// <summary>Gets the N content of plants below ground (kg/ha).</summary>
-        [Description("Amount of N in plant below ground")]
+        /// <summary>Gets the amount of N in the plant below ground (kgN/ha).</summary>
+        [Description("Amount of N in the plant below ground")]
         [Units("kg/ha")]
         public double BelowGroundN
         {
             get { return mySpecies.Sum(species => species.BelowGroundN); }
         }
 
-        /// <summary>Gets the N content of standing plants (kg/ha).</summary>
+        /// <summary>Gets the amount of N in standing herbage (kgN/ha).</summary>
         [Description("Amount of N in standing herbage")]
         [Units("kg/ha")]
         public double StandingHerbageN
@@ -426,7 +426,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StandingHerbageN); }
         }
 
-        /// <summary>Gets the N content of standing live plant material (kg/ha).</summary>
+        /// <summary>Gets the amount of N in live standing herbage (kgN/ha).</summary>
         [Description("Amount of N in live standing herbage")]
         [Units("kg/ha")]
         public double StandingLiveHerbageN
@@ -442,7 +442,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StandingDeadHerbageN); }
         }
 
-        /// <summary>Gets the total N content of leaves (kg/ha).</summary>
+        /// <summary>Gets the amount of N in the plant's leaves (kgN/ha).</summary>
         [Description("Amount of N in the plant's leaves")]
         [Units("kg/ha")]
         public double LeafN
@@ -450,7 +450,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LeafN); }
         }
 
-        /// <summary>Gets the total N content of stems and sheath (kg/ha).</summary>
+        /// <summary>Gets the amount of N in the plant's stems and sheath (kgN/ha).</summary>
         [Description("Amount of N in the plant's stems and sheath")]
         [Units("kg/ha")]
         public double StemN
@@ -458,7 +458,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StemN); }
         }
 
-        /// <summary>Gets the total N content of stolons (kg/ha).</summary>
+        /// <summary>Gets the amount of N in the plant's stolons (kgN/ha).</summary>
         [Description("Amount of N in the plant's stolons")]
         [Units("kg/ha")]
         public double StolonN
@@ -466,7 +466,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.StolonN); }
         }
 
-        /// <summary>Gets the total N content of roots (kg/ha).</summary>
+        /// <summary>Gets the amount of N in the plant's roots (kgN/ha).</summary>
         [Description("Amount of N in the plant's roots")]
         [Units("kg/ha")]
         public double RootN
@@ -476,15 +476,15 @@ namespace Models.AgPasture
 
         ////- N concentration outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the average N concentration in plant above ground (kg/kg).</summary>
-        [Description("Average N concentration in plant above ground")]
+        /// <summary>Gets the average N concentration in the plant above ground (kgN/kgDM).</summary>
+        [Description("Average N concentration in the plant above ground")]
         [Units("kg/kg")]
         public double AboveGroundNConc
         {
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of standing plant material (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in standing herbage (kgN/kgDM).</summary>
         [Description("Average N concentration in standing herbage")]
         [Units("kg/kg")]
         public double StandingHerbageNConc
@@ -492,7 +492,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(StandingHerbageN, StandingHerbageWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of leaves (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in plant's leaves (kgN/kgDM).</summary>
         [Description("Average N concentration in plant's leaves")]
         [Units("kg/kg")]
         public double LeafNConc
@@ -500,7 +500,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(LeafN, LeafWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of stems and sheath (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in plant's stems (kgN/kgDM).</summary>
         [Description("Average N concentration in plant's stems")]
         [Units("kg/kg")]
         public double StemNConc
@@ -508,7 +508,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(StemN, StemWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of stolons (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in plant's stolons (kgN/kgDM).</summary>
         [Description("Average N concentration in plant's stolons")]
         [Units("kg/kg")]
         public double StolonNConc
@@ -516,7 +516,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(StolonN, StolonWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of roots (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in plant's roots (kgN/kgDM).</summary>
         [Description("Average N concentration in plant's roots")]
         [Units("kg/kg")]
         public double RootNConc
@@ -526,7 +526,7 @@ namespace Models.AgPasture
 
         ////- DM growth and senescence outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the gross potential growth rate (kg/ha).</summary>
+        /// <summary>Gets the gross potential growth rate (kgDM/ha).</summary>
         [Description("Gross potential growth rate")]
         [Units("kg/ha")]
         public double GrossPotentialGrowthWt
@@ -534,7 +534,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.GrossPotentialGrowthWt); }
         }
 
-        /// <summary>Gets the net potential growth rate (kg/ha).</summary>
+        /// <summary>Gets the net potential growth rate, after respiration (kgDM/ha).</summary>
         [Description("Net potential growth rate, after respiration")]
         [Units("kg/ha")]
         public double NetPotentialGrowthWt
@@ -542,7 +542,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NetPotentialGrowthWt); }
         }
 
-        /// <summary>Gets the potential growth rate after water stress (kg/ha).</summary>
+        /// <summary>Gets the net potential growth rate after water stress (kgDM/ha).</summary>
         [Description("Net potential growth rate after water stress")]
         [Units("kg/ha")]
         public double NetPotentialGrowthAfterWaterWt
@@ -550,7 +550,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NetPotentialGrowthAfterWaterWt); }
         }
 
-        /// <summary>Gets the actual growth rate (kg/ha).</summary>
+        /// <summary>Gets the net potential growth rate after nutrient stress (kgDM/ha).</summary>
         [Description("Net potential growth rate after nutrient stress")]
         [Units("kg/ha")]
         public double NetPotentialGrowthAfterNutrientWt
@@ -558,7 +558,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NetPotentialGrowthAfterNutrientWt); }
         }
 
-        /// <summary>Gets the effective growth rate (kg/ha).</summary>
+        /// <summary>Gets the net, or actual, plant growth rate (kgDM/ha).</summary>
         [Description("Net, or actual, plant growth rate")]
         [Units("kg/ha")]
         public double NetGrowthWt
@@ -566,7 +566,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NetGrowthWt); }
         }
 
-        /// <summary>Gets the effective herbage growth rate (kg/ha).</summary>
+        /// <summary>Gets the net herbage growth rate (above ground) (kgDM/ha).</summary>
         [Description("Net herbage growth rate (above ground)")]
         [Units("kg/ha")]
         public double HerbageGrowthWt
@@ -574,7 +574,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.HerbageGrowthWt); }
         }
 
-        /// <summary>Gets the effective root growth rate (kg/ha).</summary>
+        /// <summary>Gets the net root growth rate (kgDM/ha).</summary>
         [Description("Net root growth rate")]
         [Units("kg/ha")]
         public double RootGrowthWt
@@ -582,7 +582,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RootGrowthWt); }
         }
 
-        /// <summary>Gets the litter DM weight deposited onto soil surface (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of detached dead material deposited onto soil surface (kgDM/ha).</summary>
         [Description("Dry matter weight of detached dead material deposited onto soil surface")]
         [Units("kg/ha")]
         public double LitterDepositionWt
@@ -590,7 +590,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LitterDepositionWt); }
         }
 
-        /// <summary>Gets the senesced root DM weight added to soil FOM (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight of detached dead roots added to soil FOM (kgDM/ha).</summary>
         [Description("Dry matter weight of detached dead roots added to soil FOM")]
         [Units("kg/ha")]
         public double RootDetachedWt
@@ -598,7 +598,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RootDetachedWt); }
         }
 
-        /// <summary>Gets the gross primary productivity (kg/ha).</summary>
+        /// <summary>Gets the gross primary productivity (kgC/ha).</summary>
         [Description("Gross primary productivity")]
         [Units("kg/ha")]
         public double GPP
@@ -606,7 +606,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.GPP); }
         }
 
-        /// <summary>Gets the net primary productivity (kg/ha).</summary>
+        /// <summary>Gets the net primary productivity (kgC/ha).</summary>
         [Description("Net primary productivity")]
         [Units("kg/ha")]
         public double NPP
@@ -614,7 +614,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NPP); }
         }
 
-        /// <summary>Gets the net above-ground primary productivity (kg/ha).</summary>
+        /// <summary>Gets the net above-ground primary productivity (kgC/ha).</summary>
         [Description("Net above-ground primary productivity")]
         [Units("kg/ha")]
         public double NAPP
@@ -622,7 +622,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.NAPP); }
         }
 
-        /// <summary>Gets the net below-ground primary productivity (kg/ha).</summary>
+        /// <summary>Gets the net below-ground primary productivity (kgC/ha).</summary>
         [Description("Net below-ground primary productivity")]
         [Units("kg/ha")]
         public double NBPP
@@ -632,7 +632,7 @@ namespace Models.AgPasture
 
         ////- N flows outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the amount of N remobilised from senesced tissue (kg/ha).</summary>
+        /// <summary>Gets the amount of senesced N potentially remobilisable (kgN/ha).</summary>
         [Description("Amount of senesced N potentially remobilisable")]
         [Units("kg/ha")]
         public double RemobilisableSenescedN
@@ -640,7 +640,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RemobilisableSenescedN); }
         }
 
-        /// <summary>Gets the amount of N remobilised from senesced tissue (kg/ha).</summary>
+        /// <summary>Gets the amount of senesced N actually remobilised (kgN/ha).</summary>
         [Description("Amount of senesced N actually remobilised")]
         [Units("kg/ha")]
         public double RemobilisedSenescedN
@@ -648,7 +648,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RemobilisedSenescedN); }
         }
 
-        /// <summary>Gets the amount of luxury N potentially remobilisable (kg/ha).</summary>
+        /// <summary>Gets the amount of luxury N potentially remobilisable (kgN/ha).</summary>
         [Description("Amount of luxury N potentially remobilisable")]
         [Units("kg/ha")]
         public double RemobilisableLuxuryN
@@ -656,7 +656,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RemobilisableLuxuryN); }
         }
 
-        /// <summary>Gets the amount of luxury N remobilised (kg/ha).</summary>
+        /// <summary>Gets the amount of luxury N actually remobilised (kgN/ha).</summary>
         [Description("Amount of luxury N actually remobilised")]
         [Units("kg/ha")]
         public double RemobilisedLuxuryN
@@ -664,7 +664,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RemobilisedLuxuryN); }
         }
 
-        /// <summary>Gets the amount of atmospheric N fixed (kg/ha).</summary>
+        /// <summary>Gets the amount of atmospheric N fixed by symbiosis (kgN/ha).</summary>
         [Description("Amount of atmospheric N fixed by symbiosis")]
         [Units("kg/ha")]
         public double FixedN
@@ -672,7 +672,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.FixedN); }
         }
 
-        /// <summary>Gets the amount of N required with luxury uptake (kg/ha).</summary>
+        /// <summary>Gets the amount of N required with luxury uptake (kgN/ha).</summary>
         [Description("Amount of N required with luxury uptake")]
         [Units("kg/ha")]
         public double DemandAtLuxuryN
@@ -680,7 +680,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.DemandAtLuxuryN); }
         }
 
-        /// <summary>Gets the amount of N required for optimum N content (kg/ha).</summary>
+        /// <summary>Gets the amount of N required for optimum growth (kgN/ha).</summary>
         [Description("Amount of N required for optimum growth")]
         [Units("kg/ha")]
         public double DemandAtOptimumN
@@ -688,18 +688,18 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.DemandAtOptimumN); }
         }
 
-        /// <summary>Gets the amount of N demanded from soil (kg/ha).</summary>
-        [Description("Amount of N demanded from soil")]
+        /// <summary>Gets the amount of N demanded from the soil (kgN/ha).</summary>
+        [Description("Amount of N demanded from the soil")]
         [Units("kg/ha")]
-        public double DemandSoilN
+        public double SoilDemandN
         {
             get { return mySpecies.Sum(species => species.SoilDemandN); }
         }
 
-        /// <summary>Gets the amount of plant available N in soil layer (kg/ha).</summary>
-        [Description("Amount of NH4-N available in the soil")]
+        /// <summary>Gets the amount of plant available N in the soil (kgN/ha).</summary>
+        [Description("Amount of plant available N in the soil")]
         [Units("kg/ha")]
-        public double[] AvailableSoilN
+        public double[] SoilAvailableN
         {
             get
             {
@@ -711,10 +711,10 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of N taken up from each soil layer (kg/ha).</summary>
-        [Description("Amount of NH4-N uptake")]
+        /// <summary>Gets the amount of N taken up from the soil (kgN/ha).</summary>
+        [Description("Amount of N taken up from the soil")]
         [Units("kg/ha")]
-        public double[] UptakeSoilN
+        public double[] SoilUptakeN
         {
             get
             {
@@ -726,7 +726,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the amount of N deposited as litter onto soil surface (kg/ha).</summary>
+        /// <summary>Gets the amount of N in detached dead material deposited onto soil surface (kgN/ha).</summary>
         [Description("Amount of N in detached dead material deposited onto soil surface")]
         [Units("kg/ha")]
         public double LitterDepositionN
@@ -734,7 +734,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LitterDepositionN); }
         }
 
-        /// <summary>Gets the amount of N from senesced roots added to soil FOM (kg/ha).</summary>
+        /// <summary>Gets the amount of N in detached dead roots added to soil FOM (kgN/ha).</summary>
         [Description("Amount of N in detached dead roots added to soil FOM")]
         [Units("kg/ha")]
         public double RootDetachedN
@@ -742,7 +742,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.RootDetachedN); }
         }
 
-        /// <summary>Gets the amount of N in new grown tissue (kg/ha).</summary>
+        /// <summary>Gets the amount of N in new growth (kgN/ha).</summary>
         [Description("Amount of N in new growth")]
         [Units("kg/ha")]
         public double NetGrowthN
@@ -752,30 +752,30 @@ namespace Models.AgPasture
 
         ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the amount of water demanded by plants (mm).</summary>
-        [Description("Plant water demand")]
+        /// <summary>Gets the amount of water demanded by the plant (mm).</summary>
+        [Description("Amount of water demanded by the plant")]
         [Units("mm")]
         public double WaterDemand
         {
             get { return mySpecies.Sum(species => species.WaterDemand); }
         }
 
-        /// <summary>Gets the amount of soil water available for uptake (mm).</summary>
-        [Description("Plant available water in the soil")]
+        /// <summary>Gets the amount of plant available water in each soil layer (mm).</summary>
+        [Description("Amount of plant available water in each soil layer")]
         [Units("mm")]
-        public double[] SoilAvailableWater
+        public double[] WaterAvailable
         {
             get
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySpecies.Sum(species => species.SoilAvailableWater[layer]);
+                    result[layer] = mySpecies.Sum(species => species.WaterAvailable[layer]);
                 return result;
             }
         }
 
-        /// <summary>Gets the amount of water taken up by the plants (mm).</summary>
-        [Description("Plant water uptake")]
+        /// <summary>Gets the amount of water taken up from each soil layer (mm).</summary>
+        [Description("Amount of water taken up from each soil layer")]
         [Units("mm")]
         public double[] WaterUptake
         {
@@ -801,7 +801,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the growth limiting factor due to variations in atmospheric CO2 (0-1).</summary>
+        /// <summary>Gets the growth factor due to variations in atmospheric CO2 (0-1).</summary>
         [Description("Growth factor due to variations in atmospheric CO2")]
         [Units("0-1")]
         public double GlfCO2
@@ -813,7 +813,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average growth limiting factor due to N concentration in the plant (0-1).</summary>
+        /// <summary>Gets the growth factor due to variations in plant N concentration (0-1).</summary>
         [Description("Growth factor due to variations in plant N concentration")]
         [Units("0-1")]
         public double GlfNContent
@@ -825,7 +825,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average growth limiting factor due to temperature (0-1).</summary>
+        /// <summary>Gets the growth factor due to variations in air temperature (0-1).</summary>
         [Description("Growth factor due to variations in air temperature")]
         [Units("0-1")]
         public double GlfTemperature
@@ -837,7 +837,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the growth limiting factor due to heat stress (0-1).</summary>
+        /// <summary>Gets the growth factor due to heat damage stress (0-1).</summary>
         [Description("Growth factor due to heat damage stress")]
         [Units("0-1")]
         public double GlfHeatDamage
@@ -849,7 +849,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the growth limiting factor due to cold stress (0-1).</summary>
+        /// <summary>Gets the growth factor due to cold damage stress (0-1).</summary>
         [Description("Growth factor due to cold damage stress")]
         [Units("0-1")]
         public double GlfColdDamage
@@ -861,8 +861,8 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average generic growth limiting factor (arbitrary limitation) (0-1).</summary>
-        [Description("Average generic plant growth limiting factor, used at potential growth level")]
+        /// <summary>Gets the generic factor affecting potential plant growth [0-1]: (0-1).</summary>
+        [Description("Generic factor affecting potential plant growth [0-1]:")]
         [Units("0-1")]
         public double GlfGeneric
         {
@@ -873,7 +873,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average growth limiting factor due to water availability (0-1).</summary>
+        /// <summary>Gets the growth limiting factor due to water deficit (0-1).</summary>
         [Description("Growth limiting factor due to water deficit")]
         [Units("0-1")]
         public double GlfWaterSupply
@@ -897,7 +897,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average growth limiting factor due to N availability (0-1).</summary>
+        /// <summary>Gets the growth limiting factor due to soil N availability (0-1).</summary>
         [Description("Growth limiting factor due to soil N availability")]
         [Units("0-1")]
         public double GlfNSupply
@@ -909,29 +909,21 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average generic growth limiting factor due to soil fertility, for nutrients other than N (0-1).</summary>
-        [Description("Average generic growth limiting factor due to soil fertility, for nutrients other than N")]
+        /// <summary>Gets the generic growth limiting factor due to soil fertility [0-1]: (0-1).</summary>
+        [Description("Generic growth limiting factor due to soil fertility [0-1]:")]
         [Units("0-1")]
-        public double GlfSFertility
+        public double GlfSoilFertility
         {
             get
             {
-                return MathUtilities.Divide(mySpecies.Sum(species => species.GlfSFertility * species.NetPotentialGrowthAfterWaterWt),
+                return MathUtilities.Divide(mySpecies.Sum(species => species.GlfSoilFertility * species.NetPotentialGrowthAfterWaterWt),
                     NetPotentialGrowthAfterWaterWt, 0.0);
             }
         }
 
         ////- LAI and cover outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the total plant LAI, leaf area index (m^2/m^2).</summary>
-        [Description("Total leaf area index")]
-        [Units("m^2/m^2")]
-        public double LAITotal
-        {
-            get { return LAIGreen + LAIDead; }
-        }
-
-        /// <summary>Gets the plant's green LAI, leaf area index (m^2/m^2).</summary>
+        /// <summary>Gets the leaf area index of green tissues (m^2/m^2).</summary>
         [Description("Leaf area index of green tissues")]
         [Units("m^2/m^2")]
         public double LAIGreen
@@ -939,7 +931,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LAIGreen); }
         }
 
-        /// <summary>Gets the plant's dead LAI, leaf area index (m^2/m^2).</summary>
+        /// <summary>Gets the leaf area index of dead tissues (m^2/m^2).</summary>
         [Description("Leaf area index of dead tissues")]
         [Units("m^2/m^2")]
         public double LAIDead
@@ -947,33 +939,15 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.LAIDead); }
         }
 
-        /// <summary>Gets the average light extinction coefficient (0-1).</summary>
-        [Description("Average light extinction coefficient")]
-        [Units("0-1")]
-        public double LightExtinctionCoefficient
+        /// <summary>Gets the total leaf area index (m^2/m^2).</summary>
+        [Description("Total leaf area index")]
+        [Units("m^2/m^2")]
+        public double LAITotal
         {
-            get
-            {
-                double result = mySpecies.Sum(species => species.LAITotal * species.LightExtentionCoefficient);
-                result /= mySpecies.Sum(species => species.LAITotal);
-
-                return result;
-            }
+            get { return LAIGreen + LAIDead; }
         }
 
-        /// <summary>Gets the plant's total cover (0-1).</summary>
-        [Description("Fraction of soil covered by plant tissues")]
-        [Units("%")]
-        public double CoverTotal
-        {
-            get
-            {
-                if (LAITotal < Epsilon) return 0.0;
-                return 1.0 - Math.Exp(-LightExtinctionCoefficient * LAITotal);
-            }
-        }
-
-        /// <summary>Gets the plant's green cover (0-1).</summary>
+        /// <summary>Gets the fraction of soil covered by green tissues (0-1).</summary>
         [Description("Fraction of soil covered by green tissues")]
         [Units("%")]
         public double CoverGreen
@@ -985,7 +959,7 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the plant's dead cover (0-1).</summary>
+        /// <summary>Gets the fraction of soil covered by dead tissues (0-1).</summary>
         [Description("Fraction of soil covered by dead tissues")]
         [Units("%")]
         public double CoverDead
@@ -997,10 +971,36 @@ namespace Models.AgPasture
             }
         }
 
-        ////- Height root depth and distribution >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        /// <summary>Gets the fraction of soil covered by plant tissues (0-1).</summary>
+        [Description("Fraction of soil covered by plant tissues")]
+        [Units("%")]
+        public double CoverTotal
+        {
+            get
+            {
+                if (LAITotal < Epsilon) return 0.0;
+                return 1.0 - Math.Exp(-LightExtinctionCoefficient * LAITotal);
+            }
+        }
 
-        /// <summary>Gets the average height of plants in the sward (mm).</summary>
-        [Description("Average height of plants in the sward")]
+        /// <summary>Gets the light extinction coefficient [0-1] (0-1).</summary>
+        [Description("Light extinction coefficient [0-1]")]
+        [Units("0-1")]
+        public double LightExtinctionCoefficient
+        {
+            get
+            {
+                double result = mySpecies.Sum(species => species.LAITotal * species.LightExtinctionCoefficient);
+                result /= mySpecies.Sum(species => species.LAITotal);
+
+                return result;
+            }
+        }
+
+        ////- Height, root depth and distribution >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        /// <summary>Gets the average canopy height (mm).</summary>
+        [Description("Average canopy height")]
         [Units("mm")]
         public double Height
         {
@@ -1019,20 +1019,20 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets average depth of roots in the sward (mm).</summary>
-        [Description("Average depth of roots in the sward")]
+        /// <summary>Gets the average depth of root zone (mm).</summary>
+        [Description("Average depth of root zone")]
         [Units("mm")]
         public double RootZoneDepth
         {
-            get { return mySpecies.Max(species => species.RootingDepth); }
+            get { return mySpecies.Max(species => species.RootDepth); }
         }
 
-        /// <summary>Gets the root frontier (layer at bottom of root zone).</summary>
+        /// <summary>Gets the layer at bottom of root zone (-).</summary>
         [Description("Layer at bottom of root zone")]
-        [Units("mm")]
-        public int RootFrontier
+        [Units("-")]
+        public int RootZoneFrontier
         {
-            get { return mySpecies.Max(species => species.RootZoneFrontier); }
+            get { return mySpecies.Max(species => species.RootFrontier); }
         }
 
         /// <summary>Gets the fraction of root dry matter for each soil layer (0-1).</summary>
@@ -1051,23 +1051,23 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the sward's average root length density for each soil layer (mm/mm^3).</summary>
+        /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
         [Description("Root length density by volume")]
         [Units("mm/mm^3")]
-        public double[] RLD
+        public double[] RootLengthDensity
         {
             get
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = mySpecies.Sum(species => species.RLD[layer]);
+                    result[layer] = mySpecies.Sum(species => species.RootLengthDensity[layer]);
                 return result;
             }
         }
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the amount of dry matter available for harvesting (kg/ha).</summary>
+        /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         [Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]
         public double HarvestableWt
@@ -1075,7 +1075,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.HarvestableWt); }
         }
 
-        /// <summary>Gets the amount of dry matter harvested (kg/ha).</summary>
+        /// <summary>Gets the amount of plant dry matter removed by harvest (kgDM/ha).</summary>
         [Description("Amount of plant dry matter removed by harvest")]
         [Units("kg/ha")]
         public double HarvestedWt
@@ -1083,7 +1083,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.HarvestedWt); }
         }
 
-        /// <summary>Gets the amount of plant N removed by harvest (kg/ha).</summary>
+        /// <summary>Gets the amount of plant N removed by harvest (kgN/ha).</summary>
         [Description("Amount of plant N removed by harvest")]
         [Units("kg/ha")]
         public double HarvestedN
@@ -1091,7 +1091,7 @@ namespace Models.AgPasture
             get { return mySpecies.Sum(species => species.HarvestedN); }
         }
 
-        /// <summary>Gets the average N concentration in harvested material (kg/kg).</summary>
+        /// <summary>Gets the average N concentration in harvested material (kgN/kgDM).</summary>
         [Description("Average N concentration in harvested material")]
         [Units("kg/kg")]
         public double HarvestedNConc
@@ -1099,7 +1099,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(HarvestedN, HarvestedWt, 0.0); }
         }
 
-        /// <summary>Gets the average digestibility of harvested DM (0-1).</summary>
+        /// <summary>Gets the average digestibility of harvested material (0-1).</summary>
         [Description("Average digestibility of harvested material")]
         [Units("0-1")]
         public double HarvestedDigestibility
@@ -1110,15 +1110,15 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Gets the average ME (metabolisable energy) of harvested DM (MJ/ha).</summary>
+        /// <summary>Gets the average metabolisable energy concentration of harvested material (MJ/kgDM).</summary>
         [Description("Average metabolisable energy concentration of harvested material")]
-        [Units("MJ/ha")]
+        [Units("MJ/kg")]
         public double HarvestedME
         {
             get { return MathUtilities.Divide(mySpecies.Sum(species => species.HarvestedME * species.HarvestedWt), HarvestedWt, 0.0); }
         }
 
-        /// <summary>Gets the average herbage digestibility (0-1).</summary>
+        /// <summary>Gets the average digestibility of standing herbage (0-1).</summary>
         [Description("Average digestibility of standing herbage")]
         [Units("0-1")]
         public double HerbageDigestibility
@@ -1126,9 +1126,9 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(mySpecies.Sum(species => species.HerbageDigestibility * species.StandingHerbageWt), StandingHerbageWt, 0.0); }
         }
 
-        /// <summary>Gets the average herbage ME, metabolisable energy (MJ/ha).</summary>
+        /// <summary>Gets the average metabolisable energy concentration of standing herbage (MJ/kgDM).</summary>
         [Description("Average metabolisable energy concentration of standing herbage")]
-        [Units("(MJ/ha)")]
+        [Units("MJ/kg")]
         public double HerbageME
         {
             get { return MathUtilities.Divide(mySpecies.Sum(species => species.HerbageME * species.StandingHerbageWt), StandingHerbageWt, 0.0); }
@@ -1296,11 +1296,11 @@ namespace Models.AgPasture
             else
             {
                 //water uptake is controlled at species level, get sward totals
-                for (int layer = 0; layer <= RootFrontier; layer++)
+                for (int layer = 0; layer <= RootZoneFrontier; layer++)
                 {
                     foreach (PastureSpecies species in mySpecies)
                     {
-                        swardSoilWaterAvailable[layer] += species.SoilAvailableWater[layer];
+                        swardSoilWaterAvailable[layer] += species.WaterAvailable[layer];
                         swardSoilWaterUptake[layer] += species.WaterUptake[layer];
                     }
                 }
@@ -1325,16 +1325,16 @@ namespace Models.AgPasture
                species.EvaluateSoilWaterAvailable(myZone);
 
             // Evaluate the available water for whole sward and adjust availability for each species if needed
-            for (int layer = 0; layer <= RootFrontier; layer++)
+            for (int layer = 0; layer <= RootZoneFrontier; layer++)
             {
                 // Get total as seen by each species
                 totalPlantWater = 0.0;
-                if (layer == RootFrontier) layerFraction = 0.0;
+                if (layer == RootZoneFrontier) layerFraction = 0.0;
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    totalPlantWater += species.SoilAvailableWater[layer];
-                    maxPlantWater = Math.Max(maxPlantWater, species.SoilAvailableWater[layer]);
-                    if (layer == RootFrontier)
+                    totalPlantWater += species.WaterAvailable[layer];
+                    maxPlantWater = Math.Max(maxPlantWater, species.WaterAvailable[layer]);
+                    if (layer == RootZoneFrontier)
                         layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
 
@@ -1372,7 +1372,7 @@ namespace Models.AgPasture
             {
                 WaterChangedType WaterTakenUp = new WaterChangedType();
                 WaterTakenUp.DeltaWater = new double[nLayers];
-                for (int layer = 0; layer <= RootFrontier; layer++)
+                for (int layer = 0; layer <= RootZoneFrontier; layer++)
                     WaterTakenUp.DeltaWater[layer] -= swardSoilWaterUptake[layer];
 
                 if (WaterChanged != null)
@@ -1409,7 +1409,7 @@ namespace Models.AgPasture
 
                     // Get N amount taken up from the soil
                     species.EvaluateSoilNitrogenUptake();
-                    for (int layer = 0; layer < RootFrontier; layer++)
+                    for (int layer = 0; layer < RootZoneFrontier; layer++)
                     {
                         swardSoilNH4Uptake[layer] += species.SoilNH4Uptake[layer];
                         swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
@@ -1425,7 +1425,7 @@ namespace Models.AgPasture
             else
             {
                 //N uptake is controlled at species level, get sward totals
-                for (int layer = 0; layer < RootFrontier; layer++)
+                for (int layer = 0; layer < RootZoneFrontier; layer++)
                 {
                     foreach (PastureSpecies species in mySpecies)
                     {
@@ -1458,17 +1458,17 @@ namespace Models.AgPasture
                 species.EvaluateSoilNitrogenAvailable(myZone);
 
             // Evaluate the available N for whole sward and adjust availability for each species if needed
-                for (int layer = 0; layer <= RootFrontier; layer++)
+                for (int layer = 0; layer <= RootZoneFrontier; layer++)
             {
                 // Get total as seen by each species
                 totalPlantNH4 = 0.0;
                 totalPlantNO3 = 0.0;
-                if (layer == RootFrontier) layerFraction = 0.0;
+                if (layer == RootZoneFrontier) layerFraction = 0.0;
                     foreach (PastureSpecies species in mySpecies)
                 {
                     totalPlantNH4 += species.SoilNH4Available[layer];
                     totalPlantNO3 += species.SoilNO3Available[layer];
-                    if (layer == RootFrontier)
+                    if (layer == RootZoneFrontier)
                         layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
                 }
 
@@ -1503,7 +1503,7 @@ namespace Models.AgPasture
                 nitrogenTakenUp.DeltaNO3 = new double[nLayers];
                 nitrogenTakenUp.DeltaNH4 = new double[nLayers];
 
-                for (int layer = 0; layer <= RootFrontier; layer++)
+                for (int layer = 0; layer <= RootZoneFrontier; layer++)
                 {
                     nitrogenTakenUp.DeltaNH4[layer] = -swardSoilNH4Uptake[layer];
                     nitrogenTakenUp.DeltaNO3[layer] = -swardSoilNO3Uptake[layer];

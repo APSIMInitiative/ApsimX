@@ -1184,7 +1184,7 @@ namespace Models
             <InitialRootDM>450</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -1295,7 +1295,7 @@ namespace Models
             <InitialRootDM>150</InitialRootDM>
             <InitialRootDepth>350</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.8</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
             <GrowthTminimum>4</GrowthTminimum>
             <GrowthToptimum>22</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -4089,7 +4089,7 @@ namespace Models
             <InitialRootDM>450</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -4200,7 +4200,7 @@ namespace Models
             <InitialRootDM>150</InitialRootDM>
             <InitialRootDepth>350</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.8</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
             <GrowthTminimum>4</GrowthTminimum>
             <GrowthToptimum>22</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -7285,7 +7285,7 @@ namespace Models
           <InitialRootDM>450</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -7396,7 +7396,7 @@ namespace Models
           <InitialRootDM>150</InitialRootDM>
           <InitialRootDepth>350</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.8</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
           <GrowthTminimum>4</GrowthTminimum>
           <GrowthToptimum>22</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -9967,7 +9967,7 @@ namespace Models
           <InitialRootDM>450</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -10078,7 +10078,7 @@ namespace Models
           <InitialRootDM>150</InitialRootDM>
           <InitialRootDepth>350</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.8</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
           <GrowthTminimum>4</GrowthTminimum>
           <GrowthToptimum>22</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>

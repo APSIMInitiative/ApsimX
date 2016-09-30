@@ -1272,7 +1272,7 @@ namespace Models
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -1462,7 +1462,7 @@ namespace Models
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.LAIGreen</string>
             <string>[Sward].Ryegrass.LAIDead as Ryegrass.LAIDead</string>
             <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
-            <string>[Sward].Ryegrass.RootingDepth as Ryegrass.RootingDepth</string>
+            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNContent</string>
@@ -4976,7 +4976,7 @@ namespace Models
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -5162,7 +5162,7 @@ namespace Models
             <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
             <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
+            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
@@ -8849,7 +8849,7 @@ namespace Models
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
             <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-            <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+            <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
             <GrowthTq>1.75</GrowthTq>
@@ -9039,7 +9039,7 @@ namespace Models
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.LAIGreen</string>
             <string>[Sward].Ryegrass.LAIDead as Ryegrass.LAIDead</string>
             <string>[Sward].Ryegrass.Height as Ryegrass.Height</string>
-            <string>[Sward].Ryegrass.RootingDepth as Ryegrass.RootingDepth</string>
+            <string>[Sward].Ryegrass.RootDepth as Ryegrass.RootDepth</string>
             <string>[Sward].Ryegrass.GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Sward].Ryegrass.GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Sward].Ryegrass.GlfNContent as Ryegrass.GlfNContent</string>
@@ -12535,7 +12535,7 @@ namespace Models
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -12721,7 +12721,7 @@ namespace Models
             <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
             <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
+            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
@@ -16311,7 +16311,7 @@ namespace Models
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
           <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
-          <LightExtentionCoefficient>0.5</LightExtentionCoefficient>
+          <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
           <GrowthTq>1.75</GrowthTq>
@@ -16497,7 +16497,7 @@ namespace Models
             <string>[Ryegrass].LAIGreen as Ryegrass.LAIGreen</string>
             <string>[Ryegrass].LAIDead as Ryegrass.LAIDead</string>
             <string>[Ryegrass].Height as Ryegrass.Height</string>
-            <string>[Ryegrass].RootingDepth as Ryegrass.RootingDepth</string>
+            <string>[Ryegrass].RootDepth as Ryegrass.RootDepth</string>
             <string>[Ryegrass].GlfRadnIntercept as Ryegrass.GlfRadnIntercept</string>
             <string>[Ryegrass].GlfCO2 as Ryegrass.GlfCO2</string>
             <string>[Ryegrass].GlfNContent as Ryegrass.GlfNContent</string>
