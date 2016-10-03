@@ -750,8 +750,8 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
               <X>
                 <double>0</double>
                 <double>10</double>
-                <double>25</double>
-                <double>40</double>
+                <double>32</double>
+                <double>42</double>
               </X>
               <Y>
                 <double>0</double>
@@ -780,7 +780,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.3</Value>
+          <Value>0.57</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -1085,13 +1085,6 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>PartitionFraction</Name>
-            <Value>0.2</Value>
-          </Constant>
-        </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
@@ -1169,6 +1162,13 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <AllometricDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Const>0.0322</Const>
+          <Power>1.3743</Power>
+          <XProperty>[AboveGround].Wt</XProperty>
+          <YProperty>[Stem].Live.Wt</YProperty>
+        </AllometricDemandFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
@@ -1324,6 +1324,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>PredictedObservedSoil</Name>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedSoil</ObservedTableName>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedGliricidia</Name>
+      <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
+      <ObservedTableName>ObservedGliricidia</ObservedTableName>
       <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
@@ -4189,57 +4195,316 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
-    <Simulation>
+    <Experiment>
       <Name>Guadeloupe</Name>
-      <Clock>
-        <Name>Clock</Name>
-        <StartDate>1993-05-01T00:00:00</StartDate>
-        <EndDate>1997-12-31T00:00:00</EndDate>
-      </Clock>
-      <Summary>
-        <Name>SummaryFile</Name>
-      </Summary>
-      <Weather>
-        <Name>Weather</Name>
-        <FileName>Guadeloupe.met</FileName>
-        <ExcelWorkSheetName />
-      </Weather>
-      <SoilArbitrator>
-        <Name>Soil Arbitrator</Name>
-      </SoilArbitrator>
-      <Zone>
-        <Name>Zone</Name>
-        <Soil>
-          <Name>Makoka Soil</Name>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>MaizeSoil</Name>
-              <LL>
+      <Memo>
+        <Name>Memo</Name>
+        <MemoText><![CDATA[This trial was conducted at Gatton in 1995 using the local variety, Hartog.  It consisted of 4 Nitrogen rates (0,40,80,160) with two irrigation rates (minimal amount for establishment, fully irrigated).  Yields ranged from 1.4 t/ha to 5.4 t/ha.]]></MemoText>
+      </Memo>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>Harvest</Name>
+          <Operations>
+            <Name>12Month</Name>
+          </Operations>
+          <Operations>
+            <Name>06Month</Name>
+            <Operation>
+              <Date>1996-08-13</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>02Month</Name>
+            <Operation>
+              <Date>1996-06-20</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-08-13</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-10-10</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-12-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[Operations]</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>GuadeloupeBase</Name>
+        <Clock>
+          <Name>Clock</Name>
+          <StartDate>1993-05-01T00:00:00</StartDate>
+          <EndDate>1997-12-31T00:00:00</EndDate>
+        </Clock>
+        <Summary>
+          <Name>SummaryFile</Name>
+        </Summary>
+        <Weather>
+          <Name>Weather</Name>
+          <FileName>Guadeloupe.met</FileName>
+          <ExcelWorkSheetName />
+        </Weather>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Zone</Name>
+          <Soil>
+            <Name>Makoka Soil</Name>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>MaizeSoil</Name>
+                <LL>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.22</double>
+                  <double>0.25</double>
+                  <double>0.25</double>
+                  <double>0.27</double>
+                  <double>0.27</double>
+                  <double>0.29</double>
+                  <double>0.29</double>
+                </LL>
+                <KL>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>1.42</double>
+                <double>1.45</double>
+                <double>1.47</double>
+                <double>1.31</double>
+                <double>1.42</double>
+                <double>1.38</double>
+                <double>1.32</double>
+                <double>1.3</double>
+                <double>1.31</double>
+                <double>1.31</double>
+              </BD>
+              <AirDry>
+                <double>0.16</double>
                 <double>0.17</double>
                 <double>0.18</double>
+                <double>0.2</double>
+                <double>0.23</double>
+                <double>0.23</double>
+                <double>0.26</double>
+                <double>0.27</double>
+                <double>0.28</double>
+                <double>0.28</double>
+              </AirDry>
+              <LL15>
+                <double>0.18</double>
                 <double>0.19</double>
+                <double>0.21</double>
                 <double>0.22</double>
                 <double>0.25</double>
                 <double>0.25</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.28</double>
+              </LL15>
+              <DUL>
+                <double>0.27</double>
                 <double>0.27</double>
                 <double>0.27</double>
                 <double>0.29</double>
                 <double>0.29</double>
-              </LL>
-              <KL>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
+                <double>0.31</double>
+                <double>0.32</double>
+                <double>0.32</double>
+                <double>0.33</double>
+                <double>0.33</double>
+              </DUL>
+              <SAT>
+                <double>0.4</double>
+                <double>0.41</double>
+                <double>0.42</double>
+                <double>0.43</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.44</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>9</SummerU>
+              <SummerCona>2.5</SummerCona>
+              <WinterDate>1-Apr</WinterDate>
+              <WinterU>9</WinterU>
+              <WinterCona>2.5</WinterCona>
+              <DiffusConst>40</DiffusConst>
+              <DiffusSlope>16</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>65</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>200</double>
+                <double>1800</double>
+              </Thickness>
+              <SWCON>
+                <double>0.6</double>
+                <double>0.6</double>
+              </SWCON>
+              <residueinterception>0</residueinterception>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
                 <double>0.06</double>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </KL>
-              <XF>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>400</RootWt>
+              <SoilCN>14.3</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <Depth>
+                <string>0-20</string>
+                <string>20-40</string>
+                <string>40-60</string>
+                <string>60-80</string>
+                <string>80-100</string>
+                <string>100-120</string>
+                <string>120-140</string>
+                <string>140-160</string>
+                <string>160-180</string>
+                <string>180-200</string>
+              </Depth>
+              <OC>
+                <double>0.88</double>
+                <double>0.63</double>
+                <double>0.4</double>
+                <double>0.23</double>
+                <double>0.22</double>
+                <double>0.11</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </OC>
+              <FBiom>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.08</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </FBiom>
+              <FInert>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -4247,446 +4512,232 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <PH>
+                <double>5.9</double>
+                <double>5.6</double>
+                <double>5.8</double>
+                <double>5.9</double>
+                <double>6.1</double>
+                <double>6.3</double>
+                <double>6.2</double>
+                <double>6.4</double>
+                <double>6.3</double>
+                <double>5.9</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>5</double>
+                <double>2</double>
+                <double>1</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </NO3>
+              <NH4>
                 <double>1</double>
                 <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <BD>
-              <double>1.42</double>
-              <double>1.45</double>
-              <double>1.47</double>
-              <double>1.31</double>
-              <double>1.42</double>
-              <double>1.38</double>
-              <double>1.32</double>
-              <double>1.3</double>
-              <double>1.31</double>
-              <double>1.31</double>
-            </BD>
-            <AirDry>
-              <double>0.16</double>
-              <double>0.17</double>
-              <double>0.18</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.23</double>
-              <double>0.26</double>
-              <double>0.27</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.18</double>
-              <double>0.19</double>
-              <double>0.21</double>
-              <double>0.22</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.27</double>
-              <double>0.27</double>
-              <double>0.27</double>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.31</double>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.33</double>
-              <double>0.33</double>
-            </DUL>
-            <SAT>
-              <double>0.4</double>
-              <double>0.41</double>
-              <double>0.42</double>
-              <double>0.43</double>
-              <double>0.44</double>
-              <double>0.44</double>
-              <double>0.44</double>
-              <double>0.44</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
-          </Water>
-          <SoilWater>
-            <Name>SoilWater</Name>
-            <SummerDate>1-Nov</SummerDate>
-            <SummerU>9</SummerU>
-            <SummerCona>2.5</SummerCona>
-            <WinterDate>1-Apr</WinterDate>
-            <WinterU>9</WinterU>
-            <WinterCona>2.5</WinterCona>
-            <DiffusConst>40</DiffusConst>
-            <DiffusSlope>16</DiffusSlope>
-            <Salb>0.13</Salb>
-            <CN2Bare>65</CN2Bare>
-            <CNRed>20</CNRed>
-            <CNCov>0.8</CNCov>
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
-            <max_pond>0</max_pond>
-            <Thickness>
-              <double>200</double>
-              <double>1800</double>
-            </Thickness>
-            <SWCON>
-              <double>0.6</double>
-              <double>0.6</double>
-            </SWCON>
-            <residueinterception>0</residueinterception>
-          </SoilWater>
-          <SoilNitrogen>
-            <Name>SoilNitrogen</Name>
-            <fom_type>
-              <string>default</string>
-              <string>manure</string>
-              <string>mucuna</string>
-              <string>lablab</string>
-              <string>shemp</string>
-              <string>stable</string>
-            </fom_type>
-            <fract_carb>
-              <double>0.2</double>
-              <double>0.3</double>
-              <double>0.54</double>
-              <double>0.57</double>
-              <double>0.45</double>
-              <double>0</double>
-            </fract_carb>
-            <fract_cell>
-              <double>0.7</double>
-              <double>0.3</double>
-              <double>0.37</double>
-              <double>0.37</double>
-              <double>0.47</double>
-              <double>0.1</double>
-            </fract_cell>
-            <fract_lign>
-              <double>0.1</double>
-              <double>0.4</double>
-              <double>0.09</double>
-              <double>0.06</double>
-              <double>0.08</double>
-              <double>0.9</double>
-            </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
-          </SoilNitrogen>
-          <SoilOrganicMatter>
-            <Name>SoilOrganicMatter</Name>
-            <RootCN>40</RootCN>
-            <RootWt>400</RootWt>
-            <SoilCN>14.3</SoilCN>
-            <EnrACoeff>7.4</EnrACoeff>
-            <EnrBCoeff>0.2</EnrBCoeff>
-            <Thickness>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <Depth>
-              <string>0-20</string>
-              <string>20-40</string>
-              <string>40-60</string>
-              <string>60-80</string>
-              <string>80-100</string>
-              <string>100-120</string>
-              <string>120-140</string>
-              <string>140-160</string>
-              <string>160-180</string>
-              <string>180-200</string>
-            </Depth>
-            <OC>
-              <double>0.88</double>
-              <double>0.63</double>
-              <double>0.4</double>
-              <double>0.23</double>
-              <double>0.22</double>
-              <double>0.11</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </OC>
-            <FBiom>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </FBiom>
-            <FInert>
-              <double>0.6</double>
-              <double>0.6</double>
-              <double>0.6</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </FInert>
-            <OCUnits>Total</OCUnits>
-          </SoilOrganicMatter>
-          <Analysis>
-            <Name>Analysis</Name>
-            <Thickness>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <PH>
-              <double>5.9</double>
-              <double>5.6</double>
-              <double>5.8</double>
-              <double>5.9</double>
-              <double>6.1</double>
-              <double>6.3</double>
-              <double>6.2</double>
-              <double>6.4</double>
-              <double>6.3</double>
-              <double>5.9</double>
-            </PH>
-            <PHUnits>Water</PHUnits>
-            <BoronUnits>HotWater</BoronUnits>
-          </Analysis>
-          <Sample>
-            <Name>Sample</Name>
-            <Thickness>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <NO3>
-              <double>5</double>
-              <double>2</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </NO3>
-            <NH4>
-              <double>1</double>
-              <double>1</double>
-              <double>0.5</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </NH4>
-            <SW>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.25</double>
-              <double>0.27</double>
-              <double>0.27</double>
-              <double>0.29</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </SW>
-            <NO3Units>ppm</NO3Units>
-            <NH4Units>ppm</NH4Units>
-            <SWUnits>Volumetric</SWUnits>
-            <OCUnits>Total</OCUnits>
-            <PHUnits>Water</PHUnits>
-          </Sample>
-          <RecordNumber>0</RecordNumber>
-          <NearestTown>Makoka</NearestTown>
-          <Country>Malawi</Country>
-          <Latitude>-15.25</Latitude>
-          <Longitude>37.25</Longitude>
-          <Area>0</Area>
-        </Soil>
-        <MicroClimate>
-          <Name>MicroClimate</Name>
-          <a_interception>0</a_interception>
-          <b_interception>0</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
-          <refheight>2</refheight>
-          <albedo>0.15</albedo>
-          <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
-          <RadIntTotal>0</RadIntTotal>
-        </MicroClimate>
-        <Report>
-          <Name>GliricidiaDailyReport</Name>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Zone].Area</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>sum([Soil].NO3N) as TotalNO3N</string>
-            <string>sum([Soil].NH4N) as TotalNH4N</string>
-            <string>sum([Soil].SoilWater.SWmm[1:10]) as SW200cm</string>
-            <string>[Soil].SoilWater.SW[2] as SW30cm</string>
-            <string>[Soil].SoilWater.SW[3] as SW50cm</string>
-            <string>[Soil].SoilWater.SW[4] as SW70cm</string>
-            <string>[Soil].FInert[1] as FInert10cm</string>
-            <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
-            <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
-            <string>[Soil].SoilNitrogen.OC[3] as SOC50cm</string>
-            <string>[Soil].SoilNitrogen.OC[4] as SOC70cm</string>
-            <string>[Soil].SoilNitrogen.OC[5] as SOC90cm</string>
-            <string>[Soil].SoilNitrogen.OC[6] as SOC110cm</string>
-            <string>[Soil].SoilNitrogen.OC[7] as SOC130cm</string>
-            <string>[Soil].SoilNitrogen.OC[8] as SOC150cm</string>
-            <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
-            <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
-            <string>[Soil].SoilNitrogen.NO3ppm[3] as NO3ppm50cm</string>
-            <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
-            <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
-            <string>[Soil].SoilNitrogen.NO3[3] as NO3kgpha50cm</string>
-            <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].FBiom[1] as FBiom10cm</string>
-            <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
-            <string>[SurfaceOrganicMatter].Wt</string>
-            <string>sum([Soil].SoilNitrogen.FOMN) as FOMN</string>
-            <string>sum([Soil].SoilNitrogen.HumicN) as HumicN</string>
-            <string>sum([Soil].SoilNitrogen.MicrobialN) as MicrobialN</string>
-            <string>[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1</string>
-            <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
-            <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
-            <string>[Gliricidia].Leaf.LAI</string>
-            <string>[Gliricidia].Leaf.Live.Wt</string>
-            <string>[Gliricidia].Stem.Live.Wt</string>
-            <string>[Gliricidia].Root.Live.Wt</string>
-            <string>[Gliricidia].Root.TotalDMDemand</string>
-            <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
-            <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
-            <string>[Gliricidia].Root.PartitionFraction.Value</string>
-            <string>[Gliricidia].AboveGround.Wt</string>
-            <string>[Gliricidia].Leaf.CoverGreen</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Clock].DoReport</string>
-          </EventNames>
-        </Report>
-        <Fertiliser>
-          <Name>Fertiliser</Name>
-        </Fertiliser>
-        <SurfaceOrganicMatter>
-          <Name>SurfaceOrganicMatter</Name>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-          <Pools>
-            <Pool>
-              <PoolName>maize_stubble</PoolName>
-              <ResidueType>maize</ResidueType>
-              <Mass>0</Mass>
-              <CNRatio>80</CNRatio>
-              <CPRatio>400</CPRatio>
-              <StandingFraction>0</StandingFraction>
-            </Pool>
-          </Pools>
-          <PoolName>maize_stubble</PoolName>
-          <type>maize</type>
-          <mass>0</mass>
-          <standing_fraction>0</standing_fraction>
-          <cpr>400</cpr>
-          <cnr>80</cnr>
-          <CriticalResidueWeight>2000</CriticalResidueWeight>
-          <OptimumDecompTemp>20</OptimumDecompTemp>
-          <MaxCumulativeEOS>20</MaxCumulativeEOS>
-          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-          <TotalLeachRain>25</TotalLeachRain>
-          <MinRainToLeach>10</MinRainToLeach>
-          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-          <DefaultCPRatio>0</DefaultCPRatio>
-          <DefaultStandingFraction>0</DefaultStandingFraction>
-          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-          <FractionFaecesAdded>0.5</FractionFaecesAdded>
-        </SurfaceOrganicMatter>
-        <Plant>
-          <Name>Gliricidia</Name>
-          <ResourceName>Gliricidia</ResourceName>
-          <CropType>Gliricidia</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
-        </Plant>
-        <Manager>
-          <Name>TreeSowingRule</Name>
-          <Script>
-            <RowSpace>0.7</RowSpace>
-            <RowWidth>3</RowWidth>
-            <CultivarName>Gliricidia</CultivarName>
-            <SowingDate>1993-05-01</SowingDate>
-          </Script>
-          <Code><![CDATA[
+                <double>0.5</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </NH4>
+              <SW>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.27</double>
+                <double>0.27</double>
+                <double>0.29</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </SW>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <NearestTown>Makoka</NearestTown>
+            <Country>Malawi</Country>
+            <Latitude>-15.25</Latitude>
+            <Longitude>37.25</Longitude>
+            <Area>0</Area>
+          </Soil>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
+          </MicroClimate>
+          <Report>
+            <Name>GliricidiaDailyReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today as Date</string>
+              <string>[Zone].Area</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>sum([Soil].NO3N) as TotalNO3N</string>
+              <string>sum([Soil].NH4N) as TotalNH4N</string>
+              <string>sum([Soil].SoilWater.SWmm[1:10]) as SW200cm</string>
+              <string>[Soil].SoilWater.SW[2] as SW30cm</string>
+              <string>[Soil].SoilWater.SW[3] as SW50cm</string>
+              <string>[Soil].SoilWater.SW[4] as SW70cm</string>
+              <string>[Soil].FInert[1] as FInert10cm</string>
+              <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
+              <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
+              <string>[Soil].SoilNitrogen.OC[3] as SOC50cm</string>
+              <string>[Soil].SoilNitrogen.OC[4] as SOC70cm</string>
+              <string>[Soil].SoilNitrogen.OC[5] as SOC90cm</string>
+              <string>[Soil].SoilNitrogen.OC[6] as SOC110cm</string>
+              <string>[Soil].SoilNitrogen.OC[7] as SOC130cm</string>
+              <string>[Soil].SoilNitrogen.OC[8] as SOC150cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[3] as NO3ppm50cm</string>
+              <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
+              <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
+              <string>[Soil].SoilNitrogen.NO3[3] as NO3kgpha50cm</string>
+              <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].FBiom[1] as FBiom10cm</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[SurfaceOrganicMatter].Wt</string>
+              <string>sum([Soil].SoilNitrogen.FOMN) as FOMN</string>
+              <string>sum([Soil].SoilNitrogen.HumicN) as HumicN</string>
+              <string>sum([Soil].SoilNitrogen.MicrobialN) as MicrobialN</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
+              <string>[Gliricidia].Leaf.LAI</string>
+              <string>[Gliricidia].Leaf.FRGR</string>
+              <string>[Gliricidia].Leaf.Live.Wt</string>
+              <string>[Gliricidia].Stem.Live.Wt</string>
+              <string>[Gliricidia].Root.Live.Wt</string>
+              <string>[Gliricidia].Root.TotalDMDemand</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value</string>
+              <string>[Gliricidia].AboveGround.Wt</string>
+              <string>[Gliricidia].Leaf.CoverGreen</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>maize_stubble</PoolName>
+                <ResidueType>maize</ResidueType>
+                <Mass>0</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>400</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>maize_stubble</PoolName>
+            <type>maize</type>
+            <mass>0</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr>400</cpr>
+            <cnr>80</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Plant>
+            <Name>Gliricidia</Name>
+            <ResourceName>Gliricidia</ResourceName>
+            <CropType>Gliricidia</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
+          <Manager>
+            <Name>TreeSowingRule</Name>
+            <Script>
+              <RowSpace>0.7</RowSpace>
+              <RowWidth>3</RowWidth>
+              <CultivarName>Gliricidia</CultivarName>
+              <SowingDate>1993-05-01</SowingDate>
+            </Script>
+            <Code><![CDATA[
 using System;
 using Models.Core;
 using Models.PMF;
@@ -4731,10 +4782,179 @@ namespace Models
 	}
 }
 				]]></Code>
-        </Manager>
+          </Manager>
+          <Operations>
+            <Name>Operations</Name>
+          </Operations>
+          <Operations>
+            <Name>PreExperimentOperations</Name>
+            <Operation>
+              <Date>1993-09-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-01-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-05-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-09-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-01-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-05-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-09-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-01-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-02-29</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Area>0</Area>
+          <Slope>0</Slope>
+        </Zone>
         <Area>0</Area>
         <Slope>0</Slope>
-      </Zone>
+      </Simulation>
+      <Graph>
+        <Name>Leaf Wt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Stem Wt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <Graph>
         <Name>AboveGroundWt</Name>
         <Series>
@@ -4742,8 +4962,8 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4763,8 +4983,8 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -4781,7 +5001,6 @@ namespace Models
         </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4789,13 +5008,188 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs LeafWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Leaf.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs StemWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Stem.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs AboveGroundWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Frgr</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -4806,8 +5200,8 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4822,30 +5216,8 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <Series>
-          <Name>Observed</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
         <Axis>
           <Type>Bottom</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -4853,83 +5225,16 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Graph>
-        <Name>LightInterception</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Observed</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16736653</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
-    </Simulation>
+    </Experiment>
   </Folder>
   <ExplorerWidth>287</ExplorerWidth>
 </Simulations>
