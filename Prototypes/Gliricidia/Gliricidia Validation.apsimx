@@ -750,8 +750,8 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
               <X>
                 <double>0</double>
                 <double>10</double>
-                <double>25</double>
-                <double>40</double>
+                <double>32</double>
+                <double>42</double>
               </X>
               <Y>
                 <double>0</double>
@@ -780,7 +780,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.3</Value>
+          <Value>0.57</Value>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -1085,13 +1085,6 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>PartitionFraction</Name>
-            <Value>0.2</Value>
-          </Constant>
-        </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
@@ -1169,6 +1162,13 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <AllometricDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Const>0.0322</Const>
+          <Power>1.3743</Power>
+          <XProperty>[AboveGround].Wt</XProperty>
+          <YProperty>[Stem].Live.Wt</YProperty>
+        </AllometricDemandFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
@@ -1324,6 +1324,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>PredictedObservedSoil</Name>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedSoil</ObservedTableName>
+      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedGliricidia</Name>
+      <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
+      <ObservedTableName>ObservedGliricidia</ObservedTableName>
       <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
@@ -4664,6 +4670,7 @@ namespace Models
               <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
               <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
               <string>[Gliricidia].Leaf.LAI</string>
+              <string>[Gliricidia].Leaf.FRGR</string>
               <string>[Gliricidia].Leaf.Live.Wt</string>
               <string>[Gliricidia].Stem.Live.Wt</string>
               <string>[Gliricidia].Root.Live.Wt</string>
@@ -4814,7 +4821,7 @@ namespace Models
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
             <Operation>
-              <Date>1996-05-01</Date>
+              <Date>1996-02-29</Date>
               <Action>[Gliricidia].Harvest()</Action>
             </Operation>
           </Operations>
@@ -4987,6 +4994,223 @@ namespace Models
           <TableName>ObservedGliricidia</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs LeafWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Leaf.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs StemWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Stem.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs AboveGroundWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Frgr</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
