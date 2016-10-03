@@ -81,6 +81,7 @@ namespace UserInterface.Views
 
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
+        internal Dictionary<Tuple<int, int>, ListStore> comboLookup = new Dictionary<Tuple<int, int>, ListStore>();
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
 
@@ -155,6 +156,10 @@ namespace UserInterface.Views
             }
             gridview.ButtonPressEvent -= OnButtonDown;
             fixedcolview.ButtonPressEvent -= OnButtonDown;
+            gridview.FocusInEvent -= FocusInEvent;
+            gridview.FocusOutEvent -= FocusOutEvent;
+            fixedcolview.FocusInEvent -= FocusInEvent;
+            fixedcolview.FocusOutEvent -= FocusOutEvent;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -257,6 +262,14 @@ namespace UserInterface.Views
             {
                 /// Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
+                CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
+                toggleRender.Visible = false;
+                toggleRender.Toggled += ToggleRender_Toggled;
+                CellRendererCombo comboRender = new Gtk.CellRendererCombo();
+                comboRender.Edited += ComboRender_Edited;
+                comboRender.Xalign = 1.0f;
+                comboRender.Visible = false;
+
                 colLookup.Add(textRender, i);
 
                 textRender.Editable = !isReadOnly;
@@ -264,7 +277,11 @@ namespace UserInterface.Views
                 textRender.Edited += OnCellValueChanged;
                 textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
-                TreeViewColumn column = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
+                TreeViewColumn column = new TreeViewColumn();
+                column.Title = this.DataSource.Columns[i].ColumnName;
+                column.PackStart(textRender, true);     // 0
+                column.PackStart(toggleRender, true);   // 1
+                column.PackStart(comboRender, true);    // 2
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 //column.FixedWidth = 100;
                 column.Resizable = true;
@@ -274,6 +291,7 @@ namespace UserInterface.Views
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
                 // the columns we want frozen
+                // For now, these frozen columns will be treated as read-only text
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 fixedColumn.Sizing = TreeViewColumnSizing.Autosize;
                 fixedColumn.Resizable = true;
@@ -315,6 +333,8 @@ namespace UserInterface.Views
                 Gtk.Application.RunIteration();
             WaitCursor = false;
         }
+
+
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -335,11 +355,11 @@ namespace UserInterface.Views
             if (numberLockedCols == 0 && gridview.GetVisibleRange(out startPath, out endPath) &&  (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
                 return;
             int colNo;
+            string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
-                string text;
                 if (dataType == typeof(DBNull))
                     text = String.Empty;
                 else if ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
@@ -347,10 +367,42 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
+                else if (dataType == typeof(Boolean))
+                {
+                    CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                    if (toggleRend != null)
+                    {
+                        toggleRend.Active = (Boolean)dataVal;
+                        toggleRend.Activatable = true;
+                        cell.Visible = false;
+                        toggleRend.Visible = true;
+                        return;
+                    }
+
+                }
                 else
+                {   // This assumes that combobox grid cells are based on the "string" type
+                    ListStore store; 
+                    if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
+                    {
+                        CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                        if (comboRend != null)
+                        {
+                            comboRend.Model = store;
+                            comboRend.TextColumn = 0;
+                            comboRend.Editable = true;
+                            comboRend.HasEntry = false;
+                            cell.Visible = false;
+                            comboRend.Visible = true;
+                            comboRend.Text = dataVal.ToString();
+                            return;
+                        }
+                    }
                     text = dataVal.ToString();
-                (cell as CellRendererText).Text = text;
+                }
             }
+            cell.Visible = true;
+            (cell as CellRendererText).Text = text;
         }
 
         /// <summary>
@@ -760,6 +812,93 @@ namespace UserInterface.Views
                 }
             }
             this.valueBeforeEdit = this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
+            Type dataType = this.valueBeforeEdit.GetType();
+            if (dataType == typeof(DateTime))
+            {
+                Dialog dialog = new Dialog("Select date", gridview.Toplevel as Window, DialogFlags.DestroyWithParent);
+                dialog.SetPosition(WindowPosition.None);
+                VBox topArea = dialog.VBox;
+                topArea.PackStart(new HBox());
+                Calendar calendar = new Calendar();
+                calendar.DisplayOptions = CalendarDisplayOptions.ShowHeading |
+                                     CalendarDisplayOptions.ShowDayNames |
+                                     CalendarDisplayOptions.ShowWeekNumbers;
+                calendar.Date = (DateTime)this.valueBeforeEdit;
+                topArea.PackStart(calendar, true, true, 0);
+                dialog.ShowAll();
+                dialog.Run();
+                // What SHOULD we do here? For now, assume that if the user modified the date in the calendar dialog,
+                // the resulting date is what they want. Otherwise, keep the text-editing (Entry) widget active, and
+                // let the user enter a value manually.
+                if (calendar.Date != (DateTime)this.valueBeforeEdit)
+                {
+                    DateTime date = calendar.GetDate();
+                    this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = date;
+                    CellRendererText render = sender as CellRendererText;
+                    if (render != null)
+                    {
+                        render.Text = String.Format("{0:d}", date);
+                        if (e.Editable is Entry)
+                        {
+                            (e.Editable as Entry).Text = render.Text;
+                            (e.Editable as Entry).Destroy();
+                            this.userEditingCell = false;
+                        }
+                    }
+                }
+                dialog.Destroy();
+            }
+        }
+
+        private void ToggleRender_Toggled(object sender, ToggledArgs r)
+        {
+            IGridCell where = GetCurrentCell;
+            while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+            {
+                this.DataSource.Rows.Add(this.DataSource.NewRow());
+            }
+            this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)this.DataSource.Rows[where.RowIndex][where.ColumnIndex];
+            if (this.CellsChanged != null)
+            {
+                GridCellsChangedArgs args = new GridCellsChangedArgs();
+                args.ChangedCells = new List<IGridCell>();
+                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                this.CellsChanged(this, args);
+            }
+        }
+
+        private void ComboRender_Edited(object sender, EditedArgs e)
+        {
+            IGridCell where = GetCurrentCell;
+            string newText = e.NewText;
+            while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
+            {
+                this.DataSource.Rows.Add(this.DataSource.NewRow());
+            }
+
+            // Put the new value into the table on the correct row.
+            if (this.DataSource != null)
+            {
+                string oldtext = this.DataSource.Rows[where.RowIndex][where.ColumnIndex].ToString();
+                if (oldtext != newText)
+                {
+                    try
+                    {
+                        this.DataSource.Rows[where.RowIndex][where.ColumnIndex] = newText;
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (this.CellsChanged != null)
+                    {
+                        GridCellsChangedArgs args = new GridCellsChangedArgs();
+                        args.ChangedCells = new List<IGridCell>();
+                        args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                        this.CellsChanged(this, args);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -788,7 +927,11 @@ namespace UserInterface.Views
 
                 Type dataType = oldValue.GetType();
                 if (oldValue == DBNull.Value)
+                {
+                    if (String.IsNullOrEmpty(newtext))
+                        return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
                     dataType = this.DataSource.Columns[where.ColumnIndex].DataType;
+                }
                 if (dataType == typeof(string))
                     newValue = newtext;
                 else if (dataType == typeof(double))
@@ -1182,6 +1325,27 @@ namespace UserInterface.Views
                 Popup.Popup();
                 e.RetVal = true;
             }
+        }
+
+        /// <summary>
+        /// Gets the Gtk Button which displays a column header
+        /// This assumes that we can get access to the Button widgets via the grid's AllChildren
+        /// iterator.
+        /// </summary>
+        /// <param name="colNo">Column number we are looking for</param>
+        public Button GetColumnHeaderButton(int colNo, TreeView view = null)
+        {
+            int i = 0;
+            if (view == null)
+                view = gridview;
+            foreach (Widget widget in view.AllChildren)
+            {
+                if (widget.GetType() != (typeof(Gtk.Button)))
+                    continue;
+                else if (i++ == colNo)
+                    return widget as Button;
+            }
+            return null;
         }
 
         /// <summary>
