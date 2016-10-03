@@ -11,7 +11,9 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Zadok model
+    /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model. 
+    /// The model uses information regarding germination, emergence, leaf appearance and tiller appearance for early growth stages.
+    /// The model then uses simulated phenological growth stages for Zadok stages 30 to 100.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

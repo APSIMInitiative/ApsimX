@@ -118,7 +118,7 @@ namespace Models.PMF.Functions
             // add a heading.
             Name = this.Name;
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
+            tags.Add(new AutoDocumentation.Paragraph("**"+this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
                                                         + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
 
             // write children.
