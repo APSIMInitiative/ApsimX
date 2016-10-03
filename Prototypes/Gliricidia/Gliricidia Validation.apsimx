@@ -879,6 +879,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
+        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
