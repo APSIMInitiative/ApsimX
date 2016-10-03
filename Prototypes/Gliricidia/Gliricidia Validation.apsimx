@@ -1449,6 +1449,182 @@ namespace Models
             <string>[FertiliserRule]</string>
           </Specifications>
         </Factor>
+        <Factor>
+          <Name>Maize</Name>
+          <Operations>
+            <Name>Sole</Name>
+          </Operations>
+          <Operations>
+            <Name>Gliricidia</Name>
+            <Operation>
+              <Date>1992-09-01</Date>
+              <Action>Gliricidia.Sow(population: 1, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-08-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-10-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-01-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[GliricidiaManagement]</string>
+          </Specifications>
+        </Factor>
       </Factors>
       <Simulation>
         <Name>MakokaBase</Name>
@@ -1945,6 +2121,62 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <Report>
+            <Name>GliricidiaDailyReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today as Date</string>
+              <string>[Zone].Area</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>sum([Soil].NO3N) as TotalNO3N</string>
+              <string>sum([Soil].NH4N) as TotalNH4N</string>
+              <string>sum([Soil].SoilWater.SWmm[1:10]) as SW200cm</string>
+              <string>[Soil].SoilWater.SW[2] as SW30cm</string>
+              <string>[Soil].SoilWater.SW[3] as SW50cm</string>
+              <string>[Soil].SoilWater.SW[4] as SW70cm</string>
+              <string>[Soil].FInert[1] as FInert10cm</string>
+              <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
+              <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
+              <string>[Soil].SoilNitrogen.OC[3] as SOC50cm</string>
+              <string>[Soil].SoilNitrogen.OC[4] as SOC70cm</string>
+              <string>[Soil].SoilNitrogen.OC[5] as SOC90cm</string>
+              <string>[Soil].SoilNitrogen.OC[6] as SOC110cm</string>
+              <string>[Soil].SoilNitrogen.OC[7] as SOC130cm</string>
+              <string>[Soil].SoilNitrogen.OC[8] as SOC150cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[3] as NO3ppm50cm</string>
+              <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
+              <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
+              <string>[Soil].SoilNitrogen.NO3[3] as NO3kgpha50cm</string>
+              <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].FBiom[1] as FBiom10cm</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[SurfaceOrganicMatter].Wt</string>
+              <string>sum([Soil].SoilNitrogen.FOMN) as FOMN</string>
+              <string>sum([Soil].SoilNitrogen.HumicN) as HumicN</string>
+              <string>sum([Soil].SoilNitrogen.MicrobialN) as MicrobialN</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
+              <string>[Gliricidia].Leaf.LAI</string>
+              <string>[Gliricidia].Leaf.Live.Wt</string>
+              <string>[Gliricidia].Stem.Live.Wt</string>
+              <string>[Gliricidia].Root.Live.Wt</string>
+              <string>[Gliricidia].Root.TotalDMDemand</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value</string>
+              <string>[TreePruningRule].Script.AnnualFoliageHarvest</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
           </Fertiliser>
@@ -2161,6 +2393,15 @@ namespace Models
             <CropType>Maize</CropType>
             <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
+          <Plant>
+            <Name>Gliricidia</Name>
+            <ResourceName>Gliricidia</ResourceName>
+            <CropType>Gliricidia</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
+          <Operations>
+            <Name>GliricidiaManagement</Name>
+          </Operations>
           <Area>0</Area>
           <Slope>0</Slope>
         </Zone>
