@@ -39,6 +39,8 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
             <double>0.27</double>
             <double>0.29</double>
             <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
           </LL>
           <KL>
             <double>0.08</double>
@@ -51,6 +53,8 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
             <double>0.02</double>
             <double>0.02</double>
             <double>0.02</double>
+            <double>0</double>
+            <double>0</double>
           </KL>
           <XF>
             <double>1</double>
@@ -63,6 +67,8 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
             <double>1</double>
             <double>1</double>
             <double>1</double>
+            <double>0</double>
+            <double>0</double>
           </XF>
         </SoilCrop>
         <SoilCrop>
@@ -72,12 +78,14 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
             <double>0.18</double>
             <double>0.19</double>
             <double>0.22</double>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.27</double>
-            <double>0.27</double>
-            <double>0.29</double>
-            <double>0.29</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
           </LL>
           <KL>
             <double>0.08</double>
@@ -90,8 +98,12 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
             <double>0.02</double>
             <double>0.02</double>
             <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
           </KL>
           <XF>
+            <double>1</double>
+            <double>1</double>
             <double>1</double>
             <double>1</double>
             <double>1</double>
@@ -115,6 +127,8 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
           <double>200</double>
           <double>200</double>
           <double>200</double>
+          <double>500</double>
+          <double>500</double>
         </Thickness>
         <BD>
           <double>1.42</double>
@@ -127,18 +141,22 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
           <double>1.3</double>
           <double>1.31</double>
           <double>1.31</double>
+          <double>1.31</double>
+          <double>1.31</double>
         </BD>
         <AirDry>
           <double>0.16</double>
-          <double>0.17</double>
-          <double>0.18</double>
-          <double>0.2</double>
-          <double>0.23</double>
-          <double>0.23</double>
-          <double>0.26</double>
-          <double>0.27</double>
-          <double>0.28</double>
-          <double>0.28</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
+          <double>0.16</double>
         </AirDry>
         <LL15>
           <double>0.17</double>
@@ -146,11 +164,13 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
           <double>0.19</double>
           <double>0.22</double>
           <double>0.25</double>
-          <double>0.25</double>
-          <double>0.27</double>
-          <double>0.27</double>
-          <double>0.29</double>
-          <double>0.29</double>
+          <double>0.24</double>
+          <double>0.24</double>
+          <double>0.24</double>
+          <double>0.24</double>
+          <double>0.24</double>
+          <double>0.24</double>
+          <double>0.24</double>
         </LL15>
         <DUL>
           <double>0.38</double>
@@ -163,12 +183,16 @@ This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][K
           <double>0.3</double>
           <double>0.3</double>
           <double>0.29</double>
+          <double>0.29</double>
+          <double>0.29</double>
         </DUL>
         <SAT>
           <double>0.4</double>
           <double>0.41</double>
           <double>0.42</double>
           <double>0.43</double>
+          <double>0.44</double>
+          <double>0.44</double>
           <double>0.44</double>
           <double>0.44</double>
           <double>0.44</double>
@@ -853,6 +877,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
+        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
@@ -2717,6 +2747,7 @@ namespace Models
             <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
             <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
             <string>[Gliricidia].Root.PartitionFraction.Value</string>
+            <string>[TreePruningRule].Script.AnnualFoliageHarvest</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2824,6 +2855,9 @@ namespace Models
           <Name>TreePruningRule</Name>
           <Script>
             <Date1>15-Aug</Date1>
+            <Date2>15-Oct</Date2>
+            <Date3>15-Jan</Date3>
+            <Date4>15-Feb</Date4>
           </Script>
           <Code><![CDATA[
 using System;
@@ -2831,6 +2865,8 @@ using Models.Core;
 using Models.PMF;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+
 namespace Models
 {
 	[Serializable] 
@@ -2839,16 +2875,34 @@ namespace Models
 	{
 		[Link] Plant Gliricidia;
 		[Link] Clock Clock;
-
+		[XmlIgnore] public double AnnualFoliageHarvest { get; set; }
 
 		[Description("First Cutting Date")]
 		public string Date1 { get; set; }
-
+		[Description("Second Cutting Date")]
+		public string Date2 { get; set; }
+		[Description("Third Cutting Date")]
+		public string Date3 { get; set; }
+		[Description("Fourth Cutting Date")]
+		public string Date4 { get; set; }
+		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (DateUtilities.WithinDates(Date1, Clock.Today, Date1))
-				Gliricidia.Harvest();
+			if (DateUtilities.WithinDates(Date1, Clock.Today, Date1) ||
+			    DateUtilities.WithinDates(Date2, Clock.Today, Date2) ||
+			    DateUtilities.WithinDates(Date3, Clock.Today, Date3) ||
+			    DateUtilities.WithinDates(Date4, Clock.Today, Date4))
+			{
+				if (Gliricidia.IsAlive)
+				{
+					AnnualFoliageHarvest = AnnualFoliageHarvest + 1; //Gliricidia.Leaf.Live.Wt;
+					Gliricidia.Harvest();
+				}
+			}
+			if (DateUtilities.WithinDates("1-Jun", Clock.Today, "1-Jun"))
+				AnnualFoliageHarvest = 0;
+				
 		}
 	}
 }
@@ -3045,6 +3099,49 @@ namespace Models
           <TableName>GliricidiaDailyReport</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Gliricidia.Root.TotalDMDemand</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GricidiaFoliageHarvest</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>TreePruningRule.Script.AnnualFoliageHarvest</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
