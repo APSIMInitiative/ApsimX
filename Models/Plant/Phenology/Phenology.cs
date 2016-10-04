@@ -579,6 +579,9 @@ namespace Models.PMF.Phen
         /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
         public bool Between(String Start, String End)
         {
+            if (Phases == null)
+                return false;
+
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
