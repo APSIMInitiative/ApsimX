@@ -12,7 +12,7 @@ namespace Models.Core
         private List<Events.Publisher> publishers = null;
         private List<Events.Subscriber> subscribers = null;
         private Scope scope = null;
-        private Dictionary<IModel, List<Publisher>> cache = new Dictionary<IModel, List<Publisher>>();
+        private Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
 
         /// <summary>Connect all events in the specified simulation.</summary>
         /// <param name="model"></param>
@@ -31,8 +31,8 @@ namespace Models.Core
                 subscribers = Events.Subscriber.FindAll(allModels);
 
             // Connect publishers to subscribers.
-            foreach (Events.Subscriber subscriber in subscribers)
-                ConnectSubscriber(subscriber, FilterPublishersInScope(subscriber));
+            foreach (Events.Publisher publisher in publishers)
+                ConnectPublisherToScriber(publisher, FilterSubscribersInScope(publisher));
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>
@@ -97,34 +97,34 @@ namespace Models.Core
                 subscriber.Invoke(args);
         }
 
-        /// <summary>Connect the specified subscriber to the closest publisher.</summary>
-        /// <param name="subscriber">Subscriber to connect.</param>
-        /// <param name="publishers">All publishers</param>
-        private static void ConnectSubscriber(Events.Subscriber subscriber, List<Events.Publisher> publishers)
+        /// <summary>Connect the specified publisher to all subscribers in scope</summary>
+        /// <param name="publisher">Publisher to connect.</param>
+        /// <param name="subscribers">All subscribers</param>
+        private static void ConnectPublisherToScriber(Events.Publisher publisher, List<Events.Subscriber> subscribers)
         {
             // Find all publishers with the same name.
-            List<Events.Publisher> matchingPublishers = publishers.FindAll(publisher => publisher.Name == subscriber.Name);
+            List<Events.Subscriber> matchingSubscribers = subscribers.FindAll(subscriber => subscriber.Name == publisher.Name);
 
             // Connect subscriber to all matching publishers.
-            matchingPublishers.ForEach(publisher => publisher.ConnectSubscriber(subscriber));
+            matchingSubscribers.ForEach(subscriber => publisher.ConnectSubscriber(subscriber));
         }
 
         /// <summary>
-        /// Return a list of publishers that are in scope.
+        /// Return a list of subscribers that are in scope.
         /// </summary>
-        /// <param name="relativeTo">Modle to base scoping rules on.</param>
-        private List<Publisher> FilterPublishersInScope(Subscriber relativeTo)
+        /// <param name="relativeTo">Model to base scoping rules on.</param>
+        private List<Subscriber> FilterSubscribersInScope(Publisher relativeTo)
         {
             // Try cache
-            List<Publisher> publishersInScope;
-            if (cache.TryGetValue(relativeTo.Model as IModel, out publishersInScope))
-                return publishersInScope;
+            List<Subscriber> subscribersInScope;
+            if (cache.TryGetValue(relativeTo.Model as IModel, out subscribersInScope))
+                return subscribersInScope;
 
             List<IModel> modelsInScope = scope.InScope(relativeTo.Model as IModel);
-            publishersInScope = new List<Publisher>();
-            publishersInScope = publishers.FindAll(publisher => modelsInScope.Contains(publisher.Model as IModel));
-            cache.Add(relativeTo.Model as IModel, publishersInScope);
-            return publishersInScope;
+            subscribersInScope = new List<Subscriber>();
+            subscribersInScope = subscribers.FindAll(subscriber => modelsInScope.Contains(subscriber.Model as IModel));
+            cache.Add(relativeTo.Model as IModel, subscribersInScope);
+            return subscribersInScope;
         }
 
 
@@ -267,10 +267,16 @@ namespace Models.Core
                     foreach (IModel child in parentZone.Children)
                     {
                         if (!modelsInScope.Contains(child))
+                        {
                             modelsInScope.Add(child);
+                            if (!IsScopedModel(child))
+                                modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
+                        }
                     }
                 }
-                modelsInScope.Add(parentZone); // top level simulation
+
+                if (!modelsInScope.Contains(parentZone))
+                    modelsInScope.Add(parentZone); // top level simulation
 
                 // add to cache for next time.
                 cache.Add(relativeTo, modelsInScope);
@@ -284,15 +290,25 @@ namespace Models.Core
             /// <param name="relativeTo">The model to use as a base.</param>
             private static IModel FindScopedParentModel(IModel relativeTo)
             {
-                while (relativeTo.Parent != null)
+                do
                 {
-                    relativeTo = relativeTo.Parent;
-                    ScopedModelAttribute attribute = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute;
-                    if (attribute != null)
+                    if (IsScopedModel(relativeTo))
                         return relativeTo;
+                    relativeTo = relativeTo.Parent;
                 }
+                while (relativeTo != null);
 
                 return null;
+            }
+
+            /// <summary>
+            /// Return true if model is a scoped model
+            /// </summary>
+            /// <param name="relativeTo"></param>
+            /// <returns></returns>
+            private static bool IsScopedModel(IModel relativeTo)
+            {
+                return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
             }
         }
     }
