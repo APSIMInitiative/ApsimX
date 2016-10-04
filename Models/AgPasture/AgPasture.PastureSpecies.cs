@@ -502,11 +502,11 @@ namespace Models.AgPasture
 
         ////- General parameters (name and type) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Family type for this plant species (grass/legume/brassica).</summary>
+        /// <summary>Family type for this plant species (grass/legume/forb).</summary>
         private PlantFamilyType mySpeciesFamily = PlantFamilyType.Grass;
 
-        /// <summary>Gets or sets the plant's family type.</summary>
-        [Description("Family type for this plant species [grass/legume/brassica]:")]
+        /// <summary>Gets or sets the family type for this plant species (grass/legume/forb).</summary>
+        [Description("Family type for this plant species [grass/legume/forb]:")]
         [Units("")]
         public PlantFamilyType SpeciesFamily
         {
@@ -519,24 +519,24 @@ namespace Models.AgPasture
         }
 
         /// <summary>Species photosynthetic pathway (C3/C4).</summary>
-        private PhotosynthesisPathwayType myPhotosynthesisPathway = PhotosynthesisPathwayType.C3;
+        private PhotosynthesisPathwayType myPhotosyntheticPathway = PhotosynthesisPathwayType.C3;
 
-        /// <summary>Gets or sets the plant's photosynthetic pathway (C3/C4).</summary>
+        /// <summary>Gets or sets the metabolic pathway for C fixation during photosynthesis (C3/C4).</summary>
         [Description("Metabolic pathway for C fixation during photosynthesis [C3/C4]:")]
         [Units("")]
-        public PhotosynthesisPathwayType PhotosynthesisPathway
+        public PhotosynthesisPathwayType PhotosyntheticPathway
         {
-            get { return myPhotosynthesisPathway; }
-            set { myPhotosynthesisPathway = value; }
+            get { return myPhotosyntheticPathway; }
+            set { myPhotosyntheticPathway = value; }
         }
 
         ////- Initial state parameters (replace the default values) >>> - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Initial above ground DM weight (kg/ha).</summary>
+        /// <summary>Initial above ground DM weight (kgDM/ha).</summary>
         private double myInitialShootDM = 2000.0;
 
-        /// <summary>Gets or sets the initial above ground DM weight (kg/ha).</summary>
-        [Description("Initial above ground DM (leaf, stem, and stolon) [kg/ha]:")]
+        /// <summary>Gets or sets the initial above ground DM weight (kgDM/ha).</summary>
+        [Description("Initial above ground DM weight (leaf, stem, and stolon) [kg/ha]:")]
         [Units("kg/ha")]
         public double InitialShootDM
         {
@@ -544,11 +544,11 @@ namespace Models.AgPasture
             set { myInitialShootDM = value; }
         }
 
-        /// <summary>Initial root DM weight (kg/ha).</summary>
+        /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
         private double myInitialRootDM = 500.0;
 
-        /// <summary>Gets or sets the initial root DM weight (kg/ha).</summary>
-        [Description("Initial below ground DM (roots) [kg/ha]:")]
+        /// <summary>Gets or sets the initial root DM weight (kgDM/ha).</summary>
+        [Description("Initial below ground DM weight (roots) [kg/ha]:")]
         [Units("kg/ha")]
         public double InitialRootDM
         {
@@ -560,7 +560,7 @@ namespace Models.AgPasture
         private double myInitialRootDepth = 750.0;
 
         /// <summary>Gets or sets the initial rooting depth (mm).</summary>
-        [Description("Initial depth for roots [mm]:")]
+        [Description("Initial rooting depth [mm]:")]
         [Units("mm")]
         public double InitialRootDepth
         {
@@ -568,10 +568,10 @@ namespace Models.AgPasture
             set { myInitialRootDepth = value; }
         }
 
-        /// <summary>Initial fractions of DM for each plant part in grass (0-1).</summary>
+        /// <summary>Initial fractions of DM for each plant part in grasses (0-1).</summary>
         private double[] initialDMFractionsGrasses = {0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00};
 
-        /// <summary>Initial fractions of DM for each plant part in legume (0-1).</summary>
+        /// <summary>Initial fractions of DM for each plant part in legumes (0-1).</summary>
         private double[] initialDMFractionsLegumes = {0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12};
 
         /// <summary>Initial fractions of DM for each plant part in forbs (0-1).</summary>
@@ -579,11 +579,11 @@ namespace Models.AgPasture
 
         ////- Potential growth (photosynthesis) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Reference CO2 assimilation rate for photosynthesis (mg CO2/m^2 leaf/s).</summary>
+        /// <summary>Reference leaf CO2 assimilation rate for photosynthesis (mg CO2/m^2Leaf/s).</summary>
         private double myReferencePhotosyntheticRate = 1.0;
 
-        /// <summary>Gets or sets the reference CO2 assimilation rate for photosynthesis (mg CO2/m^2 leaf/s).</summary>
-        [Description("Reference CO2 assimilation rate for photosynthesis [mg CO2/m^2/s]:")]
+        /// <summary>Gets or sets the reference leaf CO2 assimilation rate for photosynthesis (mg CO2/m^2Leaf/s).</summary>
+        [Description("Reference leaf CO2 assimilation rate for photosynthesis [mg CO2/m^2/s]:")]
         [Units("mg/m^2/s")]
         public double ReferencePhotosyntheticRate
         {
@@ -601,7 +601,7 @@ namespace Models.AgPasture
         [Units("J/kg/s")]
         public double PhotosynthesisCurveFactor = 0.8;
 
-        /// <summary>Gets or sets the fraction of total radiation that is photosynthetically active (0-1).</summary>
+        /// <summary>Gets or sets the fraction of radiation that is photosynthetically active (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
         public double FractionPAR = 0.5;
@@ -623,17 +623,17 @@ namespace Models.AgPasture
         [Units("ppm")]
         public double ReferenceCO2 = 380.0;
 
-        /// <summary>Gets or sets the coefficient controlling the CO2 effect on photosynthesis (ppm).</summary>
+        /// <summary>Gets or sets the scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [XmlIgnore]
         [Units("ppm")]
         public double CO2EffectScaleFactor = 700.0;
 
-        /// <summary>Gets or sets the scaling parameter for the CO2 effects on N uptake (ppm).</summary>
+        /// <summary>Gets or sets the scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [XmlIgnore]
         [Units("ppm")]
         public double CO2EffectOffsetFactor = 600.0;
 
-        /// <summary>Gets or sets the minimum value of the CO2 effect on N requirements (0-1).</summary>
+        /// <summary>Gets or sets the minimum value for the CO2 effect on N requirements (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
         public double CO2EffectMinimum = 0.7;
@@ -681,7 +681,7 @@ namespace Models.AgPasture
 
         /// <summary>Flag whether photosynthesis reduction due to heat damage is enabled (yes/no).</summary>
         [Description("Enable photosynthesis reduction due to heat damage [yes/no]:")]
-        [Units("oC")]
+        [Units("yes/no")]
         public YesNoAnswer UseHeatStressFactor
         {
             get
@@ -794,15 +794,15 @@ namespace Models.AgPasture
         }
 
         /// <summary>Reference temperature for recovery from cold stress (oC).</summary>
-        private double myColdRecoveryTreference = 0.0;
+        private double myColdRecoveryTReference = 0.0;
 
         /// <summary>Gets or sets the reference temperature for recovery from cold stress (oC).</summary>
         [Description("Reference temperature for recovery from cold stress [oC]:")]
         [Units("oC")]
-        public double ColdRecoveryTreference
+        public double ColdRecoveryTReference
         {
-            get { return myColdRecoveryTreference; }
-            set { myColdRecoveryTreference = value; }
+            get { return myColdRecoveryTReference; }
+            set { myColdRecoveryTReference = value; }
         }
 
         ////- Respiration parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -832,15 +832,15 @@ namespace Models.AgPasture
         }
 
         /// <summary>Reference temperature for maintenance respiration (oC).</summary>
-        private double myRespirationTreference = 20.0;
+        private double myRespirationTReference = 20.0;
 
         /// <summary>Gets or sets the reference temperature for maintenance respiration (oC).</summary>
         [Description("Reference temperature for maintenance respiration [oC]:")]
         [Units("oC")]
-        public double RespirationTreference
+        public double RespirationTReference
         {
-            get { return myRespirationTreference; }
-            set { myRespirationTreference = value; }
+            get { return myRespirationTReference; }
+            set { myRespirationTReference = value; }
         }
 
         /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
@@ -857,10 +857,10 @@ namespace Models.AgPasture
 
         ////- N concentrations thresholds >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>N concentration thresholds for leaves, optimum, minimum and maximum (kg/kg).</summary>
-        private double[] myNThresholdsForLeaves = { 0.04, 0.05, 0.012 };
+        /// <summary>N concentration thresholds for leaves, optimum, minimum and maximum (kgN/kgDM).</summary>
+        private double[] myNThresholdsForLeaves = { 0.04, 0.012, 0.05 };
 
-        /// <summary>Gets or sets the N concentration thresholds for leaves, optimum, minimum and maximum (kg/kg).</summary>
+        /// <summary>Gets or sets the N concentration thresholds for leaves, optimum, minimum and maximum (kgN/kgDM).</summary>
         [Description("N concentration thresholds for leaves (optimum, minimum and maximum) [kg/kg]:")]
         [Units("kg/kg")]
         public double[] NThresholdsForLeaves
@@ -869,10 +869,10 @@ namespace Models.AgPasture
             set { myNThresholdsForLeaves = value; }
         }
 
-        /// <summary>N concentration thresholds for stems, optimum, minimum and maximum (kg/kg).</summary>
-        private double[] myNThresholdsForStems = { 0.02, 0.025, 0.006 };
+        /// <summary>N concentration thresholds for stems, optimum, minimum and maximum (kgN/kgDM).</summary>
+        private double[] myNThresholdsForStems = { 0.02, 0.006, 0.025 };
 
-        /// <summary>Gets or sets the N concentration thresholds for stems, optimum, minimum and maximum (kg/kg).</summary>
+        /// <summary>Gets or sets the N concentration thresholds for stems, optimum, minimum and maximum (kgN/kgDM).</summary>
         [Description("N concentration thresholds for stems (optimum, minimum and maximum) [kg/kg]:")]
         [Units("kg/kg")]
         public double[] NThresholdsForStems
@@ -881,10 +881,10 @@ namespace Models.AgPasture
             set { myNThresholdsForStems = value; }
         }
 
-        /// <summary>N concentration thresholds for stolons, optimum, minimum and maximum (kg/kg).</summary>
+        /// <summary>N concentration thresholds for stolons, optimum, minimum and maximum (kgN/kgDM).</summary>
         private double[] myNThresholdsForStolons = { 0.0, 0.0, 0.0 };
 
-        /// <summary>Gets or sets the N concentration thresholds for stolons, optimum, minimum and maximum (kg/kg).</summary>
+        /// <summary>Gets or sets the N concentration thresholds for stolons, optimum, minimum and maximum (kgN/kgDM).</summary>
         [Description("N concentration thresholds for stolons (optimum, minimum and maximum) [kg/kg]:")]
         [Units("kg/kg")]
         public double[] NThresholdsForStolons
@@ -893,10 +893,10 @@ namespace Models.AgPasture
             set { myNThresholdsForStolons = value; }
         }
 
-        /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kg/kg).</summary>
-        private double[] myNThresholdsForRoots = { 0.02, 0.025, 0.006 };
+        /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
+        private double[] myNThresholdsForRoots = { 0.02, 0.006, 0.025 };
 
-        /// <summary>Gets or sets the N concentration thresholds for roots, optimum, minimum and maximum (kg/kg).</summary>
+        /// <summary>Gets or sets the N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
         [Description("N concentration thresholds for roots (optimum, minimum and maximum) [kg/kg]:")]
         [Units("kg/kg")]
         public double[] NThresholdsForRoots
@@ -918,22 +918,22 @@ namespace Models.AgPasture
         ////- Allocation of new growth >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
-        private double myTargetSRratio = 3.0;
+        private double myTargetShootRootRatio = 3.0;
 
-        /// <summary>Gets or sets the target, or ideal, shoot-root ratio (>0.0).</summary>
-        [Description("Target, or ideal, shoot-root ratio (for DM allocation) [>0.0]:")]
+        /// <summary>Gets or sets the target, or ideal, shoot-root ratio at vegetative stage (>0.0).</summary>
+        [Description("Target, or ideal, shoot-root ratio at vegetative stage [>0.0]:")]
         [Units("-")]
-        public double TargetSRratio
+        public double TargetShootRootRatio
         {
-            get { return myTargetSRratio; }
-            set { myTargetSRratio = value; }
+            get { return myTargetShootRootRatio; }
+            set { myTargetShootRootRatio = value; }
         }
 
         /// <summary>Maximum fraction of DM growth allocated to roots (0-1).</summary>
         private double myMaxRootAllocation = 0.25;
 
-        /// <summary>Gets or sets the maximum fraction of DM growth allocated to roots (0-1).</summary>
-        [Description("Maximum fraction of DM growth allocated to roots [0-1]:")]
+        /// <summary>Gets or sets the maximum fraction of DM growth that can be  allocated to roots (0-1).</summary>
+        [Description("Maximum fraction of DM growth that can be allocated to roots [0-1]:")]
         [Units("0-1")]
         public double MaxRootAllocation
         {
@@ -1060,10 +1060,10 @@ namespace Models.AgPasture
             set { myFractionLeafMinimum = value; }
         }
 
-        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kg/ha).</summary>
+        /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         private double myFractionLeafDMThreshold = 500;
 
-        /// <summary>Gets or sets the shoot DM at which allocation of new growth to leaves start to decrease (kg/ha).</summary>
+        /// <summary>Gets or sets the shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Description("Shoot DM at which allocation of new growth to leaves start to decrease [kg/ha]:")]
         [Units("kg/ha")]
         public double FractionLeafDMThreshold
@@ -1072,10 +1072,10 @@ namespace Models.AgPasture
             set { myFractionLeafDMThreshold = value; }
         }
 
-        /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kg/ha).</summary>
+        /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         private double myFractionLeafDMFactor = 2000;
 
-        /// <summary>Gets or sets the shoot DM when allocation to leaves is midway maximum and minimum (kg/ha).</summary>
+        /// <summary>Gets or sets the shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Description("Shoot DM when allocation to leaves is midway maximum and minimum [kg/ha]:")]
         [Units("kg/ha")]
         public double FractionLeafDMFactor
@@ -1096,11 +1096,11 @@ namespace Models.AgPasture
             set { myFractionLeafExponent = value; }
         }
 
-        /// <summary>Fraction of new shoot growth allocated to stolons (0-1).</summary>
+        /// <summary>Fraction of new shoot growth to be allocated to stolons (0-1).</summary>
         private double myFractionToStolon = 0.0;
 
-        /// <summary>Gets or sets the fraction of new shoot growth allocated to stolons (0-1).</summary>
-        [Description("Fraction of new shoot growth allocated to stolons [0-1]:")]
+        /// <summary>Gets or sets the fraction of new shoot growth to be allocated to stolons (0-1).</summary>
+        [Description("Fraction of new shoot growth to be allocated to stolons [0-1]:")]
         [Units("0-1")]
         public double FractionToStolon
         {
@@ -1108,11 +1108,11 @@ namespace Models.AgPasture
             set { myFractionToStolon = value; }
         }
 
-        /// <summary>Specific leaf area (m^2/kg DM).</summary>
+        /// <summary>Specific leaf area (m^2/kgDM).</summary>
         private double mySpecificLeafArea = 20.0;
 
-        /// <summary>Gets or sets the specific leaf area (m^2/kg DM).</summary>
-        [Description("Specific leaf area [m^2/kg DM]:")]
+        /// <summary>Gets or sets the specific leaf area (m^2/kgDM).</summary>
+        [Description("Specific leaf area [m^2/kg]:")]
         [Units("m^2/kg")]
         public double SpecificLeafArea
         {
@@ -1120,11 +1120,11 @@ namespace Models.AgPasture
             set { mySpecificLeafArea = value; }
         }
 
-        /// <summary>Specific root length (m/g DM).</summary>
+        /// <summary>Specific root length (m/gDM).</summary>
         private double mySpecificRootLength = 75.0;
 
-        /// <summary>Gets or sets the specific root length (m/g DM).</summary>
-        [Description("Specific root length [m/g DM]:")]
+        /// <summary>Gets or sets the specific root length (m/gDM).</summary>
+        [Description("Specific root length [m/g]:")]
         [Units("m/g")]
         public double SpecificRootLength
         {
@@ -1137,7 +1137,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double StolonEffectOnLAI = 0.3;
 
-        /// <summary>Gets or sets the maximum aboveground biomass for using stems when computing LAI (kg/ha).</summary>
+        /// <summary>Gets or sets the maximum aboveground biomass for using stems when computing LAI (kgDM/ha).</summary>
         [XmlIgnore]
         [Units("kg/ha")]
         public double ShootMaxEffectOnLAI = 1000;
@@ -1274,7 +1274,7 @@ namespace Models.AgPasture
         public double DetachmentDroughtEffectMin = 0.1;
 
 
-        /// <summary>Gets or sets the stock factor increasing tissue turnover rate (>0.0).</summary>
+        /// <summary>Gets or sets the factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
         public double TurnoverStockFactor = 0.0;
@@ -1327,10 +1327,10 @@ namespace Models.AgPasture
             set { myMaximumNFixation = value; }
         }
 
-        /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC roots).</summary>
+        /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
         private double mySymbiontCostFactor = 0.0;
 
-        /// <summary>Gets or sets the respiration cost factor due to the presence of symbiont bacteria (kgC/kgC roots).</summary>
+        /// <summary>Gets or sets the respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
         [XmlIgnore]
         [Units("kg/kg")]
         public double SymbiontCostFactor
@@ -1354,15 +1354,15 @@ namespace Models.AgPasture
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maximum reduction in plant growth due to water logging, saturated soil (0-1).</summary>
-        private double mySoilWaterSaturationFactor = 0.1;
+        private double mySoilSaturationEffectMax = 0.1;
 
         /// <summary>Gets or sets the maximum reduction in plant growth due to water logging, saturated soil (0-1).</summary>
         [Description("Maximum reduction in plant growth due to water logging (saturated soil) [0-1]:")]
         [Units("0-1")]
-        public double SoilWaterSaturationFactor
+        public double SoilSaturationEffectMax
         {
-            get { return mySoilWaterSaturationFactor; }
-            set { mySoilWaterSaturationFactor = value; }
+            get { return mySoilSaturationEffectMax; }
+            set { mySoilSaturationEffectMax = value; }
         }
 
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
@@ -1438,51 +1438,51 @@ namespace Models.AgPasture
         ////- Plant height >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum shoot height (mm).</summary>
-        private double myMinimumPlantHeight = 25.0;
+        private double myPlantHeightMinimum = 25.0;
 
-        /// <summary>Gets or sets the minimum shoot height (mm).</summary>
-        [Description("Minimum shoot height [mm]:")]
+        /// <summary>Gets or sets the minimum plant height (mm).</summary>
+        [Description("Minimum plant height [mm]:")]
         [Units("mm")]
-        public double MinimumPlantHeight
+        public double PlantHeightMinimum
         {
-            get { return myMinimumPlantHeight; }
-            set { myMinimumPlantHeight = value; }
+            get { return myPlantHeightMinimum; }
+            set { myPlantHeightMinimum = value; }
         }
 
         /// <summary>Maximum shoot height (mm).</summary>
-        private double myMaximumPlantHeight = 600.0;
+        private double myPlantHeightMaximum = 600.0;
 
         /// <summary>Gets or sets the maximum shoot height (mm).</summary>
         [Description("Maximum shoot height [mm]:")]
         [Units("mm")]
-        public double MaximumPlantHeight
+        public double PlantHeightMaximum
         {
-            get { return myMaximumPlantHeight; }
-            set { myMaximumPlantHeight = value; }
+            get { return myPlantHeightMaximum; }
+            set { myPlantHeightMaximum = value; }
         }
 
-        /// <summary>DM weight for maximum shoot height (kg/ha).</summary>
-        private double myMassForMaximumHeight = 10000;
+        /// <summary>DM weight above ground for maximum plant height (kgDM/ha).</summary>
+        private double myPlantHeightMassForMax = 10000;
 
-        /// <summary>Gets or sets the DM weight for maximum shoot height (kg/ha).</summary>
-        [Description("DM weight for maximum shoot height [kg/ha]:")]
+        /// <summary>Gets or sets the DM weight above ground for maximum plant height (kgDM/ha).</summary>
+        [Description("DM weight above ground for maximum plant height [kg/ha]:")]
         [Units("kg/ha")]
-        public double MassForMaximumHeight
+        public double PlantHeightMassForMax
         {
-            get { return myMassForMaximumHeight; }
-            set { myMassForMaximumHeight = value; }
+            get { return myPlantHeightMassForMax; }
+            set { myPlantHeightMassForMax = value; }
         }
 
-        /// <summary>Exponent of shoot height function (>1.0).</summary>
-        private double myExponentHeightFromMass = 2.8;
+        /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
+        private double myPlantHeightExponent = 2.8;
 
-        /// <summary>Gets or sets the exponent of shoot height function (>1.0).</summary>
-        [Description("Exponent of shoot height function [>1.0]:")]
+        /// <summary>Gets or sets the exponent controlling shoot height as function of DM weight (>1.0).</summary>
+        [Description("Exponent controlling shoot height as function of DM weight [>1.0]:")]
         [Units(">1.0")]
-        public double ExponentHeightFromMass
+        public double PlantHeightExponent
         {
-            get { return myExponentHeightFromMass; }
-            set { myExponentHeightFromMass = value; }
+            get { return myPlantHeightExponent; }
+            set { myPlantHeightExponent = value; }
         }
 
         ////- Root depth and distribution >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1523,11 +1523,11 @@ namespace Models.AgPasture
             set { myRootElongationRate = value; }
         }
 
-        /// <summary>Depth coefficient for root distribution, proportion decreases below this value (mm).</summary>
+        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
         private double myRootDistributionDepthParam = 90.0;
 
-        /// <summary>Gets or sets the depth coefficient for root distribution, proportion decreases below this value (mm).</summary>
-        [Description("Depth for constant distribution of roots [mm]:")]
+        /// <summary>Gets or sets the depth from surface where root proportion starts to decrease (mm).</summary>
+        [Description("Depth from surface where root proportion starts to decrease [mm]:")]
         [Units("mm")]
         public double RootDistributionDepthParam
         {
@@ -1535,11 +1535,11 @@ namespace Models.AgPasture
             set { myRootDistributionDepthParam = value; }
         }
 
-        /// <summary>Exponent for the root distribution, controls the reduction as function of depth (>0.0).</summary>
+        /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
         private double myRootDistributionExponent = 3.2;
 
-        /// <summary>Gets or sets the exponent for the root distribution, controls the reduction as function of depth (>0.0).</summary>
-        [Description("Coefficient for the root distribution [>0.0]:")]
+        /// <summary>Gets or sets the exponent controlling the root distribution as function of depth (>0.0).</summary>
+        [Description("Exponent controlling the root distribution as function of depth [>0.0]:")]
         [Units("-")]
         public double RootDistributionExponent
         {
@@ -1569,17 +1569,17 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double DigestibilitiesProtein = 1.0;
 
-        /// <summary>Gets or sets the soluble fraction of carbohydrates in newly grown tissues (0-1).</summary>
+        /// <summary>Gets or sets the fraction of soluble carbohydrates in newly grown tissues (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
         public double SugarFractionNewGrowth = 0.0;
 
         ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Minimum above ground green DM, leaf and stems (kg/ha).</summary>
+        /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         private double myMinimumGreenWt = 300.0;
 
-        /// <summary>Gets or sets the minimum above ground green DM, leaf and stems (kg/ha).</summary>
+        /// <summary>Gets or sets the minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         [Description("Minimum above ground green DM [kg/ha]:")]
         [Units("kg/ha")]
         public double MinimumGreenWt
@@ -1730,12 +1730,12 @@ namespace Models.AgPasture
         [Units("days")]
         public int daysAnthesisToMaturity = 100;
 
-        /// <summary>Gets or sets the cumulative degrees-day from emergence to anthesis.</summary>
+        /// <summary>Gets or sets the cumulative degrees-day from emergence to anthesis (oCd).</summary>
         [XmlIgnore]
         [Units("oCd")]
         public double degreesDayForAnthesis = 0.0;
 
-        /// <summary>Gets or sets the cumulative degrees-day from anthesis to maturity.</summary>
+        /// <summary>Gets or sets the cumulative degrees-day from anthesis to maturity (oCd).</summary>
         [XmlIgnore]
         [Units("oCd")]
         public double degreesDayForMaturity = 0.0;
@@ -5316,7 +5316,7 @@ namespace Models.AgPasture
                     reproFac = CalcReproductiveGrowthFactor();
 
                 // get today's target SR
-                double targetSR = myTargetSRratio * reproFac;
+                double targetSR = myTargetShootRootRatio * reproFac;
 
                 // update today's shoot:root partition
                 double growthSR = targetSR * glfFactor * targetSR / currentSR;
@@ -5396,17 +5396,17 @@ namespace Models.AgPasture
         /// <returns>The plant height (mm)</returns>
         internal double HeightfromDM()
         {
-            double TodaysHeight = myMaximumPlantHeight;
+            double TodaysHeight = myPlantHeightMaximum;
 
-            if (StandingHerbageWt <= myMassForMaximumHeight)
+            if (StandingHerbageWt <= myPlantHeightMassForMax)
             {
-                double massRatio = StandingHerbageWt / myMassForMaximumHeight;
-                double heightF = myExponentHeightFromMass - (myExponentHeightFromMass * massRatio) + massRatio;
-                heightF *= Math.Pow(massRatio, myExponentHeightFromMass - 1);
+                double massRatio = StandingHerbageWt / myPlantHeightMassForMax;
+                double heightF = myPlantHeightExponent - (myPlantHeightExponent * massRatio) + massRatio;
+                heightF *= Math.Pow(massRatio, myPlantHeightExponent - 1);
                 TodaysHeight *= heightF;
             }
 
-            return Math.Max(TodaysHeight, myMinimumPlantHeight);
+            return Math.Max(TodaysHeight, myPlantHeightMinimum);
         }
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
@@ -6047,7 +6047,7 @@ namespace Models.AgPasture
                     recoveryFactor = (1.0 - coldFactor) * (cumulativeDDCold / myColdRecoverySumDD);
 
                 // accumulate temperature
-                cumulativeDDCold += Math.Max(0.0, Tmean(0.5) - myColdRecoveryTreference);
+                cumulativeDDCold += Math.Max(0.0, Tmean(0.5) - myColdRecoveryTReference);
 
                 // cold stress
                 lowTempStress = Math.Min(1.0, coldFactor + recoveryFactor);
@@ -6066,7 +6066,7 @@ namespace Models.AgPasture
         {
             double result = 0.0;
             double growthTmax = myGrowthToptimum + (myGrowthToptimum - myGrowthTminimum) / myGrowthTEffectExponent;
-            if (myPhotosynthesisPathway == PhotosynthesisPathwayType.C3)
+            if (myPhotosyntheticPathway == PhotosynthesisPathwayType.C3)
             {
                 if (temperature > myGrowthTminimum && temperature < growthTmax)
                 {
@@ -6075,7 +6075,7 @@ namespace Models.AgPasture
                     result = val1 / val2;
                 }
             }
-            else if (myPhotosynthesisPathway == PhotosynthesisPathwayType.C4)
+            else if (myPhotosyntheticPathway == PhotosynthesisPathwayType.C4)
             {
                 if (temperature > myGrowthTminimum)
                 {
@@ -6106,7 +6106,7 @@ namespace Models.AgPasture
             else
             {
                 double scalef = 1.0 - Math.Exp(-1.0);
-                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / myRespirationTreference, myRespirationExponent));
+                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / myRespirationTReference, myRespirationExponent));
                 result = baseEffect / scalef;
             }
 
@@ -6171,7 +6171,7 @@ namespace Models.AgPasture
             }
 
             if (mySWater > myDUL)
-                effect = mySoilWaterSaturationFactor * (mySWater - myDUL) / (mySAT - myDUL);
+                effect = mySoilSaturationEffectMax * (mySWater - myDUL) / (mySAT - myDUL);
             else
                 effect = -SoilSaturationRecoveryFactor;
 
@@ -6352,36 +6352,25 @@ namespace Models.AgPasture
         /// <returns>The proportion of root mass expected in each soil layer (0-1)</returns>
         private double[] CurrentRootDistributionTarget()
         {
-            double currentDepth = 0.0;
             double cumProportion = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (currentDepth < roots.Depth)
-                {
-                    // layer is within the root zone
-                    currentDepth += mySoil.Thickness[layer];
-                    if (currentDepth <= roots.Depth)
-                    {
-                        // layer is fully in the root zone
-                        cumProportion += roots.TargetDistribution[layer];
-                    }
-                    else
-                    {
-                        // layer is partially in the root zone
-                        double layerFrac = (roots.Depth - (currentDepth - mySoil.Thickness[layer]))
-                                         / (myRootDepthMaximum - (currentDepth - mySoil.Thickness[layer]));
-                        cumProportion += roots.TargetDistribution[layer] * Math.Min(1.0, Math.Max(0.0, layerFrac));
-                    }
-                }
-                else
-                    layer = nLayers;
-            }
-
+            double topLayersDepth = 0.0;
             double[] result = new double[nLayers];
+
+            // Get the total weight over the root zone, first layers totally within the root zone
+            for (int layer = 0; layer < roots.BottomLayer; layer++)
+            {
+                cumProportion += roots.TargetDistribution[layer];
+                topLayersDepth += mySoil.Thickness[layer];
+            }
+            // Then consider layer at the bottom of the root zone
+            double layerFrac = Math.Min(1.0, (myRootDepthMaximum - topLayersDepth) / (roots.Depth - topLayersDepth));
+            cumProportion += roots.TargetDistribution[roots.BottomLayer] * layerFrac;
+
             if (cumProportion > Epsilon)
             {
-                for (int layer = 0; layer < nLayers; layer++)
+                for (int layer = 0; layer < roots.BottomLayer; layer++)
                     result[layer] = roots.TargetDistribution[layer] / cumProportion;
+                result[roots.BottomLayer] = roots.TargetDistribution[roots.BottomLayer] * layerFrac / cumProportion;
             }
 
             return result;

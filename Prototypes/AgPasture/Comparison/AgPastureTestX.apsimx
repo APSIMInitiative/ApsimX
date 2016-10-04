@@ -1267,15 +1267,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Grass</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -1283,7 +1283,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -1324,18 +1324,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -1343,21 +1342,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <NDillutionCoefficient>0.5</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>750</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -1452,7 +1451,7 @@ namespace Models
             <string>[Sward].Ryegrass.RootDetachedN as Ryegrass.RootDetachedN</string>
             <string>[Sward].Ryegrass.NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
+            <string>sum([Sward].Ryegrass.WaterAvailable) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Sward].Ryegrass.TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
             <string>[Sward].Ryegrass.TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
@@ -1494,9 +1493,9 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Sward].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Sward].RLD as Ryegrass.RLD</string>
-            <string>[Sward].AvailableSoilN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].UptakeSoilN as Ryegrass.UptakeSoilN</string>
-            <string>[Sward].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
+            <string>[Sward].SoilAvailableN as Ryegrass.SoilNAvailable</string>
+            <string>[Sward].SoilUptakeN as Ryegrass.SoilNUptake</string>
+            <string>[Sward].WaterAvailable as Ryegrass.WaterAvailable</string>
             <string>[Sward].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
           <EventNames>
@@ -1523,7 +1522,7 @@ namespace Models
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].UptakeSoilN) as SoilUptakeN</string>
+            <string>sum([Sward].SoilUptakeN) as SoilNUptake</string>
             <string>[Sward].RemobilisedSenescedN as RemobilisedSenescedN</string>
             <string>[Sward].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
             <string>[Sward].NetGrowthN as NetGrowthN</string>
@@ -3476,7 +3475,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>N demand, uptake (kg/ha/day)</Title>
+            <Title>N demand (kg/ha/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -3560,7 +3559,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Water demand, uptake (mm/day)</Title>
+            <Title>N demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -3580,7 +3579,7 @@ namespace Models
         <Graph>
           <Name>Remobilisation</Name>
           <Series>
-            <Name>SenescedRemble</Name>
+            <Name>SenescedRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3601,7 +3600,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>SenescedRemobd</Name>
+            <Name>SenescedRemoblised</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3622,7 +3621,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemble</Name>
+            <Name>LuxuryRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3643,7 +3642,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemobd</Name>
+            <Name>LuxuryRemobilsed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3665,7 +3664,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Title>N  (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -4971,15 +4970,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Grass</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -4987,7 +4986,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -5028,18 +5027,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -5047,21 +5045,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <NDillutionCoefficient>0.5</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>750</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -5152,7 +5150,7 @@ namespace Models
             <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
             <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
-            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
+            <string>sum([Ryegrass].WaterAvailable) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
             <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
@@ -5198,7 +5196,7 @@ namespace Models
             <string>[Ryegrass].SoilNO3Available as Ryegrass.NO3Available</string>
             <string>[Ryegrass].SoilNH4Uptake as Ryegrass.NH4Uptake</string>
             <string>[Ryegrass].SoilNO3Uptake as Ryegrass.NO3Uptake</string>
-            <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
+            <string>[Ryegrass].WaterAvailable as Ryegrass.WaterAvailable</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
           <EventNames>
@@ -7372,7 +7370,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>N demand, uptake (kg/ha/day)</Title>
+            <Title>N demand (kg/ha/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -7456,7 +7454,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Water demand, uptake (mm/day)</Title>
+            <Title>N demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -7476,7 +7474,7 @@ namespace Models
         <Graph>
           <Name>Remobilisation</Name>
           <Series>
-            <Name>SenescedRemble</Name>
+            <Name>SenescedRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7497,7 +7495,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>SenescedRemobd</Name>
+            <Name>SenescedRemoblised</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7518,7 +7516,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemble</Name>
+            <Name>LuxuryRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7539,7 +7537,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemobd</Name>
+            <Name>LuxuryRemobilsed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -7561,7 +7559,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Title>N  (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -8844,15 +8842,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Grass</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>2000</InitialShootDM>
             <InitialRootDM>500</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -8860,7 +8858,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -8901,18 +8899,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -8920,21 +8917,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <NDillutionCoefficient>0.5</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>750</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -9029,7 +9026,7 @@ namespace Models
             <string>[Sward].Ryegrass.RootDetachedN as Ryegrass.RootDetachedN</string>
             <string>[Sward].Ryegrass.NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
+            <string>sum([Sward].Ryegrass.WaterAvailable) as Ryegrass.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Sward].Ryegrass.TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
             <string>[Sward].Ryegrass.TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
@@ -9071,9 +9068,9 @@ namespace Models
             <string>[Soil].Thickness as Soil.Thickness</string>
             <string>[Sward].RootWtFraction as Ryegrass.RootWtFraction</string>
             <string>[Sward].RLD as Ryegrass.RLD</string>
-            <string>[Sward].AvailableSoilN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].UptakeSoilN as Ryegrass.UptakeSoilN</string>
-            <string>[Sward].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
+            <string>[Sward].SoilAvailableN as Ryegrass.SoilNAvailable</string>
+            <string>[Sward].SoilUptakeN as Ryegrass.SoilNUptake</string>
+            <string>[Sward].WaterAvailable as Ryegrass.WaterAvailable</string>
             <string>[Sward].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
           <EventNames>
@@ -9100,7 +9097,7 @@ namespace Models
             <string>[Sward].HarvestedN as HarvestN</string>
             <string>sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN</string>
             <string>[Soil].SoilWater.LeachNO3 as LeachedN</string>
-            <string>sum([Sward].UptakeSoilN) as SoilUptakeN</string>
+            <string>sum([Sward].SoilUptakeN) as SoilUptakeN</string>
             <string>[Sward].RemobilisedSenescedN as RemobilisedSenescedN</string>
             <string>[Sward].RemobilisedLuxuryN as RemobilisedLuxuryN</string>
             <string>[Sward].NetGrowthN as NetGrowthN</string>
@@ -11032,7 +11029,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>N demand, uptake (kg/ha/day)</Title>
+            <Title>N demand (kg/ha/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -11116,7 +11113,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Water demand, uptake (mm/day)</Title>
+            <Title>N demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -11136,7 +11133,7 @@ namespace Models
         <Graph>
           <Name>Remobilisation</Name>
           <Series>
-            <Name>SenescedRemble</Name>
+            <Name>SenescedRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11157,7 +11154,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>SenescedRemobd</Name>
+            <Name>SenescedRemoblised</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11178,7 +11175,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemble</Name>
+            <Name>LuxuryRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11199,7 +11196,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemobd</Name>
+            <Name>LuxuryRemobilsed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -11221,7 +11218,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Title>N  (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -12530,15 +12527,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Grass</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -12546,7 +12543,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -12587,18 +12584,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -12606,21 +12602,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <NDillutionCoefficient>0.5</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>750</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -12711,7 +12707,7 @@ namespace Models
             <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
             <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
-            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
+            <string>sum([Ryegrass].WaterAvailable) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
             <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
@@ -12758,7 +12754,7 @@ namespace Models
             <string>[Ryegrass].SoilNO3Available as Ryegrass.NO3Available</string>
             <string>[Ryegrass].SoilNH4Uptake as Ryegrass.NH4Uptake</string>
             <string>[Ryegrass].SoilNO3Uptake as Ryegrass.NO3Uptake</string>
-            <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
+            <string>[Ryegrass].WaterAvailable as Ryegrass.WaterAvailable</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
           <EventNames>
@@ -14806,7 +14802,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>N demand, uptake (kg/ha/day)</Title>
+            <Title>N demand (kg/ha/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -14890,7 +14886,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Water demand, uptake (mm/day)</Title>
+            <Title>N demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -14910,7 +14906,7 @@ namespace Models
         <Graph>
           <Name>Remobilisation</Name>
           <Series>
-            <Name>SenescedRemble</Name>
+            <Name>SenescedRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14931,7 +14927,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>SenescedRemobd</Name>
+            <Name>SenescedRemoblised</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14952,7 +14948,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemble</Name>
+            <Name>LuxuryRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14973,7 +14969,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemobd</Name>
+            <Name>LuxuryRemobilsed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -14995,7 +14991,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Title>N  (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -16306,15 +16302,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Grass</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>2000</InitialShootDM>
           <InitialRootDM>500</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -16322,7 +16318,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -16363,18 +16359,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -16382,21 +16377,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <NDillutionCoefficient>0.5</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>750</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -16487,7 +16482,7 @@ namespace Models
             <string>[Ryegrass].RootDetachedN as Ryegrass.RootDetachedN</string>
             <string>[Ryegrass].NetGrowthN as Ryegrass.NetGrowthN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
-            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
+            <string>sum([Ryegrass].WaterAvailable) as Ryegrass.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>[Ryegrass].TurnoverRateLiveShoot as Ryegrass.TurnoverRateLiveShoot</string>
             <string>[Ryegrass].TurnoverRateDeadShoot as Ryegrass.TurnoverRateDeadShoot</string>
@@ -16534,7 +16529,7 @@ namespace Models
             <string>[Ryegrass].SoilNO3Available as Ryegrass.NO3Available</string>
             <string>[Ryegrass].SoilNH4Uptake as Ryegrass.NH4Uptake</string>
             <string>[Ryegrass].SoilNO3Uptake as Ryegrass.NO3Uptake</string>
-            <string>[Ryegrass].SoilAvailableWater as Ryegrass.SoilAvailableWater</string>
+            <string>[Ryegrass].WaterAvailable as Ryegrass.WaterAvailable</string>
             <string>[Ryegrass].WaterUptake as Ryegrass.WaterUptake</string>
           </VariableNames>
           <EventNames>
@@ -18582,7 +18577,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>N demand, uptake (kg/ha/day)</Title>
+            <Title>N demand (kg/ha/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -18666,7 +18661,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>Water demand, uptake (mm/day)</Title>
+            <Title>N demand, uptake (mm/day)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -18686,7 +18681,7 @@ namespace Models
         <Graph>
           <Name>Remobilisation</Name>
           <Series>
-            <Name>SenescedRemble</Name>
+            <Name>SenescedRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18707,7 +18702,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>SenescedRemobd</Name>
+            <Name>SenescedRemoblised</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18728,7 +18723,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemble</Name>
+            <Name>LuxuryRemobilisable</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18749,7 +18744,7 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>LuxuryRemobd</Name>
+            <Name>LuxuryRemobilsed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -18771,7 +18766,7 @@ namespace Models
           </Series>
           <Axis>
             <Type>Left</Type>
-            <Title>DM (kg/ha)</Title>
+            <Title>N  (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>

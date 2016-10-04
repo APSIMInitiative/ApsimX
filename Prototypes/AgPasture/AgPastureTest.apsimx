@@ -1179,15 +1179,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Grass</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>1500</InitialShootDM>
             <InitialRootDM>450</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -1195,7 +1195,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -1236,18 +1236,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -1255,21 +1254,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <NDillutionCoefficient>0.5</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>750</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -1290,15 +1289,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Legume</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>500</InitialShootDM>
             <InitialRootDM>150</InitialRootDM>
             <InitialRootDepth>350</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
             <GrowthTminimum>4</GrowthTminimum>
             <GrowthToptimum>22</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>30</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -1306,7 +1305,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-2</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>30</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -1347,18 +1346,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0.2</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -1366,21 +1364,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0.2</MinimumNFixation>
             <MaximumNFixation>0.6</MaximumNFixation>
-            <NDillutionCoefficient>1</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>1</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>450</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>8000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>350</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>350</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>70</DepthForConstantRootProportion>
-            <ExponentRootDistribution>2.5</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -1430,14 +1428,14 @@ namespace Models
             <string>[Sward].WhiteClover.LeafNConc as WhiteClover.LeafNConc</string>
             <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
             <string>[Sward].WhiteClover.SoilDemandN as WhiteClover.SoilDemandN</string>
-            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.AvailableSoilN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.SoilAvailableN</string>
             <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
             <string>[Sward].WhiteClover.SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>[Sward].WhiteClover.WaterDemand as WhiteClover.WaterDemand</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
-            <string>sum([Sward].WhiteClover.SoilAvailableWater) as WhiteClover.WaterAvailable</string>
+            <string>sum([Sward].Ryegrass.WaterAvailable) as Ryegrass.WaterAvailable</string>
+            <string>sum([Sward].WhiteClover.WaterAvailable) as WhiteClover.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>sum([Sward].WhiteClover.WaterUptake) as WhiteClover.WaterUptake</string>
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
@@ -2732,7 +2730,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -2816,7 +2814,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.AvailableSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4084,15 +4082,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Grass</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>1500</InitialShootDM>
             <InitialRootDM>450</InitialRootDM>
             <InitialRootDepth>750</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
             <GrowthTminimum>2</GrowthTminimum>
             <GrowthToptimum>20</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -4100,7 +4098,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-3</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -4141,18 +4139,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -4160,21 +4157,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0</MinimumNFixation>
             <MaximumNFixation>0</MaximumNFixation>
-            <NDillutionCoefficient>0.5</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>600</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>750</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-            <ExponentRootDistribution>3.2</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -4195,15 +4192,15 @@ namespace Models
             <Gsmax>0.011</Gsmax>
             <R50>200</R50>
             <SpeciesFamily>Legume</SpeciesFamily>
-            <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
             <InitialShootDM>500</InitialShootDM>
             <InitialRootDM>150</InitialRootDM>
             <InitialRootDepth>350</InitialRootDepth>
-            <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+            <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
             <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
             <GrowthTminimum>4</GrowthTminimum>
             <GrowthToptimum>22</GrowthToptimum>
-            <GrowthTq>1.75</GrowthTq>
+            <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
             <UseHeatStressFactor>yes</UseHeatStressFactor>
             <HeatOnsetTemperature>30</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
@@ -4211,7 +4208,7 @@ namespace Models
             <HeatRecoveryTreference>25</HeatRecoveryTreference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
-            <mColdFullTemperature>-2</mColdFullTemperature>
+            <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>30</ColdRecoverySumDD>
             <ColdRecoveryTreference>0</ColdRecoveryTreference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -4252,18 +4249,17 @@ namespace Models
             <FractionLeafDMFactor>2000</FractionLeafDMFactor>
             <FractionLeafExponent>3</FractionLeafExponent>
             <FractionToStolon>0.2</FractionToStolon>
-            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <SpecificLeafArea>20</SpecificLeafArea>
             <SpecificRootLength>75</SpecificRootLength>
-            <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+            <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
             <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
             <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-            <DetachmentRate>0.11</DetachmentRate>
-            <TissueTurnoverTmin>2</TissueTurnoverTmin>
-            <TissueTurnoverTref>20</TissueTurnoverTref>
-            <TissueTurnoverTq>1</TissueTurnoverTq>
-            <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-            <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+            <DetachmentRateShoot>0.11</DetachmentRateShoot>
+            <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+            <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+            <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+            <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+            <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
             <FractionNLuxuryRemobilisable>
               <double>0</double>
               <double>0</double>
@@ -4271,21 +4267,21 @@ namespace Models
             </FractionNLuxuryRemobilisable>
             <MinimumNFixation>0.2</MinimumNFixation>
             <MaximumNFixation>0.6</MaximumNFixation>
-            <NDillutionCoefficient>1</NDillutionCoefficient>
-            <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+            <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
             <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
             <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+            <NDillutionCoefficient>1</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
-            <GlfSFertility>1</GlfSFertility>
+            <GlfSoilFertility>1</GlfSoilFertility>
             <MinimumPlantHeight>25</MinimumPlantHeight>
             <MaximumPlantHeight>450</MaximumPlantHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
             <MassForMaximumHeight>8000</MassForMaximumHeight>
-            <MinimumRootDepth>50</MinimumRootDepth>
-            <MaximumRootDepth>350</MaximumRootDepth>
+            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <RootDepthMinimum>50</RootDepthMinimum>
+            <RootDepthMaximum>350</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
-            <DepthForConstantRootProportion>70</DepthForConstantRootProportion>
-            <ExponentRootDistribution>2.5</ExponentRootDistribution>
+            <RootDistributionDepthParam>90</RootDistributionDepthParam>
+            <RootDistributionExponent>3.2</RootDistributionExponent>
             <DigestibilitiesCellWall>
               <double>0.6</double>
               <double>0.6</double>
@@ -4335,14 +4331,14 @@ namespace Models
             <string>[Sward].WhiteClover.LeafNConc as WhiteClover.LeafNConc</string>
             <string>[Sward].Ryegrass.SoilDemandN as Ryegrass.SoilDemandN</string>
             <string>[Sward].WhiteClover.SoilDemandN as WhiteClover.SoilDemandN</string>
-            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.AvailableSoilN</string>
+            <string>[Sward].Ryegrass.SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[Sward].WhiteClover.SoilAvailableN as WhiteClover.SoilAvailableN</string>
             <string>[Sward].Ryegrass.SoilUptakeN as Ryegrass.SoilUptakeN</string>
             <string>[Sward].WhiteClover.SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Sward].Ryegrass.WaterDemand as Ryegrass.WaterDemand</string>
             <string>[Sward].WhiteClover.WaterDemand as WhiteClover.WaterDemand</string>
-            <string>sum([Sward].Ryegrass.SoilAvailableWater) as Ryegrass.WaterAvailable</string>
-            <string>sum([Sward].WhiteClover.SoilAvailableWater) as WhiteClover.WaterAvailable</string>
+            <string>sum([Sward].Ryegrass.WaterAvailable) as Ryegrass.WaterAvailable</string>
+            <string>sum([Sward].WhiteClover.WaterAvailable) as WhiteClover.WaterAvailable</string>
             <string>sum([Sward].Ryegrass.WaterUptake) as Ryegrass.WaterUptake</string>
             <string>sum([Sward].WhiteClover.WaterUptake) as WhiteClover.WaterUptake</string>
             <string>[Sward].Ryegrass.LAIGreen as Ryegrass.GreenLAI</string>
@@ -5637,7 +5633,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -5721,7 +5717,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.AvailableSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -7280,15 +7276,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Grass</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>1500</InitialShootDM>
           <InitialRootDM>450</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -7296,7 +7292,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -7337,18 +7333,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -7356,21 +7351,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <NDillutionCoefficient>0.5</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>750</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -7391,15 +7386,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Legume</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>500</InitialShootDM>
           <InitialRootDM>150</InitialRootDM>
           <InitialRootDepth>350</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
           <GrowthTminimum>4</GrowthTminimum>
           <GrowthToptimum>22</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>30</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -7407,7 +7402,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-2</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>30</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -7448,18 +7443,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0.2</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -7467,21 +7461,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0.2</MinimumNFixation>
           <MaximumNFixation>0.6</MaximumNFixation>
-          <NDillutionCoefficient>1</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>1</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>450</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>8000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>350</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>350</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>70</DepthForConstantRootProportion>
-          <ExponentRootDistribution>2.5</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -7526,14 +7520,14 @@ namespace Models
             <string>[WhiteClover].LeafNConc as WhiteClover.LeafNConc</string>
             <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
             <string>[WhiteClover].SoilDemandN as WhiteClover.SoilDemandN</string>
-            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[WhiteClover].SoilAvailableN as WhiteClover.AvailableSoilN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[WhiteClover].SoilAvailableN as WhiteClover.SoilAvailableN</string>
             <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
             <string>[WhiteClover].SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>[WhiteClover].WaterDemand as WhiteClover.WaterDemand</string>
-            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
-            <string>sum([WhiteClover].SoilAvailableWater) as WhiteClover.WaterAvailable</string>
+            <string>sum([Ryegrass].WaterAvailable) as Ryegrass.WaterAvailable</string>
+            <string>sum([WhiteClover].WaterAvailable) as WhiteClover.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>sum([WhiteClover].WaterUptake) as WhiteClover.WaterUptake</string>
             <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
@@ -8597,7 +8591,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -8681,7 +8675,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.AvailableSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -9962,15 +9956,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Grass</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>1500</InitialShootDM>
           <InitialRootDM>450</InitialRootDM>
           <InitialRootDepth>750</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -9978,7 +9972,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-3</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -10019,18 +10013,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -10038,21 +10031,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
-          <NDillutionCoefficient>0.5</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>600</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>750</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>90</DepthForConstantRootProportion>
-          <ExponentRootDistribution>3.2</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -10073,15 +10066,15 @@ namespace Models
           <Gsmax>0.011</Gsmax>
           <R50>200</R50>
           <SpeciesFamily>Legume</SpeciesFamily>
-          <PhotosynthesisPathway>C3</PhotosynthesisPathway>
+          <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           <InitialShootDM>500</InitialShootDM>
           <InitialRootDM>150</InitialRootDM>
           <InitialRootDepth>350</InitialRootDepth>
-          <ReferencePhotosynthesisRate>1</ReferencePhotosynthesisRate>
+          <ReferencePhotosyntheticRate>1</ReferencePhotosyntheticRate>
           <LightExtinctionCoefficient>0.8</LightExtinctionCoefficient>
           <GrowthTminimum>4</GrowthTminimum>
           <GrowthToptimum>22</GrowthToptimum>
-          <GrowthTq>1.75</GrowthTq>
+          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
           <UseHeatStressFactor>yes</UseHeatStressFactor>
           <HeatOnsetTemperature>30</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
@@ -10089,7 +10082,7 @@ namespace Models
           <HeatRecoveryTreference>25</HeatRecoveryTreference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
-          <mColdFullTemperature>-2</mColdFullTemperature>
+          <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>30</ColdRecoverySumDD>
           <ColdRecoveryTreference>0</ColdRecoveryTreference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
@@ -10130,18 +10123,17 @@ namespace Models
           <FractionLeafDMFactor>2000</FractionLeafDMFactor>
           <FractionLeafExponent>3</FractionLeafExponent>
           <FractionToStolon>0.2</FractionToStolon>
-          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
-          <UseStemStolonEffectOnLAI>yes</UseStemStolonEffectOnLAI>
+          <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
           <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRate>0.11</DetachmentRate>
-          <TissueTurnoverTmin>2</TissueTurnoverTmin>
-          <TissueTurnoverTref>20</TissueTurnoverTref>
-          <TissueTurnoverTq>1</TissueTurnoverTq>
-          <TissueTurnoverDroughtMax>1</TissueTurnoverDroughtMax>
-          <TissueTurnoverDroughtThreshold>0.5</TissueTurnoverDroughtThreshold>
+          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
+          <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
+          <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
+          <TurnoverDroughtEffectMax>1</TurnoverDroughtEffectMax>
+          <TurnoverDroughtThreshold>0.5</TurnoverDroughtThreshold>
           <FractionNLuxuryRemobilisable>
             <double>0</double>
             <double>0</double>
@@ -10149,21 +10141,21 @@ namespace Models
           </FractionNLuxuryRemobilisable>
           <MinimumNFixation>0.2</MinimumNFixation>
           <MaximumNFixation>0.6</MaximumNFixation>
-          <NDillutionCoefficient>1</NDillutionCoefficient>
-          <SoilWaterSaturationFactor>0.1</SoilWaterSaturationFactor>
+          <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
           <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
+          <NDillutionCoefficient>1</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
-          <GlfSFertility>1</GlfSFertility>
+          <GlfSoilFertility>1</GlfSoilFertility>
           <MinimumPlantHeight>25</MinimumPlantHeight>
           <MaximumPlantHeight>450</MaximumPlantHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
           <MassForMaximumHeight>8000</MassForMaximumHeight>
-          <MinimumRootDepth>50</MinimumRootDepth>
-          <MaximumRootDepth>350</MaximumRootDepth>
+          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <RootDepthMinimum>50</RootDepthMinimum>
+          <RootDepthMaximum>350</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
-          <DepthForConstantRootProportion>70</DepthForConstantRootProportion>
-          <ExponentRootDistribution>2.5</ExponentRootDistribution>
+          <RootDistributionDepthParam>90</RootDistributionDepthParam>
+          <RootDistributionExponent>3.2</RootDistributionExponent>
           <DigestibilitiesCellWall>
             <double>0.6</double>
             <double>0.6</double>
@@ -10208,14 +10200,14 @@ namespace Models
             <string>[WhiteClover].LeafNConc as WhiteClover.LeafNConc</string>
             <string>[Ryegrass].SoilDemandN as Ryegrass.SoilDemandN</string>
             <string>[WhiteClover].SoilDemandN as WhiteClover.SoilDemandN</string>
-            <string>[Ryegrass].SoilAvailableN as Ryegrass.AvailableSoilN</string>
-            <string>[WhiteClover].SoilAvailableN as WhiteClover.AvailableSoilN</string>
+            <string>[Ryegrass].SoilAvailableN as Ryegrass.SoilAvailableN</string>
+            <string>[WhiteClover].SoilAvailableN as WhiteClover.SoilAvailableN</string>
             <string>[Ryegrass].SoilUptakeN as Ryegrass.SoilUptakeN</string>
             <string>[WhiteClover].SoilUptakeN as WhiteClover.SoilUptakeN</string>
             <string>[Ryegrass].WaterDemand as Ryegrass.WaterDemand</string>
             <string>[WhiteClover].WaterDemand as WhiteClover.WaterDemand</string>
-            <string>sum([Ryegrass].SoilAvailableWater) as Ryegrass.WaterAvailable</string>
-            <string>sum([WhiteClover].SoilAvailableWater) as WhiteClover.WaterAvailable</string>
+            <string>sum([Ryegrass].WaterAvailable) as Ryegrass.WaterAvailable</string>
+            <string>sum([WhiteClover].WaterAvailable) as WhiteClover.WaterAvailable</string>
             <string>sum([Ryegrass].WaterUptake) as Ryegrass.WaterUptake</string>
             <string>sum([WhiteClover].WaterUptake) as WhiteClover.WaterUptake</string>
             <string>[Ryegrass].LAIGreen as Ryegrass.GreenLAI</string>
@@ -11279,7 +11271,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>Ryegrass.AvailableSoilN</YFieldName>
+              <YFieldName>Ryegrass.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11363,7 +11355,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Results</TableName>
               <XFieldName>Date</XFieldName>
-              <YFieldName>WhiteClover.AvailableSoilN</YFieldName>
+              <YFieldName>WhiteClover.SoilAvailableN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11755,7 +11747,7 @@ namespace Models
         <XFieldName>Date</XFieldName>
         <YFieldName>Ryegrass.TotalWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -11776,7 +11768,7 @@ namespace Models
         <XFieldName>Date</XFieldName>
         <YFieldName>WhiteClover.TotalWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -11818,7 +11810,7 @@ namespace Models
         <XFieldName>Date</XFieldName>
         <YFieldName>Ryegrass.HarvestedWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
@@ -11833,13 +11825,13 @@ namespace Models
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
         <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
+        <Line>Dash</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Results</TableName>
         <XFieldName>Date</XFieldName>
         <YFieldName>WhiteClover.HarvestedWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
