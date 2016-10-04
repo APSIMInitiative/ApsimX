@@ -2455,14 +2455,14 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
-            <ForEachSeries>true</ForEachSeries>
+            <ForEachSeries>false</ForEachSeries>
           </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -2573,7 +2573,7 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -2616,7 +2616,7 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Small</MarkerSize>
@@ -2638,7 +2638,7 @@ namespace Models
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -2677,14 +2677,14 @@ namespace Models
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
-            <ForEachSeries>true</ForEachSeries>
+            <ForEachSeries>false</ForEachSeries>
           </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -2727,7 +2727,7 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Small</MarkerSize>
@@ -2749,7 +2749,7 @@ namespace Models
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
