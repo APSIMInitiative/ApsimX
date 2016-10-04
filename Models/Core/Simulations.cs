@@ -17,6 +17,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
+    [ScopedModel]
     public class Simulations : Model
     {
         /// <summary>The _ file name</summary>

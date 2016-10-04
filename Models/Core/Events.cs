@@ -115,17 +115,15 @@ namespace Models.Core
         /// <param name="relativeTo">Modle to base scoping rules on.</param>
         private List<Publisher> FilterPublishersInScope(Subscriber relativeTo)
         {
-            IModel parentZone = Apsim.Parent(relativeTo.Model as IModel, typeof(Zone));
-
             // Try cache
             List<Publisher> publishersInScope;
-            if (cache.TryGetValue(parentZone, out publishersInScope))
+            if (cache.TryGetValue(relativeTo.Model as IModel, out publishersInScope))
                 return publishersInScope;
 
-            List<IModel> modelsInScope = scope.InScope(parentZone);
+            List<IModel> modelsInScope = scope.InScope(relativeTo.Model as IModel);
             publishersInScope = new List<Publisher>();
             publishersInScope = publishers.FindAll(publisher => modelsInScope.Contains(publisher.Model as IModel));
-            cache.Add(parentZone, publishersInScope);
+            cache.Add(relativeTo.Model as IModel, publishersInScope);
             return publishersInScope;
         }
 
@@ -255,7 +253,9 @@ namespace Models.Core
                 // The algorithm is to find the parent Zone of the specified model.
                 // Then return all children of this zone recursively and then recursively 
                 // the direct children of the parents of the zone.
-                IModel parentZone = Apsim.Parent(relativeTo, typeof(Zone));
+                IModel parentZone = FindScopedParentModel(relativeTo);
+                if (parentZone == null)
+                    throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
 
                 // return all models in zone and all direct children of zones parent.
                 modelsInScope = new List<IModel>();
@@ -264,13 +264,35 @@ namespace Models.Core
                 while (parentZone.Parent != null)
                 {
                     parentZone = parentZone.Parent;
-                    modelsInScope.AddRange(parentZone.Children);
+                    foreach (IModel child in parentZone.Children)
+                    {
+                        if (!modelsInScope.Contains(child))
+                            modelsInScope.Add(child);
+                    }
                 }
                 modelsInScope.Add(parentZone); // top level simulation
 
                 // add to cache for next time.
                 cache.Add(relativeTo, modelsInScope);
                 return modelsInScope;
+            }
+
+            /// <summary>
+            /// Find a parent of 'relativeTo' that has a [ScopedModel] attribute. 
+            /// Returns null if non found.
+            /// </summary>
+            /// <param name="relativeTo">The model to use as a base.</param>
+            private static IModel FindScopedParentModel(IModel relativeTo)
+            {
+                while (relativeTo.Parent != null)
+                {
+                    relativeTo = relativeTo.Parent;
+                    ScopedModelAttribute attribute = relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute;
+                    if (attribute != null)
+                        return relativeTo;
+                }
+
+                return null;
             }
         }
     }

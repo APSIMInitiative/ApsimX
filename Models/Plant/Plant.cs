@@ -56,6 +56,7 @@ namespace Models.PMF
     /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
+    [ScopedModel]
     public class Plant : ModelCollectionFromResource, ICrop
     {
         #region Class links
