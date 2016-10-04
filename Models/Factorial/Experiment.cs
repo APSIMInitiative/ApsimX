@@ -47,8 +47,9 @@ namespace Models.Factorial
                 Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
 
                 // Call OnLoaded in all models.
-                foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
-                    Apsim.CallEventHandler(child, "Loaded", null);
+                Events events = new Events();
+                events.AddModelEvents(newSimulation);
+                events.CallEventHandler(newSimulation, "Loaded", null);
 
                 foreach (FactorValue value in combination)
                     value.ApplyToSimulation(newSimulation);
@@ -127,8 +128,9 @@ namespace Models.Factorial
                     Simulations.MakeSubstitutions(parentSimulations, new List<Simulation> { newSimulation });
 
                     // Connect events and links in our new  simulation.
-                    foreach (Model child in Apsim.ChildrenRecursively(newSimulation))
-                        Apsim.CallEventHandler(child, "Loaded", null);
+                    Events events = new Events();
+                    events.AddModelEvents(newSimulation);
+                    events.CallEventHandler(newSimulation, "Loaded", null);
 
                     foreach (FactorValue value in combination)
                         value.ApplyToSimulation(newSimulation);

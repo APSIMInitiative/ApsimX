@@ -43,6 +43,60 @@ namespace Models.Core
                 publisher.DisconnectAll();
         }
 
+        /// <summary>
+        /// Scan a model and all child model for events and add the found publishers and subscribers
+        /// to the list of known events and handlers.
+        /// </summary>
+        /// <param name="model">The model to scan</param>
+        internal void AddModelEvents(IModel model)
+        {
+            // Get a complete list of all models in simulation (including the simulation itself).
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            if (publishers == null)
+            {
+                publishers = new List<Core.Events.Publisher>();
+                subscribers = new List<Core.Events.Subscriber>();
+            }
+            publishers.AddRange(Events.Publisher.FindAll(allModels));
+            subscribers.AddRange(Events.Subscriber.FindAll(allModels));
+        }
+
+        /// <summary>
+        /// Remove a model and all child model events and handlers from the list.
+        /// </summary>
+        /// <param name="model">The model to scan</param>
+        internal void RemoveModelEvents(IModel model)
+        {
+            // Get a complete list of all models in simulation (including the simulation itself).
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+
+            publishers.RemoveAll(publisher => allModels.Contains(publisher.Model as IModel));
+            subscribers.RemoveAll(subscriber => allModels.Contains(subscriber.Model as IModel));
+        }
+
+        /// <summary>
+        /// Call the specified event on the specified model and all child models.
+        /// </summary>
+        /// <param name="model">The model to call the event on</param>
+        /// <param name="eventName">The name of the event</param>
+        /// <param name="args">The event arguments. Can be null</param>
+        internal void CallEventHandler(IModel model, string eventName, object[] args)
+        {
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+
+            List<Subscriber> matches = subscribers.FindAll(subscriber => subscriber.Name == eventName &&
+                                                                         allModels.Contains(subscriber.Model as IModel));
+
+            foreach (Subscriber subscriber in matches)
+                subscriber.Invoke(args);
+        }
+
         /// <summary>Connect the specified subscriber to the closest publisher.</summary>
         /// <param name="subscriber">Subscriber to connect.</param>
         /// <param name="publishers">All publishers</param>
@@ -121,6 +175,14 @@ namespace Models.Core
                 return Delegate.CreateDelegate(handlerType, Model, methodInfo);
             }
 
+            /// <summary>
+            /// Call the event handler.
+            /// </summary>
+            /// <param name="args"></param>
+            internal void Invoke(object[] args)
+            {
+                methodInfo.Invoke(Model, args);
+            }
 
         }
 
