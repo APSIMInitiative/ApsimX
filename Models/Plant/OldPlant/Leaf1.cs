@@ -1112,11 +1112,12 @@ namespace Models.PMF.OldPlant
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhenologyChange">The phenology change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhenologyChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhenologyChange.NewPhaseName == "EmergenceToEndOfJuvenile")
+            if (phaseChange.NewPhaseName == "EmergenceToEndOfJuvenile")
             {
                 Live.StructuralWt = InitialWt * Population.Density;
                 Live.StructuralN = InitialNConcentration * Live.StructuralWt;

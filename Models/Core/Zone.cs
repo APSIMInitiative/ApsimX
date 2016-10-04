@@ -18,6 +18,7 @@ namespace Models.Core
     [Serializable]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
+    [ScopedModel]
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>
