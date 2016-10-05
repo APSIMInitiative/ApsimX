@@ -1458,7 +1458,7 @@ namespace Models
             <Name>Gliricidia</Name>
             <Operation>
               <Date>1992-09-01</Date>
-              <Action>Gliricidia.Sow(population: 1, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
+              <Action>[Gliricidia].Sow(population: 1, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
             </Operation>
             <Operation>
               <Date>1993-08-15</Date>
@@ -2505,7 +2505,7 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Small</MarkerSize>
@@ -2527,7 +2527,7 @@ namespace Models
           <ColourArgb>-16776961</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
