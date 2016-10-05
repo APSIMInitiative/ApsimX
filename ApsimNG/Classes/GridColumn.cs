@@ -213,10 +213,10 @@ namespace UserInterface.Classes
         {
             get
             {
-                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
-                if (label != null)
+                Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
+                if (button != null)
                 {
-                    Gdk.Color bg = label.Style.Backgrounds[0];
+                    Gdk.Color bg = button.Style.Backgrounds[0];
                     return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
                 }
                 else
@@ -225,9 +225,13 @@ namespace UserInterface.Classes
 
             set
             {
-                Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
-                if (label != null)
-                    label.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+                // I'm not sure why, but this DOES NOT WORK. It appears that buttons, like labels, don't
+                // really draw their own background.
+                Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
+                if (button != null)
+                {
+                   button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+                }
             }
         }
 

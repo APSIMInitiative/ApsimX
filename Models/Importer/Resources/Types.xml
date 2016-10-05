@@ -1425,11 +1425,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SimpleRoot">
+  <Type name="PerennialLeaf">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
-  </Type>
+  </Type>  
   <Type name="Biomass">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

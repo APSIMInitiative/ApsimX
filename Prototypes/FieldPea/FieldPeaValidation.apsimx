@@ -54,6 +54,10 @@
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <VariableReference>
+            <Name>ThermalTime1</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>15</ShootLag>
@@ -76,6 +80,10 @@
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>Emergence</Start>
           <End>StartFlowering</End>
         </NodeNumberPhase>
@@ -114,6 +122,10 @@
               <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
           <Start>StartFlowering</Start>
           <End>EndFlowering</End>
         </NodeNumberPhase>
@@ -925,6 +937,7 @@
         </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
       </Nodule>
       <GenericOrgan>
         <Name>Shell</Name>
@@ -1590,6 +1603,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </OrganBiomassRemovalType>
         </Folder>
         <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <Value>0.5</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>

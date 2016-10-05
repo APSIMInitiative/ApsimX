@@ -128,18 +128,17 @@ This is important in SLURP as it is set for each species to represent their diff
           <Value>50</Value>
           <Units>g/plant</Units>
         </Constant>
-		<Constant>
+		    <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
         <Constant>
-          <Constant>
-            <Name>PartitionFraction</Name>
-            <Value>0</Value>
-            <Units>0-1</Units>
-          </Constant>
-
+          <Name>PartitionFraction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
           <Name>SpecificRootLength</Name>
           <Value>40</Value>
           <Units>m/g</Units>

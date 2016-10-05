@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -437,10 +437,10 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>       
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <Constant>
           <Name>LaiDeadFunction</Name>
           <Value>0</Value>
@@ -812,10 +812,10 @@ DM demand is based on ...
           <Value>0.02</Value>
           <Units>gN/gDM</Units>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>		
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
           <XYPairs>
@@ -1053,11 +1053,11 @@ DM demand is based on ...
           <Value>0.02</Value>
           <Units>gN/gDM</Units>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>
-     	<PartitionFractionDemandFunction>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
@@ -1553,10 +1553,10 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>        
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <Value>0</Value>
