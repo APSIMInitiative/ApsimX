@@ -1430,11 +1430,6 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>  
-  <Type name="SimpleRoot">
-    <MetaData>
-      <ShowInMainTree>Yes</ShowInMainTree>
-    </MetaData>
-  </Type>
   <Type name="Biomass">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
