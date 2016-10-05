@@ -130,8 +130,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
         [XmlElement(typeof(Models.PMF.Organs.PerennialLeaf))]
-        [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
-        [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
