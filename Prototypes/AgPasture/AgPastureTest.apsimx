@@ -1192,15 +1192,15 @@ namespace Models
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
             <HeatRecoverySumDD>30</HeatRecoverySumDD>
-            <HeatRecoveryTreference>25</HeatRecoveryTreference>
+            <HeatRecoveryTReference>25</HeatRecoveryTReference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
             <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
-            <ColdRecoveryTreference>0</ColdRecoveryTreference>
+            <ColdRecoveryTReference>0</ColdRecoveryTReference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
-            <RespirationTreference>20</RespirationTreference>
+            <RespirationTReference>20</RespirationTReference>
             <RespirationExponent>1.5</RespirationExponent>
             <NThresholdsForLeaves>
               <double>0.04</double>
@@ -1222,7 +1222,7 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <TargetSRratio>3</TargetSRratio>
+            <TargetShootRootRatio>3</TargetShootRootRatio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -1260,10 +1260,10 @@ namespace Models
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
             <GlfSoilFertility>1</GlfSoilFertility>
-            <MinimumPlantHeight>25</MinimumPlantHeight>
-            <MaximumPlantHeight>600</MaximumPlantHeight>
-            <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <PlantHeightMinimum>25</PlantHeightMinimum>
+            <PlantHeightMaximum>600</PlantHeightMaximum>
+            <PlantHeightMassForMax>10000</PlantHeightMassForMax>
+            <PlantHeightExponent>2.8</PlantHeightExponent>
             <RootDepthMinimum>50</RootDepthMinimum>
             <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
@@ -1302,15 +1302,15 @@ namespace Models
             <HeatOnsetTemperature>30</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
             <HeatRecoverySumDD>20</HeatRecoverySumDD>
-            <HeatRecoveryTreference>25</HeatRecoveryTreference>
+            <HeatRecoveryTReference>25</HeatRecoveryTReference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
             <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>30</ColdRecoverySumDD>
-            <ColdRecoveryTreference>0</ColdRecoveryTreference>
+            <ColdRecoveryTReference>0</ColdRecoveryTReference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
-            <RespirationTreference>20</RespirationTreference>
+            <RespirationTReference>20</RespirationTReference>
             <RespirationExponent>1.5</RespirationExponent>
             <NThresholdsForLeaves>
               <double>0.045</double>
@@ -1332,7 +1332,7 @@ namespace Models
               <double>0.01</double>
               <double>0.0275</double>
             </NThresholdsForRoots>
-            <TargetSRratio>4</TargetSRratio>
+            <TargetShootRootRatio>4</TargetShootRootRatio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -1370,10 +1370,10 @@ namespace Models
             <NDillutionCoefficient>1</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
             <GlfSoilFertility>1</GlfSoilFertility>
-            <MinimumPlantHeight>25</MinimumPlantHeight>
-            <MaximumPlantHeight>450</MaximumPlantHeight>
-            <MassForMaximumHeight>8000</MassForMaximumHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <PlantHeightMinimum>25</PlantHeightMinimum>
+            <PlantHeightMaximum>450</PlantHeightMaximum>
+            <PlantHeightMassForMax>8000</PlantHeightMassForMax>
+            <PlantHeightExponent>2.8</PlantHeightExponent>
             <RootDepthMinimum>50</RootDepthMinimum>
             <RootDepthMaximum>350</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
@@ -1456,6 +1456,9 @@ namespace Models
             <string>[Sward].WhiteClover.GlfWaterSupply as WhiteClover.GlfWaterSupply</string>
             <string>[Sward].Ryegrass.GlfNSupply as Ryegrass.GlfNSupply</string>
             <string>[Sward].WhiteClover.GlfNSupply as WhiteClover.GlfNSupply</string>
+            <string>[Weather].Radn</string>
+            <string>[Sward].Ryegrass.InterceptedRadn</string>
+            <string>[Sward].WhiteClover.InterceptedRadn</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -4095,15 +4098,15 @@ namespace Models
             <HeatOnsetTemperature>28</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
             <HeatRecoverySumDD>30</HeatRecoverySumDD>
-            <HeatRecoveryTreference>25</HeatRecoveryTreference>
+            <HeatRecoveryTReference>25</HeatRecoveryTReference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
             <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>20</ColdRecoverySumDD>
-            <ColdRecoveryTreference>0</ColdRecoveryTreference>
+            <ColdRecoveryTReference>0</ColdRecoveryTReference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
-            <RespirationTreference>20</RespirationTreference>
+            <RespirationTReference>20</RespirationTReference>
             <RespirationExponent>1.5</RespirationExponent>
             <NThresholdsForLeaves>
               <double>0.04</double>
@@ -4125,7 +4128,7 @@ namespace Models
               <double>0.006</double>
               <double>0.025</double>
             </NThresholdsForRoots>
-            <TargetSRratio>3</TargetSRratio>
+            <TargetShootRootRatio>3</TargetShootRootRatio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -4163,10 +4166,10 @@ namespace Models
             <NDillutionCoefficient>0.5</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
             <GlfSoilFertility>1</GlfSoilFertility>
-            <MinimumPlantHeight>25</MinimumPlantHeight>
-            <MaximumPlantHeight>600</MaximumPlantHeight>
-            <MassForMaximumHeight>10000</MassForMaximumHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <PlantHeightMinimum>25</PlantHeightMinimum>
+            <PlantHeightMaximum>600</PlantHeightMaximum>
+            <PlantHeightMassForMax>10000</PlantHeightMassForMax>
+            <PlantHeightExponent>2.8</PlantHeightExponent>
             <RootDepthMinimum>50</RootDepthMinimum>
             <RootDepthMaximum>750</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
@@ -4205,15 +4208,15 @@ namespace Models
             <HeatOnsetTemperature>30</HeatOnsetTemperature>
             <HeatFullTemperature>35</HeatFullTemperature>
             <HeatRecoverySumDD>20</HeatRecoverySumDD>
-            <HeatRecoveryTreference>25</HeatRecoveryTreference>
+            <HeatRecoveryTReference>25</HeatRecoveryTReference>
             <UseColdStressFactor>yes</UseColdStressFactor>
             <ColdOnsetTemperature>0</ColdOnsetTemperature>
             <ColdFullTemperature>-3</ColdFullTemperature>
             <ColdRecoverySumDD>30</ColdRecoverySumDD>
-            <ColdRecoveryTreference>0</ColdRecoveryTreference>
+            <ColdRecoveryTReference>0</ColdRecoveryTReference>
             <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
             <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
-            <RespirationTreference>20</RespirationTreference>
+            <RespirationTReference>20</RespirationTReference>
             <RespirationExponent>1.5</RespirationExponent>
             <NThresholdsForLeaves>
               <double>0.045</double>
@@ -4235,7 +4238,7 @@ namespace Models
               <double>0.01</double>
               <double>0.0275</double>
             </NThresholdsForRoots>
-            <TargetSRratio>4</TargetSRratio>
+            <TargetShootRootRatio>4</TargetShootRootRatio>
             <MaxRootAllocation>0.25</MaxRootAllocation>
             <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
             <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -4273,10 +4276,10 @@ namespace Models
             <NDillutionCoefficient>1</NDillutionCoefficient>
             <GlfGeneric>1</GlfGeneric>
             <GlfSoilFertility>1</GlfSoilFertility>
-            <MinimumPlantHeight>25</MinimumPlantHeight>
-            <MaximumPlantHeight>450</MaximumPlantHeight>
-            <MassForMaximumHeight>8000</MassForMaximumHeight>
-            <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+            <PlantHeightMinimum>25</PlantHeightMinimum>
+            <PlantHeightMaximum>450</PlantHeightMaximum>
+            <PlantHeightMassForMax>8000</PlantHeightMassForMax>
+            <PlantHeightExponent>2.8</PlantHeightExponent>
             <RootDepthMinimum>50</RootDepthMinimum>
             <RootDepthMaximum>350</RootDepthMaximum>
             <RootElongationRate>10</RootElongationRate>
@@ -7289,15 +7292,15 @@ namespace Models
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
           <HeatRecoverySumDD>30</HeatRecoverySumDD>
-          <HeatRecoveryTreference>25</HeatRecoveryTreference>
+          <HeatRecoveryTReference>25</HeatRecoveryTReference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
           <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
-          <ColdRecoveryTreference>0</ColdRecoveryTreference>
+          <ColdRecoveryTReference>0</ColdRecoveryTReference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
-          <RespirationTreference>20</RespirationTreference>
+          <RespirationTReference>20</RespirationTReference>
           <RespirationExponent>1.5</RespirationExponent>
           <NThresholdsForLeaves>
             <double>0.04</double>
@@ -7319,7 +7322,7 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <TargetSRratio>3</TargetSRratio>
+          <TargetShootRootRatio>3</TargetShootRootRatio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
           <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -7357,10 +7360,10 @@ namespace Models
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
           <GlfSoilFertility>1</GlfSoilFertility>
-          <MinimumPlantHeight>25</MinimumPlantHeight>
-          <MaximumPlantHeight>600</MaximumPlantHeight>
-          <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <PlantHeightMinimum>25</PlantHeightMinimum>
+          <PlantHeightMaximum>600</PlantHeightMaximum>
+          <PlantHeightMassForMax>10000</PlantHeightMassForMax>
+          <PlantHeightExponent>2.8</PlantHeightExponent>
           <RootDepthMinimum>50</RootDepthMinimum>
           <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
@@ -7399,15 +7402,15 @@ namespace Models
           <HeatOnsetTemperature>30</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
           <HeatRecoverySumDD>20</HeatRecoverySumDD>
-          <HeatRecoveryTreference>25</HeatRecoveryTreference>
+          <HeatRecoveryTReference>25</HeatRecoveryTReference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
           <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>30</ColdRecoverySumDD>
-          <ColdRecoveryTreference>0</ColdRecoveryTreference>
+          <ColdRecoveryTReference>0</ColdRecoveryTReference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
-          <RespirationTreference>20</RespirationTreference>
+          <RespirationTReference>20</RespirationTReference>
           <RespirationExponent>1.5</RespirationExponent>
           <NThresholdsForLeaves>
             <double>0.045</double>
@@ -7429,7 +7432,7 @@ namespace Models
             <double>0.01</double>
             <double>0.0275</double>
           </NThresholdsForRoots>
-          <TargetSRratio>4</TargetSRratio>
+          <TargetShootRootRatio>4</TargetShootRootRatio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
           <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -7467,10 +7470,10 @@ namespace Models
           <NDillutionCoefficient>1</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
           <GlfSoilFertility>1</GlfSoilFertility>
-          <MinimumPlantHeight>25</MinimumPlantHeight>
-          <MaximumPlantHeight>450</MaximumPlantHeight>
-          <MassForMaximumHeight>8000</MassForMaximumHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <PlantHeightMinimum>25</PlantHeightMinimum>
+          <PlantHeightMaximum>450</PlantHeightMaximum>
+          <PlantHeightMassForMax>8000</PlantHeightMassForMax>
+          <PlantHeightExponent>2.8</PlantHeightExponent>
           <RootDepthMinimum>50</RootDepthMinimum>
           <RootDepthMaximum>350</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
@@ -9969,15 +9972,15 @@ namespace Models
           <HeatOnsetTemperature>28</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
           <HeatRecoverySumDD>30</HeatRecoverySumDD>
-          <HeatRecoveryTreference>25</HeatRecoveryTreference>
+          <HeatRecoveryTReference>25</HeatRecoveryTReference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
           <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>20</ColdRecoverySumDD>
-          <ColdRecoveryTreference>0</ColdRecoveryTreference>
+          <ColdRecoveryTReference>0</ColdRecoveryTReference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
-          <RespirationTreference>20</RespirationTreference>
+          <RespirationTReference>20</RespirationTReference>
           <RespirationExponent>1.5</RespirationExponent>
           <NThresholdsForLeaves>
             <double>0.04</double>
@@ -9999,7 +10002,7 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <TargetSRratio>3</TargetSRratio>
+          <TargetShootRootRatio>3</TargetShootRootRatio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
           <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -10037,10 +10040,10 @@ namespace Models
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
           <GlfSoilFertility>1</GlfSoilFertility>
-          <MinimumPlantHeight>25</MinimumPlantHeight>
-          <MaximumPlantHeight>600</MaximumPlantHeight>
-          <MassForMaximumHeight>10000</MassForMaximumHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <PlantHeightMinimum>25</PlantHeightMinimum>
+          <PlantHeightMaximum>600</PlantHeightMaximum>
+          <PlantHeightMassForMax>10000</PlantHeightMassForMax>
+          <PlantHeightExponent>2.8</PlantHeightExponent>
           <RootDepthMinimum>50</RootDepthMinimum>
           <RootDepthMaximum>750</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>
@@ -10079,15 +10082,15 @@ namespace Models
           <HeatOnsetTemperature>30</HeatOnsetTemperature>
           <HeatFullTemperature>35</HeatFullTemperature>
           <HeatRecoverySumDD>20</HeatRecoverySumDD>
-          <HeatRecoveryTreference>25</HeatRecoveryTreference>
+          <HeatRecoveryTReference>25</HeatRecoveryTReference>
           <UseColdStressFactor>yes</UseColdStressFactor>
           <ColdOnsetTemperature>0</ColdOnsetTemperature>
           <ColdFullTemperature>-3</ColdFullTemperature>
           <ColdRecoverySumDD>30</ColdRecoverySumDD>
-          <ColdRecoveryTreference>0</ColdRecoveryTreference>
+          <ColdRecoveryTReference>0</ColdRecoveryTReference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
           <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
-          <RespirationTreference>20</RespirationTreference>
+          <RespirationTReference>20</RespirationTReference>
           <RespirationExponent>1.5</RespirationExponent>
           <NThresholdsForLeaves>
             <double>0.045</double>
@@ -10109,7 +10112,7 @@ namespace Models
             <double>0.01</double>
             <double>0.0275</double>
           </NThresholdsForRoots>
-          <TargetSRratio>4</TargetSRratio>
+          <TargetShootRootRatio>4</TargetShootRootRatio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
           <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -10147,10 +10150,10 @@ namespace Models
           <NDillutionCoefficient>1</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
           <GlfSoilFertility>1</GlfSoilFertility>
-          <MinimumPlantHeight>25</MinimumPlantHeight>
-          <MaximumPlantHeight>450</MaximumPlantHeight>
-          <MassForMaximumHeight>8000</MassForMaximumHeight>
-          <ExponentHeightFromMass>2.8</ExponentHeightFromMass>
+          <PlantHeightMinimum>25</PlantHeightMinimum>
+          <PlantHeightMaximum>450</PlantHeightMaximum>
+          <PlantHeightMassForMax>8000</PlantHeightMassForMax>
+          <PlantHeightExponent>2.8</PlantHeightExponent>
           <RootDepthMinimum>50</RootDepthMinimum>
           <RootDepthMaximum>350</RootDepthMaximum>
           <RootElongationRate>10</RootElongationRate>

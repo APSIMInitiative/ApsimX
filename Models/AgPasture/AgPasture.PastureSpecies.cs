@@ -731,15 +731,15 @@ namespace Models.AgPasture
         }
 
         /// <summary>Reference temperature for recovery from heat stress (oC).</summary>
-        private double myHeatRecoveryTreference = 25.0;
+        private double myHeatRecoveryTReference = 25.0;
 
         /// <summary>Gets or sets the reference temperature for recovery from heat stress (oC).</summary>
         [Description("Reference temperature for recovery from heat stress [oC]:")]
         [Units("oC")]
-        public double HeatRecoveryTreference
+        public double HeatRecoveryTReference
         {
-            get { return myHeatRecoveryTreference; }
-            set { myHeatRecoveryTreference = value; }
+            get { return myHeatRecoveryTReference; }
+            set { myHeatRecoveryTReference = value; }
         }
 
         /// <summary>Flag whether photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
@@ -6005,7 +6005,7 @@ namespace Models.AgPasture
                     recoveryFactor = (1.0 - heatFactor) * (cumulativeDDHeat / myHeatRecoverySumDD);
 
                 // accumulate temperature
-                cumulativeDDHeat += Math.Max(0.0, myHeatRecoveryTreference - Tmean(0.5));
+                cumulativeDDHeat += Math.Max(0.0, myHeatRecoveryTReference - Tmean(0.5));
 
                 // heat stress
                 highTempStress = Math.Min(1.0, heatFactor + recoveryFactor);
@@ -6366,6 +6366,7 @@ namespace Models.AgPasture
             double layerFrac = Math.Min(1.0, (myRootDepthMaximum - topLayersDepth) / (roots.Depth - topLayersDepth));
             cumProportion += roots.TargetDistribution[roots.BottomLayer] * layerFrac;
 
+            // Normalise the weights to be a fraction, adds up to one
             if (cumProportion > Epsilon)
             {
                 for (int layer = 0; layer < roots.BottomLayer; layer++)
