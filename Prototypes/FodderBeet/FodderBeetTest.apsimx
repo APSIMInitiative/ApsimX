@@ -209,7 +209,9 @@
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -302,6 +304,8 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>50</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -743,6 +747,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -758,7 +767,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -824,10 +832,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>MinimumNConc</Name>
           <Value>0.005</Value>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>PreEmerge</Start>
@@ -954,8 +962,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>Bulb</Name>
@@ -963,10 +974,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
         </Constant>
-		<Constant>
-		  <Name>NReallocationFactor</Name>
-		  <Value>0</Value>
-		</Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
@@ -1057,28 +1068,28 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
-	 <Constant>
-	   <Name>SenescenceRate</Name>
-	   <Value>0</Value>
-	   <Units>/d</Units>
-	 </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
@@ -1184,23 +1195,23 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1497,7 +1508,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -1530,6 +1540,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
               <double>0.55</double>
               <double>0.55</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1663,6 +1674,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FodderBeet</Name>
@@ -1688,6 +1700,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>

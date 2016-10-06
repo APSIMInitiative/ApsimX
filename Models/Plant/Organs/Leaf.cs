@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
 using Models.Core;
 using Models.PMF.Functions;
-using Models.PMF.Functions.SupplyFunctions;
-using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
@@ -291,9 +287,6 @@ namespace Models.PMF.Organs
         //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
         //Variables that represent the number of primordia or nodes (double) in a particular state on an individual mainstem are called number variables (e.g NodeNo or PrimordiaNo suffix)
         //Variables that the number of leaves on a plant or a primary bud have Plant or Primary bud prefixes
-
-        /// <summary>Return the</summary>
-            public double GrowthRespiration { get; set;  }
 
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove

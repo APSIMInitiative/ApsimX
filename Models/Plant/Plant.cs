@@ -56,6 +56,7 @@ namespace Models.PMF
     /// </remarks>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
+    [ScopedModel]
     public class Plant : ModelCollectionFromResource, ICrop
     {
         #region Class links
@@ -263,11 +264,12 @@ namespace Models.PMF
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhaseChange">The phase change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (Phenology != null && Leaf != null && AboveGround != null)
+            if (sender == this && Phenology != null && Leaf != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
                 if (Leaf != null)

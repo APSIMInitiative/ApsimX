@@ -99,6 +99,8 @@ namespace Models
         public event EventHandler DoReport;
         /// <summary> Process stock methods in GrazPlan Stock </summary>
         public event EventHandler DoStock;
+        /// <summary> Process a Pest and Disease lifecycle object </summary>
+        public event EventHandler DoLifecycle;
 
 
         /// <summary>WholeFarm Activities Request Resources for this month</summary>
@@ -251,6 +253,9 @@ namespace Models
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
+
+                if (DoLifecycle != null)
+                    DoLifecycle.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);

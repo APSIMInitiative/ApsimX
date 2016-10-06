@@ -174,7 +174,6 @@ namespace UserInterface.Views
             this.plot1.Model.Annotations.Clear();
             //modLMC - 11/05/2016 - Need to clear the chart title as well
             this.FormatTitle("");
-
         }
 
         /// <summary>
@@ -750,7 +749,7 @@ namespace UserInterface.Views
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
                 // Create data points
-                for (int i = 0; i < xValues.Length; i++)
+                for (int i = 0; i < Math.Min(xValues.Length,yValues.Length); i++)
                     if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                         points.Add(new DataPoint(xValues[i], yValues[i]));
 
@@ -1064,7 +1063,7 @@ namespace UserInterface.Views
             {
                 if (e.ClickCount == 1 && SingleClick != null)
                     SingleClick.Invoke(this, e);
-                else /// Enable this when OxyPlot is fixed if (e.ClickCount == 2)  
+                else if (e.ClickCount == 2)  
                     OnMouseDoubleClick(sender, e);
             }
         }

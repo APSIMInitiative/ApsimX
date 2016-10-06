@@ -25,8 +25,10 @@
         {
             // Call the all completed event in all models
             object[] args = new object[] { this, new EventArgs() };
-            foreach (Model childModel in Apsim.ChildrenRecursively(simulations))
-                Apsim.CallEventHandler(childModel, "AllCompleted", args);
+
+            Events events = new Events();
+            events.AddModelEvents(simulations);
+            events.CallEventHandler(simulations, "AllCompleted", args);
         }
     }
 }
