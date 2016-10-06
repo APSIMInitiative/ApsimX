@@ -22,13 +22,17 @@ namespace Models.Lifecycle
         /// </summary>
         PhysiologicalGrowth,
         /// <summary>
-        /// Reproduction process that creates new numbers for a new cohort in the linked lifestage
-        /// </summary>
-        Reproduction,
-        /// <summary>
         /// Calculates and adjusts the cohort numbers based on a mortality function
         /// </summary>
         Mortality
+    }
+
+    /// <summary>
+    /// The general description of a lifestage process. A Lifestage can contain a number of these.
+    /// </summary>
+    interface ILifestageProcess 
+    {
+        void ProcessCohort(Cohort cohortItem);
     }
 
     /// <summary>
@@ -38,10 +42,8 @@ namespace Models.Lifecycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Lifestage))]
-    public class LifestageProcess : Model
+    public class LifestageProcess : Model, ILifestageProcess
     {
-        private IFunction ProgenyFunc = null;
-        private IFunction FecundityFunc = null;
         /// <summary>
         /// 
         /// </summary>
@@ -53,18 +55,6 @@ namespace Models.Lifecycle
         /// </summary>
         [Description("Transfer to Lifestage")]
         public string TransferTo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("Reproduction - Fecundity function name")]
-        public string FecundityFunctionName { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Description("Reproduction - Progeny production function name")]
-        public string  ProgenyFunctonName{ get; set; }
 
         [NonSerialized]
         private List<IFunction> FunctionList;
@@ -97,36 +87,6 @@ namespace Models.Lifecycle
                     //kill some creatures
                     cohortItem.Count = cohortItem.Count * (1 - func.Value);
                 }
-                else if (ProcessAction == ProcessType.Reproduction)
-                {
-                    if (FecundityFunc != null && ProgenyFunc != null)
-                    {
-                        if (cohortItem.Fecundity < 0)
-                            cohortItem.Fecundity = FecundityFunc.Value;
-                        double progenyrate = ProgenyFunc.Value;
-
-                        if (cohortItem.Fecundity > 0)
-                        {
-                            //number of Progeny produced per individual per timestep
-                            double progenyRate = Math.Max(0.0, Math.Min(cohortItem.Fecundity, progenyrate));
-                            if (progenyRate > 0)
-                            {
-                                double numberToCreate = cohortItem.Count * progenyRate;
-                                if (numberToCreate > 0)
-                                {
-                                    //transfer magic here
-                                    Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
-                                    cohortItem.OwningStage.Reproduce(cohortItem, destStage, numberToCreate);
-                                }
-                                cohortItem.Fecundity -= progenyRate;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Fecundity and Progeny functions must be configured for " + this.Name + " lifestage");
-                    }
-                }
             }
         }
         
@@ -142,15 +102,6 @@ namespace Models.Lifecycle
             foreach (IFunction func in Apsim.Children(this, typeof(IFunction)))
             {
                 FunctionList.Add(func);
-                // store the specific functions for use later in ProcessCohort()
-                if (String.Compare(((IModel)func).Name, FecundityFunctionName, true) == 0)
-                {
-                    FecundityFunc = func;
-                }
-                else if (String.Compare(((IModel)func).Name, ProgenyFunctonName, true) == 0)
-                {
-                    ProgenyFunc = func;
-                }
             }
         }
     }
