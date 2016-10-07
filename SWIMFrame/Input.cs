@@ -39,8 +39,12 @@ namespace SWIMFrame
         static double[,] isopar; //2 params (nt,2)
 
         //public static void Setup()
-        public static void Main_(string[] args)
+        public static void Main(string[] args)
         {
+            Soil.SoilProperties = new Dictionary<string, SoilProps>();
+            Fluxes.FluxTables = new Dictionary<string, FluxTable>();
+            Program.GenerateFlux();
+
             c0 = new double[ns + 1];
             cin = new double[ns + 1];
             h = new double[n + 1];

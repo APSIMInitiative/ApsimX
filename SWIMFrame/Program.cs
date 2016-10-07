@@ -9,9 +9,14 @@ using System.Xml.Serialization;
 
 namespace SWIMFrame
 {
+    /// <summary>
+    /// Originally stand alone flux table generation code.
+    /// Now integrated into Input.cs.
+    /// Likely won't be need once APSIM inputs are coded.
+    /// </summary>
     class Program
     {
-        static void Main(string[] args)
+        public static void GenerateFlux()
         {
 
             MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);
@@ -50,42 +55,25 @@ namespace SWIMFrame
             dz[1, 4] = 40;
             for (i = 0; i < 2; i++)
             {
-                BinaryWriter b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + ".dat"));
                 MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
                 soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven);
-                WriteProps(b, soils[i].sp);
-                b.Close();
+                Soil.SoilProperties.Add("soil" + soils[i].sid, soils[i].sp);
                 for (j = 0; j <= ndz[i]; j++)
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp);
-                    b = new BinaryWriter(File.OpenWrite("soil" + soils[i].sid + "dz" + (dz[i, j] * 10) + ".dat"));
-                    Fluxes.WriteFluxTable(b, Fluxes.ft);
-                    b.Close();
+                    Fluxes.FluxTables.Add("soil" + soils[i].sid + "dz" + (dz[i, j] * 10), Fluxes.ft);
                 }
             }
             Fluxes.WriteDiags();
 
             //generate and write composite flux table for path with two soil types
-            sp1 = Soil.ReadProps("soil103.dat");
-            sp2 = Soil.ReadProps("soil109.dat");
-            ft1 = Fluxes.ReadFluxTable("soil103dz50.dat");
-            ft2 = Fluxes.ReadFluxTable("soil109dz100.dat");
+            sp1 = Soil.ReadProps("soil103");
+            sp2 = Soil.ReadProps("soil109");
+            ft1 = Fluxes.ReadFluxTable("soil103dz50");
+            ft2 = Fluxes.ReadFluxTable("soil109dz100");
 
             FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
-            BinaryWriter bw = new BinaryWriter(File.OpenWrite("soil0103dz0050_soil0109dz0100.dat"));
-            Fluxes.WriteFluxTable(bw, ftwo);
-        }
-
-        private static void WriteProps(BinaryWriter b, SoilProps soilProps)
-        {
-            byte[] bytes;
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, soilProps);
-                bytes = stream.ToArray();
-            }
-            b.Write(bytes);
+            Fluxes.FluxTables.Add("soil0103dz0050_soil0109dz0100", ftwo);
         }
     }
 }

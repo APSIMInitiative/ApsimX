@@ -9,9 +9,12 @@ using System.IO; //debug
 
 namespace SWIMFrame
 {
-     // Calculates flux tables given soil properties and path lengths.
+    // Calculates flux tables given soil properties and path lengths.
     public class Fluxes
     {
+        /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
+        public static Dictionary<string, FluxTable> FluxTables {get;set;}
+
         public static FluxTable ft = new FluxTable();
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
@@ -55,7 +58,6 @@ namespace SWIMFrame
             // Generates a flux table for use by other programs.
             // Assumes soil props available in sp of module soil.
             // dz - path length.
-
 
             //diags - timer start here
             sp = props;
@@ -618,47 +620,10 @@ namespace SWIMFrame
 
         public static FluxTable ReadFluxTable(string file)
         {
-            FluxTable ft = new FluxTable();
-            string path = @"C:\ApsimX\SWIMFrame\bin\" + file;
-            using (BinaryReader b = new BinaryReader(File.OpenRead(path)))
-            {
-                int nFluxEnd;
-                int nphif;
-                int[] nFluxTable = new int[2];
-
-                //read number of FluxEnds
-                nFluxEnd = b.ReadInt32();
-
-                //read FluxEnds
-                FluxEnd[] fe = new FluxEnd[nFluxEnd];
-                for (int i = 0; i < nFluxEnd; i++)
-                {
-                    fe[i].sid = b.ReadInt32();
-                    fe[i].nfu = b.ReadInt32();
-                    fe[i].nft = b.ReadInt32();
-                    nphif = b.ReadInt32();
-                    fe[i].phif = new double[nphif];
-                    for (int j = 0; j < nphif; j++)
-                        fe[i].phif[j] = b.ReadDouble();
-                    fe[i].dz = b.ReadDouble();
-                }
-                ft.fend = fe;
-
-                // read flux table
-                nFluxTable[0] = b.ReadInt32();
-                nFluxTable[1] = b.ReadInt32();
-                double[,] ftable = new double[nFluxTable[0], nFluxTable[1]];
-                for (int i = 0; i < nFluxTable[0]; i++)
-                    for (int j = 0; j < nFluxTable[1]; j++)
-                        ftable[i, j] = b.ReadDouble();
-                ft.ftable = ftable;
-            }
-
-            return ft;
+            return FluxTables[file];
         }
     }
-
-
+    
     //  sid - soil ident
     //  nfu, nft - no. of fluxes unsat and total
     //  dz - path length

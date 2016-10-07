@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -23,7 +24,10 @@ namespace SWIMFrame
  */
     public static class Soil
     {
-        /* ! soilprops - derived type definition for properties.
+        /// <summary>A collection of soil properties.</summary>
+        public static Dictionary<string, SoilProps> SoilProperties { get; set; }
+
+      /* ! soilprops - derived type definition for properties.
          ! gensptbl  - subroutine to generate the property values.
          ! sp        - variable of type soilprops containing the properties.
         */
@@ -305,14 +309,7 @@ namespace SWIMFrame
 
         public static SoilProps ReadProps(string file)
         {
-            SoilProps sp;
-            string path = @"C:\ApsimX\SWIMFrame\bin\" + file;
-            using (Stream stream = File.Open(path, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                sp = (SoilProps)formatter.Deserialize(stream);
-            }
-            return sp;
+            return SoilProperties[file];
         }
     }
 
