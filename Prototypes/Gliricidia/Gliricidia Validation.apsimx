@@ -2561,12 +2561,12 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>AboveGroundWt PvsO</Name>
+        <Name>Maize AboveGroundWt PvsO</Name>
         <Series>
           <Name>PvsO</Name>
           <Regression>
             <Name>Regression</Name>
-            <ForEachSeries>true</ForEachSeries>
+            <ForEachSeries>false</ForEachSeries>
           </Regression>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
@@ -4365,7 +4365,7 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopRight</LegendPosition>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
@@ -4458,6 +4458,10 @@ namespace Models
           </Operations>
           <Operations>
             <Name>02Month</Name>
+            <Operation>
+              <Date>1996-04-29</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
             <Operation>
               <Date>1996-06-20</Date>
               <Action>[Gliricidia].Harvest()</Action>
