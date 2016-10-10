@@ -459,23 +459,23 @@ namespace SWIMFrame
 
             // qi5(1:i:2,1:j:2)=qp(1:nft[1],1:nft[2])
             for (int a = 1; a < 101; a += 2)
-                for (int j = 1; j < 101; j += 2)
-                    qi5[j, a] = qp[j / 2 + 1, a / 2 + 1];
+                for (int b = 1; b < 101; b += 2)
+                    qi5[b, a] = qp[b / 2 + 1, a / 2 + 1];
 
-            // qi5(1:a: 2, 2:j: 2) = qi1(1:nft[1], 1:nfi[2])
+            // qi5(1:a: 2, 2:b: 2) = qi1(1:nft[1], 1:nfi[2])
             for (int a = 1; a < 101; a += 2)
-                for (int j = 2; j < 101; j += 2)
-                    qi5[j, a] = qi1[(j-1) / 2 + 1, a / 2 + 1];
+                for (int b = 2; b < 101; b += 2)
+                    qi5[b, a] = qi1[(b-1) / 2 + 1, a / 2 + 1];
 
-            // qi5(2:a:2,1:j:2)=qi2(1:nfi[1],1:nft[2])
+            // qi5(2:a:2,1:b:2)=qi2(1:nfi[1],1:nft[2])
             for (int a = 2; a < 101; a += 2)
-                for (int j = 1; j < 101; j += 2)
-                    qi5[j, a] = qi2[j / 2 + 1, (a - 1) / 2 + 1];
+                for (int b = 1; b < 101; b += 2)
+                    qi5[b, a] = qi2[b / 2 + 1, (a - 1) / 2 + 1];
 
-            // qi5(2:a:2,2:j:2)=qi3(1:nfi[1],1:nfi[2])
+            // qi5(2:a:2,2:b:2)=qi3(1:nfi[1],1:nfi[2])
             for (int a = 2; a < 101; a += 2)
-                for (int j = 2; j < 101; j += 2)
-                    qi5[j, a] = qi3[(j - 1) / 2 + 1, (a - 1) / 2 + 1];
+                for (int b = 2; b < 101; b += 2)
+                    qi5[b, a] = qi3[(b - 1) / 2 + 1, (a - 1) / 2 + 1];
 
             // phii5(1, 1:a: 2) = phif(1, 1:nft[1])
             for (int a = 1; a < 101; a += 2)
@@ -485,11 +485,11 @@ namespace SWIMFrame
             for (int a = 2; a < 101; a += 2)
                 phii5[a, 1] = phifi[(a - 1) / 2 + 1, 1];
 
-            // phii5(2,1:j:2)=phif(2,1:nft[2])
+            // phii5(2,1:b:2)=phif(2,1:nft[2])
             for (int a = 1; a < 101; a += 2)
                 phii5[a, 2] = phif[a / 2 + 1, 2];
 
-            // phii5(2,2:j:2)=phifi(2,1:nfi[2])
+            // phii5(2,2:b:2)=phifi(2,1:nfi[2])
             for (int a = 2; a < 101; a += 2)
                 phii5[a, 2] = phifi[(a-1) / 2 + 1, 2];
 

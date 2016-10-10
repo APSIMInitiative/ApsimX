@@ -47,9 +47,9 @@ namespace SWIMFrame
             dx = MathUtilities.Subtract(x.Slice(2, n), x.Slice(1, n - 1));
 
             //  Set up locations in soil, path, S and phi arrays.
-            for (int x = 1; x < philoc.GetLength(0); x++)
-                for (int y = 1; y < philoc.GetLength(1); y++)
-                    philoc[x, y] = 1;
+            for (int a = 1; a < philoc.GetLength(0); a++)
+                for (int b = 1; b < philoc.GetLength(1); b++)
+                    philoc[a, b] = 1;
 
             // Get ns different soil idents in array isoil.
             isoil = sid.Skip(1).Distinct().ToArray();
