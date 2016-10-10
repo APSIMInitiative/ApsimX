@@ -163,7 +163,7 @@ namespace SWIMFrame
 
         public static void WriteLog()
         {
-            System.IO.File.WriteAllText(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\log.txt", sb.ToString());
+          //  System.IO.File.WriteAllText(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\log.txt", sb.ToString());
         }
     }
 }
