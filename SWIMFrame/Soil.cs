@@ -307,9 +307,9 @@ namespace SWIMFrame
             return co;
         }
 
-        public static SoilProps ReadProps(string file)
+        public static SoilProps ReadProps(string key)
         {
-            return SoilProperties[file];
+            return SoilProperties[key];
         }
     }
 

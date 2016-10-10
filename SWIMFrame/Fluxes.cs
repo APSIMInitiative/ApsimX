@@ -222,12 +222,12 @@ namespace SWIMFrame
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
-            for (int i = 1;i <= nphif;i++)
+            for (i = 1; i <= nphif;i++)
             {
                 phii5[i * 2 - 1] = phii51[i];
             }
 
-            for (int i = 1; i <= ni; i++)
+            for (i = 1; i <= ni; i++)
             {
                 phii5[i * 2] = phii52[i];
             }
@@ -618,9 +618,9 @@ namespace SWIMFrame
                     b.Write(ft.ftable[i, j]);
         }
 
-        public static FluxTable ReadFluxTable(string file)
+        public static FluxTable ReadFluxTable(string key)
         {
-            return FluxTables[file];
+            return FluxTables[key];
         }
     }
     

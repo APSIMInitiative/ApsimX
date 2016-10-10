@@ -14,7 +14,7 @@ namespace SWIMFrame
     /// Now integrated into Input.cs.
     /// Likely won't be need once APSIM inputs are coded.
     /// </summary>
-    class Program
+    public class Program
     {
         public static void GenerateFlux()
         {

@@ -64,12 +64,12 @@ namespace SWIMFrame
             Array.Copy(dx, 1, x, 1, dx.Length / 2);
 
             //hdx=(/0.0,0.5*dx,0.0/) ! half delta x
-            for (int x = 0; x < hdx.Length; x++)
+            for (int a = 0; a < hdx.Length; a++)
             {
-                if (x == 0 || x == hdx.Length - 1)
-                    hdx[x] = 0;
+                if (a == 0 || a == hdx.Length - 1)
+                    hdx[a] = 0;
                 else
-                    hdx[x] = dx[x] / 2;
+                    hdx[a] = dx[a] / 2;
             }
 
             Array.Copy(sid, 1, jt, 1, sid.Length - 1);
@@ -98,9 +98,9 @@ namespace SWIMFrame
                         continue;
 
                     double[] absdz = new double[dz.GetLength(0)];
-                    for (int x = 0; x < absdz.Length; x++)
+                    for (int a = 0; a < absdz.Length; a++)
                     {
-                        absdz[x] = Math.Abs(dz[x, j] - dz[x, np + 1]);
+                        absdz[a] = Math.Abs(dz[a, j] - dz[a, np + 1]);
                     }
                     double tsum = MathUtilities.Sum(absdz);
                     if (MathUtilities.Sum(absdz) < small)
@@ -116,7 +116,7 @@ namespace SWIMFrame
             sp = new SoilProps[nsp + 1];
             for (i = 1; i <= ns; i++)
             {
-                sp[i] = Soil.ReadProps("soil" + isoil[i-1] + ".dat");
+                sp[i] = Soil.ReadProps("soil" + isoil[i-1]);
             }
 
             //Set ths and he
@@ -141,8 +141,8 @@ namespace SWIMFrame
                 nc = sp[i].nc;
 
                 //S(:,i)=sp(i)%Sc(1)+(/(j,j=0,nphi-1)/)*(sp(i)%Sc(nc)-sp(i)%Sc(1))/(nphi-1)
-                for (int x = 0; x < nphi; x++)
-                    S[i, x+1] = sp[i].Sc[1] + x * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
+                for (int a = 0; a < nphi; a++)
+                    S[i, a + 1] = sp[i].Sc[1] + a * (sp[i].Sc[nc] - sp[i].Sc[1]) / (nphi - 1);
                 phi[i, 1] = sp[i].phic[1];
                 phi[i, nphi] = sp[i].phic[nc];
                 j = 1;
@@ -162,10 +162,10 @@ namespace SWIMFrame
 
                 rdS[i] = 1.0 / (S[i, 2] - S[i, 1]);
 
-                for (int x = 2; x <= nphi; x++)
+                for (int a = 2; a <= nphi; a++)
                 {
-                    dphidS[i, x - 1] = rdS[i] * (phi[i, x] - phi[i, x - 1]);
-                    dKdS[i, x - 1] = rdS[i] * (K[i, x] - K[i, x - 1]);
+                    dphidS[i, a - 1] = rdS[i] * (phi[i, a] - phi[i, a - 1]);
+                    dKdS[i, a - 1] = rdS[i] * (K[i, a] - K[i, a - 1]);
                 }
             }
 
