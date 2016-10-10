@@ -244,6 +244,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Lifecycle.Lifecycle))]
         [XmlElement(typeof(Models.Lifecycle.Lifestage))]
         [XmlElement(typeof(Models.Lifecycle.LifestageProcess))]
+        [XmlElement(typeof(Models.Lifecycle.LifestageReproductionProcess))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 
