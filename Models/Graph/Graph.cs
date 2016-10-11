@@ -193,7 +193,7 @@ namespace Models.Graph
 
                 string baseFilter = null;
                 // If the graph is in a zone then just graph the zone.
-                if (parentZone != null && !(parentZone is Simulation))
+                if (parentZone != null)
                 {
                     // in a zone.
                     baseFilter = string.Format("SimulationName='{0}' and ZoneName='{1}'", parentSimulation.Name, parentZone.Name);

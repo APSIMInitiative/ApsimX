@@ -340,10 +340,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <EndStageName>Maturity</EndStageName>
         </PotentialSizeDemandFunction>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -455,8 +451,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -671,6 +667,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -1114,6 +1111,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
@@ -1129,7 +1127,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1159,10 +1156,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -1249,8 +1242,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4970,8 +4963,6 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -8783,8 +8774,6 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -12259,8 +12248,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -15964,8 +15951,6 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -20542,8 +20527,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -24622,8 +24605,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -26647,8 +26628,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -26794,6 +26775,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>40</Value>
               <Units>m/g</Units>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -27190,6 +27172,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </Propertys>
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </ArrayBiomass>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <CurrentExpandingLeaf>10</CurrentExpandingLeaf>
             <StartFractionExpanded>0.88608885312500008</StartFractionExpanded>
@@ -27211,7 +27194,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <DMConversionEfficiency>0</DMConversionEfficiency>
-            <GrowthRespiration>0</GrowthRespiration>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
@@ -27293,8 +27275,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <CompositeBiomass>
             <Name>AboveGround</Name>
@@ -30192,8 +30174,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -32084,8 +32064,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -32215,6 +32195,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>40</Value>
               <Units>m/g</Units>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -32611,6 +32592,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </Propertys>
               <ArraySize>[Leaf].MaxNodeNo</ArraySize>
             </ArrayBiomass>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
             <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
@@ -32626,7 +32608,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <DMConversionEfficiency>0</DMConversionEfficiency>
-            <GrowthRespiration>0</GrowthRespiration>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
@@ -32708,8 +32689,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <CompositeBiomass>
             <Name>AboveGround</Name>
@@ -35703,8 +35684,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>

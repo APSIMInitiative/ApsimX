@@ -2071,10 +2071,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0.01</Value>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.9</Value>
-        </Constant>
-        <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -2184,27 +2180,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <PhaseLookup>
-          <Name>StructuralFraction</Name>
-          <PhaseLookupValue>
-            <Name>VegetativeGrowth</Name>
-            <Constant>
-              <Name>Fraction</Name>
-              <Value>0.7</Value>
-            </Constant>
-            <Start>Sowing</Start>
-            <End>FlagLeaf</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>ReproductiveGrowth</Name>
-            <Constant>
-              <Name>Fraction</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Start>FlagLeaf</Start>
-            <End>HarvestRipe</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
@@ -3809,8 +3784,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

@@ -971,10 +971,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       <GenericOrgan>
         <Name>Bulb</Name>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.95</Value>
-        </Constant>
-        <Constant>
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
@@ -1093,10 +1089,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.95</Value>
-        </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
@@ -1859,8 +1851,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>PhenologyGraphs</Name>
