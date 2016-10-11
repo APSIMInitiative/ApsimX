@@ -330,26 +330,29 @@ namespace Models.AgPasture
             // get amounts turned over
             for (int t = 0; t < TissueCount; t++)
             {
-                turnedoverDM = Tissue[t].DM * turnoverRate[t];
-                turnedoverN = Tissue[t].Namount * turnoverRate[t];
-                Tissue[t].DMTransferedOut += turnedoverDM;
-                Tissue[t].NTransferedOut += turnedoverN;
-
-                if (t < TissueCount - 1)
+                if (turnoverRate[t] > 0.0)
                 {
-                    // pass amounts turned over from this tissue to the next (except last one)
-                    Tissue[t + 1].DMTransferedIn += turnedoverDM;
-                    Tissue[t + 1].NTransferedIn += turnedoverN;
+                    turnedoverDM = Tissue[t].DM * turnoverRate[t];
+                    turnedoverN = Tissue[t].Namount * turnoverRate[t];
+                    Tissue[t].DMTransferedOut += turnedoverDM;
+                    Tissue[t].NTransferedOut += turnedoverN;
 
-                    // get the amounts remobilisable (luxury N)
-                    double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
-                }
-                else
-                {
-                    // N transferred into dead tissue in excess of minimum N concentration is remobilisable
-                    double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                    if (t < TissueCount - 1)
+                    {
+                        // pass amounts turned over from this tissue to the next (except last one)
+                        Tissue[t + 1].DMTransferedIn += turnedoverDM;
+                        Tissue[t + 1].NTransferedIn += turnedoverN;
+
+                        // get the amounts remobilisable (luxury N)
+                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
+                    }
+                    else
+                    {
+                        // N transferred into dead tissue in excess of minimum N concentration is remobilisable
+                        double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                    }
                 }
             }
         }
@@ -680,33 +683,36 @@ namespace Models.AgPasture
             // get amounts turned over
             for (int t = 0; t < TissueCount; t++)
             {
-                turnoverDM = Tissue[t].DM * turnoverRate[t];
-                turnoverN = Tissue[t].Namount * turnoverRate[t];
-                Tissue[t].DMTransferedOut += turnoverDM;
-                Tissue[t].NTransferedOut += turnoverN;
-
-                if (t < TissueCount - 1)
+                if (turnoverRate[t] > 0.0)
                 {
-                    // pass amounts turned over from this tissue to the next
-                    Tissue[t + 1].DMTransferedIn += turnoverDM;
-                    Tissue[t + 1].NTransferedIn += turnoverN;
+                    turnoverDM = Tissue[t].DM * turnoverRate[t];
+                    turnoverN = Tissue[t].Namount * turnoverRate[t];
+                    Tissue[t].DMTransferedOut += turnoverDM;
+                    Tissue[t].NTransferedOut += turnoverN;
 
-                    // incoming stuff need to be given for each layer
-                    for (int layer = 0; layer <= BottomLayer; layer++)
+                    if (t < TissueCount - 1)
                     {
-                        Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
-                        Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
-                    }
+                        // pass amounts turned over from this tissue to the next
+                        Tissue[t + 1].DMTransferedIn += turnoverDM;
+                        Tissue[t + 1].NTransferedIn += turnoverN;
 
-                    // get the amounts remobilisable (luxury N)
-                    double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
-                }
-                else
-                {
-                    // N transfered into dead tissue in excess of minimum N concentration is remobilisable
-                    double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
-                    Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                        // incoming stuff need to be given for each layer
+                        for (int layer = 0; layer <= BottomLayer; layer++)
+                        {
+                            Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
+                            Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
+                        }
+
+                        // get the amounts remobilisable (luxury N)
+                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
+                    }
+                    else
+                    {
+                        // N transferred into dead tissue in excess of minimum N concentration is remobilisable
+                        double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                    }
                 }
             }
         }

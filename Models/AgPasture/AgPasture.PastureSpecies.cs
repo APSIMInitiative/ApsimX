@@ -668,7 +668,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Curve parameter for growth response to temperature (>0.0).</summary>
-        private double myGrowthTEffectExponent = 1.75;
+        private double myGrowthTEffectExponent = 1.5;
 
         /// <summary>Gets or sets the curve parameter for growth response to temperature (>0.0).</summary>
         [Description("Curve parameter for growth response to temperature [>0.0]:")]
@@ -695,7 +695,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
-        private double myHeatOnsetTemperature = 28.0;
+        private double myHeatOnsetTemperature = 26.0;
 
         /// <summary>Gets or sets the onset temperature for heat effects on photosynthesis (oC).</summary>
         [Description("Onset temperature for heat effects on photosynthesis [oC]:")]
@@ -707,7 +707,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
-        private double myHeatFullTemperature = 35.0;
+        private double myHeatFullTemperature = 31.0;
 
         /// <summary>Gets or sets the temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
         [Description("Temperature for full heat effect on photosynthesis [oC]:")]
@@ -758,7 +758,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Onset temperature for cold effects on photosynthesis (oC).</summary>
-        private double myColdOnsetTemperature = 0.0;
+        private double myColdOnsetTemperature = 1.0;
 
         /// <summary>Gets or sets the onset temperature for cold effects on photosynthesis (oC).</summary>
         [Description("Onset temperature for cold effects on photosynthesis [oC]:")]
@@ -782,7 +782,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Cumulative degrees for recovery from cold stress (oCd).</summary>
-        private double myColdRecoverySumDD = 20.0;
+        private double myColdRecoverySumDD = 30.0;
 
         /// <summary>Gets or sets the cumulative degrees for recovery from cold stress (oCd).</summary>
         [Description("Cumulative degrees for recovery from cold stress [oCd]:")]
@@ -820,7 +820,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Growth respiration coefficient (0-1).</summary>
-        private double myGrowthRespirationCoefficient = 0.20;
+        private double myGrowthRespirationCoefficient = 0.25;
 
         /// <summary>Gets or sets the growth respiration coefficient (0-1).</summary>
         [Description("Growth respiration coefficient [0-1]:")]
@@ -918,7 +918,7 @@ namespace Models.AgPasture
         ////- Allocation of new growth >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
-        private double myTargetShootRootRatio = 3.0;
+        private double myTargetShootRootRatio = 4.0;
 
         /// <summary>Gets or sets the target, or ideal, shoot-root ratio at vegetative stage (>0.0).</summary>
         [Description("Target, or ideal, shoot-root ratio at vegetative stage [>0.0]:")]
@@ -1162,7 +1162,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
-        private double myTissueTurnoverRateShoot = 0.025;
+        private double myTissueTurnoverRateShoot = 0.05;
 
         /// <summary>Gets or sets the reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
@@ -1192,7 +1192,7 @@ namespace Models.AgPasture
         public double RelativeTurnoverEmerging = 2.0;
 
         /// <summary>Reference daily detachment rate for dead tissues (0-1).</summary>
-        private double myDetachmentRateShoot = 0.11;
+        private double myDetachmentRateShoot = 0.08;
 
         /// <summary>Gets or sets the reference daily detachment rate for dead tissues (0-1).</summary>
         [Description("Reference daily detachment rate for dead tissues [0-1]:")]
@@ -1277,17 +1277,22 @@ namespace Models.AgPasture
         /// <summary>Gets or sets the factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double TurnoverStockFactor = 0.0;
+        public double TurnoverStockFactor = 0.05;
 
-        /// <summary>Gets or sets the coefficient of function increasing the stolons turnover rate due to defoliation (>0.0).</summary>
+        /// <summary>Gets or sets the coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double TurnoverDefoliationCoefficient = 0.65;
+        public double TurnoverDefoliationCoefficient = 0.0;
 
-        /// <summary>Gets or sets the minimum significant daily effect of defoliation on stolons turnover rate (0-1).</summary>
+        /// <summary>Gets or sets the minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [XmlIgnore]
         [Units("/day")]
-        public double TurnoverMinDefoliationEffect = 0.025;
+        public double TurnoverDefoliationEffectMin = 1.0;
+
+        /// <summary>Gets or sets the effect of defoliation on root turnover rate relative to stolon (0-1).</summary>
+        [XmlIgnore]
+        [Units("")]
+        public double TurnoverDefoliationRootEffect = 0.5;
 
         /// <summary>Fraction of luxury N remobilisable each day for each tissue age, emerging, developing, mature (0-1).</summary>
         private double[] myFractionNLuxuryRemobilisable = {0.0, 0.0, 0.0};
@@ -1366,7 +1371,8 @@ namespace Models.AgPasture
         }
 
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
-        private double myMinimumWaterFreePorosity = 0.1;
+        /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
+        private double myMinimumWaterFreePorosity = -1.0;
 
         /// <summary>Gets or sets the minimum water-free pore space for growth with no limitations (0-1).</summary>
         [Description("Minimum water-free pore space for growth with no limitations [0-1]:")]
@@ -1572,12 +1578,12 @@ namespace Models.AgPasture
         /// <summary>Gets or sets the fraction of soluble carbohydrates in newly grown tissues (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double SugarFractionNewGrowth = 0.0;
+        public double SugarFractionNewGrowth = 0.5;
 
         ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
-        private double myMinimumGreenWt = 300.0;
+        private double myMinimumGreenWt = 120.0;
 
         /// <summary>Gets or sets the minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         [Description("Minimum above ground green DM [kg/ha]:")]
@@ -1917,7 +1923,7 @@ namespace Models.AgPasture
         private double ttfLeafNumber;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
-        private double defoliationFactor;
+        private double cumDefoliationFactor;
 
         ////- Plant height, LAI and cover >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -4228,110 +4234,119 @@ namespace Models.AgPasture
             // Turnover rate for leaf and stem tissues
             gama = myTissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
 
-            // Turnover rate for dead to litter (detachment)
+            // Get the factor due to defoliation (increases turnover)
+            double defoliationFactor = DefoliationEffectOnTissueTurnover();
+
+            // Turnover rate for stolons
+            if (isLegume)
+            {
+                // base rate is the same as for the other above ground organs, but consider defoliation effect
+                gamaS = gama + defoliationFactor * (1.0 - gama);
+            }
+            else
+                gamaS = 0.0;
+
+            // Turnover rate for roots
+            gamaR = myTissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
+            gamaR += TurnoverDefoliationRootEffect * defoliationFactor * (1.0 - gamaR);
+
+            // Turnover rate for dead material (littering or detachment)
             double digestDead = (leaves.DigestibilityDead * leaves.DMDead) + (stems.DigestibilityDead * stems.DMDead);
             digestDead = MathUtilities.Divide(digestDead, leaves.DMDead + stems.DMDead, 0.0);
             gamaD = myDetachmentRateShoot * ttfMoistureLitter * digestDead / CarbonFractionInDM;
             gamaD += StockFac2Litter;
 
-            // Turnover rate for roots
-            gamaR = myTissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
-
-            if ((gama > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
+            if ((gama > 1.0) || (gamaS > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
                 throw new ApsimXException(this, " AgPasture computed a tissue turnover rate greater than one");
-            if ((gama < 0.0) || (gamaD < 0.0) || (gamaR < 0.0))
+            if ((gama < 0.0) || (gamaS < 0.0) || (gamaD < 0.0) || (gamaR < 0.0))
                 throw new ApsimXException(this, " AgPasture computed a negative tissue turnover rate");
 
-            // Check whether any adjust on turnover rates are needed
-            if ((gama + gamaD + gamaR) > Epsilon)
+            // Check phenology effect for annuals
+            if (isAnnual && phenologicStage > 0)
             {
-                // Check phenology effect for annuals
-                if (isAnnual && phenologicStage > 0)
+                if (phenologicStage == 1)
                 {
-                    if (phenologicStage == 1)
-                    {
-                        //vegetative, turnover is zero at emergence and increases with age
-                        gama *= Math.Pow(phenoFactor, 0.5);
-                        gamaR *= Math.Pow(phenoFactor, 2.0);
-                        gamaD *= Math.Pow(phenoFactor, 2.0);
-                    }
-                    else if (phenologicStage == 2)
-                    {
-                        //reproductive, turnover increases with age and reach one at maturity
-                        gama += (1.0 - gama) * Math.Pow(phenoFactor, 2.0);
-                        gamaR += (1.0 - gamaR) * Math.Pow(phenoFactor, 3.0);
-                        gamaD += (1.0 - gamaD) * Math.Pow(phenoFactor, 3.0);
-                    }
+                    //vegetative, turnover is zero at emergence and increases with age
+                    gama *= Math.Pow(phenoFactor, 0.5);
+                    gamaR *= Math.Pow(phenoFactor, 2.0);
+                    gamaD *= Math.Pow(phenoFactor, 2.0);
                 }
-
-                // Check that senescence will not result in dmGreen < dmGreenmin (perennials only)
-                if (!isAnnual)
+                else if (phenologicStage == 2)
                 {
-                    //only relevant for leaves+stems
-                    double currentGreenDM = leaves.DMLive + stems.DMLive;
-                    double currentMatureDM = leaves.Tissue[2].DM + stems.Tissue[2].DM;
-                    double dmGreenToBe = currentGreenDM - (currentMatureDM * gama);
-                    double minimumStandingLive = leaves.MinimumLiveDM + stems.MinimumLiveDM;
-                    if (dmGreenToBe < minimumStandingLive)
-                    {
-                        double gamaAdjusted = MathUtilities.Divide(currentGreenDM - minimumStandingLive, currentMatureDM, 0.0);
-                        gamaAdjusted = MathUtilities.Bound(gamaAdjusted, 0.0, 1.0);
-                        gamaR *= gamaAdjusted / gama;
-                        gama = gamaAdjusted;
-                    }
-
-                    // set a minimum for roots too
-                    if (roots.DMLive * (1.0 - gamaR) < minimumStandingLive * MinimumGreenRootProp)
-                        gamaR = 0.0;
+                    //reproductive, turnover increases with age and reach one at maturity
+                    gama += (1.0 - gama) * Math.Pow(phenoFactor, 2.0);
+                    gamaR += (1.0 - gamaR) * Math.Pow(phenoFactor, 3.0);
+                    gamaD += (1.0 - gamaD) * Math.Pow(phenoFactor, 3.0);
                 }
-
-                // Turnover rate for stolon
-                if (isLegume)
-                {
-                    // base rate is the same as for the other above ground organs
-                    gamaS = gama;
-
-                    // Adjust stolon turnover due to defoliation (increases stolon senescence)
-                    double defoliationFactor = DefoliationEffectOnTissueTurnover();
-                    gamaS += defoliationFactor * (1.0 - gamaS);
-                    gamaS = MathUtilities.Bound(gamaS, 0.0, 1.0);
-                }
-                else
-                    gamaS = 0.0;
-
-                // Do the actual turnover, update DM and N
-                // - Leaves and stems
-                double[] turnoverRates = new double[] { gama * RelativeTurnoverEmerging, gama, gama, gamaD };
-                leaves.DoTissueTurnover(turnoverRates);
-                stems.DoTissueTurnover(turnoverRates);
-
-                // - Stolons
-                if (isLegume)
-                {
-                    turnoverRates = new double[] { gamaS * RelativeTurnoverEmerging, gamaS, gamaS, 1.0 };
-                    stolons.DoTissueTurnover(turnoverRates);
-                }
-
-                // - Roots (only 2 tissues)
-                turnoverRates = new double[] { gamaR, 1.0 };
-                roots.DoTissueTurnover(turnoverRates);
-
-                // TODO: consider C remobilisation
-                // ChRemobSugar = dSenescedRoot * KappaCRemob;
-                // ChRemobProtein = dSenescedRoot * (roots.Tissue[0].Nconc - roots.NConcMinimum) * CNratioProtein * FacCNRemob;
-                // senescedRootDM -= ChRemobSugar + ChRemobProtein;
-                // CRemobilisable += ChRemobSugar + ChRemobProtein;
-
-                // C remobilised from senesced tissues to be used in new growth (converted from carbohydrate to C)
-                remobilisableC += 0.0;
-                remobilisableC *= CarbonFractionInDM;
-
-                // Get the amounts detached today
-                detachedShootDM = leaves.DMDetached + stems.DMDetached + stolons.DMDetached;
-                detachedShootN = leaves.NDetached + stems.NDetached + stolons.NDetached;
-                detachedRootDM = roots.DMDetached;
-                detachedRootN = roots.NDetached;
             }
+
+            // Check that senescence will not result in dmGreen < dmGreenmin
+            if (gama > 0.0)
+            {
+                //only relevant for leaves+stems
+                double currentGreenDM = leaves.DMLive + stems.DMLive;
+                double currentMatureDM = leaves.Tissue[2].DM + stems.Tissue[2].DM;
+                double dmGreenToBe = currentGreenDM - (currentMatureDM * gama);
+                double minimumStandingLive = leaves.MinimumLiveDM + stems.MinimumLiveDM;
+                if (dmGreenToBe < minimumStandingLive)
+                {
+                    double gamaBase = gama;
+                    gama = MathUtilities.Divide(currentGreenDM - minimumStandingLive, currentMatureDM, 0.0);
+
+                    // reduce stolon and root turnover too (half of the reduction in leaf/stem)
+                    double dmFactor = 0.5 * (gamaBase + gama) / gamaBase;
+                    gamaS *= dmFactor;
+                    gamaR *= dmFactor;
+                }
+            }
+
+            // Check minimum DM for roots too
+            if (roots.DMLive * (1.0 - gamaR) < roots.MinimumLiveDM)
+            {
+                if (roots.DMLive <= roots.MinimumLiveDM)
+                    gamaR = 0.0;
+                else
+                    gamaR = MathUtilities.Divide(roots.DMLive - roots.MinimumLiveDM, roots.DMLive, 0.0);
+            }
+
+            // Make sure rates are within bounds
+            gama = MathUtilities.Bound(gama, 0.0, 1.0);
+            gamaS = MathUtilities.Bound(gamaS, 0.0, 1.0);
+            gamaR = MathUtilities.Bound(gamaR, 0.0, 1.0);
+            gamaD = MathUtilities.Bound(gamaD, 0.0, 1.0);
+
+            // Do the actual turnover, update DM and N
+            // - Leaves and stems
+            double[] turnoverRates = new double[] {gama * RelativeTurnoverEmerging, gama, gama, gamaD};
+            leaves.DoTissueTurnover(turnoverRates);
+            stems.DoTissueTurnover(turnoverRates);
+
+            // - Stolons
+            if (isLegume)
+            {
+                turnoverRates = new double[] {gamaS * RelativeTurnoverEmerging, gamaS, gamaS, 1.0};
+                stolons.DoTissueTurnover(turnoverRates);
+            }
+
+            // - Roots (only 2 tissues)
+            turnoverRates = new double[] {gamaR, 1.0};
+            roots.DoTissueTurnover(turnoverRates);
+
+            // TODO: consider C remobilisation
+            // ChRemobSugar = dSenescedRoot * KappaCRemob;
+            // ChRemobProtein = dSenescedRoot * (roots.Tissue[0].Nconc - roots.NConcMinimum) * CNratioProtein * FacCNRemob;
+            // senescedRootDM -= ChRemobSugar + ChRemobProtein;
+            // CRemobilisable += ChRemobSugar + ChRemobProtein;
+
+            // C remobilised from senesced tissues to be used in new growth (converted from carbohydrate to C)
+            remobilisableC += 0.0;
+            remobilisableC *= CarbonFractionInDM;
+
+            // Get the amounts detached today
+            detachedShootDM = leaves.DMDetached + stems.DMDetached + stolons.DMDetached;
+            detachedShootN = leaves.NDetached + stems.NDetached + stolons.NDetached;
+            detachedRootDM = roots.DMDetached;
+            detachedRootN = roots.NDetached;
         }
 
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
@@ -6088,7 +6103,7 @@ namespace Models.AgPasture
                 }
             }
             else
-                throw new Exception("Photosynthesis pathway is not valid");
+                throw new Exception("Photosynthetic pathway is not valid");
             return result;
         }
 
@@ -6200,27 +6215,30 @@ namespace Models.AgPasture
             return effect;
         }
 
-        /// <summary>Computes the effect of defoliation on stolon turnover rate.</summary>
+        /// <summary>Computes the effect of defoliation on stolon/root turnover rate.</summary>
         /// <remarks>
         /// This approach spreads the effect over a few days after a defoliation, starting large and decreasing with time.
         /// It is assumed that a defoliation of 100% of harvestable material will result in a full decay of stolons.
         /// </remarks>
-        /// <returns>A factor for adjusting stolon's tissue turnover (0-1)</returns>
+        /// <returns>A factor for adjusting tissue turnover (0-1)</returns>
         private double DefoliationEffectOnTissueTurnover()
         {
-            double defoliationEffect;
-            defoliationFactor += myDefoliatedFraction;
-            double todaysFactor = Math.Pow(defoliationFactor, TurnoverDefoliationCoefficient + 1.0);
-            todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
-            if (defoliationFactor - todaysFactor < TurnoverMinDefoliationEffect)
+            double defoliationEffect = 0.0;
+            cumDefoliationFactor += myDefoliatedFraction;
+            if (cumDefoliationFactor > 0.0)
             {
-                defoliationEffect = defoliationFactor;
-                defoliationFactor = 0.0;
-            }
-            else
-            {
-                defoliationEffect = defoliationFactor - todaysFactor;
-                defoliationFactor = todaysFactor;
+                double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
+                todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
+                if (cumDefoliationFactor - todaysFactor < TurnoverDefoliationEffectMin)
+                {
+                    defoliationEffect = cumDefoliationFactor;
+                    cumDefoliationFactor = 0.0;
+                }
+                else
+                {
+                    defoliationEffect = cumDefoliationFactor - todaysFactor;
+                    cumDefoliationFactor = todaysFactor;
+                }
             }
 
             // clear fraction defoliated after use

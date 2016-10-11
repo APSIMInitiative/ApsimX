@@ -3817,7 +3817,7 @@ namespace Models
 		public double PreHarvestDM { get; set; }
 		[XmlIgnore][Units("g/m2")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut
 		public double PostHarvestDM { get; set; }
-		
+						
 		// - Internal variables
 		// fraction of harvested Dm to actually remove from field
 		private double fractionDM2Remove = 1.0;
@@ -3876,7 +3876,7 @@ namespace Models
 				if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate) && (Pasture.IsAlive))
 				{
 					// Check whether we should start a defoliation
-					if (DaysAfterCut == CutInterval)
+					if (DaysAfterCut >= (CutInterval - 1))
 					{
 						Graze(AmountGiven, amountType, DurationOfCut);
 					}
@@ -4978,19 +4978,19 @@ namespace Models
           <LightExtinctionCoefficient>0.5</LightExtinctionCoefficient>
           <GrowthTminimum>2</GrowthTminimum>
           <GrowthToptimum>20</GrowthToptimum>
-          <GrowthTEffectExponent>1.75</GrowthTEffectExponent>
-          <UseHeatStressFactor>yes</UseHeatStressFactor>
-          <HeatOnsetTemperature>28</HeatOnsetTemperature>
-          <HeatFullTemperature>35</HeatFullTemperature>
+          <GrowthTEffectExponent>1.5</GrowthTEffectExponent>
+          <UseHeatStressFactor>no</UseHeatStressFactor>
+          <HeatOnsetTemperature>26</HeatOnsetTemperature>
+          <HeatFullTemperature>32</HeatFullTemperature>
           <HeatRecoverySumDD>30</HeatRecoverySumDD>
           <HeatRecoveryTReference>25</HeatRecoveryTReference>
-          <UseColdStressFactor>yes</UseColdStressFactor>
-          <ColdOnsetTemperature>0</ColdOnsetTemperature>
+          <UseColdStressFactor>no</UseColdStressFactor>
+          <ColdOnsetTemperature>1</ColdOnsetTemperature>
           <ColdFullTemperature>-3</ColdFullTemperature>
-          <ColdRecoverySumDD>20</ColdRecoverySumDD>
+          <ColdRecoverySumDD>30</ColdRecoverySumDD>
           <ColdRecoveryTReference>0</ColdRecoveryTReference>
           <MaintenanceRespirationCoefficient>0.03</MaintenanceRespirationCoefficient>
-          <GrowthRespirationCoefficient>0.2</GrowthRespirationCoefficient>
+          <GrowthRespirationCoefficient>0.25</GrowthRespirationCoefficient>
           <RespirationTReference>20</RespirationTReference>
           <RespirationExponent>1.5</RespirationExponent>
           <NThresholdsForLeaves>
@@ -5013,7 +5013,7 @@ namespace Models
             <double>0.006</double>
             <double>0.025</double>
           </NThresholdsForRoots>
-          <TargetShootRootRatio>3</TargetShootRootRatio>
+          <TargetShootRootRatio>4</TargetShootRootRatio>
           <MaxRootAllocation>0.25</MaxRootAllocation>
           <ShootRootGlfFactor>0.5</ShootRootGlfFactor>
           <UseReproSeasonFactor>yes</UseReproSeasonFactor>
@@ -5030,9 +5030,9 @@ namespace Models
           <SpecificLeafArea>20</SpecificLeafArea>
           <SpecificRootLength>75</SpecificRootLength>
           <LiveLeavesPerTiller>3</LiveLeavesPerTiller>
-          <TissueTurnoverRateShoot>0.025</TissueTurnoverRateShoot>
+          <TissueTurnoverRateShoot>0.05</TissueTurnoverRateShoot>
           <TissueTurnoverRateRoot>0.02</TissueTurnoverRateRoot>
-          <DetachmentRateShoot>0.11</DetachmentRateShoot>
+          <DetachmentRateShoot>0.08</DetachmentRateShoot>
           <TurnoverTemperatureMin>2</TurnoverTemperatureMin>
           <TurnoverTemperatureRef>20</TurnoverTemperatureRef>
           <TurnoverTemperatureExponent>1</TurnoverTemperatureExponent>
@@ -5046,7 +5046,7 @@ namespace Models
           <MinimumNFixation>0</MinimumNFixation>
           <MaximumNFixation>0</MaximumNFixation>
           <SoilSaturationEffectMax>0.1</SoilSaturationEffectMax>
-          <MinimumWaterFreePorosity>0.1</MinimumWaterFreePorosity>
+          <MinimumWaterFreePorosity>-1</MinimumWaterFreePorosity>
           <UseCumulativeWaterLoggingEffect>no</UseCumulativeWaterLoggingEffect>
           <NDillutionCoefficient>0.5</NDillutionCoefficient>
           <GlfGeneric>1</GlfGeneric>
@@ -5066,7 +5066,7 @@ namespace Models
             <double>0.6</double>
             <double>0.2</double>
           </DigestibilitiesCellWall>
-          <MinimumGreenWt>300</MinimumGreenWt>
+          <MinimumGreenWt>120</MinimumGreenWt>
           <FractionStolonStanding>0</FractionStolonStanding>
           <PreferenceForGreenOverDead>1</PreferenceForGreenOverDead>
           <PreferenceForLeafOverStems>1</PreferenceForLeafOverStems>
