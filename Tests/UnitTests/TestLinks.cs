@@ -86,9 +86,10 @@ namespace UnitTests
             ModelWithLinks links = new ModelWithLinks();
             simulation.Add(links);
 
-            Links.Resolve(simulations);
+            Links linksAlgorithm = new Links();
+            linksAlgorithm.Resolve(simulations);
 
-            Assert.AreEqual(links.zones.Length, 3);
+            Assert.AreEqual(links.zones.Length, 2);
             Assert.NotNull(links.zones[0]);
             Assert.NotNull(links.zones[1]);
         }
@@ -114,76 +115,17 @@ namespace UnitTests
             simulation.Add(new Zone());
             simulation.Add(new Zone());
 
-            ModelWithIFunctions links = new ModelWithIFunctions();
+            ModelWrapper links = simulation.Add(new ModelWithIFunctions());
             simulation.Add(links);
 
-            simulation.Add(new IFunctionProxy() { value = 1 }).Name = "model1";
-            simulation.Add(new IFunctionProxy() { value = 2 }).Name = "model2";
-            simulation.Add(new IFunctionProxy() { value = 3 }).Name = "model3";
+            links.Add(new IFunctionProxy() { value = 1 }).Name = "model1";
+            links.Add(new IFunctionProxy() { value = 2 }).Name = "model2";
+            links.Add(new IFunctionProxy() { value = 3 }).Name = "model3";
 
-            Links.Resolve(simulations);
+            Links linksAlgorithm = new Links();
+            linksAlgorithm.Resolve(simulations);
 
-            Assert.AreEqual(links.model2.Value, 2);
-        }
-
-        [Test]
-        public void EnsureModelNodeLinksCorrectly()
-        {
-            // Create a tree with a root node for our models.
-            ModelWrapper models = new ModelWrapper();
-
-            // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
-
-            Clock clock = new Clock();
-            clock.StartDate = new DateTime(2015, 1, 1);
-            clock.EndDate = new DateTime(2015, 12, 31);
-            simulation.Add(clock);
-
-            MockSummary summary = new MockSummary();
-            simulation.Add(summary);
-            simulation.Add(new Zone());
-            simulation.Add(new Zone());
-
-            ModelWithModelNodeLink modelWithModelNode = new ModelWithModelNodeLink();
-            simulation.Add(modelWithModelNode);
-
-            Links.Resolve(simulations);
-
-            Assert.IsNotNull(modelWithModelNode.model);
-        }
-
-        [Test]
-        public void EnsureDynamicPropertyLinksCorrectly()
-        {
-            // Create a tree with a root node for our models.
-            ModelWrapper models = new ModelWrapper();
-
-            // Create some models.
-            ModelWrapper simulations = models.Add(new Simulations());
-
-            ModelWrapper simulation = simulations.Add(new Simulation());
-
-            Clock clock = new Clock();
-            clock.StartDate = new DateTime(2015, 1, 1);
-            clock.EndDate = new DateTime(2015, 12, 31);
-            simulation.Add(clock);
-
-            MockSummary summary = new MockSummary();
-            simulation.Add(summary);
-            simulation.Add(new Zone());
-            simulation.Add(new Zone());
-
-            ModelWithDynamicProperty modelWithDynamicProperty = new ModelWithDynamicProperty();
-            modelWithDynamicProperty.xname = "Clock.StartDate";
-            simulation.Add(modelWithDynamicProperty);
-
-            Links.Resolve(simulation);
-
-            Assert.IsNotNull(modelWithDynamicProperty);
-            Assert.AreEqual(modelWithDynamicProperty.x.Get(), clock.StartDate);
+            Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value, 2);
         }
 
     }
