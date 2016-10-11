@@ -956,6 +956,32 @@ DM demand is based on ...
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>DetachmentRateFunction</Name>
+          <Constant>
+            <Name>MaxRate</Name>
+            <Value>0.25</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>DMFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>100</double>
+                <double>500</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.4</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Stem].Dead.Wt</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1002,11 +1028,6 @@ DM demand is based on ...
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1119,6 +1140,32 @@ DM demand is based on ...
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>DetachmentRateFunction</Name>
+          <Constant>
+            <Name>MaxRate</Name>
+            <Value>0.25</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>DMFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>100</double>
+                <double>500</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.4</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Inflorescence].Dead.Wt</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1165,11 +1212,6 @@ DM demand is based on ...
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1499,6 +1541,10 @@ No effect of soil water content on root growth is currently captured in the mode
           </PhaseLookup>
         </PartitionFractionDemandFunction>
         <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
@@ -1530,6 +1576,32 @@ No effect of soil water content on root growth is currently captured in the mode
               </Y>
             </XYPairs>
             <XProperty>[Taproot].Live.Wt</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>DetachmentRateFunction</Name>
+          <Constant>
+            <Name>MaxRate</Name>
+            <Value>0.25</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>DMFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>100</double>
+                <double>500</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.4</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Taproot].Dead.Wt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Biomass>
@@ -1573,16 +1645,6 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
           <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
