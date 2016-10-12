@@ -885,6 +885,7 @@ namespace Models.PMF.Organs
             WaterDemand = 0;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
+            TipsAtEmergence = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
