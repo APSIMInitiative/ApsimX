@@ -24,18 +24,25 @@ namespace Models.PMF.Functions.DemandFunctions
         [Link]
         IFunction TranspirationEfficiencyCoefficient = null;
 
+        /// <summary>Computes the vapour pressure deficit.</summary>
+        /// <value>The vapour pressure deficit (hPa?)</value>
+        public double VPD
+        {
+            get
+            {
+                double SVPmax = MetUtilities.svp(MetData.MaxT) * 0.1;
+                double SVPmin = MetUtilities.svp(MetData.MinT) * 0.1;
+                return Math.Max(SVPFrac.Value * (SVPmax - SVPmin), 0.01);
+            }
+        }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value
         {
             get
             {
-                double SVPmax = MetUtilities.svp(MetData.MaxT) * 0.1;
-                double SVPmin = MetUtilities.svp(MetData.MinT) * 0.1;
-                double VPD = Math.Max(SVPFrac.Value * (SVPmax - SVPmin), 0.01);
-
                 return Photosynthesis.Value / (TranspirationEfficiencyCoefficient.Value / VPD / 0.001);
-
             }
         }
 
