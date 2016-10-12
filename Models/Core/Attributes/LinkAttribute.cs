@@ -5,9 +5,12 @@
 // -----------------------------------------------------------------------
 namespace Models.Core
 {
+    using PMF;
+    using PMF.Functions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Xml.Serialization;
 
@@ -54,6 +57,29 @@ namespace Models.Core
             set { this.isOptional = value; }
         }
 
+        /// <summary>Is this link a scoped link</summary>
+        public virtual bool IsScoped(FieldInfo field)
+        {
+            if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
+                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
+                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
+                        field.FieldType.Name == "Object")
+                return false;
+            else
+                return true;
+        }
+
+        /// <summary>Should the fields name be used when matching?</summary>
+        public virtual bool UseNameToMatch(FieldInfo field)
+        {
+            if (IsScoped(field))
+                return false;
+            else
+                return true;
+        }
+
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -74,6 +100,13 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Field)]
     public class ScopedLinkByNameAttribute : LinkAttribute
     {
+        /// <summary>Is this link a scoped link</summary>
+        public override bool IsScoped(FieldInfo fieldInfo)
+        {
+            return true;
+        }
 
+        /// <summary>Should the fields name be used when matching?</summary>
+        public override bool UseNameToMatch(FieldInfo field) { return true; }
     }
 }

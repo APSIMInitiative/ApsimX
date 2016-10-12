@@ -89,7 +89,13 @@ namespace Models.Core
             }
             else
             {
-                ModelWrapper child = new ModelWrapper(model) { Name = model.GetType().Name };
+                string name;
+                if (model is IModel)
+                    name = (model as IModel).Name;
+                else
+                    name = model.GetType().Name;
+
+                ModelWrapper child = new ModelWrapper(model,  name );
                 child.depth = depth + 1;
                 Children.Add(child);
                 return child;
