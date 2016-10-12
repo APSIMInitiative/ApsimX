@@ -1,15 +1,15 @@
-﻿
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Links.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Core
 {
     using APSIM.Shared.Utilities;
-    using PMF;
-    using PMF.Functions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
 
     /// <summary>
     /// 
@@ -46,91 +46,69 @@ namespace Models.Core
         /// <param name="obj"></param>
         private void ResolveInternal(object obj)
         {
-            string errorMsg = string.Empty;
-            List<object> modelsInScope = GetModelsInScope(obj);
-
             // Go looking for [Link]s
             foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
                                                             GetModel(obj).GetType(),
                                                             BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
-                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-
-                //link = ReflectionUtilities.GetAttribute(field, typeof(ScopedLinkByNameAttribute), false) as ScopedLinkByNameAttribute;
+                LinkAttribute link = GetLinkAttribute(field);
 
                 if (link != null)
                 {
-                    object linkedObject = null;
-
-                    Type type = field.FieldType;
-                    if (type.IsArray)
-                        type = type.GetElementType();
+                    // Get the field type or the array element if it is an array field.
+                    Type fieldType = field.FieldType;
+                    if (fieldType.IsArray)
+                        fieldType = fieldType.GetElementType();
 
                     // Get a list of models that could possibly match.
-                    List<object> possibleMatches;
-                    bool useNameToMatch;
-                    bool selectClosestMatch = true;
-                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
-                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
-                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
-                        field.FieldType.Name == "Object")
-                    {
-                        possibleMatches = GetChildren(obj);
-                        useNameToMatch = true;
-                        selectClosestMatch = false;
-                    }
-                    else if (link is ScopedLinkByNameAttribute)
-                    {
-                        possibleMatches = modelsInScope;
-                        useNameToMatch = false;
-                    }
+                    List<object> matches;
+                    if (link.IsScoped(field))
+                        matches = GetModelsInScope(obj);
                     else
-                    {
-                        possibleMatches = modelsInScope;
-                        useNameToMatch = false;
-                    }
+                        matches = GetChildren(obj);
 
-                    // Get a list of models that actually match.
-                    List<object> allMatches = new List<object>();
-                    foreach (object match in possibleMatches)
-                    {
-                        if (type.IsAssignableFrom(GetModel(match).GetType()))
-                        {
-                            if (useNameToMatch)
-                            {
-                                if (GetName(match).Equals(field.Name, StringComparison.InvariantCultureIgnoreCase))
-                                    allMatches.Add(GetModel(match));
-                            }
-                            else
-                                allMatches.Add(GetModel(match));
-                        }
-                    }
+                    // Filter possible matches to those of the correct type.
+                    matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
+
+                    // If we should use name to match then filter matches to those with a matching name.
+                    if (link.UseNameToMatch(field))
+                        matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
 
                     if (field.FieldType.IsArray)
                     {
-                        Array array = Array.CreateInstance(type, allMatches.Count);
-                        for (int i = 0; i < allMatches.Count; i++)
-                            array.SetValue(allMatches[i], i);
-                        linkedObject = array;
-
+                        Array array = Array.CreateInstance(fieldType, matches.Count);
+                        for (int i = 0; i < matches.Count; i++)
+                            array.SetValue(GetModel(matches[i]), i);
+                        field.SetValue(GetModel(obj), array);
                     }
-                    else if (allMatches.Count == 1)
-                        linkedObject = allMatches[0];
-                    else if (allMatches.Count == 0)
+                    else if (matches.Count == 0)
                     {
                         if (!link.IsOptional)
-                            throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetName(obj));
+                            throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (allMatches.Count > 1)
-                    {
-                        if (selectClosestMatch)
-                            linkedObject = allMatches[0];
-                        else
-                            throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", allMatches.Count, field.Name, GetName(obj)));
-                    }
-                    field.SetValue(GetModel(obj), linkedObject);
+                    else if (matches.Count >= 2 && !link.IsScoped(field))
+                        throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
+                    else
+                        field.SetValue(GetModel(obj), GetModel(matches[0]));
                 }
             }
+        }
+
+        /// <summary>
+        /// Go looking for a link attribute.
+        /// </summary>
+        /// <param name="field">The associated field.</param>
+        /// <returns>Returns link or null if none field on specified field.</returns>
+        private static LinkAttribute GetLinkAttribute(FieldInfo field)
+        {
+            var attributes = field.GetCustomAttributes();
+            foreach (Attribute attribute in attributes)
+            {
+                LinkAttribute link = attribute as LinkAttribute;
+                if (link != null)
+                    return link;
+            }
+            return null;
         }
 
         /// <summary>
@@ -155,6 +133,19 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return (obj as IModel).Name;
+            else
+                return (obj as ModelWrapper).Name;
+        }
+
+        /// <summary>
+        /// Determine the type of an object and return its name.
+        /// </summary>
+        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
+        /// <returns>The name</returns>
+        private string GetFullName(object obj)
+        {
+            if (obj is IModel)
+                return Apsim.FullPath(obj as IModel);
             else
                 return (obj as ModelWrapper).Name;
         }

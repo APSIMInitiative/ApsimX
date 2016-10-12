@@ -58,8 +58,16 @@ namespace UnitTests
 
     }
 
+    [Serializable]
+    class ModelWithScopedLinkByName
+    {
+        [ScopedLinkByName]
+        public Zone zone2 = null;
+
+    }
+
     [TestFixture]
-    class TestLinks
+    class LinkTests
     {
 
         [Test]
@@ -126,6 +134,25 @@ namespace UnitTests
             linksAlgorithm.Resolve(simulations);
 
             Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value, 2);
+        }
+
+        [Test]
+        public void EnsureScopedLinkByNameWorks()
+        {
+            ModelWithScopedLinkByName modelWithScopedLink = new UnitTests.ModelWithScopedLinkByName();
+
+            // Create a simulation
+            ModelWrapper simulation = new ModelWrapper(new Simulation());
+            simulation.Add(new Clock());
+            simulation.Add(new MockSummary());
+            simulation.Add(new Zone() { Name = "zone1" });
+            simulation.Add(new Zone() { Name = "zone2" });
+            simulation.Children[1].Add(modelWithScopedLink); // added to zone1
+
+            Links linksAlgorithm = new Links();
+            linksAlgorithm.Resolve(simulation);
+
+            Assert.AreEqual(modelWithScopedLink.zone2.Name, "zone2");
         }
 
     }
