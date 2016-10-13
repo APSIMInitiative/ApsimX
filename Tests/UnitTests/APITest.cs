@@ -158,7 +158,7 @@ namespace UnitTests
             Assert.AreEqual(inScopeForGraph[9].Name, "Test");
             
             List<IModel> zones = Apsim.FindAll(graph, typeof(Zone));
-            Assert.AreEqual(zones.Count, 4);
+            Assert.AreEqual(zones.Count, 3);
             Assert.AreEqual(zones[0].Name, "Field2SubZone");
             Assert.AreEqual(zones[1].Name, "Field2");
             Assert.AreEqual(zones[2].Name, "Field1");
@@ -208,33 +208,33 @@ namespace UnitTests
             Zone field1 = this.simulation.Children[3] as Zone;
             
             // Make sure we can get a link to a local model from Field1
-            Assert.AreEqual((field1.Get("Field1Report") as IModel).Name, "Field1Report");
+            Assert.AreEqual((simulation.Get("Field1.Field1Report") as IModel).Name, "Field1Report");
             
             // Make sure we can get a variable from a local model.
-            Assert.AreEqual(field1.Get("Field1Report.Name"), "Field1Report");
+            Assert.AreEqual(simulation.Get("Field1.Field1Report.Name"), "Field1Report");
 
             // Make sure we can get a variable from a local model using a full path.
-            Assert.AreEqual((field1.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, "Field1Report");
-            Assert.AreEqual(field1.Get(".Simulations.Test.Field1.Field1Report.Name"), "Field1Report");
+            Assert.AreEqual((simulation.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, "Field1Report");
+            Assert.AreEqual(simulation.Get(".Simulations.Test.Field1.Field1Report.Name"), "Field1Report");
 
             // Make sure we get a null when trying to link to a top level model from Field1
-            Assert.IsNull(field1.Get("Weather"));
+            Assert.IsNull(simulation.Get("Field1.Weather"));
 
             // Make sure we can get a top level model from Field1 using a full path.
-            Assert.AreEqual(ReflectionUtilities.Name(field1.Get(".Simulations.Test.Weather")), "Weather");
+            Assert.AreEqual(ReflectionUtilities.Name(simulation.Get(".Simulations.Test.Weather")), "Weather");
 
             // Make sure we can get a model in Field2 from Field1 using a full path.
-            Assert.AreEqual(ReflectionUtilities.Name(field1.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
+            Assert.AreEqual(ReflectionUtilities.Name(simulation.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
 
             // Make sure we can get a property from a model in Field2 from Field1 using a full path.
-            Assert.AreEqual(field1.Get(".Simulations.Test.Field2.Graph1.Name"), "Graph1");
+            Assert.AreEqual(simulation.Get(".Simulations.Test.Field2.Graph1.Name"), "Graph1");
 
             // Make sure we can get a property from a model in Field2/Field2SubZone from Field1 using a full path.
-            Assert.AreEqual(field1.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), "Field2SubZoneReport");
+            Assert.AreEqual(simulation.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), "Field2SubZoneReport");
             
             // Test the in scope capability of get.
-            Assert.AreEqual(zone2.Get("[Graph1].Name"), "Graph1");
-            Assert.AreEqual(zone2.Get("[Soil].Water.Name"), "Water");
+            Assert.AreEqual(simulation.Get("[Graph1].Name"), "Graph1");
+            Assert.AreEqual(simulation.Get("[Soil].Water.Name"), "Water");
         }
         
         /// <summary>
