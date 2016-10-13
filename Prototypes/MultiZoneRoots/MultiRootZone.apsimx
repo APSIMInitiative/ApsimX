@@ -1811,8 +1811,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>229</ExplorerWidth>
 </Simulations>

@@ -1009,11 +1009,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -1106,11 +1101,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
           <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
@@ -2797,8 +2787,6 @@ namespace Models
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>PhenologyGraphs</Name>
@@ -8179,8 +8167,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>LincolnP21_Cv2012</Name>
@@ -10675,8 +10661,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Memo>
     <Name>References</Name>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <DataStore>
@@ -613,6 +613,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
           <Name>Slurp1</Name>
@@ -818,6 +819,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -848,7 +850,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <Constant>
               <Name>SenescenceRate</Name>
               <Value>0</Value>
-            </Constant> 
+            </Constant>
             <MultiplyFunction>
               <Name>InitialWtFunction</Name>
               <Constant>
@@ -955,10 +957,6 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>0.7</Value>
             </Constant>
             <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>0.5</Value>
-            </Constant>
-            <Constant>
               <Name>HeightFunction</Name>
               <Value>400</Value>
               <Units>mm</Units>
@@ -994,8 +992,8 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1270,6 +1268,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -1399,10 +1398,6 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>0.7</Value>
             </Constant>
             <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>0.5</Value>
-            </Constant>
-            <Constant>
               <Name>HeightFunction</Name>
               <Value>400</Value>
               <Units>mm</Units>
@@ -1414,7 +1409,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <Constant>
               <Name>SenescenceRate</Name>
               <Value>0</Value>
-            </Constant>            
+            </Constant>
             <Folder>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
@@ -1446,8 +1441,8 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1834,8 +1829,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <ExplorerWidth>350</ExplorerWidth>

@@ -312,10 +312,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
@@ -1173,10 +1169,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
         </Constant>
         <InternodeDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -4664,8 +4656,6 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>259</ExplorerWidth>
 </Simulations>
