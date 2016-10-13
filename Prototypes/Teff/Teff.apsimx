@@ -289,6 +289,7 @@ Unknown?????????????????????????????????????<br/>
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <OnEventFunction>
           <Name>FloweringDAS</Name>
@@ -350,6 +351,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <SetEvent>FloralInitiation</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -945,9 +947,9 @@ A function is used to provide flowering date as days after sowing(DAS).
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
-        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -1039,10 +1041,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-ma
           <Value>0.01</Value>
           <Units>g/g</Units>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
           <XYPairs>
@@ -1183,19 +1185,26 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>380</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1756,6 +1765,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -1771,7 +1785,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>50</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1797,8 +1810,9 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.01</Value>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -1874,23 +1888,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1901,8 +1915,9 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>Dead</Name>
         </Biomass>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.8</Value>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -2045,23 +2060,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2552,6 +2567,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -2694,7 +2710,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -2733,6 +2748,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -2884,6 +2900,7 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -2961,8 +2978,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
@@ -3214,6 +3229,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -3437,7 +3453,6 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -3476,6 +3491,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -3675,6 +3691,7 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -3749,8 +3766,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Experiment>
     <Experiment>
@@ -4831,6 +4846,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -5021,7 +5037,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -5060,6 +5075,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -5219,6 +5235,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -5293,8 +5310,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>SoilWater</Name>
@@ -6574,6 +6589,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -6734,7 +6750,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -6773,6 +6788,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -6932,6 +6948,7 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -7035,8 +7052,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -7443,6 +7458,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -7651,7 +7667,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -7690,6 +7705,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -7879,6 +7895,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -7953,8 +7970,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -8894,6 +8909,7 @@ Field Crops Research 116 (2010) 196204
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -9050,7 +9066,6 @@ Field Crops Research 116 (2010) 196204
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -9089,6 +9104,7 @@ Field Crops Research 116 (2010) 196204
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -9278,6 +9294,7 @@ Field Crops Research 116 (2010) 196204
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -9397,8 +9414,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -9547,6 +9562,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -9784,7 +9800,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -9823,6 +9838,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -10022,6 +10038,7 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -10245,8 +10262,6 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Simulation>
         <Name>Lysimeter4</Name>
@@ -10285,6 +10300,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -10510,7 +10526,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -10549,6 +10564,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -10748,6 +10764,7 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -10971,8 +10988,6 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Folder>
     <Experiment>
@@ -11094,6 +11109,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -11310,7 +11326,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -11349,6 +11364,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -11538,6 +11554,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -11612,8 +11629,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -12545,6 +12560,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -12753,7 +12769,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -12792,6 +12807,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -12981,6 +12997,7 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -13055,8 +13072,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -14144,6 +14159,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
@@ -14358,7 +14374,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>3</SummerCona>
@@ -14397,6 +14412,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -14596,6 +14612,7 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <Area>0</Area>
           </Soil>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -14668,8 +14685,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>FinalLeafNumber</Name>

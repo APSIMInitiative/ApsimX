@@ -12,7 +12,7 @@ namespace Models.Core
         private List<Events.Publisher> publishers = null;
         private List<Events.Subscriber> subscribers = null;
         private Scope scope = null;
-        private Dictionary<IModel, List<Publisher>> cache = new Dictionary<IModel, List<Publisher>>();
+        private Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
 
         /// <summary>Connect all events in the specified simulation.</summary>
         /// <param name="model"></param>
@@ -31,8 +31,8 @@ namespace Models.Core
                 subscribers = Events.Subscriber.FindAll(allModels);
 
             // Connect publishers to subscribers.
-            foreach (Events.Subscriber subscriber in subscribers)
-                ConnectSubscriber(subscriber, FilterPublishersInScope(subscriber));
+            foreach (Events.Publisher publisher in publishers)
+                ConnectPublisherToScriber(publisher, FilterSubscribersInScope(publisher));
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>
@@ -43,36 +43,88 @@ namespace Models.Core
                 publisher.DisconnectAll();
         }
 
-        /// <summary>Connect the specified subscriber to the closest publisher.</summary>
-        /// <param name="subscriber">Subscriber to connect.</param>
-        /// <param name="publishers">All publishers</param>
-        private static void ConnectSubscriber(Events.Subscriber subscriber, List<Events.Publisher> publishers)
+        /// <summary>
+        /// Scan a model and all child model for events and add the found publishers and subscribers
+        /// to the list of known events and handlers.
+        /// </summary>
+        /// <param name="model">The model to scan</param>
+        internal void AddModelEvents(IModel model)
         {
-            // Find all publishers with the same name.
-            List<Events.Publisher> matchingPublishers = publishers.FindAll(publisher => publisher.Name == subscriber.Name);
-
-            // Connect subscriber to all matching publishers.
-            matchingPublishers.ForEach(publisher => publisher.ConnectSubscriber(subscriber));
+            // Get a complete list of all models in simulation (including the simulation itself).
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            if (publishers == null)
+            {
+                publishers = new List<Core.Events.Publisher>();
+                subscribers = new List<Core.Events.Subscriber>();
+            }
+            publishers.AddRange(Events.Publisher.FindAll(allModels));
+            subscribers.AddRange(Events.Subscriber.FindAll(allModels));
         }
 
         /// <summary>
-        /// Return a list of publishers that are in scope.
+        /// Remove a model and all child model events and handlers from the list.
         /// </summary>
-        /// <param name="relativeTo">Modle to base scoping rules on.</param>
-        private List<Publisher> FilterPublishersInScope(Subscriber relativeTo)
+        /// <param name="model">The model to scan</param>
+        internal void RemoveModelEvents(IModel model)
         {
-            IModel parentZone = Apsim.Parent(relativeTo.Model as IModel, typeof(Zone));
+            // Get a complete list of all models in simulation (including the simulation itself).
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
 
+            publishers.RemoveAll(publisher => allModels.Contains(publisher.Model as IModel));
+            subscribers.RemoveAll(subscriber => allModels.Contains(subscriber.Model as IModel));
+        }
+
+        /// <summary>
+        /// Call the specified event on the specified model and all child models.
+        /// </summary>
+        /// <param name="model">The model to call the event on</param>
+        /// <param name="eventName">The name of the event</param>
+        /// <param name="args">The event arguments. Can be null</param>
+        internal void CallEventHandler(IModel model, string eventName, object[] args)
+        {
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(model);
+            allModels.AddRange(Apsim.ChildrenRecursively(model));
+
+            List<Subscriber> matches = subscribers.FindAll(subscriber => subscriber.Name == eventName &&
+                                                                         allModels.Contains(subscriber.Model as IModel));
+
+            foreach (Subscriber subscriber in matches)
+                subscriber.Invoke(args);
+        }
+
+        /// <summary>Connect the specified publisher to all subscribers in scope</summary>
+        /// <param name="publisher">Publisher to connect.</param>
+        /// <param name="subscribers">All subscribers</param>
+        private static void ConnectPublisherToScriber(Events.Publisher publisher, List<Events.Subscriber> subscribers)
+        {
+            // Find all publishers with the same name.
+            List<Events.Subscriber> matchingSubscribers = subscribers.FindAll(subscriber => subscriber.Name == publisher.Name);
+
+            // Connect subscriber to all matching publishers.
+            matchingSubscribers.ForEach(subscriber => publisher.ConnectSubscriber(subscriber));
+        }
+
+        /// <summary>
+        /// Return a list of subscribers that are in scope.
+        /// </summary>
+        /// <param name="relativeTo">Model to base scoping rules on.</param>
+        private List<Subscriber> FilterSubscribersInScope(Publisher relativeTo)
+        {
             // Try cache
-            List<Publisher> publishersInScope;
-            if (cache.TryGetValue(parentZone, out publishersInScope))
-                return publishersInScope;
+            List<Subscriber> subscribersInScope;
+            if (cache.TryGetValue(relativeTo.Model as IModel, out subscribersInScope))
+                return subscribersInScope;
 
-            List<IModel> modelsInScope = scope.InScope(parentZone);
-            publishersInScope = new List<Publisher>();
-            publishersInScope = publishers.FindAll(publisher => modelsInScope.Contains(publisher.Model as IModel));
-            cache.Add(parentZone, publishersInScope);
-            return publishersInScope;
+            List<IModel> modelsInScope = scope.InScope(relativeTo.Model as IModel);
+            subscribersInScope = new List<Subscriber>();
+            subscribersInScope = subscribers.FindAll(subscriber => modelsInScope.Contains(subscriber.Model as IModel));
+            cache.Add(relativeTo.Model as IModel, subscribersInScope);
+            return subscribersInScope;
         }
 
 
@@ -121,6 +173,14 @@ namespace Models.Core
                 return Delegate.CreateDelegate(handlerType, Model, methodInfo);
             }
 
+            /// <summary>
+            /// Call the event handler.
+            /// </summary>
+            /// <param name="args"></param>
+            internal void Invoke(object[] args)
+            {
+                methodInfo.Invoke(Model, args);
+            }
 
         }
 
@@ -193,7 +253,9 @@ namespace Models.Core
                 // The algorithm is to find the parent Zone of the specified model.
                 // Then return all children of this zone recursively and then recursively 
                 // the direct children of the parents of the zone.
-                IModel parentZone = Apsim.Parent(relativeTo, typeof(Zone));
+                IModel parentZone = FindScopedParentModel(relativeTo);
+                if (parentZone == null)
+                    throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
 
                 // return all models in zone and all direct children of zones parent.
                 modelsInScope = new List<IModel>();
@@ -202,13 +264,51 @@ namespace Models.Core
                 while (parentZone.Parent != null)
                 {
                     parentZone = parentZone.Parent;
-                    modelsInScope.AddRange(parentZone.Children);
+                    foreach (IModel child in parentZone.Children)
+                    {
+                        if (!modelsInScope.Contains(child))
+                        {
+                            modelsInScope.Add(child);
+                            if (!IsScopedModel(child))
+                                modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
+                        }
+                    }
                 }
-                modelsInScope.Add(parentZone); // top level simulation
+
+                if (!modelsInScope.Contains(parentZone))
+                    modelsInScope.Add(parentZone); // top level simulation
 
                 // add to cache for next time.
                 cache.Add(relativeTo, modelsInScope);
                 return modelsInScope;
+            }
+
+            /// <summary>
+            /// Find a parent of 'relativeTo' that has a [ScopedModel] attribute. 
+            /// Returns null if non found.
+            /// </summary>
+            /// <param name="relativeTo">The model to use as a base.</param>
+            private static IModel FindScopedParentModel(IModel relativeTo)
+            {
+                do
+                {
+                    if (IsScopedModel(relativeTo))
+                        return relativeTo;
+                    relativeTo = relativeTo.Parent;
+                }
+                while (relativeTo != null);
+
+                return null;
+            }
+
+            /// <summary>
+            /// Return true if model is a scoped model
+            /// </summary>
+            /// <param name="relativeTo"></param>
+            /// <returns></returns>
+            private static bool IsScopedModel(IModel relativeTo)
+            {
+                return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
             }
         }
     }

@@ -117,7 +117,6 @@ The proxy tree component of this model is intended also to be a guide for develo
       </Water>
       <SoilWater>
         <Name>SoilWater</Name>
-        <residueinterception>0</residueinterception>
         <SummerDate>1-Nov</SummerDate>
         <SummerU>9</SummerU>
         <SummerCona>2.5</SummerCona>
@@ -142,6 +141,7 @@ The proxy tree component of this model is intended also to be a guide for develo
           <double>0.7</double>
           <double>0.7</double>
         </SWCON>
+        <residueinterception>0</residueinterception>
       </SoilWater>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
@@ -324,6 +324,7 @@ The proxy tree component of this model is intended also to be a guide for develo
       <Country>Kenya</Country>
       <Latitude>-1.55</Latitude>
       <Longitude>37.13</Longitude>
+      <Area>0</Area>
     </Soil>
   </Replacements>
   <DataStore>
@@ -739,6 +740,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -919,7 +921,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -952,6 +953,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1161,6 +1163,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1193,6 +1196,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -1352,7 +1356,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -1385,6 +1388,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1556,6 +1560,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1588,6 +1593,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -1747,7 +1753,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -1780,6 +1785,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -1951,6 +1957,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1983,6 +1990,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -2142,7 +2150,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -2175,6 +2182,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2346,6 +2354,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -2378,6 +2387,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -2537,7 +2547,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -2570,6 +2579,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -2741,6 +2751,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -2773,6 +2784,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -2932,7 +2944,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -2965,6 +2976,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -3136,6 +3148,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3168,6 +3181,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -3327,7 +3341,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -3360,6 +3373,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -3531,6 +3545,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3563,6 +3578,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -3722,7 +3738,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -3755,6 +3770,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -3926,6 +3942,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3958,6 +3975,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>DailyReport</Name>
@@ -4117,7 +4135,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -4150,6 +4167,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
               <double>0.7</double>
               <double>0.7</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -4321,6 +4339,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -4687,8 +4706,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Warra</Name>
@@ -5022,6 +5039,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>Report</Name>
@@ -5178,7 +5196,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -5211,6 +5228,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5420,6 +5438,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -5452,6 +5471,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -5630,7 +5650,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -5663,6 +5682,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -5834,6 +5854,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -5872,6 +5893,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -6050,7 +6072,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -6083,6 +6104,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6254,6 +6276,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -6292,6 +6315,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -6470,7 +6494,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -6503,6 +6526,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6674,6 +6698,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -6712,6 +6737,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -6890,7 +6916,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -6923,6 +6948,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7094,6 +7120,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7132,6 +7159,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -7310,7 +7338,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -7343,6 +7370,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7514,6 +7542,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7552,6 +7581,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -7730,7 +7760,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -7763,6 +7792,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7934,6 +7964,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7972,6 +8003,7 @@ namespace Models
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
           <Name>HarvestReport</Name>
@@ -8150,7 +8182,6 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -8183,6 +8214,7 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8354,6 +8386,7 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
+          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -9336,8 +9369,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Folder>
     <Name>Machakos</Name>
@@ -9819,6 +9850,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -10011,7 +10043,6 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -10036,6 +10067,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -10218,6 +10250,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.001</Area>
           <Slope>0</Slope>
@@ -10247,6 +10280,7 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -10535,7 +10569,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -10560,6 +10593,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -10742,6 +10776,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -10771,6 +10806,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -11059,7 +11095,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -11084,6 +11119,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -11266,6 +11302,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -11295,6 +11332,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -11583,7 +11621,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -11608,6 +11645,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -11790,6 +11828,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -11819,6 +11858,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -12107,7 +12147,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -12132,6 +12171,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -12314,6 +12354,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -12343,6 +12384,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -12631,7 +12673,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -12656,6 +12697,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -12838,6 +12880,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -12867,6 +12910,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -13155,7 +13199,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -13180,6 +13223,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -13362,6 +13406,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -13391,6 +13436,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -13679,7 +13725,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -13704,6 +13749,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -13886,6 +13932,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -13915,6 +13962,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -14231,7 +14279,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -14256,6 +14303,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -14438,6 +14486,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -14772,8 +14821,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>Gliricidia</Name>
@@ -15212,6 +15259,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -15403,7 +15451,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -15428,6 +15475,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -15610,6 +15658,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.001</Area>
           <Slope>0</Slope>
@@ -15639,6 +15688,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -15922,7 +15972,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -15947,6 +15996,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16129,6 +16179,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -16158,6 +16209,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -16441,7 +16493,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -16466,6 +16517,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -16648,6 +16700,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -16677,6 +16730,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -16960,7 +17014,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -16985,6 +17038,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -17167,6 +17221,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -17196,6 +17251,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -17479,7 +17535,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -17504,6 +17559,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -17686,6 +17742,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -17715,6 +17772,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -17998,7 +18056,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -18023,6 +18080,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -18205,6 +18263,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -18234,6 +18293,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -18517,7 +18577,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -18542,6 +18601,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -18724,6 +18784,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -18753,6 +18814,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -19036,7 +19098,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -19061,6 +19122,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -19243,6 +19305,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -19272,6 +19335,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>Operations</Name>
@@ -19555,7 +19619,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>9</SummerU>
               <SummerCona>2.5</SummerCona>
@@ -19580,6 +19643,7 @@ namespace Models
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -19762,6 +19826,7 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
+            <Area>0</Area>
           </Soil>
           <Graph>
             <Name>TotalNO3</Name>
@@ -20182,8 +20247,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Memo>
       <Name>Memo re SW</Name>
@@ -20754,6 +20817,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>Report</Name>
@@ -20898,7 +20962,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -20931,6 +20994,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -21102,6 +21166,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21133,6 +21198,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -21301,7 +21367,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -21334,6 +21399,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -21496,6 +21562,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21527,6 +21594,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -21695,7 +21763,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -21728,6 +21795,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -21890,6 +21958,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21921,6 +21990,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -22089,7 +22159,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -22122,6 +22191,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -22284,6 +22354,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -22315,6 +22386,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -22483,7 +22555,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -22516,6 +22587,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -22678,6 +22750,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -22709,6 +22782,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -22877,7 +22951,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -22910,6 +22983,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -23072,6 +23146,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23103,6 +23178,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -23271,7 +23347,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -23304,6 +23379,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -23466,6 +23542,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23497,6 +23574,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -23665,7 +23743,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -23698,6 +23775,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -23860,6 +23938,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23891,6 +23970,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -24059,7 +24139,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -24092,6 +24171,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -24254,6 +24334,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -24285,6 +24366,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -24453,7 +24535,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -24486,6 +24567,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -24648,6 +24730,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -24679,6 +24762,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -24847,7 +24931,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -24880,6 +24963,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -25042,6 +25126,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -25073,6 +25158,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
             <Name>HarvestReport</Name>
@@ -25241,7 +25327,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -25274,6 +25359,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -25436,6 +25522,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -25552,6 +25639,7 @@ namespace Models
             <emissivity>0.96</emissivity>
             <gsmax>0.01</gsmax>
             <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Soil</Name>
@@ -25635,7 +25723,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -25668,6 +25755,7 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -25830,6 +25918,7 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
+            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -25929,8 +26018,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <ExplorerWidth>287</ExplorerWidth>

@@ -129,8 +129,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Root))]
         [XmlElement(typeof(Models.PMF.Organs.RootSWIM))]
         [XmlElement(typeof(Models.PMF.Organs.SimpleLeaf))]
-        [XmlElement(typeof(Models.PMF.Organs.TreeCanopy))]
-        [XmlElement(typeof(Models.PMF.Organs.SimpleRoot))]
+        [XmlElement(typeof(Models.PMF.Organs.PerennialLeaf))]
         [XmlElement(typeof(Models.PMF.Phen.Phenology))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase))]
         [XmlElement(typeof(Models.PMF.Phen.EmergingPhase15))]
@@ -188,6 +187,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.Zadok))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.CanopyPhotosynthesis))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.TEWaterDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PartitionFractionDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
@@ -241,6 +241,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.RuminantHerd))]
         [XmlElement(typeof(Models.WholeFarm.RuminantType))]
         [XmlElement(typeof(Models.WholeFarm.RuminantTypeCohort))]
+        [XmlElement(typeof(Models.Lifecycle.Lifecycle))]
+        [XmlElement(typeof(Models.Lifecycle.Lifestage))]
+        [XmlElement(typeof(Models.Lifecycle.LifestageProcess))]
+        [XmlElement(typeof(Models.Lifecycle.LifestageReproductionProcess))]
         [XmlElement(typeof(Map))]
         public List<Model> Children { get; set; }
 

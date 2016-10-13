@@ -43,14 +43,15 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhaseChange">The phase change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhaseChange.EventStageName == SetEvent)
+            if (phaseChange.EventStageName == SetEvent)
                 OnSetEvent();
 
-            if (PhaseChange.EventStageName == ReSetEvent)
+            if (phaseChange.EventStageName == ReSetEvent)
                 OnReSetEvent();
         }
 

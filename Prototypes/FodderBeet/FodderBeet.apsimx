@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -724,6 +724,11 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -739,7 +744,6 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -769,10 +773,10 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Name>PartitionFraction</Name>
           <Value>0.05</Value>
         </Constant>
-		<Constant>
-		  <Name>MaximumRootDepth</Name>
-		  <Value>1000000</Value>
-		</Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000000</Value>
+        </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -916,6 +920,7 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           </XYPairs>
           <XProperty>[Root].Depth</XProperty>
         </LinearInterpolationFunction>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -928,12 +933,21 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <Value>0.95</Value>
         </Constant>
         <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.011</Value>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -989,29 +1003,29 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Petiole</Name>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.95</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1083,23 +1097,18 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
         </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-         <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2274,6 +2283,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <emissivity>0.96</emissivity>
           <gsmax>0.01</gsmax>
           <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -2777,8 +2787,6 @@ namespace Models
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
       </SoilArbitrator>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>PhenologyGraphs</Name>
@@ -5997,6 +6005,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8158,8 +8167,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>LincolnP21_Cv2012</Name>
@@ -8492,6 +8499,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -10653,8 +10661,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Memo>
     <Name>References</Name>
