@@ -213,10 +213,6 @@ namespace Models.Core
             events.ConnectEvents(this);
             links = new Core.Links();
             links.Resolve(this);
-
-//            Apsim.ResolveLinks(this);
-//            foreach (Model child in Apsim.ChildrenRecursively(this))
-//                Apsim.ResolveLinks(child);
         }
 
         /// <summary>Disconnect all links and events in simulation</summary>
@@ -224,9 +220,7 @@ namespace Models.Core
         {
             events.DisconnectEvents(this);
             events = null;
-            Apsim.UnresolveLinks(this);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-                Apsim.UnresolveLinks(child);
+            links.Unresolve(this);
         }
     }
 }

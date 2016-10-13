@@ -171,7 +171,19 @@ namespace Models.Core
             return relativeTo;
         }
 
+        /// <summary>Set the Parent field of all iModels</summary>
+        public void ParentAllModels()
+        {
+            ParentAllModelsInternal(null);            
+        }
 
-
+        /// <summary>Internal routine to parent all models. Uses recursion.</summary>
+        /// <param name="parent">The parent of all child models.</param>
+        private void ParentAllModelsInternal(IModel parent)
+        {
+            if (Model != null && Model is IModel)
+                (Model as IModel).Parent = parent;
+            Children.ForEach(child => child.ParentAllModelsInternal(Model as IModel));
+        }
     }
 }

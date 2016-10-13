@@ -41,6 +41,26 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Set to null all link fields in the specified model.
+        /// </summary>
+        /// <param name="model">The model to look through for links</param>
+        public void Unresolve(IModel model)
+        {
+            foreach (IModel modelNode in Apsim.ChildrenRecursively(model))
+            {
+                // Go looking for private [Link]s
+                foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
+                                                model.GetType(),
+                                                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+                {
+                    LinkAttribute link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                    if (link != null)
+                        field.SetValue(model, null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
@@ -62,7 +82,12 @@ namespace Models.Core
 
                     // Get a list of models that could possibly match.
                     List<object> matches;
-                    if (link.IsScoped(field))
+                    if (link is ParentLinkAttribute)
+                    {
+                        matches = new List<object>();
+                        matches.Add(GetParent(obj, fieldType));
+                    }
+                    else if (link.IsScoped(field))
                         matches = GetModelsInScope(obj);
                     else
                         matches = GetChildren(obj);
@@ -135,6 +160,22 @@ namespace Models.Core
                 return (obj as IModel).Name;
             else
                 return (obj as ModelWrapper).Name;
+        }
+
+        /// <summary>
+        /// Determine the type of an object and return its parent of the specified type.
+        /// </summary>
+        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
+        /// <param name="type">The type of parent to find.</param>
+        /// <returns>The matching parent</returns>
+        private object GetParent(object obj, Type type)
+        {
+            if (obj is IModel)
+                return Apsim.Parent(obj as IModel, type);
+            else if (obj is ModelWrapper && (obj as ModelWrapper).Model is IModel)
+                return Apsim.Parent((obj as ModelWrapper).Model as IModel, type);
+            else
+                throw new NotImplementedException();
         }
 
         /// <summary>
