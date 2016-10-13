@@ -2191,11 +2191,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -2414,11 +2409,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
           <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
@@ -5606,8 +5596,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Crop</Name>
@@ -7226,8 +7214,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Canopy</Name>
@@ -9448,8 +9434,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Yield</Name>
@@ -10343,8 +10327,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafAppearance</Name>
@@ -11435,8 +11417,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafAppearance</Name>
@@ -12748,8 +12728,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -13287,8 +13265,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafNumberTimeSeries</Name>
@@ -14423,8 +14399,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -15140,8 +15114,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -15857,8 +15829,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -16869,8 +16839,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
       </Experiment>
       <Experiment>
@@ -17902,8 +17870,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -19285,8 +19251,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -21492,8 +21456,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Harvest Yield</Name>
@@ -22698,8 +22660,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>TotalSW</Name>
@@ -23776,8 +23736,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>TotalSW</Name>
@@ -26091,8 +26049,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>SoilWaterProfile</Name>
@@ -29730,8 +29686,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -33776,8 +33730,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -37141,8 +37093,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -39659,8 +39609,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -41918,8 +41866,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Graph1</Name>
@@ -42501,8 +42447,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -43054,8 +42998,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FLNdynamics</Name>
@@ -43947,8 +43889,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -44489,8 +44429,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Graph1</Name>
@@ -45134,8 +45072,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -45676,8 +45612,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -46218,8 +46152,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -46760,8 +46692,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -47302,8 +47232,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -47844,8 +47772,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -48386,8 +48312,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -48928,8 +48852,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
       </Folder>
@@ -49642,8 +49564,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Yield</Name>
@@ -51284,8 +51204,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Yield</Name>
@@ -52669,8 +52587,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Biomass</Name>
@@ -53372,8 +53288,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Biomass</Name>
@@ -54314,8 +54228,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -56409,8 +56321,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -57588,8 +57498,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -58344,8 +58252,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -59061,8 +58967,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -59778,8 +59682,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -60580,8 +60482,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Lonzee06</Name>
@@ -61226,8 +61126,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Lonzee08</Name>
@@ -61872,8 +61770,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>
@@ -63238,8 +63134,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Phenology</Name>
@@ -65000,8 +64894,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Phenology</Name>
@@ -66450,8 +66342,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Yucheng03</Name>
@@ -67114,8 +67004,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Yucheng04</Name>
@@ -67778,8 +67666,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>
@@ -68840,8 +68726,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -69613,8 +69497,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>

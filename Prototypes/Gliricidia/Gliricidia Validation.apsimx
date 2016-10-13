@@ -1082,10 +1082,6 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Value>0</Value>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -2494,8 +2490,6 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Grain Yield PvsO</Name>
@@ -4019,8 +4013,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>Hamakuapoko</Name>
@@ -4760,8 +4752,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Experiment>
       <Name>Guadeloupe</Name>
@@ -5400,8 +5390,6 @@ namespace Models
           <Area>0</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Leaf Wt</Name>

@@ -1029,11 +1029,6 @@ DM demand is based on ...
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
@@ -1217,11 +1212,6 @@ DM demand is based on ...
           <Name>StructuralFraction</Name>
           <Value>1</Value>
           <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1655,16 +1645,6 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
           <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -6942,8 +6922,6 @@ namespace Models
               </Graph>
             </Folder>
           </Folder>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>ScottFarmEstablishment</Name>
@@ -11137,8 +11115,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>D9a</Name>
@@ -15374,8 +15350,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Experiment>
           <Name>FD902</Name>
@@ -16587,8 +16561,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Folder>
             <Name>Results</Name>
@@ -21168,8 +21140,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Results</Name>
@@ -25665,8 +25635,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Results</Name>
@@ -33603,8 +33571,6 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Folder>
     <Folder>
@@ -34508,8 +34474,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Harvests</Name>
@@ -39265,8 +39229,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Results</Name>
@@ -43491,8 +43453,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Results</Name>
@@ -52909,8 +52869,6 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>Clapham</Name>
@@ -54462,8 +54420,6 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <ExplorerWidth>327</ExplorerWidth>
