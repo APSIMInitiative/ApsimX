@@ -1810,10 +1810,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0.01</Value>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
           <Units>/d</Units>
@@ -1918,10 +1914,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.8</Value>
-        </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
@@ -2986,8 +2978,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
@@ -3776,8 +3766,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Experiment>
     <Experiment>
@@ -5322,8 +5310,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>SoilWater</Name>
@@ -7066,8 +7052,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -7986,8 +7970,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -9432,8 +9414,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -10282,8 +10262,6 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Simulation>
         <Name>Lysimeter4</Name>
@@ -11010,8 +10988,6 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Folder>
     <Experiment>
@@ -11653,8 +11629,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -13098,8 +13072,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -14713,8 +14685,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>FinalLeafNumber</Name>

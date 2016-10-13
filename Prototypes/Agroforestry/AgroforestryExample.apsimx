@@ -3448,8 +3448,6 @@ namespace Models
       <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
       <RainShaddowWidth>0</RainShaddowWidth>
     </AgroforestrySystem>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Windbreak Example</Name>
@@ -11049,8 +11047,6 @@ namespace Models
       <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
       <RainShaddowWidth>0</RainShaddowWidth>
     </AgroforestrySystem>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -14127,8 +14123,6 @@ namespace Models
       <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
       <RainShaddowWidth>0</RainShaddowWidth>
     </AgroforestrySystem>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Folder>
     <Name>Validation</Name>
@@ -18754,8 +18748,6 @@ namespace Models
         <RainfallInterceptionFraction>0</RainfallInterceptionFraction>
         <RainShaddowWidth>0</RainShaddowWidth>
       </AgroforestrySystem>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <ExplorerWidth>287</ExplorerWidth>
