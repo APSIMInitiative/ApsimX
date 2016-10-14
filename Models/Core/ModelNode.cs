@@ -183,7 +183,13 @@ namespace Models.Core
         {
             if (Model != null && Model is IModel)
                 (Model as IModel).Parent = parent;
-            Children.ForEach(child => child.ParentAllModelsInternal(Model as IModel));
+            foreach (ModelWrapper child in Children)
+            {
+                if (Model is IModel && child.Model is IModel)
+                    (Model as IModel).Children.Add(child.Model as Model);
+                child.ParentAllModelsInternal(Model as IModel);
+            }
+
         }
     }
 }
