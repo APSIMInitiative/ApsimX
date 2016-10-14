@@ -104,9 +104,10 @@ namespace Models.Core
         /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel model, string namePath)
+        public static IModel Find(IModel model, string namePath)
         {
-            return Locator(model).Find(namePath, model as Model);
+            List<IModel> matches = FindAll(model);
+            return matches.Find(match => StringUtilities.StringsAreEqual(match.Name, namePath));
         }
 
         /// <summary>
@@ -115,9 +116,13 @@ namespace Models.Core
         /// <param name="model">The reference model</param>
         /// <param name="type">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel model, Type type)
+        public static IModel Find(IModel model, Type type)
         {
-            return Locator(model).Find(type, model as Model);
+            List<IModel> matches = FindAll(model, type);
+            if (matches.Count > 0)
+                return matches[0];
+            else
+                return null;
         }
 
         /// <summary>
@@ -127,7 +132,13 @@ namespace Models.Core
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model)
         {
-            return new List<IModel>(Locator(model).FindAll(model as Model));
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation == null || simulation.Scope == null)
+            {
+                ScopingRules scope = new ScopingRules();
+                return scope.FindAll(model).ToList();
+            }
+            return simulation.Scope.FindAll(model).ToList();
         }
 
         /// <summary>
@@ -138,7 +149,9 @@ namespace Models.Core
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
-            return new List<IModel>(Locator(model).FindAll(typeFilter, model as Model));
+            List<IModel> matches = FindAll(model);
+            matches.RemoveAll(match => match.GetType() != typeFilter);
+            return matches;
         }
 
         /// <summary>
@@ -213,7 +226,7 @@ namespace Models.Core
             IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
             // Call deserialised
-            Events events = new Events();
+            Events events = new Events(null);
             events.AddModelEvents(modelToAdd);
             object[] args = new object[] { true };
             events.CallEventHandler(modelToAdd, "Deserialised", args);
@@ -263,7 +276,7 @@ namespace Models.Core
         /// <returns>The string version of the model</returns>
         public static string Serialise(IModel model)
         {
-            Events events = new Events();
+            Events events = new Events(null);
             events.AddModelEvents(model);
 
             // Let all models know that we're about to serialise.
