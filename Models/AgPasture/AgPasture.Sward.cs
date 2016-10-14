@@ -235,7 +235,7 @@ namespace Models.AgPasture
 
         /// <summary>Gets the plant status (dead, alive, etc.).</summary>
         [Description("Plant status (dead, alive, etc.)")]
-        [Units("")]
+        [Units("-")]
         public string PlantStatus
         {
             get
@@ -249,7 +249,7 @@ namespace Models.AgPasture
 
         /// <summary>Gets the number of species in the sward.</summary>
         [Description("Number of species in the sward")]
-        [Units("")]
+        [Units("-")]
         public int NumSpecies
         {
             get { return numSpecies; }
