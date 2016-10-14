@@ -150,7 +150,7 @@ namespace Models.Core
         public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
             List<IModel> matches = FindAll(model);
-            matches.RemoveAll(match => match.GetType() != typeFilter);
+            matches.RemoveAll(match => !typeFilter.IsAssignableFrom(match.GetType()));
             return matches;
         }
 
