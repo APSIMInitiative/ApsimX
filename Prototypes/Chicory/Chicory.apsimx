@@ -3424,7 +3424,7 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
               <Graph>
-                <Name>Soil</Name>
+                <Name>SoilWater</Name>
                 <Series>
                   <Name>AccumDrainage</Name>
                   <Type>Scatter</Type>
@@ -7729,7 +7729,7 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
               <Graph>
-                <Name>Soil</Name>
+                <Name>SoilWater</Name>
                 <Series>
                   <Name>AccumDrainage</Name>
                   <Type>Scatter</Type>
@@ -11964,7 +11964,7 @@ namespace Models
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
               <Graph>
-                <Name>Soil</Name>
+                <Name>SoilWater</Name>
                 <Series>
                   <Name>AccumDrainage</Name>
                   <Type>Scatter</Type>
@@ -30203,7 +30203,7 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>Soil</Name>
+              <Name>SoilWater</Name>
               <Series>
                 <Name>AccumDrainage</Name>
                 <Type>Scatter</Type>
@@ -48494,7 +48494,7 @@ namespace Models
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
-          <Name>Soil</Name>
+          <Name>SoilWater</Name>
           <Series>
             <Name>AccumDrainage</Name>
             <Type>Scatter</Type>
@@ -52470,7 +52470,7 @@ namespace Models
       <Folder>
         <Name>PlantN</Name>
         <Graph>
-          <Name>Plant</Name>
+          <Name>Plant N</Name>
           <Series>
             <Name>AboveGround</Name>
             <Type>Scatter</Type>
