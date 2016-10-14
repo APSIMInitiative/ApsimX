@@ -849,7 +849,7 @@ namespace Models.Soils
                     if (l <= ProfileLayers - 1)
                     {
                         PotentialUpwardDiffusion += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
-                        DownwardDiffusionCapacity += Pores[l][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb downward diffusion
+                        DownwardDiffusionCapacity += Pores[l + 1][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb downward diffusion
                     }
                     else
                     {
