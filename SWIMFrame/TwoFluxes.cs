@@ -141,18 +141,15 @@ namespace SWIMFrame
             {
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
+                for (int x = 1; x <= j; x++)
+                    for (int a = 1; a <= m; a++)
+                        phif[x, i] = ft[i - 1].fend[0].phif[a]; //discard every second
                 nft[i] = j;
                 nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
             }
 
-            // do matrices seperatly
-            for (i = 1; i <= 2; i++)
-                for (int x = 1; x <= j; x++)
-                {
-                    phif[x, i] = ft[i - 1].fend[0].phif[x * 2 - 1]; //discard every second
-                    for (int y = 1; y <= m; y++)
-                        qf[y, x, i] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
-                }
+            //         for (int y = 1; y <= m; y++)
+            //            qf[y, x, i] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
             // phif = Matrix<double>.Build.DenseOfArray(phif).Transpose().ToArray();
 
             // Extend phi2 and h2 if he1>he2, or vice-versa.

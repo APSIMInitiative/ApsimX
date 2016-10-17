@@ -86,7 +86,7 @@ namespace SWIMFrame
             aq[1, 1] = sp.Kc[1]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
             q1 = (sp.phic[1] - sp.phic[2]) / dz; // q1 is initial estimate
-            aq[1, 2] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
+            aq[2, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
             for (j = 3; j <= nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
             {
                 if (j > nu) // part satn - set h, K and phi
@@ -97,20 +97,20 @@ namespace SWIMFrame
                 }
 
                 // get approx q from linear extrapolation
-                q1 = aq[1, j - 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[1, j - 1] - aq[1, j - 2]) / (sp.phic[j - 1] - sp.phic[j - 2]);
-                aq[1, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                q1 = aq[j - 1, 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[j - 1, 1] - aq[j - 2, 1]) / (sp.phic[j - 1] - sp.phic[j - 2]);
+                aq[j, i] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
-                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
+                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[j, 1] - aq[j - 1, 1]) < (1 + rerr) * dz)
                         break;
             }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu), rerr);
-            re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
+            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu));// for unsat phi
             double[] rei = new double[nu - 2 + 1];
             Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice
             indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
@@ -120,7 +120,7 @@ namespace SWIMFrame
             for (int idx = 1; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Row(1).ToArray().Slice(nu, nt)); // for sat phi
+            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
             int[] ifsTemp = ifs.Slice(2, nfs);
@@ -197,11 +197,6 @@ namespace SWIMFrame
                     qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
                 }
 
-     /*       Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
-            printMatrix = printMatrix.RemoveRow(0);
-            printMatrix = printMatrix.RemoveColumn(0);
-            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t",  null, "E6", null, null);
-*/
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
             for (j = 2; j <= i; j += 2)
@@ -222,14 +217,14 @@ namespace SWIMFrame
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
-            for (i = 1; i <= nphif;i++)
+            for (int a = 1; a <= nphif;a++)
             {
-                phii5[i * 2 - 1] = phii51[i];
+                phii5[a * 2 - 1] = phii51[a];
             }
 
-            for (i = 1; i <= ni; i++)
+            for (int a = 1; a <= ni; a++)
             {
-                phii5[i * 2] = phii52[i];
+                phii5[a * 2] = phii52[a];
             }
             // diags - end timer here
 

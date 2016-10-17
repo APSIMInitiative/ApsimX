@@ -168,7 +168,7 @@ namespace SWIMFrame
                 if (i == sp.n)
                     break;
 
-                cco = Cuco(sp.phi.Slice(i,i+3), sp.K.Slice(i, i+3));
+                cco = Cuco(sp.phi.Slice(i + 3, i), sp.K.Slice(i + 3, i));
                 double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
                 KcoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
                 sp.Kco = KcoM.ToArray();
