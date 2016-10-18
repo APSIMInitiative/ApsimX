@@ -1320,13 +1320,13 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>PredictedObservedSoil</Name>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedSoil</ObservedTableName>
-      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedGliricidia</Name>
       <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
       <ObservedTableName>ObservedGliricidia</ObservedTableName>
-      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -2135,8 +2135,8 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-              <string>[Maize].Grain.Size as GrainSize</string>
+              <string>[Maize].Grain.NumberFunction.Value</string>
+              <string>[Maize].Grain.Size</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>sum([Soil].SoilNitrogen.FOMC) as FOMC</string>
@@ -2201,6 +2201,11 @@ namespace Models
               <string>[Maize].Phenology.DaysAfterSowing</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
               <string>[Maize].Phenology.Photosensitive.Target.Value</string>
+              <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
+              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
+              <string>[Maize].Leaf.ExpandedCohortNo</string>
+              <string>[Soil].SoilWater.LeachNO3</string>
+              <string>[Soil].SoilWater.flow_no3</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2729,7 +2734,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoil</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2750,7 +2755,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2840,7 +2845,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoil</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SubsurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2861,7 +2866,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SubsurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2975,7 +2980,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>PPTTTarget</Name>
+        <Name>NStress</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -2990,8 +2995,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Clock.Today.DayOfYear</XFieldName>
-          <YFieldName>Maize.Phenology.Photosensitive.Target.Value</YFieldName>
+          <XFieldName>Maize.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Maize.Leaf.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3018,7 +3023,101 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Photoperiod</Name>
+        <Name>Grain No PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Maize.Grain.NumberFunction.Value</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSize PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Maize.Grain.Size</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.Size</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NLeaching</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -3030,57 +3129,14 @@ namespace Models
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+          <YFieldName>Soil.SoilWater.LeachNO3</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>SowingDOY</Name>
-        <Series>
-          <Name>Predicted</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.SowingDate.DayOfYear</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
+          <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Axis>
@@ -4407,7 +4463,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today as Date</string>
+            <string>[Clock].Today</string>
             <string>[Zone].Area</string>
             <string>[Soil].SoilWater.Es</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -4576,7 +4632,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4597,7 +4653,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4640,7 +4696,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4661,7 +4717,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4704,7 +4760,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4725,7 +4781,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5194,7 +5250,7 @@ namespace Models
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
-              <string>[Clock].Today as Date</string>
+              <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -5407,7 +5463,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5428,7 +5484,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5469,7 +5525,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5490,7 +5546,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5531,7 +5587,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5552,7 +5608,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5728,7 +5784,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5769,7 +5825,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5796,5 +5852,5 @@ namespace Models
       </Graph>
     </Experiment>
   </Folder>
-  <ExplorerWidth>287</ExplorerWidth>
+  <ExplorerWidth>309</ExplorerWidth>
 </Simulations>
