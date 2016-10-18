@@ -1326,7 +1326,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>PredictedObservedGliricidia</Name>
       <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
       <ObservedTableName>ObservedGliricidia</ObservedTableName>
-      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -4463,7 +4463,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today as Date</string>
+            <string>[Clock].Today</string>
             <string>[Zone].Area</string>
             <string>[Soil].SoilWater.Es</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -4632,7 +4632,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4653,7 +4653,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4696,7 +4696,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4717,7 +4717,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4760,7 +4760,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4781,7 +4781,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5250,7 +5250,7 @@ namespace Models
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
-              <string>[Clock].Today as Date</string>
+              <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -5463,7 +5463,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5484,7 +5484,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5525,7 +5525,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5546,7 +5546,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5587,7 +5587,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5608,7 +5608,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5784,7 +5784,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5825,7 +5825,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
