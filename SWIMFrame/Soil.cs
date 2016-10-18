@@ -116,14 +116,13 @@ namespace SWIMFrame
             nld = nli1 + 1;
             nc = 1 + sp.n / 3; // n-1 has been made divisible by 3
             // fill out the rest of the structure.
-             sp.nld = nld; sp.nc = nc;
-             sp.h = h; 
-             sp.lnh = new double[nld+1];
-             sp.Sd = new double[nld+1];
-             sp.Kco = new double[3, nc];
-             sp.phico = new double[3, nc];
-             sp.Sco = new double[3, nc];
-
+            sp.nld = nld; sp.nc = nc;
+            sp.h = h;
+            sp.lnh = new double[nld + 1];
+            sp.Sd = new double[nld + 1];
+            sp.Kco = new double[3 + 1, nc + 1];
+            sp.phico = new double[3 + 1, nc + 1];
+            sp.Sco = new double[3 + 1, nc + 1];
             // Store Sd and lnh in sp.
             sp.lnh[1] = lhd;
             for (j = 2; j <= nld; j++)
@@ -169,18 +168,17 @@ namespace SWIMFrame
                     break;
 
                 cco = Cuco(sp.phi.Slice(i, i + 3), sp.K.Slice(i, i + 3));
-                double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
-                KcoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.Kco = KcoM.ToArray();
+                KcoM.SetColumn(j, cco.Slice(2, 4).ToArray());
 
                 cco = Cuco(sp.S.Slice(i, i + 3), sp.phi.Slice(i, i + 3));
-                phicoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.phico = phicoM.ToArray();
+                phicoM.SetColumn(j, cco.Slice(2, 4).ToArray());
 
                 cco = Cuco(sp.phi.Slice(i, i + 3), sp.S.Slice(i, i + 3));
-                ScoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.Sco = ScoM.ToArray();
+                ScoM.SetColumn(j, cco.Slice(2, 4).ToArray());
             }
+            sp.Kco = KcoM.ToArray();
+            sp.phico = phicoM.ToArray();
+            sp.Sco = ScoM.ToArray();
             // diags - end timing
             return sp;
         }

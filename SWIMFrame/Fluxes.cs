@@ -35,7 +35,7 @@ namespace SWIMFrame
         static double[,] qi2 = new double[mx + 1, mx + 1];
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
-        static double[,] aKco = new double[3 + 1, mx + 1];
+        static double[,] aKco = new double[mx + 1, 3 + 1];
     //    static double[,] aphico = new double[3 + 1, mx + 1];
         static SoilProps sp;
 
@@ -64,10 +64,10 @@ namespace SWIMFrame
             ft.fend = new FluxEnd[2];
             nu = sp.nc;
             he = sp.he; Ks = sp.ks;
-            for (i = 1; i < 4; i++) // this is needed as some calcs require indexs out of range of the sp arrays
-                for (j = 1; j < sp.Kco.GetLength(1); j++)
+            for (i = 1; i <= nu - 1; i++)
+                for (j = 1; j < sp.Kco.GetLength(0); j++)
                 {
-                    aKco[i, j] = sp.Kco[i - 1, j];
+                    aKco[i, j] = sp.Kco[j, i];
                    // aphico[i, j] = sp.phico[i, j]; //doesn't seem to be used
                 }
 
@@ -75,7 +75,7 @@ namespace SWIMFrame
             for (i = 1; i <= nu - 1; i++)
             {
                 x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
-                hpK[i] = sp.Kc[i] + x * (aKco[1, i] + x * (aKco[2, i] + x * aKco[3, i]));
+                hpK[i] = sp.Kc[i] + x * (aKco[i, 1] + x * (aKco[i, 2] + x * aKco[i, 3]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
@@ -98,7 +98,7 @@ namespace SWIMFrame
 
                 // get approx q from linear extrapolation
                 q1 = aq[j - 1, 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[j - 1, 1] - aq[j - 2, 1]) / (sp.phic[j - 1] - sp.phic[j - 2]);
-                aq[j, i] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                aq[j, 1] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
@@ -131,26 +131,26 @@ namespace SWIMFrame
             for (int idx = 1; idx <= nphif; idx++)
             {
                 phif[idx] = sp.phic[iphif[idx]];
-                qf[1, idx] = aq[1, iphif[idx]];
+                qf[idx, 1] = aq[iphif[idx], 1];
             }
             // Get rest of fluxes
             // First for lower end wetter
             for (j = 2; j <= nphif; j++)
                 for (i = 2; i <= j; i++)
                 {
-                    q1 = qf[i - 1, j];
+                    q1 = qf[j, i - 1];
                     if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
                         q1 = 0.0; // improve?
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Then for upper end wetter
             for (i = 2; i <= nphif; i++)
                 for (j = i - 1; j >= 1; j--)
                 {
-                    q1 = qf[i, j + 1];
+                    q1 = qf[j + 1, i];
                     if (j + 1 == i)
                         q1 = q1 + (sp.phic[iphif[i]] - sp.phic[iphif[j]]) / dz;
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Use of flux table involves only linear interpolation, so gain accuracy
             // by providing fluxes in between using quadratic interpolation.
@@ -166,24 +166,24 @@ namespace SWIMFrame
 
             for (i = 1; i <= nphif; i++)
             {
-                qi1Return = quadinterp(phif, qfM.Row(i).ToArray(), nphif, phii);
+                qi1Return = quadinterp(phif, qfM.Column(i).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi1Return.Length; idx++)
-                    qi1[i, idx] = qi1Return[idx];
+                    qi1[idx, i] = qi1Return[idx];
             }
 
             for (j = 1; j <= nphif; j++)
             {
-                qi2Return = quadinterp(phif, qfM.Column(j).ToArray(), nphif, phii);
+                qi2Return = quadinterp(phif, qfM.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi2Return.Length; idx++)
-                    qi2[idx, j] = qi2Return[idx];
+                    qi2[j, idx] = qi2Return[idx];
             }
 
             for (j = 1; j <= ni; j++)
             {
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
-                qi3Return = quadinterp(phif, qi1M.Column(j).ToArray(), nphif, phii);
+                qi3Return = quadinterp(phif, qi1M.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi3Return.Length; idx++)
-                    qi3[idx, j] = qi3Return[idx];
+                    qi3[j, idx] = qi3Return[idx];
             }
 
             // Put all the fluxes together.
@@ -191,10 +191,10 @@ namespace SWIMFrame
             for (int row = 1; row <= i; row += 2)
                 for (int col = 1; col <= i; col += 2)
                 {
-                    qi5[row, col] = qf[row / 2 + 1, col / 2 + 1];
-                    qi5[row, col + 1] = qi1[row / 2 + 1, col / 2 + 1];
-                    qi5[row + 1, col] = qi2[row / 2 + 1, col / 2 + 1];
-                    qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
+                    qi5[col, row] = qf[col / 2 + 1, row / 2 + 1];
+                    qi5[col+1, row] = qi1[col / 2 + 1, row / 2 + 1];
+                    qi5[col, row + 1] = qi2[col / 2 + 1, row / 2 + 1];
+                    qi5[col + 1, row + 1] = qi3[col / 2 + 1, row / 2 + 1];
                 }
 
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
@@ -212,7 +212,7 @@ namespace SWIMFrame
                     ii = ii - 1;
                 } 
                 x = phii[ip] - sp.phic[ii];
-                qi5[j, j] = sp.Kc[ii] + x * (aKco[1, ii] + x * (aKco[2, ii] + x * aKco[3, ii]));
+                qi5[j, j] = sp.Kc[ii] + x * (aKco[ii, 1] + x * (aKco[ii, 2] + x * aKco[ii, 3]));
             }
 
             double[] phii51 = phif.Slice(1, nphif);
