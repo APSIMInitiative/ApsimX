@@ -184,9 +184,9 @@ namespace SWIMFrame
                     ftname[j] = "soil" + id + "dz" + mm;
                 }
                 if (isid[1, i] == isid[2, i])
-                    sfile = ftname[1] + ".dat";
+                    sfile = ftname[1];
                 else
-                    sfile = ftname[1] + "_" + ftname[2] + ".dat";
+                    sfile = ftname[1] + "_" + ftname[2];
                 ft[i] = Fluxes.ReadFluxTable(sfile);
 
                 // Set up flux path data.
