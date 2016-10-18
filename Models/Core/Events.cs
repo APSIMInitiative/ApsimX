@@ -1,4 +1,8 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright file="Events.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Core
 {
     using APSIM.Shared.Utilities;
@@ -11,19 +15,25 @@ namespace Models.Core
     {
         private List<Events.Publisher> publishers = null;
         private List<Events.Subscriber> subscribers = null;
-        private Scope scope = null;
         private Dictionary<IModel, List<Subscriber>> cache = new Dictionary<IModel, List<Subscriber>>();
+        private Simulation simulation;
 
+        /// <summary>Default constructor</summary>
+        public Events() { }
+
+        /// <summary>Constructor</summary>
+        /// <param name="simulation">Parent simulation</param>
+        public Events(Simulation simulation)
+        {
+            this.simulation = simulation;
+        }
         /// <summary>Connect all events in the specified simulation.</summary>
-        /// <param name="model"></param>
-        internal void ConnectEvents(IModel model)
+        internal void ConnectEvents()
         {
             // Get a complete list of all models in simulation (including the simulation itself).
             List<IModel> allModels = new List<IModel>();
-            allModels.Add(model);
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
-
-            scope = new Scope(allModels);
+            allModels.Add(simulation);
+            allModels.AddRange(Apsim.ChildrenRecursively(simulation));
 
             if (publishers == null)
                 publishers = Events.Publisher.FindAll(allModels);
@@ -120,7 +130,7 @@ namespace Models.Core
             if (cache.TryGetValue(relativeTo.Model as IModel, out subscribersInScope))
                 return subscribersInScope;
 
-            List<IModel> modelsInScope = scope.InScope(relativeTo.Model as IModel);
+            List<IModel> modelsInScope = new List<IModel>(simulation.Scope.FindAll(relativeTo.Model as IModel));
             subscribersInScope = new List<Subscriber>();
             subscribersInScope = subscribers.FindAll(subscriber => modelsInScope.Contains(subscriber.Model as IModel));
             cache.Add(relativeTo.Model as IModel, subscribersInScope);
@@ -227,89 +237,5 @@ namespace Models.Core
             }
         }
 
-        internal class Scope
-        {
-            private Dictionary<IModel, List<IModel>> cache = new Dictionary<IModel, List<IModel>>();
-            private List<IModel> allModels = new List<IModel>();
-
-            /// <summary>Constructor</summary>
-            internal Scope(List<IModel> allModelsInSimulation)
-            {
-                allModels = allModelsInSimulation;
-            }
-
-            /// <summary>
-            /// Return a list of models in scope to the one specified.
-            /// </summary>
-            /// <param name="relativeTo">The model to base scoping rules on</param>
-            internal List<IModel> InScope(IModel relativeTo)
-            {
-                // Try the cache first.
-                List<IModel> modelsInScope;
-                if (cache.TryGetValue(relativeTo, out modelsInScope))
-                    return modelsInScope;
-
-
-                // The algorithm is to find the parent Zone of the specified model.
-                // Then return all children of this zone recursively and then recursively 
-                // the direct children of the parents of the zone.
-                IModel parentZone = FindScopedParentModel(relativeTo);
-                if (parentZone == null)
-                    throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
-
-                // return all models in zone and all direct children of zones parent.
-                modelsInScope = new List<IModel>();
-                modelsInScope.Add(parentZone);
-                modelsInScope.AddRange(Apsim.ChildrenRecursively(parentZone));
-                while (parentZone.Parent != null)
-                {
-                    parentZone = parentZone.Parent;
-                    foreach (IModel child in parentZone.Children)
-                    {
-                        if (!modelsInScope.Contains(child))
-                        {
-                            modelsInScope.Add(child);
-                            if (!IsScopedModel(child))
-                                modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
-                        }
-                    }
-                }
-
-                if (!modelsInScope.Contains(parentZone))
-                    modelsInScope.Add(parentZone); // top level simulation
-
-                // add to cache for next time.
-                cache.Add(relativeTo, modelsInScope);
-                return modelsInScope;
-            }
-
-            /// <summary>
-            /// Find a parent of 'relativeTo' that has a [ScopedModel] attribute. 
-            /// Returns null if non found.
-            /// </summary>
-            /// <param name="relativeTo">The model to use as a base.</param>
-            private static IModel FindScopedParentModel(IModel relativeTo)
-            {
-                do
-                {
-                    if (IsScopedModel(relativeTo))
-                        return relativeTo;
-                    relativeTo = relativeTo.Parent;
-                }
-                while (relativeTo != null);
-
-                return null;
-            }
-
-            /// <summary>
-            /// Return true if model is a scoped model
-            /// </summary>
-            /// <param name="relativeTo"></param>
-            /// <returns></returns>
-            private static bool IsScopedModel(IModel relativeTo)
-            {
-                return relativeTo.GetType().GetCustomAttribute(typeof(ScopedModelAttribute), true) as ScopedModelAttribute != null;
-            }
-        }
     }
 }

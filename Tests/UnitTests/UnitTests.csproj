@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="ScopeTests.cs" />
     <Compile Include="MockSoil.cs" />
     <Compile Include="MockSummary.cs" />
     <Compile Include="MockSurfaceOrganicMatter.cs" />
@@ -129,7 +130,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="FileFormatTests.cs" />
-    <Compile Include="TestLinks.cs" />
+    <Compile Include="LinksTests.cs" />
     <Compile Include="TestModelNode.cs" />
     <Compile Include="TestSoils.cs" />
     <Compile Include="TestStats.cs" />

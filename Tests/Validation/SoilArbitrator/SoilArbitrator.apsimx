@@ -1557,8 +1557,6 @@ The crops are simple instances of a static plant model and so the crop type is o
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>SoilWater</Name>
@@ -2914,6 +2912,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -2927,11 +2926,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <Biomass>
               <Name>Dead</Name>
             </Biomass>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-              <Units>0-1</Units>
-            </Constant>
             <Constant>
               <Name>DetachmentRateFunction</Name>
               <Value>0</Value>
@@ -3090,8 +3084,8 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3366,6 +3360,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>MinimumNConc</Name>
               <Value>0.01</Value>
             </Constant>
+            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
             <ZoneNamesToGrowRootsIn />
             <ZoneRootDepths />
@@ -3379,11 +3374,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <Biomass>
               <Name>Dead</Name>
             </Biomass>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-              <Units>0-1</Units>
-            </Constant>
             <Constant>
               <Name>DetachmentRateFunction</Name>
               <Value>0</Value>
@@ -3542,8 +3532,8 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
             <GrowthRespiration>0</GrowthRespiration>
+            <MaintenanceRespiration>0</MaintenanceRespiration>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3868,8 +3858,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <ExplorerWidth>350</ExplorerWidth>
