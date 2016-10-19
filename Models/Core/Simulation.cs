@@ -10,7 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
 
-namespace Models.Core 
+namespace Models.Core
 {
     /// <summary>
     /// A simulation model
@@ -30,6 +30,9 @@ namespace Models.Core
 
         [NonSerialized]
         private Links links = null;
+
+        [NonSerialized]
+        private ScopingRules scope = null;
 
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
@@ -51,6 +54,9 @@ namespace Models.Core
 
         /// <summary>Occurs when [completed].</summary>
         public event EventHandler Completed;
+
+        /// <summary>Returns the object responsible for scoping rules.</summary>
+        public ScopingRules Scope { get { return scope; } }
 
         /// <summary>A locater object for finding models and variables.</summary>
         [NonSerialized]
@@ -124,6 +130,7 @@ namespace Models.Core
         public Simulation()
         {
             locater = new Locater();
+            scope = new ScopingRules();
         }
 
         /// <summary>Called to start the job.</summary>
@@ -169,6 +176,8 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
+            scope = new ScopingRules();
+
             ConnectLinksAndEvents();
 
             _IsRunning = true;
@@ -209,8 +218,8 @@ namespace Models.Core
         /// <summary>Connect all links and events in simulation</summary>
         public void ConnectLinksAndEvents()
         {
-            events = new Events();
-            events.ConnectEvents(this);
+            events = new Events(this);
+            events.ConnectEvents();
             links = new Core.Links();
             links.Resolve(this);
         }

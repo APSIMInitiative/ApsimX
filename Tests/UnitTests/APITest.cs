@@ -133,67 +133,7 @@ namespace UnitTests
             Assert.AreEqual(Apsim.Parent(graph, typeof(Zone)).Name, "Field2");
         }
 
-        /// <summary>
-        /// FindAll method tests.
-        /// </summary>
-        [Test]
-        public void FindAllTest()
-        {
-            Zone zone2 = this.simulation.Children[4] as Zone;
-            Graph graph = zone2.Children[0] as Graph;
-            Soil soil = zone2.Children[1] as Soil;
 
-            // Test the models that are in scope of zone2.graph
-            List<IModel> inScopeForGraph = Apsim.FindAll(graph);
-            Assert.AreEqual(inScopeForGraph.Count, 10);
-            Assert.AreEqual(inScopeForGraph[0].Name, "Series1");
-            Assert.AreEqual(inScopeForGraph[1].Name, "Soil");
-            Assert.AreEqual(inScopeForGraph[2].Name, "SurfaceOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[3].Name, "Field2SubZone");
-            Assert.AreEqual(inScopeForGraph[4].Name, "Field2");
-            Assert.AreEqual(inScopeForGraph[5].Name, "Weather");
-            Assert.AreEqual(inScopeForGraph[6].Name, "Clock");
-            Assert.AreEqual(inScopeForGraph[7].Name, "Summary");
-            Assert.AreEqual(inScopeForGraph[8].Name, "Field1");
-            Assert.AreEqual(inScopeForGraph[9].Name, "Test");
-            
-            List<IModel> zones = Apsim.FindAll(graph, typeof(Zone));
-            Assert.AreEqual(zones.Count, 3);
-            Assert.AreEqual(zones[0].Name, "Field2SubZone");
-            Assert.AreEqual(zones[1].Name, "Field2");
-            Assert.AreEqual(zones[2].Name, "Field1");
-        }
-
-        /// <summary>
-        /// Scoping rule tests. Find method
-        /// </summary>
-        [Test]
-        public void FindTest()
-        {
-            Zone field1 = this.simulation.Children[3] as Zone;
-
-            // Make sure we can get a link to a local model from Field1
-            Assert.AreEqual(Apsim.Find(field1, "Field1Report").Name, "Field1Report");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report.Report)).Name, "Field1Report");
-
-            // Make sure we can get a link to a model in top level zone from Field1
-            Assert.AreEqual(Apsim.Find(field1, "Weather").Name, "Weather");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Weather)).Name, "Weather");
-
-            // Make sure we can't get a link to a model in Field2 from Field1
-            Assert.IsNull(Apsim.Find(field1, "Graph"));
-            Assert.IsNull(Apsim.Find(field1, typeof(Models.Graph.Graph)));
-
-            // Make sure we can get a link to a model in a child field.
-            Zone field2 = this.simulation.Children[4] as Zone;
-            Assert.IsNotNull(Apsim.Find(field2, "Field2SubZoneReport"));
-            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report.Report)));
-
-            // Make sure we can get a link from a child, child zone to the top level zone.
-            Zone field2SubZone = field2.Children[3] as Zone;
-            Assert.AreEqual(Apsim.Find(field2SubZone, "Weather").Name, "Weather");
-            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.Weather)).Name, "Weather");
-        }
 
         /// <summary>
         /// Tests for the get method

@@ -319,7 +319,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
-        public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
+        public Biomass[] LayerLive { get { if (PlantZone != null) return PlantZone.LayerLive; else return new Biomass[0]; } }
 
         /// <summary>Layer dead.</summary>
         [XmlIgnore]

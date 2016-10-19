@@ -1320,13 +1320,13 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
       <Name>PredictedObservedSoil</Name>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedSoil</ObservedTableName>
-      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedGliricidia</Name>
       <PredictedTableName>GliricidiaDailyReport</PredictedTableName>
       <ObservedTableName>ObservedGliricidia</ObservedTableName>
-      <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -1498,208 +1498,204 @@ namespace Models
           <Operations>
             <Name>Gliricidia</Name>
             <Operation>
-              <Date>1992-09-01</Date>
+              <Date>1992-02-01</Date>
               <Action>[Gliricidia].Sow(population: 1, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
             </Operation>
             <Operation>
-              <Date>1993-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1992-09-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1993-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1992-12-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1994-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1993-02-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-09-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-12-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
               <Date>1994-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1994-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1994-09-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1994-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
-            </Operation>
-            <Operation>
-              <Date>1995-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1994-12-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
               <Date>1995-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1995-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1995-09-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1995-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
-            </Operation>
-            <Operation>
-              <Date>1996-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1995-12-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
               <Date>1996-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1996-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1996-09-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1996-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1996-12-15</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
               <Date>1997-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1997-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1997-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1997-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1997-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1998-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1997-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1998-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1998-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1998-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1998-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1998-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1998-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1999-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1998-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1999-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1999-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1999-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1999-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1999-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1999-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2000-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>1999-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2000-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2000-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2000-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2000-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2000-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2000-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2001-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2000-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2001-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2001-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2001-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2001-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2001-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2001-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2002-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2001-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2002-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2002-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2002-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2002-08-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2002-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2002-10-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2003-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2002-12-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2003-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2003-02-28</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2003-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2003-08-18</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2003-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2003-11-07</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2004-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2003-12-16</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2004-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2004-02-02</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2004-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2004-08-18</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2004-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2004-12-21</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2005-01-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2005-01-31</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2005-02-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2005-10-04</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2005-08-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2005-12-05</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>2005-10-15</Date>
-              <Action>[Gliricidia].Harvest()</Action>
+              <Date>2006-01-24</Date>
+              <Action>[Gliricidia].Harvest();</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -1711,7 +1707,7 @@ namespace Models
         <Name>MakokaBase</Name>
         <Clock>
           <Name>Clock</Name>
-          <StartDate>1992-09-01T00:00:00</StartDate>
+          <StartDate>1992-02-01T00:00:00</StartDate>
           <EndDate>2006-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
@@ -2135,8 +2131,8 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-              <string>[Maize].Grain.Size as GrainSize</string>
+              <string>[Maize].Grain.NumberFunction.Value</string>
+              <string>[Maize].Grain.Size</string>
               <string>[Maize].Population</string>
               <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>sum([Soil].SoilNitrogen.FOMC) as FOMC</string>
@@ -2201,6 +2197,11 @@ namespace Models
               <string>[Maize].Phenology.DaysAfterSowing</string>
               <string>[Maize].Phenology.Photoperiod.Value</string>
               <string>[Maize].Phenology.Photosensitive.Target.Value</string>
+              <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
+              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
+              <string>[Maize].Leaf.ExpandedCohortNo</string>
+              <string>[Soil].SoilWater.LeachNO3</string>
+              <string>[Soil].SoilWater.flow_no3</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2729,7 +2730,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoil</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2750,7 +2751,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2761,8 +2762,8 @@ namespace Models
           <Type>Bottom</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>34800</Minimum>
+          <Maximum>35800</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -2840,7 +2841,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoil</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SubsurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2861,7 +2862,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SubsurfaceMineralN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2872,8 +2873,8 @@ namespace Models
           <Type>Bottom</Type>
           <Title />
           <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Minimum>34800</Minimum>
+          <Maximum>35800</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -2975,7 +2976,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>PPTTTarget</Name>
+        <Name>NStress</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -2990,8 +2991,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
-          <XFieldName>Clock.Today.DayOfYear</XFieldName>
-          <YFieldName>Maize.Phenology.Photosensitive.Target.Value</YFieldName>
+          <XFieldName>Maize.Phenology.DaysAfterSowing</XFieldName>
+          <YFieldName>Maize.Leaf.Fn</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3018,7 +3019,101 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Photoperiod</Name>
+        <Name>Grain No PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Maize.Grain.NumberFunction.Value</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSize PvsO</Name>
+        <Series>
+          <Name>PvsO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16736653</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Maize.Grain.Size</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.Size</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NLeaching</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -3030,11 +3125,75 @@ namespace Models
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+          <YFieldName>Soil.SoilWater.LeachNO3</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GliricidiaStem vs Year</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3061,7 +3220,28 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SowingDOY</Name>
+        <Name>Foliage vs Year</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Leaf+Branch</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -3075,9 +3255,52 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>HarvestReport</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Maize.SowingDate.DayOfYear</YFieldName>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAIv s Year</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4407,7 +4630,7 @@ namespace Models
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
-            <string>[Clock].Today as Date</string>
+            <string>[Clock].Today</string>
             <string>[Zone].Area</string>
             <string>[Soil].SoilWater.Es</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -4576,7 +4799,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4597,7 +4820,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4640,7 +4863,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4661,7 +4884,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4704,7 +4927,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4725,7 +4948,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5194,7 +5417,7 @@ namespace Models
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
-              <string>[Clock].Today as Date</string>
+              <string>[Clock].Today</string>
               <string>[Zone].Area</string>
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
@@ -5407,7 +5630,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5428,7 +5651,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5469,7 +5692,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5490,7 +5713,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5531,7 +5754,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5552,7 +5775,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedGliricidia</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5728,7 +5951,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5769,7 +5992,7 @@ namespace Models
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GliricidiaDailyReport</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5796,5 +6019,5 @@ namespace Models
       </Graph>
     </Experiment>
   </Folder>
-  <ExplorerWidth>287</ExplorerWidth>
+  <ExplorerWidth>309</ExplorerWidth>
 </Simulations>

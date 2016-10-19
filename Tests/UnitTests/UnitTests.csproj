@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="ScopeTests.cs" />
     <Compile Include="MockSoil.cs" />
     <Compile Include="MockSummary.cs" />
     <Compile Include="MockSurfaceOrganicMatter.cs" />
