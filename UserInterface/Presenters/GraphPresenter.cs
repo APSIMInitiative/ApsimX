@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         private IPresenter currentPresenter = null;
 
         /// <summary>The series definitions to show on graph.</summary>
-        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        public List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -51,7 +51,6 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
             this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
-            this.graph.ClearBaseData();
             DrawGraph();
         }
 
@@ -374,9 +373,10 @@ namespace UserInterface.Presenters
                             MathUtilities.FloatsAreEqual(x, (double)rowX) &&
                             MathUtilities.FloatsAreEqual(y, (double)rowY))
                         {
-                            object simulationName = simNameEnum.Current;
-                            if (simulationName != null)
-                                return simulationName.ToString();
+                            return definition.title;
+                            //object simulationName = simNameEnum.Current;
+                            //if (simulationName != null)
+                            //    return simulationName.ToString();
                         }
                     }
                 }

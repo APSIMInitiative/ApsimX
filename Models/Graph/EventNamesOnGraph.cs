@@ -24,7 +24,7 @@ namespace Models.Graph
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
-        private DataView data;
+        private DataTable data;
 
         /// <summary>The x variable name</summary>
         private string xFieldName;
@@ -41,7 +41,7 @@ namespace Models.Graph
         {
             if (definitions.Count > 0)
             {
-                data = definitions[0].dataView;
+                data = definitions[0].data;
                 xFieldName = definitions[0].xFieldName;
             }
         }
@@ -55,7 +55,7 @@ namespace Models.Graph
             if (data != null && ColumnName != null && xFieldName != null)
             {
                 string phenologyColumnName = FindPhenologyStageColumn(data);
-                if (phenologyColumnName != null && data.Table.Columns.Contains(xFieldName))
+                if (phenologyColumnName != null && data.Columns.Contains(xFieldName))
                 {
                     string[] names = DataTableUtilities.GetColumnAsStrings(data, phenologyColumnName);
                     DateTime[] dates = DataTableUtilities.GetColumnAsDates(data, xFieldName);
@@ -93,9 +93,9 @@ namespace Models.Graph
 
         /// <summary>Find and return the phenology stage column name.</summary>
         /// <param name="data">The data table to search</param>
-        private string FindPhenologyStageColumn(DataView data)
+        private string FindPhenologyStageColumn(DataTable data)
         {
-            var columnNames = data.Table.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
+            var columnNames = data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
             return columnNames.Find(name => name.Contains(ColumnName));
         }
 
