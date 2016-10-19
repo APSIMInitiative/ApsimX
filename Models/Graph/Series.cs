@@ -366,7 +366,7 @@ namespace Models.Graph
         {
             // Create an appropriate painter object
             SimulationZonePainter.IPainter painter;
-            if (FactorIndexToVaryColours != -1)
+            if (FactorIndexToVaryColours != -1 && FactorIndexToVaryColours < FactorNamesForVarying.Count)
             {
                 string factorNameToVaryByColours = FactorNamesForVarying[FactorIndexToVaryColours];
                 if (FactorIndexToVaryLines != -1)
@@ -386,14 +386,14 @@ namespace Models.Graph
                                                                               MaximumIndex = ColourUtilities.Colours.Length,
                                                                               Setter = VisualElements.SetColour };
             }
-            else if (FactorIndexToVaryLines != -1)
+            else if (FactorIndexToVaryLines != -1 && FactorIndexToVaryLines < FactorNamesForVarying.Count)
             {
                 string factorNameToVaryByLine = FactorNamesForVarying[FactorIndexToVaryLines];
                 painter = new SimulationZonePainter.SequentialPainter() { FactorName = factorNameToVaryByLine,
                                                                           MaximumIndex = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type   
                                                                           Setter = VisualElements.SetLineType };
             }
-            else if (FactorIndexToVaryMarkers != -1)
+            else if (FactorIndexToVaryMarkers != -1 && FactorIndexToVaryMarkers < FactorNamesForVarying.Count)
             {
                 string factorNameToVaryByMarker = FactorNamesForVarying[FactorIndexToVaryMarkers];
                 painter = new SimulationZonePainter.SequentialPainter() { FactorName = factorNameToVaryByMarker,
