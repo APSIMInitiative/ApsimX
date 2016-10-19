@@ -411,7 +411,7 @@ The proxy tree component of this model is intended also to be a guide for develo
       </Tests>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>ObservedWarraBlock1</ObservedTableName>
-      <FieldNameUsedForMatch>ZoneName</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Zone</FieldNameUsedForMatch>
       <FieldName2UsedForMatch>Date</FieldName2UsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
