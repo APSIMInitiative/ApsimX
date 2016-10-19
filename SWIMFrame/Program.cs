@@ -38,8 +38,6 @@ namespace SWIMFrame
             double[] x;
             double[,] dz = new double[2, 10]; //only for testing? if not will need to change hardcoded dimensions.
             bool Kgiven = true;
-            SoilProps sp1, sp2;
-            FluxTable ft1, ft2;
 
             //define soil profile
             x = new double[] { 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 }; //length = num soil layers
@@ -55,25 +53,15 @@ namespace SWIMFrame
             dz[1, 4] = 40;
             for (i = 0; i < 2; i++)
             {
-                MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en);
-                soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven);
+                MVG.Params(soils[i].sid, soils[i].ths, soils[i].ks, soils[i].he, soils[i].hd, soils[i].p, soils[i].hg, soils[i].em, soils[i].en); //set MVG params
+                soils[i].sp = Soil.gensptbl(dzmin, soils[i], Kgiven); // generate soil props
                 Soil.SoilProperties.Add("soil" + soils[i].sid, soils[i].sp);
                 for (j = 0; j <= ndz[i]; j++)
                 {
-                    Fluxes.FluxTable(dz[i, j], soils[i].sp);
+                    Fluxes.FluxTable(dz[i, j], soils[i].sp); // generate flux tables
                     Fluxes.FluxTables.Add("soil" + soils[i].sid + "dz" + (dz[i, j] * 10), Fluxes.ft);
                 }
             }
-            Fluxes.WriteDiags();
-
-            //generate and write composite flux table for path with two soil types
-            sp1 = Soil.ReadProps("soil103");
-            sp2 = Soil.ReadProps("soil109");
-            ft1 = Fluxes.ReadFluxTable("soil103dz50");
-            ft2 = Fluxes.ReadFluxTable("soil109dz100");
-
-            FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
-            Fluxes.FluxTables.Add("soil0103dz0050_soil0109dz0100", ftwo);
         }
     }
 }

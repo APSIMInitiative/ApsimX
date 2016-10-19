@@ -291,14 +291,7 @@ namespace SWIMFrame
             u[2] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
                   (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
                   MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6));
-       //     if (double.IsNaN(u[0]) || double.IsNaN(u[1]))
-       //         throw new Exception();
             return u;
-        }
-
-        public static void WriteDiags()
-        {
-            File.WriteAllText("C:\\temp\\NETout.txt", diags.ToString());
         }
 
         private static double ssflux(int ia, int ib, double dz, double qin, double rerr)
@@ -424,8 +417,6 @@ namespace SWIMFrame
             if (it > maxit)
                 Console.WriteLine("ssflux: too many iterations", ia, ib);
             nit = nit + it;
-            // Possible diversion here. Numbers are out by about 0.2%. Appears to be a multiplicative issue from other functions due
-            // to floating point differences between FORTRAN and C#.
             return q;
         }
 
@@ -586,31 +577,6 @@ namespace SWIMFrame
                                           0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
                                           0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00 };
             double[] odefOut = odef(1, 2, aK, hpK);
-        }
-
-        public static void WriteFluxTable(BinaryWriter b, FluxTable ft)
-        { 
-            //write number of FluxEnds
-            b.Write(ft.fend.Length);
-            
-            //write FluxEnds
-            for (int i=0;i<ft.fend.Length;i++)
-            {
-                b.Write(ft.fend[i].sid);
-                b.Write(ft.fend[i].nfu);
-                b.Write(ft.fend[i].nft);
-                b.Write(ft.fend[i].phif.Length);
-                for (int j = 0; j < ft.fend[i].phif.Length; j++)
-                    b.Write(ft.fend[i].phif[j]);
-                b.Write(ft.fend[i].dz);
-            }
-
-            //write flux table
-            b.Write(ft.ftable.GetLength(0));
-            b.Write(ft.ftable.GetLength(1));
-            for (int i = 0; i < ft.ftable.GetLength(0); i++)
-                for (int j = 0; j < ft.ftable.GetLength(1); j++)
-                    b.Write(ft.ftable[i, j]);
         }
 
         public static FluxTable ReadFluxTable(string key)

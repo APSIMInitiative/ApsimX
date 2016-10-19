@@ -142,7 +142,7 @@ namespace SWIMFrame
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
                 for (int x = 1; x <= j; x++)
-                    for (int a = 1; a <= m; a++)
+                    for (int a = 1; a <= m; a+=2)
                         phif[x, i] = ft[i - 1].fend[0].phif[a]; //discard every second
                 nft[i] = j;
                 nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
@@ -508,6 +508,7 @@ namespace SWIMFrame
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
 
+            Fluxes.FluxTables.Add("soil" + sp[0].sid + "dz" + ft1.fend[0].dz, ftwo);
             return ftwo;
         }
 

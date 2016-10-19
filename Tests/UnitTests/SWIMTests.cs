@@ -701,7 +701,9 @@ namespace UnitTests
         [Test]
         public void TwoTables()
         {
-       /*     TwoFluxes.TestReset();
+            //generate and write composite flux table for path with two soil types
+
+            TwoFluxes.TestReset();
             Soil.SoilProperties = new Dictionary<string, SoilProps>();
             Fluxes.FluxTables = new Dictionary<string, FluxTable>();
             Program.GenerateFlux();
@@ -742,7 +744,7 @@ namespace UnitTests
             for (int x = 1; x < res.ftable.GetLength(0); x++)
                 for (int y = 1; y < ftwo.GetLength(1); y++)
                     Assert.AreEqual(ftwo[x, y], res.ftable[x, y], 1E-2); //accuracy is a bit off. Will need to see effect in sims.
-      */  }
+        }
 
         [Test]
         public void GetRowCol()
