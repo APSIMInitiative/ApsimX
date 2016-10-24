@@ -181,7 +181,7 @@ namespace UserInterface.Forms
         private void PopulateUpgradeList()
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            //version = new Version(0, 0, 0, 652);  
+            // version = new Version(0, 0, 0, 652);  
             upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
@@ -262,6 +262,11 @@ namespace UserInterface.Forms
                             // Copy the separate upgrader executable to the temp directory.
                             string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
                             string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
+
+                            // Check to see if upgrader is already running for whatever reason.
+                            // Kill them if found.
+                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                                process.Kill();
 
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
