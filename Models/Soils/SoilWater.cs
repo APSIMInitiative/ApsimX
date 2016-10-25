@@ -55,7 +55,8 @@ namespace Models.Soils
         /// <value>
         /// The summer date.
         /// </value>
-        [Description("Start Date for Summer evaporation (dd-mmm)")]
+        [Description("Start date for switch to summer parameters for soil water evaporation (dd-mmm)")]
+        [Units("dd-mmm")]
         public string SummerDate { get; set; }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
-        [Description("Summer: Cummulative Evap for end of stage 1 soil evaporation (U)")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)(0-40 mm)")]
         public double SummerU { get; set; }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace Models.Soils
         /// The summer cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Summer: Stage 2 drying coefficient (Cona)")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA) (0-10)")]
         public double SummerCona { get; set; }
 
 
@@ -90,7 +91,8 @@ namespace Models.Soils
         /// <value>
         /// The winter date.
         /// </value>
-        [Description("Start Date for Winter evaporation (dd-mmm)")]
+        [Description("Start date for switch to winter parameters for soil water evaporation (dd-mmm)")]
+        [Units("dd-mmm")]
         public string WinterDate { get; set; }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
-        [Description("Winter: Cummulative Evap for end of stage 1 soil evaporation (U)")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U) (0-10 mm)")]
         public double WinterU { get; set; }
 
         /// <summary>
@@ -111,11 +113,8 @@ namespace Models.Soils
         /// The winter cona.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Winter: Stage 2 drying coefficient (Cona)")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA) (0-10)")]
         public double WinterCona { get; set; }
-
-
-
 
 
         /// <summary>
@@ -125,7 +124,8 @@ namespace Models.Soils
         /// The diffus constant.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [Description("Diffusivity constant for soil texture")]
+        [Description("Constant in the soil water diffusivity calculation (0-1000 mm2/day)")]
+        [Units("mm2/day")]
         public double DiffusConst { get; set; }
 
         /// <summary>
@@ -135,7 +135,8 @@ namespace Models.Soils
         /// The diffus slope.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Description("Diffusivity slope for diffusivity/soil water content relationship")]
+        [Description("Effect of soil water storage above the lower limit on soil water diffusivity (0-100 /mm)")]
+        [Units("/mm")]
         public double DiffusSlope { get; set; }
 
         /// <summary>
@@ -144,10 +145,10 @@ namespace Models.Soils
         /// <value>
         /// The salb.
         /// </value>
-        [Description("Bare soil albedo")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Description("Proportion of incoming radiation reflected from bare soil (0-1)")]
+        [Units("MJ/MJ")]
         public double Salb { get; set; }
-
-
 
         //Runoff
 
@@ -159,8 +160,8 @@ namespace Models.Soils
         /// The c n2 bare.
         /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
-        [Units("0-100")]
-        [Description("Runoff Curve Number of bare soil with average moisture (cn2_bare)")]
+        [Units("")]
+        [Description("Runoff Curve Number (CN) for bare soil with average moisture (1-100)")]
         public double CN2Bare { get; set; }
 
         /// <summary>
@@ -170,8 +171,8 @@ namespace Models.Soils
         /// The cn red.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Units("0-100")]
-        [Description("Maximum reduction in cn2_bare due to cover (cn_red)")]
+        [Units("")]
+        [Description("Maximum reduction in runoff Curve Number due to cover (0-100)")]
         public double CNRed { get; set; }
 
         /// <summary>
@@ -181,8 +182,8 @@ namespace Models.Soils
         /// The cn cov.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Cover at which cn_red occurs (cn_cov)")]
+        [Units("")]
+        [Description("Fractional cover at which maximum reduction of Curve Number occurs (0-1)")]
         public double CNCov { get; set; }
 
 
@@ -196,8 +197,8 @@ namespace Models.Soils
         /// The slope.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Lateral Flow: Slope of Catchment Area")]
+        [Units("")]
+        [Description("Slope of the catchment area for lateral flow calculations (0-1)")]
         public double slope { get; set; }
 
         /// <summary>
@@ -208,7 +209,7 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
-        [Description("Lateral Flow: Basal width of downslope boundary of the catchment")]
+        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations (m)")]
         public double discharge_width { get; set; }
 
         /// <summary>
@@ -218,8 +219,8 @@ namespace Models.Soils
         /// The catchment_area.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
-        [Units("m^2")]
-        [Description("Lateral Flow: Catchment Area")]
+        [Units("m2")]
+        [Description("Catchment area for later flow calculations (m2)")]
         public double catchment_area { get; set; }
 
 
@@ -234,12 +235,8 @@ namespace Models.Soils
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum Ponding Depth (eg. Rice Paddy)")]
+        [Description("Maximum ponding depth of water (e.g. of a rice paddy) (0-1000 mm water)")]
         public double max_pond { get; set; }
-
-
-
-
 
 
         // SOIL "Profile" (LAYERED)
@@ -271,6 +268,11 @@ namespace Models.Soils
         /// <value>
         /// The thickness.
         /// </value>
+
+        
+        [Units("mm")]
+        [Description("Soil layer thickness for each layer (mm soil)")]
+
         public double[] Thickness { get; set; }
 
 
@@ -284,7 +286,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("cm")]
-        [Description("Depth")]
+        [Description("Soil layer thickness for each layer in cm (only used in the GUI) (cm soil)")]
         public string[] Depth
             {
             get
@@ -308,8 +310,8 @@ namespace Models.Soils
         /// The swcon.
         /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("/d")]
-        [Description("SWCON")]
+        [Units("/day")]
+        [Description("Fractional amount of water above DUL that can drain under gravity per day (0-1 /day)")]
         public double[] SWCON { get; set; }
 
 
@@ -322,8 +324,8 @@ namespace Models.Soils
         /// The klat.
         /// </value>
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
-        [Units("mm/d")]
-        [Description("KLAT")]
+        [Units("mm/day")]
+        [Description("Lateral saturated hydraulic conductivity (mm/day)")]
         public double[] KLAT { get; set; }
 
 
@@ -407,7 +409,9 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("oC")]
+        [Units("C")]
+        [Description("Air temperature below which the ratio between eo and eeq decreases (0-10 C)")]
+
         public double min_crit_temp { get; set; }
 
 
@@ -419,9 +423,9 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 50.0)]
-        [Units("oC")]
+        [Units("C")]
+        [Description("Air temperature above which the ratio between eo and eeq increases (0-50 C)")]
         public double max_crit_temp { get; set; }
-
 
         /// <summary>
         /// Maximum bare ground soil albedo
@@ -431,7 +435,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Maximum bare ground soil albedo (0-1)")]
         public double max_albedo { get; set; }
 
 
@@ -443,7 +447,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Constant in the calculation of the effect of surface residues on potential evapotranspiration (0-1)")]
         public double A_to_evap_fact { get; set; }
 
 
@@ -455,7 +459,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("0-10")]
+        [Description("Constant in the calculation of the effect of canopy cover on potential evapotranspiration (0-10)")]
         public double canopy_eos_coef { get; set; }
 
 
@@ -467,7 +471,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Critical soil water ratio in top layer below which stage 2 evaporation occurs (0-1)")]
         public double sw_top_crit { get; set; }
 
 
@@ -477,6 +481,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
+        [Description("The value of the sum of soil water evaporation after which stage 1 evaporation concludes (0-1000 mm)")]
         public double sumes1_max { get; set; }
 
 
@@ -486,15 +491,15 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
+        [Description("The value of the sum of soil water evaporation after which stage 2 evaporation concludes (0-1000 mm)")]
         public double sumes2_max { get; set; }
-
 
         /// <summary>
         /// Efficiency of moving solute with unsaturated flow
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Efficiency of moving solute with water flow below DUL (unsaturated flow) (0-1)")]
         public double[] solute_flow_eff { get; set; }
 
 
@@ -503,7 +508,7 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Efficiency of moving solute with water flow above DUL (saturated flow) (0-1)")]
         public double[] solute_flux_eff { get; set; }
 
 
@@ -512,7 +517,7 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Multiplier that can be used to reduce the effects of gravity on soil water movement, 0 = a horizontal soil, 1 = a vertial soil (0-1)")]
         public double gravity_gradient { get; set; }
 
 
@@ -521,7 +526,8 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 3.0)]
-        [Units("g/cm^3")]
+        [Units("Mg /m3")]
+        [Description("Soil dry bulk density (0-3 Mg soil /m3)")]
         public double specific_bd { get; set; }
 
 
@@ -531,6 +537,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 1.0, Upper = 1000.0)]
         [Units("mm")]
+        [Description("Effective depth of ponded water that must be built up on the soil surface before runoff will occur (1-1000 mm)")]
         public double hydrol_effective_depth { get; set; }
 
 
@@ -538,6 +545,7 @@ namespace Models.Soils
         /// Names of all possible mobile solutes
         /// </summary>
         [XmlIgnore]
+        [Description("Names of all possible mobile solutes")]
         public string[] mobile_solutes { get; set; }
 
 
@@ -545,6 +553,7 @@ namespace Models.Soils
         /// Names of all possible immobile solutes
         /// </summary>
         [XmlIgnore]
+        [Description("Names of all possible immobile solutes")]
         public string[] immobile_solutes { get; set; }
 
 
@@ -554,6 +563,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("Values of canopy effect for lookup (Y) in the relationship between crop height and effect of canopy cover on runoff (0-1)")]
         public double[] canopy_fact { get; set; }
 
 
@@ -563,15 +573,15 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 100000.0)]
         [Units("mm")]
+        [Description("Heights values for lookup (X) in the relationship between crop height and effect of canopy cover on runoff (mm)")]
         public double[] canopy_fact_height { get; set; }
-
 
         /// <summary>
         /// Default canopy factor in absence of height
         /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Description("Default canopy factor for runoff to use in absence of the canopy effect function (0-1)")]
         public double canopy_fact_default { get; set; }
 
 
@@ -579,6 +589,7 @@ namespace Models.Soils
         /// Actual soil evaporation model being used
         /// </summary>
         [XmlIgnore]
+        [Description("Name of soil water evaporation model being used")]
         public string act_evap_method { get; set; }  
  
 
@@ -692,6 +703,8 @@ namespace Models.Soils
         /// The eo.
         /// </value>
         [XmlIgnore]
+        [Bounds(Lower = 0.0, Upper = 100000.0)]
+        [Description("Potential evapotranspiration of the whole soil-plant system (mm)")]
         [Units("mm")]
         public double Eo { get{return surface.Eo;} }
 
@@ -703,6 +716,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Potential evaporation of water from the soil (after accounting for the effects of cover and residues) (mm)")]
         public double Eos { get{return surface.Eos;} }
 
 
@@ -714,6 +728,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Actual (realised) soil water evaporation (mm)")]
         public double Es { get { return surface.Es; } }
 
         /// <summary>
@@ -723,7 +738,8 @@ namespace Models.Soils
         /// The t.
         /// </value>
         [XmlIgnore]
-        [Units("d")]
+        [Units("days")]
+        [Description("Number of days since the beginning of 2nd-stage soil water evaporation (days)")]
         public double t
             {
             get
@@ -752,6 +768,8 @@ namespace Models.Soils
         /// The cn2_new.
         /// </value>
         [XmlIgnore]
+        [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Description("Actual curve number (CN) after taking into account the effects of crop and residue cover (1-100)")]
         public double cn2_new
             {
             get {
@@ -779,7 +797,8 @@ namespace Models.Soils
         /// The drainage.
         /// </value>
         [XmlIgnore]
-        [Units("mm")]
+        [Units("mm/day")]
+        [Description("Drainage of water exiting the deepest soil layer (mm/day)")]
         public double Drainage { get{return SoilObject.Drainage;} }
 
 
@@ -792,6 +811,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as NO3-N from the deepest soil layer (kg/ha)")]
         public double LeachNO3 { get { return SoilObject.LeachNO3; } }         //! Leaching from bottom layer (kg/ha) // 
 
         /// <summary>
@@ -802,6 +822,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as NH4-N from the deepest soil layer (kg/ha)")]
         public double LeachNH4 { get { return SoilObject.LeachNH4; } }         //! Leaching from bottom layer (kg/ha) // 
 
         /// <summary>
@@ -812,6 +833,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as urea-N  from the deepest soil layer (kg/ha)")]
         public double LeachUrea { get { return SoilObject.LeachUrea; } }         //! Leaching from bottom layer (kg/ha) // 
 
 
@@ -825,6 +847,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Depth of water infiltration into the soil (mm)")]
         public double Infiltration { get{return surface.Infiltration;} }
 
         /// <summary>
@@ -835,6 +858,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Amount of water runoff (mm)")]
         public double Runoff { get{return surface.Runoff;} }
 
         /// <summary>
@@ -845,6 +869,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Evaporation of water from the surface of the pond (mm)")]
         public double pond_evap
             {
             get {
@@ -868,6 +893,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Surface water ponding depth (mm)")]
         public double pond
             {
             get {
@@ -892,6 +918,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Depth below the soil surface of the first saturated layer (mm)")]
         public double WaterTable
             { 
             get{return SoilObject.DepthToWaterTable;}
@@ -908,6 +935,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Extractable soil water (above LL15) over the profile (mm)")]
         public double ESW
         { get { return SoilObject.esw; } }
 
@@ -927,7 +955,7 @@ namespace Models.Soils
         /// The irrig layer.
         /// </value>
         [XmlIgnore]
-        [Units("")]
+        [Description("Soil layer to which irrigation was applied (0 is for surface irrigation)")]
         public int IrrigLayer
         { get { return irrig.layer; } }
 
@@ -949,6 +977,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
+        [Description("Thicknesses of each soil layer (mm)")]
         public double[] dlayer
         { get { return SoilObject.dlayer; } }
 
@@ -964,6 +993,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Saturated water content for each soil layer expressed as a depth of water (mm)")]
         public double[] SATmm
         { get { return SoilObject.sat_dep; } }
 
@@ -975,6 +1005,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Drained upper limit for each soil layer expressed as a depth of water (mm)")]
         public double[] DULmm
         { get { return SoilObject.dul_dep; } }
 
@@ -986,6 +1017,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Current soil water content for each soil layer expressed as a depth of water (mm)")]
         public double[] SWmm
             { 
             get {
@@ -1005,6 +1037,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("15 bar lower limit of extractable soil water for each soil layer expressed as a depth of water (mm)")]
         public double[] LL15mm
         { get { return SoilObject.ll15_dep; } }
 
@@ -1016,6 +1049,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Air dry soil water content for each soil layer expressed as a depth of water (mm)")]
         public double[] AIRDRYmm
         { get { return SoilObject.air_dry_dep; } }
 
@@ -1033,6 +1067,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("Saturated water content for each soil layer expressed as a volumetric water content (0-1)")]
         public double[] SAT
         { get { return SoilObject.sat; } }
 
@@ -1045,6 +1080,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("Drained upper limit for each soil layer expressed as a volumetric water content (0-1)")]
         public double[] DUL
         { get { return SoilObject.dul; } }
 
@@ -1057,6 +1093,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("Current soil water content for each soil layer expressed as a volumetric water content (0-1)")]
         public double[] SW
             { 
             get { return SoilObject.sw; }
@@ -1072,6 +1109,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("15 bar lower limit of extractable soil water for each soil layer expressed as a volumetric water content (0-1)")]
         public double[] LL15
         { get { return SoilObject.ll15; } }
 
@@ -1084,6 +1122,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        [Description("Air dry soil water content for each soil layer expressed as a volumetric water content (0-1)")]
         public double[] AIRDRY
         { get { return SoilObject.air_dry; } }
 
@@ -1097,6 +1136,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Depth of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)")]
         public double[] flow
         { get { return SoilObject.flow; } }
 
@@ -1108,6 +1148,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Depth of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)")]
         public double[] flux
         { get { return SoilObject.flux; } }
 
@@ -1119,6 +1160,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Amount of water moving laterally out of the profile (mm)")]
         public double[] outflow_lat
         { get { return SoilObject.outflow_lat; } }
 
@@ -1135,6 +1177,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as NO3 from each soil layer (kg N /ha)")]
         public double[] flow_no3
         { get { return SoilObject.GetFlowArrayForASolute("NO3"); } }
 
@@ -1146,6 +1189,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as NH4 from each soil layer (kg N /ha)")]
         public double[] flow_nh4
         { get { return SoilObject.GetFlowArrayForASolute("NH4"); } }
 
@@ -1157,6 +1201,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
+        [Description("Amount of N leaching as urea from each soil layer (kg N /ha)")]
         public double[] flow_urea
         { get { return SoilObject.GetFlowArrayForASolute("urea"); } }
 
@@ -1494,6 +1539,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Change in soil water depth in each soil layer (mm)")]
         public double[] dlt_sw_dep
             {
             set
@@ -1509,7 +1555,8 @@ namespace Models.Soils
         /// The DLT_SW.
         /// </value>
         [XmlIgnore]
-        [Units("0-1")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Description("Change in volumetric soil water content in each soil layer (0-1)")]
         public double[] dlt_sw
             {
             set
@@ -1641,7 +1688,8 @@ namespace Models.Soils
         /// <summary>
         /// The runon
         /// </summary>
-        [Units("mm/d")]
+        [Units("mm/day")]
+        [Description("External run-on of H2O (mm/day)")]
         private double runon;      //! external run-on of H2O (mm/d)
 
 
@@ -1651,6 +1699,7 @@ namespace Models.Soils
         /// The inflow_lat
         /// </summary>
         [Units("mm")]
+        [Description("Inflowing lateral water (mm)")]
         private double[] inflow_lat;       //! inflowing lateral water
 
 
@@ -1662,9 +1711,9 @@ namespace Models.Soils
         /// <summary>
         /// The interception
         /// </summary>
-        [Units("mm")]
+        [Units("mm")]        
+        [Description("Canopy interception loss (mm)")]
         private double interception;      //! canopy interception loss (mm)
-
 
 
         //residueinterception can be specified in surface organic matter module (not implemented yet)
@@ -1676,6 +1725,7 @@ namespace Models.Soils
         /// The residueinterception
         /// </summary>
         [Units("mm")]
+        [Description("Loss of precipitation due in interception of surface residues (mm)")]
         public double residueinterception { get; set; }     //residue interception loss (mm)
 
 
