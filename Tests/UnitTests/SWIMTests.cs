@@ -475,13 +475,12 @@ namespace UnitTests
 
         /// <summary>
         /// This test is commented out as the 3D arrays have incorrect dimensions. Current dimensions of [a,b,c] should be [c,b,a].
-        /// This require a bit of time to transpose that I don't have now. Fd will be tested as part of some of these other tests.
+        /// This requires a bit of time to transpose that I don't have now. Fd will be tested as part of some of these other tests.
         /// </summary>
         [Test]
         public void Fd()
-        {
-            return;
-          /*  double[] phia = new double[] { 3.35430149789317511E-006 };
+        {/*
+            double[] phia = new double[] { 3.35430149789317511E-006 };
             double[] f = new double[] { 4.206066E-10 };
             double[] d = new double[] { -2.598124E-01 };
             double[] q = new double[] { 8.740528E-10 };
@@ -612,8 +611,7 @@ namespace UnitTests
                 Assert.AreEqual(f[i], res[0], 1E-7);
                 Assert.AreEqual(d[i], res[1], 1E-7);
                 Assert.AreEqual(q[i], res[2], 1E-7);
-            }
-            */
+            }  */        
         }
 
         [Test]
@@ -743,7 +741,7 @@ namespace UnitTests
             FluxTable res = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             for (int x = 1; x < res.ftable.GetLength(0); x++)
                 for (int y = 1; y < ftwo.GetLength(1); y++)
-                    Assert.AreEqual(ftwo[x, y], res.ftable[x, y], 1E-2); //accuracy is a bit off. Will need to see effect in sims.
+                    Assert.AreEqual(ftwo[x, y], res.ftable[x, y], 1E-2); //some differences but final flux table accurate to 1%
         }
 
         [Test]
@@ -771,7 +769,7 @@ namespace UnitTests
         [Test]
         public void SoilSofh()
         {
-          /*  SoilData sd = new SoilData();
+            SoilData sd = new SoilData();
             Soil.SoilProperties = new Dictionary<string, SoilProps>();
             Fluxes.FluxTables = new Dictionary<string, FluxTable>();
             Program.GenerateFlux();
@@ -786,12 +784,16 @@ namespace UnitTests
             {
                 sd.Sofh(h[i], il[i], out Sout, out Sh);
                 Assert.AreEqual(S[i], Sout, Math.Abs(S[i] * 1E-5));
-            }*/
+            }
         }
 
         [Test]
         public void SoilhofS()
-        {/*
+        {
+            Soil.SoilProperties = new Dictionary<string, SoilProps>();
+            Fluxes.FluxTables = new Dictionary<string, FluxTable>();
+            Program.GenerateFlux();
+
             SoilData sd = new SoilData();
             sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
             int[] il = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -804,7 +806,7 @@ namespace UnitTests
             {
                 sd.hofS(S[i], il[i], out hout, out hs);
                 Assert.AreEqual(h[i], hout, Math.Abs(h[i] * 1E-5));
-            }*/
+            }
         }
 
         [Test]
@@ -815,14 +817,14 @@ namespace UnitTests
 
         [Test]
         public void GetTables()
-        {/*
+        {
             Soil.SoilProperties = new Dictionary<string, SoilProps>();
             Fluxes.FluxTables = new Dictionary<string, FluxTable>();
             Program.GenerateFlux();
 
             SoilData sd = new SoilData();
             sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
-            */
+            
             //No assertions at this point, just make sure it runs
         }
 
@@ -843,7 +845,7 @@ namespace UnitTests
 
         [Test]
         public void GetK()
-        {/*
+        {
             SoilData sd = new SoilData();
             Soil.SoilProperties = new Dictionary<string, SoilProps>();
             Fluxes.FluxTables = new Dictionary<string, FluxTable>();
@@ -863,13 +865,17 @@ namespace UnitTests
                 sd.GetK(iq, iS, x[i], out qout, out qyaout);
                 Assert.AreEqual(q[i], qout, q[i] * 1E-5);
                 Assert.AreEqual(qya[i], qyaout, qya[i] * 1E-5);
-            }*/
+            }
         }
 
         [Test]
         public void GetQ()
-        {/*
+        {
             SoilData sd = new SoilData();
+            Soil.SoilProperties = new Dictionary<string, SoilProps>();
+            Fluxes.FluxTables = new Dictionary<string, FluxTable>();
+            Program.GenerateFlux();
+
             sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
             int[] iq = new int[] { 0, 1, 2, 3, 4 };
             int[] iS = new int[] { 0, 0, 0 };
@@ -887,7 +893,7 @@ namespace UnitTests
                 Assert.AreEqual(q[i], qout, Math.Abs(q[i] * 1E-5));
                 Assert.AreEqual(qya[i], qyaout, Math.Abs(qya[i] * 1E-5));
                 Assert.AreEqual(qyb[i], qybout, Math.Abs(qyb[i] * 1E-5));
-            }*/
+            }
         }
 
         [Test]

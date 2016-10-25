@@ -589,6 +589,7 @@ namespace SWIMFrame
     //  nfu, nft - no. of fluxes unsat and total
     //  dz - path length
     //  phif(1:nft) - phi values
+    [Serializable]
     public struct FluxEnd
     {
         public int sid, nfu, nft;
@@ -598,6 +599,7 @@ namespace SWIMFrame
 
     //  fend(2) - flux end data
     //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+    [Serializable]
     public struct FluxTable
     {
         public FluxEnd[] fend;

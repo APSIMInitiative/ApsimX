@@ -141,16 +141,23 @@ namespace SWIMFrame
             {
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
+                double[] tempPhif = new double[j + 1];
+                Array.Copy(ft[i - 1].fend[0].phif.Where((x, i) => i % 2 == 1).ToArray(), 0, tempPhif, 1, j);
                 for (int x = 1; x <= j; x++)
-                    for (int a = 1; a <= m; a+=2)
-                        phif[x, i] = ft[i - 1].fend[0].phif[a]; //discard every second
+                    phif[x, i] = tempPhif[x]; //discard every second
                 nft[i] = j;
                 nfu[i] = 1 + ft[i - 1].fend[1].nfu / 2; //ft[i].fend[1].nfu should be odd
-            }
 
-            //         for (int y = 1; y <= m; y++)
-            //            qf[y, x, i] = ft[i - 1].ftable[x * 2 - 1, y * 2 - 1];
-            // phif = Matrix<double>.Build.DenseOfArray(phif).Transpose().ToArray();
+
+                double[,] tempFt = new double[m + 1, m + 1];
+                for (int a = 1; a <= m; a += 2)
+                    for (int b = 1; b <= m; b += 2)
+                        tempFt[a / 2 + 1, b / 2 + 1] = ft[i - 1].ftable[a, b];
+
+                for (int a = 1; a <= m; a++)
+                    for (int b = 1; b <= m; b++)
+                        qf[b, a, i] = tempFt[a, b];
+            }
 
             // Extend phi2 and h2 if he1>he2, or vice-versa.
             dhe = Math.Abs(he[1] - he[2]);
@@ -281,9 +288,13 @@ namespace SWIMFrame
          */
             Matrix<double> coqM = Matrix<double>.Build.DenseOfArray(coq);
             Vector<double>[] quadcoV = new Vector<double>[ni - 2 + 1];
+            double[] tmpx;
+            double[] tmpy;
             for (i = 1; i <= ni - 2; i++)
             {
-                quadcoV[i] = Vector<double>.Build.DenseOfArray(Fluxes.quadco(new double[4] { 0, phii[i, 1], phii[i + 1, 1], phii[i + 2, 1] }, new double[4] { 0, phii[i, 2], phii[i + 1, 2], phii[i + 2, 2] }));
+                tmpx = new double[4] { 0, phii[i, 1], phii[i + 1, 1], phii[i + 2, 1] };
+                tmpy = new double[4] { 0, phii[i, 2], phii[i + 1, 2], phii[i + 2, 2] };
+                quadcoV[i] = Vector<double>.Build.DenseOfArray(Fluxes.quadco(tmpx, tmpy));
                 coqM.SetRow(i, quadcoV[i]);
             }
             Vector<double> lincoV = Vector<double>.Build.DenseOfArray(linco(new double[3] { 0, phii[ni - 1, 1], phii[ni, 1] }, new double[3] { 0, phii[ni - 1, 2], phii[ni, 2] }));
@@ -303,7 +314,7 @@ namespace SWIMFrame
                 {
                     phico2[k] = phif[ip, 2];
                     double[] co2co = Soil.Cuco(new double[5] { 0, phif[ip, 2], phif[ip + 1, 2], phif[ip + 2, 2], phif[ip + 3, 2] },
-                                               new double[5] { 0, qf[ip, j, 2], qf[ip + 1, j, 2], qf[ip + 2, j, 2], qf[ip + 3, j, 2] });
+                                               new double[5] { 0, qf[j, ip, 2], qf[j, ip + 1, 2], qf[j, ip + 2, 2], qf[j, ip + 3, 2] });
                     for (int x = 1; x < co2co.Length; x++)
                         co2[j, k, x] = co2co[x];
                     ip += 3;
@@ -508,7 +519,6 @@ namespace SWIMFrame
                     qi5Slice[x, y] = qi5[x, y];
             ftwo.ftable = qi5Slice;
 
-            Fluxes.FluxTables.Add("soil" + sp[0].sid + "dz" + ft1.fend[0].dz, ftwo);
             return ftwo;
         }
 

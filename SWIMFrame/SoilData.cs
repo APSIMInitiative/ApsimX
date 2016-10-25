@@ -134,7 +134,7 @@ namespace SWIMFrame
             rdS = new double[ns + 1];
             phi = new double[ns + 1, nphi + 1];
             dphidS = new double[ns + 1, nphi - 1 + 1];
-            K = new double[ns + 1, nphi + 1];
+            K = new double[nphi + 1, ns + 1];
             dKdS = new double[ns + 1, nphi - 1 + 1];
             for (i = 1; i <= ns; i++)
             {
@@ -155,9 +155,9 @@ namespace SWIMFrame
                         j++;
                     }
                     x1 = S[i, i1] - sp[i].Sc[j];
-                    phi[i, i1] = sp[i].phic[j] + x1 * (sp[i].phico[0, j] + x1 * (sp[i].phico[1, j] + x1 * sp[i].phico[2, j]));
+                    phi[i, i1] = sp[i].phic[j] + x1 * (sp[i].phico[1, j] + x1 * (sp[i].phico[2, j] + x1 * sp[i].phico[3, j]));
                     x1 = phi[i, i1] - sp[i].phic[j];
-                    K[i, i1] = sp[i].Kc[j] + x1 * (sp[i].Kco[0, j] + x1 * (sp[i].Kco[1, j] + x1 * sp[i].Kco[2, j]));
+                    K[i1, i] = sp[i].Kc[j] + x1 * (sp[i].Kco[1, j] + x1 * (sp[i].Kco[2, j] + x1 * sp[i].Kco[3, j]));
                 }
 
                 rdS[i] = 1.0 / (S[i, 2] - S[i, 1]);
@@ -165,7 +165,7 @@ namespace SWIMFrame
                 for (int a = 2; a <= nphi; a++)
                 {
                     dphidS[i, a - 1] = rdS[i] * (phi[i, a] - phi[i, a - 1]);
-                    dKdS[i, a - 1] = rdS[i] * (K[i, a] - K[i, a - 1]);
+                    dKdS[i, a - 1] = rdS[i] * (K[a, i] - K[a - 1, i]);
                 }
             }
 
@@ -200,7 +200,7 @@ namespace SWIMFrame
                 pe1.S = Extensions.GetRowCol(S, j, false);
                 pe1.phi = Extensions.GetRowCol(phi, j, false);
                 pe1.dphidS = Extensions.GetRowCol(dphidS, j, false);
-                pe1.K = Extensions.GetRowCol(K, j, false);
+                pe1.K = Extensions.GetRowCol(K, j, true);
                 pe1.dKdS = Extensions.GetRowCol(dKdS, j, false);
                 pe1.Sd = sp[j].Sd;
                 pe1.lnh = sp[j].lnh;
@@ -375,10 +375,10 @@ namespace SWIMFrame
 
             // Get flux from table
             qf = path.ftable;
-            f1 = qf[k[2], k[1]]; //use bilinear interp
-            f2 = qf[k[2], k[1] + 1];
-            f3 = qf[k[2] + 1, k[1]];
-            f4 = qf[k[2] + 1, k[1] + 1];
+            f1 = qf[k[1], k[2]]; //use bilinear interp
+            f2 = qf[k[1] + 1, k[2]]; 
+            f3 = qf[k[1], k[2] + 1];
+            f4 = qf[k[1] + 1, k[2] + 1];
             for (int count = 1; count < u.Length; count++)
                 omu[count] = 1.0 - u[count];
             q = omu[1] * omu[2] * f1 + u[1] * omu[2] * f2 + omu[1] * u[2] * f3 + u[1] * u[2] * f4;

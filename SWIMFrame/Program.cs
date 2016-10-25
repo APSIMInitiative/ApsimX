@@ -59,9 +59,21 @@ namespace SWIMFrame
                 for (j = 0; j <= ndz[i]; j++)
                 {
                     Fluxes.FluxTable(dz[i, j], soils[i].sp); // generate flux tables
-                    Fluxes.FluxTables.Add("soil" + soils[i].sid + "dz" + (dz[i, j] * 10), Fluxes.ft);
+                    using (MemoryStream ms = new MemoryStream()) // make copies of the tables or they get overwritten
+                    {
+                        BinaryFormatter fm = new BinaryFormatter();
+                        fm.Serialize(ms, Fluxes.ft);
+                        ms.Position = 0;
+                        Fluxes.FluxTables.Add("soil" + soils[i].sid + "dz" + (dz[i, j] * 10), (FluxTable)fm.Deserialize(ms));
+                    }
                 }
             }
+            SoilProps sp1 = Soil.ReadProps("soil103");
+            SoilProps sp2 = Soil.ReadProps("soil109");
+            FluxTable ft1 = Fluxes.ReadFluxTable("soil103dz50");
+            FluxTable ft2 = Fluxes.ReadFluxTable("soil109dz100");
+            FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
+            Fluxes.FluxTables.Add("soil103dz50_soil109dz100", ftwo);
         }
     }
 }
