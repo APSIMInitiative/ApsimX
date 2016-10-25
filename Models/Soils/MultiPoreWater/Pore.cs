@@ -29,12 +29,6 @@ namespace Models.Soils
         #endregion
 
         #region Pore Geometry
-        /// <summary>
-        /// The depth of the soil layer this pore compartment sits within
-        /// </summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double Thickness { get; set; }
         /// <summary>The diameter of the upper boundry of the pore</summary>
         [XmlIgnore]
         [Units("um")]
@@ -58,6 +52,12 @@ namespace Models.Soils
         #endregion
 
         #region Porosity and Water
+        /// <summary>
+        /// The depth of the soil layer this pore compartment sits within
+        /// </summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double Thickness { get; set; }
         /// <summary>The water potential when this pore is empty but all smaller pores are full</summary>
         [XmlIgnore]
         [Units("cm")]
@@ -203,7 +203,7 @@ namespace Models.Soils
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
         [XmlIgnore]
-        [Units("mm/h")]
+        [Units("cm")]
         public double GravitationalPotential { get; set; }
         /// <summary>
         /// Factor describing the effects of water surface tension holding water in pores.  Is zero where surface tension exceeds the forces of gravity and neglegable where suction is low in larger pores

@@ -245,7 +245,7 @@ namespace Models.Soils
         /// </summary>
         [Units("um")]
         [Description("The pore diameters that seperate modeled pore compartments")]
-        public double[] PoreBounds { get; set; }
+        private double[] PoreBounds = { 3000, 1687, 949, 533, 300, 70, 16.18, 3.76, 0.87, 0.202, 0.0005 };
         /// <summary>
         /// The hydraulic conductance below the bottom of the specified profile
         /// </summary>
