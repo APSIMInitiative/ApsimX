@@ -941,7 +941,7 @@ namespace UnitTests
 
         [Test]
         public void Solute()
-        {/*
+        {
             int nt = 2;
             int ns = 2;
             SolProps sp = new SolProps(nt, ns);
@@ -991,7 +991,7 @@ namespace UnitTests
             double[,] smRes = res[0] as double[,];
             for (int i = 1; i < smOUT.GetLength(0); i++)
                 for (int j = 1; j < smOUT.GetLength(1); j++)
-                    Assert.AreEqual(smOUT[i, j], smRes[i, j], Math.Abs(smOUT[i, 1] * 1E-2)); //variations in sm at E-40... I don't think we really care at that point. Also probably outside of float range
+                    Assert.AreEqual(smOUT[i, j], smRes[i, j], Math.Abs(smOUT[i, 1] * 1E-5)); //variations in sm at E-40... I don't think we really care at that point. Also probably outside of float range
 
             double[] sdrnRes = res[1] as double[];
             for (int i = 1; i < sdrnOUT.Length; i++)
@@ -1005,13 +1005,17 @@ namespace UnitTests
             for (int i = 1; i < cOUT.GetLength(0); i++)
                 for (int j = 1; j < cOUT.GetLength(1); j++)
                     Assert.AreEqual(cOUT[i, j], cRes[i, j], Math.Abs(cOUT[i,j] * 1E-7));
-     */   }
+        }
 
         [Test]
         public void Solve()
-        {/*
+        {
             SolProps sol = new SolProps(10,2);
             SoilData sd = new SoilData();
+            Soil.SoilProperties = new Dictionary<string, SoilProps>();
+            Fluxes.FluxTables = new Dictionary<string, FluxTable>();
+            Program.GenerateFlux();
+
             sd.GetTables(10, new int[] { 0, 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }, new double[] { 0, 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 });
             sd.dx = new double[] {0.0, 10.0, 10.0, 10.0, 10.0, 20.0, 20.0, 20.0, 20.0, 40.0, 40.0 };
             sd.n = 10;
@@ -1034,7 +1038,7 @@ namespace UnitTests
             int[] jt=new int[] { 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 };
             double[] cin = new double[] { 0.0, 0.0, 0.0 };
             double[] c0 = new double[] { 0.0, 0.0, 0.0 };
-            double[,] sm = new double[11,3]; sm[1, 1] = 100; sm[1, 2] = 100;
+            double[,] sm = new double[3,11]; sm[1, 1] = 100; sm[2, 1] = 100;
             double[] soff = new double[] { 0.0, 0.0, 0.0 };
             double[] sinfil = new double[] { 0.0, 0.0, 0.0 };
             double[] sdrn = new double[] { 0.0, 0.0, 0.0 };
@@ -1044,7 +1048,7 @@ namespace UnitTests
 
             Flow.Solve(sol, sd, ts, tfin, qprec, qevap, nsol, nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn,
                        ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex, ref sex);
-       */ }
+        }
 
         [Test]
         public void Tri()
