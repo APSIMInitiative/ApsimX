@@ -27450,7 +27450,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Operation>
           </Operations>
           <Operations>
-            <Name>Irrigation</Name>
+            <Name>IrrigationApplications</Name>
             <Operation>
               <Date>2006-10-05T00:00:00</Date>
               <Action>  [Irrigation].Apply(5.4)</Action>
@@ -32864,7 +32864,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Operation>
           </Operations>
           <Operations>
-            <Name>Irrigation</Name>
+            <Name>IrrigationApplications</Name>
             <Operation>
               <Date>2006-10-18T00:00:00</Date>
               <Action>[Irrigation].Apply(2.2)</Action>
