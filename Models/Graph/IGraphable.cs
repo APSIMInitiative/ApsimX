@@ -43,9 +43,6 @@ namespace Models.Graph
     /// <summary>An enumeration for the different types of markers</summary>
     public enum MarkerType 
     {
-        /// <summary>No marker should be display</summary>
-        None,
-
         /// <summary>A filled circle marker</summary>
         FilledCircle,
 
@@ -77,7 +74,10 @@ namespace Models.Graph
         Plus,
 
         /// <summary>A star marker</summary>
-        Star
+        Star,
+
+        /// <summary>No marker should be display</summary>
+        None
     }
 
     /// <summary>An enumeration for the different sizes of markers</summary>
@@ -168,7 +168,7 @@ namespace Models.Graph
 
         /// <summary>Gets the dataview</summary>
         [XmlIgnore]
-        public DataView dataView;
+        public DataTable data;
 
         /// <summary>Gets the x values</summary>
         public IEnumerable x;
