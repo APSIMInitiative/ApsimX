@@ -366,6 +366,19 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
 
+        /// <summary>Gets the cohort live.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass CohortLive
+        {
+            get
+            {
+                return Live;
+            }
+
+        }
+
+
         #endregion
 
         #region Organ functions
