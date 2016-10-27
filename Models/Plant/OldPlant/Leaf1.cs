@@ -531,8 +531,8 @@ namespace Models.PMF.OldPlant
             _SLAI -= dlt_slai;
             RemoveDetachment(dlt_slai, dlt_lai);
 
-            Live = Live - GreenRemoved;
-            Dead = Dead - SenescedRemoved;
+            Live.Subtract(GreenRemoved);
+            Dead.Subtract(SenescedRemoved);
 
             // keep dm above a minimum
             double dm_init = InitialWt * Population.Density;
@@ -754,17 +754,19 @@ namespace Models.PMF.OldPlant
             Growth.StructuralN -= dlt_n_senesced_trans;
             Growth.StructuralN -= TotalDltNSenescedRetrans;
 
-            Live = Live + Growth - Senescing;
+            Live.Add(Growth);
+            Live.Subtract(Senescing);
 
-            Dead = Dead - Detaching + Senescing;
-            Live = Live + Retranslocation;
+            Dead.Add(Senescing);
+            Dead.Subtract(Detaching);
+            Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
             Biomass dying = Live;
             dying.Multiply(Population.DyingFractionPlants);
-            Live = Live - dying;
-            Dead = Dead + dying;
-            Senescing = Senescing + dying;
+            Live.Subtract(dying);
+            Dead.Add(dying);
+            Senescing.Add(dying);
 
             Util.Debug("Leaf.Green.Wt=%f", Live.Wt);
             Util.Debug("Leaf.Green.N=%f", Live.N);

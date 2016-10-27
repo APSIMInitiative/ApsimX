@@ -416,7 +416,7 @@ namespace Models.PMF.Organs
             {
                 Biomass Biomass = new Biomass();
                 foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Live;
+                    Biomass.Add(L.Live);
                 return Biomass;
             }
             
@@ -431,7 +431,7 @@ namespace Models.PMF.Organs
             {
                 Biomass Biomass = new Biomass();
                 foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Dead;
+                    Biomass.Add(L.Dead);
                 return Biomass;
             }
         }

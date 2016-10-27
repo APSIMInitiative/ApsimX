@@ -282,40 +282,7 @@ namespace Models.PMF
             _NonStructuralN = a.NonStructuralN;
             _MetabolicN = a.MetabolicN;
         }
-        /// <summary>Implements the operator +.</summary>
-        /// <param name="a">a.</param>
-        /// <param name="b">The b.</param>
-        /// <returns>The result of the operator.</returns>
-        public static Biomass operator +(Biomass a, Biomass b)
-        {
-            return new Biomass
-            {
-                StructuralWt = a.StructuralWt + b.StructuralWt,
-                NonStructuralWt = a.NonStructuralWt + b.NonStructuralWt,
-                MetabolicWt = a.MetabolicWt + b.MetabolicWt,
-                StructuralN = a.StructuralN + b.StructuralN,
-                NonStructuralN = a.NonStructuralN + b.NonStructuralN,
-                MetabolicN = a.MetabolicN + b.MetabolicN
-            };
 
-        }
-        /// <summary>Implements the operator -.</summary>
-        /// <param name="a">a.</param>
-        /// <param name="b">The b.</param>
-        /// <returns>The result of the operator.</returns>
-        public static Biomass operator -(Biomass a, Biomass b)
-        {
-            return new Biomass
-            {
-                StructuralWt = a.StructuralWt - b.StructuralWt,
-                NonStructuralWt = a.NonStructuralWt - b.NonStructuralWt,
-                MetabolicWt = a.MetabolicWt - b.MetabolicWt,
-                StructuralN = a.StructuralN - b.StructuralN,
-                NonStructuralN = a.NonStructuralN - b.NonStructuralN,
-                MetabolicN = a.MetabolicN - b.MetabolicN
-            };
-
-        }
 
         /// <summary>The _ empty</summary>
         private static Biomass _Empty = new Biomass();
