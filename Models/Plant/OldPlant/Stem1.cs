@@ -201,7 +201,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead;
+            Detaching.SetTo(Dead);
             Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Stem.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Stem.Detaching.N=%f", Detaching.N);
@@ -413,7 +413,7 @@ namespace Models.PMF.OldPlant
             Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live;
+            Biomass dying = new Biomass(Live);
             dying.Multiply(Population.DyingFractionPlants);
             Live.Subtract(dying);
             Dead.Add(dying);

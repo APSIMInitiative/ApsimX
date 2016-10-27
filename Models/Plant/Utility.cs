@@ -222,7 +222,7 @@ namespace Models.PMF
         internal static Biomass RemoveDM(double delta, Biomass Pool, string OrganName)
         {
             double fraction = MathUtilities.Divide(delta, Pool.Wt, 0.0);
-            Biomass RemovedPool = Pool;
+            Biomass RemovedPool = new Biomass(Pool);
             RemovedPool.Multiply(fraction);
 
             double error_margin = 1.0e-6f;

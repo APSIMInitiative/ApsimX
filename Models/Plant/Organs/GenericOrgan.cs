@@ -381,7 +381,7 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                Biomass Loss = Live;
+                Biomass Loss = new Biomass(Live);
                 Loss.Multiply(SenescenceRate.Value);
                 //Live.Subtract(Loss);
 

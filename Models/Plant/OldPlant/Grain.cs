@@ -425,7 +425,7 @@ namespace Models.PMF.OldPlant
             Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live;
+            Biomass dying = new Biomass(Live);
             dying.Multiply(Population.DyingFractionPlants);
             Live.Subtract(dying);
             Dead.Add(dying);

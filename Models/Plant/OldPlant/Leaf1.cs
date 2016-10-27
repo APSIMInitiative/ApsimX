@@ -506,7 +506,7 @@ namespace Models.PMF.OldPlant
                 }
             }
 
-            Detaching = Dead;
+            Detaching.SetTo(Dead);
             Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("leaf.dltSLAI_detached=%f", dltSLAI_detached);
             Util.DebugArray("leaf.LeafArea=%f0", LeafArea, 10);
@@ -762,7 +762,7 @@ namespace Models.PMF.OldPlant
             Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live;
+            Biomass dying = new Biomass(Live);
             dying.Multiply(Population.DyingFractionPlants);
             Live.Subtract(dying);
             Dead.Add(dying);
