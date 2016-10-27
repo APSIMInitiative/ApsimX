@@ -176,7 +176,7 @@ namespace Models.PMF.Phen
         private DateTime SowDate = DateTime.MinValue;
         /// <summary>The emerged</summary>
         [XmlIgnore]
-        public bool Emerged = true;
+        public bool Emerged = false;
         /// <summary>Germinated test</summary>
         [XmlIgnore]
         public bool Germinated = false;
@@ -276,11 +276,7 @@ namespace Models.PMF.Phen
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
 
-            for (int P = 0; P < Phases.Count; P++)
-            {//if the plant has an emerging phase, set emerged to false so it become true when emerged otherwise leave true so perenial crops with no emergance phase start of emmerged 
-                if (Phases[P] is EmergingPhase)
-                    Emerged = false;
-            }
+       
 
         }
 
@@ -301,6 +297,16 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
+            bool hasEmergencePhase = false;
+            for (int P = 0; P < Phases.Count; P++)
+            {//if the plant has an emerging phase, set emerged to false so it become true when emerged otherwise leave true so perenial crops with no emergance phase start of emmerged 
+                if (Phases[P] is EmergingPhase)
+                    hasEmergencePhase = true;
+            }
+            if (hasEmergencePhase == false)
+            {
+                Emerged = true;
+            }
         }
 
         /// <summary>Called when crop is being harvested.</summary>
