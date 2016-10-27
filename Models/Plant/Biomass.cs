@@ -316,23 +316,6 @@ namespace Models.PMF
             };
 
         }
-        /// <summary>Implements the operator *.</summary>
-        /// <param name="a">a.</param>
-        /// <param name="Fraction">The fraction.</param>
-        /// <returns>The result of the operator.</returns>
-        public static Biomass operator *(Biomass a, double Fraction)
-        {
-            return new Biomass
-            {
-                StructuralWt = a.StructuralWt * Fraction,
-                NonStructuralWt = a.NonStructuralWt * Fraction,
-                MetabolicWt = a.MetabolicWt * Fraction,
-                StructuralN = a.StructuralN * Fraction,
-                NonStructuralN = a.NonStructuralN * Fraction,
-                MetabolicN = a.MetabolicN * Fraction
-            };
-
-        }
 
         /// <summary>The _ empty</summary>
         private static Biomass _Empty = new Biomass();

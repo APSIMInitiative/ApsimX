@@ -201,7 +201,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching = Dead;
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Stem.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Stem.Detaching.N=%f", Detaching.N);
         }
@@ -410,7 +411,8 @@ namespace Models.PMF.OldPlant
             Live = Live + Retranslocation;
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
+            Biomass dying = Live;
+            dying.Multiply(Population.DyingFractionPlants);
             Live = Live - dying;
             Dead = Dead + dying;
             Senescing = Senescing + dying;
@@ -520,8 +522,8 @@ namespace Models.PMF.OldPlant
             //double dlt_p_harvest = Green.P * chop_fr_green
             //                    + Senesced.P * chop_fr_sen;
 
-            Dead = Dead * RetainFraction.Value;
-            Live = Live * RetainFraction.Value;
+            Dead.Multiply(RetainFraction.Value);
+            Live.Multiply(RetainFraction.Value);
 
             Height = MathUtilities.Constrain(Harvest.Height, 1.0, double.MaxValue);
 

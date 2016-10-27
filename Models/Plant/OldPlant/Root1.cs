@@ -439,7 +439,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching = Dead;
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Root.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Root.Detaching.N=%f", Detaching.N);
         }
@@ -747,7 +748,8 @@ namespace Models.PMF.OldPlant
             Live = Live + Retranslocation;
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
+            Biomass dying = Live;
+            dying.Multiply(Population.DyingFractionPlants);
             Live = Live - dying;
             Dead = Dead + dying;
             Senescing = Senescing + dying;
@@ -1046,8 +1048,8 @@ namespace Models.PMF.OldPlant
         /// <param name="Fraction">The fraction.</param>
         internal void RemoveBiomassFraction(double Fraction)
         {
-            Biomass Dead;
-            Dead = Live * DieBackFraction * Fraction;
+            Biomass Dead = Live;
+            Dead.Multiply(DieBackFraction * Fraction);
             // however dead roots have a given N concentration
             Dead.StructuralN = Dead.Wt * NSenescenceConcentration;
 
@@ -1144,8 +1146,8 @@ namespace Models.PMF.OldPlant
         /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
-            Biomass Dead;
-            Dead = Live * DieBackFraction;
+            Biomass Dead = Live;
+            Dead.Multiply(DieBackFraction);
 
             // however dead roots have a given N concentration
             Dead.StructuralN = Dead.Wt * NSenescenceConcentration;
