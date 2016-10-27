@@ -336,7 +336,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
               <double>0</double>
               <double>30</double>
               <double>30</double>
-              <double>0</double>
+              <double>20</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -349,7 +349,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <Name>Leaf</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Structure].ThermalTime.Value</VariableName>
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
@@ -815,8 +815,8 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <Start>Planting</Start>
-          <End>FinalLeaf</End>
+          <Start>BudBurst</Start>
+          <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1104,7 +1104,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>2005-01-01T00:00:00</StartDate>
+      <StartDate>2005-04-05T00:00:00</StartDate>
       <EndDate>2007-06-05T00:00:00</EndDate>
     </Clock>
     <Summary>
@@ -1606,6 +1606,8 @@ namespace Models
           <string>[Grapevine].Phenology.Stage</string>
           <string>[Grapevine].Phenology.CurrentStageName</string>
           <string>[Grapevine].Structure.LeafTipsAppeared</string>
+          <string>[Grapevine].Structure.PlantTotalNodeNo</string>
+          <string>[Grapevine].Leaf.InitialisedCohortNo</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1614,6 +1616,88 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
+    <Graph>
+      <Name>Phenology</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Phenology.Stage</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>LeafNum</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.InitialisedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Simulation>
   <ExplorerWidth>259</ExplorerWidth>
 </Simulations>
