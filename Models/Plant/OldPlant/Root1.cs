@@ -439,15 +439,16 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching.SetTo(Dead);
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Root.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Root.Detaching.N=%f", Detaching.N);
         }
         /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
-            Live = Live - GreenRemoved;
-            Dead = Dead - SenescedRemoved;
+            Live.Subtract(GreenRemoved);
+            Dead.Subtract(SenescedRemoved);
         }
 
         // nitrogen
@@ -741,16 +742,19 @@ namespace Models.PMF.OldPlant
             // send off detached roots before root structure is updated by plant death
             DisposeDetachedMaterial(Detaching, RootLength);
 
-            Live = Live + Growth - Senescing;
+            Live.Add(Growth);
+            Live.Subtract(Senescing);
 
-            Dead = Dead - Detaching + Senescing;
-            Live = Live + Retranslocation;
+            Dead.Add(Senescing);
+            Dead.Subtract(Detaching);
+            Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
-            Live = Live - dying;
-            Dead = Dead + dying;
-            Senescing = Senescing + dying;
+            Biomass dying = new Biomass(Live);
+            dying.Multiply(Population.DyingFractionPlants);
+            Live.Subtract(dying);
+            Dead.Add(dying);
+            Senescing.Add(dying);
 
             Util.Debug("Root.Green.Wt=%f", Live.Wt);
             Util.Debug("Root.Green.N=%f", Live.N);
@@ -1046,13 +1050,13 @@ namespace Models.PMF.OldPlant
         /// <param name="Fraction">The fraction.</param>
         internal void RemoveBiomassFraction(double Fraction)
         {
-            Biomass Dead;
-            Dead = Live * DieBackFraction * Fraction;
+            Biomass Dead = new Biomass(Live);
+            Dead.Multiply(DieBackFraction * Fraction);
             // however dead roots have a given N concentration
             Dead.StructuralN = Dead.Wt * NSenescenceConcentration;
 
-            Live = Live - Dead;
-            Dead = Dead + Dead;
+            Live.Subtract(Dead);
+            Dead.Add(Dead);
 
             // do root_length
             double[] dltRootLengthDie = new double[Soil.Thickness.Length];
@@ -1144,14 +1148,14 @@ namespace Models.PMF.OldPlant
         /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
-            Biomass Dead;
-            Dead = Live * DieBackFraction;
+            Biomass Dead = new Biomass(Live);
+            Dead.Multiply(DieBackFraction);
 
             // however dead roots have a given N concentration
             Dead.StructuralN = Dead.Wt * NSenescenceConcentration;
 
-            Live = Live - Dead;
-            Dead = Dead + Dead;
+            Live.Subtract(Dead);
+            Dead.Add(Dead);
 
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
 
