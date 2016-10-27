@@ -278,19 +278,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
-
-
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            if (Phenology != null)
-                if (Phenology.OnDayOf("Emergence"))
-                    if (Structure != null)
-                        Structure.LeafTipsAppeared = 1.0;
-        }
         #endregion
 
         #region Component Process Functions
