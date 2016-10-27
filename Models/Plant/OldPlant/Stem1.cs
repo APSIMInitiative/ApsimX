@@ -201,15 +201,16 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching = Dead;
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Stem.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Stem.Detaching.N=%f", Detaching.N);
         }
         /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
-            Live = Live - GreenRemoved;
-            Dead = Dead - SenescedRemoved;
+            Live.Subtract(GreenRemoved);
+            Dead.Subtract(SenescedRemoved);
         }
         /// <summary>Adjusts the morphology after a remove biomass.</summary>
         internal void AdjustMorphologyAfterARemoveBiomass()
@@ -404,16 +405,19 @@ namespace Models.PMF.OldPlant
         public override void Update()
         {
             Growth.StructuralN += Leaf.NSenescedTrans;
-            Live = Live + Growth - Senescing;
+            Live.Add(Growth);
+            Live.Subtract(Senescing);
 
-            Dead = Dead - Detaching + Senescing;
-            Live = Live + Retranslocation;
+            Dead.Add(Senescing);
+            Dead.Subtract(Detaching);
+            Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
-            Live = Live - dying;
-            Dead = Dead + dying;
-            Senescing = Senescing + dying;
+            Biomass dying = Live;
+            dying.Multiply(Population.DyingFractionPlants);
+            Live.Subtract(dying);
+            Dead.Add(dying);
+            Senescing.Add(dying);
             Height += DeltaHeight;
 
             Util.Debug("Stem.Green.Wt=%f", Live.Wt);
@@ -520,8 +524,8 @@ namespace Models.PMF.OldPlant
             //double dlt_p_harvest = Green.P * chop_fr_green
             //                    + Senesced.P * chop_fr_sen;
 
-            Dead = Dead * RetainFraction.Value;
-            Live = Live * RetainFraction.Value;
+            Dead.Multiply(RetainFraction.Value);
+            Live.Multiply(RetainFraction.Value);
 
             Height = MathUtilities.Constrain(Harvest.Height, 1.0, double.MaxValue);
 

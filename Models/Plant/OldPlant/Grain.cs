@@ -262,15 +262,16 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching.SetTo(Dead);
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("meal.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("meal.Detaching.N=%f", Detaching.N);
         }
         /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
-            Live = Live - GreenRemoved;
-            Dead = Dead - SenescedRemoved;
+            Live.Subtract(GreenRemoved);
+            Dead.Subtract(SenescedRemoved);
         }
 
         // nitrogen
@@ -416,16 +417,19 @@ namespace Models.PMF.OldPlant
         /// <summary>Updates this instance.</summary>
         public override void Update()
         {
-            Live = Live + Growth - Senescing;
+            Live.Add(Growth);
+            Live.Subtract(Senescing);
 
-            Dead = Dead - Detaching + Senescing;
-            Live = Live + Retranslocation;
+            Dead.Add(Senescing);
+            Dead.Subtract(Detaching);
+            Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
-            Live = Live - dying;
-            Dead = Dead + dying;
-            Senescing = Senescing + dying;
+            Biomass dying = Live;
+            dying.Multiply(Population.DyingFractionPlants);
+            Live.Subtract(dying);
+            Dead.Add(dying);
+            Senescing.Add(dying);
 
             //if (HIStressSensitivePeriod.Value == 1)
             //{

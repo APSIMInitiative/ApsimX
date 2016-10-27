@@ -256,15 +256,16 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
-            Detaching = Dead * SenescenceDetachmentFraction;
+            Detaching = Dead;
+            Detaching.Multiply(SenescenceDetachmentFraction);
             Util.Debug("Pod.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Pod.Detaching.N=%f", Detaching.N);
         }
         /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
-            Live = Live - GreenRemoved;
-            Dead = Dead - SenescedRemoved;
+            Live.Subtract(GreenRemoved);
+            Dead.Subtract(SenescedRemoved);
         }
         // nitrogen
         /// <summary>Gets the n demand.</summary>
@@ -459,16 +460,19 @@ namespace Models.PMF.OldPlant
         /// <summary>Updates this instance.</summary>
         public override void Update()
         {
-            Live = Live + Growth - Senescing;
+            Live.Add(Growth);
+            Live.Subtract(Senescing);
 
-            Dead = Dead - Detaching + Senescing;
-            Live = Live + Retranslocation;
+            Dead.Add(Senescing);
+            Dead.Subtract(Detaching);
+            Live.Add(Retranslocation);
             Live.StructuralN = Live.N + dlt_n_senesced_retrans;
 
-            Biomass dying = Live * Population.DyingFractionPlants;
-            Live = Live - dying;
-            Dead = Dead + dying;
-            Senescing = Senescing + dying;
+            Biomass dying = Live;
+            dying.Multiply(Population.DyingFractionPlants);
+            Live.Subtract(dying);
+            Dead.Add(dying);
+            Senescing.Add(dying);
 
             Util.Debug("Pod.Green.Wt=%f", Live.Wt);
             Util.Debug("Pod.Green.N=%f", Live.N);
@@ -544,7 +548,7 @@ namespace Models.PMF.OldPlant
             double dlt_n_harvest = Live.N + Dead.N - n_init;
             //double dlt_p_harvest = Green.P + Senesced.P - p_init;
 
-            Dead = Dead * retain_fr_sen;
+            Dead.Multiply(retain_fr_sen);
             Live.StructuralWt = Live.Wt * retain_fr_green;
             Live.StructuralN = n_init;
             //Green.P = p_init;
