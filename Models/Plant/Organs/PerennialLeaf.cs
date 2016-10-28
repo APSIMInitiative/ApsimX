@@ -70,7 +70,6 @@ namespace Models.PMF.Organs
         /// <summary>Growth Respiration</summary>
         public double GrowthRespiration { get; set; }
 
-
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
         public double RemovedWt { get; set; }
@@ -79,51 +78,30 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double RemovedN { get; set; }
 
-
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
-        /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        /// <summary>The amount of biomass detached every day</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
-
-        /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
-        public double DetachedN { get; set; }
-
+        public Biomass Detached = new Biomass();
 
         #region Leaf Interface
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public bool CohortsInitialised { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public int TipsAtEmergence { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public int CohortsAtInitialisation { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public double InitialisedCohortNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public double AppearedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public double PlantAppearedLeafNo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         /// <param name="proprtionRemoved"></param>
         public void DoThin(double proprtionRemoved) { }
         #endregion
@@ -200,7 +178,6 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
-
         /// <summary>The lai function</summary>
         [Link]
         IFunction LAIFunction = null;
@@ -222,18 +199,15 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
-
         /// <summary>Leaf Detachment Time</summary>
         [Link]
         IFunction LeafDetachmentTime = null;
-
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-
 
         #endregion
 
@@ -245,10 +219,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double WaterDemand
         {
-            get
-            {
-                 return PotentialEP;
-            }
+            get {return PotentialEP;}
             set { }
         }
         /// <summary>Gets the transpiration.</summary>
@@ -286,7 +257,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
-
 
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
@@ -452,11 +422,7 @@ namespace Models.PMF.Organs
         /// <summary>The non structural dm demand</summary>
         protected double NonStructuralDMDemand = 0;
 
-
         #endregion
-
-
-
 
         #region Class properties
 
@@ -519,7 +485,6 @@ namespace Models.PMF.Organs
             Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value + LeafDetachmentTime.Value));
         }
 
-
         #endregion
 
         #region Organ functions
@@ -528,22 +493,16 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-
         /// <summary>Sets the dm potential allocation.</summary>
         public BiomassPoolType DMPotentialAllocation
         {
             set
             {
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in " + Name);
                 PotentialMetabolicDMAllocation = value.Metabolic;
                 PotentialStructuralDMAllocation = value.Structural;
                 PotentialDMAllocation = value.Structural + value.Metabolic;
             }
         }
-
 
         /// <summary>Gets or sets the N supply.</summary>
         [XmlIgnore]
@@ -624,6 +583,7 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                Detached.Clear();
                 FRGR = FRGRFunction.Value;
                 LAI = LAIFunction.Value;
                 Height = HeightFunction.Value;
@@ -633,13 +593,11 @@ namespace Models.PMF.Organs
 
                 Leaves.Add(new PerrenialLeafCohort());
                 if (Leaves.Count == 1)
-                {
                     AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value,
                                        NonStructuralWt: 0, 
                                        StructuralN: InitialWtFunction.Value * MinimumNConc.Value, 
                                        NonStructuralN: InitialWtFunction.Value * (MaximumNConc.Value - MinimumNConc.Value));
              
-                }
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age++;
 
@@ -658,16 +616,10 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
-                Biomass Detached = new Biomass();
                 DetachLeaves(out Detached);
 
                 if (Detached.Wt > 0.0)
-                {
-                    DetachedWt += Detached.Wt;
-                    DetachedN += Detached.N;
                     SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.CropType, Name);
-                }
-
 
                 MaintenanceRespiration = 0;
                 //Do Maintenance respiration
@@ -687,18 +639,16 @@ namespace Models.PMF.Organs
 
         #endregion
 
-
         /// <summary>Called when crop is ending</summary>
         ///[EventSubscribe("PlantEnding")]
         virtual public void DoPlantEnding()
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
-
             Clear();
         }
 
@@ -713,42 +663,31 @@ namespace Models.PMF.Organs
             double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
 
             if (totalLiveFractionToRemove > 1.0)
-            {
                 throw new Exception("The sum of FractionToResidue and FractionToRemove for "
                                     + value.Name
                                     + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
-            }
+            
             if (totalDeadFractionToRemove > 1.0)
-            {
                 throw new Exception("The sum of FractionToResidue and FractionToRemove for "
                                     + value.Name
                                     + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
-            }
+            
             if (totalFractionToRemove > 0.0)
-            {
+            { 
                 double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
                 double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
 
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                Biomass Detaching = Live * value.FractionLiveToResidue + Dead * value.FractionDeadToResidue;
+                Detached.Add(Detaching);
                 RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
                 RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
 
                 ReduceLeavesUniformly(RemainingLiveFraction);
+                ReduceDeadLeavesUniformly(RemainingDeadFraction);
 
-                Dead.StructuralWt *= RemainingDeadFraction;
-                Dead.NonStructuralWt *= RemainingDeadFraction;
-                Dead.MetabolicWt *= RemainingDeadFraction;
-
-                Dead.StructuralN *= RemainingDeadFraction;
-                Dead.NonStructuralN *= RemainingDeadFraction;
-                Dead.MetabolicN *= RemainingDeadFraction;
-
-                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Detaching.Wt * 10, Detaching.N * 10, 0.0, Plant.CropType, Name);
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
 
                 double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
@@ -759,7 +698,5 @@ namespace Models.PMF.Organs
                                          + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
             }
         }
-
-
     }
 }
