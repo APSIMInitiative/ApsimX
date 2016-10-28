@@ -65,7 +65,7 @@ namespace Models.PMF.Organs
         protected ISummary Summary = null;
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        virtual public double MaintenanceRespiration { get { return 0; } set { } }
+        public double MaintenanceRespiration { get; set; }
 
         /// <summary>Growth Respiration</summary>
         public double GrowthRespiration { get; set; }
@@ -233,9 +233,6 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
-        /// <summary>Water Demand Function</summary>
-        [Link(IsOptional = true)]
-        IFunction WaterDemandFunction = null;
 
 
         #endregion
@@ -250,10 +247,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (WaterDemandFunction != null)
-                    return WaterDemandFunction.Value;
-                else
-                    return PotentialEP;
+                 return PotentialEP;
             }
             set { }
         }
