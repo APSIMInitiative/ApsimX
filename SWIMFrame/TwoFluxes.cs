@@ -142,7 +142,7 @@ namespace SWIMFrame
                 m = ft[i - 1].fend[0].nft; //should be odd
                 j = 1 + m / 2;
                 double[] tempPhif = new double[j + 1];
-                Array.Copy(ft[i - 1].fend[0].phif.Where((x, i) => i % 2 == 1).ToArray(), 0, tempPhif, 1, j);
+                Array.Copy(ft[i - 1].fend[0].phif.Where((x, it) => it % 2 == 1).ToArray(), 0, tempPhif, 1, j);
                 for (int x = 1; x <= j; x++)
                     phif[x, i] = tempPhif[x]; //discard every second
                 nft[i] = j;
