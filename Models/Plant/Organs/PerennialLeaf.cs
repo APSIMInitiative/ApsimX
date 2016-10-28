@@ -37,10 +37,20 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>The dead</summary>
-        [Link]
-        [DoNotDocument]
-        public Biomass Dead = null;
+        /// <summary>Gets the cohort live.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Dead
+        {
+            get
+            {
+                Biomass dead = new Biomass();
+                foreach (PerrenialLeafCohort L in Leaves)
+                    dead.Add(L.Dead);
+                return dead;
+            }
+        }
+
 
         /// <summary>The plant</summary>
         [Link]
@@ -209,6 +219,13 @@ namespace Models.PMF.Organs
         /// <summary>The structural fraction</summary>
         [Link]
         IFunction StructuralFraction = null;
+        /// <summary>Leaf Residence Time</summary>
+        [Link]
+        IFunction LeafResidenceTime = null;
+
+        /// <summary>Leaf Detachment Time</summary>
+        [Link]
+        IFunction LeafDetachmentTime = null;
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
@@ -386,11 +403,6 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction SenescenceRate = null;
 
-        /// <summary>The detachment rate function</summary>
-        [Link]
-        [Units("/d")]
-        IFunction DetachmentRateFunction = null;
-
         /// <summary>The n reallocation factor</summary>
         [Link]
         [Units("/d")]
@@ -464,6 +476,7 @@ namespace Models.PMF.Organs
         {
             public double Age = 0;
             public Biomass Live = new Biomass();
+            public Biomass Dead = new Biomass();
         }
 
         private List<PerrenialLeafCohort> Leaves = new List<PerrenialLeafCohort>();
@@ -480,6 +493,11 @@ namespace Models.PMF.Organs
             foreach (PerrenialLeafCohort L in Leaves)
                 L.Live.Multiply(fraction);
         }
+        private void ReduceDeadLeavesUniformly(double fraction)
+        {
+            foreach (PerrenialLeafCohort L in Leaves)
+                L.Dead.Multiply(fraction);
+        }
         private void RespireLeafFraction(double fraction)
         {
             foreach (PerrenialLeafCohort L in Leaves)
@@ -488,8 +506,24 @@ namespace Models.PMF.Organs
                 L.Live.MetabolicWt *= (1-fraction);
             }
         }
+        private void SenesceLeaves()
+        {
+            foreach (PerrenialLeafCohort L in Leaves)
+                if (L.Age >= LeafResidenceTime.Value)
+                {
+                    L.Dead.Add(L.Live);
+                    L.Live.Clear();
+                }
+        }
 
-
+        private void DetachLeaves(out Biomass Detached)
+        {
+            Detached = new Biomass();
+            foreach (PerrenialLeafCohort L in Leaves)
+                if (L.Age >= (LeafResidenceTime.Value+ LeafDetachmentTime.Value))
+                    Detached.Add(L.Dead);
+            Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value + LeafDetachmentTime.Value));
+        }
 
 
         #endregion
@@ -665,41 +699,15 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                Biomass Loss = Live * SenescenceRate.Value;
-                //Live.Subtract(Loss);
+                SenesceLeaves();
+                Biomass Detached = new Biomass();
+                DetachLeaves(out Detached);
 
-                //Live.StructuralWt -= Loss.StructuralWt;
-                //Live.NonStructuralWt -= Loss.NonStructuralWt;
-                //Live.StructuralN -= Loss.StructuralN;
-                //Live.NonStructuralN -= Loss.NonStructuralN;
-
-                Dead.StructuralWt += Loss.StructuralWt;
-                Dead.NonStructuralWt += Loss.NonStructuralWt;
-                Dead.StructuralN += Loss.StructuralN;
-                Dead.NonStructuralN += Loss.NonStructuralN;
-
-
-                //Live.Subtract(Loss);
-                //Dead.Add(Loss);
-
-                double DetachedFrac = DetachmentRateFunction.Value;
-                double detachingWt = Dead.Wt * DetachedFrac;
-                double detachingN = Dead.N * DetachedFrac;
-
-                Dead.StructuralWt *= (1 - DetachedFrac);
-                Dead.StructuralN *= (1 - DetachedFrac);
-                Dead.NonStructuralWt *= (1 - DetachedFrac);
-                Dead.NonStructuralN *= (1 - DetachedFrac);
-                Dead.MetabolicWt *= (1 - DetachedFrac);
-                Dead.MetabolicN *= (1 - DetachedFrac);
-
-                //Dead.Multiply(1 - DetachedFrac);
-
-                if (detachingWt > 0.0)
+                if (Detached.Wt > 0.0)
                 {
-                    DetachedWt += detachingWt;
-                    DetachedN += detachingN;
-                    SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
+                    DetachedWt += Detached.Wt;
+                    DetachedN += Detached.N;
+                    SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.CropType, Name);
                 }
 
 

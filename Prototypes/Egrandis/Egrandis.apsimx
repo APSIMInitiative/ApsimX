@@ -167,12 +167,6 @@
           <Name>Description</Name>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
@@ -368,8 +362,20 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <VariableName>[Leaf].Live.Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>LeafResidenceTime</Name>
+          <Value>365</Value>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>LeafDetachmentTime</Name>
+          <Value>1000</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -384,6 +390,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0</KDead>
+        <WaterDemand>0</WaterDemand>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
       </PerennialLeaf>
@@ -2581,7 +2588,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2624,7 +2631,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2667,7 +2674,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2688,7 +2695,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2731,7 +2738,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2742,7 +2749,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2752,7 +2759,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-1663232</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2763,7 +2770,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2773,7 +2780,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16736653</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2784,7 +2791,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -2794,7 +2801,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
+            <ColourArgb>-16747854</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2805,14 +2812,14 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <Axis>
             <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -2820,7 +2827,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Axis>
           <Axis>
             <Type>Left</Type>
-            <Title>Y axis title</Title>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -2837,7 +2844,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2858,7 +2865,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2901,7 +2908,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2922,7 +2929,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2943,7 +2950,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2986,7 +2993,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3007,7 +3014,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3028,7 +3035,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3071,7 +3078,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3114,7 +3121,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3157,7 +3164,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3178,7 +3185,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3789,7 +3796,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3832,7 +3839,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3875,7 +3882,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3896,7 +3903,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3917,7 +3924,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3938,7 +3945,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3981,7 +3988,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4002,7 +4009,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4045,7 +4052,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4066,7 +4073,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4087,7 +4094,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4130,7 +4137,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4151,7 +4158,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4172,7 +4179,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4215,7 +4222,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4258,7 +4265,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4301,7 +4308,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6500,7 +6507,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6521,7 +6528,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
