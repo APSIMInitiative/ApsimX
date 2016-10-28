@@ -4,6 +4,7 @@ using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -16,11 +17,71 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : BaseOrgan, ICanopy, ILeaf
+    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration
     {
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+
+        /// <summary>The live</summary>
+        [Link]
+        [DoNotDocument]
+        public Biomass Live = null;
+
+        /// <summary>The dead</summary>
+        [Link]
+        [DoNotDocument]
+        public Biomass Dead = null;
+
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>The summary</summary>
+        [Link]
+        protected ISummary Summary = null;
+
+        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        virtual public double MaintenanceRespiration { get { return 0; } set { } }
+
+        /// <summary>Growth Respiration</summary>
+        public double GrowthRespiration { get; set; }
+
+
+        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedWt { get; set; }
+
+        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
+        [XmlIgnore]
+        public double RemovedN { get; set; }
+
+
+        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
+        public double Wt { get { return Live.Wt + Dead.Wt; } }
+
+        /// <summary>Gets the total (live + dead) n (g/m2)</summary>
+        public double N { get { return Live.N + Dead.N; } }
+
+        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
+        public double Nconc { get { return N / Wt; } }
+
+        /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedWt { get; set; }
+
+        /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        [XmlIgnore]
+        public double DetachedN { get; set; }
+
+
+        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
+        [XmlIgnore]
+        virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
 
         #region Leaf Interface
@@ -167,7 +228,7 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Gets or sets the water demand.</summary>
         [Units("mm")]
-        public override double WaterDemand
+        public double WaterDemand
         {
             get
             {
@@ -176,10 +237,35 @@ namespace Models.PMF.Organs
                 else
                     return PotentialEP;
             }
+            set { }
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        virtual public double NFixationCost { get { return 0; } set { } }
+
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <param name="zone">The zone.</param>
+        virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
+        /// <summary>Does the water uptake.</summary>
+        /// <param name="Amount">The amount.</param>
+        /// <param name="zoneName">Zone name to do water uptake in</param>
+        virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        {
+            NO3Supply = null;
+            NH4Supply = null;
+        }
+
+        /// <summary>Does the Nitrogen uptake.</summary>
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
@@ -202,10 +288,11 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public override double WaterAllocation { get; set; }
+        public double WaterAllocation { get; set; }
         
         /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
+        [XmlIgnore]
+        public BiomassPoolType DMDemand
         {
             get
             {
@@ -213,10 +300,12 @@ namespace Models.PMF.Organs
                 NonStructuralDMDemand = 0;
                 return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
             }
+            set { }
         }
 
         /// <summary>Gets or sets the dm supply.</summary>
-        public override BiomassSupplyType DMSupply
+        [XmlIgnore]
+        public BiomassSupplyType DMSupply
         {
             get
             {
@@ -227,10 +316,12 @@ namespace Models.PMF.Organs
                     Reallocation = 0.0
                 };
             }
+            set { }
         }
 
         /// <summary>Gets or sets the n demand.</summary>
-        public override BiomassPoolType NDemand
+        [XmlIgnore]
+        public BiomassPoolType NDemand
         {
             get
             {
@@ -238,6 +329,7 @@ namespace Models.PMF.Organs
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
+            set { }
         }
 
         #endregion
@@ -249,7 +341,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
+        protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (Phenology != null)
                 if (Phenology.OnDayOf("Emergence"))
@@ -261,9 +353,8 @@ namespace Models.PMF.Organs
         #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
-        protected override void Clear()
+        protected void Clear()
         {
-            base.Clear();
             Height = 0;
             LAI = 0;
             StartNRetranslocationSupply = 0;
@@ -409,7 +500,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Sets the dm potential allocation.</summary>
-        public override BiomassPoolType DMPotentialAllocation
+        public BiomassPoolType DMPotentialAllocation
         {
             set
             {
@@ -438,7 +529,8 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets or sets the N supply.</summary>
-        public override BiomassSupplyType NSupply
+        [XmlIgnore]
+        public BiomassSupplyType NSupply
         {
             get
             {
@@ -449,6 +541,7 @@ namespace Models.PMF.Organs
                     Uptake = 0.0
                 };
             }
+            set { }
         }
 
         /// <summary>Gets the N amount available for retranslocation</summary>
@@ -475,7 +568,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dm allocation.</summary>
-        public override BiomassAllocationType DMAllocation
+        public BiomassAllocationType DMAllocation
         {
             set
             {
@@ -510,7 +603,7 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
-        public override BiomassAllocationType NAllocation
+        public BiomassAllocationType NAllocation
         {
             set
             {
@@ -544,7 +637,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc { get { return MaximumNConc.Value; } }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc { get { return MinimumNConc.Value; } }
+        public double MinNconc { get { return MinimumNConc.Value; } }
         #endregion
 
         #region Events and Event Handlers
@@ -675,6 +768,82 @@ namespace Models.PMF.Organs
 
         #endregion
 
+
+        /// <summary>Called when crop is ending</summary>
+        ///[EventSubscribe("PlantEnding")]
+        virtual public void DoPlantEnding()
+        {
+            if (Wt > 0.0)
+            {
+                DetachedWt += Wt;
+                DetachedN += N;
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
+        }
+
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="value">The fractions of biomass to remove</param>
+        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        {
+            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
+                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
+
+            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
+            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
+
+            if (totalLiveFractionToRemove > 1.0)
+            {
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                    + value.Name
+                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
+                                    + Name + " than there is to remove");
+            }
+            if (totalDeadFractionToRemove > 1.0)
+            {
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                    + value.Name
+                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
+                                    + Name + " than there is to remove");
+            }
+            if (totalFractionToRemove > 0.0)
+            {
+                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
+                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
+
+                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
+                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
+                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
+                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+                DetachedWt += detachingWt;
+                DetachedN += detachingN;
+
+                Live.StructuralWt *= RemainingLiveFraction;
+                Live.NonStructuralWt *= RemainingLiveFraction;
+                Live.MetabolicWt *= RemainingLiveFraction;
+                Dead.StructuralWt *= RemainingDeadFraction;
+                Dead.NonStructuralWt *= RemainingDeadFraction;
+                Dead.MetabolicWt *= RemainingDeadFraction;
+
+                Live.StructuralN *= RemainingLiveFraction;
+                Live.NonStructuralN *= RemainingLiveFraction;
+                Live.MetabolicN *= RemainingLiveFraction;
+                Dead.StructuralN *= RemainingDeadFraction;
+                Dead.NonStructuralN *= RemainingDeadFraction;
+                Dead.MetabolicN *= RemainingDeadFraction;
+
+                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
+                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
+
+                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
+                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
+                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
+                                         + "% of " + Name + " Biomass from " + Plant.Name
+                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
+            }
+        }
 
 
     }
