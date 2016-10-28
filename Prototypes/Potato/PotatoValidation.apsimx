@@ -8540,15 +8540,15 @@ namespace Models
 {
 	[Serializable] 
 	public class Script : Model
-	{      
+	{
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
+		[Link] Weather Met;
 		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;    
-        [Link] Zone zone;
+		[Link] Irrigation Irrig;
+		[Link] Plant Potato;
+		[Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -8594,20 +8594,20 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
 			InitialDay = true;
-		}	   
+		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = MathUtilities.Sum(Soil.NO3N);
 			NH4N = MathUtilities.Sum(Soil.NH4N);
@@ -8615,7 +8615,7 @@ namespace Models
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
+			int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -8626,8 +8626,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -8639,14 +8639,14 @@ namespace Models
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
 			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
-			SoilWaterDeficit =  (SWC - DUL);
+			SoilWaterDeficit = (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 			if (Potato.Phenology.Stage >= 3)
-			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
+				AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -8654,7 +8654,7 @@ namespace Models
 		{
 			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
@@ -18250,65 +18250,6 @@ namespace Models
             </Operation>
           </Operations>
           <Manager>
-            <Name>FertiliserRule</Name>
-            <Script>
-              <Fert1>37.5</Fert1>
-              <Fert2>37.5</Fert2>
-              <Fert3>25</Fert3>
-              <Day1>27</Day1>
-              <Day2>52</Day2>
-              <Day3>67</Day3>
-            </Script>
-            <Code><![CDATA[
-using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Description("N applied (kg/ha) on first fertiliser event")]
-		public double Fert1 { get; set; }
-		[Description("N applied (kg/ha) on 2nd fertiliser event")]
-		public double Fert2 { get; set; }
-		[Description("N applied (kg/ha) on 3rd fertiliser event")]
-		public double Fert3 { get; set; }
-		[Description("Days after sowing for first N application")]
-		public double Day1 { get; set; }
-		[Description("Days after sowing for second N application")]
-		public double Day2 { get; set; }
-		[Description("Days after sowing for third N application")]
-		public double Day3 { get; set; }
-                
-		private double DaysAfterSowing = 0;
-               
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			DaysAfterSowing = 0;
-		}
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			DaysAfterSowing += 1;
-			if (DaysAfterSowing == Day1)
-				Fertiliser.Apply(Fert1, Fertiliser.Types.UreaN, 10);
-			if (DaysAfterSowing == Day2)
-				Fertiliser.Apply(Fert2, Fertiliser.Types.UreaN, 10);
-			if (DaysAfterSowing == Day3)
-				Fertiliser.Apply(Fert3, Fertiliser.Types.UreaN, 10);
-		}
-	}
-}
-				]]></Code>
-          </Manager>
-          <Manager>
             <Name>ExtraVariables</Name>
             <Script />
             <Code><![CDATA[using System;
@@ -20524,6 +20465,65 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
+        <Manager>
+          <Name>FertiliserRule</Name>
+          <Script>
+            <Fert1>37.5</Fert1>
+            <Fert2>37.5</Fert2>
+            <Fert3>25</Fert3>
+            <Day1>27</Day1>
+            <Day2>52</Day2>
+            <Day3>67</Day3>
+          </Script>
+          <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+        
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Description("N applied (kg/ha) on first fertiliser event")]
+		public double Fert1 { get; set; }
+		[Description("N applied (kg/ha) on 2nd fertiliser event")]
+		public double Fert2 { get; set; }
+		[Description("N applied (kg/ha) on 3rd fertiliser event")]
+		public double Fert3 { get; set; }
+		[Description("Days after sowing for first N application")]
+		public double Day1 { get; set; }
+		[Description("Days after sowing for second N application")]
+		public double Day2 { get; set; }
+		[Description("Days after sowing for third N application")]
+		public double Day3 { get; set; }
+                
+		private double DaysAfterSowing = 0;
+               
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			DaysAfterSowing = 0;
+		}
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			DaysAfterSowing += 1;
+			if (DaysAfterSowing == Day1)
+				Fertiliser.Apply(Fert1, Fertiliser.Types.UreaN, 10);
+			if (DaysAfterSowing == Day2)
+				Fertiliser.Apply(Fert2, Fertiliser.Types.UreaN, 10);
+			if (DaysAfterSowing == Day3)
+				Fertiliser.Apply(Fert3, Fertiliser.Types.UreaN, 10);
+		}
+	}
+}
+				]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -27450,7 +27450,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Operation>
           </Operations>
           <Operations>
-            <Name>Irrigation</Name>
+            <Name>IrrigationApplications</Name>
             <Operation>
               <Date>2006-10-05T00:00:00</Date>
               <Action>  [Irrigation].Apply(5.4)</Action>
@@ -32864,7 +32864,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Operation>
           </Operations>
           <Operations>
-            <Name>Irrigation</Name>
+            <Name>IrrigationApplications</Name>
             <Operation>
               <Date>2006-10-18T00:00:00</Date>
               <Action>[Irrigation].Apply(2.2)</Action>
