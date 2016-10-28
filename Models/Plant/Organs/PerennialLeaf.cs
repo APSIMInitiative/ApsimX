@@ -5,6 +5,7 @@ using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
@@ -366,6 +367,22 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
 
+        [Serializable]
+        private class PerrenialLeafCohort
+        {
+            public double Age = 0;
+            public Biomass Live = new Biomass();
+        }
+
+        private List<PerrenialLeafCohort> Leaves = new List<PerrenialLeafCohort>();
+        private void AddNewLeafMaterial(double StructuralWt, double NonStructuralWt, double StructuralN, double NonStructuralN)
+        {
+            Leaves[Leaves.Count - 1].Live.StructuralWt += StructuralWt;
+            Leaves[Leaves.Count - 1].Live.NonStructuralWt += NonStructuralWt;
+            Leaves[Leaves.Count - 1].Live.StructuralN += StructuralN;
+            Leaves[Leaves.Count - 1].Live.NonStructuralN += NonStructuralN;
+        }
+
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
@@ -373,7 +390,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Live;
+                Biomass Biomass = new Biomass();
+                foreach (PerrenialLeafCohort L in Leaves)
+                    Biomass = Biomass + L.Live;
+                return Biomass;
             }
 
         }
@@ -465,18 +485,28 @@ namespace Models.PMF.Organs
 
                 Live.StructuralWt += Math.Min(value.Structural * DMConversionEfficiency, StructuralDMDemand);
 
+
+
                 // Excess allocation
                 if (value.NonStructural < -0.0000000001)
                     throw new Exception("-ve NonStructuralDM Allocation to " + Name);
                 if ((value.NonStructural * DMConversionEfficiency - DMDemand.NonStructural) > 0.0000000001)
                     throw new Exception("Non StructuralDM Allocation to " + Name + " is in excess of its Capacity");
                 if (DMDemand.NonStructural > 0)
+                {
                     Live.NonStructuralWt += value.NonStructural * DMConversionEfficiency;
-
+                }
                 // Retranslocation
                 if (value.Retranslocation - StartLive.NonStructuralWt > 0.0000000001)
                     throw new Exception("Retranslocation exceeds nonstructural biomass in organ: " + Name);
+
                 Live.NonStructuralWt -= value.Retranslocation;
+
+                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency, StructuralDMDemand),
+                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency - value.Retranslocation,
+                                   StructuralN: 0,
+                                   NonStructuralN: 0);
+
             }
         }
         /// <summary>Sets the n allocation.</summary>
@@ -486,6 +516,8 @@ namespace Models.PMF.Organs
             {
                 Live.StructuralN += value.Structural;
                 Live.NonStructuralN += value.NonStructural;
+
+
 
                 // Retranslocation
                 if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
@@ -500,6 +532,12 @@ namespace Models.PMF.Organs
                 if (value.Reallocation < -0.000000001)
                     throw new Exception("-ve N Reallocation requested from " + Name);
                 Live.NonStructuralN -= value.Reallocation;
+
+
+                AddNewLeafMaterial(StructuralWt: 0,
+                   NonStructuralWt: 0,
+                   StructuralN: value.Structural,
+                   NonStructuralN: value.NonStructural- value.Retranslocation- value.Reallocation);
             }
         }
 
@@ -557,6 +595,16 @@ namespace Models.PMF.Organs
                     Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
                     Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Live.StructuralN;
                 }
+                Leaves.Add(new PerrenialLeafCohort());
+                if (Leaves.Count == 1)
+                {
+                    Leaves[0].Live.StructuralWt = InitialWtFunction.Value;
+                    Leaves[0].Live.NonStructuralWt = 0.0;
+                    Leaves[0].Live.StructuralN = Leaves[0].Live.StructuralWt * MinimumNConc.Value;
+                    Leaves[0].Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Leaves[0].Live.StructuralN;
+                }
+                foreach (PerrenialLeafCohort L in Leaves)
+                    L.Age++;
 
                 StartLive = Live;
                 StartNReallocationSupply = NSupply.Reallocation;
