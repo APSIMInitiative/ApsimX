@@ -409,7 +409,7 @@ namespace Models.PMF.Organs
         IFunction NReallocationFactor = null;
 
         /// <summary>The n retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
