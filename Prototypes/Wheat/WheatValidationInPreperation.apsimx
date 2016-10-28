@@ -3849,6 +3849,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>0.1</Value>
             <Units>0-1</Units>
           </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>

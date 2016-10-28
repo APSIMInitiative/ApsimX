@@ -1446,6 +1446,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             </XYPairs>
             <XProperty>[Leaf].AppearedCohortNo</XProperty>
           </LinearInterpolationFunction>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
