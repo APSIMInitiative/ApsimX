@@ -46,24 +46,31 @@ namespace Models.PMF.Organs
         #region Paramater Input Classes
 
         /// <summary>The plant</summary>
-        [Link] private Plant Plant = null;
+        [Link]
+        private Plant Plant = null;
 
         /// <summary>The structure</summary>
-        [Link] private Structure Structure = null;
+        [Link]
+        private Structure Structure = null;
 
         /// <summary>The leaf</summary>
-        [Link] private Leaf Leaf = null;
+        [Link]
+        private Leaf Leaf = null;
 
         /// <summary>The clock</summary>
-        [Link] public Clock Clock = null;
+        [Link]
+        public Clock Clock = null;
 
-        [Link] private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        [Link]
+        private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The live</summary>
-        [XmlIgnore] public Biomass Live = new Biomass();
+        [XmlIgnore]
+        public Biomass Live = new Biomass();
 
         /// <summary>The dead</summary>
-        [XmlIgnore] public Biomass Dead = new Biomass();
+        [XmlIgnore]
+        public Biomass Dead = new Biomass();
 
         /// <summary>The live start</summary>
         private Biomass LiveStart = null;
@@ -82,7 +89,8 @@ namespace Models.PMF.Organs
 
         //Leaf coefficients
         /// <summary>The age</summary>
-        [XmlIgnore] public double Age = 0;
+        [XmlIgnore]
+        public double Age = 0;
 
         /// <summary>The n reallocation factor</summary>
         private double NReallocationFactor = 0;
@@ -103,61 +111,80 @@ namespace Models.PMF.Organs
         private double LuxaryNConc = 0;
 
         /// <summary>The structural fraction</summary>
-        [XmlIgnore] public double StructuralFraction = 0;
+        [XmlIgnore]
+        public double StructuralFraction = 0;
 
         /// <summary>The non structural fraction</summary>
-        [XmlIgnore] public double NonStructuralFraction = 0;
+        [XmlIgnore]
+        public double NonStructuralFraction = 0;
 
         /// <summary>The maximum live area</summary>
-        [XmlIgnore] public double MaxLiveArea = 0;
+        [XmlIgnore]
+        public double MaxLiveArea = 0;
 
         /// <summary>The maximum live area</summary>
-        [XmlIgnore] public double MaxCohortPopulation = 0;
+        [XmlIgnore]
+        public double MaxCohortPopulation = 0;
 
         /// <summary>The growth duration</summary>
-        [XmlIgnore] public double GrowthDuration = 0;
+        [XmlIgnore]
+        public double GrowthDuration = 0;
 
         /// <summary>The lag duration</summary>
-        [XmlIgnore] public double LagDuration = 0;
+        [XmlIgnore]
+        public double LagDuration = 0;
 
         /// <summary>The senescence duration</summary>
-        [XmlIgnore] public double SenescenceDuration = 0;
+        [XmlIgnore]
+        public double SenescenceDuration = 0;
 
         /// <summary>The detachment lag duration</summary>
-        [XmlIgnore] public double DetachmentLagDuration = 0;
+        [XmlIgnore]
+        public double DetachmentLagDuration = 0;
 
         /// <summary>The detachment duration</summary>
-        [XmlIgnore] public double DetachmentDuration = 0;
+        [XmlIgnore]
+        public double DetachmentDuration = 0;
 
         /// <summary>The specific leaf area maximum</summary>
-        [XmlIgnore] public double SpecificLeafAreaMax = 0;
+        [XmlIgnore]
+        public double SpecificLeafAreaMax = 0;
 
         /// <summary>The specific leaf area minimum</summary>
-        [XmlIgnore] public double SpecificLeafAreaMin = 0;
+        [XmlIgnore]
+        public double SpecificLeafAreaMin = 0;
 
         /// <summary>The maximum n conc</summary>
-        [XmlIgnore] public double MaximumNConc = 0;
+        [XmlIgnore]
+        public double MaximumNConc = 0;
 
         /// <summary>The minimum n conc</summary>
-        [XmlIgnore] public double MinimumNConc = 0;
+        [XmlIgnore]
+        public double MinimumNConc = 0;
 
         /// <summary>The initial n conc</summary>
-        [XmlIgnore] public double InitialNConc = 0;
+        [XmlIgnore]
+        public double InitialNConc = 0;
 
         /// <summary>The live area</summary>
-        [XmlIgnore] public double LiveArea = 0;
+        [XmlIgnore]
+        public double LiveArea = 0;
 
         /// <summary>The dead area</summary>
-        [XmlIgnore] public double DeadArea = 0;
+        [XmlIgnore]
+        public double DeadArea = 0;
 
         /// <summary>The maximum area</summary>
-        [XmlIgnore] public double MaxArea = 0;
+        [XmlIgnore]
+        public double MaxArea = 0;
 
         /// <summary>The maximum area</summary>
-        [XmlIgnore] public double LeafSizeShape = 0.01;
+        [XmlIgnore]
+        public double LeafSizeShape = 0.01;
 
         /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
-        [XmlIgnore] public double SenessingLeafRelativeSize = 1;
+        [XmlIgnore]
+        public double SenessingLeafRelativeSize = 1;
 
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
@@ -174,62 +201,77 @@ namespace Models.PMF.Organs
         private double DetachedFrac = 0;
 
         /// <summary>The cohort population</summary>
-        [XmlIgnore] public double CohortPopulation = 0; //Number of leaves in this cohort
+        [XmlIgnore]
+        public double CohortPopulation = 0; //Number of leaves in this cohort
 
         /// <summary>The cell division stress factor</summary>
-        [XmlIgnore] public double CellDivisionStressFactor = 1;
+        [XmlIgnore]
+        public double CellDivisionStressFactor = 1;
 
         /// <summary>The cell division stress accumulation</summary>
-        [XmlIgnore] public double CellDivisionStressAccumulation = 0;
+        [XmlIgnore]
+        public double CellDivisionStressAccumulation = 0;
 
         /// <summary>The cell division stress days</summary>
-        [XmlIgnore] public double CellDivisionStressDays = 0;
+        [XmlIgnore]
+        public double CellDivisionStressDays = 0;
 
         //Leaf Initial status paramaters
         /// <summary>The leaf start n retranslocation supply</summary>
-        [XmlIgnore] public double LeafStartNRetranslocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartNRetranslocationSupply = 0;
 
         /// <summary>The leaf start n reallocation supply</summary>
-        [XmlIgnore] public double LeafStartNReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartNReallocationSupply = 0;
 
         /// <summary>The leaf start dm retranslocation supply</summary>
-        [XmlIgnore] public double LeafStartDMRetranslocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartDMRetranslocationSupply = 0;
 
         /// <summary>The leaf start dm reallocation supply</summary>
-        [XmlIgnore] public double LeafStartDMReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartDMReallocationSupply = 0;
 
         /// <summary>The leaf start area</summary>
-        [XmlIgnore] public double LeafStartArea = 0;
+        [XmlIgnore]
+        public double LeafStartArea = 0;
 
         /// <summary>
         /// The leaf start metabolic n reallocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartMetabolicNReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartMetabolicNReallocationSupply = 0;
 
         /// <summary>
         /// The leaf start non structural n reallocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartNonStructuralNReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartNonStructuralNReallocationSupply = 0;
 
         /// <summary>
         /// The leaf start metabolic n retranslocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartMetabolicNRetranslocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartMetabolicNRetranslocationSupply = 0;
 
         /// <summary>
         /// The leaf start non structural n retranslocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartNonStructuralNRetranslocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartNonStructuralNRetranslocationSupply = 0;
 
         /// <summary>
         /// The leaf start metabolic dm reallocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartMetabolicDMReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartMetabolicDMReallocationSupply = 0;
 
         /// <summary>
         /// The leaf start non structural dm reallocation supply
         /// </summary>
-        [XmlIgnore] public double LeafStartNonStructuralDMReallocationSupply = 0;
+        [XmlIgnore]
+        public double LeafStartNonStructuralDMReallocationSupply = 0;
 
         //variables used in calculating daily supplies and deltas
         /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
@@ -300,7 +342,8 @@ namespace Models.PMF.Organs
         #region Class Properties
 
         /// <summary>Has the leaf chort been initialised?</summary>
-        [XmlIgnore] public bool IsInitialised = false;
+        [XmlIgnore]
+        public bool IsInitialised = false;
 
         /// <summary>Gets a value indicating whether this instance has not appeared.</summary>
         /// <value>
@@ -308,7 +351,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsNotAppeared
         {
-            get { return (IsInitialised && Age == 0); }
+            get { return IsInitialised && Age == 0; }
         }
 
         /// <summary>Gets a value indicating whether this instance is growing.</summary>
@@ -317,7 +360,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsGrowing
         {
-            get { return (Age < GrowthDuration); }
+            get { return Age < GrowthDuration; }
         }
 
         /// <summary>Gets or sets a value indicating whether this instance is appeared.</summary>
@@ -333,14 +376,14 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsFullyExpanded
         {
-            get { return (IsAppeared && Age > GrowthDuration); }
+            get { return IsAppeared && Age > GrowthDuration; }
         }
 
         /// <summary>Gets a value indicating whether this instance is green.</summary>
         /// <value><c>true</c> if this instance is green; otherwise, <c>false</c>.</value>
         public bool IsGreen
         {
-            get { return (Age < (GrowthDuration + LagDuration + SenescenceDuration)); }
+            get { return Age < GrowthDuration + LagDuration + SenescenceDuration; }
         }
         /// <summary>Gets a value indicating whether this instance is senescing.</summary>
         /// <value>
@@ -348,7 +391,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return (Age > (GrowthDuration + LagDuration)); }
+            get { return Age > GrowthDuration + LagDuration; }
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -356,7 +399,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsNotSenescing
         {
-            get { return (Age < (GrowthDuration + LagDuration)); }
+            get { return Age < GrowthDuration + LagDuration; }
         }
         /// <summary>Gets a value indicating whether this <see cref="LeafCohort"/> is finished.</summary>
         /// <value><c>true</c> if finished; otherwise, <c>false</c>.</value>
@@ -381,8 +424,7 @@ namespace Models.PMF.Organs
             {
                 if (MaxLiveArea == 0)
                     return 0;
-                else
-                    return MaxLiveArea/MaxCohortPopulation;
+                return MaxLiveArea/MaxCohortPopulation;
             }
         }
 
@@ -394,8 +436,7 @@ namespace Models.PMF.Organs
             {
                 if (IsAppeared)
                     return LiveArea/CohortPopulation;
-                else
-                    return 0;
+                return 0;
             }
         }
 
@@ -407,10 +448,9 @@ namespace Models.PMF.Organs
             {
                 if (Age == 0)
                     return 0;
-                else if (Age >= GrowthDuration)
+                if (Age >= GrowthDuration)
                     return 1;
-                else
-                    return Age/GrowthDuration;
+                return Age/GrowthDuration;
             }
         }
 
@@ -422,8 +462,7 @@ namespace Models.PMF.Organs
             {
                 if (Live.Wt > 0)
                     return LiveArea/Live.Wt;
-                else
-                    return 0;
+                return 0;
             }
         }
 
@@ -451,7 +490,7 @@ namespace Models.PMF.Organs
                     return TotalDMDemand*StructuralFraction;
 
                 }
-                else return 0;
+                return 0;
             }
         }
 
@@ -467,7 +506,7 @@ namespace Models.PMF.Organs
                         DeltaWaterConstrainedArea/SpecificLeafAreaMin);
                     return TotalDMDemand*(1 - StructuralFraction);
                 }
-                else return 0;
+                return 0;
             }
         }
 
@@ -483,8 +522,7 @@ namespace Models.PMF.Organs
                                                  LiveStart.StructuralWt)*NonStructuralFraction;
                     return Math.Max(0.0, MaxNonStructuralDM - LiveStart.NonStructuralWt);
                 }
-                else
-                    return 0.0;
+                return 0.0;
             }
         }
 
@@ -497,8 +535,7 @@ namespace Models.PMF.Organs
                 if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
                     return MinimumNConc*PotentialStructuralDMAllocation;
-                else
-                    return 0.0;
+                return 0.0;
             }
         }
 
@@ -508,14 +545,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0))
+                if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (NonStructuralFraction > 0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
                     return Math.Max(0.0, LuxaryNConc*(LiveStart.StructuralWt + LiveStart.MetabolicWt
                                                       + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) -
                                          Live.NonStructuralN);
-                        //Math.Max(0.0, MaxN - CritN - LeafStartNonStructuralN); //takes the difference between the two above as the maximum nonstructural N conc and subtracts the current nonstructural N conc to give a value
-                else
-                    return 0.0;
+                return 0.0;
             }
         }
 
@@ -525,11 +560,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0))
+                if (IsNotSenescing && (ShadeInducedSenRate == 0.0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
                     return FunctionalNConc*PotentialMetabolicDMAllocation;
-                else
-                    return 0.0;
+
+                return 0.0;
             }
         }
 
@@ -721,10 +756,8 @@ namespace Models.PMF.Organs
             SpecificLeafAreaMin = leafCohortParameterseafCohortParameters.SpecificLeafAreaMin.Value;
             MaximumNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value;
             MinimumNConc = leafCohortParameterseafCohortParameters.MinimumNConc.Value;
-            if (leafCohortParameterseafCohortParameters.NonStructuralFraction != null)
-                NonStructuralFraction = leafCohortParameterseafCohortParameters.NonStructuralFraction.Value;
-            if (leafCohortParameterseafCohortParameters.InitialNConc != null) //FIXME HEB I think this can be removed
-                InitialNConc = leafCohortParameterseafCohortParameters.InitialNConc.Value;
+            NonStructuralFraction = leafCohortParameterseafCohortParameters.NonStructuralFraction.Value;
+            InitialNConc = leafCohortParameterseafCohortParameters.InitialNConc.Value;
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
                 Age = Area/MaxArea*GrowthDuration;
                     //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
@@ -732,11 +765,11 @@ namespace Models.PMF.Organs
             Live.StructuralWt = LiveArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2)*StructuralFraction;
             Live.StructuralN = Live.StructuralWt*InitialNConc;
             FunctionalNConc = (leafCohortParameterseafCohortParameters.CriticalNConc.Value -
-                               (leafCohortParameterseafCohortParameters.MinimumNConc.Value*StructuralFraction))*
+                               leafCohortParameterseafCohortParameters.MinimumNConc.Value*StructuralFraction)*
                               (1/(1 - StructuralFraction));
-            LuxaryNConc = (leafCohortParameterseafCohortParameters.MaximumNConc.Value -
-                           leafCohortParameterseafCohortParameters.CriticalNConc.Value);
-            Live.MetabolicWt = (Live.StructuralWt*1/StructuralFraction) - Live.StructuralWt;
+            LuxaryNConc = leafCohortParameterseafCohortParameters.MaximumNConc.Value -
+                           leafCohortParameterseafCohortParameters.CriticalNConc.Value;
+            Live.MetabolicWt = Live.StructuralWt*1/StructuralFraction - Live.StructuralWt;
             Live.NonStructuralWt = 0;
             Live.StructuralN = Live.StructuralWt*MinimumNConc;
             Live.MetabolicN = Live.MetabolicWt*FunctionalNConc;
@@ -955,6 +988,7 @@ namespace Models.PMF.Organs
         {
             if (!IsInitialised)
                 return;
+
             double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
                                                + value.FractionLiveToResidue + value.FractionDeadToResidue;
             if (totalFractionBeingRemoved > 1.0)
@@ -965,7 +999,7 @@ namespace Models.PMF.Organs
                                     " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
                                     + Name + " than there is to remove");
             }
-            else if (totalFractionBeingRemoved > 0.0)
+            if (totalFractionBeingRemoved > 0.0)
             {
                 double remainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
                 double remainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
@@ -1000,7 +1034,7 @@ namespace Models.PMF.Organs
         /// <param name="proportionRemoved">The fraction.</param>
         public void DoThin(double proportionRemoved)
         {
-            CohortPopulation *= (1 - proportionRemoved);
+            CohortPopulation *= 1 - proportionRemoved;
         }
 
         /// <summary>Does the kill.</summary>
