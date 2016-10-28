@@ -378,6 +378,10 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>DMRetranslocationFactor</Name>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>

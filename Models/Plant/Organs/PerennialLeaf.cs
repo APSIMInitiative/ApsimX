@@ -557,31 +557,17 @@ namespace Models.PMF.Organs
         {
             get
             {
+                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
                 return new BiomassSupplyType()
                 {
                     Reallocation = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value,
-                    Retranslocation = AvailableNRetranslocation(),
+                    Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value,
                     Uptake = 0.0
                 };
             }
             set { }
         }
 
-        /// <summary>Gets the N amount available for retranslocation</summary>
-        /// <returns>N available to retranslocate</returns>
-        public double AvailableNRetranslocation()
-        {
-            if (NRetranslocationFactor != null)
-            {
-                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                return (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
-            }
-            else
-            {
-                //Default of 0 means retranslocation is always turned off!!!!
-                return 0.0;
-            }
-        }
 
         /// <summary>Sets the dm allocation.</summary>
         public BiomassAllocationType DMAllocation
