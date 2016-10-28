@@ -877,6 +877,10 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <VariableName>[Leaf].Live.Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>0</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CohortsInitialised>false</CohortsInitialised>
