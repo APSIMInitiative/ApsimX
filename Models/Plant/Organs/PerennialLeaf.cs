@@ -262,20 +262,20 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
-        virtual public double NFixationCost { get { return 0; } set { } }
+        public double NFixationCost { get { return 0; } set { } }
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
+         public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
-        virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
+         public void DoWaterUptake(double[] Amount, string zoneName) { }
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+         public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
             NO3Supply = null;
             NH4Supply = null;
@@ -283,7 +283,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
+         public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
@@ -330,7 +330,7 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
-                    Retranslocation = AvailableDMRetranslocation(),
+                    Retranslocation = StartLive.NonStructuralWt * DMRetranslocationFactor.Value,
                     Reallocation = 0.0
                 };
             }
@@ -414,7 +414,7 @@ namespace Models.PMF.Organs
         IFunction NRetranslocationFactor = null;
 
         /// <summary>The dm retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
 
@@ -547,19 +547,6 @@ namespace Models.PMF.Organs
                 PotentialMetabolicDMAllocation = value.Metabolic;
                 PotentialStructuralDMAllocation = value.Structural;
                 PotentialDMAllocation = value.Structural + value.Metabolic;
-            }
-        }
-
-
-        /// <summary>Gets the amount of DM available for retranslocation</summary>
-        /// <returns>DM available to retranslocate</returns>
-        public double AvailableDMRetranslocation()
-        {
-            if (DMRetranslocationFactor != null)
-                return StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
-            else
-            { //Default of 0 means retranslocation is always turned off!!!!
-                return 0.0;
             }
         }
 
