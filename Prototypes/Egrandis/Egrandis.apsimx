@@ -372,7 +372,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <Value>1000</Value>
+          <Value>7</Value>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
@@ -3784,6 +3784,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <string>Eucalyptus.Age.Value</string>
             <string>Eucalyptus.Leaf.Photosynthesis.Value</string>
             <string>Eucalyptus.Arbitrator.NSupply</string>
+            <string>([SurfaceOrganicMatter].Wt / 10)  as Litter</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -3882,7 +3883,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
+            <ColourArgb>-16736653</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3903,7 +3904,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
+            <ColourArgb>-1663232</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3945,7 +3946,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
+            <ColourArgb>-11094807</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4326,7 +4327,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Series>
           <Axis>
             <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -4334,7 +4335,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Axis>
           <Axis>
             <Type>Left</Type>
-            <Title>Y axis title</Title>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -4421,6 +4422,91 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Axis>
             <Type>Left</Type>
             <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LeafWt</Name>
+          <Series>
+            <Name>Live</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Dead</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Litter</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16747854</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Litter</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -4876,52 +4962,52 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <RowSpace>3</RowSpace>
             <RowWidth>3</RowWidth>
             <CultivarName>EGrandis</CultivarName>
-            <SowingDate>1987-02-04</SowingDate>
+            <SowingDate>1991-07-01</SowingDate>
           </Script>
           <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant Plant;
-               [Link] Clock Clock;
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Plant;
+		[Link] Clock Clock;
 
-               [Description("Spacing (m) between plants within rows")]
-               public double RowSpace { get; set; }
-               [Description("Spacing (m) between rows")]
-               public double RowWidth { get; set; }
+		[Description("Spacing (m) between plants within rows")]
+		public double RowSpace { get; set; }
+		[Description("Spacing (m) between rows")]
+		public double RowWidth { get; set; }
 
-               [Description("Cultivar")]
-               public string CultivarName { get; set; }
-               [Description("Sowing Date")]
-               public DateTime SowingDate { get; set; }
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 
-               [EventSubscribe("DoManagement")]
-               private void OnDoManagement(object sender, EventArgs e)
-               {
-				double PlantPopulation = 1/(RowWidth*RowSpace);
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			double PlantPopulation = 1 / (RowWidth * RowSpace);
 
-				if (Clock.Today.Date == SowingDate)
-                    Plant.Sow(population:PlantPopulation, 
-                              cultivar:CultivarName, 
-                              depth:100, 
-                              rowSpacing:150);
-                //Plant.Sow(... Contains the following arguements:
-                //Population  double  Required  Seeds sowing/m2
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-			   }
-            }
-        }
+			if (Clock.Today.Date == SowingDate)
+				Plant.Sow(population: PlantPopulation, 
+					cultivar: CultivarName, 
+					depth: 100, 
+					rowSpacing: 150);
+			//Plant.Sow(... Contains the following arguements:
+			//Population  double  Required  Seeds sowing/m2
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
 				]]></Code>
         </Manager>
         <Operations>
@@ -6516,7 +6602,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
-            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6826,7 +6912,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6847,7 +6933,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6868,7 +6954,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6954,7 +7040,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6997,7 +7083,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7018,7 +7104,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
