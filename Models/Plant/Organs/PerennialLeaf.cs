@@ -559,7 +559,7 @@ namespace Models.PMF.Organs
             {
                 return new BiomassSupplyType()
                 {
-                    Reallocation = AvailableNReallocation(),
+                    Reallocation = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value,
                     Retranslocation = AvailableNRetranslocation(),
                     Uptake = 0.0
                 };
@@ -583,27 +583,18 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the N amount available for reallocation</summary>
-        /// <returns>DM available to reallocate</returns>
-        public double AvailableNReallocation()
-        {
-            return SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
-        }
-
         /// <summary>Sets the dm allocation.</summary>
         public BiomassAllocationType DMAllocation
         {
             set
             {
-                GrowthRespiration = 0;
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency.Value)
-                                   + value.NonStructural * (1 - DMConversionEfficiency.Value);
+                GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value)
+                                  + value.NonStructural * (1 - DMConversionEfficiency.Value);
 
                 AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand),
                                    NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value - value.Retranslocation,
                                    StructuralN: 0,
                                    NonStructuralN: 0);
-
             }
         }
         /// <summary>Sets the n allocation.</summary>
