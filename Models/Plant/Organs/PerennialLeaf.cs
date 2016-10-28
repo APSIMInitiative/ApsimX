@@ -23,6 +23,20 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        /// <summary>Gets the cohort live.</summary>
+        [XmlIgnore]
+        [Units("g/m^2")]
+        public Biomass Live
+        {
+            get
+            {
+                Biomass live = new Biomass();
+                foreach (PerrenialLeafCohort L in Leaves)
+                    live.Add(L.Live);
+                return live;
+            }
+        }
+
         /// <summary>The dead</summary>
         [Link]
         [DoNotDocument]
@@ -62,9 +76,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
-        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
-        public double Nconc { get { return N / Wt; } }
-
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public double DetachedWt { get; set; }
@@ -72,11 +83,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public double DetachedN { get; set; }
-
-
-        /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
-        [XmlIgnore]
-        virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
 
         #region Leaf Interface
@@ -420,8 +426,8 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(IsOptional = true)]
-        public IFunction DMConversionEfficiencyFunction = null;
+        [Link]
+        public IFunction DMConversionEfficiency = null;
         #endregion
 
         #region States
@@ -467,14 +473,12 @@ namespace Models.PMF.Organs
             Leaves[Leaves.Count - 1].Live.NonStructuralWt += NonStructuralWt;
             Leaves[Leaves.Count - 1].Live.StructuralN += StructuralN;
             Leaves[Leaves.Count - 1].Live.NonStructuralN += NonStructuralN;
-            UpdateLive();
         }
 
         private void ReduceLeavesUniformly(double fraction)
         {
             foreach (PerrenialLeafCohort L in Leaves)
                 L.Live.Multiply(fraction);
-            UpdateLive();
         }
         private void RespireLeafFraction(double fraction)
         {
@@ -483,21 +487,9 @@ namespace Models.PMF.Organs
                 L.Live.NonStructuralWt *= (1-fraction);
                 L.Live.MetabolicWt *= (1-fraction);
             }
-            UpdateLive();
         }
 
-        /// <summary>Gets the cohort live.</summary>
-        [XmlIgnore]
-        [Units("g/m^2")]
-        public Biomass Live { get; set; }
 
-        /// <summary>Updates Live Biomass.</summary>
-        private void UpdateLive()
-        {
-                Live.Clear();
-                foreach (PerrenialLeafCohort L in Leaves)
-                    Live.Add(L.Live);
-        }
 
 
         #endregion
@@ -583,11 +575,11 @@ namespace Models.PMF.Organs
             set
             {
                 GrowthRespiration = 0;
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency)
-                                   + value.NonStructural * (1 - DMConversionEfficiency);
+                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency.Value)
+                                   + value.NonStructural * (1 - DMConversionEfficiency.Value);
 
-                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency, StructuralDMDemand),
-                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency - value.Retranslocation,
+                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand),
+                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value - value.Retranslocation,
                                    StructuralN: 0,
                                    NonStructuralN: 0);
 
@@ -619,7 +611,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
             Clear();
         }
 
@@ -631,12 +622,6 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
-
-            if (DMConversionEfficiencyFunction != null)
-                DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
-            else
-                DMConversionEfficiency = 1.0;
-
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
