@@ -131,8 +131,14 @@ namespace Models.Graph
                 // Find a parent that heads the scope that we're going to graph
                 IModel parent = FindParent();
 
-                // Create a list of all simulation/zone objects that we're going to graph.
-                List<SimulationZone> simulationZones = BuildListFromModel(parent);
+                List<SimulationZone> simulationZones = null;
+                do
+                {
+                    // Create a list of all simulation/zone objects that we're going to graph.
+                    simulationZones = BuildListFromModel(parent);
+                    parent = parent.Parent;
+                }
+                while (simulationZones.Count == 0 && parent != null);
 
                 // Get rid of factors that don't vary across objects.
                 RemoveFactorsThatDontVary(simulationZones);

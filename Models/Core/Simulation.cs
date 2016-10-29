@@ -176,8 +176,6 @@ namespace Models.Core
             timer = new Stopwatch();
             timer.Start();
 
-            scope = new ScopingRules();
-
             ConnectLinksAndEvents();
 
             _IsRunning = true;
@@ -218,6 +216,7 @@ namespace Models.Core
         /// <summary>Connect all links and events in simulation</summary>
         public void ConnectLinksAndEvents()
         {
+            scope = new ScopingRules();
             events = new Events(this);
             events.ConnectEvents();
             links = new Core.Links();
