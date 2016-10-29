@@ -308,7 +308,8 @@ namespace Models.PMF.Organs
             get
             {
                 double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
+                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
+
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
             set { }
