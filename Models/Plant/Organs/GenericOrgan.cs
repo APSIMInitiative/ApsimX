@@ -214,24 +214,7 @@ namespace Models.PMF.Organs
         {
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
                                            + value.FractionLiveToResidue + value.FractionDeadToResidue;
-
-            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
-
-            if (totalLiveFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalDeadFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
+            
             if (totalFractionToRemove > 0.0)
             {
                 double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
