@@ -540,6 +540,7 @@ namespace Models.PMF.Phen
             Phase Current = Phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
+            if(PhaseRewind != null)
             PhaseRewind.Invoke(this, new EventArgs());
         }
 
