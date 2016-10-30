@@ -386,7 +386,21 @@ namespace Models.PMF
             // Remove the biomass
             foreach (IOrgan organ in Organs)
             {
-                organ.DoRemoveBiomass(allData.removalData[organ.Name]);
+                OrganBiomassRemovalType amountToRemove = allData.removalData[organ.Name];
+                double totalLiveFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
+                double totalDeadFractionToRemove = amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
+
+                if (amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue > 1.0)
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                        + organ.Name
+                                        + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                if (amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue > 1.0)
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                        + organ.Name
+                                        + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                organ.DoRemoveBiomass(amountToRemove);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
