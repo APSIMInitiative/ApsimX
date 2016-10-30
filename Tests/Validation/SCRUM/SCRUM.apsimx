@@ -12453,381 +12453,6 @@ namespace Models
 }
 				]]></Code>
           </Manager>
-          <Manager>
-            <Name>NConcReps</Name>
-            <Script>
-              <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
-              <TotalLeach>0</TotalLeach>
-              <Leach_60>0</Leach_60>
-              <ObservedLeach1>0</ObservedLeach1>
-              <ObservedLeach2>0</ObservedLeach2>
-              <ObservedLeach3>0</ObservedLeach3>
-              <ObservedLeach4>0</ObservedLeach4>
-              <ObservedLeach5>0</ObservedLeach5>
-              <NConc1>0</NConc1>
-              <NConc2>0</NConc2>
-              <NConc3>0</NConc3>
-              <NConc4>0</NConc4>
-              <NConc5>0</NConc5>
-              <Treat_Rep1>
-              </Treat_Rep1>
-              <Treat_Rep2>
-              </Treat_Rep2>
-              <Treat_Rep3>
-              </Treat_Rep3>
-              <Treat_Rep4>
-              </Treat_Rep4>
-              <Treat_Rep5>
-              </Treat_Rep5>
-              <NLeachMean>0</NLeachMean>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.Data;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant SCRUM;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		
-		[Description("File of Nconcs")]
-		public string NConcFile { get; set; }
-		
-		public string FullFileName
-		{
-			get
-			{
-				return PathUtilities.GetAbsolutePath(NConcFile, Simulation.FileName);
-			}
-		}
-		
-		public double TotalLeach { get; set; }
-		public double Leach_60 { get; set; }
-		public double ObservedLeach1 { get; set; }
-		public double ObservedLeach2 { get; set; }
-		public double ObservedLeach3 { get; set; }
-		public double ObservedLeach4 { get; set; }
-		public double ObservedLeach5 { get; set; }
-		public double NConc1 { get; set; }
-		public double NConc2 { get; set; }
-		public double NConc3 { get; set; }
-		public double NConc4 { get; set; }
-		public double NConc5 { get; set; }
-	
-		public string Treat_Rep1 { get; set; }
-		public string Treat_Rep2 { get; set; }
-		public string Treat_Rep3 { get; set; }
-		public string Treat_Rep4 { get; set; }
-		public string Treat_Rep5 { get; set; }
-		
-		public double NLeachMean { get; set; }
-	    
-		[XmlIgnore] private DataTable NConcs { get; set; }
-	
-		private DateTime Date1 { get; set; }
-		
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-			ApsimTextFile textFile = new ApsimTextFile();
-			textFile.Open(FullFileName);
-			NConcs = textFile.ToTable();
-			textFile.Close();
-			
-			Treat_Rep1 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_1";
-			Treat_Rep2 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_2";
-			Treat_Rep3 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_3";
-			Treat_Rep4 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_4";
-			Treat_Rep5 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_5";
-		}
-		
-		[EventSubscribe("DoInitialSummary")]
-		private void OnDoInitialSummary(object sender, EventArgs e)
-		{
-			TotalLeach = 0;
-			Leach_60 = 0;
-			NConc1 = 0;
-			NConc2 = 0;
-			NConc3 = 0;
-			NConc4 = 0;
-			NConc5 = 0;
-			ObservedLeach1 = 0;
-			ObservedLeach2 = 0;
-			ObservedLeach3 = 0;
-			ObservedLeach4 = 0;
-			ObservedLeach5 = 0;
-		}
-		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			try
-			{
-				foreach (DataRow row in NConcs.Rows)
-				{
-					DateTime TodayDate = Convert.ToDateTime(row["Date"]);
-					if (TodayDate.Date == Clock.Today.Date)
-					{
-						NConc1 = Convert.ToDouble(row[Treat_Rep1]);
-						NConc2 = Convert.ToDouble(row[Treat_Rep2]);
-						NConc3 = Convert.ToDouble(row[Treat_Rep3]);
-						NConc4 = Convert.ToDouble(row[Treat_Rep4]);
-						NConc5 = Convert.ToDouble(row[Treat_Rep5]);
-					}
-				}
-			}
-			finally
-			{
-			}
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			DateTime Potato1Start = new DateTime(2004, 12, 9);
-			DateTime Potato1End = new DateTime(2005, 3, 14);
-		
-			if ((Clock.Today.Date >= Potato1Start) && (Clock.Today.Date <= Potato1End))
-			{
-				Leach_60 = Leach_60 + (Soil.SoilWater.flow_no3[3]);
-				ObservedLeach1 = ObservedLeach1 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc1) / 100;
-				ObservedLeach2 = ObservedLeach2 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc2) / 100;
-				ObservedLeach3 = ObservedLeach3 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc3) / 100;
-				ObservedLeach4 = ObservedLeach4 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc4) / 100;
-				ObservedLeach5 = ObservedLeach5 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc5) / 100;
-				if (ObservedLeach5 > 0)
-					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
-				else
-					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
-					
-				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[2] + Soil.SoilWater.flow_nh4[2]);
-			}
-			else if (Clock.Today.Date > Potato1End)
-			{	
-				Leach_60 = 0;
-				ObservedLeach1 = ObservedLeach1 + (Soil.SoilWater.Drainage * NConc1) / 100;
-				ObservedLeach2 = ObservedLeach2 + (Soil.SoilWater.Drainage * NConc2) / 100;
-				ObservedLeach3 = ObservedLeach3 + (Soil.SoilWater.Drainage * NConc3) / 100;
-				ObservedLeach4 = ObservedLeach4 + (Soil.SoilWater.Drainage * NConc4) / 100;
-				ObservedLeach5 = ObservedLeach5 + (Soil.SoilWater.Drainage * NConc5) / 100;
-				if (ObservedLeach5 > 0)
-					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
-				else
-					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
-				//TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
-				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[7] + Soil.SoilWater.flow_nh4[7]);
-			}
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			Leach_60 = 0;
-			ObservedLeach1 = 0;
-			ObservedLeach2 = 0;
-			ObservedLeach3 = 0;
-			ObservedLeach4 = 0;
-			ObservedLeach5 = 0;
-			TotalLeach = 0;
-			
-			
-		}
-	}
-}
-	]]></Code>
-          </Manager>
-          <Manager>
-            <Name>ExtraVariables</Name>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;
-		[Link] Plant SCRUM;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double ResidueWt{ get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-		
-			//Residue components//
-			ResidueWt = SOM.Wt;
-			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
-			
-			int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
-			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
-			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN += (double)zone.Get("SCRUM.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-	
-			
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
-			AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
-			SoilWaterDeficit = (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage += Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-		}
-		
-		[EventSubscribe("PlantEnding")]
-		private void OnPlantEnding(object sender, EventArgs e)
-		{
-			AccumFert = 0;
-			AccumIrrigation = 0;
-			
-			
-			AccumEO = 0;
-			AccumES = 0;
-			AccumDrainage = 0;
-			AccumRunoff = 0;
-			
-			AccumLeach = 0;
-			AccumMineralisation = 0;
-			AccumDenit = 0;
-			AccumPlantN = 0;
-			
-			AccumRainfall = 0;
-			AccumEP = 0;
-			AccumOutflowLat = 0;
-			
-		}
-	}
-}
-	   ]]></Code>
-          </Manager>
           <Operations>
             <Name>Nit</Name>
             <Operation>
@@ -13197,6 +12822,381 @@ namespace Models
             <string>[SCRUM].Harvesting</string>
           </EventNames>
         </Report>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant SCRUM;
+		[Link] Zone zone;
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+	
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		[XmlIgnore] public double ResidueWt{ get; set; }
+		
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			InitialDay = true;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+		
+			//Residue components//
+			ResidueWt = SOM.Wt;
+			//MathUtilities.Sum(SOM.dlt_SurfaceOM_wt);	Failed:)
+			
+			int layers = Soil.Thickness.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.N;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+			//AccumLeach = AccumLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea; //Fails
+			AccumLeach = AccumLeach + Soil.SoilWater.LeachNO3;
+			AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+			AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumPlantN += (double)zone.Get("SCRUM.Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+	
+			
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumRainfall += Met.Rain;
+			//AccumEP -= (double)zone.Get("[SCRUM].Stover.Transpiration");
+			AccumEP -= (double)zone.Get("SCRUM.Root.WaterUptake");
+			SoilWaterDeficit = (SWC - DUL);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+			BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
+			AccumFert += Fert.NitrogenApplied;
+			AccumIrrigation += Irrig.IrrigationApplied;
+			
+			
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage += Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+		}
+		
+		[EventSubscribe("PlantEnding")]
+		private void OnPlantEnding(object sender, EventArgs e)
+		{
+			AccumFert = 0;
+			AccumIrrigation = 0;
+			
+			
+			AccumEO = 0;
+			AccumES = 0;
+			AccumDrainage = 0;
+			AccumRunoff = 0;
+			
+			AccumLeach = 0;
+			AccumMineralisation = 0;
+			AccumDenit = 0;
+			AccumPlantN = 0;
+			
+			AccumRainfall = 0;
+			AccumEP = 0;
+			AccumOutflowLat = 0;
+			
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
+        <Manager>
+          <Name>NConcReps</Name>
+          <Script>
+            <NConcFile>%root%\Tests\Validation\SCRUM\NO3.csv</NConcFile>
+            <TotalLeach>0</TotalLeach>
+            <Leach_60>0</Leach_60>
+            <ObservedLeach1>0</ObservedLeach1>
+            <ObservedLeach2>0</ObservedLeach2>
+            <ObservedLeach3>0</ObservedLeach3>
+            <ObservedLeach4>0</ObservedLeach4>
+            <ObservedLeach5>0</ObservedLeach5>
+            <NConc1>0</NConc1>
+            <NConc2>0</NConc2>
+            <NConc3>0</NConc3>
+            <NConc4>0</NConc4>
+            <NConc5>0</NConc5>
+            <Treat_Rep1>
+            </Treat_Rep1>
+            <Treat_Rep2>
+            </Treat_Rep2>
+            <Treat_Rep3>
+            </Treat_Rep3>
+            <Treat_Rep4>
+            </Treat_Rep4>
+            <Treat_Rep5>
+            </Treat_Rep5>
+            <NLeachMean>0</NLeachMean>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;
+		[Link] Plant SCRUM;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		
+		[Description("File of Nconcs")]
+		public string NConcFile { get; set; }
+		
+		public string FullFileName
+		{
+			get
+			{
+				return PathUtilities.GetAbsolutePath(NConcFile, Simulation.FileName);
+			}
+		}
+		
+		public double TotalLeach { get; set; }
+		public double Leach_60 { get; set; }
+		public double ObservedLeach1 { get; set; }
+		public double ObservedLeach2 { get; set; }
+		public double ObservedLeach3 { get; set; }
+		public double ObservedLeach4 { get; set; }
+		public double ObservedLeach5 { get; set; }
+		public double NConc1 { get; set; }
+		public double NConc2 { get; set; }
+		public double NConc3 { get; set; }
+		public double NConc4 { get; set; }
+		public double NConc5 { get; set; }
+	
+		public string Treat_Rep1 { get; set; }
+		public string Treat_Rep2 { get; set; }
+		public string Treat_Rep3 { get; set; }
+		public string Treat_Rep4 { get; set; }
+		public string Treat_Rep5 { get; set; }
+		
+		public double NLeachMean { get; set; }
+	    
+		[XmlIgnore] private DataTable NConcs { get; set; }
+	
+		private DateTime Date1 { get; set; }
+		
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
+		{
+			ApsimTextFile textFile = new ApsimTextFile();
+			textFile.Open(FullFileName);
+			NConcs = textFile.ToTable();
+			textFile.Close();
+			
+			Treat_Rep1 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_1";
+			Treat_Rep2 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_2";
+			Treat_Rep3 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_3";
+			Treat_Rep4 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_4";
+			Treat_Rep5 = (string)Apsim.Get(Simulation, "TreatmentID.Script.TreatmentName") + "_5";
+		}
+		
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			TotalLeach = 0;
+			Leach_60 = 0;
+			NConc1 = 0;
+			NConc2 = 0;
+			NConc3 = 0;
+			NConc4 = 0;
+			NConc5 = 0;
+			ObservedLeach1 = 0;
+			ObservedLeach2 = 0;
+			ObservedLeach3 = 0;
+			ObservedLeach4 = 0;
+			ObservedLeach5 = 0;
+		}
+		
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
+		{
+			try
+			{
+				foreach (DataRow row in NConcs.Rows)
+				{
+					DateTime TodayDate = Convert.ToDateTime(row["Date"]);
+					if (TodayDate.Date == Clock.Today.Date)
+					{
+						NConc1 = Convert.ToDouble(row[Treat_Rep1]);
+						NConc2 = Convert.ToDouble(row[Treat_Rep2]);
+						NConc3 = Convert.ToDouble(row[Treat_Rep3]);
+						NConc4 = Convert.ToDouble(row[Treat_Rep4]);
+						NConc5 = Convert.ToDouble(row[Treat_Rep5]);
+					}
+				}
+			}
+			finally
+			{
+			}
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			DateTime Potato1Start = new DateTime(2004, 12, 9);
+			DateTime Potato1End = new DateTime(2005, 3, 14);
+		
+			if ((Clock.Today.Date >= Potato1Start) && (Clock.Today.Date <= Potato1End))
+			{
+				Leach_60 = Leach_60 + (Soil.SoilWater.flow_no3[3]);
+				ObservedLeach1 = ObservedLeach1 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc1) / 100;
+				ObservedLeach2 = ObservedLeach2 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc2) / 100;
+				ObservedLeach3 = ObservedLeach3 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc3) / 100;
+				ObservedLeach4 = ObservedLeach4 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc4) / 100;
+				ObservedLeach5 = ObservedLeach5 + ((Soil.SoilWater.flow[3] + Soil.SoilWater.flux[3]) * NConc5) / 100;
+				if (ObservedLeach5 > 0)
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
+				else
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
+					
+				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[2] + Soil.SoilWater.flow_nh4[2]);
+			}
+			else if (Clock.Today.Date > Potato1End)
+			{	
+				Leach_60 = 0;
+				ObservedLeach1 = ObservedLeach1 + (Soil.SoilWater.Drainage * NConc1) / 100;
+				ObservedLeach2 = ObservedLeach2 + (Soil.SoilWater.Drainage * NConc2) / 100;
+				ObservedLeach3 = ObservedLeach3 + (Soil.SoilWater.Drainage * NConc3) / 100;
+				ObservedLeach4 = ObservedLeach4 + (Soil.SoilWater.Drainage * NConc4) / 100;
+				ObservedLeach5 = ObservedLeach5 + (Soil.SoilWater.Drainage * NConc5) / 100;
+				if (ObservedLeach5 > 0)
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3 + ObservedLeach4 + ObservedLeach5) / 5;
+				else
+					NLeachMean = (ObservedLeach1 + ObservedLeach2 + ObservedLeach3) / 3;
+				//TotalLeach = TotalLeach + Soil.SoilWater.LeachNH4 + Soil.SoilWater.LeachNO3 + Soil.SoilWater.LeachUrea;
+				TotalLeach = TotalLeach + (Soil.SoilWater.flow_no3[7] + Soil.SoilWater.flow_nh4[7]);
+			}
+		}
+		
+		[EventSubscribe("PlantEnding")]
+		private void OnPlantEnding(object sender, EventArgs e)
+		{
+			Leach_60 = 0;
+			ObservedLeach1 = 0;
+			ObservedLeach2 = 0;
+			ObservedLeach3 = 0;
+			ObservedLeach4 = 0;
+			ObservedLeach5 = 0;
+			TotalLeach = 0;
+			
+			
+		}
+	}
+}
+	]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>

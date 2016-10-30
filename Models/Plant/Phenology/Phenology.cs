@@ -275,6 +275,9 @@ namespace Models.PMF.Phen
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
+
+       
+
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -294,6 +297,16 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
+            bool hasEmergencePhase = false;
+            for (int P = 0; P < Phases.Count; P++)
+            {//if the plant has an emerging phase, set emerged to false so it become true when emerged otherwise leave true so perenial crops with no emergance phase start of emmerged 
+                if (Phases[P] is EmergingPhase)
+                    hasEmergencePhase = true;
+            }
+            if (hasEmergencePhase == false)
+            {
+                Emerged = true;
+            }
         }
 
         /// <summary>Called when crop is being harvested.</summary>

@@ -222,12 +222,12 @@ namespace UserInterface.Views
 
             headerBox.PackStart(tabLabel);
             headerBox.PackEnd(closeBtn);
-            headerBox.ButtonPressEvent += on_eventbox1_button_press_event;
 
-            // Wrap the whole thing inside an event box, so we can respond to a right-button click
+            // Wrap the whole thing inside an event box, so we can respond to a right-button or center-button click
             EventBox eventbox = new EventBox();
             eventbox.HasTooltip = text.Contains(Path.DirectorySeparatorChar.ToString());
-            eventbox.TooltipText = text;           
+            eventbox.TooltipText = text;
+            eventbox.ButtonPressEvent += on_eventbox1_button_press_event;
             eventbox.Add(headerBox);
             eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
@@ -236,27 +236,9 @@ namespace UserInterface.Views
 
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
         {
-            if (e.Event.Button == 2)
+            if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
             {
-
-                Notebook notebook = null;
-                string tabText = null;
-                int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
-                if (tabPage > -1)
-                    notebook.CurrentPage = tabPage;
-                if (tabPage > 0)
-                {
-                    TabClosingEventArgs args = new TabClosingEventArgs();
-                    if (TabClosing != null)
-                    {
-                        args.LeftTabControl = IsControlOnLeft(o);
-                        args.Name = tabText;
-                        args.Index = tabPage;
-                        TabClosing.Invoke(this, args);
-                    }
-                    if (args.AllowClose)
-                        notebook.RemovePage(tabPage);
-                }
+                CloseTabContaining(o);
             }
         }
 
@@ -353,8 +335,6 @@ namespace UserInterface.Views
                     args.Index = tabPage;
                     TabClosing.Invoke(this, args);
                 }
-                if (args.AllowClose)
-                    notebook.RemovePage(tabPage);
             }
         }
 
