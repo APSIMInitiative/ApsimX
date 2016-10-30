@@ -153,6 +153,8 @@ namespace Models.PMF.Organs
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
+            Live.Clear();
+            Dead.Clear();
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             PotentialDMAllocation = 0;
@@ -203,6 +205,7 @@ namespace Models.PMF.Organs
         virtual public double DMConversionEfficiency { get { return 1; } set { } }
 
         /// <summary>Growth Respiration</summary>
+        [XmlIgnore]
         public double GrowthRespiration { get; set; }
 
         #endregion
@@ -257,6 +260,7 @@ namespace Models.PMF.Organs
         #region Arbitrator methods
 
         /// <summary>Gets or sets the dm demand.</summary>
+        [XmlIgnore]
         [Units("g/m^2")]
         public virtual BiomassPoolType DMDemand
         {
@@ -273,6 +277,7 @@ namespace Models.PMF.Organs
             set { }
         }
         /// <summary>Sets the dm potential allocation.</summary>
+        [XmlIgnore]
         public BiomassPoolType DMPotentialAllocation
         {
             set
@@ -288,6 +293,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the dm supply.</summary>
+        [XmlIgnore]
         public virtual BiomassSupplyType DMSupply
         {
             get
@@ -315,6 +321,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the N demand.</summary>
+        [XmlIgnore]
         public virtual BiomassPoolType NDemand
         {
             get
@@ -331,6 +338,7 @@ namespace Models.PMF.Organs
             set { }
         }
         /// <summary>Gets or sets the N supply.</summary>
+        [XmlIgnore]
         public virtual BiomassSupplyType NSupply
         {
             get
@@ -373,6 +381,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the dm allocation.</summary>
+        [XmlIgnore]
         public virtual BiomassAllocationType DMAllocation
         {
             set
@@ -398,6 +407,7 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
+        [XmlIgnore]
         public virtual BiomassAllocationType NAllocation
         {
             set
@@ -431,6 +441,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
+
+        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
+        public double Nconc { get { return N / Wt; } }
 
         #endregion
 
