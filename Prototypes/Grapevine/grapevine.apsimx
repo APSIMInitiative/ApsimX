@@ -170,14 +170,13 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>StartFlowering</Start>
-          <End>EndFlowering</End>
+          <End>FruitSet</End>
         </GenericPhase>
         <GenericPhase>
           <Name>BerryDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>40</Value>
-            <Units>dd</Units>
+            <Value>20</Value>
           </Constant>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
@@ -197,7 +196,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
               </Y>
             </XYPairs>
           </AirTemperatureFunction>
-          <Start>EndFlowering</Start>
+          <Start>FruitSet</Start>
           <End>Veraison</End>
         </GenericPhase>
         <LeafDeathPhase>
@@ -344,6 +343,8 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -432,12 +433,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                 <double>1</double>
               </X>
               <Y>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>20</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>2000</double>
+                <double>2000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -455,12 +456,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                 <double>1</double>
               </X>
               <Y>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>350</double>
-                <double>100</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
+                <double>1000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -1104,8 +1105,8 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>2005-04-05T00:00:00</StartDate>
-      <EndDate>2007-06-05T00:00:00</EndDate>
+      <StartDate>2005-04-30T00:00:00</StartDate>
+      <EndDate>2007-09-05T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -1273,6 +1274,30 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
+          <urea_min>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </urea_min>
+          <nh4_min>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </nh4_min>
+          <no3_min>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </no3_min>
           <wfpsN2N2O_x>
             <double>22</double>
             <double>88</double>
@@ -1282,12 +1307,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>3.5120417868354008</double>
-            <double>2.4888011122565477</double>
-            <double>1.1998615131698891</double>
-            <double>1.0306721761582318</double>
-            <double>0.47032752096862684</double>
-            <double>0.47012738804856147</double>
+            <double>3.5087566566696209</double>
+            <double>2.5000446389987916</double>
+            <double>1.2003447486804877</double>
+            <double>1.0302553388102849</double>
+            <double>0.4701677719053009</double>
+            <double>0.47008570515145176</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -1424,16 +1449,16 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         </TillageTypes>
         <Pools>
           <Pool>
-            <PoolName>Wheat</PoolName>
-            <ResidueType>Wheat</ResidueType>
+            <PoolName>Grapevine</PoolName>
+            <ResidueType>Grapevine</ResidueType>
             <Mass>2000</Mass>
             <CNRatio>80</CNRatio>
             <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
           </Pool>
         </Pools>
-        <PoolName>Wheat</PoolName>
-        <type>Wheat</type>
+        <PoolName>Grapevine</PoolName>
+        <type>Grapevine</type>
         <mass>2000</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
@@ -1465,7 +1490,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <night_interception_fraction>0.5</night_interception_fraction>
         <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
-        <albedo>0.26</albedo>
+        <albedo>0.15</albedo>
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
@@ -1481,52 +1506,52 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <Name>Grapevine</Name>
         <ResourceName>Grapevine</ResourceName>
         <CropType>Grapevine</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
+        <SowingDate>2005-05-01T00:00:00</SowingDate>
       </Plant>
       <Operations>
         <Name>Operations</Name>
         <Operation>
-          <Date>2003-10-20T00:00:00</Date>
+          <Date>2003-10-20</Date>
           <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
         </Operation>
         <Operation>
-          <Date>2003-11-25T00:00:00</Date>
+          <Date>2003-11-25</Date>
           <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN,0);</Action>
         </Operation>
         <Operation>
-          <Date>2003-11-26T00:00:00</Date>
+          <Date>2003-11-26</Date>
           <Action>[Irrigation].Apply(15);</Action>
         </Operation>
         <Operation>
-          <Date>2003-12-04T00:00:00</Date>
+          <Date>2003-12-04</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2003-12-16T00:00:00</Date>
+          <Date>2003-12-16</Date>
           <Action>[Irrigation].Apply(15);</Action>
         </Operation>
         <Operation>
-          <Date>2003-12-22T00:00:00</Date>
+          <Date>2003-12-22</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2003-12-30T00:00:00</Date>
+          <Date>2003-12-30</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2004-01-08T00:00:00</Date>
+          <Date>2004-01-08</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2004-01-21T00:00:00</Date>
+          <Date>2004-01-21</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2004-01-31T00:00:00</Date>
+          <Date>2004-01-31</Date>
           <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
-          <Date>2004-02-27T00:00:00</Date>
+          <Date>2004-02-27</Date>
           <Action>[Irrigation].Apply(25);</Action>
         </Operation>
       </Operations>
@@ -1602,17 +1627,70 @@ namespace Models
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
+          <string>Name as Zone</string>
           <string>[Clock].Today</string>
           <string>[Grapevine].Phenology.Stage</string>
           <string>[Grapevine].Phenology.CurrentStageName</string>
           <string>[Grapevine].Structure.LeafTipsAppeared</string>
           <string>[Grapevine].Structure.PlantTotalNodeNo</string>
           <string>[Grapevine].Leaf.InitialisedCohortNo</string>
+          <string>[Grapevine].Leaf.DeadCohortNo</string>
+          <string>[Grapevine].Leaf.AppearedCohortNo</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <Manager>
+        <Name>Pruning</Name>
+        <Script>
+          <PruneDate>2006-05-10</PruneDate>
+        </Script>
+        <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Grapevine;
+		[Link] Clock Clock;
+
+		[Description("Prune Date")]
+		public DateTime PruneDate { get; set; }
+
+		[XmlIgnore] private RemovalFractions Remove { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Remove = new RemovalFractions();
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
+
+			
+			if (Clock.Today.Date == PruneDate)
+			{
+				Remove.SetPhenologyStage = 1;
+				Grapevine.RemoveBiomass("Prune", Remove);
+			}
+		}
+	}
+}
+			
+				]]></Code>
+      </Manager>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1633,7 +1711,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Phenology.Stage</YFieldName>
+        <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1660,7 +1738,70 @@ namespace Models
     <Graph>
       <Name>LeafNum</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Cohort</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.InitialisedCohortNo</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>tips</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.AppearedCohortNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dead</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.DeadCohortNo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series3</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>

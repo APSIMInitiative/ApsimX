@@ -31,11 +31,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The surface organic matter model</summary>
         [Link]
-        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The summary</summary>
         [Link]
-        protected ISummary Summary = null;
+        public ISummary Summary = null;
         #endregion
 
         #region Arbitration methods
@@ -82,22 +82,11 @@ namespace Models.PMF.Organs
             NO3Supply = null;
             NH4Supply = null;
         }
-
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        virtual public double WaterDemand { get { return 0; } set { } }
-
+        
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        virtual public double WaterAllocation
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water allocation for " + Name); }
-        }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
