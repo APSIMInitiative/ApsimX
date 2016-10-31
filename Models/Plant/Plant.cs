@@ -242,6 +242,8 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<RemovingBiomassArgs> RemovingBiomass;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Pruning;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -410,8 +412,13 @@ namespace Models.PMF
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0)
                 Structure.doThin(removalData.SetThinningProportion);
+
+            // Pruning event (winter pruning, summer pruning is called as cut) reset the phenology if SetPhenologyStage specified.
+            if (biomassRemoveType == "Prune" && Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+                
         }
-        
+
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {

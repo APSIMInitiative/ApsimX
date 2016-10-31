@@ -1527,15 +1527,6 @@ namespace Models.PMF.Organs
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
 
-        /// <summary>Called when [prune].</summary>
-        /// <param name="Prune">The prune.</param>
-        [EventSubscribe("Prune")]
-        private void OnPrune(PruneType Prune)
-        {
-            Structure.PrimaryBudNo = Prune.BudNumber;
-            ZeroLeaves();
-        }
-
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
@@ -1589,6 +1580,32 @@ namespace Models.PMF.Organs
                 Leaves.Clear();
                 CohortsAtInitialisation = 0;
             }
+        }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Structure.PotLeafTipsAppeared = 0;
+            Structure.CohortToInitialise = 0;
+            Structure.TipToAppear = 0;
+            Structure.Emerged = false;
+            Structure.Initialised = false;
+            Structure.Clear();
+            Structure.ResetStemPopn();
+            Structure.LeafTipsAppeared = 0;
+            Structure.NextLeafProportion = 1.0;
+
+            Leaves.Clear();
+            CohortsAtInitialisation = 0;
+            TipsAtEmergence = 0;
+            OnInitialiseLeafCohorts(this, e);
+
+            Structure.Initialised = true;
+            Structure.DoEmergence();
+            Structure.Emerged = true;        
         }
 
         /// <summary>Called when [simulation commencing].</summary>
