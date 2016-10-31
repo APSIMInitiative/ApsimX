@@ -69,15 +69,9 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets the total (live + dead) n (g/m2).</summary>
         double N { get; }
 
-        /// <summary>Gets or sets the water demand.</summary>
-        double WaterDemand { get; set; }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         double[] WaterSupply(ZoneWaterAndN zone);
-
-        /// <summary>Gets or sets the water allocation.</summary>
-        double WaterAllocation { get; set; }
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>

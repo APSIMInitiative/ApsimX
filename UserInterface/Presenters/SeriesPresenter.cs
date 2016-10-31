@@ -446,25 +446,8 @@ namespace UserInterface.Presenters
                 this.seriesView.DataSource.SelectedValue != null &&
                 parentGraph != null)
             {
-                DataTable data = null;
-                int i = 0;
-                while (i < graphPresenter.seriesDefinitions.Count && graphPresenter.seriesDefinitions[i].data == null)
-                    i++;
-                if (i < graphPresenter.seriesDefinitions.Count)
-                    data = graphPresenter.seriesDefinitions[i].data;
-
                 List<string> fieldNames = new List<string>();
-                if (data == null)
-                    fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
-                else
-                {
-                    foreach (DataColumn column in data.Columns)
-                    {
-                        if (column.DataType.Name != "Object")
-                            fieldNames.Add(column.ColumnName);
-                    }
-                }
-        
+                fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
                 fieldNames.Sort();
 
                 this.seriesView.X.Values = fieldNames.ToArray();

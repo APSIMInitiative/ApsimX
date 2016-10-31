@@ -5,6 +5,7 @@ using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using System;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -44,7 +45,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
+    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
         /// <summary>The met data</summary>
         [Link]
@@ -200,23 +201,19 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Gets or sets the water demand.</summary>
-        [Units("mm")]
-        public override double WaterDemand
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-            get
-            {
-                if (WaterDemandFunction != null)
-                    return WaterDemandFunction.Value;
-                else
-                    return PotentialEP;
-            }
+            if (WaterDemandFunction != null)
+                return WaterDemandFunction.Value;
+            else
+                return PotentialEP;
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -237,8 +234,16 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public override double WaterAllocation { get; set; }
-        
+        [XmlIgnore]
+        public double WaterAllocation { get; private set; }
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
+
         /// <summary>Gets or sets the dm demand.</summary>
         public override BiomassPoolType DMDemand
         {

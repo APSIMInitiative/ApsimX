@@ -673,7 +673,10 @@ namespace Models.PMF
                 // Calculate total water demand.
                 double waterDemand = 0;
                 foreach (IArbitration o in Organs)
-                    waterDemand += o.WaterDemand;
+                {
+                    if (o is IHasWaterDemand)
+                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+                }
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
@@ -714,7 +717,10 @@ namespace Models.PMF
             // Calculate total plant water demand.
             waterDemand = 0.0;
             foreach (IArbitration o in Organs)
-                waterDemand += o.WaterDemand;
+            {
+                if (o is IHasWaterDemand)
+                    waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+            }
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
@@ -724,10 +730,15 @@ namespace Models.PMF
             // Proportionally allocate supply across organs.
             waterUptake = 0.0;
             foreach (IArbitration o in Organs)
-                if (o.WaterDemand > 0)
+                if (o is IHasWaterDemand)
                 {
-                    o.WaterAllocation = fraction * o.WaterDemand;
-                    waterUptake += o.WaterAllocation;
+                    double demand = (o as IHasWaterDemand).CalculateWaterDemand();
+                    if (demand > 0)
+                    {
+                        double allocation = fraction * demand;
+                        (o as IHasWaterDemand).SetWaterAllocation(allocation);
+                        waterUptake += allocation;
+                    }
                 }
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
