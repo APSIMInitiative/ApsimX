@@ -415,6 +415,8 @@ namespace Models.PMF
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
+            if (IsAlive == false)
+                throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             Summary.WriteMessage(this, "Crop ending");
 
             foreach (IOrgan O in Organs)
