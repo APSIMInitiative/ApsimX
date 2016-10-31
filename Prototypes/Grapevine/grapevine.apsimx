@@ -170,7 +170,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
           <Start>StartFlowering</Start>
-          <End>EndFlowering</End>
+          <End>FruitSet</End>
         </GenericPhase>
         <GenericPhase>
           <Name>BerryDevelopment</Name>
@@ -196,7 +196,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
               </Y>
             </XYPairs>
           </AirTemperatureFunction>
-          <Start>EndFlowering</Start>
+          <Start>FruitSet</Start>
           <End>Veraison</End>
         </GenericPhase>
         <LeafDeathPhase>
@@ -1105,7 +1105,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>2005-04-05T00:00:00</StartDate>
+      <StartDate>2005-04-30T00:00:00</StartDate>
       <EndDate>2007-09-05T00:00:00</EndDate>
     </Clock>
     <Summary>
@@ -1642,7 +1642,7 @@ namespace Models
         </EventNames>
       </Report>
       <Manager>
-        <Name>SowingAndCutting</Name>
+        <Name>Pruning</Name>
         <Script>
           <PruneDate>2006-05-10</PruneDate>
         </Script>
@@ -1711,7 +1711,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Leaf.AppearedCohortNo</YFieldName>
+        <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
