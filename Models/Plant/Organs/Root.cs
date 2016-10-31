@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan
+    public class Root : BaseOrgan, IWaterNitrogenUptake
     {
         #region Links
         /// <summary>The arbitrator</summary>
@@ -402,7 +402,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
-        public override void DoWaterUptake(double[] Amount, string zoneName)
+        public void DoWaterUptake(double[] Amount, string zoneName)
         {
             ZoneState zone = Zones.Find(z => z.Name == zoneName);
             if (zone == null)
@@ -414,7 +414,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        public override void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
+        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
@@ -649,7 +649,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        public override void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        public void CalculateNitrogenSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
             NO3Supply = null;
             NH4Supply = null;
@@ -726,7 +726,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        public override double[] WaterSupply(ZoneWaterAndN zone)
+        public double[] CalculateWaterSupply(ZoneWaterAndN zone)
         {
             ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
             if (myZone == null)
