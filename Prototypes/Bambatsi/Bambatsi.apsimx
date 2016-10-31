@@ -117,6 +117,20 @@
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
+        <Name>AboveGroundLive</Name>
+        <Propertys>
+          <string>[Leaf].Live</string>
+          <string>[Stem].Live</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
+        <Name>AboveGroundDead</Name>
+        <Propertys>
+          <string>[Leaf].Dead</string>
+          <string>[Stem].Dead</string>
+        </Propertys>
+      </CompositeBiomass>
+      <CompositeBiomass>
         <Name>BelowGround</Name>
         <Propertys>
           <string>[Root].Live</string>
@@ -160,7 +174,7 @@
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>1</Value>
+            <Value>0.01</Value>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -314,16 +328,10 @@ But their data suggests a value of 0.3]]></MemoText>
               <X>
                 <double>0</double>
                 <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>6</double>
               </X>
               <Y>
-                <double>0.016</double>
-                <double>0.013</double>
-                <double>0.011</double>
-                <double>0.01</double>
-                <double>0.008</double>
+                <double>0.015</double>
+                <double>0.015</double>
               </Y>
             </XYPairs>
             <XProperty>[Bambatsi].Age.Value</XProperty>
@@ -331,7 +339,7 @@ But their data suggests a value of 0.3]]></MemoText>
         </MultiplyFunction>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <Value>365</Value>
+          <Value>130</Value>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
@@ -627,7 +635,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0041</Value>
+          <Value>0.01</Value>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
@@ -635,7 +643,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.004</Value>
+          <Value>0.008</Value>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
@@ -862,101 +870,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <CropType>Bambatsi</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
-    <Report>
-      <Name>Report</Name>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>Bambatsi.Phenology.CurrentPhaseName</string>
-        <string>Bambatsi.Phenology.StageCode.Value</string>
-        <string>Bambatsi.Root.NSupplyUptake</string>
-        <string>[Soil].SoilWater.Eo</string>
-        <string>[Soil].SoilWater.Es</string>
-        <string>[Soil].SoilWater.Drainage</string>
-        <string>[Soil].SoilWater.Runoff</string>
-        <string>[Soil].SoilWater.pond</string>
-        <string>Bambatsi.AboveGround.Wt</string>
-        <string>Bambatsi.BelowGround.Wt</string>
-        <string>Bambatsi.Total.Wt</string>
-        <string>Bambatsi.Leaf.Dead.Wt</string>
-        <string>Bambatsi.Leaf.Live.Wt</string>
-        <string>Bambatsi.Stem.Dead.Wt</string>
-        <string>Bambatsi.Stem.Live.Wt</string>
-        <string>Bambatsi.Root.Dead.Wt</string>
-        <string>Bambatsi.Root.Live.Wt</string>
-        <string>Bambatsi.AboveGround.N</string>
-        <string>Bambatsi.BelowGround.N</string>
-        <string>Bambatsi.Total.N</string>
-        <string>Bambatsi.TotalLive.N</string>
-        <string>Bambatsi.TotalDead.N</string>
-        <string>Bambatsi.Leaf.Dead.N</string>
-        <string>Bambatsi.Leaf.Live.N</string>
-        <string>Bambatsi.Stem.Dead.N</string>
-        <string>Bambatsi.Stem.Live.N</string>
-        <string>Bambatsi.Branch.Live.Wt</string>
-        <string>Bambatsi.Branch.Live.N</string>
-        <string>Bambatsi.Wood.Wt</string>
-        <string>Bambatsi.Root.Live.N</string>
-        <string>Bambatsi.Root.Dead.N</string>
-        <string>Bambatsi.Leaf.Live.NConc</string>
-        <string>Bambatsi.Leaf.Dead.NConc</string>
-        <string>Bambatsi.Stem.Live.NConc</string>
-        <string>Bambatsi.Root.Live.NConc</string>
-        <string>Bambatsi.Root.WaterSupply</string>
-        <string>Bambatsi.Root.WaterUptake</string>
-        <string>Bambatsi.Leaf.Transpiration</string>
-        <string>Bambatsi.Leaf.WaterDemand</string>
-        <string>Bambatsi.Root.Depth</string>
-        <string>Bambatsi.Leaf.CoverGreen</string>
-        <string>Bambatsi.Leaf.CoverTotal</string>
-        <string>Bambatsi.Leaf.CoverDead</string>
-        <string>Bambatsi.Leaf.LAI</string>
-        <string>Bambatsi.Leaf.LAIDead</string>
-        <string>Bambatsi.Leaf.Fn</string>
-        <string>Bambatsi.Leaf.Fw</string>
-        <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
-        <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
-        <string>Bambatsi.Leaf.Photosynthesis.RueAct</string>
-        <string>Bambatsi.Stem.MinimumNConc.Value</string>
-        <string>Bambatsi.Root.MinimumNConc.Value</string>
-        <string>Bambatsi.Stem.MaximumNConc.Value</string>
-        <string>Bambatsi.Root.MaximumNConc.Value</string>
-        <string>Bambatsi.TotalLive.Wt</string>
-        <string>Bambatsi.Stem.Live.StructuralWt</string>
-        <string>Bambatsi.Stem.Live.NonStructuralWt</string>
-        <string>Bambatsi.Leaf.SpecificArea</string>
-        <string>Bambatsi.TotalDead.Wt</string>
-        <string>[Soil].SoilWater.SWmm</string>
-        <string>[Soil].NO3N</string>
-        <string>Bambatsi.Arbitrator.NDemand</string>
-        <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-        <string>Bambatsi.IndividualTreeLiveWt.Value</string>
-        <string>Bambatsi.Age.Value</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].DoReport</string>
-      </EventNames>
-    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
-    <Input>
-      <Name>Input</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>BambatsiValidationData.txt</FileName>
-    </Input>
     <ExcelInput>
       <Name>Observed</Name>
-      <FileName>BambatsiValidationData.xlsx</FileName>
+      <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
+        <string>ObservedSoilWater</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedSoilWater</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ObservedSoilWater</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
@@ -1576,81 +1510,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <CropType>Bambatsi</CropType>
             <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
-          <Report>
-            <Name>Report</Name>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
-            <VariableNames>
-              <string>[Clock].Today</string>
-              <string>Bambatsi.Phenology.CurrentPhaseName</string>
-              <string>Bambatsi.Phenology.StageCode.Value</string>
-              <string>Bambatsi.Root.NSupplyUptake</string>
-              <string>[Soil].SoilWater.Eo</string>
-              <string>[Soil].SoilWater.Es</string>
-              <string>[Soil].SoilWater.Drainage</string>
-              <string>[Soil].SoilWater.Runoff</string>
-              <string>[Soil].SoilWater.pond</string>
-              <string>Bambatsi.AboveGround.Wt</string>
-              <string>Bambatsi.BelowGround.Wt</string>
-              <string>Bambatsi.Total.Wt</string>
-              <string>Bambatsi.Leaf.Dead.Wt</string>
-              <string>Bambatsi.Leaf.Live.Wt</string>
-              <string>Bambatsi.Stem.Dead.Wt</string>
-              <string>Bambatsi.Stem.Live.Wt</string>
-              <string>Bambatsi.Root.Dead.Wt</string>
-              <string>Bambatsi.Root.Live.Wt</string>
-              <string>Bambatsi.AboveGround.N</string>
-              <string>Bambatsi.BelowGround.N</string>
-              <string>Bambatsi.Total.N</string>
-              <string>Bambatsi.TotalLive.N</string>
-              <string>Bambatsi.TotalDead.N</string>
-              <string>Bambatsi.Leaf.Dead.N</string>
-              <string>Bambatsi.Leaf.Live.N</string>
-              <string>Bambatsi.Stem.Dead.N</string>
-              <string>Bambatsi.Stem.Live.N</string>
-              <string>Bambatsi.Root.Live.N</string>
-              <string>Bambatsi.Root.Dead.N</string>
-              <string>Bambatsi.Leaf.Live.NConc</string>
-              <string>Bambatsi.Leaf.Dead.NConc</string>
-              <string>Bambatsi.Stem.Live.NConc</string>
-              <string>Bambatsi.Root.Live.NConc</string>
-              <string>Bambatsi.Root.WaterSupply</string>
-              <string>Bambatsi.Root.WaterUptake</string>
-              <string>Bambatsi.Leaf.Transpiration</string>
-              <string>Bambatsi.Leaf.WaterDemand</string>
-              <string>Bambatsi.Root.Depth</string>
-              <string>Bambatsi.Leaf.CoverGreen</string>
-              <string>Bambatsi.Leaf.CoverTotal</string>
-              <string>Bambatsi.Leaf.CoverDead</string>
-              <string>Bambatsi.Leaf.LAI</string>
-              <string>Bambatsi.Leaf.LAIDead</string>
-              <string>Bambatsi.Leaf.Fn</string>
-              <string>Bambatsi.Leaf.Fw</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
-              <string>Bambatsi.Stem.MinimumNConc.Value</string>
-              <string>Bambatsi.Root.MinimumNConc.Value</string>
-              <string>Bambatsi.Stem.MaximumNConc.Value</string>
-              <string>Bambatsi.Root.MaximumNConc.Value</string>
-              <string>Bambatsi.TotalLive.Wt</string>
-              <string>Bambatsi.Stem.Live.StructuralWt</string>
-              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
-              <string>Bambatsi.Leaf.SpecificArea</string>
-              <string>Bambatsi.TotalDead.Wt</string>
-              <string>[Soil].SoilWater.SWmm</string>
-              <string>[Soil].NO3N</string>
-              <string>Bambatsi.Arbitrator.NDemand</string>
-              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-              <string>Bambatsi.IndividualTreeLiveWt.Value</string>
-              <string>Bambatsi.Age.Value</string>
-              <string>Bambatsi.Leaf.Photosynthesis.Value</string>
-              <string>Bambatsi.Arbitrator.NSupply</string>
-              <string>([SurfaceOrganicMatter].Wt / 10)  as Litter</string>
-            </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
-          </Report>
           <Operations>
             <Name>Operations</Name>
             <Operation>
@@ -1738,6 +1597,88 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Action>[Bambatsi].Harvest();</Action>
             </Operation>
           </Operations>
+          <Report>
+            <Name>Report</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>Bambatsi.Phenology.CurrentPhaseName</string>
+              <string>Bambatsi.Phenology.StageCode.Value</string>
+              <string>Bambatsi.Root.NSupplyUptake</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>[Soil].SoilWater.Drainage</string>
+              <string>[Soil].SoilWater.Runoff</string>
+              <string>[Soil].SoilWater.pond</string>
+              <string>sum([Soil].SoilWater.SWmm[2:6]) as SW10_110cm</string>
+              <string>sum([Soil].SoilWater.SWmm[7:11]) as SW110_210cm</string>
+              <string>sum([Soil].SoilWater.SWmm[12:16]) as SW210_310cm</string>
+              <string>sum([Soil].SoilWater.SWmm[2:16]) as SW10_310cm</string>
+              <string>Bambatsi.AboveGround.Wt</string>
+              <string>Bambatsi.AboveGroundLive.Wt</string>
+              <string>Bambatsi.AboveGroundDead.Wt</string>
+              <string>Bambatsi.BelowGround.Wt</string>
+              <string>Bambatsi.Total.Wt</string>
+              <string>Bambatsi.Leaf.Dead.Wt</string>
+              <string>Bambatsi.Leaf.Live.Wt</string>
+              <string>Bambatsi.Stem.Dead.Wt</string>
+              <string>Bambatsi.Stem.Live.Wt</string>
+              <string>Bambatsi.Root.Dead.Wt</string>
+              <string>Bambatsi.Root.Live.Wt</string>
+              <string>Bambatsi.AboveGround.N</string>
+              <string>Bambatsi.BelowGround.N</string>
+              <string>Bambatsi.Total.N</string>
+              <string>Bambatsi.TotalLive.N</string>
+              <string>Bambatsi.TotalDead.N</string>
+              <string>Bambatsi.Leaf.Dead.N</string>
+              <string>Bambatsi.Leaf.Live.N</string>
+              <string>Bambatsi.Stem.Dead.N</string>
+              <string>Bambatsi.Stem.Live.N</string>
+              <string>Bambatsi.Branch.Live.Wt</string>
+              <string>Bambatsi.Branch.Live.N</string>
+              <string>Bambatsi.Wood.Wt</string>
+              <string>Bambatsi.Root.Live.N</string>
+              <string>Bambatsi.Root.Dead.N</string>
+              <string>Bambatsi.Leaf.Live.NConc</string>
+              <string>Bambatsi.Leaf.Dead.NConc</string>
+              <string>Bambatsi.Stem.Live.NConc</string>
+              <string>Bambatsi.Root.Live.NConc</string>
+              <string>Bambatsi.Root.WaterSupply</string>
+              <string>Bambatsi.Root.WaterUptake</string>
+              <string>Bambatsi.Leaf.Transpiration</string>
+              <string>Bambatsi.Leaf.WaterDemand</string>
+              <string>Bambatsi.Root.Depth</string>
+              <string>Bambatsi.Leaf.CoverGreen</string>
+              <string>Bambatsi.Leaf.CoverTotal</string>
+              <string>Bambatsi.Leaf.CoverDead</string>
+              <string>Bambatsi.Leaf.LAI</string>
+              <string>Bambatsi.Leaf.LAIDead</string>
+              <string>Bambatsi.Leaf.Fn</string>
+              <string>Bambatsi.Leaf.Fw</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
+              <string>Bambatsi.Leaf.Photosynthesis.RueAct</string>
+              <string>Bambatsi.Stem.MinimumNConc.Value</string>
+              <string>Bambatsi.Root.MinimumNConc.Value</string>
+              <string>Bambatsi.Stem.MaximumNConc.Value</string>
+              <string>Bambatsi.Root.MaximumNConc.Value</string>
+              <string>Bambatsi.TotalLive.Wt</string>
+              <string>Bambatsi.Stem.Live.StructuralWt</string>
+              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
+              <string>Bambatsi.Leaf.SpecificArea</string>
+              <string>Bambatsi.TotalDead.Wt</string>
+              <string>[Soil].SoilWater.SWmm</string>
+              <string>[Soil].NO3N</string>
+              <string>Bambatsi.Arbitrator.NDemand</string>
+              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
+              <string>Bambatsi.IndividualTreeLiveWt.Value</string>
+              <string>Bambatsi.Age.Value</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
           <Area>0</Area>
           <Slope>0</Slope>
         </Zone>
@@ -1829,91 +1770,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>LeafWt</Name>
-        <Series>
-          <Name>Live</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Dead</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Leaf.Dead.Wt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Litter</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16747854</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Litter</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
         <Series>
           <Name>Observed</Name>
           <Type>Scatter</Type>
@@ -1929,7 +1785,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
+          <YFieldName>Bambatsi.Leaf.LAI</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1958,11 +1814,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <Graph>
         <Name>Biomass</Name>
         <Series>
-          <Name>Predicted Biomass</Name>
+          <Name>Predicted LiveBiomass</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1972,18 +1828,18 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+          <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Observed Biomass</Name>
+          <Name>Observed LiveBiomass</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-16736653</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1993,14 +1849,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+          <YFieldName>Bambatsi.AboveGroundLive.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Predicted Wood</Name>
+          <Name>Predicted DeadBiomass</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2014,18 +1870,18 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Wood.Wt</YFieldName>
+          <YFieldName>Bambatsi.AboveGroundDead.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Observed Wood</Name>
+          <Name>Observed DeadBiomass</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2035,7 +1891,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Wood.Wt</YFieldName>
+          <YFieldName>Bambatsi.AboveGroundDead.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2122,6 +1978,309 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 10 to 310cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_310cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_310cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 10 to 110cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_110cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_110cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 110 to 210cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW110_210cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW110_210cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 210 to 310cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW210_310cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW210_310cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Pre vs Obs TotalSoilWater</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoilWater</TableName>
+          <XFieldName>Observed.SW10_310cm</XFieldName>
+          <YFieldName>Predicted.SW10_310cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
