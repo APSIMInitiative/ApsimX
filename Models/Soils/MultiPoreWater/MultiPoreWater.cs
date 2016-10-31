@@ -980,7 +980,7 @@ namespace Models.Soils
                 Pores[l][c].WaterDepth += PoreDiffusionIn;
                 WaterToDiffuseIn -= PoreDiffusionIn;
             }
-            if (WaterToDiffuseIn > 0)
+            if (WaterToDiffuseIn > FloatingPointTolerance)
                 throw new Exception(this + " Error in diffusion in layer " + l);
         }
         private void DistributeOutwardDiffusion(int l, double WaterToDiffuseOut)
