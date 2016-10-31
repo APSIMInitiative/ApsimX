@@ -31,11 +31,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The surface organic matter model</summary>
         [Link]
-        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The summary</summary>
         [Link]
-        protected ISummary Summary = null;
+        public ISummary Summary = null;
         #endregion
 
         #region Arbitration methods
