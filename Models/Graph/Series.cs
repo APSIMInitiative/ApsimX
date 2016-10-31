@@ -593,10 +593,12 @@ namespace Models.Graph
                 filter += "'" + simulationName + "'";
             }
             filter = "SimulationName in (" + filter + ")";
-            filter = AddToFilter(filter, Filter);
+            if (Filter != string.Empty)
+                filter = AddToFilter(filter, Filter);
 
             List<string> fieldNames = new List<string>();
-            //fieldNames.Add("Zone");
+            if (dataStore.ColumnNames(TableName).Contains("Zone"))
+                fieldNames.Add("Zone");
             fieldNames.Add(XFieldName);
             fieldNames.Add(YFieldName);
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
