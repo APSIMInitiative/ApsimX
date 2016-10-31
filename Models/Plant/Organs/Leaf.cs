@@ -17,7 +17,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
 
         /// <summary>The met data</summary>
@@ -791,7 +791,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]
@@ -882,7 +882,6 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             Leaves = new List<LeafCohort>();
-            WaterDemand = 0;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
@@ -1306,19 +1305,21 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + "Leaf DM allocation has gone squiffy");
             }
         }
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public override double WaterDemand
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-           get
-            {
-                return PotentialEP * FudgeToGetETDemandRight;
-            }
+            return PotentialEP * FudgeToGetETDemandRight;
         }
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public override double WaterAllocation { get; set;}
+        public double WaterAllocation { get; private set;}
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
 
         /// <summary>Gets or sets the n demand.</summary>
         [Units("g/m^2")]

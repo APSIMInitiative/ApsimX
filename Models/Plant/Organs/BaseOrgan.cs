@@ -82,22 +82,11 @@ namespace Models.PMF.Organs
             NO3Supply = null;
             NH4Supply = null;
         }
-
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        virtual public double WaterDemand { get { return 0; } set { } }
-
+        
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        virtual public double WaterAllocation
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water allocation for " + Name); }
-        }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>

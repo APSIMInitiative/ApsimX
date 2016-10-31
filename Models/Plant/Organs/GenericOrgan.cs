@@ -46,12 +46,6 @@ namespace Models.PMF.Organs
     [Serializable]
     public class GenericOrgan : Model, IOrgan, IArbitration
     {
-
-        #region Class Structures
-        /// <summary>The start live</summary>
-        private Biomass StartLive = new Biomass();
-        #endregion
-
         #region Class Parameter Function Links
         /// <summary>The live</summary>
         [Link]
@@ -148,7 +142,8 @@ namespace Models.PMF.Organs
         protected double StructuralDMDemand = 0;
         /// <summary>The non structural dm demand</summary>
         protected double NonStructuralDMDemand = 0;
-
+        /// <summary>The start live</summary>
+        private Biomass StartLive = new Biomass();
 
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
@@ -166,16 +161,12 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-
-
-
         #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
-
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
@@ -448,21 +439,9 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Soil Arbitrator interface
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        virtual public double WaterDemand { get { return 0; } set { } }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        virtual public double WaterAllocation
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water allocation for " + Name); }
-        }
 
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>

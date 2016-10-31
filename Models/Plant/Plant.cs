@@ -146,8 +146,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.WaterDemand > 0)
-                    F = Root.WaterUptake / Leaf.WaterDemand;
+                if (Leaf != null && Leaf.CalculateWaterDemand() > 0)
+                    F = Root.WaterUptake / Leaf.CalculateWaterDemand();
                 else
                     F = 1;
                 return F;

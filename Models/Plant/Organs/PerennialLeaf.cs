@@ -17,7 +17,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration
+    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration, IHasWaterDemand
     {
         /// <summary>The met data</summary>
         [Link]
@@ -215,12 +215,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Gets or sets the water demand.</summary>
-        [Units("mm")]
-        public double WaterDemand
+        /// <summary>Calculate the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-            get {return PotentialEP;}
-            set { }
+            return PotentialEP;
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
@@ -250,7 +248,7 @@ namespace Models.PMF.Organs
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
          public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -270,8 +268,16 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public double WaterAllocation { get; set; }
-        
+        [XmlIgnore]
+        public double WaterAllocation { get; private set; }
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
+
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]
         public BiomassPoolType DMDemand
