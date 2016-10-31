@@ -547,6 +547,10 @@ namespace Models.Graph
                         return obj as Array;
                 }
             }
+            else
+            {
+                return Apsim.Get(this, fieldName) as IEnumerable;
+            }
 
             return null;
         }
