@@ -51,6 +51,10 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        /// <summary>The climate module</summary>
+        [Link(IsOptional = true)]
+        public MicroClimate MicroClimate = null;
+
         #region Leaf Interface
         /// <summary>
         /// 
@@ -207,7 +211,11 @@ namespace Models.PMF.Organs
             if (WaterDemandFunction != null)
                 return WaterDemandFunction.Value;
             else
+            {
+                if (MicroClimate == null)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
                 return PotentialEP;
+            }
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }

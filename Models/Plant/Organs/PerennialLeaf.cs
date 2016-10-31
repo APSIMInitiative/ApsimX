@@ -22,6 +22,10 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
+        
+        /// <summary>The climate module</summary>
+        [Link(IsOptional = true)]
+        public MicroClimate MicroClimate = null;
 
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
@@ -218,6 +222,9 @@ namespace Models.PMF.Organs
         /// <summary>Calculate the water demand.</summary>
         public double CalculateWaterDemand()
         {
+            if (MicroClimate == null)
+                throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
             return PotentialEP;
         }
         /// <summary>Gets the transpiration.</summary>

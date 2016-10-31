@@ -123,9 +123,12 @@ namespace Models.PMF.Organs
         [Link]
         public Structure Structure = null;
 
+        /// <summary>The climate module</summary>
+        [Link(IsOptional = true)]
+        public MicroClimate MicroClimate = null;
         #endregion
 
-    
+
 
         #region Structures
         /// <summary>
@@ -1308,6 +1311,9 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
+            if (MicroClimate == null)
+                throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
             return PotentialEP * FudgeToGetETDemandRight;
         }
         /// <summary>Gets or sets the water allocation.</summary>
