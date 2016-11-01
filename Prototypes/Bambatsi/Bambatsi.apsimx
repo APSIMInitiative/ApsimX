@@ -276,10 +276,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Value>0</Value>
-        </Constant>
         <Folder>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -311,10 +307,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <VariableReference>
@@ -590,9 +582,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0</KDead>
-        <WaterDemand>0</WaterDemand>
         <LAIDead>0</LAIDead>
-        <WaterAllocation>0</WaterAllocation>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
@@ -615,7 +605,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <Value>10</Value>
+          <Value>4</Value>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -968,12 +958,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
+                  <double>0.75</double>
+                  <double>0.75</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.25</double>
+                  <double>0.25</double>
                   <double>0</double>
                   <double>0</double>
                   <double>0</double>
@@ -1101,7 +1091,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.13</Salb>
-              <CN2Bare>72</CN2Bare>
+              <CN2Bare>75</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
               <slope>NaN</slope>
@@ -1611,10 +1601,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <string>[Soil].SoilWater.Drainage</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.pond</string>
-              <string>sum([Soil].SoilWater.SWmm[2:6]) as SW10_110cm</string>
-              <string>sum([Soil].SoilWater.SWmm[7:11]) as SW110_210cm</string>
-              <string>sum([Soil].SoilWater.SWmm[12:16]) as SW210_310cm</string>
-              <string>sum([Soil].SoilWater.SWmm[2:16]) as SW10_310cm</string>
+              <string>sum([Soil].SoilWater.SWmm[2:3]) as SW10_50cm</string>
+              <string>sum([Soil].SoilWater.SWmm[4:5]) as SW50_90cm</string>
+              <string>sum([Soil].SoilWater.SWmm[6:7]) as SW90_130cm</string>
+              <string>sum([Soil].SoilWater.SWmm[8:9]) as SW130_170cm</string>
+              <string>sum([Soil].SoilWater.SWmm[10:11]) as SW170_210cm</string>
+              <string>sum([Soil].SoilWater.SWmm[12:13]) as SW210_250cm</string>
+              <string>sum([Soil].SoilWater.SWmm[2:13]) as SW10_250cm</string>
               <string>Bambatsi.AboveGround.Wt</string>
               <string>Bambatsi.AboveGroundLive.Wt</string>
               <string>Bambatsi.AboveGroundDead.Wt</string>
@@ -1982,7 +1975,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SW 10 to 310cm</Name>
+        <Name>SW 10 to 50cm</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -1998,7 +1991,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW10_310cm</YFieldName>
+          <YFieldName>SW10_50cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2019,7 +2012,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW10_310cm</YFieldName>
+          <YFieldName>SW10_50cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2046,7 +2039,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SW 10 to 110cm</Name>
+        <Name>SW 50 to 90cm</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -2062,7 +2055,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW10_110cm</YFieldName>
+          <YFieldName>SW50_90cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2083,7 +2076,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW10_110cm</YFieldName>
+          <YFieldName>SW50_90cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2110,7 +2103,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SW 110 to 210cm</Name>
+        <Name>SW 90 to 130cm</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -2126,7 +2119,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW110_210cm</YFieldName>
+          <YFieldName>SW90_130cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2147,7 +2140,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW110_210cm</YFieldName>
+          <YFieldName>SW90_130cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2174,7 +2167,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SW 210 to 310cm</Name>
+        <Name>SW 130 to 170cm</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -2190,7 +2183,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW210_310cm</YFieldName>
+          <YFieldName>SW130_170cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2211,7 +2204,199 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW210_310cm</YFieldName>
+          <YFieldName>SW130_170cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 170 to 210cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW170_210cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW170_210cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 210 to 250cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW210_250cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW210_250cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SW 10 to 250cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_250cm</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedSoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>SW10_250cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2257,8 +2442,8 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObservedSoilWater</TableName>
-          <XFieldName>Observed.SW10_310cm</XFieldName>
-          <YFieldName>Predicted.SW10_310cm</YFieldName>
+          <XFieldName>Observed.SW10_250cm</XFieldName>
+          <YFieldName>Predicted.SW10_250cm</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
