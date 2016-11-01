@@ -19,8 +19,8 @@ namespace SWIMFrame
 
         int idrip;
         int idrn;
-        int n;
-        int ns;
+        // int n;
+        // int ns;
         double dcond;
         double driprate;
         double[] dripsol;
@@ -33,8 +33,8 @@ namespace SWIMFrame
         //Set sink parameters.
         public void SetSinks(int n, int ns, int idrip, int idrn, double driprate, double[] dripsol, double dcond)
         {
-            this.n = n;
-            this.ns = ns;
+            // this.n = n;
+            // this.ns = ns;
             this.idrip = idrip;
             this.idrn = idrn;
             if (idrip == idrn)
