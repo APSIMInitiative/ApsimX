@@ -108,7 +108,7 @@ namespace UserInterface.Views
         /// </summary>
         private void OnBrowseButtonClick(object sender, EventArgs e)
         {
-            if (BrowseButtonClicked != null )
+            if (BrowseButtonClicked != null)
             {
                 FileChooserDialog fileChooser = new FileChooserDialog("Select a file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
                 FileFilter allFilter = new FileFilter();

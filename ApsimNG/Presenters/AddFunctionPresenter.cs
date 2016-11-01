@@ -7,23 +7,23 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
-    using System.IO;
-    using System.Reflection;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddFunctionPresenter : IPresenter
     {
-        /// <summary>The model</summary>
+        /// <summary>The model.</summary>
         private IModel model;
 
-        /// <summary>The view</summary>
+        /// <summary>The view.</summary>
         private IListButtonView view;
 
-        /// <summary>The parent explorer presenter</summary>
+        /// <summary>The parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The allowable child models.</summary>

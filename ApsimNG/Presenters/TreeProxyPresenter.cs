@@ -78,8 +78,8 @@
             if (Zones.Count == 0)
                 return;
 
-            //setup tree heights
-            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights,ForestryModel.NDemands,ForestryModel.CanopyWidths,ForestryModel.TreeLeafAreas);
+            // setup tree heights
+            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights, ForestryModel.NDemands, ForestryModel.CanopyWidths, ForestryModel.TreeLeafAreas);
 
       /*      //get the distance of each Zone from Tree.
             double zoneWidth = 0;
@@ -95,11 +95,11 @@
                     ZoneWidths[i] = ZoneWidths[i - 1] + zoneWidth;
             }*/
 
-            //get the first soil. For now we're assuming all soils have the same structure.
+            // get the first soil. For now we're assuming all soils have the same structure.
             Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
 
             ForestryViewer.SoilMidpoints = Soil.DepthMidPoints;
-            //setup columns
+            // setup columns
             List<string> colNames = new List<string>();
 
             colNames.Add("Parameter");
@@ -119,7 +119,7 @@
                 ForestryModel.Table = new List<List<String>>();
                 ForestryModel.Table.Add(colNames);
 
-                //setup rows
+                // setup rows
                 List<string> rowNames = new List<string>();
 
                 rowNames.Add("Shade (%)");
@@ -137,7 +137,7 @@
                     ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
                 }
 
-                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                for (int i = 2; i < ForestryModel.Table.Count; i++) // set Depth and RLD rows to empty strings
                 {
                     ForestryModel.Table[i][1] = string.Empty;
                     ForestryModel.Table[i][2] = string.Empty;
@@ -150,10 +150,10 @@
                 foreach (string s in except)
                     ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => "0").ToList());
                 ForestryModel.Table[0].AddRange(except);
-                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                for (int i = 2; i < ForestryModel.Table.Count; i++) // set Depth and RLD rows to empty strings
                 {
                     ForestryModel.Table[i][2] = string.Empty;
-                    //ForestryModel.Table[i][3] = string.Empty;
+                    // ForestryModel.Table[i][3] = string.Empty;
                 }
 
                 // remove Zones from table that don't exist in simulation

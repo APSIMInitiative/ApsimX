@@ -71,7 +71,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            //if the model is Testable, run the test method.
+            // if the model is Testable, run the test method.
             ITestable testModel = model as ITestable;
             if (testModel != null)
                 testModel.Test(false, true);
@@ -185,7 +185,7 @@ namespace UserInterface.Presenters
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
 
-                    if(property.PropertyType == typeof(DataTable))
+                    if (property.PropertyType == typeof(DataTable))
                     {
                         VariableProperty vp = new VariableProperty(this.model, property);
                         DataTable dt = vp.Value as DataTable;
