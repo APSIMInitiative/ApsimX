@@ -155,9 +155,9 @@ namespace SWIMFrame
                         j++;
                     }
                     x1 = S[i, i1] - sp[i].Sc[j];
-                    phi[i, i1] = sp[i].phic[j] + x1 * (sp[i].phico[0, j] + x1 * (sp[i].phico[1, j] + x1 * sp[i].phico[2, j]));
+                    phi[i, i1] = sp[i].phic[j] + x1 * (sp[i].phico[1, j] + x1 * (sp[i].phico[2, j] + x1 * sp[i].phico[3, j]));
                     x1 = phi[i, i1] - sp[i].phic[j];
-                    K[i, i1] = sp[i].Kc[j] + x1 * (sp[i].Kco[0, j] + x1 * (sp[i].Kco[1, j] + x1 * sp[i].Kco[2, j]));
+                    K[i, i1] = sp[i].Kc[j] + x1 * (sp[i].Kco[1, j] + x1 * (sp[i].Kco[2, j] + x1 * sp[i].Kco[3, j]));
                 }
 
                 rdS[i] = 1.0 / (S[i, 2] - S[i, 1]);
@@ -184,9 +184,9 @@ namespace SWIMFrame
                     ftname[j] = "soil" + id + "dz" + mm;
                 }
                 if (isid[1, i] == isid[2, i])
-                    sfile = ftname[1] + ".dat";
+                    sfile = ftname[1];
                 else
-                    sfile = ftname[1] + "_" + ftname[2] + ".dat";
+                    sfile = ftname[1] + "_" + ftname[2];
                 ft[i] = Fluxes.ReadFluxTable(sfile);
 
                 // Set up flux path data.
@@ -375,10 +375,10 @@ namespace SWIMFrame
 
             // Get flux from table
             qf = path.ftable;
-            f1 = qf[k[2], k[1]]; //use bilinear interp
-            f2 = qf[k[2], k[1] + 1];
-            f3 = qf[k[2] + 1, k[1]];
-            f4 = qf[k[2] + 1, k[1] + 1];
+            f1 = qf[k[1], k[2]]; //use bilinear interp
+            f2 = qf[k[1] + 1, k[2]]; 
+            f3 = qf[k[1], k[2] + 1];
+            f4 = qf[k[1] + 1, k[2] + 1];
             for (int count = 1; count < u.Length; count++)
                 omu[count] = 1.0 - u[count];
             q = omu[1] * omu[2] * f1 + u[1] * omu[2] * f2 + omu[1] * u[2] * f3 + u[1] * u[2] * f4;
@@ -567,8 +567,6 @@ namespace SWIMFrame
                     KS = 0.0;
             }
         }
-
-
     }
 
         public struct PathEnd

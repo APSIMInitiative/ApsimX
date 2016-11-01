@@ -35,7 +35,7 @@ namespace SWIMFrame
         static double[,] qi2 = new double[mx + 1, mx + 1];
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
-        static double[,] aKco = new double[3 + 1, mx + 1];
+        static double[,] aKco = new double[mx + 1, 3 + 1];
     //    static double[,] aphico = new double[3 + 1, mx + 1];
         static SoilProps sp;
 
@@ -64,10 +64,10 @@ namespace SWIMFrame
             ft.fend = new FluxEnd[2];
             nu = sp.nc;
             he = sp.he; Ks = sp.ks;
-            for (i = 1; i < 4; i++) // this is needed as some calcs require indexs out of range of the sp arrays
-                for (j = 1; j < sp.Kco.GetLength(1); j++)
+            for (i = 1; i <= nu - 1; i++)
+                for (j = 1; j < sp.Kco.GetLength(0); j++)
                 {
-                    aKco[i, j] = sp.Kco[i - 1, j];
+                    aKco[i, j] = sp.Kco[j, i];
                    // aphico[i, j] = sp.phico[i, j]; //doesn't seem to be used
                 }
 
@@ -75,7 +75,7 @@ namespace SWIMFrame
             for (i = 1; i <= nu - 1; i++)
             {
                 x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
-                hpK[i] = sp.Kc[i] + x * (aKco[1, i] + x * (aKco[2, i] + x * aKco[3, i]));
+                hpK[i] = sp.Kc[i] + x * (aKco[i, 1] + x * (aKco[i, 2] + x * aKco[i, 3]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
@@ -86,7 +86,7 @@ namespace SWIMFrame
             aq[1, 1] = sp.Kc[1]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
             q1 = (sp.phic[1] - sp.phic[2]) / dz; // q1 is initial estimate
-            aq[1, 2] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
+            aq[2, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
             for (j = 3; j <= nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
             {
                 if (j > nu) // part satn - set h, K and phi
@@ -97,20 +97,20 @@ namespace SWIMFrame
                 }
 
                 // get approx q from linear extrapolation
-                q1 = aq[1, j - 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[1, j - 1] - aq[1, j - 2]) / (sp.phic[j - 1] - sp.phic[j - 2]);
-                aq[1, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                q1 = aq[j - 1, 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[j - 1, 1] - aq[j - 2, 1]) / (sp.phic[j - 1] - sp.phic[j - 2]);
+                aq[j, 1] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
-                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
+                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[j, 1] - aq[j - 1, 1]) < (1 + rerr) * dz)
                         break;
             }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu), rerr);
-            re = curv(nu, sp.phic.Slice(1, nu), aqM.Row(1).ToArray().Slice(1, nu));// for unsat phi
+            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu));// for unsat phi
             double[] rei = new double[nu - 2 + 1];
             Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice
             indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
@@ -120,7 +120,7 @@ namespace SWIMFrame
             for (int idx = 1; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Row(1).ToArray().Slice(nu, nt)); // for sat phi
+            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
             int[] ifsTemp = ifs.Slice(2, nfs);
@@ -131,26 +131,26 @@ namespace SWIMFrame
             for (int idx = 1; idx <= nphif; idx++)
             {
                 phif[idx] = sp.phic[iphif[idx]];
-                qf[1, idx] = aq[1, iphif[idx]];
+                qf[idx, 1] = aq[iphif[idx], 1];
             }
             // Get rest of fluxes
             // First for lower end wetter
             for (j = 2; j <= nphif; j++)
                 for (i = 2; i <= j; i++)
                 {
-                    q1 = qf[i - 1, j];
+                    q1 = qf[j, i - 1];
                     if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
                         q1 = 0.0; // improve?
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Then for upper end wetter
             for (i = 2; i <= nphif; i++)
                 for (j = i - 1; j >= 1; j--)
                 {
-                    q1 = qf[i, j + 1];
+                    q1 = qf[j + 1, i];
                     if (j + 1 == i)
                         q1 = q1 + (sp.phic[iphif[i]] - sp.phic[iphif[j]]) / dz;
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Use of flux table involves only linear interpolation, so gain accuracy
             // by providing fluxes in between using quadratic interpolation.
@@ -166,24 +166,24 @@ namespace SWIMFrame
 
             for (i = 1; i <= nphif; i++)
             {
-                qi1Return = quadinterp(phif, qfM.Row(i).ToArray(), nphif, phii);
+                qi1Return = quadinterp(phif, qfM.Column(i).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi1Return.Length; idx++)
-                    qi1[i, idx] = qi1Return[idx];
+                    qi1[idx, i] = qi1Return[idx];
             }
 
             for (j = 1; j <= nphif; j++)
             {
-                qi2Return = quadinterp(phif, qfM.Column(j).ToArray(), nphif, phii);
+                qi2Return = quadinterp(phif, qfM.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi2Return.Length; idx++)
-                    qi2[idx, j] = qi2Return[idx];
+                    qi2[j, idx] = qi2Return[idx];
             }
 
             for (j = 1; j <= ni; j++)
             {
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
-                qi3Return = quadinterp(phif, qi1M.Column(j).ToArray(), nphif, phii);
+                qi3Return = quadinterp(phif, qi1M.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi3Return.Length; idx++)
-                    qi3[idx, j] = qi3Return[idx];
+                    qi3[j, idx] = qi3Return[idx];
             }
 
             // Put all the fluxes together.
@@ -191,17 +191,12 @@ namespace SWIMFrame
             for (int row = 1; row <= i; row += 2)
                 for (int col = 1; col <= i; col += 2)
                 {
-                    qi5[row, col] = qf[row / 2 + 1, col / 2 + 1];
-                    qi5[row, col + 1] = qi1[row / 2 + 1, col / 2 + 1];
-                    qi5[row + 1, col] = qi2[row / 2 + 1, col / 2 + 1];
-                    qi5[row + 1, col + 1] = qi3[row / 2 + 1, col / 2 + 1];
+                    qi5[col, row] = qf[col / 2 + 1, row / 2 + 1];
+                    qi5[col+1, row] = qi1[col / 2 + 1, row / 2 + 1];
+                    qi5[col, row + 1] = qi2[col / 2 + 1, row / 2 + 1];
+                    qi5[col + 1, row + 1] = qi3[col / 2 + 1, row / 2 + 1];
                 }
 
-     /*       Matrix<double> printMatrix = Matrix<double>.Build.DenseOfArray(qi5);
-            printMatrix = printMatrix.RemoveRow(0);
-            printMatrix = printMatrix.RemoveColumn(0);
-            MathNet.Numerics.Data.Text.DelimitedWriter.Write(@"C:\Users\fai04d\OneDrive\SWIM Conversion 2015\NET.out", printMatrix, "\t",  null, "E6", null, null);
-*/
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
             for (j = 2; j <= i; j += 2)
@@ -217,19 +212,19 @@ namespace SWIMFrame
                     ii = ii - 1;
                 } 
                 x = phii[ip] - sp.phic[ii];
-                qi5[j, j] = sp.Kc[ii] + x * (aKco[1, ii] + x * (aKco[2, ii] + x * aKco[3, ii]));
+                qi5[j, j] = sp.Kc[ii] + x * (aKco[ii, 1] + x * (aKco[ii, 2] + x * aKco[ii, 3]));
             }
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
-            for (i = 1; i <= nphif;i++)
+            for (int a = 1; a <= nphif;a++)
             {
-                phii5[i * 2 - 1] = phii51[i];
+                phii5[a * 2 - 1] = phii51[a];
             }
 
-            for (i = 1; i <= ni; i++)
+            for (int a = 1; a <= ni; a++)
             {
-                phii5[i * 2] = phii52[i];
+                phii5[a * 2] = phii52[a];
             }
             // diags - end timer here
 
@@ -296,14 +291,7 @@ namespace SWIMFrame
             u[2] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
                   (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
                   MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6));
-       //     if (double.IsNaN(u[0]) || double.IsNaN(u[1]))
-       //         throw new Exception();
             return u;
-        }
-
-        public static void WriteDiags()
-        {
-            File.WriteAllText("C:\\temp\\NETout.txt", diags.ToString());
         }
 
         private static double ssflux(int ia, int ib, double dz, double qin, double rerr)
@@ -429,8 +417,6 @@ namespace SWIMFrame
             if (it > maxit)
                 Console.WriteLine("ssflux: too many iterations", ia, ib);
             nit = nit + it;
-            // Possible diversion here. Numbers are out by about 0.2%. Appears to be a multiplicative issue from other functions due
-            // to floating point differences between FORTRAN and C#.
             return q;
         }
 
@@ -593,31 +579,6 @@ namespace SWIMFrame
             double[] odefOut = odef(1, 2, aK, hpK);
         }
 
-        public static void WriteFluxTable(BinaryWriter b, FluxTable ft)
-        { 
-            //write number of FluxEnds
-            b.Write(ft.fend.Length);
-            
-            //write FluxEnds
-            for (int i=0;i<ft.fend.Length;i++)
-            {
-                b.Write(ft.fend[i].sid);
-                b.Write(ft.fend[i].nfu);
-                b.Write(ft.fend[i].nft);
-                b.Write(ft.fend[i].phif.Length);
-                for (int j = 0; j < ft.fend[i].phif.Length; j++)
-                    b.Write(ft.fend[i].phif[j]);
-                b.Write(ft.fend[i].dz);
-            }
-
-            //write flux table
-            b.Write(ft.ftable.GetLength(0));
-            b.Write(ft.ftable.GetLength(1));
-            for (int i = 0; i < ft.ftable.GetLength(0); i++)
-                for (int j = 0; j < ft.ftable.GetLength(1); j++)
-                    b.Write(ft.ftable[i, j]);
-        }
-
         public static FluxTable ReadFluxTable(string key)
         {
             return FluxTables[key];
@@ -628,6 +589,7 @@ namespace SWIMFrame
     //  nfu, nft - no. of fluxes unsat and total
     //  dz - path length
     //  phif(1:nft) - phi values
+    [Serializable]
     public struct FluxEnd
     {
         public int sid, nfu, nft;
@@ -637,6 +599,7 @@ namespace SWIMFrame
 
     //  fend(2) - flux end data
     //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+    [Serializable]
     public struct FluxTable
     {
         public FluxEnd[] fend;
