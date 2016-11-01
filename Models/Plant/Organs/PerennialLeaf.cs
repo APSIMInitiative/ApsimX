@@ -199,6 +199,12 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
+        /// <summary>Leaf Death</summary>
+        [Link]
+        IFunction LeafKillFraction = null;
+        /// <summary>Minimum LAI</summary>
+        [Link]
+        IFunction MinimumLAI = null;
         /// <summary>Leaf Detachment Time</summary>
         [Link]
         IFunction LeafDetachmentTime = null;
@@ -487,6 +493,17 @@ namespace Models.PMF.Organs
                 }
         }
 
+        private void KillLeavesUniformly(double fraction)
+        {
+            foreach (PerrenialLeafCohort L in Leaves)
+            {
+                Biomass Loss = new Biomass();
+                Loss.SetTo(L.Live);
+                Loss.Multiply(fraction);
+                L.Dead.Add(Loss);
+                L.Live.Subtract(Loss);
+            }
+        }
         private void DetachLeaves(out Biomass Detached)
         {
             Detached = new Biomass();
@@ -630,6 +647,8 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
+                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value, (1-MinimumLAI.Value/LAI)));
+                KillLeavesUniformly(LKF);
                 DetachLeaves(out Detached);
 
                 if (Detached.Wt > 0.0)
