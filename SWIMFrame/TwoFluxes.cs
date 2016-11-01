@@ -25,7 +25,7 @@ namespace SWIMFrame
         static double[] xval = new double[mx + 1];
         static double[] phico1 = new double[mx + 1];
         static double[] phico2 = new double[mx + 1];
-        static double[] y2 = new double[3 * mx + 1];
+        // static double[] y2 = new double[3 * mx + 1];
         static double[] hi = new double[3 * mx + 1];
         static double[,] phif = new double[mx + 1, 2 + 1];
         static double[,] phifi = new double[mx + 1, 2 + 1];
@@ -33,7 +33,7 @@ namespace SWIMFrame
         static double[,] coq = new double[3 * mx + 1, 3 + 1];
         static double[,] co1 = new double[mx + 1, 4 + 1];
         static double[,] qp = new double[mx + 1, mx + 1];
-        static double[,] y22 = new double[mx + 1, mx + 1];
+        // static double[,] y22 = new double[mx + 1, mx + 1];
         static double[,] qi1 = new double[mx + 1, mx + 1];
         static double[,] qi2 = new double[mx + 1, mx + 1];
         static double[,] qi3 = new double[mx + 1, mx + 1];
@@ -42,7 +42,7 @@ namespace SWIMFrame
         static double[,] phi = new double[3 * mx + 1, 2 + 1];
         static double[,] phii = new double[3 * mx + 1, 2 + 1];
         static double[,,] qf = new double[mx + 1, mx + 1, 2 + 1];
-        static double[,,] y2q = new double[mx + 1, mx + 1, 2 + 1];
+        // static double[,,] y2q = new double[mx + 1, mx + 1, 2 + 1];
         static double[,,] co2 = new double[mx + 1, mx + 1, 4 + 1];
         static FluxTable ftwo = new FluxTable();
         static FluxTable[] ft = { new FluxTable(), new FluxTable() };
@@ -69,7 +69,7 @@ namespace SWIMFrame
             xval = new double[mx + 1];
             phico1 = new double[mx + 1];
             phico2 = new double[mx + 1];
-            y2 = new double[3 * mx + 1];
+            // y2 = new double[3 * mx + 1];
             hi = new double[3 * mx + 1];
             phif = new double[mx + 1, 2 + 1];
             phifi = new double[mx + 1, 2 + 1];
@@ -77,7 +77,7 @@ namespace SWIMFrame
             coq = new double[3 * mx + 1, 3 + 1];
             co1 = new double[mx + 1, 4 + 1];
             qp = new double[mx + 1, mx + 1];
-            y22 = new double[mx + 1, mx + 1];
+            // y22 = new double[mx + 1, mx + 1];
             qi1 = new double[mx + 1, mx + 1];
             qi2 = new double[mx + 1, mx + 1];
             qi3 = new double[mx + 1, mx + 1];
@@ -86,7 +86,7 @@ namespace SWIMFrame
             phi = new double[3 * mx + 1, 2 + 1];
             phii = new double[3 * mx + 1, 2 + 1];
             qf = new double[mx + 1, mx + 1, 2 + 1];
-            y2q = new double[mx + 1, mx + 1, 2 + 1];
+            // y2q = new double[mx + 1, mx + 1, 2 + 1];
             co2 = new double[mx + 1, mx + 1, 4 + 1];
             ftwo = new FluxTable();
             ft = new FluxTable[] { new FluxTable(), new FluxTable() };
