@@ -426,9 +426,6 @@ namespace Models.PMF
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             Summary.WriteMessage(this, "Crop ending");
 
-            foreach (IOrgan O in Organs)
-                O.DoPlantEnding();
-
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());

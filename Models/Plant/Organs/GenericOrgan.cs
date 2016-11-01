@@ -107,10 +107,6 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
-        /// <summary>The dry matter content</summary>
-        [Link(IsOptional = true)]
-        [Units("g/g")]
-        IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
         [Link]
         [Units("g/g")]
@@ -157,16 +153,10 @@ namespace Models.PMF.Organs
             PotentialMetabolicDMAllocation = 0;
             StructuralDMDemand = 0;
             NonStructuralDMDemand = 0;
-            LiveFWt = 0;
         }
         #endregion
 
         #region Class properties
-
-        /// <summary>Gets or sets the live f wt.</summary>
-        [XmlIgnore]
-        [Units("g/m^2")]
-        public double LiveFWt { get; set; }
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
@@ -189,7 +179,8 @@ namespace Models.PMF.Organs
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        virtual public double MaintenanceRespiration { get { return 0; } set { } }
+        [XmlIgnore]
+        virtual public double MaintenanceRespiration { get; private set; }
 
         /// <summary>the efficiency with which allocated DM is converted to organ mass.</summary>
         [XmlIgnore]
@@ -441,7 +432,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// 
         [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
@@ -450,7 +441,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
                 Clear();
@@ -488,7 +479,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantGrowth")]
-        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsAlive)
             {
@@ -508,7 +499,7 @@ namespace Models.PMF.Organs
                     SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, Plant.CropType, Name);
                 }
 
-                // Do Maintenance respiration
+                // Do maintenance respiration
                 MaintenanceRespiration = 0;
                 if (MaintenanceRespirationFunction != null)
                 {
@@ -517,16 +508,14 @@ namespace Models.PMF.Organs
                     MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
                     Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
                 }
-
-                if (DryMatterContent != null) 
-                    LiveFWt = Live.Wt / DryMatterContent.Value;
             }
         }
 
 
         /// <summary>Called when crop is ending</summary>
         ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        private void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {
