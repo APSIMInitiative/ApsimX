@@ -199,6 +199,12 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
+        /// <summary>Leaf Death</summary>
+        [Link]
+        IFunction LeafKillFraction = null;
+        /// <summary>Minimum LAI</summary>
+        [Link]
+        IFunction MinimumLAI = null;
         /// <summary>Leaf Detachment Time</summary>
         [Link]
         IFunction LeafDetachmentTime = null;
@@ -369,11 +375,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Parameter Function Links
-        /// <summary>The senescence rate function</summary>
-        [Link]
-        [Units("/d")]
-        IFunction SenescenceRate = null;
-
         /// <summary>The n reallocation factor</summary>
         [Link]
         [Units("/d")]
@@ -473,6 +474,15 @@ namespace Models.PMF.Organs
                 L.Live.MetabolicWt *= (1-fraction);
             }
         }
+
+        private void GetSenescingLeafBiomass(out Biomass Senescing)
+        {
+            Senescing = new Biomass();
+            foreach (PerrenialLeafCohort L in Leaves)
+                if (L.Age >= LeafResidenceTime.Value)
+                    Senescing.Add(L.Live);
+        }
+
         private void SenesceLeaves()
         {
             foreach (PerrenialLeafCohort L in Leaves)
@@ -483,6 +493,17 @@ namespace Models.PMF.Organs
                 }
         }
 
+        private void KillLeavesUniformly(double fraction)
+        {
+            foreach (PerrenialLeafCohort L in Leaves)
+            {
+                Biomass Loss = new Biomass();
+                Loss.SetTo(L.Live);
+                Loss.Multiply(fraction);
+                L.Dead.Add(Loss);
+                L.Live.Subtract(Loss);
+            }
+        }
         private void DetachLeaves(out Biomass Detached)
         {
             Detached = new Biomass();
@@ -518,9 +539,12 @@ namespace Models.PMF.Organs
             get
             {
                 double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                Biomass Senescing = new Biomass();
+                GetSenescingLeafBiomass(out Senescing);
+                
                 return new BiomassSupplyType()
                 {
-                    Reallocation = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value,
+                    Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value,
                     Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value,
                     Uptake = 0.0
                 };
@@ -623,6 +647,8 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
+                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value, (1-MinimumLAI.Value/LAI)));
+                KillLeavesUniformly(LKF);
                 DetachLeaves(out Detached);
 
                 if (Detached.Wt > 0.0)
@@ -665,22 +691,7 @@ namespace Models.PMF.Organs
         {
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
                                            + value.FractionLiveToResidue + value.FractionDeadToResidue;
-
-            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
-
-            if (totalLiveFractionToRemove > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            
-            if (totalDeadFractionToRemove > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            
+         
             if (totalFractionToRemove > 0.0)
             { 
                 double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
