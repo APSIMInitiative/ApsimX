@@ -433,9 +433,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
-        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
-        public double Nconc { get { return N / Wt; } }
-
         #endregion
 
         #region Events and Event Handlers
@@ -462,7 +459,6 @@ namespace Models.PMF.Organs
                 DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
             else
                 DMConversionEfficiency = 1.0;
-
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -496,46 +492,26 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
+                // Do senescence
                 Biomass Loss = Live * SenescenceRate.Value;
-                //Live.Subtract(Loss);
+                Loss.MetabolicWt = 0;
+                Loss.MetabolicN = 0;
+                Live.Subtract(Loss);
+                Dead.Add(Loss);
 
-                Live.StructuralWt -= Loss.StructuralWt;
-                Live.NonStructuralWt -= Loss.NonStructuralWt;
-                Live.StructuralN -= Loss.StructuralN;
-                Live.NonStructuralN -= Loss.NonStructuralN;
-
-                Dead.StructuralWt += Loss.StructuralWt;
-                Dead.NonStructuralWt += Loss.NonStructuralWt;
-                Dead.StructuralN += Loss.StructuralN;
-                Dead.NonStructuralN += Loss.NonStructuralN;
-                
-                
-                //Live.Subtract(Loss);
-                //Dead.Add(Loss);
-
+                // Do detachment
                 double DetachedFrac = DetachmentRateFunction.Value;
-                double detachingWt = Dead.Wt * DetachedFrac;
-                double detachingN = Dead.N * DetachedFrac;
-
-                Dead.StructuralWt *= (1 - DetachedFrac);
-                Dead.StructuralN *= (1 - DetachedFrac);
-                Dead.NonStructuralWt *= (1 - DetachedFrac);
-                Dead.NonStructuralN *= (1 - DetachedFrac);
-                Dead.MetabolicWt *= (1 - DetachedFrac);
-                Dead.MetabolicN *= (1 - DetachedFrac);
-				
-                //Dead.Multiply(1 - DetachedFrac);
-
-                if (detachingWt > 0.0)
+                Biomass detaching = Dead * DetachedFrac;
+                Dead.Multiply(1 - DetachedFrac);
+                if (detaching.Wt > 0.0)
                 {
-                    DetachedWt += detachingWt;
-                    DetachedN += detachingN;
-                    SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0, Plant.CropType, Name);
+                    DetachedWt += detaching.Wt;
+                    DetachedN += detaching.N;
+                    SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, Plant.CropType, Name);
                 }
-                
 
+                // Do Maintenance respiration
                 MaintenanceRespiration = 0;
-                //Do Maintenance respiration
                 if (MaintenanceRespirationFunction != null)
                 {
                     MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
