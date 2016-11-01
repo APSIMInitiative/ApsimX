@@ -494,8 +494,6 @@ namespace Models.PMF.Organs
             {
                 // Do senescence
                 Biomass Loss = Live * SenescenceRate.Value;
-                Loss.MetabolicWt = 0;
-                Loss.MetabolicN = 0;
                 Live.Subtract(Loss);
                 Dead.Add(Loss);
 
