@@ -6,9 +6,7 @@
 namespace UserInterface.Views
 {
     using System;
-    ///using System.Windows.Forms;
     using Interfaces;
-    using APSIM.Shared.Utilities;
     using Gtk;
     using Glade;
 

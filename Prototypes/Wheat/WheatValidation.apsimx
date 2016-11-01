@@ -1455,6 +1455,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>1</Value>
           </Constant>
           <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
             <Name>NRetranslocationFactor</Name>
             <Value>0.03</Value>
           </Constant>

@@ -16,7 +16,7 @@ namespace SWIMFrame
      */
     public static class MVG
     {
-        static int sid; // soil ident
+        // static int sid; // soil ident
         static double ths, Ks, he, hd, p, hg, m, n, eta, fhe, fhd;
 
         // Set hydraulic params.
@@ -24,7 +24,15 @@ namespace SWIMFrame
         // ths1 etc. - MVGBC or MVGM params.
         public static void Params(int sid1, double ths1, double Ks1, double he1, double hd1, double p1, double hg1, double m1, double n1)
         {
-            sid = sid1; ths = ths1; Ks = Ks1; he = he1; hd = hd1; p = p1; hg = hg1; m = m1; n = n1;
+            // sid = sid1;
+            ths = ths1;
+            Ks = Ks1;
+            he = he1;
+            hd = hd1;
+            p = p1;
+            hg = hg1;
+            m = m1;
+            n = n1;
             eta = 2.0 / (m * n) + 2.0 + p;
             fhe = Math.Pow(1.0 + Math.Pow(he / hg, n), -m);
             fhd = Math.Pow(1.0 + Math.Pow(hd / hg, n), -m);

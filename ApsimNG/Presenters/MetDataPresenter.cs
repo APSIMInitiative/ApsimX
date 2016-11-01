@@ -25,7 +25,7 @@ namespace UserInterface.Presenters
         /// <summary>The met data view</summary>
         private IMetDataView weatherDataView;
 
-        //these are used to display the graphs, and refresh graphs as required
+        // these are used to display the graphs, and refresh graphs as required
         /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
 
@@ -77,18 +77,18 @@ namespace UserInterface.Presenters
             {
                 if (Path.GetExtension(fileName) == ExcelUtilities.ExcelExtension)
                 {
-                    //Extend height of Browse Panel to show Drop Down for Sheet names
+                    // Extend height of Browse Panel to show Drop Down for Sheet names
                     weatherDataView.ShowExcelSheets(true);
                     sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(sheetNames);
-                    //the following is not required here as it happens when the sheet name is changed
-                    //this.WriteTableAndSummary(fileName);
+                    // the following is not required here as it happens when the sheet name is changed
+                    // this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
-                    //Shrink Browse Panel so that the sheet name dropdown doesn't show
+                    // Shrink Browse Panel so that the sheet name dropdown doesn't show
                     weatherDataView.ShowExcelSheets(false);
-                    //as a precaution, set this to nothing
+                    // as a precaution, set this to nothing
                     this.weatherData.ExcelWorkSheetName = string.Empty;
                     this.WriteTableAndSummary(fileName);
                 }
@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
                     }
                     else
                     {
-                        //Shrink Browse Panel so that the sheet name dropdown doesn't show
+                        // Shrink Browse Panel so that the sheet name dropdown doesn't show
                         weatherDataView.ShowExcelSheets(false);
                     }
 
@@ -205,7 +205,7 @@ namespace UserInterface.Presenters
                     this.explorerPresenter.MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
             }
-            //this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
@@ -220,11 +220,11 @@ namespace UserInterface.Presenters
                 if (siteIdx >= 0)
                     data.Columns.RemoveAt(siteIdx);
 
-                //modLMC - 10/03/2016 - Add the Qmax (Max Radiation) column that we require for the graphs
-                //This is done here so that we can use the "day" or "doy" column if it exists, as it will be quicker
+                // modLMC - 10/03/2016 - Add the Qmax (Max Radiation) column that we require for the graphs
+                // This is done here so that we can use the "day" or "doy" column if it exists, as it will be quicker
                 MetUtilities.CalcQmax(data, weatherData.Latitude);
 
-                //modLMC - 10/03/2016 - Modified to use this new function, as some data has "doy" and not "day"
+                // modLMC - 10/03/2016 - Modified to use this new function, as some data has "doy" and not "day"
                 int dayCol = data.Columns.IndexOf("day");
                 int yrCol = data.Columns.IndexOf("year");
 
@@ -286,14 +286,14 @@ namespace UserInterface.Presenters
                 dataLastDate = DataTableUtilities.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
 
                 TimeSpan diff = dataLastDate - dataFirstDate;
-                //modLMC - 16/03/2016 - don't change dates if data is within the same year
+                // modLMC - 16/03/2016 - don't change dates if data is within the same year
                 if (diff.Days > 365)
                 {
                     if (dataFirstDate.DayOfYear != 1)
                         dataFirstDate = new DateTime(dataFirstDate.Year + 1, 1, 1);
                 }
 
-                //modLMC - 16/03/2016 - don't change dates if data is within the same year
+                // modLMC - 16/03/2016 - don't change dates if data is within the same year
                 if (dataFirstDate.Year != dataLastDate.Year)
                 { 
                     if (dataLastDate.Day != 31 || dataLastDate.Month != 12)
@@ -305,8 +305,8 @@ namespace UserInterface.Presenters
                 double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", dataFirstDate, dataLastDate);
                 double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", dataFirstDate, dataLastDate);
 
-                //what do we do if the date range is less than 1 year.
-                //modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
+                // what do we do if the date range is less than 1 year.
+                // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
                 if (monthlyRainfall.Length <= 12)
                     monthsToDisplay = DataTableUtilities.GetDistinctMonthsasStrings(table, dataFirstDate, dataLastDate);
 
@@ -324,7 +324,7 @@ namespace UserInterface.Presenters
 
                     string title = String.Format("Long term average data for years : {0} - {1}", dataFirstDate.Year, dataLastDate.Year);
 
-                    //modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
+                    // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
                     this.PopulateSummaryGraph(title,
                                         monthsToDisplay,
                                         monthlyRainfall,
@@ -342,9 +342,9 @@ namespace UserInterface.Presenters
         {
             if (table != null && table.Rows.Count > 0)
             {
-                //By default, only do one year (the first year)
+                // By default, only do one year (the first year)
                 DateTime endDate = new DateTime(dataFirstDate.Year, 12, 31);
-                //by default, assume if not passed in, then we are displaying first tab (tab 0)
+                // by default, assume if not passed in, then we are displaying first tab (tab 0)
                 DisplayDetailedGraphs(table, 0, dataFirstDate, endDate, true);
             }
         }
@@ -361,16 +361,16 @@ namespace UserInterface.Presenters
                 {
                     switch (tabIndex)
                     {
-                        case 2:     //Daily Rain
+                        case 2:     // Daily Rain
                             DisplayGraphDailyRain(table, startDate, endDate, true);
                             break;
-                        case 3:     //Monthly Rain
+                        case 3:     // Monthly Rain
                             DisplayGraphMonthlyRain(table, startDate, endDate, true);
                             break;
-                        case 4:     //Temperature
+                        case 4:     // Temperature
                             DisplayGraphTemperature(table, startDate, endDate, true);
                             break;
-                        case 5:     //Radiation
+                        case 5:     // Radiation
                             DisplayGraphRadiation(table, startDate, endDate, true);
                             break;
                     }
@@ -401,7 +401,7 @@ namespace UserInterface.Presenters
                     DateTime[] dailyDates = DataTableUtilities.GetColumnAsDates(table, "Date", startDate, endDate);
                     double[] dailyRain = DataTableUtilities.GetColumnAsDoubles(table, "rain", startDate, endDate);
 
-                    String rainMessage = string.Empty ;
+                    String rainMessage = string.Empty;
                     if (dailyRain.Length != 0)
                     {
                         double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
@@ -509,10 +509,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private void SetGraphControlsDefaultValues()
         {
-            //Options for new Min Year:  less than current, greater than current, and greater than max
-            //if less, just set it first, then value, then max
-            //else is greater than max, then do max first, then value set value to max, set min, then reset value
-            //if greater than current but less than max, then set value first, then min, then max
+            // Options for new Min Year:  less than current, greater than current, and greater than max
+            // if less, just set it first, then value, then max
+            // else is greater than max, then do max first, then value set value to max, set min, then reset value
+            // if greater than current but less than max, then set value first, then min, then max
 
             if (this.weatherData.StartDate.Year < weatherDataView.GraphStartYearMinValue)
             {
@@ -527,7 +527,7 @@ namespace UserInterface.Presenters
                 weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
                 weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
             }
-            else  //we are between our original range
+            else  // we are between our original range
             {
                 if (weatherDataView.GraphStartYearMinValue < this.weatherData.StartDate.Year)
                 {

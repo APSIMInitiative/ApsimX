@@ -962,6 +962,18 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
       <Constant>
+        <Name>DMReallocationFactor</Name>
+        <Value>0</Value>
+      </Constant>      
+      <Constant>
+        <Name>LeafSizeShapeParameter</Name>
+        <Value>0.01</Value>
+      </Constant>
+      <Constant>
+        <Name>MaintenanceRespirationFunction</Name>
+        <Value>0</Value>
+      </Constant> 
+      <Constant>
         <Name>SenessingLeafRelativeSize</Name>
         <Value>1</Value>
         <Units>0-1</Units>

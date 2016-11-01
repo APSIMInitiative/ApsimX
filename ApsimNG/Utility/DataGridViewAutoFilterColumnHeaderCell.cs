@@ -14,8 +14,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Text;
-///using System.Windows.Forms;
-///using System.Windows.Forms.VisualStyles;
 using System.Collections;
 using System.Reflection;
 
@@ -1552,10 +1550,8 @@ namespace DataGridViewAutoFilter
             {
                 return ProcessKeyEventArgs(ref m);
             }
-
         }
 */
     }
-
 }
 

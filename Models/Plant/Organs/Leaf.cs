@@ -180,7 +180,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
             [Link]
@@ -207,7 +207,7 @@ namespace Models.PMF.Organs
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link(IsOptional = true)]
@@ -215,7 +215,7 @@ namespace Models.PMF.Organs
             /// <summary>
             /// The proportion of mass that is respired each day
             /// </summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
@@ -1253,7 +1253,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Supply = Math.Min(remainder, L.DMRetranslocationSupply);
+                        double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
                         DMRetranslocationCohort[i] = Supply;
                         remainder -= Supply;
                     }
