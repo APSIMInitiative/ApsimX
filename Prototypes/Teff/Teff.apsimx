@@ -1223,6 +1223,10 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <Propertys>

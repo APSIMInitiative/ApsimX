@@ -1459,6 +1459,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <Propertys>
@@ -3046,8 +3050,8 @@ Simulation results for the combined datasets from the various growing regions ar
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>

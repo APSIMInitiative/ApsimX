@@ -1061,6 +1061,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <CompositeBiomass>
           <Name>Total</Name>
           <Propertys>

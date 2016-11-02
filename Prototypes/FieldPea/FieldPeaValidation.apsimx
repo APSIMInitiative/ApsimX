@@ -1126,6 +1126,10 @@
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <Propertys>

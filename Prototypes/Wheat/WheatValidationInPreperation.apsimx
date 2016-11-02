@@ -841,6 +841,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <Propertys>
@@ -3537,6 +3541,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
           <Propertys>
