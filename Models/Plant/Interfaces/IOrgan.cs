@@ -16,11 +16,6 @@ namespace Models.PMF.Interfaces
         /// The Name of the organ.
         /// </summary>
         string Name { get; set; }
-        
-        /// <summary>
-        /// Do Plant ending logic for this organ.
-        /// </summary>
-        void DoPlantEnding();
 
         /// <summary>
         /// Biomass removal logic for this organ.

@@ -1914,6 +1914,16 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Units>/d</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2084,7 +2094,16 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

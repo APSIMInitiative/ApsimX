@@ -1010,6 +1010,16 @@ This is important in SLURP as it is set for each species to represent their diff
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
             <WaterAllocation>0</WaterAllocation>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
@@ -1459,6 +1469,16 @@ This is important in SLURP as it is set for each species to represent their diff
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
             <WaterAllocation>0</WaterAllocation>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
