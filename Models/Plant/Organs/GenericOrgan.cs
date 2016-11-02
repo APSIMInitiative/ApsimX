@@ -432,7 +432,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// 
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
@@ -441,7 +441,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
                 Clear();
@@ -452,6 +452,19 @@ namespace Models.PMF.Organs
                 DMConversionEfficiency = 1.0;
         }
 
+        /// <summary>Called when crop is emerging</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">Event data</param>
+        [EventSubscribe("PlantEmerging")]
+        protected void OnPlantEmerging(object sender, EventArgs e)
+        {
+            //Initialise biomass and nitrogen
+            Live.StructuralWt = InitialWtFunction.Value;
+            Live.NonStructuralWt = 0.0;
+            Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
+            Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Live.StructuralN;
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -460,15 +473,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                //Initialise biomass and nitrogen
-                if (Live.Wt == 0)
-                {
-                    Live.StructuralWt = InitialWtFunction.Value;
-                    Live.NonStructuralWt = 0.0;
-                    Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-                    Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Live.StructuralN;
-                }
-
                 StartLive = Live;
                 StartNReallocationSupply = NSupply.Reallocation;
                 StartNRetranslocationSupply = NSupply.Retranslocation;
@@ -479,7 +483,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsAlive)
             {
