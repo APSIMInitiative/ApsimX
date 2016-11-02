@@ -517,9 +517,8 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
         [EventSubscribe("PlantEnding")]
-        private void DoPlantEnding(object sender, EventArgs e)
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

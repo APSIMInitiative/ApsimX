@@ -431,9 +431,10 @@ namespace Models.PMF.Organs
                 zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
             }
         }
-        
+
         /// <summary>Called when crop is ending</summary>
-        public override void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             //Send all root biomass to soil FOM
             DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });

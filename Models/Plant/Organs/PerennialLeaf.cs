@@ -647,8 +647,8 @@ namespace Models.PMF.Organs
         #endregion
 
         /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

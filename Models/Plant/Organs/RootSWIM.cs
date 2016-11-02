@@ -60,7 +60,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Called when crop is ending</summary>
-        public override void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             Clear();
         }

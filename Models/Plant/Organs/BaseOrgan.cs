@@ -203,20 +203,6 @@ namespace Models.PMF.Organs
                 DoDailyCleanup();
         }
 
-        /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
-        {
-            if (Wt > 0.0)
-            {
-                DetachedWt += Wt;
-                DetachedN += N;
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-            }
-
-            Clear();
-        }
-
         /// <summary>Do harvest logic for this organ</summary>
         virtual public void DoHarvest() { }
 
