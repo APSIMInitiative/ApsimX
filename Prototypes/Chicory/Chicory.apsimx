@@ -782,8 +782,16 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -799,17 +807,6 @@ DM demand is based on ...
         <PotentialEP>0</PotentialEP>
         <KDead>0</KDead>
         <LAIDead>0</LAIDead>
-        <WaterAllocation>0</WaterAllocation>
-        <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
-          <Units>0-1</Units>
-        </Constant> 
-        <Constant>
-          <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
-          <Units>0-1</Units>
-        </Constant>
       </SimpleLeaf>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1039,12 +1036,11 @@ DM demand is based on ...
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1232,12 +1228,11 @@ DM demand is based on ...
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1674,12 +1669,11 @@ No effect of soil water content on root growth is currently captured in the mode
           <Value>0</Value>
           <Units>g/m^2</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>

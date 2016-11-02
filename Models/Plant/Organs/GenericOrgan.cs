@@ -424,6 +424,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            StartLive = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
             Clear();

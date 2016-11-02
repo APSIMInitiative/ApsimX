@@ -3084,8 +3084,16 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3101,12 +3109,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <PotentialEP>0</PotentialEP>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
-            <Constant>
-              <Name>MaintenanceRespirationFunction</Name>
-              <Value>0</Value>
-              <Units>0-1</Units>
-            </Constant> 
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
@@ -3537,8 +3539,16 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
             </Folder>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3554,17 +3564,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <PotentialEP>0</PotentialEP>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
-            <Constant>
-              <Name>MaintenanceRespirationFunction</Name>
-              <Value>0</Value>
-              <Units>0-1</Units>
-            </Constant> 
-            <Constant>
-              <Name>DMConversionEfficiency</Name>
-              <Value>1</Value>
-              <Units>0-1</Units>
-            </Constant>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
