@@ -776,6 +776,19 @@ But their data suggests a value of 0.3]]></MemoText>
           </Memo>
           <Value>0.57</Value>
         </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientDead</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Value of 0.57 from 
+Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
+Author(s): Robin A. Harrington and James H. Fownes
+Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
+
+But their data suggests a value of 0.3]]></MemoText>
+          </Memo>
+          <Value>0.57</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -910,7 +923,6 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <KDead>0</KDead>
         <LAIDead>0</LAIDead>
       </PerennialLeaf>
       <Root>
