@@ -592,6 +592,14 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
         </RUEModel>
+        <Constant>
+          <Name>LeafKillFraction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumLAI</Name>
+          <Value>0.1</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -608,9 +616,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <KDead>0</KDead>
-        <WaterDemand>0</WaterDemand>
         <LAIDead>0</LAIDead>
-        <WaterAllocation>0</WaterAllocation>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
@@ -816,7 +822,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <Cultivar>
@@ -896,7 +901,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CropType>Eucalyptus</CropType>

@@ -29,9 +29,11 @@ namespace SWIMFrame
         static int nsteps;
         static int[] nssteps; //ns
         static double drn, evap, h0, h1, h2, infil, qevap, qprec, runoff;
-        static double S1, S2, ti, tf, ts, win, wp, wpi;
+        static double S1, S2, ti, tf, ts, win;
+        // static double wp, wpi;
         static double[] bd, dis; //nt
-        static double[] c0, cin, sdrn, sinfil, soff, sp, spi;//ns
+        static double[] c0, cin, sdrn, sinfil, soff;
+        // static double sp, spi;//ns
         static double[] h, S, x;//n
         static double[,] sm;//(n, ns)
         //define isotype and isopar for solute 2
@@ -98,7 +100,7 @@ namespace SWIMFrame
             sd.Sofh(h2, 5, out S2, out Sh);
             for (int c = 1; c <= n; c++)
                 S[c] = c < 5 ? S1 : S2;
-            wpi = MathUtilities.Sum(Vector<double>.Build.DenseOfArray(sd.ths) * Vector<double>.Build.DenseOfArray(S) * Vector<double>.Build.DenseOfArray(sd.dx)); //water in profile initially
+            // wpi = MathUtilities.Sum(Vector<double>.Build.DenseOfArray(sd.ths) * Vector<double>.Build.DenseOfArray(S) * Vector<double>.Build.DenseOfArray(sd.dx)); //water in profile initially
             nsteps = 0; //no.of time steps for water soln(cumulative)
             win = 0.0; //water input(total precip)
             evap = 0.0;
@@ -109,7 +111,7 @@ namespace SWIMFrame
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
             //solute in profile initially
-            spi = S;sp = S;    //  spi = smM.ColumnSums().ToArray();
+            // spi = S;sp = S;    //  spi = smM.ColumnSums().ToArray();
         //    sm = smM.ToArray();
             Flow.dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
             Flow.nwsteps = 10;
@@ -139,7 +141,7 @@ namespace SWIMFrame
                 qprec = 0.0;
             }
             win = win + qprec * (tf - ti);
-            wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths,S), sd.dx)); //!water in profile
+            // wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths,S), sd.dx)); //!water in profile
      //       smM = Matrix<double>.Build.DenseOfArray(sm);
      //       smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx));
       //      sp = smM.ColumnSums().ToArray();

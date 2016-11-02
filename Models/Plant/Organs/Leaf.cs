@@ -180,7 +180,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
             [Link]
@@ -207,7 +207,7 @@ namespace Models.PMF.Organs
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link(IsOptional = true)]
@@ -215,7 +215,7 @@ namespace Models.PMF.Organs
             /// <summary>
             /// The proportion of mass that is respired each day
             /// </summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
@@ -1253,7 +1253,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Supply = Math.Min(remainder, L.DMRetranslocationSupply);
+                        double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
                         DMRetranslocationCohort[i] = Supply;
                         remainder -= Supply;
                     }
@@ -1527,15 +1527,6 @@ namespace Models.PMF.Organs
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
 
-        /// <summary>Called when [prune].</summary>
-        /// <param name="Prune">The prune.</param>
-        [EventSubscribe("Prune")]
-        private void OnPrune(PruneType Prune)
-        {
-            Structure.PrimaryBudNo = Prune.BudNumber;
-            ZeroLeaves();
-        }
-
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
@@ -1589,6 +1580,32 @@ namespace Models.PMF.Organs
                 Leaves.Clear();
                 CohortsAtInitialisation = 0;
             }
+        }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Structure.PotLeafTipsAppeared = 0;
+            Structure.CohortToInitialise = 0;
+            Structure.TipToAppear = 0;
+            Structure.Emerged = false;
+            Structure.Initialised = false;
+            Structure.Clear();
+            Structure.ResetStemPopn();
+            Structure.LeafTipsAppeared = 0;
+            Structure.NextLeafProportion = 1.0;
+
+            Leaves.Clear();
+            CohortsAtInitialisation = 0;
+            TipsAtEmergence = 0;
+            OnInitialiseLeafCohorts(this, e);
+
+            Structure.Initialised = true;
+            Structure.DoEmergence();
+            Structure.Emerged = true;        
         }
 
         /// <summary>Called when [simulation commencing].</summary>

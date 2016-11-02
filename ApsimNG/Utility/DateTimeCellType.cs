@@ -1,10 +1,6 @@
 // This code was found on: http://msdn.microsoft.com/en-us/library/7tas5c80.aspx
 
-
-
 using System;
-///using System.Windows.Forms;
-///using System.Drawing;
 
 namespace APSIM.Shared.Utilities
 {

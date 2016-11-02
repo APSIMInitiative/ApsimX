@@ -272,6 +272,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <GenericOrgan>
         <Name>Tuber</Name>
@@ -451,7 +453,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <Root>
@@ -895,6 +896,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>NonStructuralFraction</Name>
             <Value>0.2</Value>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1242,7 +1255,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
@@ -26476,6 +26488,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Initialised>false</Initialised>
             <Germinated>false</Germinated>
             <Emerged>false</Emerged>
+            <CohortToInitialise>0</CohortToInitialise>
+            <TipToAppear>0</TipToAppear>
           </Structure>
           <GenericOrgan>
             <Name>Tuber</Name>
@@ -26628,7 +26642,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <Root>
@@ -27275,7 +27288,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <CompositeBiomass>
@@ -31912,6 +31924,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Initialised>false</Initialised>
             <Germinated>false</Germinated>
             <Emerged>false</Emerged>
+            <CohortToInitialise>0</CohortToInitialise>
+            <TipToAppear>0</TipToAppear>
           </Structure>
           <GenericOrgan>
             <Name>Tuber</Name>
@@ -32064,7 +32078,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <Root>
@@ -32689,7 +32702,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Value>0</Value>
               <Units>/d</Units>
             </Constant>
-            <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
           </GenericOrgan>
           <CompositeBiomass>
