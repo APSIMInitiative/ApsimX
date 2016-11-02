@@ -45,8 +45,8 @@ namespace APSIM.Shared.Utilities
         {
             if (this.ItemsSource != null && this.XAxis != null)
             {
-                //double halfBarWidth = this.XAxis.ActualMajorStep * 0.4;
-                double halfBarWidth =  0.4;
+                // double halfBarWidth = this.XAxis.ActualMajorStep * 0.4;
+                double halfBarWidth = 0.4;
                 if (this.XAxis.ActualStringFormat != null && this.XAxis.ActualStringFormat.Contains("yyyy"))
                 {
                     DateTime d1 = DateTimeAxis.ToDateTime(this.XAxis.ActualMinimum);

@@ -22,28 +22,28 @@ namespace SWIMFrame
             MVG.TestParams(103, 9.0, 0.99670220130280185, 9.99999999999998460E-003);
             SoilProps sp = Soil.gensptbl(1.0, new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0), true);
             Fluxes.FluxTable(5.0, sp);
-            FluxTable ft = Fluxes.ft;
+            // FluxTable ft = Fluxes.ft;
 
-            string output = string.Empty;
-            //define test soils
+            // string output = string.Empty;
+            // define test soils
             SoilParam[] soils = new SoilParam[2];
             soils[0] = new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0);
             soils[1] = new SoilParam(10, 109, 0.6, 0.2, -2.0, -40.0, 1.0 / 9.0, 1.0);
 
-            string[] ftname = new string[2];
-            int[] sidx;
+            // string[] ftname = new string[2];
+            // int[] sidx;
             int i, j;
             int[] ndz;
             double dzmin;
-            double[] x;
+            // double[] x;
             double[,] dz = new double[2, 10]; //only for testing? if not will need to change hardcoded dimensions.
             bool Kgiven = true;
             SoilProps sp1, sp2;
             FluxTable ft1, ft2;
 
-            //define soil profile
-            x = new double[] { 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 }; //length = num soil layers
-            sidx = new int[] { 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }; //soil ident of layers
+            // define soil profile
+            // x = new double[] { 10, 20, 30, 40, 60, 80, 100, 120, 160, 200 }; //length = num soil layers
+            // sidx = new int[] { 103, 103, 103, 103, 109, 109, 109, 109, 109, 109 }; //soil ident of layers
             dzmin = 1.0; // smallest likely path length
             ndz = new int[] { 2, 4 }; // for the two soil types - gives six flux tables
             //can be done in loops, but clearer this way and will only be used for testing

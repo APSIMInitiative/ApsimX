@@ -414,7 +414,7 @@
             if (doc.Styles["TableText"] == null)
             {
                 var tableTextStyle = doc.AddStyle("TableText", "Normal");
-                //tableTextStyle.ParagraphFormat.LineSpacing = 0;
+                // tableTextStyle.ParagraphFormat.LineSpacing = 0;
                 tableTextStyle.ParagraphFormat.SpaceAfter = 5;
             }
 
