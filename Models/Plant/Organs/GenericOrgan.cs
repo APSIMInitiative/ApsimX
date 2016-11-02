@@ -139,7 +139,7 @@ namespace Models.PMF.Organs
         /// <summary>The non structural dm demand</summary>
         protected double NonStructuralDMDemand = 0;
         /// <summary>The start live</summary>
-        private Biomass StartLive = new Biomass();
+        private Biomass StartLive = null;
 
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
@@ -158,21 +158,13 @@ namespace Models.PMF.Organs
 
         #region Class properties
 
-        /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        /// <summary>Gets the biomass detached (sent to soil/surface organic matter)</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
+        public Biomass Detached { get; set; }
 
-        /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        /// <summary>Gets the biomass removed from the system (harvested, grazed, etc)</summary>
         [XmlIgnore]
-        public double DetachedN { get; set; }
-
-        /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
+        public Biomass Removed { get; set; }
 
         /// <summary>Gets the dm supply photosynthesis.</summary>
         [Units("g/m^2")]
@@ -201,12 +193,9 @@ namespace Models.PMF.Organs
                 double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
                 double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
 
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
+                Biomass detaching = Live * value.FractionLiveToResidue + Dead * value.FractionDeadToResidue;
+                Removed = Live * value.FractionLiveToRemove + Dead * value.FractionDeadToRemove;
+                Detached.Add(detaching);
 
                 Live.StructuralWt *= RemainingLiveFraction;
                 Live.NonStructuralWt *= RemainingLiveFraction;
@@ -222,7 +211,7 @@ namespace Models.PMF.Organs
                 Dead.NonStructuralN *= RemainingDeadFraction;
                 Dead.MetabolicN *= RemainingDeadFraction;
 
-                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0.0, Plant.CropType, Name);
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
 
                 double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
@@ -442,8 +431,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            if (data.Plant == Plant)
-                Clear();
+            Clear();
         }
 
         /// <summary>Called when crop is emerging</summary>
@@ -492,8 +480,7 @@ namespace Models.PMF.Organs
                 Dead.Multiply(1 - DetachedFrac);
                 if (detaching.Wt > 0.0)
                 {
-                    DetachedWt += detaching.Wt;
-                    DetachedN += detaching.N;
+                    Detached.Add(detaching);
                     SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, Plant.CropType, Name);
                 }
 
@@ -505,15 +492,14 @@ namespace Models.PMF.Organs
             }
         }
 
-
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantEnding")]
         protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 
