@@ -1609,7 +1609,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant>    
     <Constant>
@@ -1772,7 +1772,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant>  
     <Constant>
@@ -1960,7 +1960,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant> 
     <Constant>

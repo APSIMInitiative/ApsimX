@@ -1540,7 +1540,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <WaterAllocation>0</WaterAllocation>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -1667,7 +1667,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -1774,7 +1774,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>

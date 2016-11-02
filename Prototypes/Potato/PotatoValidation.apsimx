@@ -462,7 +462,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -1273,7 +1273,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -26669,7 +26669,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Constant>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>
@@ -27324,7 +27324,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Constant>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>
@@ -32130,7 +32130,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Constant>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>
@@ -32763,7 +32763,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             </Constant>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>

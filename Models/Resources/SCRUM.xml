@@ -386,7 +386,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant>  
     <Constant>
@@ -899,7 +899,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
     <WaterAllocation>0</WaterAllocation>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant> 
     <Constant>
@@ -1282,7 +1282,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
       <Units>0-1</Units>
     </Constant> 
     <Constant>

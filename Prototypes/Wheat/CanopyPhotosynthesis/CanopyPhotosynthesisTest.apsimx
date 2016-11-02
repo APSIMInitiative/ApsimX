@@ -2176,7 +2176,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -2389,7 +2389,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>

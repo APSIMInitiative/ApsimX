@@ -1012,7 +1012,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <WaterAllocation>0</WaterAllocation>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>
@@ -1471,7 +1471,7 @@ This is important in SLURP as it is set for each species to represent their diff
             <WaterAllocation>0</WaterAllocation>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
               <Units>0-1</Units>
             </Constant> 
             <Constant>

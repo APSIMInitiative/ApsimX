@@ -1445,7 +1445,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
@@ -2292,7 +2292,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant>  
         <Constant>
@@ -2528,7 +2528,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </MultiplyFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>

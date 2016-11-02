@@ -1094,7 +1094,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
