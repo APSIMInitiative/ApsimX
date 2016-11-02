@@ -550,6 +550,22 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                DetachedWt += Wt;
+                DetachedN += N;
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
+        }
+
         #endregion
 
         #region IArbitrator interface

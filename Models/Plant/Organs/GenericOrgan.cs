@@ -424,6 +424,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) n (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
+        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
+        public double Nconc { get { return N / Wt; } }
+
         #endregion
 
         #region Events and Event Handlers
