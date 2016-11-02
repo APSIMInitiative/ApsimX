@@ -153,6 +153,8 @@ namespace Models.PMF.Organs
             PotentialMetabolicDMAllocation = 0;
             StructuralDMDemand = 0;
             NonStructuralDMDemand = 0;
+            Detached.Clear();
+            Removed.Clear();
         }
         #endregion
 
@@ -422,6 +424,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Detached = new Biomass();
+            Removed = new Biomass();
             Clear();
         }
 
