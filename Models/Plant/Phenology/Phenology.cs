@@ -309,7 +309,8 @@ namespace Models.PMF.Phen
             if (hasEmergencePhase == false)
             {
                 Emerged = true;
-                Plant.SendEmergingEvent();
+                if (Plant != null)
+                    Plant.SendEmergingEvent();
             }
         }
 
