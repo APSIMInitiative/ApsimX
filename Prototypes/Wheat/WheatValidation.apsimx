@@ -922,6 +922,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -2039,7 +2041,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <R50>150</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -2199,7 +2200,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <GenericOrgan>
@@ -2419,7 +2419,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </GenericOrgan>
       <CompositeBiomass>
@@ -29617,42 +29616,6 @@ namespace Models
 	}
 }
 	   ]]></Code>
-            </Manager>
-            <Manager>
-              <Name>FudgeWaterDemand</Name>
-              <Script>
-                <FudgeFactor>1</FudgeFactor>
-              </Script>
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.Data;
-
-namespace Models
-{
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Zone zone;
-		
-		[Description("Multiply Water Demand by this amount")]
-		public  double FudgeFactor { get; set; }
-		
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-			object FudgeFactorVAlue = FudgeFactor;
-			zone.Set("Wheat.Leaf.FudgeToGetETDemandRight", FudgeFactor);   
-		}
-	}
-}
-				]]></Code>
             </Manager>
             <Manager>
               <Name>MaxLeafSize</Name>

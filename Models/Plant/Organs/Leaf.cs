@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
@@ -47,14 +48,10 @@ namespace Models.PMF.Organs
             get
             {
                 int MM2ToM2 = 1000000; // Conversion of mm2 to m2
-                double value = 0;
                 foreach (LeafCohort L in Leaves)
-                {
                     if (Double.IsNaN(L.LiveArea))
                         throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
-                    value = value + L.LiveArea / MM2ToM2;
-                }
-                return value;
+                return Leaves.Sum(x => x.LiveArea) / MM2ToM2;
             }
         }
 
@@ -68,29 +65,25 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
-                else
-                    return 0;
+                    return Math.Min(MaxCover*(1.0 - Math.Exp(-ExtinctionCoeff.Value*LAI/MaxCover)), 0.999999999);
+                return 0;
             }
         }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal 
-        { 
-            get 
+        public double CoverTotal
+        {
+            get
             {
                 if (Plant != null)
                 {
                     if (Plant.IsAlive)
-                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
-                    else
-                        return 0;
-                }
-                else
+                        return 1.0 - (1 - CoverGreen) * (1 - (1.0 - Math.Exp(-KDead * LAIDead)));
                     return 0;
-
-            } 
+                }
+                return 0;
+            }
         }
 
         /// <summary>Gets the height.</summary>
@@ -109,11 +102,6 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double PotentialEP { get;  set; }
 
-        /// <summary>
-        /// This paramater is applied to ETDemand.  It is a fudge for testing
-        /// </summary>
-        public double FudgeToGetETDemandRight { get; set; }
-
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
@@ -122,10 +110,7 @@ namespace Models.PMF.Organs
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-
-        #endregion
-
-    
+        #endregion 
 
         #region Structures
         /// <summary>
@@ -198,19 +183,19 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
             /// <summary>The drought induced sen acceleration</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link]
             public IFunction NonStructuralFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
             [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction SenessingLeafRelativeSize = null;
             /// <summary>
             /// The proportion of mass that is respired each day
@@ -241,7 +226,6 @@ namespace Models.PMF.Organs
         /// <summary>The frost fraction</summary>
         [Link]
         IFunction FrostFraction = null;
-
         /// <summary>The structural fraction</summary>
         [Link]
         IFunction StructuralFraction = null;
@@ -294,11 +278,11 @@ namespace Models.PMF.Organs
             get
             {
                 if (CurrentRank > Leaves.Count)
-                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
-                else if (CurrentRank <= 0)
+                    throw new ApsimXException(this,
+                        "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
+                if (CurrentRank <= 0)
                     return 0;
-                else
-                    return Leaves[CurrentRank - 1].CoverAbove;
+                return Leaves[CurrentRank - 1].CoverAbove;
             }
         }
 
@@ -322,7 +306,7 @@ namespace Models.PMF.Organs
         /// <summary>The maximum cover</summary>
         [Description("Max cover")]
         [Units("max units")]
-        public double MaxCover;
+        public double MaxCover { get; set; }
 
         /// <summary>Gets the initialised cohort no.</summary>
         [Description("Number of leaf cohort objects that have been initialised")] 
@@ -359,11 +343,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double n = 0;
-                foreach (LeafCohort L in Leaves)
-                    if ((L.IsAppeared) && (!L.Finished))
-                        n += L.CohortPopulation;
-                return n / Plant.Population;
+                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation);
             }
         }
 
@@ -374,11 +354,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double n = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.IsAppeared)
-                        n += L.CohortPopulation;
-                return n;
+                return Leaves.Where(l => l.IsAppeared).Sum(l => l.CohortPopulation);
             }
         }
 
@@ -400,10 +376,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double value = 0;
-                foreach (LeafCohort L in Leaves)
-                    value = value + L.DeadArea / 1000000;
-                return value;
+                return Leaves.Sum(l => l.DeadArea)/1000000;
             }
         }
 
@@ -436,10 +409,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the cover dead.</summary>
-        [Units("0-1")]
-        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
-
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
@@ -456,10 +425,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                for (i = 0; i <= MaximumMainStemLeafNumber - 1; i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -478,10 +447,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                for (i = 0; i <= MaximumMainStemLeafNumber - 1; i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -502,7 +471,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
                 for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
@@ -524,7 +493,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
                 for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
@@ -551,17 +520,19 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsEmerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
-                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
-                            if(AppearedCohortNo < InitialisedCohortNo)
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                        if (Leaves[(int) ExpandedCohortNo].Age > 0)
+                            if (AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1,
+                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration);
                             else
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                                return Math.Min(1,
+                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration*
+                                    Structure.NextLeafProportion);
                         else
                             return 0;
                     else
-                        return Structure.NextLeafProportion - 1 ;
-                else
-                    return 0;
+                        return Structure.NextLeafProportion - 1;
+                return 0;
             }
         }
 
@@ -572,7 +543,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
                 for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
@@ -606,7 +577,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
                 for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
@@ -1308,7 +1279,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            return PotentialEP * FudgeToGetETDemandRight;
+            return PotentialEP;
         }
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
@@ -1547,7 +1518,6 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-                FudgeToGetETDemandRight = 1.0;
             }
         }
 
