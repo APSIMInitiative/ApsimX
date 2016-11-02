@@ -460,6 +460,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -1260,6 +1270,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
@@ -26647,6 +26667,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
           </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -27291,6 +27321,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>DetachmentRateFunction</Name>
               <Value>0</Value>
               <Units>/d</Units>
+            </Constant>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
             </Constant>
           </GenericOrgan>
           <CompositeBiomass>
@@ -32088,6 +32128,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
           </GenericOrgan>
           <Root>
             <Name>Root</Name>
@@ -32710,6 +32760,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>DetachmentRateFunction</Name>
               <Value>0</Value>
               <Units>/d</Units>
+            </Constant>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant> 
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
             </Constant>
           </GenericOrgan>
           <CompositeBiomass>

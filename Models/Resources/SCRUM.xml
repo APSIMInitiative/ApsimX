@@ -384,6 +384,16 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Value>0</Value>
       <Units>/d</Units>
     </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>  
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
   </GenericOrgan>
   <SimpleLeaf>
     <Name>Stover</Name>
@@ -887,6 +897,16 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
     <DeltaBiomass>0</DeltaBiomass>
     <LAIDead>0</LAIDead>
     <WaterAllocation>0</WaterAllocation>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
   </SimpleLeaf>
   <Root>
     <Name>Root</Name>
@@ -1259,6 +1279,16 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     <Constant>
       <Name>FixationMetabolicCost</Name>
       <Value>0.0</Value>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
     </Constant>
   </Nodule>
   <CompositeBiomass>

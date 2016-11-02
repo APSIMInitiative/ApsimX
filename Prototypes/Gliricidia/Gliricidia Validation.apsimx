@@ -1177,7 +1177,16 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <YProperty>[Stem].Live.Wt</YProperty>
         </AllometricDemandFunction>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -1300,7 +1309,16 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Units>g/m^2/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <Cultivar>
         <Name>Gliricidia</Name>

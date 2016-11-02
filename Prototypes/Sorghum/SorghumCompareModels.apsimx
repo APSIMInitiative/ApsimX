@@ -1555,6 +1555,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <KDead>0.03</KDead>
         <LAIDead>0</LAIDead>
         <WaterAllocation>0</WaterAllocation>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </SimpleLeaf>
       <GenericOrgan>
         <Name>Rachis</Name>
@@ -1677,7 +1687,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>g/m^2</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1775,7 +1794,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Cultivar>
         <Name>Buster</Name>
