@@ -348,7 +348,8 @@ namespace Models.PMF
         /// </summary>
         public void SendEmergingEvent()
         {
-            PlantEmerging.Invoke(this, null);
+            if (PlantEmerging != null)
+                PlantEmerging.Invoke(this, null);
         }
 
         /// <summary>Harvest the crop.</summary>
