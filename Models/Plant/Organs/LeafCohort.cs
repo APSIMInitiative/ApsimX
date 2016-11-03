@@ -812,7 +812,7 @@ namespace Models.PMF.Organs
             {
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
-                if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
+                if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && IsFullyExpanded)
                     thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value;
                 else thermalTime = tt;
 

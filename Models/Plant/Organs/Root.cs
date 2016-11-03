@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
     [Description("Root Class")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Root : BaseOrgan, IWaterNitrogenUptake
+    public class Root : BaseOrgan
     {
         #region Links
         /// <summary>The arbitrator</summary>
@@ -402,7 +402,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
-        public void DoWaterUptake(double[] Amount, string zoneName)
+        public override void DoWaterUptake(double[] Amount, string zoneName)
         {
             ZoneState zone = Zones.Find(z => z.Name == zoneName);
             if (zone == null)
@@ -414,7 +414,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
+        public override void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator)
         {
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
@@ -431,10 +431,9 @@ namespace Models.PMF.Organs
                 zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
             }
         }
-
+        
         /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("PlantEnding")]
-        protected void DoPlantEnding(object sender, EventArgs e)
+        public override void DoPlantEnding()
         {
             //Send all root biomass to soil FOM
             DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
@@ -550,22 +549,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-            if (Wt > 0.0)
-            {
-                DetachedWt += Wt;
-                DetachedN += N;
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-            }
-
-            Clear();
-        }
-
         #endregion
 
         #region IArbitrator interface
@@ -666,7 +649,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalculateNitrogenSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        public override void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
             NO3Supply = null;
             NH4Supply = null;
@@ -743,7 +726,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        public double[] CalculateWaterSupply(ZoneWaterAndN zone)
+        public override double[] WaterSupply(ZoneWaterAndN zone)
         {
             ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
             if (myZone == null)

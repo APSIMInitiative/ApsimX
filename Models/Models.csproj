@@ -184,7 +184,6 @@
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
-    <Compile Include="Plant\Interfaces\IWaterNitrogenUptake.cs" />
     <Compile Include="Plant\Interfaces\IHasWaterDemand.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />

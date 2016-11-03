@@ -73,6 +73,28 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Soil Arbitrator interface
+        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <param name="NO3Supply">The returned NO3 supply</param>
+        /// <param name="NH4Supply">The returned NH4 supply</param>
+        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        {
+            NO3Supply = null;
+            NH4Supply = null;
+        }
+        
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <param name="zone">The zone.</param>
+        virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
+        
+        /// <summary>Does the water uptake.</summary>
+        /// <param name="Amount">The amount.</param>
+        /// <param name="zoneName">Zone name to do water uptake in</param>
+        virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
+
+        /// <summary>Does the Nitrogen uptake.</summary>
+        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
+        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
 
         /// <summary>Gets the n supply uptake.</summary>
         [Units("g/m^2")]
@@ -201,6 +223,20 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
                 DoDailyCleanup();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        ///[EventSubscribe("PlantEnding")]
+        virtual public void DoPlantEnding()
+        {
+            if (Wt > 0.0)
+            {
+                DetachedWt += Wt;
+                DetachedN += N;
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
         }
 
         /// <summary>Do harvest logic for this organ</summary>

@@ -945,6 +945,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <string>[Leaf].CohortDead</string>
       </Propertys>
     </CompositeBiomass>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <Value>1</Value>
+    </Constant>    
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
       <Propertys>
@@ -1607,16 +1611,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Value>0</Value>
       <Units>/d</Units>
     </Constant>
-    <Constant>
-      <Name>MaintenanceRespirationFunction</Name>
-      <Value>0</Value>
-      <Units>0-1</Units>
-    </Constant>    
-    <Constant>
-      <Name>DMConversionEfficiency</Name>
-      <Value>1</Value>
-      <Units>0-1</Units>
-    </Constant>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Rachis</Name>
@@ -1769,16 +1763,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>DetachmentRateFunction</Name>
       <Value>0</Value>
       <Units>/d</Units>
-    </Constant>
-    <Constant>
-      <Name>MaintenanceRespirationFunction</Name>
-      <Value>0</Value>
-      <Units>0-1</Units>
-    </Constant>  
-    <Constant>
-      <Name>DMConversionEfficiency</Name>
-      <Value>1</Value>
-      <Units>0-1</Units>
     </Constant>
   </GenericOrgan>
   <GenericOrgan>
@@ -1958,16 +1942,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Value>0</Value>
       <Units>/d</Units>
     </Constant>
-    <Constant>
-      <Name>MaintenanceRespirationFunction</Name>
-      <Value>0</Value>
-      <Units>0-1</Units>
-    </Constant> 
-    <Constant>
-      <Name>DMConversionEfficiency</Name>
-      <Value>1</Value>
-      <Units>0-1</Units>
-    </Constant>     
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
