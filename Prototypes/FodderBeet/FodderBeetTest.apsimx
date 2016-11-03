@@ -711,6 +711,14 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
             <Name>MaintenanceRespirationFunction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -771,19 +779,18 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
         <DeadNodesYesterday>0</DeadNodesYesterday>
-        <MaxCover>1</MaxCover>
         <Albedo>0</Albedo>
         <Gsmax>0</Gsmax>
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>80</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
+        <MaxCover>1</MaxCover>
       </Leaf>
       <Root>
         <Name>Root</Name>
