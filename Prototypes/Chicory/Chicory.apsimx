@@ -751,7 +751,7 @@ DM demand is based on ...
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -781,7 +781,7 @@ DM demand is based on ...
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
@@ -995,7 +995,7 @@ DM demand is based on ...
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1025,7 +1025,7 @@ DM demand is based on ...
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -1187,7 +1187,7 @@ DM demand is based on ...
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1217,7 +1217,7 @@ DM demand is based on ...
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -1633,7 +1633,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1663,7 +1663,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>

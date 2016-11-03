@@ -367,7 +367,12 @@ namespace Models.PMF
             foreach (IOrgan organ in Organs)
             {
                 // Get the default removal fractions
-                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+                OrganBiomassRemovalType biomassRemoval;
+                if (organ is GenericOrgan)
+                    biomassRemoval = (organ as GenericOrgan).biomassRemovalModel.FindDefault(biomassRemoveType);
+                else
+                    biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+
                 if (biomassRemoval == null)
                     throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
 
