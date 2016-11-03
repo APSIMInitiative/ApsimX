@@ -908,6 +908,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>MaintenanceRespirationFunction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1134,19 +1142,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
         <DeadNodesYesterday>0</DeadNodesYesterday>
-        <MaxCover>1</MaxCover>
         <Albedo>0.26</Albedo>
         <Gsmax>0.03</Gsmax>
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
+        <MaxCover>1</MaxCover>
       </Leaf>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -27195,13 +27202,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <StartFractionExpanded>0.88608885312500008</StartFractionExpanded>
             <FractionNextleafExpanded>0.89094664983812755</FractionNextleafExpanded>
             <DeadNodesYesterday>9</DeadNodesYesterday>
-            <MaxCover>1</MaxCover>
             <Albedo>0.26</Albedo>
             <Gsmax>0.03</Gsmax>
             <R50>200</R50>
             <FRGR>1</FRGR>
             <PotentialEP>0</PotentialEP>
-            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
             <LightProfile>
               <CanopyEnergyBalanceInterceptionlayerType>
                 <thickness>0.079549208283424377</thickness>
@@ -27214,6 +27219,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
+            <MaxCover>1</MaxCover>
           </Leaf>
           <GenericOrgan>
             <Name>Stem</Name>
@@ -32615,19 +32621,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
             <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
             <DeadNodesYesterday>0</DeadNodesYesterday>
-            <MaxCover>1</MaxCover>
             <Albedo>0.26</Albedo>
             <Gsmax>0.03</Gsmax>
             <R50>200</R50>
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
-            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <DMConversionEfficiency>0</DMConversionEfficiency>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
             <FractionDied>0</FractionDied>
+            <MaxCover>1</MaxCover>
           </Leaf>
           <GenericOrgan>
             <Name>Stem</Name>
