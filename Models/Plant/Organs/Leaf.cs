@@ -284,7 +284,7 @@ namespace Models.PMF.Organs
             {
                 if (CurrentRank > Leaves.Count)
                     throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
-                else if (CurrentRank <= 0)
+                if (CurrentRank <= 0)
                     return 0;
                 return Leaves[CurrentRank - 1].CoverAbove;
             }
@@ -348,7 +348,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation);
+                return Leaves.Where(l => l.IsAppeared && !l.Finished).Sum(l => l.CohortPopulation) / Plant.Population;
             }
         }
 
@@ -359,7 +359,6 @@ namespace Models.PMF.Organs
         {
             get { return Leaves.Where(l => l.IsAppeared).Sum(l => l.CohortPopulation); }
         }
-
 
         /// <summary>Gets the plant senesced leaf no.</summary>
         [Units("/plant")]
