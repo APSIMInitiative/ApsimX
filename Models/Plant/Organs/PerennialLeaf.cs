@@ -184,6 +184,9 @@ namespace Models.PMF.Organs
         /// <summary>The extinction coefficient function</summary>
         [Link]
         IFunction ExtinctionCoefficient = null;
+        /// <summary>The extinction coefficient function for dead leaves</summary>
+        [Link]
+        IFunction ExtinctionCoefficientDead = null;
         /// <summary>The photosynthesis</summary>
         [Link]
         IFunction Photosynthesis = null;
@@ -219,8 +222,6 @@ namespace Models.PMF.Organs
 
         #region States and variables
 
-        /// <summary>Gets or sets the k dead.</summary>
-        public double KDead { get; set; }                  // Extinction Coefficient (Dead)
         /// <summary>Calculate the water demand.</summary>
         public double CalculateWaterDemand()
         {
@@ -232,7 +233,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } set { } }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
          public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
@@ -263,7 +263,7 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
         /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value * LAIDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
@@ -673,8 +673,8 @@ namespace Models.PMF.Organs
         #endregion
 
         /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {

@@ -309,6 +309,8 @@ namespace Models.PMF.Phen
             if (hasEmergencePhase == false)
             {
                 Emerged = true;
+                if (Plant != null)
+                    Plant.SendEmergingEvent();
             }
         }
 
@@ -419,7 +421,10 @@ namespace Models.PMF.Phen
                             Germinated = true;
 
                         if (CurrentPhase is EmergingPhase)
+                        {
+                            Plant.SendEmergingEvent();
                             Emerged = true;
+                        }
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)
