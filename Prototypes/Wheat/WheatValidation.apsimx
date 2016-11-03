@@ -2039,7 +2039,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
         <DeadNodesYesterday>0</DeadNodesYesterday>
-        <MaxCover>1</MaxCover>
         <Albedo>0.2</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
@@ -2051,6 +2050,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
+        <MaxCover>1</MaxCover>
       </Leaf>
       <GenericOrgan>
         <Name>Spike</Name>

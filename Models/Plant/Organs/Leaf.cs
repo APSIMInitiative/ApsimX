@@ -79,7 +79,8 @@ namespace Models.PMF.Organs
                 if (Plant != null)
                 {
                     if (Plant.IsAlive)
-                        return 1.0 - (1 - CoverGreen)*(1 - (1.0 - Math.Exp(-KDead*LAIDead)));
+                        return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                    else
                     return 0;
                 }
                 return 0;
@@ -88,17 +89,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the height.</summary>
         [Units("mm")]
-        public double Height
-        {
-            get { return Structure.Height; }
-        }
+        public double Height { get { return Structure.Height; } }
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth
-        {
-            get { return Structure.Height; }
-        }
+        public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
@@ -116,7 +111,8 @@ namespace Models.PMF.Organs
         #region Links
 
         /// <summary>The structure</summary>
-        [Link] public Structure Structure = null;
+        [Link]
+        public Structure Structure = null;
 
         #endregion
 
@@ -287,9 +283,8 @@ namespace Models.PMF.Organs
             get
             {
                 if (CurrentRank > Leaves.Count)
-                    throw new ApsimXException(this,
-                        "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
-                if (CurrentRank <= 0)
+                    throw new ApsimXException(this, "Curent Rank is greater than the number of leaves appeared when trying to determine CoverAbove this cohort");
+                else if (CurrentRank <= 0)
                     return 0;
                 return Leaves[CurrentRank - 1].CoverAbove;
             }
@@ -311,10 +306,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets a value indicating whether [cohorts initialised].
         /// </summary>
-        public bool CohortsInitialised
-        {
-            get { return Leaves.Count > 0; }
-        }
+        public bool CohortsInitialised { get { return Leaves.Count > 0; } }
 
         /// <summary>The maximum cover</summary>
         [Description("Max cover")]
@@ -413,20 +405,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the cover dead.</summary>
+        [Units("0-1")]
+        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
-        {
-            get { return CoverGreen*MetData.Radn; }
-        }
+        public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
         /// <summary>Gets the specific area.</summary>
         [Units("mm^2/g")]
-        public double SpecificArea
-        {
-            get { return MathUtilities.Divide(LAI*1000000, Live.Wt, 0); }
-        }
+        public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
 
         /// <summary>Gets the growth duration of the cohort.</summary>
         [XmlIgnore]
@@ -516,14 +506,11 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsEmerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
-                        if (Leaves[(int) ExpandedCohortNo].Age > 0)
-                            if (AppearedCohortNo < InitialisedCohortNo)
-                                return Math.Min(1,
-                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration);
+                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
+                            if(AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
                             else
-                                return Math.Min(1,
-                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration*
-                                    Structure.NextLeafProportion);
+                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
                         else
                             return 0;
                     else
@@ -674,17 +661,25 @@ namespace Models.PMF.Organs
             get
             {
                 int i = 0;
-                double[] values = new double[MaximumMainStemLeafNumber];
 
+                double[] values = new double[MaximumMainStemLeafNumber];
+                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                    values[i] = 0;
+                i = 0;
                 foreach (LeafCohort L in Leaves)
                 {
-                    if (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt > 0.0)
-                        values[i] = L.Live.StructuralWt/
-                                    (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
+                    if ((L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt) > 0.0)
+                    {
+                        values[i] = L.Live.StructuralWt / (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
+                        i++;
+                    }
                     else
+                    {
                         values[i] = 0;
-                    i++;
+                        i++;
+                    }
                 }
+
                 return values;
             }
         }
@@ -693,10 +688,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
-        public double LiveNConc
-        {
-            get { return Live.NConc; }
-        }
+        public double LiveNConc { get { return Live.NConc; } }
 
         /// <summary>Gets the potential growth.</summary>
         [Units("g/m^2")]
@@ -1279,55 +1271,70 @@ namespace Models.PMF.Organs
                 double[] NonStructuralNAllocationCohort = new double[Leaves.Count + 2];
                 double[] NReallocationCohort = new double[Leaves.Count + 2];
                 double[] NRetranslocationCohort = new double[Leaves.Count + 2];
-                if (value.Structural + value.Metabolic + value.NonStructural != 0.0)
-                    return;
 
-                //setup allocation variables
-                double[] CohortNAllocation = new double[Leaves.Count + 2];
-                double[] StructuralNDemand = new double[Leaves.Count + 2];
-                double[] MetabolicNDemand = new double[Leaves.Count + 2];
-                double[] NonStructuralNDemand = new double[Leaves.Count + 2];
-                double TotalStructuralNDemand = 0;
-                double TotalMetabolicNDemand = 0;
-                double TotalNonStructuralNDemand = 0;
-
-                for (int i = 0; i < Leaves.Count; i++)
+                if (value.Structural + value.Metabolic + value.NonStructural > 0.0)
                 {
-                    CohortNAllocation[i] = 0;
-                    StructuralNDemand[i] = Leaves[i].StructuralNDemand;
-                    TotalStructuralNDemand += Leaves[i].StructuralNDemand;
-                    MetabolicNDemand[i] = Leaves[i].MetabolicNDemand;
-                    TotalMetabolicNDemand += Leaves[i].MetabolicNDemand;
-                    NonStructuralNDemand[i] = Leaves[i].NonStructuralNDemand;
-                    TotalNonStructuralNDemand += Leaves[i].NonStructuralNDemand;
+                    //setup allocation variables
+                    double[] CohortNAllocation = new double[Leaves.Count + 2];
+                    double[] StructuralNDemand = new double[Leaves.Count + 2];
+                    double[] MetabolicNDemand = new double[Leaves.Count + 2];
+                    double[] NonStructuralNDemand = new double[Leaves.Count + 2];
+                    double TotalStructuralNDemand = 0;
+                    double TotalMetabolicNDemand = 0;
+                    double TotalNonStructuralNDemand = 0;
+
+                    int i = 0;
+                    foreach (LeafCohort L in Leaves)
+                    {
+                        i++;
+                        CohortNAllocation[i] = 0;
+                        StructuralNDemand[i] = L.StructuralNDemand;
+                        TotalStructuralNDemand += L.StructuralNDemand;
+                        MetabolicNDemand[i] = L.MetabolicNDemand;
+                        TotalMetabolicNDemand += L.MetabolicNDemand;
+                        NonStructuralNDemand[i] = L.NonStructuralNDemand;
+                        TotalNonStructuralNDemand += L.NonStructuralNDemand;
+                    }
+                    double NSupplyValue = value.Structural;
+
+                    // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for nonstructural growth)
+                    if (NSupplyValue > 0 && TotalStructuralNDemand > 0)
+                    {
+                        i = 0;
+                      foreach(LeafCohort L in Leaves)
+                        {
+                            i++;
+                            StructuralNAllocationCohort[i] = Math.Min(StructuralNDemand[i],
+                                NSupplyValue*(StructuralNDemand[i]/TotalStructuralNDemand));
+                        }
+
+                    }
+                    // then allocate additional N relative to leaves metabolic demands
+                    NSupplyValue = value.Metabolic;
+                    if (NSupplyValue > 0 && TotalMetabolicNDemand > 0)
+                    {
+                        i = 0;
+                        foreach (LeafCohort L in Leaves)
+                        {
+                            i++;
+                            MetabolicNAllocationCohort[i] = Math.Min(MetabolicNDemand[i],
+                                NSupplyValue*(MetabolicNDemand[i]/TotalMetabolicNDemand));
+                        }
+                    }
+                    // then allocate excess N relative to leaves N sink capacity
+                    NSupplyValue = value.NonStructural;
+                    if (NSupplyValue > 0 && TotalNonStructuralNDemand > 0)
+                    {
+                        i = 0;
+                        foreach (LeafCohort L in Leaves)
+                        {
+                            i++;
+                            NonStructuralNAllocationCohort[i] += Math.Min(NonStructuralNDemand[i],
+                                NSupplyValue*(NonStructuralNDemand[i]/TotalNonStructuralNDemand));
+                        }
+                    }
                 }
-                double NSupplyValue = value.Structural;
 
-                // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for nonstructural growth)
-                if (NSupplyValue > 0 && TotalStructuralNDemand > 0)
-                    for (int i = 0; i < Leaves.Count; i++)
-                    {
-                        StructuralNAllocationCohort[i] = Math.Min(StructuralNDemand[i],
-                            NSupplyValue*(StructuralNDemand[i]/TotalStructuralNDemand));
-                    }
-
-                // then allocate additional N relative to leaves metabolic demands
-                NSupplyValue = value.Metabolic;
-                if (NSupplyValue > 0 && TotalMetabolicNDemand > 0)
-                    for (int i = 0; i < Leaves.Count; i++)
-                    {
-                        MetabolicNAllocationCohort[i] = Math.Min(MetabolicNDemand[i],
-                            NSupplyValue*(MetabolicNDemand[i]/TotalMetabolicNDemand));
-                    }
-                // then allocate excess N relative to leaves N sink capacity
-                NSupplyValue = value.NonStructural;
-                if (NSupplyValue > 0 && TotalNonStructuralNDemand > 0)
-                    for (int i = 0; i < Leaves.Count; i++)
-                    {
-                        NonStructuralNAllocationCohort[i] += Math.Min(NonStructuralNDemand[i],
-                            NSupplyValue*(NonStructuralNDemand[i]/TotalNonStructuralNDemand));
-                    }
- 
                 // Retranslocation
                 if (value.Retranslocation - NSupply.Retranslocation > 0.000000001)
                     throw new Exception(Name + " cannot supply that amount for N retranslocation");
@@ -1335,12 +1342,14 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + " recieved -ve N retranslocation");
                 if (value.Retranslocation > 0)
                 {
+                    int i = 0;
                     double remainder = value.Retranslocation;
-                    for (int i = 0; i < Leaves.Count; i++)
+                    foreach (LeafCohort L in Leaves)
                     {
-                        double retrans = Math.Min(remainder, Leaves[i].LeafStartNRetranslocationSupply);
-                        NRetranslocationCohort[i] = retrans;
-                        remainder = Math.Max(0.0, remainder - retrans);
+                        i++;
+                        double Retrans = Math.Min(remainder, L.LeafStartNRetranslocationSupply);
+                        NRetranslocationCohort[i] = Retrans;
+                        remainder = Math.Max(0.0, remainder - Retrans);
                     }
                     if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
                         throw new Exception(Name + " N Retranslocation demand left over after processing.");
@@ -1353,27 +1362,31 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + " recieved -ve N reallocation");
                 if (value.Reallocation > 0)
                 {
+                    int i = 0;
                     double remainder = value.Reallocation;
-                    for (int i = 0; i < Leaves.Count; i++)
+                    foreach (LeafCohort L in Leaves)
                     {
-                        double reAlloc = Math.Min(remainder, Leaves[i].LeafStartNReallocationSupply);
-                        NReallocationCohort[i] = reAlloc;
-                        remainder = Math.Max(0.0, remainder - reAlloc);
+                        i++;
+                        double ReAlloc = Math.Min(remainder, L.LeafStartNReallocationSupply);
+                        NReallocationCohort[i] = ReAlloc;
+                        remainder = Math.Max(0.0, remainder - ReAlloc);
                     }
                     if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
                         throw new Exception(Name + " N Reallocation demand left over after processing.");
                 }
 
                 //Send allocations to cohorts
-                for (int i = 0; i < Leaves.Count; i++)
+                int a = 0;
+                foreach (LeafCohort L in Leaves)
                 {
-                    Leaves[i].NAllocation = new BiomassAllocationType
+                    a++;
+                    L.NAllocation = new BiomassAllocationType
                     {
-                        Structural = StructuralNAllocationCohort[i],
-                        Metabolic = MetabolicNAllocationCohort[i],
-                        NonStructural = NonStructuralNAllocationCohort[i],
-                        Retranslocation = NRetranslocationCohort[i],
-                        Reallocation = NReallocationCohort[i],
+                        Structural = StructuralNAllocationCohort[a],
+                        Metabolic = MetabolicNAllocationCohort[a],
+                        NonStructural = NonStructuralNAllocationCohort[a],
+                        Retranslocation = NRetranslocationCohort[a],
+                        Reallocation = NReallocationCohort[a],
                     };
                 }
 
