@@ -44,6 +44,14 @@ namespace UserInterface.Views
     {
         void Navigate(string uri);
         void LoadHTML(string html);
+
+        /// <summary>
+        /// Returns the Title of the current document
+        /// </summary>
+        /// <returns></returns>
+        string GetTitle();
+
+        void ExecJavaScript(string command, object[] args);
     }
 
 
@@ -151,6 +159,18 @@ namespace UserInterface.Views
         {
             InitIE(w);
         }
+
+        public string GetTitle()
+        {
+            if (wb.Document != null)
+                return wb.Document.Title;
+            else
+                return String.Empty;
+        }
+        public void ExecJavaScript(string command, object[] args)
+        {
+            wb.Document.InvokeScript(command, args);
+        }
     }
 
     public class TWWebBrowserSafari : IBrowserWidget
@@ -233,6 +253,25 @@ namespace UserInterface.Views
         {
             InitWebKit(w);
         }
+
+        public string GetTitle()
+        {
+            return wb.MainFrameTitle;
+        }
+
+        public void ExecJavaScript(string command, object[] args)
+        {
+            string argString = "";
+            bool first = true;
+            foreach (object obj in args)
+            {
+                if (!first)
+                    argString += ", ";
+                first = false;
+                argString += obj.ToString();
+            }
+            wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ")");
+        }
     }
 
     public class TWWebBrowserWK : IBrowserWidget
@@ -272,6 +311,25 @@ namespace UserInterface.Views
         public TWWebBrowserWK(Gtk.Box w)
         {
             InitWebKit(w);
+        }
+
+        public string GetTitle()
+        {
+            return wb.Title;
+        }
+
+        public void ExecJavaScript(string command, object[] args)
+        {
+            string argString = "";
+            bool first = true;
+            foreach (object obj in args)
+            {
+                if (!first)
+                    argString += ", ";
+                first = false;
+                argString += obj.ToString();
+            }
+            wb.ExecuteScript(command + "(" + argString + ")");
         }
     }
 
@@ -344,11 +402,8 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
                 frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).wb.DocumentTitleChanged -= IE_TitleChanged;
                 (browser as TWWebBrowserIE).socket.UnmapEvent += (browser as TWWebBrowserIE).Socket_UnmapEvent;
             }
-            else if ((browser as TWWebBrowserWK) != null)
-                (browser as TWWebBrowserWK).wb.TitleChanged -= WK_TitleChanged;
             if (popupWin != null)
             {
                 popupWin.Destroy();
@@ -411,7 +466,6 @@ namespace UserInterface.Views
                     if (vbox2.Toplevel is Window)
                         (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
-                    (browser as TWWebBrowserIE).wb.DocumentTitleChanged += IE_TitleChanged;
                     if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
                         (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
                 }
@@ -422,7 +476,6 @@ namespace UserInterface.Views
                 else
                 {
                     browser = new TWWebBrowserWK(vbox2);
-                    (browser as TWWebBrowserWK).wb.TitleChanged += WK_TitleChanged;
                 }
             }
             browser.LoadHTML(contents);
@@ -431,16 +484,6 @@ namespace UserInterface.Views
 
         protected virtual void NewTitle(string title)
         {
-        }
-
-        private void WK_TitleChanged(object o, TitleChangedArgs args)
-        {
-            NewTitle(args.Title);
-        }
-
-        private void IE_TitleChanged(object sender, EventArgs e)
-        {
-            NewTitle((browser as TWWebBrowserIE).wb.DocumentTitle);
         }
 
         // Although this isn't the obvious way to handle window resizing,

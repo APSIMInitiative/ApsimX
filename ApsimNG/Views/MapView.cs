@@ -258,22 +258,13 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
-                if (browser is TWWebBrowserIE)
-                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetZoom", new object[] { value });
-                else if (browser is TWWebBrowserSafari)
+                browser.ExecJavaScript("SetZoom", new object[] { value });
+                if (popupWin != null)
                 {
-                    (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("SetZoom(" + (int)Math.Round(value) + ")");
-                }
-                else if (browser is TWWebBrowserWK)
-                {
-                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetZoom(" + (int)Math.Round(value) + ")");
-                    if (popupWin != null)
-                    {
-                        Stopwatch watch = new Stopwatch();
-                        watch.Start(); 
-                        while (watch.ElapsedMilliseconds < 500)
-                            Gtk.Application.RunIteration();
-                    }
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    while (watch.ElapsedMilliseconds < 500)
+                        Gtk.Application.RunIteration();
                 }
             }
         }
@@ -289,45 +280,23 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
-                if (browser is TWWebBrowserIE)
-                    (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetCenter", new object[] { value.Latitude, value.Longitude });
-                else if (browser is TWWebBrowserSafari)
+                browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
+
+                // With WebKit, it appears we need to give it time to actually update the display
+                // Really only a problem with the temporary windows used for generating documentation
+                if (popupWin != null)
                 {
-                    // None of these alternative seem to work. Why???
                     Stopwatch watch = new Stopwatch();
-                    watch.Start();
-                    while (watch.ElapsedMilliseconds < 5000)
-                        Gtk.Application.RunIteration();
-                    var callresult = (browser as TWWebBrowserSafari).wb.WindowScriptObject.CallWebScriptMethod("alert", new MonoMac.Foundation.NSObject[] { new MonoMac.Foundation.NSString("hello") });
-                    var result = (browser as TWWebBrowserSafari).wb.WindowScriptObject.EvaluateWebScript("alert(\"HI!\")");
-                    string str = (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("alert(\"HI!\")");
                     watch.Start();
                     while (watch.ElapsedMilliseconds < 500)
                         Gtk.Application.RunIteration();
-                    str = (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
-                }
-                else if (browser is TWWebBrowserWK)
-                {
-                    (browser as TWWebBrowserWK).wb.ExecuteScript("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
-                    // With WebKit, it appears we need to give it time to actually update the display
-                    // Really only a problem with the temporary windows used for generating documentation
-                    if (popupWin != null) 
-                    {
-                        Stopwatch watch = new Stopwatch();
-                        watch.Start(); 
-                        while (watch.ElapsedMilliseconds < 500)
-                            Gtk.Application.RunIteration();
-                    }
                 }
             }
         }
 
         public void StoreSettings()
         {
-            if (browser is TWWebBrowserSafari)
-            {
-                NewTitle((browser as TWWebBrowserSafari).wb.MainFrameTitle);
-            }
+            NewTitle(browser.GetTitle());
         }
 
         protected override void NewTitle(string title)
