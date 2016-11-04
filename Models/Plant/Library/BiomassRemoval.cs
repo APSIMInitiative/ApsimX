@@ -23,7 +23,7 @@ namespace Models.PMF.Library
         Summary summary = null;
 
         /// <summary>Biomass removal defaults for different event types e.g. prune, cut etc.</summary>
-        [Link]
+        [ChildLink]
         public List<OrganBiomassRemovalType> defaults = null;
 
         /// <summary>Removes biomass from live and dead biomass pools.</summary>
@@ -57,7 +57,7 @@ namespace Models.PMF.Library
                 double toResidue = (amount.FractionLiveToResidue + amount.FractionDeadToResidue) / totalFractionToRemove * 100;
                 double removedOff = (amount.FractionLiveToRemove + amount.FractionDeadToRemove) / totalFractionToRemove * 100;
                 summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + plant.Name
+                                         + "% of " + Parent.Name + " Biomass from " + plant.Name
                                          + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                          + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
             }

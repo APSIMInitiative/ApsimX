@@ -67,7 +67,7 @@ namespace Models.PMF.Organs
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
