@@ -292,7 +292,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -322,7 +322,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
