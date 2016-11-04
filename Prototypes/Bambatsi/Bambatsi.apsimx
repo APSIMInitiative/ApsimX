@@ -919,7 +919,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -956,7 +956,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>

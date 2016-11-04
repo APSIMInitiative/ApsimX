@@ -1867,7 +1867,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1897,7 +1897,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -2048,7 +2048,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2078,7 +2078,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>

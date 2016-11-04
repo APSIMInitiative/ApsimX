@@ -7,6 +7,7 @@ namespace Models.Core
 {
     using APSIM.Shared.Utilities;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -79,6 +80,8 @@ namespace Models.Core
                     Type fieldType = field.FieldType;
                     if (fieldType.IsArray)
                         fieldType = fieldType.GetElementType();
+                    else if (field.FieldType.Name.StartsWith("List") && field.FieldType.GenericTypeArguments.Length == 1)
+                        fieldType = field.FieldType.GenericTypeArguments[0];
 
                     // Get a list of models that could possibly match.
                     List<object> matches;
@@ -104,6 +107,16 @@ namespace Models.Core
                         Array array = Array.CreateInstance(fieldType, matches.Count);
                         for (int i = 0; i < matches.Count; i++)
                             array.SetValue(GetModel(matches[i]), i);
+                        field.SetValue(GetModel(obj), array);
+                        
+                    }
+                    else if (field.FieldType.Name.StartsWith("List") && field.FieldType.GenericTypeArguments.Length == 1)
+                    {
+                        var listType = typeof(List<>);
+                        var constructedListType = listType.MakeGenericType(fieldType);
+                        IList array = Activator.CreateInstance(constructedListType) as IList;
+                        for (int i = 0; i < matches.Count; i++)
+                            array.Add(GetModel(matches[i]));
                         field.SetValue(GetModel(obj), array);
                     }
                     else if (matches.Count == 0)

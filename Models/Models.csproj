@@ -190,6 +190,7 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
+    <Compile Include="Plant\Library\BiomassRemoval.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
     <Compile Include="Plant\Phenology\BuddingPhase.cs" />

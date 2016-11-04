@@ -1149,7 +1149,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1186,7 +1186,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <AllometricDemandFunction>
           <Name>DMDemandFunction</Name>
           <Const>0.0322</Const>
@@ -1275,7 +1275,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Start>Emergence</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1305,7 +1305,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
