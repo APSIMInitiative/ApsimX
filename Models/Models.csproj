@@ -199,7 +199,6 @@
     <Compile Include="Plant\Phenology\VernalisationC.cs" />
     <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
-    <Compile Include="Plant\RemoveBiomassFromOrgan.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />

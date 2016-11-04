@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 using Models.PMF.Phen;
 using Models.Soils.Arbitrator;
 using System;
@@ -64,6 +65,10 @@ namespace Models.PMF.Organs
         [Link]
         protected ISummary Summary = null;
 
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
+
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         public double MaintenanceRespiration { get; set; }
 
@@ -72,11 +77,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
+        public Biomass Removed { get; set; }
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
@@ -689,32 +690,15 @@ namespace Models.PMF.Organs
         /// <param name="value">The fractions of biomass to remove</param>
         virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
-         
-            if (totalFractionToRemove > 0.0)
-            { 
-                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
+            Biomass liveAfterRemoval = Live;
+            Biomass deadAfterRemoval = Dead;
+            biomassRemovalModel.RemoveBiomass(value, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
 
-                Biomass Detaching = Live * value.FractionLiveToResidue + Dead * value.FractionDeadToResidue;
-                Detached.Add(Detaching);
-                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
+            double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
+            double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt,  Dead.Wt, 0);
 
-                ReduceLeavesUniformly(RemainingLiveFraction);
-                ReduceDeadLeavesUniformly(RemainingDeadFraction);
-
-                SurfaceOrganicMatter.Add(Detaching.Wt * 10, Detaching.N * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + Plant.Name
-                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-            }
+            ReduceLeavesUniformly(remainingLiveFraction);
+            ReduceDeadLeavesUniformly(remainingDeadFraction);
         }
     }
 }
