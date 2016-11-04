@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Glade;
 using Gtk;
 using WebKit;
+using MonoMac.AppKit;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Views
 {
@@ -42,6 +45,7 @@ namespace UserInterface.Views
         void Navigate(string uri);
         void LoadHTML(string html);
     }
+
 
     public class TWWebBrowserIE : IBrowserWidget
     {
@@ -131,7 +135,7 @@ namespace UserInterface.Views
                 // and doesn't make a little clicky sound.
                 wb.Document.Body.InnerHtml = html;
             else
-               wb.DocumentText = html;
+                wb.DocumentText = html;
 
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
@@ -149,14 +153,96 @@ namespace UserInterface.Views
         }
     }
 
-    public class TWWebBrowserWK : IBrowserWidget
+    public class TWWebBrowserSafari : IBrowserWidget
     {
-        public WebView wb = null;
+        static bool appInited = false;
+        const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
+
+        [DllImport(LIBQUARTZ)]
+        static extern IntPtr gdk_quartz_window_get_nsview(IntPtr window);
+
+        [DllImport(LIBQUARTZ)]
+        static extern IntPtr gdk_quartz_window_get_nswindow(IntPtr window);
+
+        [DllImport(LIBQUARTZ, CallingConvention = CallingConvention.Cdecl)]
+        static extern bool gdk_window_supports_nsview_embedding();
+
+        [DllImport(LIBQUARTZ)]
+        extern static IntPtr gtk_ns_view_new(IntPtr nsview);
+
+        public static Gtk.Widget NSViewToGtkWidget(NSView view)
+        {
+            return new Gtk.Widget(gtk_ns_view_new((IntPtr)view.Handle));
+        }
+
+        public static NSWindow GetWindow(Gtk.Window window)
+        {
+            if (window.GdkWindow == null)
+                return null;
+            var ptr = gdk_quartz_window_get_nswindow(window.GdkWindow.Handle);
+            if (ptr == IntPtr.Zero)
+                return null;
+            return (NSWindow)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
+        }
+
+        public static NSView GetView(Gtk.Widget widget)
+        {
+            var ptr = gdk_quartz_window_get_nsview(widget.GdkWindow.Handle);
+            if (ptr == IntPtr.Zero)
+                return null;
+            return (NSView)MonoMac.ObjCRuntime.Runtime.GetNSObject(ptr);
+        }
+
+        public MonoMac.WebKit.WebView wb = null;
+        public Gtk.Socket socket = new Gtk.Socket();
         public ScrolledWindow scrollWindow = new ScrolledWindow();
 
         public void InitWebKit(Gtk.Box w)
         {
-            wb = new WebView();
+            if (!appInited)
+            {
+                MonoMac.AppKit.NSApplication.Init();
+                appInited = true;
+            }
+            wb = new MonoMac.WebKit.WebView(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
+            scrollWindow.Add(NSViewToGtkWidget(wb));
+            w.PackStart(scrollWindow, true, true, 0);
+            w.ShowAll();
+        }
+
+        public void Navigate(string uri)
+        {
+            wb.MainFrame.LoadRequest(new MonoMac.Foundation.NSUrlRequest(new MonoMac.Foundation.NSUrl(uri)));
+        }
+
+        public void LoadHTML(string html)
+        {
+            wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("about:blank"));
+            // Probably should make this conditional.
+            // We use a timeout so we don't sit here forever if a document fails to load.
+            /*
+			Stopwatch watch = new Stopwatch();
+			watch.Start();
+			while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+				while (Gtk.Application.EventsPending())
+					Gtk.Application.RunIteration();
+					*/
+        }
+
+        public TWWebBrowserSafari(Gtk.Box w)
+        {
+            InitWebKit(w);
+        }
+    }
+
+    public class TWWebBrowserWK : IBrowserWidget
+    {
+        public WebKit.WebView wb = null;
+        public ScrolledWindow scrollWindow = new ScrolledWindow();
+
+        public void InitWebKit(Gtk.Box w)
+        {
+            wb = new WebKit.WebView();
             scrollWindow.Add(wb);
             // Hack to work around webkit bug; webkit will crash the app if a size is not provided
             // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=466360 for a related bug report
@@ -228,7 +314,7 @@ namespace UserInterface.Views
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
                 if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
-                    popupWin.Move(-10000, -10000); 
+                    popupWin.Move(-10000, -10000);
                 popupWin.Add(MainWidget);
                 popupWin.ShowAll();
                 while (Gtk.Application.EventsPending())
@@ -271,13 +357,13 @@ namespace UserInterface.Views
 
         private void Hbox1_Realized(object sender, EventArgs e)
         {
-           vpaned1.Position = vpaned1.Parent.Allocation.Height / 2;
+            vpaned1.Position = vpaned1.Parent.Allocation.Height / 2;
         }
 
         private void Frame1_Unrealized(object sender, EventArgs e)
         {
             if ((browser as TWWebBrowserIE) != null)
-              (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+                (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
         }
 
         private void MainWindow_SetFocus(object o, SetFocusArgs args)
@@ -297,9 +383,9 @@ namespace UserInterface.Views
             if (contents != null)
             {
                 if (allowModification)
-                  memoView1.MemoText = contents;
+                    memoView1.MemoText = contents;
                 else
-                  PopulateView(contents);
+                    PopulateView(contents);
             }
         }
 
@@ -313,7 +399,7 @@ namespace UserInterface.Views
         {
             if (browser == null)
             {
-                if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+                if (ProcessUtilities.CurrentOS.IsWindows)
                 {
                     browser = new TWWebBrowserIE(vbox2);
 
@@ -328,6 +414,10 @@ namespace UserInterface.Views
                     (browser as TWWebBrowserIE).wb.DocumentTitleChanged += IE_TitleChanged;
                     if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
                         (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
+                }
+                else if (ProcessUtilities.CurrentOS.IsMac)
+                {
+                    browser = new TWWebBrowserSafari(vbox2);
                 }
                 else
                 {
@@ -345,7 +435,7 @@ namespace UserInterface.Views
 
         private void WK_TitleChanged(object o, TitleChangedArgs args)
         {
-            NewTitle(args.Title);        
+            NewTitle(args.Title);
         }
 
         private void IE_TitleChanged(object sender, EventArgs e)
@@ -389,7 +479,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Tells view to use a mono spaced font.
         /// </summary>
-        public void UseMonoSpacedFont() 
+        public void UseMonoSpacedFont()
         {
         }
 
@@ -407,7 +497,7 @@ namespace UserInterface.Views
         /// </summary>
         private void ToggleEditMode()
         {
-            bool editorIsOn = hbox1.Visible;  
+            bool editorIsOn = hbox1.Visible;
             TurnEditorOn(!editorIsOn);   // toggle preview / edit mode.
         }
 

@@ -5,11 +5,15 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    ///using GMap.NET.WindowsForms;
     using System;
     using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Drawing;
+    using System.Threading;
+    using APSIM.Shared.Utilities;
+    ///using System.Windows.Forms;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -40,6 +44,11 @@ namespace UserInterface.Views
         /// Get or set the center position of the map
         /// </summary>
         Models.Map.Coordinate Center { get; set; }
+
+        /// <summary>
+        /// Store current position and zoom settings
+        /// </summary>
+        void StoreSettings();
     }
 
     /// It would be good if we could retrieve the current center and zoom values for a map,
@@ -81,7 +90,7 @@ namespace UserInterface.Views
 <head>
 <script src='http://maps.googleapis.com/maps/api/js?key=AIzaSyC6OF6s7DwSHwibtQqAKC9GtOQEwTkCpkw'>
 </script>";
-            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
                 html +=
 @"<script>
@@ -214,7 +223,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
-            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
                 // Give the browser half a second to run all its scripts
                 // It would be better if we could tap into the browser's Javascript engine
@@ -251,6 +260,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
             {
                 if (browser is TWWebBrowserIE)
                     (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetZoom", new object[] { value });
+                else if (browser is TWWebBrowserSafari)
+                {
+                    (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("SetZoom(" + (int)Math.Round(value) + ")");
+                }
                 else if (browser is TWWebBrowserWK)
                 {
                     (browser as TWWebBrowserWK).wb.ExecuteScript("SetZoom(" + (int)Math.Round(value) + ")");
@@ -278,6 +291,21 @@ google.maps.event.addDomListener(window, 'load', initialize);
             {
                 if (browser is TWWebBrowserIE)
                     (browser as TWWebBrowserIE).wb.Document.InvokeScript("SetCenter", new object[] { value.Latitude, value.Longitude });
+                else if (browser is TWWebBrowserSafari)
+                {
+                    // None of these alternative seem to work. Why???
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    while (watch.ElapsedMilliseconds < 5000)
+                        Gtk.Application.RunIteration();
+                    var callresult = (browser as TWWebBrowserSafari).wb.WindowScriptObject.CallWebScriptMethod("alert", new MonoMac.Foundation.NSObject[] { new MonoMac.Foundation.NSString("hello") });
+                    var result = (browser as TWWebBrowserSafari).wb.WindowScriptObject.EvaluateWebScript("alert(\"HI!\")");
+                    string str = (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("alert(\"HI!\")");
+                    watch.Start();
+                    while (watch.ElapsedMilliseconds < 500)
+                        Gtk.Application.RunIteration();
+                    str = (browser as TWWebBrowserSafari).wb.StringByEvaluatingJavaScriptFromString("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
+                }
                 else if (browser is TWWebBrowserWK)
                 {
                     (browser as TWWebBrowserWK).wb.ExecuteScript("SetCenter(" + value.Latitude + ", " + value.Longitude + ")");
@@ -291,6 +319,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
                             Gtk.Application.RunIteration();
                     }
                 }
+            }
+        }
+
+        public void StoreSettings()
+        {
+            if (browser is TWWebBrowserSafari)
+            {
+                NewTitle((browser as TWWebBrowserSafari).wb.MainFrameTitle);
             }
         }
 
