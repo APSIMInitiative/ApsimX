@@ -1591,7 +1591,7 @@ namespace Models.PMF.Organs
             Structure.CohortToInitialise = 0;
             Structure.TipToAppear = 0;
             Structure.Emerged = false;
-            Structure.Initialised = false;
+            //Structure.Initialised = false;
             Structure.Clear();
             Structure.ResetStemPopn();
             Structure.LeafTipsAppeared = 0;
@@ -1600,11 +1600,10 @@ namespace Models.PMF.Organs
             Leaves.Clear();
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            OnInitialiseLeafCohorts(this, e);
+            Structure.Germinated = false;
+            //OnInitialiseLeafCohorts(this, e);
+            // Structure.Initialised = true;
 
-            Structure.Initialised = true;
-            Structure.DoEmergence();
-            Structure.Emerged = true;        
         }
 
         /// <summary>Called when [simulation commencing].</summary>

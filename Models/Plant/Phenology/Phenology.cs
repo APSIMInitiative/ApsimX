@@ -300,17 +300,7 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
-            bool hasEmergencePhase = false;
-            for (int P = 0; P < Phases.Count; P++)
-            {//if the plant has an emerging phase, set emerged to false so it become true when emerged otherwise leave true so perenial crops with no emergance phase start of emmerged 
-                if (Phases[P] is EmergingPhase)
-                    hasEmergencePhase = true;
             }
-            if (hasEmergencePhase == false)
-            {
-                Emerged = true;
-            }
-        }
 
         /// <summary>Called when crop is being harvested.</summary>
         /// <param name="sender">The sender.</param>
@@ -325,6 +315,17 @@ namespace Models.PMF.Phen
                 CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Germinated = false;
+            Emerged = false;
+        }
+
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -418,8 +419,9 @@ namespace Models.PMF.Phen
                         if (Stage >= 1)
                             Germinated = true;
 
-                        if (CurrentPhase is EmergingPhase)
+                        if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
                             Emerged = true;
+                        
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)

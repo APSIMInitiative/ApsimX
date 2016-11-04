@@ -417,7 +417,7 @@ namespace Models.PMF
                     //On the day of germination set up the first cohorts
                     if(InitialiseLeafCohorts !=null)
                         InitialiseLeafCohorts.Invoke(this, args);
-                    Initialised = true;
+                        Initialised = true;
                 }
 
                 if (Plant.IsEmerged)
