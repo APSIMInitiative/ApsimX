@@ -94,7 +94,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Start>StartDomancy</Start>
           <End>EndDomancy</End>
         </GenericPhase>
-        <GenericPhase>
+        <BuddingPhase>
           <Name>Budding</Name>
           <Memo>
             <Name>Memo</Name>
@@ -144,7 +144,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           </AccumulateFunction>
           <Start>EndDomancy</Start>
           <End>BudBurst</End>
-        </GenericPhase>
+        </BuddingPhase>
         <GenericPhase>
           <Name>ShootGrowth</Name>
           <Constant>
@@ -803,7 +803,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <PotentialEP>0</PotentialEP>
         <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
         <KDead>0.03</KDead>
-        <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
+        <MaximumMainStemLeafNumber>34</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -1656,6 +1656,7 @@ namespace Models
           <string>[Grapevine].Leaf.InitialisedCohortNo</string>
           <string>[Grapevine].Leaf.DeadCohortNo</string>
           <string>[Grapevine].Leaf.AppearedCohortNo</string>
+          <string>[Grapevine].Leaf.CohortSize</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1759,6 +1760,10 @@ namespace Models
       <Name>LeafNum</Name>
       <Series>
         <Name>Cohort</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+        </EventNamesOnGraph>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1860,5 +1865,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Simulation>
-  <ExplorerWidth>259</ExplorerWidth>
+  <ExplorerWidth>416</ExplorerWidth>
 </Simulations>
