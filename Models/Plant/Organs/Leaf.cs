@@ -17,7 +17,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
 
         /// <summary>The met data</summary>
@@ -180,7 +180,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
             [Link]
@@ -207,7 +207,7 @@ namespace Models.PMF.Organs
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link(IsOptional = true)]
@@ -215,7 +215,7 @@ namespace Models.PMF.Organs
             /// <summary>
             /// The proportion of mass that is respired each day
             /// </summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
@@ -791,7 +791,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]
@@ -882,7 +882,6 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             Leaves = new List<LeafCohort>();
-            WaterDemand = 0;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
@@ -1254,7 +1253,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Supply = Math.Min(remainder, L.DMRetranslocationSupply);
+                        double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
                         DMRetranslocationCohort[i] = Supply;
                         remainder -= Supply;
                     }
@@ -1306,19 +1305,21 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + "Leaf DM allocation has gone squiffy");
             }
         }
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public override double WaterDemand
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-           get
-            {
-                return PotentialEP * FudgeToGetETDemandRight;
-            }
+            return PotentialEP * FudgeToGetETDemandRight;
         }
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public override double WaterAllocation { get; set;}
+        public double WaterAllocation { get; private set;}
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
 
         /// <summary>Gets or sets the n demand.</summary>
         [Units("g/m^2")]
@@ -1624,6 +1625,14 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
+            if (Wt > 0.0)
+            {
+                DetachedWt += Wt;
+                DetachedN += N;
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
             CohortsAtInitialisation = 0;
         }
 

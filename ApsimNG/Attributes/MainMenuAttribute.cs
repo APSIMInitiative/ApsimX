@@ -15,7 +15,7 @@ namespace Models.Core
     public class MainMenuAttribute : System.Attribute
     {
         /// <summary>
-        /// Gets or sets the main menu name
+        /// Gets or sets the main menu name.
         /// </summary>
         public string MenuName { get; set; }
     } 

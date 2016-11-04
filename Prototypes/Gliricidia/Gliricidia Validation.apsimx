@@ -676,12 +676,6 @@ namespace Models
           <Name>Description</Name>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
@@ -782,6 +776,19 @@ But their data suggests a value of 0.3]]></MemoText>
           </Memo>
           <Value>0.57</Value>
         </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientDead</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Value of 0.57 from 
+Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees
+Author(s): Robin A. Harrington and James H. Fownes
+Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
+
+But their data suggests a value of 0.3]]></MemoText>
+          </Memo>
+          <Value>0.57</Value>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -851,10 +858,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
@@ -877,8 +880,36 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <VariableName>[Leaf].Live.Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>LeafResidenceTime</Name>
+          <Value>1000</Value>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>LeafDetachmentTime</Name>
+          <Value>1000</Value>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>LeafKillFraction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumLAI</Name>
+          <Value>0.1</Value>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -892,9 +923,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <KDead>0</KDead>
         <LAIDead>0</LAIDead>
-        <WaterAllocation>0</WaterAllocation>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
@@ -1166,7 +1195,16 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <YProperty>[Stem].Live.Wt</YProperty>
         </AllometricDemandFunction>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -1289,7 +1327,16 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Units>g/m^2/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <Cultivar>
         <Name>Gliricidia</Name>
@@ -2546,7 +2593,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2567,7 +2614,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -2657,7 +2704,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2678,7 +2725,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -2721,7 +2768,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2742,7 +2789,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -2939,7 +2986,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -3162,7 +3209,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3183,7 +3230,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -3226,7 +3273,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3247,7 +3294,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -3290,7 +3337,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -4669,6 +4716,7 @@ namespace Models
             <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
             <string>[Gliricidia].Leaf.LAI</string>
             <string>[Gliricidia].Leaf.Live.Wt</string>
+            <string>[Gliricidia].Leaf.CohortLive.Wt</string>
             <string>[Gliricidia].Stem.Live.Wt</string>
             <string>[Gliricidia].Root.Live.Wt</string>
             <string>[Gliricidia].Root.TotalDMDemand</string>

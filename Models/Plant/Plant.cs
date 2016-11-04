@@ -146,8 +146,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.WaterDemand > 0)
-                    F = Root.WaterUptake / Leaf.WaterDemand;
+                if (Leaf != null && Leaf.CalculateWaterDemand() > 0)
+                    F = Root.WaterUptake / Leaf.CalculateWaterDemand();
                 else
                     F = 1;
                 return F;
@@ -236,6 +236,8 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> PlantSowing;
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler PlantEmerging;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
@@ -335,8 +337,19 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            
+            if (Phenology == null)
+                SendEmergingEvent();
+
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+        }
+
+        /// <summary>
+        /// Send out an emerging event
+        /// </summary>
+        public void SendEmergingEvent()
+        {
+            if (PlantEmerging != null)
+                PlantEmerging.Invoke(this, null);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -388,7 +401,21 @@ namespace Models.PMF
             // Remove the biomass
             foreach (IOrgan organ in Organs)
             {
-                organ.DoRemoveBiomass(allData.removalData[organ.Name]);
+                OrganBiomassRemovalType amountToRemove = allData.removalData[organ.Name];
+                double totalLiveFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
+                double totalDeadFractionToRemove = amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
+
+                if (amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue > 1.0)
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                        + organ.Name
+                                        + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                if (amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue > 1.0)
+                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                        + organ.Name
+                                        + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
+                                        + Name + " than there is to remove");
+                organ.DoRemoveBiomass(amountToRemove);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
@@ -408,10 +435,9 @@ namespace Models.PMF
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
+            if (IsAlive == false)
+                throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             Summary.WriteMessage(this, "Crop ending");
-
-            foreach (IOrgan O in Organs)
-                O.DoPlantEnding();
 
             // Invoke a plant ending event.
             if (PlantEnding != null)

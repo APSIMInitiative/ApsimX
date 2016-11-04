@@ -420,8 +420,10 @@ namespace Models.PMF.Phen
                             Germinated = true;
 
                         if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
+                        {
+                            Plant.SendEmergingEvent();
                             Emerged = true;
-                        
+                        }
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)

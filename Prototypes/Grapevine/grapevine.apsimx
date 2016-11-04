@@ -568,6 +568,18 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <Value>1</Value>
             <Units>0-1</Units>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1080,8 +1092,16 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CropType>Grapevine</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>

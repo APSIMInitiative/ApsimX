@@ -331,6 +331,8 @@
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -866,7 +868,6 @@
             <Name>NoduleWt</Name>
             <VariableName>[Nodule].Live.Wt</VariableName>
           </VariableReference>
-
           <Constant>
             <Name>SpecificNitrogenaseActivity</Name>
             <Memo>
@@ -935,9 +936,16 @@
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <GenericOrgan>
         <Name>Shell</Name>
@@ -1111,8 +1119,16 @@
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1423,6 +1439,18 @@
             <Name>NonStructuralFraction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>
@@ -1602,7 +1630,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </Folder>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>StructuralFraction</Name>
           <Memo>
@@ -1611,6 +1638,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0.5</Value>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -1748,8 +1776,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4799,8 +4835,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -8256,8 +8290,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -11140,8 +11172,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -15515,8 +15545,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
