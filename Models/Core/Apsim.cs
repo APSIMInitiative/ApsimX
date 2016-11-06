@@ -104,9 +104,10 @@ namespace Models.Core
         /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel model, string namePath)
+        public static IModel Find(IModel model, string namePath)
         {
-            return Locator(model).Find(namePath, model as Model);
+            List<IModel> matches = FindAll(model);
+            return matches.Find(match => StringUtilities.StringsAreEqual(match.Name, namePath));
         }
 
         /// <summary>
@@ -115,9 +116,13 @@ namespace Models.Core
         /// <param name="model">The reference model</param>
         /// <param name="type">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
-        public static Model Find(IModel model, Type type)
+        public static IModel Find(IModel model, Type type)
         {
-            return Locator(model).Find(type, model as Model);
+            List<IModel> matches = FindAll(model, type);
+            if (matches.Count > 0)
+                return matches[0];
+            else
+                return null;
         }
 
         /// <summary>
@@ -127,7 +132,13 @@ namespace Models.Core
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model)
         {
-            return new List<IModel>(Locator(model).FindAll(model as Model));
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation == null || simulation.Scope == null)
+            {
+                ScopingRules scope = new ScopingRules();
+                return scope.FindAll(model).ToList();
+            }
+            return simulation.Scope.FindAll(model).ToList();
         }
 
         /// <summary>
@@ -138,7 +149,9 @@ namespace Models.Core
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
-            return new List<IModel>(Locator(model).FindAll(typeFilter, model as Model));
+            List<IModel> matches = FindAll(model);
+            matches.RemoveAll(match => !typeFilter.IsAssignableFrom(match.GetType()));
+            return matches;
         }
 
         /// <summary>
@@ -213,7 +226,7 @@ namespace Models.Core
             IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
             // Call deserialised
-            Events events = new Events();
+            Events events = new Events(null);
             events.AddModelEvents(modelToAdd);
             object[] args = new object[] { true };
             events.CallEventHandler(modelToAdd, "Deserialised", args);
@@ -263,7 +276,7 @@ namespace Models.Core
         /// <returns>The string version of the model</returns>
         public static string Serialise(IModel model)
         {
-            Events events = new Events();
+            Events events = new Events(null);
             events.AddModelEvents(model);
 
             // Let all models know that we're about to serialise.
@@ -413,120 +426,6 @@ namespace Models.Core
             {
                 child.Parent = model;
                 ParentAllChildren(child);
-            }
-        }
-
-        /// <summary>
-        /// Resolve all Link fields in the specified model.
-        /// </summary>
-        /// <param name="model">The model to look through for links</param>
-        /// <param name="linkTypeToMatch">If specified, only look for these types of links</param>
-        public static void ResolveLinks(IModel model, Type linkTypeToMatch = null)
-        {
-            string errorMsg = string.Empty;
-
-            // Go looking for [Link]s
-            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                            model.GetType(),
-                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
-            {
-                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null &&
-                    (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
-                {
-                    object linkedObject = null;
-
-                    List<IModel> allMatches = null;
-
-                    // Special cases: 
-                    //   if the type is an IFunction then must match on name and type.
-                    //   PMF organs have Live and Dead Biomass types. Need to link to correct one.
-                    //   Root1 has 'object NUptake3'. Need to use name to do link.
-                    if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
-                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
-                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
-                        field.FieldType.Name == "Object")
-                    {
-                        allMatches = Children(model, field.FieldType);
-                        linkedObject = allMatches.Find(m => m.Name == field.Name);
-                        if (linkedObject == null)
-                            allMatches.Clear();
-                    }
-
-                    else 
-                    {
-                        allMatches = FindAll(model, field.FieldType);
-                        if (allMatches.Count >= 1)
-                            linkedObject = allMatches[0];     // choose closest match.
-                    }
-
-                    if ((linkedObject == null) && (!link.IsOptional))
-                        errorMsg = string.Format(": Found {0} matches for {1} {2} !", allMatches.Count, field.FieldType.FullName, field.Name);
-
-                    if (linkedObject != null)
-                        field.SetValue(model, linkedObject);
-
-                    else if (!link.IsOptional)
-                        throw new ApsimXException(
-                                    model,
-                                    "Cannot resolve [Link] '" + field.ToString() + " in class " + Apsim.FullPath(model) + ". " + errorMsg);
-
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get all links. Useful for debugging.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetAllLinks(IModel model)
-        {
-            string st = string.Empty;
-
-            st += "\r\n******" + Apsim.FullPath(model) + "******\r\n";
-
-            // Go looking for [Link]s
-            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                            model.GetType(),
-                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
-            {
-                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null)
-                {
-                    st += field.Name + " = ";
-                    object value = field.GetValue(model);
-                    if (value == null)
-                        st += "null\r\n";
-                    else if (value is IModel)
-                        st += Apsim.FullPath(value as IModel) + "\r\n";
-                    else
-                        st += "??\r\n";
-                }
-            }
-
-            foreach (IModel child in model.Children)
-                st += GetAllLinks(child);
-
-            return st;
-        }
-
-
-        /// <summary>
-        /// Set to null all link fields in the specified model.
-        /// </summary>
-        /// <param name="model">The model to look through for links</param>
-        public static void UnresolveLinks(IModel model)
-        {
-            // Go looking for private [Link]s
-            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
-                                                model.GetType(),
-                                                BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
-            {
-                LinkAttribute link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
-                if (link != null)
-                {
-                    field.SetValue(model, null);
-                }
             }
         }
 

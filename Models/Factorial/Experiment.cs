@@ -170,7 +170,7 @@ namespace Models.Factorial
         /// <summary>
         /// Return a list of list of factorvalue objects for all permutations.
         /// </summary>
-        private List<List<FactorValue>> AllCombinations()
+        public List<List<FactorValue>> AllCombinations()
         {
             Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
 

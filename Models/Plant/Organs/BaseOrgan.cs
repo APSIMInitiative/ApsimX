@@ -31,11 +31,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The surface organic matter model</summary>
         [Link]
-        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The summary</summary>
         [Link]
-        protected ISummary Summary = null;
+        public ISummary Summary = null;
         #endregion
 
         #region Arbitration methods
@@ -73,39 +73,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Soil Arbitrator interface
-        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        /// <param name="NO3Supply">The returned NO3 supply</param>
-        /// <param name="NH4Supply">The returned NH4 supply</param>
-        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
-        {
-            NO3Supply = null;
-            NH4Supply = null;
-        }
-
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        virtual public double WaterDemand { get { return 0; } set { } }
-
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <param name="zone">The zone.</param>
-        virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-        
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        virtual public double WaterAllocation
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water allocation for " + Name); }
-        }
-        /// <summary>Does the water uptake.</summary>
-        /// <param name="Amount">The amount.</param>
-        /// <param name="zoneName">Zone name to do water uptake in</param>
-        virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
-
-        /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
 
         /// <summary>Gets the n supply uptake.</summary>
         [Units("g/m^2")]
@@ -151,10 +118,11 @@ namespace Models.PMF.Organs
 
         #endregion
 
-            #region Biomass removal
-            /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-            /// <param name="value">The fractions of biomass to remove</param>
-            virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        #region Biomass removal
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
                                            + value.FractionLiveToResidue + value.FractionDeadToResidue;
@@ -234,20 +202,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
                 DoDailyCleanup();
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
-        {
-            if (Wt > 0.0)
-            {
-                DetachedWt += Wt;
-                DetachedN += N;
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-            }
-
-            Clear();
         }
 
         /// <summary>Do harvest logic for this organ</summary>

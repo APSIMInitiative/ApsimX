@@ -16,7 +16,7 @@ namespace SWIMFrame
      */
     public static class MVG
     {
-        static int sid; // soil ident
+        // static int sid; // soil ident
         static double ths, Ks, he, hd, p, hg, m, n, eta, fhe, fhd;
 
         // Set hydraulic params.
@@ -24,10 +24,58 @@ namespace SWIMFrame
         // ths1 etc. - MVGBC or MVGM params.
         public static void Params(int sid1, double ths1, double Ks1, double he1, double hd1, double p1, double hg1, double m1, double n1)
         {
-            sid = sid1; ths = ths1; Ks = Ks1; he = he1; hd = hd1; p = p1; hg = hg1; m = m1; n = n1;
+            // sid = sid1;
+            ths = ths1;
+            Ks = Ks1;
+            he = he1;
+            hd = hd1;
+            p = p1;
+            hg = hg1;
+            m = m1;
+            n = n1;
             eta = 2.0 / (m * n) + 2.0 + p;
             fhe = Math.Pow(1.0 + Math.Pow(he / hg, n), -m);
             fhd = Math.Pow(1.0 + Math.Pow(hd / hg, n), -m);
+        }
+
+        /// <summary>
+        /// Helper function for unit testing. Only tests values that are modified by Params
+        /// </summary>
+        /// <param name="etaTest">Expected eta</param>
+        /// <param name="fheTest">Expected fhe</param>
+        /// <param name="fhdTest">Expected fhd</param>
+        /// <returns></returns>
+        public static bool TestParams(int sidTest, double etaTest, double fheTest, double fhdTest)
+        {
+            if (sidTest==103)
+            {
+                ths = 0.4;
+                Ks = 2.0;
+                he = -2.0;
+                hd = -10000000.0;
+                p = 1.0;
+                hg = -10.0;
+                m = 0.14285714285714285;
+                n = 2.3333333333333335;
+            }
+            else
+            {
+                ths = 0.6;
+                Ks = 0.2;
+                he = -2.0;
+                hd = -10000000.0;
+                p = 1.0;
+                hg = -40.0;
+                m = 5.26315789473684181E-002;
+                n = 2.1111111111111112;
+            }
+
+            Params(sidTest, ths, Ks, he, hd, p, hg, m, n);
+
+            if (etaTest == eta && fheTest == fhe && fhdTest == fhd)
+                return true;
+            else
+                return false;
         }
 
         public static double Sofh(double h)
@@ -69,12 +117,12 @@ namespace SWIMFrame
 
         public static double KofhS(double h, double S)
         {
-            return Math.Pow(Ks * S, eta);
+            return Ks * Math.Pow(S, eta);
         }
 
         public static double Kofh(double h)
         {
-            return Math.Pow(Ks * Sofh(h), eta);
+            return Ks * Math.Pow(Sofh(h), eta);
         }
     }
 }

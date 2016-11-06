@@ -196,9 +196,15 @@ namespace UserInterface.Forms
                             string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
                             string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
+                            // Check to see if upgrader is already running for whatever reason.
+                            // Kill them if found.
+                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                                process.Kill();
+
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
+
                             // Copy in the new upgrader.
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 

@@ -10,7 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.Factorial;
 using System.ComponentModel;
 
-namespace Models.Core 
+namespace Models.Core
 {
     /// <summary>
     /// A simulation model
@@ -18,7 +18,8 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Experiment))]
     [Serializable]
-    public class Simulation : Zone, JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
+    [ScopedModel]
+    public class Simulation : Model, JobManager.IRunnable, JobManager.IComputationalyTimeConsuming
     {
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
@@ -26,6 +27,12 @@ namespace Models.Core
         /// <summary></summary>
         [NonSerialized]
         private Events events = null;
+
+        [NonSerialized]
+        private Links links = null;
+
+        [NonSerialized]
+        private ScopingRules scope = null;
 
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
@@ -48,6 +55,9 @@ namespace Models.Core
         /// <summary>Occurs when [completed].</summary>
         public event EventHandler Completed;
 
+        /// <summary>Returns the object responsible for scoping rules.</summary>
+        public ScopingRules Scope { get { return scope; } }
+
         /// <summary>A locater object for finding models and variables.</summary>
         [NonSerialized]
         private Locater locater;
@@ -66,6 +76,33 @@ namespace Models.Core
                 return locater;
             }
         }
+
+        /// <summary>Gets the value of a variable or model.</summary>
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public object Get(string namePath)
+        {
+            return Locater.Get(namePath, this);
+        }
+
+        /// <summary>Get the underlying variable object for the given path.</summary>
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public IVariable GetVariableObject(string namePath)
+        {
+            return Locater.GetInternal(namePath, this);
+        }
+
+        /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
+        /// <param name="namePath">The name of the object to set</param>
+        /// <param name="value">The value to set the property to</param>
+        public void Set(string namePath, object value)
+        {
+            Locater.Set(namePath, this, value);
+        }
+
+
+
 
         /// <summary>Argument for a DoCommence event.</summary>
         public class CommenceArgs : EventArgs
@@ -93,6 +130,7 @@ namespace Models.Core
         public Simulation()
         {
             locater = new Locater();
+            scope = new ScopingRules();
         }
 
         /// <summary>Called to start the job.</summary>
@@ -178,11 +216,11 @@ namespace Models.Core
         /// <summary>Connect all links and events in simulation</summary>
         public void ConnectLinksAndEvents()
         {
-            events = new Events();
-            events.ConnectEvents(this);
-            Apsim.ResolveLinks(this);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-                Apsim.ResolveLinks(child);
+            scope = new ScopingRules();
+            events = new Events(this);
+            events.ConnectEvents();
+            links = new Core.Links();
+            links.Resolve(this);
         }
 
         /// <summary>Disconnect all links and events in simulation</summary>
@@ -190,9 +228,7 @@ namespace Models.Core
         {
             events.DisconnectEvents(this);
             events = null;
-            Apsim.UnresolveLinks(this);
-            foreach (Model child in Apsim.ChildrenRecursively(this))
-                Apsim.UnresolveLinks(child);
+            links.Unresolve(this);
         }
     }
 }

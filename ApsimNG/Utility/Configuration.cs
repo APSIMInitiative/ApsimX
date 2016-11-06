@@ -133,7 +133,7 @@ namespace Utility
         {
             get
             {
-                //On Linux and Mac the path will be .config/
+                // On Linux and Mac the path will be .config/
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                     "ApsimInitiative",
                                     "ApsimX");
@@ -158,7 +158,7 @@ namespace Utility
                     return instance;
 
                 string ConfigurationFile = Path.Combine(ConfigurationFolder, "ApsimX.xml");
-                //deserialise the file
+                // deserialise the file
                 if (File.Exists(ConfigurationFile))
                 {
                     System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));

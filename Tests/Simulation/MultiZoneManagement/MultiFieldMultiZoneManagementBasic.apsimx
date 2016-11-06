@@ -67,18 +67,18 @@ public class Script : Model
       <Script>
         <Today_PatchIrrigation>
         </Today_PatchIrrigation>
-        <No_fields>4</No_fields>
-        <Nozzle_diameter>0</Nozzle_diameter>
         <SoilPAW>
         </SoilPAW>
         <TodayDeficit>
         </TodayDeficit>
         <IrrigDeficit>
         </IrrigDeficit>
+        <No_fields>4</No_fields>
         <On_off>True</On_off>
         <Start_irrig>1998-10-01</Start_irrig>
         <Finish_irrig>1999-04-01</Finish_irrig>
         <Irrig_eff>0</Irrig_eff>
+        <Nozzle_diameter>0</Nozzle_diameter>
         <Rain_pause>0</Rain_pause>
         <Days_pause>0</Days_pause>
         <Crop_in>True</Crop_in>
@@ -190,14 +190,7 @@ namespace Models
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-               		if (zone is Simulation)
-                    {
-                       // top level simulation - we don't want this.
-                    }
-                    else
-                    {
-                    	zones.Add(zone as Zone);
-                  	}
+                  	zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                
@@ -461,14 +454,7 @@ namespace Models
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-                     if (zone is Simulation)
-                     {
-                        // top level simulation - we don't want this.
-                     }
-                     else
-                     {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                Fert_depth = 10;//WHEN FIXED REMOVE
@@ -579,14 +565,7 @@ namespace Models
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-                     if (zone is Simulation)
-                     {
-                        // top level simulation - we don't want this.
-                     }
-                     else
-                     {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                Fert_depth = 10;//WHEN FIXED REMOVE
@@ -697,14 +676,7 @@ namespace Models
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-                     if (zone is Simulation)
-                     {
-                        // top level simulation - we don't want this.
-                     }
-                     else
-                     {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                Fert_depth = 10;//WHEN FIXED REMOVE
@@ -815,14 +787,7 @@ namespace Models
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-                     if (zone is Simulation)
-                     {
-                        // top level simulation - we don't want this.
-                     }
-                     else
-                     {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                Fert_depth = 10;//WHEN FIXED REMOVE
@@ -866,12 +831,10 @@ namespace Models
     <Manager>
       <Name>ApplyWater</Name>
       <Script>
-        <TotWaterApp>
-        </TotWaterApp>
-        <WaterExport>
-        </WaterExport>
         <IrrApp>
         </IrrApp>
+        <TotWaterApp>
+        </TotWaterApp>
         <Runoff>
         </Runoff>
         <RunoffField>
@@ -887,6 +850,8 @@ namespace Models
         </RunOn>
         <AreaRunOn>
         </AreaRunOn>
+        <WaterExport>
+        </WaterExport>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -922,14 +887,7 @@ namespace Models
 		       List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-               	  if (zone is Simulation)
-               	  {
-               	     // top level simulation - we don't want this.
-               	  }
-               	  else
-               	  {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                
@@ -1061,6 +1019,8 @@ namespace Models
     <Manager>
       <Name>Field_Reporting</Name>
       <Script>
+        <RArea_Array>
+        </RArea_Array>
         <RYieldArea_Array>
         </RYieldArea_Array>
         <RIrrigationArea_Array>
@@ -1069,8 +1029,6 @@ namespace Models
         </RWaterArea_Array>
         <RFertiliserArea_Array>
         </RFertiliserArea_Array>
-        <RArea_Array>
-        </RArea_Array>
         <RDrainArea_Array>
         </RDrainArea_Array>
       </Script>
@@ -1114,14 +1072,7 @@ namespace Models
 		       List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-               	  if (zone is Simulation)
-               	  {
-               	     // top level simulation - we don't want this.
-               	  }
-               	  else
-               	  {
-                     zones.Add(zone as Zone);
-                  }
+                    zones.Add(zone as Zone);
                }
                Zones = zones.ToArray();
                
@@ -1185,11 +1136,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>2</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>2</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -1367,7 +1318,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -1402,6 +1352,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -1632,6 +1583,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -1695,6 +1647,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -1708,11 +1661,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -1919,7 +1872,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -1954,6 +1906,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2184,6 +2137,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -2241,6 +2195,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2260,11 +2215,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -2441,7 +2396,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -2476,6 +2430,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2706,6 +2661,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -2769,6 +2725,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2782,11 +2739,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>6</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>6</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -2993,7 +2950,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -3028,6 +2984,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -3258,6 +3215,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -3315,6 +3273,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3334,11 +3293,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -3515,7 +3474,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -3550,6 +3508,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -3780,6 +3739,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -3843,6 +3803,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -3856,11 +3817,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -4067,7 +4028,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -4102,6 +4062,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4332,6 +4293,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -4389,6 +4351,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4408,11 +4371,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -4589,7 +4552,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -4624,6 +4586,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4854,6 +4817,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -4917,6 +4881,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4930,11 +4895,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -5141,7 +5106,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -5176,6 +5140,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -5406,6 +5371,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -5463,6 +5429,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -5482,11 +5449,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>1</This_field_no>
-          <Irrigator_position>1</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>1</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -5693,7 +5660,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -5728,6 +5694,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -5958,6 +5925,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -6015,6 +5983,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6034,11 +6003,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>2</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>2</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -6245,7 +6214,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -6280,6 +6248,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -6510,6 +6479,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -6567,6 +6537,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6586,11 +6557,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -6797,7 +6768,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -6832,6 +6802,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -7062,6 +7033,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -7119,6 +7091,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -7138,11 +7111,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -7349,7 +7322,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -7384,6 +7356,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -7614,6 +7587,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -7671,6 +7645,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -7690,11 +7665,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>6</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>6</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -7901,7 +7876,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -7936,6 +7910,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -8166,6 +8141,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -8223,6 +8199,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8242,11 +8219,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -8453,7 +8430,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -8488,6 +8464,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -8718,6 +8695,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -8775,6 +8753,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8794,11 +8773,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -9005,7 +8984,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -9040,6 +9018,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -9270,6 +9249,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -9327,6 +9307,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -9346,11 +9327,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Gain</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Gain</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -9557,7 +9538,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -9592,6 +9572,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -9822,6 +9803,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -9879,6 +9861,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -9898,11 +9881,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -10109,7 +10092,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -10144,6 +10126,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -10374,6 +10357,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -10431,6 +10415,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -10450,11 +10435,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>2</This_field_no>
-          <Irrigator_position>1</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>1</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -10661,7 +10646,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -10696,6 +10680,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -10926,6 +10911,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -10983,6 +10969,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -11002,11 +10989,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -11183,7 +11170,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -11218,6 +11204,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -11448,6 +11435,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -11511,6 +11499,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -11524,11 +11513,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>2</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>2</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -11705,7 +11694,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -11740,6 +11728,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -11970,6 +11959,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -12033,6 +12023,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -12046,11 +12037,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>6</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>6</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -12227,7 +12218,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -12262,6 +12252,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -12492,6 +12483,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -12555,6 +12547,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -12568,11 +12561,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -12749,7 +12742,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -12784,6 +12776,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -13014,6 +13007,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -13077,6 +13071,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -13090,11 +13085,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -13301,7 +13296,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -13336,6 +13330,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -13566,6 +13561,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -13623,6 +13619,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -13642,11 +13639,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_01</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -13823,7 +13820,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -13858,6 +13854,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -14088,6 +14085,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -14151,6 +14149,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -14164,11 +14163,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -14375,7 +14374,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -14410,6 +14408,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -14640,6 +14639,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -14697,6 +14697,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -14716,11 +14717,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -14927,7 +14928,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -14962,6 +14962,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -15192,6 +15193,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -15249,6 +15251,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -15268,11 +15271,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>3</This_field_no>
-          <Irrigator_position>1</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>1</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -15479,7 +15482,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -15514,6 +15516,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -15744,6 +15747,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -15801,6 +15805,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -15820,11 +15825,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -16031,7 +16036,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -16066,6 +16070,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -16296,6 +16301,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -16353,6 +16359,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -16372,11 +16379,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>4</Irrigator_position>
-          <Patch_area>2</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>2</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>4</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -16583,7 +16590,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -16618,6 +16624,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -16848,6 +16855,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -16905,6 +16913,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -16924,11 +16933,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>6</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>6</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -17135,7 +17144,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -17170,6 +17178,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -17400,6 +17409,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -17457,6 +17467,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -17476,11 +17487,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -17687,7 +17698,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -17722,6 +17732,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -17952,6 +17963,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -18009,6 +18021,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -18028,11 +18041,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>3</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>3</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -18239,7 +18252,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -18274,6 +18286,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -18504,6 +18517,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -18561,6 +18575,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -18580,11 +18595,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Loss</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Loss</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -18791,7 +18806,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -18826,6 +18840,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -19056,6 +19071,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -19113,6 +19129,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -19132,11 +19149,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>1</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_03</Soil_type>
+          <Patch_area>1</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -19343,7 +19360,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -19378,6 +19394,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -19608,6 +19625,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -19665,6 +19683,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -19684,11 +19703,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>2</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>2</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -19895,7 +19914,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -19930,6 +19948,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -20160,6 +20179,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -20217,6 +20237,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -20236,11 +20257,11 @@ namespace Models
         <Name>Manager_P</Name>
         <Script>
           <This_field_no>4</This_field_no>
-          <Irrigator_position>1</Irrigator_position>
-          <Patch_area>3</Patch_area>
-          <Landscape_position>Neutral</Landscape_position>
           <Field_crop>wheat</Field_crop>
           <Soil_type>Soil_02</Soil_type>
+          <Patch_area>3</Patch_area>
+          <Landscape_position>Neutral</Landscape_position>
+          <Irrigator_position>1</Irrigator_position>
         </Script>
         <Code><![CDATA[
 using Microsoft.VisualBasic;
@@ -20447,7 +20468,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -20482,6 +20502,7 @@ namespace Models
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -20712,6 +20733,7 @@ namespace Models
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -20769,6 +20791,7 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -21460,8 +21483,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>277</ExplorerWidth>
 </Simulations>

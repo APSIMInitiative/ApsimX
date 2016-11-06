@@ -962,6 +962,18 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     <LeafCohortParameters>
       <Name>CohortParameters</Name>
       <Constant>
+        <Name>DMReallocationFactor</Name>
+        <Value>0</Value>
+      </Constant>      
+      <Constant>
+        <Name>LeafSizeShapeParameter</Name>
+        <Value>0.01</Value>
+      </Constant>
+      <Constant>
+        <Name>MaintenanceRespirationFunction</Name>
+        <Value>0</Value>
+      </Constant> 
+      <Constant>
         <Name>SenessingLeafRelativeSize</Name>
         <Value>1</Value>
         <Units>0-1</Units>
@@ -1498,8 +1510,8 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Constant>
         <Name>SenescenceRate</Name>
         <Value>0</Value>
-		    <Units>/d</Units>
-      </Constant>	  
+        <Units>/d</Units>
+      </Constant>
       <LinearInterpolationFunction>
         <Name>ExpansionStress</Name>
         <XYPairs>
@@ -1554,7 +1566,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>DMRetranslocationFactor</Name>
       <Value>0.1</Value>
     </Constant>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1584,23 +1596,28 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-     <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
-      </GenericOrgan>
+    </BiomassRemoval>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <Value>0</Value>
+      <Units>g/m^2</Units>
+    </Constant>
+    <Constant>
+      <Name>DetachmentRateFunction</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant>    
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
+  </GenericOrgan>
   <GenericOrgan>
     <Name>Rachis</Name>
     <MultiplyFunction>
@@ -1691,7 +1708,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>SenescenceRate</Name>
       <Value>0</Value>
       <Units>/d</Units>
-    </Constant>	  
+    </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
       <Value>0.003</Value>
@@ -1712,7 +1729,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </XYPairs>
       <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
     </LinearInterpolationFunction>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1742,23 +1759,28 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-     <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
-      </GenericOrgan>
+    </BiomassRemoval>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <Value>0</Value>
+      <Units>g/m^2</Units>
+    </Constant>
+    <Constant>
+      <Name>DetachmentRateFunction</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant>  
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
+  </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
     <Biomass>
@@ -1890,7 +1912,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </PhaseLookupValue>
       </PhaseLookup>
     </PartitionFractionDemandFunction>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1920,28 +1942,33 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-     <Constant>
-            <Name>InitialWtFunction</Name>
-            <Value>0</Value>
-            <Units>g/m^2</Units>
-         </Constant>
-         <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>1</Value>
-            <Units>g/g</Units>
-         </Constant>
-         <Constant>
-            <Name>DetachmentRateFunction</Name>
-            <Value>0</Value>
-            <Units>/d</Units>
-         </Constant>
-		  <Constant>
-			<Name>SenescenceRate</Name>
-			<Value>0</Value>
-			<Units>/d</Units>
-		  </Constant>
-    </GenericOrgan>
+    </BiomassRemoval>
+    <Constant>
+      <Name>InitialWtFunction</Name>
+      <Value>0</Value>
+      <Units>g/m^2</Units>
+    </Constant>
+    <Constant>
+      <Name>DetachmentRateFunction</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>SenescenceRate</Name>
+      <Value>0</Value>
+      <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>     
+  </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <Memo>

@@ -29,7 +29,7 @@ namespace Models.Lifecycle
         private List<Cohort> CohortList;
 
         [NonSerialized]
-        private List<LifestageProcess> ProcessList;
+        private List<ILifestageProcess> ProcessList;
 
         /// <summary>
         /// 
@@ -93,7 +93,7 @@ namespace Models.Lifecycle
                     //apply functions to cohort
                     CurrentCohort = aCohort;
                     //iterate throught the process children of this lifestage
-                    foreach (LifestageProcess proc in ProcessList)
+                    foreach (ILifestageProcess proc in ProcessList)
                     {
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
@@ -221,8 +221,8 @@ namespace Models.Lifecycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ProcessList = new List<LifestageProcess>();
-            foreach (LifestageProcess proc in Apsim.Children(this, typeof(LifestageProcess)))
+            ProcessList = new List<ILifestageProcess>();
+            foreach (ILifestageProcess proc in Apsim.Children(this, typeof(ILifestageProcess)))
             {
                 ProcessList.Add(proc);
             }

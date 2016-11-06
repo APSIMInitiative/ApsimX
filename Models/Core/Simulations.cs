@@ -306,17 +306,14 @@ namespace Models.Core
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
 
                 // resolve all links in cloned simulation.
-                Apsim.ResolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.ResolveLinks(child);
+                Links links = new Core.Links();
+                links.Resolve(clonedSimulation);
 
                 // Document the model.
                 modelToDocument.Document(tags, headingLevel, 0);
 
                 // Unresolve links.
-                Apsim.UnresolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.UnresolveLinks(child);
+                links.Unresolve(clonedSimulation);
             }
         }
     }

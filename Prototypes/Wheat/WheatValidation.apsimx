@@ -922,6 +922,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1453,6 +1455,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>NReallocationFactor</Name>
             <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
@@ -2121,7 +2127,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2158,7 +2164,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>Emergence</Start>
@@ -2191,17 +2197,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2361,7 +2370,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2398,7 +2407,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <DivideFunction>
           <Name>PercentWSC</Name>
           <VariableReference>
@@ -2416,17 +2425,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4188,7 +4200,7 @@ namespace Models
     <Name>Validation</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[A test dataset has been developed to test the APSIM Wheat model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates, row spacing, irrigation), genetic backgrounds (different regions, cultivar types) and for special considerations such as crop damage.  These tests have been groups into various geographical regions to allow the user to evaluate the suitability of the model for their particular region of interest.
+      <MemoText><![CDATA[A test dataset has been developed to test the APSIM Wheat model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates, row spacing, irrigation), genetic backgrounds (different regions, cultivar types) and for special considerations such as crop damage.  These tests have been groups into various geographical regions to allow the user to evaluate the suitability of the model for their particular region of interest.  Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and grain yield components.
 ]]></MemoText>
     </Memo>
     <Map>
@@ -4258,8 +4270,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -4306,8 +4318,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -4353,8 +4365,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -4401,8 +4413,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -4448,8 +4460,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -4495,8 +4507,8 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -5606,8 +5618,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Crop</Name>
@@ -7226,8 +7236,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Canopy</Name>
@@ -9448,8 +9456,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Yield</Name>
@@ -10343,8 +10349,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafAppearance</Name>
@@ -11435,8 +11439,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafAppearance</Name>
@@ -12748,8 +12750,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -13287,8 +13287,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafNumberTimeSeries</Name>
@@ -13435,8 +13433,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13483,8 +13481,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13531,8 +13529,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13578,8 +13576,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13625,8 +13623,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13672,8 +13670,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -14423,8 +14421,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -15140,8 +15136,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -15857,8 +15851,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FloweringDate</Name>
@@ -16869,8 +16861,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
       </Experiment>
       <Experiment>
@@ -17902,8 +17892,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -19285,8 +19273,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -21492,8 +21478,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Harvest Yield</Name>
@@ -21697,8 +21681,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -21792,8 +21776,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -21839,8 +21823,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -22698,8 +22682,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>TotalSW</Name>
@@ -23776,8 +23758,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>TotalSW</Name>
@@ -23942,8 +23922,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -23990,8 +23970,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -24038,8 +24018,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -24085,8 +24065,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -26091,8 +26071,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>SoilWaterProfile</Name>
@@ -29730,8 +29708,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -33776,8 +33752,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -37141,8 +37115,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -39659,8 +39631,6 @@ namespace Models
           <SoilArbitrator>
             <Name>Soil Arbitrator</Name>
           </SoilArbitrator>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -41918,8 +41888,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Graph1</Name>
@@ -42501,8 +42469,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -43054,8 +43020,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>FLNdynamics</Name>
@@ -43947,8 +43911,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -44489,8 +44451,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Graph1</Name>
@@ -45134,8 +45094,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -45676,8 +45634,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -46218,8 +46174,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -46760,8 +46714,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -47302,8 +47254,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -47844,8 +47794,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -48386,8 +48334,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
         <Experiment>
@@ -48928,8 +48874,6 @@ namespace Models
             <SoilArbitrator>
               <Name>Soil Arbitrator</Name>
             </SoilArbitrator>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
         </Experiment>
       </Folder>
@@ -49642,8 +49586,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Yield</Name>
@@ -51284,8 +51226,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Yield</Name>
@@ -52669,8 +52609,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Biomass</Name>
@@ -53372,8 +53310,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Biomass</Name>
@@ -54314,8 +54250,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -56409,8 +56343,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -57588,8 +57520,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -58344,8 +58274,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -59061,8 +58989,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -59778,8 +59704,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>FloweringDate</Name>
@@ -59841,8 +59765,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -60580,8 +60504,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Lonzee06</Name>
@@ -61226,8 +61148,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Lonzee08</Name>
@@ -61872,8 +61792,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>
@@ -63238,8 +63156,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Phenology</Name>
@@ -65000,8 +64916,6 @@ namespace Models
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <Area>0</Area>
-            <Slope>0</Slope>
           </Simulation>
           <Graph>
             <Name>Phenology</Name>
@@ -66450,8 +66364,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Yucheng03</Name>
@@ -67114,8 +67026,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Simulation>
           <Name>Yucheng04</Name>
@@ -67778,8 +67688,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>
@@ -68840,8 +68748,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -68850,7 +68756,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -68871,7 +68777,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -68914,7 +68820,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -68935,7 +68841,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -68956,7 +68862,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -68977,7 +68883,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -69020,7 +68926,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -69041,7 +68947,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -69613,8 +69519,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Phenology</Name>
@@ -70149,7 +70053,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -70197,7 +70101,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -70245,7 +70149,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -70293,7 +70197,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -70341,7 +70245,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
