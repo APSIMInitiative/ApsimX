@@ -979,8 +979,9 @@ namespace Models.PMF.Organs
         /// <summary>
         /// remove biomass from the leaf.
         /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The frations of biomass to remove</param>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
             foreach (LeafCohort leaf in Leaves)
             {

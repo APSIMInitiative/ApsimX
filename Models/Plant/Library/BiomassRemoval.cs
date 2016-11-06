@@ -27,14 +27,33 @@ namespace Models.PMF.Library
         public List<OrganBiomassRemovalType> defaults = null;
 
         /// <summary>Removes biomass from live and dead biomass pools.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="amount">The fractions of biomass to remove</param>
         /// <param name="Live">Live biomass pool</param>
         /// <param name="Dead">Dead biomass pool</param>
         /// <param name="Removed">The removed pool to add to.</param>
         /// <param name="Detached">The detached pool to add to.</param>
-        public void RemoveBiomass(OrganBiomassRemovalType amount, Biomass Live, Biomass Dead, 
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amount, 
+                                  Biomass Live, Biomass Dead, 
                                   Biomass Removed, Biomass Detached)
         {
+            if (amount == null)
+                amount = FindDefault(biomassRemoveType);
+
+            if (amount == null)
+                throw new Exception("Cannot find biomass removal defaults: " + Parent.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
+
+            if (amount.FractionLiveToRemove + amount.FractionLiveToResidue > 1.0)
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                    + Parent.Name
+                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
+                                    + Name + " than there is to remove");
+            if (amount.FractionDeadToRemove + amount.FractionDeadToResidue > 1.0)
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                    + Parent.Name
+                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
+                                    + Name + " than there is to remove");
+
             double totalFractionToRemove = amount.FractionLiveToRemove + amount.FractionDeadToRemove
                                            + amount.FractionLiveToResidue + amount.FractionDeadToResidue;
             
