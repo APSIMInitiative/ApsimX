@@ -181,10 +181,11 @@ namespace Models.PMF.Organs
 
         #region IOrgan interface
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            biomassRemovalModel.RemoveBiomass(value, Live, Dead, Removed, Detached);
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
         #endregion
 

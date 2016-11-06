@@ -20,8 +20,9 @@ namespace Models.PMF.Interfaces
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="biomassToRemove">Biomass to remove</param>
-        void DoRemoveBiomass(OrganBiomassRemovalType biomassToRemove);
+        void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
 
     }
