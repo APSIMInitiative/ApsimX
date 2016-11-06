@@ -236,12 +236,16 @@ namespace Models.PMF
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> PlantSowing;
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler PlantEmerging;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<RemovingBiomassArgs> RemovingBiomass;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Pruning;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -333,8 +337,19 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            
+            if (Phenology == null)
+                SendEmergingEvent();
+
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+        }
+
+        /// <summary>
+        /// Send out an emerging event
+        /// </summary>
+        public void SendEmergingEvent()
+        {
+            if (PlantEmerging != null)
+                PlantEmerging.Invoke(this, null);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -352,7 +367,12 @@ namespace Models.PMF
             foreach (IOrgan organ in Organs)
             {
                 // Get the default removal fractions
-                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+                OrganBiomassRemovalType biomassRemoval;
+                if (organ is GenericOrgan)
+                    biomassRemoval = (organ as GenericOrgan).biomassRemovalModel.FindDefault(biomassRemoveType);
+                else
+                    biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
+
                 if (biomassRemoval == null)
                     throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
 
@@ -410,17 +430,19 @@ namespace Models.PMF
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0)
                 Structure.doThin(removalData.SetThinningProportion);
+
+            // Pruning event (winter pruning, summer pruning is called as cut) reset the phenology if SetPhenologyStage specified.
+            if (biomassRemoveType == "Prune" && Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+                
         }
-        
+
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             Summary.WriteMessage(this, "Crop ending");
-
-            foreach (IOrgan O in Organs)
-                O.DoPlantEnding();
 
             // Invoke a plant ending event.
             if (PlantEnding != null)

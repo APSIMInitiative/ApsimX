@@ -142,7 +142,6 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -177,6 +176,7 @@
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -407,6 +407,7 @@
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
+        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -450,6 +451,7 @@
         <Name>Maize</Name>
         <ResourceName>Maize</ResourceName>
         <CropType>Maize</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -469,6 +471,7 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Manager>
         <Name>SowingFertiliser</Name>
@@ -680,8 +683,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
