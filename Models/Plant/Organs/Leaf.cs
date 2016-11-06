@@ -105,10 +105,18 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double FRGR { get; set; }
         
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
-        public double PotentialEP { get;  set; }
-
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
         /// <summary>
         /// This paramater is applied to ETDemand.  It is a fudge for testing
         /// </summary>
@@ -118,17 +126,35 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
         #endregion
 
+        #region Has Water Demand Interface
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent {get; set;}
+        
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
+        {
+            return PotentialEP * FudgeToGetETDemandRight;
+        }
+        /// <summary>Gets or sets the water allocation.</summary>
+        [XmlIgnore]
+        public double WaterAllocation { get; private set; }
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
+
+        #endregion
+
         #region Links
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-
-        /// <summary>The climate module</summary>
-        [Link(IsOptional = true)]
-        public MicroClimate MicroClimate = null;
         #endregion
-
-
 
         #region Structures
         /// <summary>
@@ -856,6 +882,9 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
                 if (FrostFraction.Value > 0)
                     foreach (LeafCohort L in Leaves)
                         L.DoFrost(FrostFraction.Value);
@@ -1308,25 +1337,6 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + "Leaf DM allocation has gone squiffy");
             }
         }
-        /// <summary>Calculates the water demand.</summary>
-        public double CalculateWaterDemand()
-        {
-            if (MicroClimate == null)
-                throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
-
-            return PotentialEP * FudgeToGetETDemandRight;
-        }
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        public double WaterAllocation { get; private set;}
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
-
         /// <summary>Gets or sets the n demand.</summary>
         [Units("g/m^2")]
         public override BiomassPoolType NDemand
@@ -1549,6 +1559,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
+                MicroClimatePresent = false;
                 Clear();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");

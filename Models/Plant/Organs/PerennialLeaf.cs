@@ -22,10 +22,6 @@ namespace Models.PMF.Organs
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
-        
-        /// <summary>The climate module</summary>
-        [Link(IsOptional = true)]
-        public MicroClimate MicroClimate = null;
 
         /// <summary>Gets the cohort live.</summary>
         [XmlIgnore]
@@ -168,8 +164,22 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double FRGR { get; set; }
 
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        public double PotentialEP { get; set; }
+        [Units("mm")]
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -229,9 +239,6 @@ namespace Models.PMF.Organs
         /// <summary>Calculate the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            if (MicroClimate == null)
-                throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
-
             return PotentialEP;
         }
         /// <summary>Gets the transpiration.</summary>
@@ -603,14 +610,17 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when crop is sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
+            {
+                MicroClimatePresent = false;
                 Clear();
+            }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -621,6 +631,9 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
                 Detached.Clear();
                 FRGR = FRGRFunction.Value;
                 LAI = LAIFunction.Value;

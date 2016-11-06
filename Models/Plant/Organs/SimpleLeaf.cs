@@ -51,10 +51,6 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        /// <summary>The climate module</summary>
-        [Link(IsOptional = true)]
-        public MicroClimate MicroClimate = null;
-
         #region Leaf Interface
         /// <summary>
         /// 
@@ -151,8 +147,22 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double FRGR { get; set; }
 
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        public double PotentialEP { get; set; }
+        [Units("mm")]
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -212,9 +222,7 @@ namespace Models.PMF.Organs
                 return WaterDemandFunction.Value;
             else
             {
-                if (MicroClimate == null)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
-                return PotentialEP;
+               return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
@@ -291,6 +299,18 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        new private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+            {
+                MicroClimatePresent = false;
+                Clear();
+            }
+        }
         #endregion
 
         #region Component Process Functions
@@ -314,6 +334,8 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
