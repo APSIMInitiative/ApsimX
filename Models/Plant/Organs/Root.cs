@@ -437,7 +437,7 @@ namespace Models.PMF.Organs
         protected void DoPlantEnding(object sender, EventArgs e)
         {
             //Send all root biomass to soil FOM
-            DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
             Clear();
         }
 
@@ -546,7 +546,7 @@ namespace Models.PMF.Organs
                 PlantZone.Depth = Math.Min(PlantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
-                DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
+                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
             }
         }
 
@@ -766,7 +766,9 @@ namespace Models.PMF.Organs
 
         #region Biomass Removal
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType removal)
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="removal">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
             //NOTE: roots don't have dead biomass
             double totalFractionToRemove = removal.FractionLiveToRemove + removal.FractionLiveToResidue;
