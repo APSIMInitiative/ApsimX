@@ -240,13 +240,11 @@ namespace UserInterface.Views
             wb.MainFrame.LoadHtmlString(html, new MonoMac.Foundation.NSUrl("about:blank"));
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
-            /*
 			Stopwatch watch = new Stopwatch();
 			watch.Start();
-			while (wb.LoadStatus != LoadStatus.Finished && watch.ElapsedMilliseconds < 10000)
+			while (wb.IsLoading && watch.ElapsedMilliseconds < 10000)
 				while (Gtk.Application.EventsPending())
 					Gtk.Application.RunIteration();
-					*/
         }
 
         public TWWebBrowserSafari(Gtk.Box w)
@@ -270,7 +268,7 @@ namespace UserInterface.Views
                 first = false;
                 argString += obj.ToString();
             }
-            wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ")");
+            wb.StringByEvaluatingJavaScriptFromString(command + "(" + argString + ");");
         }
     }
 
@@ -467,7 +465,7 @@ namespace UserInterface.Views
                         (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                     frame1.Unrealized += Frame1_Unrealized;
                     if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                        (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
+                       (browser as TWWebBrowserIE).wb.ScrollBarsEnabled = false;
                 }
                 else if (ProcessUtilities.CurrentOS.IsMac)
                 {
