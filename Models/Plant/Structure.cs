@@ -530,7 +530,7 @@ namespace Models.PMF
                 InitParams.Rank = CohortToInitialise; 
                 if(AddLeafCohort != null)
                     AddLeafCohort.Invoke(this, InitParams);
-                DoLeafTipAppearance();
+                    DoLeafTipAppearance();
             }
         }
         #region Component Process Functions
