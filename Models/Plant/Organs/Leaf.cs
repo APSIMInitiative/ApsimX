@@ -1023,12 +1023,15 @@ namespace Models.PMF.Organs
             bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
-                biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
-                writeToSummary = false; // only want it written once.
-                DetachedWt += leaf.Detached.Wt;
-                DetachedN += leaf.Detached.N;
-                RemovedWt += leaf.Removed.Wt;
-                RemovedN += leaf.Removed.N;
+                if (leaf.IsInitialised)
+                {
+                    biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    writeToSummary = false; // only want it written once.
+                    DetachedWt += leaf.Detached.Wt;
+                    DetachedN += leaf.Detached.N;
+                    RemovedWt += leaf.Removed.Wt;
+                    RemovedN += leaf.Removed.N;
+                }
             }
         }
 

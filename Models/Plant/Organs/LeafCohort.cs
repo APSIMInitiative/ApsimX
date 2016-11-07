@@ -710,6 +710,13 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+        /// <summary>Constructor</summary>
+        public LeafCohort()
+        {
+            Detached = new Biomass();
+            Removed = new Biomass();
+        }
+        
         /// <summary>Returns a clone of this object</summary>
         /// <returns></returns>
         public virtual LeafCohort Clone()
@@ -717,6 +724,8 @@ namespace Models.PMF.Organs
             LeafCohort newLeaf = (LeafCohort) MemberwiseClone();
             newLeaf.Live = new Biomass();
             newLeaf.Dead = new Biomass();
+            newLeaf.Detached = new Biomass();
+            newLeaf.Removed = new Biomass();
             return newLeaf;
         }
 
@@ -1020,14 +1029,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some varibles.</summary>
         protected void DoDailyCleanup()
         {
-            if (Detached == null)
-                Detached = new Biomass();
-            else
-                Detached.Clear();
-            if (Removed == null)
-                Removed = new Biomass();
-            else
-                Removed.Clear();
+            Detached.Clear();
+            Removed.Clear();
         }
 
         /// <summary>Potential delta LAI</summary>
