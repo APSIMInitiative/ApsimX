@@ -1025,7 +1025,8 @@ namespace Models.PMF.Organs
             {
                 if (leaf.IsInitialised)
                 {
-                    biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    leaf.LiveArea *= remainingLiveFraction;
                     writeToSummary = false; // only want it written once.
                     DetachedWt += leaf.Detached.Wt;
                     DetachedN += leaf.Detached.N;

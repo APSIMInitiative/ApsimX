@@ -34,7 +34,8 @@ namespace Models.PMF.Library
         /// <param name="Removed">The removed pool to add to.</param>
         /// <param name="Detached">The detached pool to add to.</param>
         /// <param name="writeToSummary">Write the biomass removal to summary file?</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amount, 
+        /// <returns>The remaining live fraction.</returns>
+        public double RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amount, 
                                   Biomass Live, Biomass Dead, 
                                   Biomass Removed, Biomass Detached,
                                   bool writeToSummary = true)
@@ -61,15 +62,15 @@ namespace Models.PMF.Library
             
             if (totalFractionToRemove > 0.0)
             {
-                double RemainingLiveFraction = 1.0 - (amount.FractionLiveToResidue + amount.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (amount.FractionDeadToResidue + amount.FractionDeadToRemove);
+                double remainingLiveFraction = 1.0 - (amount.FractionLiveToResidue + amount.FractionLiveToRemove);
+                double remainingDeadFraction = 1.0 - (amount.FractionDeadToResidue + amount.FractionDeadToRemove);
 
                 Biomass detaching = Live * amount.FractionLiveToResidue + Dead * amount.FractionDeadToResidue;
                 Removed = Live * amount.FractionLiveToRemove + Dead * amount.FractionDeadToRemove;
                 Detached.Add(detaching);
 
-                Live.Multiply(RemainingLiveFraction);
-                Dead.Multiply(RemainingDeadFraction);
+                Live.Multiply(remainingLiveFraction);
+                Dead.Multiply(remainingDeadFraction);
 
                 // Add the detaching biomass to surface organic matter model.
                 //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
@@ -84,7 +85,10 @@ namespace Models.PMF.Library
                                              + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                              + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
                 }
+                return remainingLiveFraction;
             }
+
+            return 1;
         }
 
         /// <summary>Finds a specific biomass removal default for the specified name</summary>
