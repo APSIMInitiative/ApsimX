@@ -276,19 +276,11 @@ namespace Models.PMF.Organs
         //variables used in calculating daily supplies and deltas
         /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
-
-        /// <summary>Gets the N amount detached (send to surface OM) (g/m2)</summary>
-        [XmlIgnore]
-        public double DetachedN { get; set; }
+        public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
+        public Biomass Removed { get; set; }
 
         /// <summary>The delta potential area</summary>
         private double DeltaPotentialArea = 0;
@@ -982,54 +974,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Removes leaf area and biomass on thinning event</summary>
-        /// <param name="value">The fractions of biomass to remove.</param>
-        public void DoLeafBiomassRemoval(OrganBiomassRemovalType value)
-        {
-            if (!IsInitialised)
-                return;
-
-            double totalFractionBeingRemoved = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                               + value.FractionLiveToResidue + value.FractionDeadToResidue;
-            if (totalFractionBeingRemoved > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove sent with your "
-                                    + "!!!!PLACE HOLDER FOR EVENT SENDER!!!!"
-                                    +
-                                    " is greater than 1.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalFractionBeingRemoved > 0.0)
-            {
-                double remainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double remainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
-
-                LiveArea *= remainingLiveFraction;
-
-                RemovedWt += (Live.Wt*value.FractionLiveToRemove) + (Dead.Wt*value.FractionDeadToRemove);
-                RemovedN += (Live.N*value.FractionLiveToRemove) + (Dead.N*value.FractionDeadToRemove);
-                DetachedWt += (Live.Wt*value.FractionLiveToResidue) + (Dead.Wt*value.FractionDeadToResidue);
-                DetachedN += (Live.N*value.FractionLiveToResidue) + (Dead.N*value.FractionDeadToResidue);
-
-                Live.StructuralWt *= remainingLiveFraction;
-                Live.NonStructuralWt *= remainingLiveFraction;
-                Live.MetabolicWt *= remainingLiveFraction;
-                Dead.StructuralWt *= remainingDeadFraction;
-                Dead.NonStructuralWt *= remainingDeadFraction;
-                Dead.MetabolicWt *= remainingDeadFraction;
-
-                Live.StructuralN *= remainingLiveFraction;
-                Live.NonStructuralN *= remainingLiveFraction;
-                Live.MetabolicN *= remainingLiveFraction;
-                Dead.StructuralN *= remainingDeadFraction;
-                Dead.NonStructuralN *= remainingDeadFraction;
-                Dead.MetabolicN *= remainingDeadFraction;
-
-                SurfaceOrganicMatter.Add(DetachedWt*10, DetachedN*10, 0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-            }
-        }
-
         /// <summary>Removes leaves for cohort due to thin event.  </summary>
         /// <param name="proportionRemoved">The fraction.</param>
         public void DoThin(double proportionRemoved)
@@ -1076,10 +1020,14 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some varibles.</summary>
         protected void DoDailyCleanup()
         {
-            DetachedWt = 0.0;
-            DetachedN = 0.0;
-            RemovedWt = 0.0;
-            RemovedN = 0.0;
+            if (Detached == null)
+                Detached = new Biomass();
+            else
+                Detached.Clear();
+            if (Removed == null)
+                Removed = new Biomass();
+            else
+                Removed.Clear();
         }
 
         /// <summary>Potential delta LAI</summary>

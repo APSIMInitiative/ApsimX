@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -280,6 +281,10 @@ namespace Models.PMF.Organs
 
         [Link(IsOptional = true)]
         IFunction DMConversionEfficiencyFunction = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>
         [Description("Extinction Coefficient (Dead)")]
@@ -1015,22 +1020,16 @@ namespace Models.PMF.Organs
         /// <param name="value">The frations of biomass to remove</param>
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
+            bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
-                leaf.DoLeafBiomassRemoval(value);
-                DetachedWt += leaf.DetachedWt;
-                DetachedN += leaf.DetachedN;
-                RemovedWt += leaf.RemovedWt;
-                RemovedN += leaf.RemovedN;
+                biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                writeToSummary = false; // only want it written once.
+                DetachedWt += leaf.Detached.Wt;
+                DetachedN += leaf.Detached.N;
+                RemovedWt += leaf.Removed.Wt;
+                RemovedN += leaf.Removed.N;
             }
-
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                     + "% of " + Name + " Biomass from " + Plant.Name
-                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>
