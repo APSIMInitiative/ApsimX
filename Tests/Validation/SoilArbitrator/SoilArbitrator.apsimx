@@ -3053,7 +3053,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -3083,7 +3083,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>
@@ -3508,7 +3508,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -3538,7 +3538,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <Constant>
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>

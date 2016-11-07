@@ -803,7 +803,7 @@
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -833,7 +833,7 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Memo>
@@ -1073,7 +1073,7 @@
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1103,7 +1103,7 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -1730,7 +1730,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>StructuralFraction</Name>
           <Value>0.7</Value>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1760,7 +1760,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>

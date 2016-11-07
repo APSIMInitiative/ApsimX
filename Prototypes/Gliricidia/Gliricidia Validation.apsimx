@@ -827,7 +827,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>SenescenceRate</Name>
           <Value>0</Value>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -857,7 +857,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
@@ -1149,7 +1149,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1186,7 +1186,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <AllometricDemandFunction>
           <Name>DMDemandFunction</Name>
           <Const>0.0322</Const>
@@ -1194,12 +1194,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <XProperty>[AboveGround].Wt</XProperty>
           <YProperty>[Stem].Live.Wt</YProperty>
         </AllometricDemandFunction>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>1</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1275,7 +1274,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Start>Emergence</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1305,7 +1304,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
@@ -1326,12 +1325,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Value>10000</Value>
           <Units>g/m^2/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>1</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>

@@ -242,8 +242,6 @@ namespace Models.PMF
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when a plant is sown.</summary>
-        public event EventHandler<RemovingBiomassArgs> RemovingBiomass;
         /// <summary>Occurs when a plant is about to be pruned.</summary>
         public event EventHandler Pruning;
         #endregion
@@ -361,61 +359,63 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
+            // Invoke an event.
+            if (biomassRemoveType == "Harvest" && Harvesting != null)
+                Harvesting.Invoke(this, new EventArgs());
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+
             // Set up the default BiomassRemovalData values
             RemovingBiomassArgs allData = new RemovingBiomassArgs();
             allData.biomassRemoveType = biomassRemoveType;
             foreach (IOrgan organ in Organs)
             {
                 // Get the default removal fractions
-                OrganBiomassRemovalType biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
-                if (biomassRemoval == null)
-                    throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
-
-                // Override the defaults if values were supplied as arguments
-                if (removalData != null)
+                OrganBiomassRemovalType biomassRemoval = null;
+                if (organ is GenericOrgan || organ is PerennialLeaf)
                 {
-                    OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
-                    if (userFractions != null)
-                    {
-                        if(!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
-                            biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
-                            biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
-                            biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
-                        if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
-                            biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
-                    }
+                    if (removalData != null)
+                        biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
+                    organ.DoRemoveBiomass(biomassRemoveType, biomassRemoval);
                 }
-                allData.removalData.Add(organ.Name, biomassRemoval);
-            }
+                else
+                {
+                    biomassRemoval = Apsim.Get(organ as IModel, "BiomassRemovalDefaults." + biomassRemoveType) as OrganBiomassRemovalType;
 
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+                    if (biomassRemoval == null)
+                        throw new Exception("Cannot find biomass removal defaults: " + organ.Name + ".BiomassRemovalDefaults." + biomassRemoveType);
 
-            // Invoke an event.
-            if (biomassRemoveType == "Harvest" && Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
-            else if (RemovingBiomass != null)
-                RemovingBiomass.Invoke(this, allData);
-            
-            // Remove the biomass
-            foreach (IOrgan organ in Organs)
-            {
-                OrganBiomassRemovalType amountToRemove = allData.removalData[organ.Name];
-                double totalLiveFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
-                double totalDeadFractionToRemove = amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
+                    // Override the defaults if values were supplied as arguments
+                    if (removalData != null)
+                    {
+                        OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan(organ.Name);
+                        if (userFractions != null)
+                        {
+                            if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToRemove, biomassRemoval.FractionLiveToRemove, 1E-9))
+                                biomassRemoval.FractionLiveToRemove = userFractions.FractionLiveToRemove;
+                            if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToRemove, biomassRemoval.FractionDeadToRemove, 1E-9))
+                                biomassRemoval.FractionDeadToRemove = userFractions.FractionDeadToRemove;
+                            if (!MathUtilities.FloatsAreEqual(userFractions.FractionLiveToResidue, biomassRemoval.FractionLiveToResidue, 1E-9))
+                                biomassRemoval.FractionLiveToResidue = userFractions.FractionLiveToResidue;
+                            if (!MathUtilities.FloatsAreEqual(userFractions.FractionDeadToResidue, biomassRemoval.FractionDeadToResidue, 1E-9))
+                                biomassRemoval.FractionDeadToResidue = userFractions.FractionDeadToResidue;
+                        }
+                    }
 
-                if (amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue > 1.0)
-                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                        + organ.Name
-                                        + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                        + Name + " than there is to remove");
-                if (amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue > 1.0)
-                    throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                        + organ.Name
-                                        + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                        + Name + " than there is to remove");
-                organ.DoRemoveBiomass(amountToRemove);
+                    double totalLiveFractionToRemove = biomassRemoval.FractionLiveToRemove + biomassRemoval.FractionLiveToResidue;
+                    double totalDeadFractionToRemove = biomassRemoval.FractionDeadToRemove + biomassRemoval.FractionDeadToResidue;
+
+                    if (biomassRemoval.FractionLiveToRemove + biomassRemoval.FractionLiveToResidue > 1.0)
+                        throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                            + organ.Name
+                                            + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
+                                            + Name + " than there is to remove");
+                    if (biomassRemoval.FractionDeadToRemove + biomassRemoval.FractionDeadToResidue > 1.0)
+                        throw new Exception("The sum of FractionToResidue and FractionToRemove for "
+                                            + organ.Name
+                                            + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
+                                            + Name + " than there is to remove");
+                    organ.DoRemoveBiomass(biomassRemoveType, biomassRemoval);
+                }
             }
 
             // Reset the phenology if SetPhenologyStage specified.
