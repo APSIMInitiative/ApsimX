@@ -1321,30 +1321,9 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
       <FileName>%root%\Prototypes\FodderBeet\Observations\FRNLObservedData.txt</FileName>
     </Input>
     <Input>
-      <Name>Lincoln2014_Interc</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Prototypes\FodderBeet\Observations\Lincoln2014Observed_Interception.txt</FileName>
-    </Input>
-    <Input>
-      <Name>BoltObserved</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\BoltingObserved.txt</FileName>
-    </Input>
-    <Input>
-      <Name>FRNLObserved_N_Uptake</Name>
-      <ErrorMessage>Invalid number of values on line:             
-in file: C:\ApsimX\Prototypes\FodderBeet\Observations\FRNL_N_Uptake.txt</ErrorMessage>
-      <FileName>Observations\FRNL_N_Uptake.txt</FileName>
-    </Input>
-    <Input>
       <Name>LincolnP21Data</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>Observations\Lincoln2011-2012_P21.txt</FileName>
-    </Input>
-    <Input>
-      <Name>FRNL_Riv_Reps_All</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\FRNL_RivSD2_DM_Reps.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -11038,7 +11017,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ExtraVariables.Script.AccumPlantN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11101,7 +11080,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.StorageRoot.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11164,7 +11143,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.Leaf.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11227,7 +11206,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.Petiole.Live.N</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11293,7 +11272,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.StorageRoot.Live.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11359,7 +11338,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.Leaf.Live.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11425,7 +11404,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.Petiole.Live.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11491,7 +11470,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.TotalDead.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11557,7 +11536,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved_N_Uptake</TableName>
+          <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>FodderBeet.Total.Nconc</YFieldName>
           <ShowInLegend>true</ShowInLegend>
