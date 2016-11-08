@@ -2,6 +2,7 @@ using System;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -24,6 +25,10 @@ namespace Models.PMF.Organs
         /// <summary>The n conc</summary>
         [Link]
         IFunction NConc = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
@@ -138,5 +143,18 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        {
+            Biomass removed = new PMF.Biomass();
+            Biomass detached = new PMF.Biomass();
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, removed, detached);
+            DetachedWt += detached.Wt;
+            DetachedN += detached.N;
+            RemovedWt += removed.Wt;
+            RemovedN += removed.N;
+        }
     }
 }

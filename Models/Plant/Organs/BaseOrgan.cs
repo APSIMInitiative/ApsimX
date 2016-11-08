@@ -124,62 +124,7 @@ namespace Models.PMF.Organs
         /// <param name="value">The fractions of biomass to remove</param>
         virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
-
-            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
-
-            if (totalLiveFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalDeadFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalFractionToRemove > 0.0)
-            {
-                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
-
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
-
-                Live.StructuralWt *= RemainingLiveFraction;
-                Live.NonStructuralWt *= RemainingLiveFraction;
-                Live.MetabolicWt *= RemainingLiveFraction;
-                Dead.StructuralWt *= RemainingDeadFraction;
-                Dead.NonStructuralWt *= RemainingDeadFraction;
-                Dead.MetabolicWt *= RemainingDeadFraction;
-
-                Live.StructuralN *= RemainingLiveFraction;
-                Live.NonStructuralN *= RemainingLiveFraction;
-                Live.MetabolicN *= RemainingLiveFraction;
-                Dead.StructuralN *= RemainingDeadFraction;
-                Dead.NonStructuralN *= RemainingDeadFraction;
-                Dead.MetabolicN *= RemainingDeadFraction;
-
-                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + Plant.Name
-                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-            }
+            throw new NotImplementedException();
         }
 
         #endregion

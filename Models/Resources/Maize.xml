@@ -650,7 +650,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <VariableName>[Maize].Population</VariableName>
       </VariableReference>
     </DivideFunction>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -680,7 +680,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <RipeStage />
   </ReproductiveOrgan>
   <Root>

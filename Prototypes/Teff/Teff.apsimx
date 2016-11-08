@@ -918,7 +918,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Units>/g</Units>
           </Constant>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -948,7 +948,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
