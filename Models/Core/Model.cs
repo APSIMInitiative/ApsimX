@@ -221,6 +221,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Cultivar))]
         [XmlElement(typeof(Models.PMF.CultivarFolder))]
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
+        [XmlElement(typeof(Models.PMF.Library.BiomassRemoval))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]

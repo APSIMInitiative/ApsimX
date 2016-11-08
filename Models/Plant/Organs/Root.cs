@@ -1,6 +1,7 @@
 namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
+    using Library;
     using Models.Core;
     using Models.PMF.Functions;
     using Models.PMF.Interfaces;
@@ -55,11 +56,6 @@ namespace Models.PMF.Organs
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
-        #endregion
-
-        #region Events
-        /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>
-        public event FOMLayerDelegate IncorpFOM;
         #endregion
 
         #region Parameters
@@ -129,6 +125,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("0-1")]
         IFunction MaximumRootDepth = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>A list of other zone names to grow roots in</summary>
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
@@ -437,7 +437,7 @@ namespace Models.PMF.Organs
         protected void DoPlantEnding(object sender, EventArgs e)
         {
             //Send all root biomass to soil FOM
-            DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+            DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
             Clear();
         }
 
@@ -485,7 +485,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
@@ -495,6 +495,7 @@ namespace Models.PMF.Organs
 
             PlantZone = new ZoneState(soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
             Zones = new List<ZoneState>();
+            base.OnSimulationCommencing(sender, e);
         }
 
         /// <summary>Called when crop is sown</summary>
@@ -546,7 +547,7 @@ namespace Models.PMF.Organs
                 PlantZone.Depth = Math.Min(PlantZone.Depth, MaxDepth);
 
                 // Do Root Senescence
-                DoRemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
+                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
             }
         }
 
@@ -558,8 +559,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 
@@ -766,55 +767,11 @@ namespace Models.PMF.Organs
 
         #region Biomass Removal
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType removal)
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="removal">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType removal)
         {
-            //NOTE: roots don't have dead biomass
-            double totalFractionToRemove = removal.FractionLiveToRemove + removal.FractionLiveToResidue;
-            if (totalFractionToRemove > 1.0 || totalFractionToRemove < 0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove is greater than 1 or less than 0.");
-
-            if (totalFractionToRemove > 0)
-            {
-                //NOTE: at the moment Root has no Dead pool
-                FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[PlantZone.soil.Thickness.Length];
-                double remainingFraction = 1.0 - (removal.FractionLiveToResidue + removal.FractionLiveToRemove);
-                double detachingWt = 0.0;
-                double detachingN = 0.0;
-                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
-                {
-                    detachingWt = PlantZone.LayerLive[layer].Wt * removal.FractionLiveToResidue;
-                    detachingN = PlantZone.LayerLive[layer].N * removal.FractionLiveToResidue;
-                    RemovedWt += PlantZone.LayerLive[layer].Wt * removal.FractionLiveToRemove;
-                    RemovedN += PlantZone.LayerLive[layer].N * removal.FractionLiveToRemove;
-                    DetachedWt += detachingWt;
-                    DetachedN += detachingN;
-
-                    PlantZone.LayerLive[layer].StructuralWt *= remainingFraction;
-                    PlantZone.LayerLive[layer].NonStructuralWt *= remainingFraction;
-                    PlantZone.LayerLive[layer].MetabolicWt *= remainingFraction;
-
-                    PlantZone.LayerLive[layer].StructuralN *= remainingFraction;
-                    PlantZone.LayerLive[layer].NonStructuralN *= remainingFraction;
-                    PlantZone.LayerLive[layer].MetabolicN *= remainingFraction;
-
-                    FOMType fom = new FOMType();
-                    fom.amount = (float)(detachingWt * 10);
-                    fom.N = (float)(detachingN * 10);
-                    fom.C = (float)(0.40 * detachingWt * 10);
-                    fom.P = 0.0;
-                    fom.AshAlk = 0.0;
-
-                    FOMLayerLayerType Layer = new FOMLayerLayerType();
-                    Layer.FOM = fom;
-                    Layer.CNR = 0.0;
-                    Layer.LabileP = 0.0;
-                    FOMLayers[layer] = Layer;
-                }
-                FOMLayerType FomLayer = new FOMLayerType();
-                FomLayer.Type = Plant.CropType;
-                FomLayer.Layer = FOMLayers;
-                IncorpFOM.Invoke(FomLayer);
-            }
+            biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
         #endregion
     }

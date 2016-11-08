@@ -717,7 +717,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           </Propertys>
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -747,7 +747,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.99</Value>
@@ -871,7 +871,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           </XYPairs>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -901,7 +901,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1024,7 +1024,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1054,7 +1054,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
