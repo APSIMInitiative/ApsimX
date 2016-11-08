@@ -444,7 +444,7 @@
             <VariableName>[Shell].PodNumber.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -474,7 +474,7 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
