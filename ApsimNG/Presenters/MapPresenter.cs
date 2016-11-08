@@ -58,6 +58,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.view.StoreSettings();
             this.view.ZoomChanged -= OnZoomChanged;
             this.view.PositionChanged -= OnPositionChanged;
         }

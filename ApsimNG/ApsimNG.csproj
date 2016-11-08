@@ -620,6 +620,11 @@
       <HintPath>Assemblies\Mono.TextEditor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assemblies\MonoMac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0933\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
@@ -649,6 +654,7 @@
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\webkit-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
