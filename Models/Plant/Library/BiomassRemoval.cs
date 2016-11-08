@@ -4,6 +4,7 @@ namespace Models.PMF.Library
 {
     using Models.Core;
     using Models.Interfaces;
+    using Interfaces;
     using Soils;
     using System;
     using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Models.PMF.Library
     /// This class impliments biomass removal from live + dead pools.
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(IOrgan))]
     public class BiomassRemoval : Model
     {
         [Link]
