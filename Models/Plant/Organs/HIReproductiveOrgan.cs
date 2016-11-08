@@ -66,8 +66,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 
@@ -148,13 +148,7 @@ namespace Models.PMF.Organs
         /// <param name="value">The fractions of biomass to remove</param>
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            Biomass removed = new PMF.Biomass();
-            Biomass detached = new PMF.Biomass();
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, removed, detached);
-            DetachedWt += detached.Wt;
-            DetachedN += detached.N;
-            RemovedWt += removed.Wt;
-            RemovedN += removed.N;
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
     }
 }

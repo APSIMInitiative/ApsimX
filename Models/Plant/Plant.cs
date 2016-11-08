@@ -372,7 +372,7 @@ namespace Models.PMF
                 // Get the default removal fractions
                 OrganBiomassRemovalType biomassRemoval = null;
                 if (organ is GenericOrgan || organ is PerennialLeaf || organ is Leaf || organ is Nodule || 
-                    organ is HIReproductiveOrgan || organ is ReproductiveOrgan)
+                    organ is HIReproductiveOrgan || organ is ReproductiveOrgan || organ is Root)
                 {
                     if (removalData != null)
                         biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);

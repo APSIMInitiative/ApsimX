@@ -1473,7 +1473,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1503,7 +1503,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />

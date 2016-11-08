@@ -833,7 +833,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Start>Germination</Start>
       <End>Maturity</End>
     </PhaseBasedSwitch>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -863,7 +863,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <FractionLiveToResidue>0.15</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <Constant>
       <Name>InitialDM</Name>
       <Value>0.2</Value>

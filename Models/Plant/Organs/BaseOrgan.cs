@@ -95,20 +95,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
-
-        /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
-        public double DetachedN { get; set; }
+        public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
-
+        public Biomass Removed { get; set; }
+        
         /// <summary>Gets the dm supply photosynthesis.</summary>
         [Units("g/m^2")]
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
@@ -135,8 +127,10 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Detached = new Biomass();
+            Removed = new Biomass();
             Clear();
         }
         /// <summary>Called when [do daily initialisation].</summary>
@@ -200,10 +194,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some varibles.</summary>
         virtual protected void DoDailyCleanup()
         {
-            DetachedWt = 0.0;
-            DetachedN = 0.0;
-            RemovedWt = 0.0;
-            RemovedN = 0.0;
+            Detached.Clear();
+            Removed.Clear();
         }
 
         #endregion

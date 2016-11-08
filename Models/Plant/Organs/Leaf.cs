@@ -1028,10 +1028,8 @@ namespace Models.PMF.Organs
                     double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
                     writeToSummary = false; // only want it written once.
-                    DetachedWt += leaf.Detached.Wt;
-                    DetachedN += leaf.Detached.N;
-                    RemovedWt += leaf.Removed.Wt;
-                    RemovedN += leaf.Removed.N;
+                    Detached.Add(leaf.Detached);
+                    Removed.Add(leaf.Removed);
                 }
             }
         }
@@ -1632,8 +1630,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
+            base.OnSimulationCommencing(sender, e);
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
@@ -1648,8 +1647,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 

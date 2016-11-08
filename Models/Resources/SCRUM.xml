@@ -1112,7 +1112,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
       </Memo>
       <Value>0.1</Value>
     </Constant>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1134,7 +1134,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionLiveToResidue>0.15</FractionLiveToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <BiomassRemovalDefaults />
     <Constant>
       <Name>InitialDM</Name>
