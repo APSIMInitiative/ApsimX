@@ -784,7 +784,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>24</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -1278,7 +1278,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Wf2>0.3</Wf2>
           <Mu2>0.011</Mu2>
         </BerryFillingRateFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1315,7 +1315,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <Value>2</Value>
