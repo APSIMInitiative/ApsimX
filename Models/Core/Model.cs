@@ -195,6 +195,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PotentialSizeDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.BerryFillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
