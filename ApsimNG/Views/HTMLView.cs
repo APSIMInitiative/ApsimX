@@ -369,7 +369,8 @@ namespace UserInterface.Views
                 popupWin.SetSizeRequest(500, 500);
                 // Move the window offscreen; the user doesn't need to see it.
                 // This works with IE, but not with WebKit
-                if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+                // Not yet tested on OSX
+                if (ProcessUtilities.CurrentOS.IsWindows)
                     popupWin.Move(-10000, -10000);
                 popupWin.Add(MainWidget);
                 popupWin.ShowAll();
@@ -454,7 +455,7 @@ namespace UserInterface.Views
             {
                 if (ProcessUtilities.CurrentOS.IsWindows)
                 {
-                    browser = new TWWebBrowserIE(vbox2);
+                    browser = CreateIEBrowser(vbox2);
 
                     /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
                     /// other controls. It's actually a COM object, I guess, and running
@@ -469,15 +470,30 @@ namespace UserInterface.Views
                 }
                 else if (ProcessUtilities.CurrentOS.IsMac)
                 {
-                    browser = new TWWebBrowserSafari(vbox2);
+                    browser = CreateSafariBrowser(vbox2);
                 }
                 else
                 {
-                    browser = new TWWebBrowserWK(vbox2);
+                    browser = CreateWebKitBrowser(vbox2);
                 }
             }
             browser.LoadHTML(contents);
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
+        }
+
+        private IBrowserWidget CreateIEBrowser(Gtk.Box box)
+        {
+            return new TWWebBrowserIE(box);
+        }
+
+        private IBrowserWidget CreateSafariBrowser(Gtk.Box box)
+        {
+            return new TWWebBrowserSafari(box);
+        }
+
+        private IBrowserWidget CreateWebKitBrowser(Gtk.Box box)
+        {
+            return new TWWebBrowserWK(box);
         }
 
         protected virtual void NewTitle(string title)
