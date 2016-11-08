@@ -178,7 +178,7 @@ This is important in SLURP as it is set for each species to represent their diff
       <XProperty>[Root].RootLengthDenisty</XProperty>
     </LinearInterpolationFunction>
     <NuptakeSupply>0</NuptakeSupply>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -200,7 +200,7 @@ This is important in SLURP as it is set for each species to represent their diff
         <FractionRemoved>0.</FractionRemoved>
         <FractionToResidue>0.15</FractionToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <LinearInterpolationFunction>
       <Name>NUptakeSWFactor</Name>
       <XYPairs>

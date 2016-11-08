@@ -725,7 +725,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -755,7 +755,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>
@@ -1184,7 +1184,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -1214,7 +1214,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>

@@ -1101,7 +1101,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1138,7 +1138,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <HoldFunction>
           <Name>NumberFunction</Name>
           <MultiplyFunction>
@@ -1276,7 +1276,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1313,7 +1313,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1954,7 +1954,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1991,7 +1991,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>ExtinctionCoeff</Name>
           <Value>0.5</Value>

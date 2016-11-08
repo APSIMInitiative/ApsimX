@@ -5,6 +5,7 @@ using Models.PMF.Phen;
 using Models.PMF.Interfaces;
 using System.Xml;
 using System.Xml.Serialization;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -50,6 +51,10 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(IsOptional = true)]
@@ -220,8 +225,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 
@@ -317,5 +322,13 @@ namespace Models.PMF.Organs
             }
         }
         #endregion
+        
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        {
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
     }
 }

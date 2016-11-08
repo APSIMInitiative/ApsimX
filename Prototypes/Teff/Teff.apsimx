@@ -918,7 +918,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Units>/g</Units>
           </Constant>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -948,7 +948,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
@@ -1101,7 +1101,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1131,7 +1131,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1744,7 +1744,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>ThermalTime</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1774,7 +1774,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>

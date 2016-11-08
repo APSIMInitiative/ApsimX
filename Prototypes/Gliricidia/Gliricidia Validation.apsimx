@@ -1043,7 +1043,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Value>100</Value>
           <Units>m/g</Units>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1080,7 +1080,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>PartitionFraction</Name>
           <Value>0.3</Value>
