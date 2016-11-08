@@ -43,12 +43,12 @@ namespace SWIMFrame
             x = xin;
             soilloc = new int[n + 1];
             pathloc = new int[n + 1]; //0 based in FORTRAN
-            philoc = new int[n, 2 + 1]; //0 based in FORTRAN
+            philoc = new int[2 + 1, n + 1]; //0 based in FORTRAN
             dx = MathUtilities.Subtract(x.Slice(2, n), x.Slice(1, n - 1));
 
             //  Set up locations in soil, path, S and phi arrays.
-            for (int a = 1; a < philoc.GetLength(0); a++)
-                for (int b = 1; b < philoc.GetLength(1); b++)
+            for (int a = 0; a < philoc.GetLength(0); a++)
+                for (int b = 0; b < philoc.GetLength(1); b++)
                     philoc[a, b] = 1;
 
             // Get ns different soil idents in array isoil.
@@ -340,7 +340,7 @@ namespace SWIMFrame
                 }
 
                 // Get place in flux table.
-                i = philoc[iq, j];
+                i = philoc[j,iq];
                 i2 = pe.nft;
                 if (phii >= phif[i])
                 {
@@ -367,7 +367,7 @@ namespace SWIMFrame
                             break;
                     }
                 }
-                philoc[iq, j] = i; // save location in phif
+                philoc[j,iq] = i; // save location in phif
                 rdphif[j] = 1.0 / (phif[i + 1] - phif[i]);
                 u[j] = rdphif[j] * (phii - phif[i]);
                 k[j] = i;
@@ -375,10 +375,10 @@ namespace SWIMFrame
 
             // Get flux from table
             qf = path.ftable;
-            f1 = qf[k[1], k[2]]; //use bilinear interp
-            f2 = qf[k[1] + 1, k[2]]; 
-            f3 = qf[k[1], k[2] + 1];
-            f4 = qf[k[1] + 1, k[2] + 1];
+            f1 = qf[k[2], k[1]]; //use bilinear interp
+            f2 = qf[k[2], k[1] + 1]; 
+            f3 = qf[k[2] + 1, k[1]];
+            f4 = qf[k[2] + 1, k[1] + 1];
             for (int count = 1; count < u.Length; count++)
                 omu[count] = 1.0 - u[count];
             q = omu[1] * omu[2] * f1 + u[1] * omu[2] * f2 + omu[1] * u[2] * f3 + u[1] * u[2] * f4;

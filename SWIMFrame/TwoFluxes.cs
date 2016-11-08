@@ -118,7 +118,8 @@ namespace SWIMFrame
                 Console.WriteLine("Flux table not for uniform soil.");
                 Environment.Exit(1);
             }
-
+            ft1.ftable = Matrix<double>.Build.DenseOfArray(ft1.ftable).Transpose().ToArray();
+            ft2.ftable = Matrix<double>.Build.DenseOfArray(ft2.ftable).Transpose().ToArray();
             ft[0] = ft1;
             ft[1] = ft2;
             sp[0] = sp1;

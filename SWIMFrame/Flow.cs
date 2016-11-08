@@ -768,8 +768,7 @@ namespace SWIMFrame
             qw[0] = r * win;
 
             // Compounding errors due to float/double issues start here. May or may not be a problem.
-            for (int x =1; x < thf.Length; x++)
-                tht[x] = r * (thf[x] - thi[x]);
+            tht = MathUtilities.Multiply_Value(MathUtilities.Subtract(thf, thi), r);
             for (i = 1; i <= n; i++)
                 qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
 

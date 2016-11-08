@@ -5,8 +5,6 @@ using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using APSIM.Shared.Utilities;
 
-using System.IO; //debug
-
 namespace SWIMFrame
 {
     // Calculates flux tables given soil properties and path lengths.
@@ -239,13 +237,13 @@ namespace SWIMFrame
                 ft.fend[ie].dz = dz;
                 ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
-            ft.ftable = Matrix<double>.Build.DenseOfArray(qi5).Transpose().ToArray(); // (1:i,1:i) as above
+            ft.ftable = qi5; // (1:i,1:i) as above
         }
 
         /// <summary>
         /// Test harness for setting private variable 'q'
         /// </summary>
-        /// <param name="q">The q value</param>
+        /// <param name="setQ">The q value</param>
         /// <param name="aphi">The sp.phic values</param>
         public static void SetupOdef(double setQ, double[] aphi)
         {
@@ -478,7 +476,6 @@ namespace SWIMFrame
         /// <param name="c">c</param>
         /// <param name="iend">iend</param>
         /// <param name="fac">fac</param>
-        /// <param name="isel">isel</param>
         /// <returns></returns>
         public static KeyValuePair<int, int[]> TestIndices(int n, double[] c, int iend, double fac)
         {
@@ -491,7 +488,7 @@ namespace SWIMFrame
         // get indices of elements selected using curvature
         private static void indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
         {
-            int i, j;
+            int a = 1, b = 1;
             int[] di = new int[n+1];
             isel = new int[100];
             double[] ac = new double[n+1];
@@ -504,28 +501,28 @@ namespace SWIMFrame
             {
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
             }
-            isel[1] = 1; i = 1; j = 1;
+            isel[1] = 1; 
             while (true) //will want to change this
             {
-                if (i >= iend)
+                if (a >= iend)
                     break;
-                i++;
-                if (i > n)
+                a++;
+                if (a > n)
                     break;
-                if (di[i - 1] > 2 && di[i] > 1)
-                    i = i + 2; // don't want points to be any further apart
-                else if (di[i - 1] > 1)
-                    i = i + 1;
+                if (di[a - 1] > 2 && di[a] > 1)
+                    a = a + 2; // don't want points to be any further apart
+                else if (di[a - 1] > 1)
+                    a = a + 1;
 
-                j++;
-                isel[j] = i;
+                b++;
+                isel[b] = a;
             }
-            if (isel[j] < n + 2)
+            if (isel[b] < n + 2)
             {
-                j++;
-                isel[j] = n + 2;
+                b++;
+                isel[b] = n + 2;
             }
-            nsel = j;
+            nsel = b;
         }
         // Return quadratic interpolation coeffs co.
         public static double[] quadco(double[] x, double[] y)
@@ -564,19 +561,6 @@ namespace SWIMFrame
                 }
             }
             return v;
-        }
-
-        public void TestFluxs()
-        {
-            double[] aK =  new double[] { 8.740528E-10,3.148991E-09,1.116638E-08,3.906024E-08,1.350389E-07,4.621461E-07,1.567779E-06,5.278070E-06,1.765091E-05,5.868045E-05,1.940329E-04,6.381824E-04,2.086113E-03,6.757548E-03,2.152482E-02,6.618264E-02,1.887549E-01,4.655217E-01,9.153457E-01,1.393520E+00,1.733586E+00,1.916091E+00,2.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00};
-            double[] hpK = new double[] { 1.942348E-09,6.760092E-09,2.390674E-08,8.260039E-08,2.837631E-07,9.641152E-07,3.252644E-06,1.089420E-05,3.627295E-05,1.201039E-04,3.956002E-04,1.295509E-03,4.209049E-03,1.348672E-02,4.200805E-02,1.232292E-01,3.212703E-01,6.904247E-01,1.165940E+00,1.578200E+00,1.834724E+00,1.963039E+00,0.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
-                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00 };
-            double[] odefOut = odef(1, 2, aK, hpK);
         }
 
         public static FluxTable ReadFluxTable(string key)
