@@ -1521,16 +1521,16 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <RegrStats>
             <Name>FodderBeet.Phenology.Stage</Name>
             <n>8</n>
-            <Slope>1.2304185338064964</Slope>
-            <Intercept>-0.63159269161349307</Intercept>
-            <SEslope>0.11642209777284965</SEslope>
-            <SEintercept>0.51575120715121225</SEintercept>
-            <R2>0.94902090272885442</R2>
-            <RMSE>0.57525010736965976</RMSE>
-            <NSE>0.78821588094156481</NSE>
-            <ME>0.34768607706411614</ME>
-            <MAE>0.41282743279785117</MAE>
-            <RSR>0.43047776269643806</RSR>
+            <Slope>1.016217748098611</Slope>
+            <Intercept>0.011009665510162137</Intercept>
+            <SEslope>0.070521017984835857</SEslope>
+            <SEintercept>0.31240890562009316</SEintercept>
+            <R2>0.97191696710043729</R2>
+            <RMSE>0.23113732267028941</RMSE>
+            <NSE>0.96580834436403873</NSE>
+            <ME>0.079935094929258876</ME>
+            <MAE>0.1965647802898588</MAE>
+            <RSR>0.17296733414568807</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.StorageRoot.Live.N</Name>
