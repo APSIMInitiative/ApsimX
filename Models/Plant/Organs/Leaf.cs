@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -277,6 +278,10 @@ namespace Models.PMF.Organs
 
         [Link(IsOptional = true)]
         IFunction DMConversionEfficiencyFunction = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>
         [Description("Extinction Coefficient (Dead)")]
@@ -1012,22 +1017,18 @@ namespace Models.PMF.Organs
         /// <param name="value">The frations of biomass to remove</param>
         public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
+            bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
-                leaf.DoLeafBiomassRemoval(value);
-                DetachedWt += leaf.DetachedWt;
-                DetachedN += leaf.DetachedN;
-                RemovedWt += leaf.RemovedWt;
-                RemovedN += leaf.RemovedN;
+                if (leaf.IsInitialised)
+                {
+                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    leaf.LiveArea *= remainingLiveFraction;
+                    writeToSummary = false; // only want it written once.
+                    Detached.Add(leaf.Detached);
+                    Removed.Add(leaf.Removed);
+                }
             }
-
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                     + "% of " + Name + " Biomass from " + Plant.Name
-                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>
@@ -1625,8 +1626,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
+            base.OnSimulationCommencing(sender, e);
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
@@ -1641,8 +1643,8 @@ namespace Models.PMF.Organs
         {
             if (Wt > 0.0)
             {
-                DetachedWt += Wt;
-                DetachedN += N;
+                Detached.Add(Live);
+                Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
 

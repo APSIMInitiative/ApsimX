@@ -781,7 +781,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <Value>100</Value>
           <Units>m/g</Units>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -818,7 +818,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
           <XYPairs>

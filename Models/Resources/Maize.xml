@@ -650,7 +650,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <VariableName>[Maize].Population</VariableName>
       </VariableReference>
     </DivideFunction>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -680,7 +680,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <RipeStage />
   </ReproductiveOrgan>
   <Root>
@@ -833,7 +833,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Start>Germination</Start>
       <End>Maturity</End>
     </PhaseBasedSwitch>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -863,7 +863,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <FractionLiveToResidue>0.15</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <Constant>
       <Name>InitialDM</Name>
       <Value>0.2</Value>
@@ -1437,7 +1437,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>StructuralFraction</Name>
       <Value>0.7</Value>
     </Constant>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1467,7 +1467,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
     <StartFractionExpanded>0</StartFractionExpanded>
     <FractionNextleafExpanded>0</FractionNextleafExpanded>
