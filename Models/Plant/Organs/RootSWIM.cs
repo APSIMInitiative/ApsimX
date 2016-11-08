@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -18,6 +19,10 @@ namespace Models.PMF.Organs
         /// <summary>The RLV</summary>
         public double[] rlv = null;
 
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
@@ -74,6 +79,14 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        {
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
 
     }
