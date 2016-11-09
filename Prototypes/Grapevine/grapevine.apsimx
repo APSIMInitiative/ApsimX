@@ -427,12 +427,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                 <double>1</double>
               </X>
               <Y>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
-                <double>600</double>
+                <double>2000</double>
+                <double>2000</double>
+                <double>2000</double>
+                <double>2000</double>
+                <double>2000</double>
+                <double>2000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -759,12 +759,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>3.00001</double>
+                <double>4</double>
                 <double>3</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
+                <double>0</double>
               </Y>
             </XYPairs>
             <XProperty>[Weather].MinT</XProperty>
@@ -784,7 +784,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>24</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -1086,6 +1086,280 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
+      <ReproductiveOrgan>
+        <Name>Berry</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>MaxNConcDailyGrowth</Name>
+          <Value>0.01</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>NFillingRate</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.0001</Value>
+        </Constant>
+        <AccumulateFunction>
+          <Name>ThermalTimeAfterVeraison</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <StartStageName>Veraison</StartStageName>
+          <EndStageName>LeafFall</EndStageName>
+          <ResetStageName>Veraison</ResetStageName>
+        </AccumulateFunction>
+        <LinearInterpolationFunction>
+          <Name>ReadyForHarvest</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>200</double>
+              <double>201</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+        </LinearInterpolationFunction>
+        <AccumulateFunction>
+          <Name>ThermalTimeAfterFlowering</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <StartStageName>FruitSet</StartStageName>
+          <EndStageName>LeafFall</EndStageName>
+          <ResetStageName>FruitSet</ResetStageName>
+        </AccumulateFunction>
+        <ExponentialFunction>
+          <Name>SolubleSolidsConc</Name>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Berry].DaysAfterVeraison.Value</VariableName>
+          </VariableReference>
+          <A>24</A>
+          <B>-15.6582</B>
+          <C>-0.040501</C>
+        </ExponentialFunction>
+        <MultiplyFunction>
+          <Name>NumberFunction</Name>
+          <VariableReference>
+            <Name>Shoots</Name>
+            <VariableName>[Structure].MainStemPopn</VariableName>
+          </VariableReference>
+          <OnEventFunction>
+            <Name>BunchesPerShoot</Name>
+            <Constant>
+              <Name>PreEventValue</Name>
+              <Value>0</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>PostEventValue</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>5</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Berry].MeanFloweringTempY0.Value</XProperty>
+            </LinearInterpolationFunction>
+            <SetEvent>BudBurst</SetEvent>
+            <ReSetEvent>EndDormancy</ReSetEvent>
+          </OnEventFunction>
+          <AddFunction>
+            <Name>PotentialBerriesPerBunch</Name>
+            <Constant>
+              <Name>MinNum</Name>
+              <Value>66</Value>
+            </Constant>
+            <SigmoidFunction>
+              <Name>BerriesPerBunch</Name>
+              <VariableReference>
+                <Name>XVariable</Name>
+                <VariableName>[Berry].MeanFloweringTemp.Value</VariableName>
+              </VariableReference>
+              <Xmax>44</Xmax>
+              <Xo>16.3</Xo>
+              <b>0.7</b>
+            </SigmoidFunction>
+          </AddFunction>
+        </MultiplyFunction>
+        <OnEventFunction>
+          <Name>MeanFloweringTempY0</Name>
+          <Constant>
+            <Name>PreEventValue</Name>
+            <Value>13</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>PostEventValue</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>40</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>40</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Berry].MeanFloweringTemp.Value</XProperty>
+          </LinearInterpolationFunction>
+          <SetEvent>FruitSet</SetEvent>
+          <ReSetEvent>StartFlowering</ReSetEvent>
+        </OnEventFunction>
+        <DivideFunction>
+          <Name>MeanFloweringTemp</Name>
+          <AccumulateFunction>
+            <Name>Temperature</Name>
+            <AirTemperatureFunction>
+              <Name>AirTemperatureFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>40</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <StartStageName>StartFlowering</StartStageName>
+            <EndStageName>FruitSet</EndStageName>
+            <ResetStageName>StartFlowering</ResetStageName>
+          </AccumulateFunction>
+          <AccumulateFunction>
+            <Name>Time</Name>
+            <Constant>
+              <Name>Days</Name>
+              <Value>1</Value>
+              <Units>days/day</Units>
+            </Constant>
+            <StartStageName>StartFlowering</StartStageName>
+            <EndStageName>FruitSet</EndStageName>
+            <ResetStageName>StartFlowering</ResetStageName>
+          </AccumulateFunction>
+        </DivideFunction>
+        <BerryFillingRateFunction>
+          <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>TT</Name>
+            <VariableName>[Structure].ThermalTime.Value</VariableName>
+          </VariableReference>
+          <FirstPhase>BerryDevelopment</FirstPhase>
+          <SecondPhase>LeafDeathPhase</SecondPhase>
+          <Wo1>0.0001</Wo1>
+          <Wf1>0.199</Wf1>
+          <Mu1>0.007</Mu1>
+          <Wo2>0.0001</Wo2>
+          <Wf2>0.3</Wf2>
+          <Mu2>0.011</Mu2>
+        </BerryFillingRateFunction>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>MaximumPotentialGrainSize</Name>
+          <Value>2</Value>
+          <Units>g</Units>
+        </Constant>
+        <SubtractFunction>
+          <Name>WaterContent</Name>
+          <Constant>
+            <Name>Constant</Name>
+            <Value>0.903</Value>
+          </Constant>
+          <PhaseLookupValue>
+            <Name>PhaseLookupValue</Name>
+            <LinearInterpolationFunction>
+              <Name>LinearInterpolationFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>300</double>
+                  <double>400</double>
+                  <double>600</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0.01</double>
+                  <double>0.02</double>
+                  <double>0.04</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Berry].ThermalTimeAfterVeraison.Value</XProperty>
+            </LinearInterpolationFunction>
+            <Start>Veraison</Start>
+            <End>LeafFall</End>
+          </PhaseLookupValue>
+        </SubtractFunction>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <RipeStage>Ripe</RipeStage>
+      </ReproductiveOrgan>
       <CropType>Grapevine</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
@@ -1514,117 +1788,10 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
       <Operations>
         <Name>Operations</Name>
         <Operation>
-          <Date>2003-10-20</Date>
-          <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-25</Date>
-          <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN,0);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-11-26</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-04</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-16</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-22</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2003-12-30</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-08</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-21</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-01-31</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>2004-02-27</Date>
-          <Action>[Irrigation].Apply(25);</Action>
+          <Date>2005-05-01</Date>
+          <Action>[Grapevine].Sow(population: 0.1667, cultivar: "Sauvignonblac", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
         </Operation>
       </Operations>
-      <Manager>
-        <Name>GrapePlantAndHarvest</Name>
-        <Script>
-          <PlantingDate>2005-05-01</PlantingDate>
-          <CultivarName>Sauvignonblac</CultivarName>
-          <RowSpace>280</RowSpace>
-          <RowWidth>770</RowWidth>
-          <PlantingDepth>120</PlantingDepth>
-          <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-          <SetFinalLeafNumber>40</SetFinalLeafNumber>
-          <HarvestDate>2006-05-01</HarvestDate>
-        </Script>
-        <Code><![CDATA[
-using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Grapevine;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Summary Summary;
-		[Description("Planting Date")]
-		public DateTime PlantingDate { get; set; }
-		[Description("Cultivar")]
-		public string CultivarName { get; set; }
-		[Description("Spacing (mm) between plants within rows")]
-		public double RowSpace { get; set; }
-		[Description("Spacing (mm) between rows")]
-		public double RowWidth { get; set; }
-		[Description("Depth (mm) tubers are planted")]
-		public double PlantingDepth { get; set; }
-		[Description("Number of stems per seed tuber")]
-		public double StemNumberPerSeedTuber { get; set; }
-		[Description("Final leaf number.  Leave at 0 if not known")]
-		public double SetFinalLeafNumber { get; set; }
-		[Description("HarvestDate Date")]
-		public DateTime HarvestDate { get; set; }
-		[XmlIgnore] public string FinalTag { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool ReadyForHarvest { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));
-
-			if (Clock.Today.Date == PlantingDate)
-				Grapevine.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);
-			//if (Clock.Today.Date == HarvestDate)
-			//	Grapevine.Harvest();
-			//if (SetFinalLeafNumber > 0)
-			//zone.Set("Grapevine.Structure.MainStemFinalNodeNumber.Value", SetFinalLeafNumber);
-			if (SetFinalLeafNumber > 46)
-				throw new Exception("The model will fail with leaf numbers > 46.  Reduce Final leaf number.");
-		}
-	}
-}
-				]]></Code>
-      </Manager>
       <Report>
         <Name>Report</Name>
         <ExperimentFactorNames />
@@ -1640,6 +1807,16 @@ namespace Models
           <string>[Grapevine].Leaf.DeadCohortNo</string>
           <string>[Grapevine].Leaf.AppearedCohortNo</string>
           <string>[Grapevine].Leaf.CohortSize</string>
+          <string>[Grapevine].Leaf.Fn</string>
+          <string>[Grapevine].Leaf.Fw</string>
+          <string>[Grapevine].Berry.Number</string>
+          <string>[Grapevine].Berry.Live.Wt</string>
+          <string>[Berry].MeanFloweringTempY0.Value</string>
+          <string>[Berry].MeanFloweringTemp.Value</string>
+          <string>[Berry].NumberFunction.Value</string>
+          <string>[Berry].NumberFunction.Shoots.Value</string>
+          <string>[Berry].NumberFunction.BunchesPerShoot.Value</string>
+          <string>[Berry].NumberFunction.PotentialBerriesPerBunch.Value</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1648,7 +1825,7 @@ namespace Models
       <Manager>
         <Name>Pruning</Name>
         <Script>
-          <PruneDate>2006-05-10</PruneDate>
+          <PruneDateString>15-May</PruneDateString>
         </Script>
         <Code><![CDATA[
 using System;
@@ -1668,8 +1845,8 @@ namespace Models
 		[Link] Clock Clock;
 
 		[Description("Prune Date")]
-		public DateTime PruneDate { get; set; }
-
+		public string PruneDateString { get; set; }
+		[XmlIgnore] private DateTime PruneDate { get; set; }
 		[XmlIgnore] private RemovalFractions Remove { get; set; }
 		
 		[EventSubscribe("Commencing")]
@@ -1682,9 +1859,9 @@ namespace Models
 		private void OnDoManagement(object sender, EventArgs e)
 		{
 			//Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.
-
-			
-			if (Clock.Today.Date == PruneDate)
+			PruneDate = DateTime.Parse(PruneDateString);
+						
+			if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)
 			{
 				Remove.SetPhenologyStage = 1;
 				Grapevine.RemoveBiomass("Prune", Remove);
@@ -1695,6 +1872,76 @@ namespace Models
 			
 				]]></Code>
       </Manager>
+      <Graph>
+        <Name>FN</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Grapevine.Leaf.Fn</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Cohort1</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Grapevine.Leaf.Fw</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1847,6 +2094,719 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>LeafSize2</Name>
+      <Series>
+        <Name>1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(1)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(2)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-11094807</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(3)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>4</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Star</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(4)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>5</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(5)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>6</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(6)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>7</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-3376729</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(7)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>8</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-990142</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(8)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>9</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(9)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>10</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(10)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>11</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-11094807</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(11)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>12</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(12)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>13</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16747854</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(13)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>14</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(14)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>15</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-3376729</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(15)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>16</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-990142</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(16)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>17</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(17)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>18</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.CohortSize(18)</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Leaf Size (mm^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Folder>
+      <Name>Berry</Name>
+      <Graph>
+        <Name>BerryWT</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Grapevine.Berry.Live.Wt</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Cohort1</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>[Grapevine].Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>BerryNum</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.NumberFunction.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>BerryPerBunch</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-2793984</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.NumberFunction.PotentialBerriesPerBunch.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>MeanFloweringTemp</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.MeanFloweringTemp.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Cohort1</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>MeanFloweringTempY0</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>BunchPerShoot</Name>
+        <Series>
+          <Name>Cohort</Name>
+          <EventNamesOnGraph>
+            <Name>EventNamesOnGraph</Name>
+            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          </EventNamesOnGraph>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.NumberFunction.Shoots.Value</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Simulation>
   <ExplorerWidth>416</ExplorerWidth>
 </Simulations>

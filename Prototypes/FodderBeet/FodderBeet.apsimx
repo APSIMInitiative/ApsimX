@@ -17,10 +17,6 @@ The fodder beet crop model has been developed using the Brown et al (2014) Plant
         <Name>Rivage</Name>
         <Command />
       </Cultivar>
-      <Cultivar>
-        <Name>Brigadier</Name>
-        <Command />
-      </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <Memo>
@@ -163,29 +159,44 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
         </GenericPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>2500</Value>
-          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Currently an empirical fit from the test dataset at 2500°Cd  (ref XXX).
-
-=> We need some justification for the reproductive phases and values !!!!!]]></MemoText>
-          </Memo>
+          <MultiplyFunction>
+            <Name>Target</Name>
+            <LinearInterpolationFunction>
+              <Name>PhotoPeriodResponse</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>13</double>
+                  <double>16</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>MaxThermalTimeToBolt</Name>
+              <Value>3200</Value>
+              <Units>oCd</Units>
+            </Constant>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Placeholder - not yet implemented. Just a placeholder to start improving simulation of bolting time.
+This needs a photoperiod (daylength at fixed point?) and/or vernalisation (chill-days) response to represent variable therma-timel accumulations to bolting. 
+In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (October sowing date).]]></MemoText>
+            </Memo>
+          </MultiplyFunction>
           <Start>Established</Start>
           <End>InitRepro</End>
         </GenericPhase>
         <GenericPhase>
           <Name>Bolt</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>1800</Value>
-          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -201,6 +212,10 @@ Currently the thermal time is set from observed, which appear to be identical re
 I suspect that there is probably a Photperiod or vernalization happening rather than TT.
 ]]></MemoText>
           </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <Value>1800</Value>
+          </Constant>
           <Start>InitRepro</Start>
           <End>StartBolt</End>
         </GenericPhase>
@@ -1521,16 +1536,16 @@ Values from measurments A-Block FRNL experiment 2014-15 Plant & Food]]></MemoTex
           <RegrStats>
             <Name>FodderBeet.Phenology.Stage</Name>
             <n>8</n>
-            <Slope>1.016217748098611</Slope>
-            <Intercept>0.011009665510162137</Intercept>
-            <SEslope>0.070521017984835857</SEslope>
-            <SEintercept>0.31240890562009316</SEintercept>
-            <R2>0.97191696710043729</R2>
-            <RMSE>0.23113732267028941</RMSE>
-            <NSE>0.96580834436403873</NSE>
-            <ME>0.079935094929258876</ME>
-            <MAE>0.1965647802898588</MAE>
-            <RSR>0.17296733414568807</RSR>
+            <Slope>0.86481153911664477</Slope>
+            <Intercept>0.46522829245606134</Intercept>
+            <SEslope>0.068203128030253773</SEslope>
+            <SEintercept>0.30214062696004168</SEintercept>
+            <R2>0.96402465026518558</R2>
+            <RMSE>0.29002921466334219</RMSE>
+            <NSE>0.94616515497072962</NSE>
+            <ME>-0.10932266629819876</ME>
+            <MAE>0.23412693183793132</MAE>
+            <RSR>0.21703799068506791</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.StorageRoot.Live.N</Name>
@@ -8421,7 +8436,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8468,7 +8483,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8515,7 +8530,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8562,7 +8577,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8612,7 +8627,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8659,7 +8674,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8706,7 +8721,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9888,7 +9903,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9909,7 +9924,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9951,7 +9966,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9972,7 +9987,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9993,7 +10008,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10227,7 +10242,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10249,7 +10264,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10292,7 +10307,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10313,7 +10328,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
