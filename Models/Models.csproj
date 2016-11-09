@@ -178,6 +178,7 @@
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
     <Compile Include="Plant\Functions\MovingAverage.cs" />
     <Compile Include="Plant\Functions\HoldFunction.cs" />
@@ -190,15 +191,16 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
+    <Compile Include="Plant\Library\BiomassRemoval.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
+    <Compile Include="Plant\Phenology\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\Phenology\PhaseSetFunction.cs" />
     <Compile Include="Plant\Phenology\QualitativePPEffect.cs" />
     <Compile Include="Plant\Phenology\VernalisationC.cs" />
     <Compile Include="Plant\Phenology\ZadokPMF.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
-    <Compile Include="Plant\RemoveBiomassFromOrgan.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
