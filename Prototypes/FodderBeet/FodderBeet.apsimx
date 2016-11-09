@@ -9979,7 +9979,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>FRNLObserved</TableName>
+          <TableName>PredictedObserved_FRNL</TableName>
           <XFieldName>Observed.FodderBeet.Phenology.Stage</XFieldName>
           <YFieldName>Predicted.FodderBeet.Phenology.Stage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
