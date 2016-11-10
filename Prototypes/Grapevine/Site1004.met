@@ -1,10 +1,9 @@
-!Data formatted for 1004 site
+[weather.met.weather]                
+Site  =  1004            
 Latitude=-41.5
-
-   ! TAV and AMP inserted 22/11/2013
- tav = 13.03  (oC)     ! annual average ambient temperature
- amp = 15.24  (oC)     ! annual amplitude in mean monthly temperature
-
+Longitude=172.466                
+tav=13.03  !annual  average  ambient  temperature        
+amp=15.24  !annual  amplitud  in  mean  monthly  temperature
        year      day       radn       maxt         mint       rain
          ()            ()     (mj/m2) (oC)        (oC)        (mm)
         2000           182         7.2       18.50        7.12        0.00
