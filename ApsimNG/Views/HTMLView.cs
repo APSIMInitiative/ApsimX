@@ -225,9 +225,10 @@ namespace UserInterface.Views
                 appInited = true;
             }
             wb = new MonoMac.WebKit.WebView(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
-            scrollWindow.Add(NSViewToGtkWidget(wb));
+            scrollWindow.AddWithViewport(NSViewToGtkWidget(wb));
             w.PackStart(scrollWindow, true, true, 0);
             w.ShowAll();
+            wb.ShouldCloseWithWindow = true;
         }
 
         public void Navigate(string uri)
