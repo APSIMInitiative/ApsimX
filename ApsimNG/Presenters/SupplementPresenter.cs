@@ -163,7 +163,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="idx">
         /// Index at which to initialise the new supplement.
-        ///</param>
+        /// </param>
         /// <param name="sNewName">
         /// Name of the new supplement.  If this name matches an entry
         /// in grazSUPP.DefaultSuppConsts, supplement properties are
@@ -253,7 +253,7 @@ namespace UserInterface.Presenters
         private void PopulateSupplementNames()
         {
             List<string> names = new List<string>();
-            for (int i = 1; i < supplement.NoStores; i++ )  // SKIP element 0; that's reserved for fodder
+            for (int i = 1; i < supplement.NoStores; i++)  // SKIP element 0; that's reserved for fodder
             {
                 if (string.IsNullOrWhiteSpace(supplement[i].sName))
                 {

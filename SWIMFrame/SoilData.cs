@@ -102,7 +102,7 @@ namespace SWIMFrame
                     {
                         absdz[a] = Math.Abs(dz[a, j] - dz[a, np + 1]);
                     }
-                    double tsum = MathUtilities.Sum(absdz);
+                    // double tsum = MathUtilities.Sum(absdz);
                     if (MathUtilities.Sum(absdz) < small)
                         break;
                 }

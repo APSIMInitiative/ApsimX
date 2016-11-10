@@ -16,17 +16,13 @@ namespace Models.PMF.Interfaces
         /// The Name of the organ.
         /// </summary>
         string Name { get; set; }
-        
-        /// <summary>
-        /// Do Plant ending logic for this organ.
-        /// </summary>
-        void DoPlantEnding();
 
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="biomassToRemove">Biomass to remove</param>
-        void DoRemoveBiomass(OrganBiomassRemovalType biomassToRemove);
+        void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
 
     }

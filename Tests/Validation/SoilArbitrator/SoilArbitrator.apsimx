@@ -2818,7 +2818,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -2848,7 +2848,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>
@@ -3053,7 +3053,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Value>400</Value>
               <Units>mm</Units>
             </Constant>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -3083,9 +3083,17 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            </BiomassRemoval>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3101,7 +3109,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <PotentialEP>0</PotentialEP>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>
@@ -3266,7 +3273,7 @@ This is important in SLURP as it is set for each species to represent their diff
               </Memo>
               <XProperty>[Root].LayerMidPointDepth</XProperty>
             </LinearInterpolationFunction>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -3296,7 +3303,7 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
+            </BiomassRemoval>
             <LinearInterpolationFunction>
               <Name>KNO3</Name>
               <XYPairs>
@@ -3501,7 +3508,7 @@ This is important in SLURP as it is set for each species to represent their diff
               <Name>NReallocationFactor</Name>
               <Value>0</Value>
             </Constant>
-            <Folder>
+            <BiomassRemoval>
               <Name>BiomassRemovalDefaults</Name>
               <OrganBiomassRemovalType>
                 <Name>Harvest</Name>
@@ -3531,9 +3538,17 @@ This is important in SLURP as it is set for each species to represent their diff
                 <FractionLiveToResidue>0.2</FractionLiveToResidue>
                 <FractionDeadToResidue>0</FractionDeadToResidue>
               </OrganBiomassRemovalType>
-            </Folder>
-            <GrowthRespiration>0</GrowthRespiration>
-            <MaintenanceRespiration>0</MaintenanceRespiration>
+            </BiomassRemoval>
+            <Constant>
+              <Name>MaintenanceRespirationFunction</Name>
+              <Value>0</Value>
+              <Units>0-1</Units>
+            </Constant>
+            <Constant>
+              <Name>DMConversionEfficiency</Name>
+              <Value>1</Value>
+              <Units>0-1</Units>
+            </Constant>
             <CohortsInitialised>false</CohortsInitialised>
             <TipsAtEmergence>0</TipsAtEmergence>
             <CohortsAtInitialisation>0</CohortsAtInitialisation>
@@ -3549,7 +3564,6 @@ This is important in SLURP as it is set for each species to represent their diff
             <PotentialEP>0</PotentialEP>
             <KDead>0</KDead>
             <LAIDead>0</LAIDead>
-            <WaterAllocation>0</WaterAllocation>
           </SimpleLeaf>
           <Cultivar>
             <Name>StaticCrop</Name>

@@ -933,6 +933,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -954,7 +956,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -991,7 +993,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PhaseLookup>
           <Name>HIIncrement</Name>
           <PhaseLookupValue>
@@ -1204,7 +1206,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1234,7 +1236,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1395,7 +1397,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1425,7 +1427,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -1441,8 +1443,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1493,7 +1503,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>3</Rank>
-          <Area>0</Area>
+          <Area>224</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <VariableReference>
@@ -1782,6 +1792,18 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <Name>NonStructuralFraction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>
@@ -2050,7 +2072,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2080,8 +2102,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
-        <GrowthRespiration>0</GrowthRespiration>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Memo>
@@ -2091,6 +2112,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0.7</Value>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -2174,7 +2196,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2204,7 +2226,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2268,8 +2290,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>  
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -2366,7 +2396,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2396,7 +2426,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
@@ -2417,7 +2447,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>10000</Value>
           <Units>g/m^2/d</Units>
         </Constant>
-
         <MultiplyFunction>
           <Name>FixationRate2</Name>
           <Memo>
@@ -2497,8 +2526,16 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2626,16 +2663,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.91287932221741563</Slope>
-            <Intercept>308.827921547124</Intercept>
-            <SEslope>0.1114079374080907</SEslope>
-            <SEintercept>88.146366616667237</SEintercept>
-            <R2>0.48603622192452223</R2>
-            <RMSE>359.7414839048385</RMSE>
-            <NSE>-0.65024774184940459</NSE>
-            <ME>244.35966185584331</ME>
-            <MAE>290.60070221553008</MAE>
-            <RSR>1.2757905817176316</RSR>
+            <Slope>0.91312923251408962</Slope>
+            <Intercept>335.17590768260675</Intercept>
+            <SEslope>0.11448117904179643</SEslope>
+            <SEintercept>90.577926611840056</SEintercept>
+            <R2>0.47259102676262121</R2>
+            <RMSE>383.33661670445139</RMSE>
+            <NSE>-0.87382364406178015</NSE>
+            <ME>270.89257862221143</ME>
+            <MAE>309.16296797005089</MAE>
+            <RSR>1.3594685825791775</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
@@ -2682,16 +2719,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.68798781349375138</Slope>
-            <Intercept>202.96533952706017</Intercept>
-            <SEslope>0.091318983996129727</SEslope>
-            <SEintercept>19.764288515837027</SEintercept>
-            <R2>0.15475969146794977</R2>
-            <RMSE>232.14919377369446</RMSE>
-            <NSE>-3.3961515987613184</NSE>
-            <ME>144.94170091026282</ME>
-            <MAE>179.94071726962997</MAE>
-            <RSR>2.0933373758852416</RSR>
+            <Slope>0.70283197955370136</Slope>
+            <Intercept>203.177835853479</Intercept>
+            <SEslope>0.09232138741107726</SEslope>
+            <SEintercept>19.981240013053892</SEintercept>
+            <R2>0.15750795665400807</R2>
+            <RMSE>235.27139553416006</RMSE>
+            <NSE>-3.5151954870910362</NSE>
+            <ME>147.91470648689685</ME>
+            <MAE>181.42233652722948</MAE>
+            <RSR>2.121490916003105</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -3083,9 +3120,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3130,9 +3167,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3177,9 +3214,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3224,9 +3261,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3966,8 +4003,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -4961,8 +4996,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>MSLeafNo</Name>
@@ -7353,8 +7386,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -8558,8 +8589,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -9359,8 +9388,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -10167,8 +10194,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -10941,8 +10966,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -11715,8 +11738,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -12813,8 +12834,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -13573,8 +13592,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -14228,8 +14245,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -15114,8 +15129,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -16637,8 +16650,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -18041,8 +18052,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -19503,8 +19512,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -21135,8 +21142,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -22104,8 +22109,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -22970,8 +22973,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -24068,8 +24069,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -25166,8 +25165,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -26036,8 +26033,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -26769,8 +26764,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -27495,8 +27488,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -28221,8 +28212,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -29022,8 +29011,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -29793,8 +29780,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -30606,8 +30591,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -31419,8 +31402,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -32232,8 +32213,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -33024,8 +33003,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -33816,8 +33793,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -35509,8 +35484,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -37412,8 +37385,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -38500,8 +38471,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -39887,8 +39856,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -40021,5 +39988,5 @@ namespace Models
       </Experiment>
     </Folder>
   </Folder>
-  <ExplorerWidth>304</ExplorerWidth>
+  <ExplorerWidth>415</ExplorerWidth>
 </Simulations>

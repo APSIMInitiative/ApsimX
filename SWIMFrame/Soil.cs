@@ -35,7 +35,8 @@ namespace SWIMFrame
         static double qsmall = 1.0e-5; // smaller fluxes negligible
         static double vhmax = -10000; // for vapour - rel humidity > 0.99 at vhmax
         static int nhpd = 5; // no. of h per decade from hd to vhmax
-        static double dSdh, hdry, hwet, dlhr, dlh, lhd, phidry, phie, x;
+        // static double dSdh;
+        static double hdry, hwet, dlhr, dlh, lhd, phidry, phie, x;
         // The above parameters can be varied, but the defaults should usually be ok.
 
         //subroutine to generate the property values.
@@ -140,6 +141,7 @@ namespace SWIMFrame
             }
             else
             {
+                double dSdh;
                 MVG.Sdofh(sPar.hd, out x, out dSdh);
                 sp.Sd[1] = x;
                 for (j = 2; j <= nld; j++)
@@ -169,7 +171,7 @@ namespace SWIMFrame
                     break;
 
                 cco = Cuco(sp.phi.Slice(i,i+3), sp.K.Slice(i, i+3));
-                double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
+                // double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
                 KcoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
                 sp.Kco = KcoM.ToArray();
 

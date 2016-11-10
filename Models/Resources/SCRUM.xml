@@ -345,7 +345,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Value>0</Value>
       <Units>/d</Units>
     </Constant>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -367,8 +367,7 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-    <BiomassRemovalDefaults />
+    </BiomassRemoval>
     <Constant>
       <Name>InitialWtFunction</Name>
       <Value>0</Value>
@@ -383,6 +382,16 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <Name>DetachmentRateFunction</Name>
       <Value>0</Value>
       <Units>/d</Units>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant>  
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
     </Constant>
   </GenericOrgan>
   <SimpleLeaf>
@@ -850,7 +859,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
         <VariableName>[Stover].bBiomass.Value</VariableName>
       </VariableReference>
     </SigmoidFunction2>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -872,8 +881,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-    <BiomassRemovalDefaults />
+    </BiomassRemoval>
     <BiomassYesterday>0</BiomassYesterday>
     <Albedo>0.18</Albedo>
     <Gsmax>0.015</Gsmax>
@@ -887,6 +895,16 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
     <DeltaBiomass>0</DeltaBiomass>
     <LAIDead>0</LAIDead>
     <WaterAllocation>0</WaterAllocation>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
   </SimpleLeaf>
   <Root>
     <Name>Root</Name>
@@ -1094,7 +1112,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
       </Memo>
       <Value>0.1</Value>
     </Constant>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1116,7 +1134,7 @@ This is the proportion of total biomass that is paritioned into the roots and is
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionLiveToResidue>0.15</FractionLiveToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <BiomassRemovalDefaults />
     <Constant>
       <Name>InitialDM</Name>
@@ -1212,7 +1230,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
       <Value>0</Value>
     </Constant>
 
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -1234,8 +1252,7 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
-    <BiomassRemovalDefaults />
+    </BiomassRemoval>
     <Constant>
       <Name>StructuralFraction</Name>
       <Value>1.0</Value>
@@ -1259,6 +1276,16 @@ The nodule organ is unparameterised and simply has a switch that is turned on fo
     <Constant>
       <Name>FixationMetabolicCost</Name>
       <Value>0.0</Value>
+    </Constant>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
     </Constant>
   </Nodule>
   <CompositeBiomass>

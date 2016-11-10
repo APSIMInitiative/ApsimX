@@ -178,7 +178,7 @@ This is important in SLURP as it is set for each species to represent their diff
       <XProperty>[Root].RootLengthDenisty</XProperty>
     </LinearInterpolationFunction>
     <NuptakeSupply>0</NuptakeSupply>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -200,7 +200,7 @@ This is important in SLURP as it is set for each species to represent their diff
         <FractionRemoved>0.</FractionRemoved>
         <FractionToResidue>0.15</FractionToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
     <LinearInterpolationFunction>
       <Name>NUptakeSWFactor</Name>
       <XYPairs>
@@ -372,7 +372,7 @@ This is important in SLURP as it is set for each species to represent their diff
     <DeltaBiomass>0</DeltaBiomass>
     <LAIDead>0</LAIDead>
     <WaterAllocation>0</WaterAllocation>
-    <Folder>
+    <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
@@ -394,7 +394,17 @@ This is important in SLURP as it is set for each species to represent their diff
         <FractionRemoved>0.6</FractionRemoved>
         <FractionToResidue>0.1</FractionToResidue>
       </OrganBiomassRemovalType>
-    </Folder>
+    </BiomassRemoval>
+    <Constant>
+      <Name>MaintenanceRespirationFunction</Name>
+      <Value>0</Value>
+      <Units>0-1</Units>
+    </Constant> 
+    <Constant>
+      <Name>DMConversionEfficiency</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
   </SimpleLeaf>
   <Cultivar>
     <Name>StaticCrop</Name>

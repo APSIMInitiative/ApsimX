@@ -202,7 +202,7 @@ namespace UserInterface.Commands
                         text += " " + Get("institution");
 
                     else if (Get("university") != string.Empty)
-                        text = AppendString(Get("type"), ".") + Get("university") ;
+                        text = AppendString(Get("type"), ".") + Get("university");
                     
                     else
                     {

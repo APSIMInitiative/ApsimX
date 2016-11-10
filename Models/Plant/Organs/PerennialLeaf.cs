@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 using Models.PMF.Phen;
 using Models.Soils.Arbitrator;
 using System;
@@ -17,7 +18,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration
+    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration, IHasWaterDemand
     {
         /// <summary>The met data</summary>
         [Link]
@@ -64,6 +65,10 @@ namespace Models.PMF.Organs
         [Link]
         protected ISummary Summary = null;
 
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
+
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         public double MaintenanceRespiration { get; set; }
 
@@ -72,11 +77,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
+        public Biomass Removed { get; set; }
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
@@ -164,8 +165,22 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double FRGR { get; set; }
 
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        public double PotentialEP { get; set; }
+        [Units("mm")]
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -184,6 +199,9 @@ namespace Models.PMF.Organs
         /// <summary>The extinction coefficient function</summary>
         [Link]
         IFunction ExtinctionCoefficient = null;
+        /// <summary>The extinction coefficient function for dead leaves</summary>
+        [Link]
+        IFunction ExtinctionCoefficientDead = null;
         /// <summary>The photosynthesis</summary>
         [Link]
         IFunction Photosynthesis = null;
@@ -199,6 +217,12 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
+        /// <summary>Leaf Death</summary>
+        [Link]
+        IFunction LeafKillFraction = null;
+        /// <summary>Minimum LAI</summary>
+        [Link]
+        IFunction MinimumLAI = null;
         /// <summary>Leaf Detachment Time</summary>
         [Link]
         IFunction LeafDetachmentTime = null;
@@ -213,14 +237,10 @@ namespace Models.PMF.Organs
 
         #region States and variables
 
-        /// <summary>Gets or sets the k dead.</summary>
-        public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Gets or sets the water demand.</summary>
-        [Units("mm")]
-        public double WaterDemand
+        /// <summary>Calculate the water demand.</summary>
+        public double CalculateWaterDemand()
         {
-            get {return PotentialEP;}
-            set { }
+            return PotentialEP;
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
@@ -228,7 +248,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } set { } }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
          public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
@@ -250,7 +269,7 @@ namespace Models.PMF.Organs
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
          public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -259,7 +278,7 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
         /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value * LAIDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
@@ -270,8 +289,16 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        public double WaterAllocation { get; set; }
-        
+        [XmlIgnore]
+        public double WaterAllocation { get; private set; }
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
+
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]
         public BiomassPoolType DMDemand
@@ -363,11 +390,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class Parameter Function Links
-        /// <summary>The senescence rate function</summary>
-        [Link]
-        [Units("/d")]
-        IFunction SenescenceRate = null;
-
         /// <summary>The n reallocation factor</summary>
         [Link]
         [Units("/d")]
@@ -467,6 +489,15 @@ namespace Models.PMF.Organs
                 L.Live.MetabolicWt *= (1-fraction);
             }
         }
+
+        private void GetSenescingLeafBiomass(out Biomass Senescing)
+        {
+            Senescing = new Biomass();
+            foreach (PerrenialLeafCohort L in Leaves)
+                if (L.Age >= LeafResidenceTime.Value)
+                    Senescing.Add(L.Live);
+        }
+
         private void SenesceLeaves()
         {
             foreach (PerrenialLeafCohort L in Leaves)
@@ -477,6 +508,17 @@ namespace Models.PMF.Organs
                 }
         }
 
+        private void KillLeavesUniformly(double fraction)
+        {
+            foreach (PerrenialLeafCohort L in Leaves)
+            {
+                Biomass Loss = new Biomass();
+                Loss.SetTo(L.Live);
+                Loss.Multiply(fraction);
+                L.Dead.Add(Loss);
+                L.Live.Subtract(Loss);
+            }
+        }
         private void DetachLeaves(out Biomass Detached)
         {
             Detached = new Biomass();
@@ -512,9 +554,12 @@ namespace Models.PMF.Organs
             get
             {
                 double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                Biomass Senescing = new Biomass();
+                GetSenescingLeafBiomass(out Senescing);
+                
                 return new BiomassSupplyType()
                 {
-                    Reallocation = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value,
+                    Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value,
                     Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value,
                     Uptake = 0.0
                 };
@@ -566,14 +611,17 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when crop is sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
+            {
+                MicroClimatePresent = false;
                 Clear();
+            }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -584,6 +632,9 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
                 Detached.Clear();
                 FRGR = FRGRFunction.Value;
                 LAI = LAIFunction.Value;
@@ -617,6 +668,8 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
+                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value, (1-MinimumLAI.Value/LAI)));
+                KillLeavesUniformly(LKF);
                 DetachLeaves(out Detached);
 
                 if (Detached.Wt > 0.0)
@@ -641,8 +694,8 @@ namespace Models.PMF.Organs
         #endregion
 
         /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
+        [EventSubscribe("PlantEnding")]
+        protected void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {
@@ -654,50 +707,19 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
+            Biomass liveAfterRemoval = Live;
+            Biomass deadAfterRemoval = Dead;
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
 
-            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
+            double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
+            double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt,  Dead.Wt, 0);
 
-            if (totalLiveFractionToRemove > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            
-            if (totalDeadFractionToRemove > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            
-            if (totalFractionToRemove > 0.0)
-            { 
-                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
-
-                Biomass Detaching = Live * value.FractionLiveToResidue + Dead * value.FractionDeadToResidue;
-                Detached.Add(Detaching);
-                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
-
-                ReduceLeavesUniformly(RemainingLiveFraction);
-                ReduceDeadLeavesUniformly(RemainingDeadFraction);
-
-                SurfaceOrganicMatter.Add(Detaching.Wt * 10, Detaching.N * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + Plant.Name
-                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-            }
+            ReduceLeavesUniformly(remainingLiveFraction);
+            ReduceDeadLeavesUniformly(remainingDeadFraction);
         }
     }
 }
