@@ -139,7 +139,7 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           </Memo>
           <Start>Germination</Start>
           <End>PreEmerge</End>
-          <ShootLag>1</ShootLag>
+          <ShootLag>0</ShootLag>
           <ShootRate>20</ShootRate>
         </EmergingPhase>
         <GenericPhase>
@@ -147,6 +147,7 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           <Constant>
             <Name>Target</Name>
             <Value>400</Value>
+            <Units>oCd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -203,17 +204,6 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Currently an empirical fit from the test dataset at 2500°Cd  (ref XXX).
-
-=> We need some justification for the reproductive phases and values !!!!!
-
-Currently the thermal time is set from observed, which appear to be identical regardless of sowing date,
-
-I suspect that there is probably a Photperiod or vernalization happening rather than TT.
-]]></MemoText>
-          </Memo>
           <Constant>
             <Name>Target</Name>
             <Value>1800</Value>
@@ -290,8 +280,7 @@ I suspect that there is probably a Photperiod or vernalization happening rather 
           </DivideFunction>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Assumes that leaf primordia is produced at 2 times faster than the leaves (i.e.half of phyllochron values).
-Need ref (Ed to check)]]></MemoText>
+            <MemoText><![CDATA[Assumes that leaf primordia is produced at 2 times faster than the leaves (i.e.half of phyllochron values) following findings for other species such as maize (Padilla & Otegui, 2005 - Annals of Botany 96: 997–1007, 2005). Empirically fitted for fodder beet so requires data for test and improvement.]]></MemoText>
           </Memo>
           <Start>PreEmerge</Start>
           <End>Maturity</End>
@@ -313,25 +302,13 @@ Need ref (Ed to check)]]></MemoText>
                 <double>47</double>
               </Y>
             </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Measured value of 45-53oCd/leaf from Emmanuel's data and FRNL data too.
-
-Two stage phyllochron (100oCd to 50oCd) is an empirical fix to get first leaves right. May be in fact response to soil temperature at later stages. To check.
-
-There seems to be a seasonal difference in leaf appearance rates across sowing dates. So we should check thermal-time model.]]></MemoText>
-            </Memo>
             <XProperty>[FodderBeet].Structure.LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Measured values of 45 to 53oCd/leaf  (Chakwizira et al 2016 Eur. Jour, Agr, XXXX).
-
-Two stage phyllochron (150oCd to 47oCd) is an empirical fix to get first leaves right. May be in fact response to soil temperature at later stages. 
-
-To check.
-
-There seems to be a seasonal difference in leaf appearance rates across sowing dates. So we should check thermal-time model.]]></MemoText>
+            <MemoText><![CDATA[Measured values of 45 to 53oCd/leaf  (Chakwizira et al 2016  European Journal of Agronomy 74: 144-154).
+Two stage phyllochron (100oCd to 47oCd) is an empirical fit to get faster leaf appearance of the first 3 leaves. 
+Needs test and imperovement to isolate soil temperature effects of different thermal-time model effects.]]></MemoText>
           </Memo>
           <Start>PreEmerge</Start>
           <End>Maturity</End>
@@ -1538,16 +1515,16 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
           <RegrStats>
             <Name>FodderBeet.Phenology.Stage</Name>
             <n>8</n>
-            <Slope>0.86481153911664477</Slope>
-            <Intercept>0.46522829245606134</Intercept>
-            <SEslope>0.068203128030253773</SEslope>
-            <SEintercept>0.30214062696004168</SEintercept>
-            <R2>0.96402465026518558</R2>
-            <RMSE>0.29002921466334219</RMSE>
-            <NSE>0.94616515497072962</NSE>
-            <ME>-0.10932266629819876</ME>
-            <MAE>0.23412693183793132</MAE>
-            <RSR>0.21703799068506791</RSR>
+            <Slope>0.86352002120624316</Slope>
+            <Intercept>0.4728264326299314</Intercept>
+            <SEslope>0.067910931336714636</SEslope>
+            <SEintercept>0.30084619230973642</SEintercept>
+            <R2>0.96421828410448318</R2>
+            <RMSE>0.28954376609848831</RMSE>
+            <NSE>0.94634522080864247</NSE>
+            <ME>-0.10721347724353508</ME>
+            <MAE>0.2338927427832676</MAE>
+            <RSR>0.21667471424335102</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.StorageRoot.Live.N</Name>
@@ -1738,10 +1715,10 @@ There seems to be a seasonal difference in leaf appearance rates across sowing d
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>0.31508512644469988</RMSE>
+            <RMSE>0.31758512644469983</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.31508512644469988</ME>
-            <MAE>0.31508512644469988</MAE>
+            <ME>0.31758512644469983</ME>
+            <MAE>0.31758512644469983</MAE>
             <RSR>NaN</RSR>
           </RegrStats>
           <RegrStats>
@@ -10429,7 +10406,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Water (mm)</Title>
+          <Title>Water stress (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>0</Minimum>
           <Maximum>1.1</Maximum>
@@ -10471,7 +10448,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Water (mm)</Title>
+          <Title>N stress (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10536,7 +10513,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Biomass (g/m2)</Title>
+          <Title>Actual RUE (g DM/MJ)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10608,7 +10585,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf Biomass (g/m2)</Title>
+          <Title>Intercepted Radiation (MJ/day)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -10674,7 +10651,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>AboveGroundN (kg/ha)</Title>
+          <Title>Above Ground N (kg/ha)</Title>
           <Inverted>false</Inverted>
           <Minimum>0</Minimum>
           <Maximum>NaN</Maximum>
@@ -10688,10 +10665,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>Riv_Sep</string>
-          <string>Riv_Nov</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -10740,7 +10714,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>StorageRoot_N (g/m2)</Title>
+          <Title>Storage Root N (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>30</Maximum>
@@ -10754,10 +10728,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>Riv_Sep</string>
-          <string>Riv_Nov</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -10806,7 +10777,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf_N (g/m2)</Title>
+          <Title>Leaf N (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>12</Maximum>
@@ -10820,10 +10791,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>Riv_Sep</string>
-          <string>Riv_Nov</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -10941,7 +10909,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>StorageRoot_NConc</Title>
+          <Title>Storage Root N Concentration (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>0.05</Maximum>
@@ -11007,7 +10975,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Leaf_NConc</Title>
+          <Title>Leaf DM N Concentration (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>0.1</Maximum>
@@ -11073,7 +11041,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Petiole N conc</Title>
+          <Title>Petiole DM N Concentration (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>0.05</Maximum>
@@ -11139,7 +11107,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Dead_NConc</Title>
+          <Title>Senesced DM N Concentration (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>0.05</Maximum>
@@ -11205,7 +11173,7 @@ namespace Models
         </Series>
         <Axis>
           <Type>Left</Type>
-          <Title>Total_NConc</Title>
+          <Title>Total Plant N Concentration (fractional)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>0.05</Maximum>
