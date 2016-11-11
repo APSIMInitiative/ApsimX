@@ -13,7 +13,7 @@ namespace SWIMFrame
         /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
         public static Dictionary<string, FluxTable> FluxTables {get;set;}
 
-        public static FluxTable ft = new FluxTable();
+        public static FluxTable ft;
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
         static int[] iphif = new int[mx+1];
@@ -34,7 +34,6 @@ namespace SWIMFrame
         static double[,] qi3 = new double[mx + 1, mx + 1];
         static double[,] qi5 = new double[mx + 1, mx + 1];
         static double[,] aKco = new double[mx + 1, 3 + 1];
-    //    static double[,] aphico = new double[3 + 1, mx + 1];
         static SoilProps sp;
 
         static StringBuilder diags = new StringBuilder();
@@ -43,7 +42,9 @@ namespace SWIMFrame
         /// Public accessor to set a SoilProps object.
         /// Only required for unit testing.
         /// </summary>
-        /// <param name="soilProps"></param>
+        /// <param name="setsp"></param>
+        /// <param name="setnu"></param>
+        /// <param name="sethpK"></param>
         public static void SetupSsflux(SoilProps setsp, int setnu, double[] sethpK)
         {
             sp = setsp;
@@ -64,10 +65,7 @@ namespace SWIMFrame
             he = sp.he; Ks = sp.ks;
             for (i = 1; i <= nu - 1; i++)
                 for (j = 1; j < sp.Kco.GetLength(0); j++)
-                {
                     aKco[i, j] = sp.Kco[j, i];
-                   // aphico[i, j] = sp.phico[i, j]; //doesn't seem to be used
-                }
 
             // Get K values for Simpson's integration rule in subroutine odef.
             for (i = 1; i <= nu - 1; i++)
@@ -110,16 +108,16 @@ namespace SWIMFrame
             i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu), rerr);
             re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu));// for unsat phi
             double[] rei = new double[nu - 2 + 1];
-            Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice
-            indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
+            Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice JF
+            Indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
             int[] iphifReverse = iphif.Skip(1).Take(nphif).Reverse().ToArray();
-            int[] iphifReversei = new int[iphifReverse.Length + 1]; // again, need to 1-index
-            Array.Copy(iphifReverse, 0, iphifReversei, 1, iphifReverse.Length);
+            int[] iphifReversei = new int[iphifReverse.Length + 1]; 
+            Array.Copy(iphifReverse, 0, iphifReversei, 1, iphifReverse.Length); // again, need to 1-index JF
             for (int idx = 1; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
             re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
-            indices(ns - 1, re, ns, cfac, out nfs, out ifs);
+            Indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
             int[] ifsTemp = ifs.Slice(2, nfs);
             for (int idx = nphif + 1; idx <= nphif + nfs - 1; idx++)
@@ -131,6 +129,7 @@ namespace SWIMFrame
                 phif[idx] = sp.phic[iphif[idx]];
                 qf[idx, 1] = aq[iphif[idx], 1];
             }
+
             // Get rest of fluxes
             // First for lower end wetter
             for (j = 2; j <= nphif; j++)
@@ -164,14 +163,14 @@ namespace SWIMFrame
 
             for (i = 1; i <= nphif; i++)
             {
-                qi1Return = quadinterp(phif, qfM.Column(i).ToArray(), nphif, phii);
+                qi1Return = Quadinterp(phif, qfM.Column(i).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi1Return.Length; idx++)
                     qi1[idx, i] = qi1Return[idx];
             }
 
             for (j = 1; j <= nphif; j++)
             {
-                qi2Return = quadinterp(phif, qfM.Row(j).ToArray(), nphif, phii);
+                qi2Return = Quadinterp(phif, qfM.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi2Return.Length; idx++)
                     qi2[j, idx] = qi2Return[idx];
             }
@@ -179,7 +178,7 @@ namespace SWIMFrame
             for (j = 1; j <= ni; j++)
             {
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
-                qi3Return = quadinterp(phif, qi1M.Row(j).ToArray(), nphif, phii);
+                qi3Return = Quadinterp(phif, qi1M.Row(j).ToArray(), nphif, phii);
                 for (int idx = 1; idx < qi3Return.Length; idx++)
                     qi3[j, idx] = qi3Return[idx];
             }
@@ -224,7 +223,6 @@ namespace SWIMFrame
             {
                 phii5[a * 2] = phii52[a];
             }
-            // diags - end timer here
 
             // Assemble flux table
             j = 2 * nfu - 1;
@@ -336,8 +334,8 @@ namespace SWIMFrame
 
             if (qin < q1 || qin > q2)
             {
-                Console.WriteLine("ssflux: qin ", qin, " out of range ", q1, q2);
-                Console.WriteLine("at ia, ib = ", ia, ib);
+                Console.WriteLine("ssflux: qin {0} out of range {1} {2}", qin, q1, q2);
+                Console.WriteLine("at ia, ib = {0} {1}", ia, ib);
             }
             else
                 q = qin;
@@ -372,13 +370,10 @@ namespace SWIMFrame
                     n2 = ib;
                 }
             }
-            u0 = new double[] {0.0, 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
-            //write (*,*) q1,q,q2
+            MathUtilities.Zero(u0); // u(1) is z, u(2) is dz/dq (partial deriv)
             for (it = 1; it < maxit; it++)// bounded Newton iterations to get q that gives correct dz
             {
-                u = u0; //point?
                 u = odef(n1, n2, sp.Kc, hpK);
-                //write (*,*) it,q,u(1),u(2)
                 if (i > n || j > n) // add sat solns
                 {
                     Ks = Math.Max(Ka, Kb);
@@ -413,7 +408,7 @@ namespace SWIMFrame
                     break;
             }
             if (it > maxit)
-                Console.WriteLine("ssflux: too many iterations", ia, ib);
+                Console.WriteLine("ssflux: too many iterations {0} {1}", ia, ib);
             nit = nit + it;
             return q;
         }
@@ -421,7 +416,6 @@ namespace SWIMFrame
         // get curvature at interior points of (x,y)
         private static double[] curv(int n, double[] x, double[] y)
         {
-            double[] c = new double[n - 1];
             double[] s = new double[n - 1];
             double[] yl = new double[n - 1];
 
@@ -434,18 +428,15 @@ namespace SWIMFrame
                                                                                 x.Slice(1, n-2)),
                                                               s));
             double[] ySlice = y.Slice(2, n - 1);
-            double[] div = MathUtilities.Divide(ySlice, yl);
-            double[] re = MathUtilities.Subtract_Value(div, 1);
             return MathUtilities.Subtract_Value(MathUtilities.Divide(ySlice, yl), 1);
         }
 
         // get last point where (x,y) deviates from linearity by < re
         private static int nonlin(int n, double[] x, double[] y, double re)
         {
-            int nonlin, i;
+            int i;
             double s, are;
             double[] yl = new double[n - 1];
-            nonlin = n;
             for (i = 3; i <= n; i++)
             {
                 s = (y[i] - y[1]) / (x[i] - x[1]);
@@ -462,9 +453,7 @@ namespace SWIMFrame
                     div[idx] = Math.Abs(div[idx]);
                 are = MathUtilities.Max(div);
                 if (are > re)
-                {
                     return i - 1;
-                }
             }
             return 0;
         }
@@ -481,12 +470,12 @@ namespace SWIMFrame
         {
             int nsel;
             int[] isel = new int[n + 2];
-            indices(n, c, iend, fac, out nsel, out isel);
+            Indices(n, c, iend, fac, out nsel, out isel);
             return new KeyValuePair<int, int[]>(nsel, isel);
         }
 
         // get indices of elements selected using curvature
-        private static void indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
+        private static void Indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
         {
             int a = 1, b = 1;
             int[] di = new int[n+1];
@@ -494,15 +483,12 @@ namespace SWIMFrame
             double[] ac = new double[n+1];
 
             for (int idx = 1; idx < c.Length; idx++)
-            {
                 ac[idx] = Math.Abs(c[idx]);
-            }
             for (int idx = 1; idx < c.Length; idx++)
-            {
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
-            }
+
             isel[1] = 1; 
-            while (true) //will want to change this
+            while (true) 
             {
                 if (a >= iend)
                     break;
@@ -525,16 +511,15 @@ namespace SWIMFrame
             nsel = b;
         }
         // Return quadratic interpolation coeffs co.
-        public static double[] quadco(double[] x, double[] y)
+        public static double[] Quadco(double[] x, double[] y)
         {
             double[] co = new double[4];
-            double s, x1, y2, x12, c1, c2;
-            s = 1.0 / (x[3] - x[1]);
-            x1 = s * (x[2] - x[1]);
-            y2 = y[3] - y[1];
-            x12 = x1 * x1;
-            c1 = (y[2] - y[1] - x12 * y2) / (x1 - x12);
-            c2 = y2 - c1;
+            double s = 1.0 / (x[3] - x[1]);
+            double x1 = s * (x[2] - x[1]);
+            double y2 = y[3] - y[1];
+            double x12 = x1 * x1;
+            double c1 = (y[2] - y[1] - x12 * y2) / (x1 - x12);
+            double c2 = y2 - c1;
             co[1] = y[1];
             co[2] = s * c1;
             co[3] = s * s * c2;
@@ -542,7 +527,7 @@ namespace SWIMFrame
         }
 
         // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
-        public static double[] quadinterp(double[] x, double[] y, int n, double[] u)
+        public static double[] Quadinterp(double[] x, double[] y, int n, double[] u)
         {
             double[] v = new double[100 + 1];
             int i, j, k;
@@ -553,7 +538,7 @@ namespace SWIMFrame
                 i = k;
                 if (k + 2 > n)
                     i = n - 2;
-                co = quadco(x.Slice(i, i+2), y.Slice(i, i+2));
+                co = Quadco(x.Slice(i, i+2), y.Slice(i, i+2));
                 for (j = k; j <= i+1; j++)
                 {
                     z = u[j] - x[i];

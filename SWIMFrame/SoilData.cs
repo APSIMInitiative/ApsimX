@@ -47,30 +47,24 @@ namespace SWIMFrame
             dx = MathUtilities.Subtract(x.Slice(2, n), x.Slice(1, n - 1));
 
             //  Set up locations in soil, path, S and phi arrays.
-            for (int a = 0; a < philoc.GetLength(0); a++)
-                for (int b = 0; b < philoc.GetLength(1); b++)
-                    philoc[a, b] = 1;
+            philoc.Populate2D(1);
 
             // Get ns different soil idents in array isoil.
             isoil = sid.Skip(1).Distinct().ToArray();
             ns = isoil.Length;
-            for(int count=1;count < soilloc.Length;count++)
-            {
+            for (int count = 1; count < soilloc.Length; count++)
                 soilloc[count] = Array.IndexOf(isoil, sid[count]);
-            }
 
             // Get soil idents in array isid and lengths in array dz for the np paths.
-            dx = MathUtilities.Subtract(x, x.Skip(x.Length - 1).Concat(x.Take(x.Length - 1)).ToArray()); //TEST
+            dx = MathUtilities.Subtract(x, x.Skip(x.Length - 1).Concat(x.Take(x.Length - 1)).ToArray());
             Array.Copy(dx, 1, x, 1, dx.Length / 2);
 
             //hdx=(/0.0,0.5*dx,0.0/) ! half delta x
             for (int a = 0; a < hdx.Length; a++)
-            {
                 if (a == 0 || a == hdx.Length - 1)
                     hdx[a] = 0;
                 else
                     hdx[a] = dx[a] / 2;
-            }
 
             Array.Copy(sid, 1, jt, 1, sid.Length - 1);
             jt[0] = sid[1];
@@ -99,10 +93,8 @@ namespace SWIMFrame
 
                     double[] absdz = new double[dz.GetLength(0)];
                     for (int a = 0; a < absdz.Length; a++)
-                    {
                         absdz[a] = Math.Abs(dz[a, j] - dz[a, np + 1]);
-                    }
-                    double tsum = MathUtilities.Sum(absdz);
+
                     if (MathUtilities.Sum(absdz) < small)
                         break;
                 }
@@ -115,9 +107,7 @@ namespace SWIMFrame
             nsp = ns;
             sp = new SoilProps[nsp + 1];
             for (i = 1; i <= ns; i++)
-            {
                 sp[i] = Soil.ReadProps("soil" + isoil[i-1]);
-            }
 
             //Set ths and he
             ths = new double[n + 1];
@@ -503,7 +493,7 @@ namespace SWIMFrame
         }
 
         // Returns h and, if required, hS given S and soil layer no. il.
-        // note in FORTRAN hS is optional -JF
+        // NB in FORTRAN hS is optional -JF
         public void hofS(double S, int il, out double h, out double hS)
         {
             int i, j;
@@ -518,7 +508,7 @@ namespace SWIMFrame
                 Environment.Exit(1);
             }
 
-            if (S >= sp[i].S[1]) // then !use linear interp in (S, ln(-h))
+            if (S >= sp[i].S[1]) // then use linear interp in (S, ln(-h))
             {
                 j = Find(S, sp[i].S);
                 d = Math.Log(sp[i].h[j + 1] / sp[i].h[j]) / (sp[i].S[j + 1] - sp[i].S[j]);
@@ -526,7 +516,7 @@ namespace SWIMFrame
                 h = -Math.Exp(lnh);
                 hS = d * h;
             }
-            else if (S >= sp[i].Sd[1]) // then !use linear interp in (S, ln(-h))
+            else if (S >= sp[i].Sd[1]) // then use linear interp in (S, ln(-h))
             {
                 j = Find(S, sp[i].Sd);
                 d = (sp[i].lnh[j + 1] - sp[i].lnh[j]) / (sp[i].Sd[j + 1] - sp[i].Sd[j]);

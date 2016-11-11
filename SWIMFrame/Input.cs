@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using APSIM.Shared.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
@@ -128,11 +126,6 @@ namespace SWIMFrame
                 Flow.Solve(solProps, sd, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex,ref sex);
                 win = win + qprec * (tf - ti);
                 if (j == 1)
-                {
-                    Console.WriteLine(tf + " " + nsteps + " " + h0); //max depth of pond
-                    Console.WriteLine("{0}", string.Join(" ", S));
-                    Console.WriteLine("{0}", string.Join(" ", h));
-                }
                 ti = tf;
                 qprec = 0.0;
             }
@@ -141,18 +134,6 @@ namespace SWIMFrame
             double hS = 0; //hS is not used used here, but is a required parameter
             for (j = 1; j <= n; j++)
                 sd.hofS(S[j], j, out h[j], out hS);
-
-            int foo = 0;
-            foo++;
-            /* write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
-               write(2, "(10f8.4)") S;
-               write(2, "(5e16.4)") h;
-               write(2, "(5g16.6)") wp,evap,infil,drn;
-               write(2, "(2f16.6,e16.2)") wp - wpi,infil - drn,win - (wp - wpi + h0 + evap + drn);
-               write(2, "(g16.6,12i5)") tf,nssteps;
-               write(2, "(6g16.6)") sp,sdrn;
-               write(2, "(6g16.6)") sp - spi,sp - spi + sdrn; //solute balance
-               write(2, "(10f8.3)") sm;*/
         }
 
         /// <summary>
