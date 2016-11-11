@@ -15,11 +15,8 @@ namespace UserInterface
         static string[] resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
         protected ViewBase _owner = null;
         protected Widget _mainWidget = null;
-
         public ViewBase Owner { get { return _owner; } }
-
         public Widget MainWidget { get { return _mainWidget; } }
-
         public ViewBase(ViewBase owner) { _owner = owner; }
 
         protected Gdk.Window mainWindow { get { return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow; } }
@@ -35,7 +32,6 @@ namespace UserInterface
             {
                 return waiting;
             }
-
             set
             {
                 if (mainWindow != null)

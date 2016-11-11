@@ -1115,6 +1115,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt Population Response</Name>
@@ -2210,6 +2212,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt Population Response</Name>
@@ -12689,6 +12693,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
       </Experiment>
       <Graph>
@@ -14290,6 +14296,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt Population Response</Name>
@@ -15437,6 +15445,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt Population Response</Name>
@@ -16368,6 +16378,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafNo</Name>
@@ -17309,6 +17321,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafNo</Name>
@@ -18171,6 +18185,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LeafNo</Name>
@@ -19147,6 +19163,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -20637,6 +20655,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -22029,6 +22049,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -23638,6 +23660,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
       </Experiment>
       <Simulation>
@@ -24646,6 +24670,8 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Simulation>
         <Name>Ames2007</Name>
@@ -25594,6 +25620,8 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>GrainWt</Name>
@@ -29083,6 +29111,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -33083,6 +33113,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -36024,6 +36056,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
       </Experiment>
       <Experiment>
@@ -37394,6 +37428,8 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
+          <Area>0</Area>
+          <Slope>0</Slope>
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
@@ -39219,6 +39255,8 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Yield CDF</Name>

@@ -64,8 +64,8 @@ namespace UserInterface.Views
 
         [Widget]
         private ScrolledWindow scrolledwindow1 = null;
-        // [Widget]
-        // private ScrolledWindow scrolledwindow2 = null;
+        //[Widget]
+        //private ScrolledWindow scrolledwindow2 = null;
 
         [Widget]
         public TreeView gridview = null;
@@ -107,7 +107,6 @@ namespace UserInterface.Views
             gridview.FocusOutEvent += FocusOutEvent;
             fixedcolview.FocusInEvent += FocusInEvent;
             fixedcolview.FocusOutEvent += FocusOutEvent;
-            image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -273,7 +272,6 @@ namespace UserInterface.Views
 
                 colLookup.Add(textRender, i);
 
-                textRender.FixedHeightFromFont = 1; // 1 line high
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.Edited += OnCellValueChanged;
@@ -326,6 +324,8 @@ namespace UserInterface.Views
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
                 gridmodel.Append();
             }
+            gridview.FixedHeightMode = true;
+            fixedcolview.FixedHeightMode = true;
             gridview.Model = gridmodel;
 
             gridview.Show();
@@ -333,6 +333,8 @@ namespace UserInterface.Views
                 Gtk.Application.RunIteration();
             WaitCursor = false;
         }
+
+
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -350,7 +352,7 @@ namespace UserInterface.Views
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
             // This gets called a lot, even when it seemingly isn't necessary.
-            if (numberLockedCols == 0 && gridview.GetVisibleRange(out startPath, out endPath) && (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
+            if (numberLockedCols == 0 && gridview.GetVisibleRange(out startPath, out endPath) &&  (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
                 return;
             int colNo;
             string text = String.Empty;
@@ -637,6 +639,7 @@ namespace UserInterface.Views
             ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
         }
 
+
         /// <summary>
         /// Add an action (on context menu) on the series grid.
         /// </summary>
@@ -674,6 +677,7 @@ namespace UserInterface.Views
             image1.Visible = true;
             scrolledwindow1.HscrollbarPolicy = PolicyType.Never;
         }
+
 
         private static Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
         {
@@ -1186,6 +1190,7 @@ namespace UserInterface.Views
                 }
             }
         }
+
 
         /// <summary>
         /// Copy to clipboard

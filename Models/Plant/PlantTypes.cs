@@ -5,7 +5,6 @@
     using Models.Core;
     using PMF.Interfaces;
     using System.Collections.Generic;
-    using Library;
 
     /// <summary>
     /// An event arguments class for some events.
@@ -205,7 +204,6 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    [ValidParent(ParentType = typeof(BiomassRemoval))]
     public class OrganBiomassRemovalType : Model
     {
         /// <summary>

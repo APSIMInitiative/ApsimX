@@ -6,9 +6,12 @@
 namespace UserInterface.Classes
 {
     using System;
+    using System.Collections.Generic;
+    //using System.Windows.Forms;
     using Interfaces;
     using Gtk;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents a grid cell.
@@ -16,7 +19,7 @@ namespace UserInterface.Classes
     public class GridCell : IGridCell
     {
         /// <summary>
-        /// The parent grid that this column belongs to.
+        /// The parent grid that this column belongs to
         /// </summary>
         private GridView gridView;
 

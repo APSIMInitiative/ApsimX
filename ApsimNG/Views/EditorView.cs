@@ -338,6 +338,7 @@
             return false; 
         }
         
+
         /// <summary>
         /// Event handler for when the completion window loses focus
         /// </summary>

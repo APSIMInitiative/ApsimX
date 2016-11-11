@@ -352,7 +352,6 @@ namespace UserInterface.Views
                 lvSupps.GetCursor(out selPath, out selCol);
                 return selPath != null ? selPath.Indices[0] : 0;
             }
-
             set
             {
                 try

@@ -262,7 +262,6 @@ namespace UserInterface.Views
                 spinStartYear.GetRange(out min, out max);
                 return (int)(min + 0.5);
             }
-
             set
             {
                 double min, max;
@@ -280,7 +279,6 @@ namespace UserInterface.Views
                 spinStartYear.GetRange(out min, out max);
                 return (int)(max + 0.5);
             }
-
             set
             {
                 double min, max;

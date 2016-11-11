@@ -383,8 +383,7 @@ namespace UserInterface.Presenters
         private void PopulateLineDropDown()
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
-            if (series.FactorNamesForVarying != null)
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
             this.seriesView.LineType.Values = values.ToArray();
             if (series.FactorIndexToVaryLines == -1)
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
@@ -401,8 +400,7 @@ namespace UserInterface.Presenters
         private void PopulateMarkerDropDown()
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
-            if (series.FactorNamesForVarying != null)
-                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
             this.seriesView.MarkerType.Values = values.ToArray();
             if (series.FactorIndexToVaryMarkers == -1)
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
@@ -423,8 +421,7 @@ namespace UserInterface.Presenters
                 colourOptions.Add(colour);
 
             // Send colour options to view.
-            if (series.FactorNamesForVarying != null)
-                colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
+            colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
             if (series.FactorIndexToVaryColours == -1)
@@ -443,8 +440,8 @@ namespace UserInterface.Presenters
         private void PopulateFieldNames(DataStore dataStore)
         {
             Graph parentGraph = series.Parent as Graph;
-            if (this.seriesView.DataSource != null &&
-                this.seriesView.DataSource.SelectedValue != string.Empty &&
+            if (this.seriesView.DataSource != null && 
+                this.seriesView.DataSource.SelectedValue != string.Empty && 
                 this.seriesView.DataSource.SelectedValue != null &&
                 parentGraph != null)
             {
@@ -454,25 +451,23 @@ namespace UserInterface.Presenters
                     i++;
                 if (i < graphPresenter.seriesDefinitions.Count)
                     data = graphPresenter.seriesDefinitions[i].data;
-
-                List<string> fieldNames = new List<string>();
-                if (data == null)
-                    fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
-                else
+                if (data != null)
                 {
+
+                    List<string> fieldNames = new List<string>();
                     foreach (DataColumn column in data.Columns)
                     {
                         if (column.DataType.Name != "Object")
                             fieldNames.Add(column.ColumnName);
                     }
+
+                    fieldNames.Sort();
+
+                    this.seriesView.X.Values = fieldNames.ToArray();
+                    this.seriesView.Y.Values = fieldNames.ToArray();
+                    this.seriesView.X2.Values = fieldNames.ToArray();
+                    this.seriesView.Y2.Values = fieldNames.ToArray();
                 }
-
-                fieldNames.Sort();
-
-                this.seriesView.X.Values = fieldNames.ToArray();
-                this.seriesView.Y.Values = fieldNames.ToArray();
-                this.seriesView.X2.Values = fieldNames.ToArray();
-                this.seriesView.Y2.Values = fieldNames.ToArray();
             }
 
         }

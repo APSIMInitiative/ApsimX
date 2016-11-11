@@ -425,14 +425,6 @@ namespace Models
             }
         }
 
-        /// <summary>Get a list of column names for table.</summary>
-        public string[] ColumnNames(string tableName)
-        {
-            string sql = "SELECT * FROM " + tableName + " LIMIT 1";
-            DataTable data = RunQuery(sql);
-            return DataTableUtilities.GetColumnNames(data);
-        }
-
         /// <summary>
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.

@@ -40,7 +40,7 @@ namespace Updater
         /// <param name="newInstallDirectory"></param>
         private static void DoUpate(string uninstallDirectory, string newInstallDirectory)
         {
-            WaitForProcess("UserInterface");
+            int i = WaitForProcess("UserInterface");
 
             // Uninstall old version.
             string uninstaller = Path.Combine(uninstallDirectory, "unins000.exe");

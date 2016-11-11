@@ -11,8 +11,6 @@ namespace Models.PMF.Phen
     /// Leaf death phenological phase
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafDeathPhase : Phase
     {
         /// <summary>The leaf</summary>

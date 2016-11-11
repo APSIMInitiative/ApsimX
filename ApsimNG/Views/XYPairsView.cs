@@ -49,7 +49,6 @@ namespace UserInterface.Views
                 return graphView;
             }
         }
-
         /// <summary>
         /// Gets the initial water graph.
         /// </summary>

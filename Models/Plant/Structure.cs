@@ -200,10 +200,8 @@ namespace Models.PMF
         public ApparingLeafParams CohortParams { get; set; }
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
-        /// <summary>CohortToInitialise</summary>
-        public int CohortToInitialise { get; set; }
-        /// <summary>TipToAppear</summary>
-        public int TipToAppear { get; set; }
+        private int CohortToInitialise { get; set; }
+        private int TipToAppear { get; set; }
         //private double FinalLeafDeltaTipNumberonDayOfAppearance { get; set; }
         #region Links
         /// <summary>The plant</summary>
@@ -271,7 +269,7 @@ namespace Models.PMF
         /// <value>The main stem node no.</value>
         [XmlIgnore]
         [Description("Number of mainstem nodes which have their tips appeared")]
-        public double PotLeafTipsAppeared { get; set; }
+        private double PotLeafTipsAppeared { get; set; }
 
         //Plant leaf number state variables
         /// <summary>Gets or sets the main stem node no.</summary>
@@ -417,7 +415,7 @@ namespace Models.PMF
                     //On the day of germination set up the first cohorts
                     if(InitialiseLeafCohorts !=null)
                         InitialiseLeafCohorts.Invoke(this, args);
-                        Initialised = true;
+                    Initialised = true;
                 }
 
                 if (Plant.IsEmerged)
@@ -530,7 +528,7 @@ namespace Models.PMF
                 InitParams.Rank = CohortToInitialise; 
                 if(AddLeafCohort != null)
                     AddLeafCohort.Invoke(this, InitParams);
-                    DoLeafTipAppearance();
+                DoLeafTipAppearance();
             }
         }
         #region Component Process Functions
@@ -635,7 +633,6 @@ namespace Models.PMF
             CohortToInitialise = 0;
             TipToAppear = 0;
         }
-
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
         /// /// <param name="ProportionRemoved">The cultivar.</param>
         public void doThin(double ProportionRemoved)

@@ -26,10 +26,7 @@ namespace Models.PMF.Phen
         public String EventStageName = "";
     }
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>. 
-    /// Each phase is bound by distinct growth <i>stages</i>. 
-    /// Phases often require a target to be reached to signal movement to the next phase. 
-    /// Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// This model simulates the development of the crop through successive developmental <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     /// should be included as the last child of 
@@ -278,9 +275,6 @@ namespace Models.PMF.Phen
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
-
-       
-
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -300,7 +294,7 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
-            }
+        }
 
         /// <summary>Called when crop is being harvested.</summary>
         /// <param name="sender">The sender.</param>
@@ -315,17 +309,6 @@ namespace Models.PMF.Phen
                 CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
-
-        /// <summary>Called when crop is being prunned.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Pruning")]
-        private void OnPruning(object sender, EventArgs e)
-        {
-            Germinated = false;
-            Emerged = false;
-        }
-
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -419,11 +402,8 @@ namespace Models.PMF.Phen
                         if (Stage >= 1)
                             Germinated = true;
 
-                        if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
-                        {
-                            Plant.SendEmergingEvent();
+                        if (CurrentPhase is EmergingPhase)
                             Emerged = true;
-                        }
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)
@@ -547,7 +527,6 @@ namespace Models.PMF.Phen
             Phase Current = Phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
-            if(PhaseRewind != null)
             PhaseRewind.Invoke(this, new EventArgs());
         }
 

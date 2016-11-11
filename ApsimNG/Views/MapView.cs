@@ -5,11 +5,14 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    ///using GMap.NET.WindowsForms;
     using System;
     using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Drawing;
+    using System.Threading;
+    ///using System.Windows.Forms;
 
     /// <summary>
     /// Describes an interface for an axis view.

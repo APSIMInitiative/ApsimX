@@ -5,7 +5,6 @@ using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using System;
-using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -45,7 +44,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf, IHasWaterDemand
+    public class SimpleLeaf : GenericOrgan, ICanopy, ILeaf
     {
         /// <summary>The met data</summary>
         [Link]
@@ -147,22 +146,8 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double FRGR { get; set; }
 
-        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        [Units("mm")]
-        public double PotentialEP
-        {
-            get { return _PotentialEP; }
-            set
-            {
-                _PotentialEP = value;
-                MicroClimatePresent = true;
-            }
-        }
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        public bool MicroClimatePresent { get; set; }
+        public double PotentialEP { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -215,21 +200,23 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
-        /// <summary>Calculates the water demand.</summary>
-        public double CalculateWaterDemand()
+        /// <summary>Gets or sets the water demand.</summary>
+        [Units("mm")]
+        public override double WaterDemand
         {
-            if (WaterDemandFunction != null)
-                return WaterDemandFunction.Value;
-            else
+            get
             {
-               return PotentialEP;
+                if (WaterDemandFunction != null)
+                    return WaterDemandFunction.Value;
+                else
+                    return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
 
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
@@ -250,16 +237,8 @@ namespace Models.PMF.Organs
 
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        public double WaterAllocation { get; private set; }
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
-
+        public override double WaterAllocation { get; set; }
+        
         /// <summary>Gets or sets the dm demand.</summary>
         public override BiomassPoolType DMDemand
         {
@@ -299,17 +278,18 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
-        /// <summary>Called when crop is sown</summary>
+
+
+        /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        new private void OnPlantSowing(object sender, SowPlant2Type data)
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        protected override void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (data.Plant == Plant)
-            {
-                MicroClimatePresent = false;
-                Clear();
-            }
+            if (Phenology != null)
+                if (Phenology.OnDayOf("Emergence"))
+                    if (Structure != null)
+                        Structure.LeafTipsAppeared = 1.0;
         }
         #endregion
 
@@ -334,8 +314,6 @@ namespace Models.PMF.Organs
             base.OnDoPotentialPlantGrowth(sender, e);
             if (Plant.IsEmerged)
             {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
                 FRGR = FRGRFunction.Value;
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
