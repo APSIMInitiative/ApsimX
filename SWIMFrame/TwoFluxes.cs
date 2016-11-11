@@ -298,7 +298,6 @@ namespace SWIMFrame
             double[,] getco = new double[20, 20];
 
             // Set up cubic coeffs to get fluxes q given phi.
-            Extensions.Log("twofluxes h", "d2", h);
             for (j = 1; j <= nft[2]; j++)
             {
                 k = 1;
@@ -547,9 +546,6 @@ namespace SWIMFrame
             der = 0;
             q1d = 0;
 
-            Extensions.Log("fd phia", "d", phia);
-            Extensions.Log("fd phialast", "d", phialast);
-            Extensions.Log("fd phi1max", "d", phi1max);
             if (phia != phialast)
             {
                 if (phia > phi1max) // both saturated - calc der and lower interface phi
@@ -579,16 +575,11 @@ namespace SWIMFrame
                     q1 = qv + q1d * (phia - v);
                 }
                 else // use cubic interpolation
-                {
                     ceval1(phia, out q1, out q1d);
-                    Extensions.Log("fd q1", "d", q1);
-                    Extensions.Log("fd q1d", "d", q1d);
-                }
                 phialast = phia;
             }
             // Get lower flux and deriv in same way.
             v = phif[nft[2], 2];
-            Extensions.Log("fd v-lower", "d", v);
             if (phib > v)
             {
                 vm1 = phif[nft[2] - 1, 2];

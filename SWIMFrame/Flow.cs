@@ -293,7 +293,6 @@ namespace SWIMFrame
                             break;
                         default:
                             Console.Out.WriteLine("solve: illegal bottom boundary condn");
-                            Extensions.WriteLog();
                             Environment.Exit(1);
                             break;
                     }
@@ -381,7 +380,6 @@ namespace SWIMFrame
                         if (itmp > 20)
                         {
                             Console.Out.WriteLine("solve: too many iterations of equation solution");
-                            Extensions.WriteLog();
                             Environment.Exit(1);
                         }
                         if (ns < 1)
