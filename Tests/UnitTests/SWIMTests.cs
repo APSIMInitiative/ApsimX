@@ -23,15 +23,6 @@ namespace UnitTests
     class SWIMTests
     {
         /// <summary>
-        /// Write out the log file at the end of the tests.
-        /// </summary>
-        [TearDown]
-        public void EndTest()
-        {
-            Extensions.WriteLog();
-        }
-
-        /// <summary>
         /// Test method nonlin.
         /// </summary>
         [Test]
