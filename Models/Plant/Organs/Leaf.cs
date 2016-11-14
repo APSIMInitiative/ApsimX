@@ -30,15 +30,15 @@ namespace Models.PMF.Organs
         public string CanopyType { get { return Plant.CropType; } }
 
         /// <summary>Albedo.</summary>
-        [Description("Albedo")]
+        [Description("Canopy Albedo")]
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
+        [Description("GSMAX: maximum canopy conductance(m/s)")]
         public double Gsmax { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
-        [Description("R50")]
+        [Description("R50: solar radiation at which stomatal conductance decreases to 50% (W/m^2)")]
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
