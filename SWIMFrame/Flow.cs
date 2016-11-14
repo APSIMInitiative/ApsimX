@@ -79,6 +79,8 @@ namespace SWIMFrame
         /// <summary>
         /// Solves the equation of continuity from time ts to tfin.
         /// </summary>
+        /// <param name="sol">solute properties.</param>
+        /// <param name="sdata">soil data.</param>
         /// <param name="ts">start time (h).</param>
         /// <param name="tfin">finish time.</param>
         /// <param name="qprec">precipitation (or water input) rate (fluxes are in cm/h).</param>
@@ -156,14 +158,7 @@ namespace SWIMFrame
             infili = 0.0;
 
             if (nex > 0)
-            {
                 extraction = true;
-                /*
-                  qwexs=0.0 ! so unused elements won't need to be set
-                  qwexsd=0.0
-                  C# arrays are automatically zeroed so we don't need these lines.
-                */
-            }
 
             if (sLength != sd.n) 
             {
@@ -223,11 +218,9 @@ namespace SWIMFrame
             }
             //-----end initialise
             //-----solve until tfin
-            Extensions.Log("Solve tfin", "d", tfin);
 
             while (t < tfin)
             {
-                Extensions.Log("Solve t", "d", t);
                 //-----take next time step
                 for (iflux = 1; iflux <= 2; iflux++) //sometimes need twice to adjust h at satn
                 {
@@ -251,7 +244,7 @@ namespace SWIMFrame
                     if (h[1] <= 0 && h0 <= 0 && nsat < sd.n) //no ponding
                     {
                         ns = 1; //start index for eqns
-                        sd.GetQ(0, new int[] {0, 0, isat[1] }, new double[] {0, 0, xtbl[1] }, out q[0], out qya[0], out qyb[0]);
+                        sd.GetQ(0, new [] {0, 0, isat[1] }, new [] {0, 0, xtbl[1] }, out q[0], out qya[0], out qyb[0]);
                         if (q[0] < qpme)
                         {
                             q[0] = qpme;
@@ -262,7 +255,7 @@ namespace SWIMFrame
                     else //ponding
                     {
                         ns = 0;
-                        sd.GetQ(0, new int[] {0, 1, isat[1] }, new double[] {0, h0 - sd.he[1], xtbl[1] }, out q[0], out qya[0], out qyb[0]);
+                        sd.GetQ(0, new [] {0, 1, isat[1] }, new [] {0, h0 - sd.he[1], xtbl[1] }, out q[0], out qya[0], out qyb[0]);
                         if (h0 >= h0max && qpme > q[0])
                         {
                             maxpond = true;
@@ -274,13 +267,13 @@ namespace SWIMFrame
 
                     //get profile fluxes
                     for (i = 1; i <= sd.n - 1; i++)
-                        sd.GetQ(i, new int[] {0, isat[i], isat[i + 1] }, new double[] {0, xtbl[i], xtbl[i + 1] }, out q[i], out qya[i], out qyb[i]);
+                        sd.GetQ(i, new [] {0, isat[i], isat[i + 1] }, new [] {0, xtbl[i], xtbl[i + 1] }, out q[i], out qya[i], out qyb[i]);
 
                     //get bottom flux
                     switch (botbc)
                     {
                         case "constant head":
-                            sd.GetQ(sd.n, new int[] {0, isat[sd.n], isatbot }, new double[] {0, xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
+                            sd.GetQ(sd.n, new [] {0, isat[sd.n], isatbot }, new [] {0, xtbl[sd.n], xtblbot }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
                             break;
                         case "0.0 flux":
                             q[sd.n] = 0;
@@ -296,13 +289,10 @@ namespace SWIMFrame
                                 qya[sd.n] = 0;
                             }
                             else
-                            {
                                 sd.GetQ(sd.n, new int[] {0, isat[sd.n], 1 }, new double[] {0, xtbl[sd.n], -sd.he[sd.n] }, out q[sd.n], out qya[sd.n], out qyb[sd.n]);
-                            }
                             break;
                         default:
                             Console.Out.WriteLine("solve: illegal bottom boundary condn");
-                            Extensions.WriteLog();
                             Environment.Exit(1);
                             break;
                     }
@@ -334,21 +324,14 @@ namespace SWIMFrame
                         dt = dSmax / dmax;
                         // if pond going adjust dt
                         if (h0 > 0 && (q[0] - qpme) * dt > h0)
-                        {
                             dt = (h0 - 0.5 * h0min) / (q[0] - qpme);
-                        }
                     }
                     else //steady state flow
                     {
-                        if (qpme >= q[sd.n])
-                        {
-                            //step to finish -but what if extraction varies with time ???
+                        if (qpme >= q[sd.n]) //step to finish -but what if extraction varies with time ???
                             dt = tfin - t;
-                        }
                         else
-                        {
                             dt = -(h0 - 0.5 * h0min) / (qpme - q[sd.n]); //pond going so adjust dt
-                        }
                     }
                     
                     if (dt > dtmax)
@@ -372,7 +355,6 @@ namespace SWIMFrame
                     }
                     else
                         t = t + dt; //tentative update
-                    Extensions.Log("Solve dt", "d", dt);
                     //-----end estimate time step dt
                     //-----get and solve eqns
                     rsigdt = 1.0 / (sig * dt);
@@ -383,15 +365,11 @@ namespace SWIMFrame
                         cc[x] = -qyb[x];
                     }
                     if (extraction)
-                    {
                         for (int x = 1; x <= sd.n; x++)
                             dd[x] = -(q[x - 1] - q[x] - qwex[x]) * rsig;
-                    }
                     else
-                    {
                         for (int x = 1; x <= sd.n; x++)
                             dd[x] = -(q[x - 1] - q[x]) * rsig;
-                    }
 
                     iok = 0; //flag for time step test
                     itmp = 0; //counter to abort if not getting solution
@@ -402,7 +380,6 @@ namespace SWIMFrame
                         if (itmp > 20)
                         {
                             Console.Out.WriteLine("solve: too many iterations of equation solution");
-                            Extensions.WriteLog();
                             Environment.Exit(1);
                         }
                         if (ns < 1)
@@ -534,24 +511,16 @@ namespace SWIMFrame
                                 if (h0 > 0.0)
                                 {
                                     if (ns == 1) // if max pond depth
-                                    {
                                         dy[0] = 0.0;
-                                    }
                                     for (int x = 1; x < cav.Length; x++)
-                                    {
                                         cav[x] = ((2.0 * h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (2.0 * h0 + dwoff + dwinfil);
-                                    }
                                     for (int x = 1; x < c0.Length; x++)
-                                    {
                                         c0[x] = 2.0 * cav[x] - c0[x]; //This needs to be tested from FORTRAN; no example in original code.
-                                    }
                                 }
                                 else
                                 {
                                     for (int x = 1; x < cav.Length; x++)
-                                    {
                                         cav[x] = ((h0 - dy[0]) * c0[x] + qprec1 * dt * cin[x]) / (dwoff + dwinfil);
-                                    }
                                     initpond = false; //pond gone
                                     c0 = cin; // for output if any pond at end
                                 }
@@ -565,14 +534,9 @@ namespace SWIMFrame
                             }
                         }
 
-                        if (botbc == "constant head")
-                        {
-                            drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
-                        }
-                        else
-                        {
-                            drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
-                        }
+                        // There's a condition based on botbc in the FORTRAN here, but both paths
+                        // resolve to the same equation.
+                        drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
 
                         if (extraction)
                         {
@@ -608,6 +572,7 @@ namespace SWIMFrame
                                     qwexsdV = qwexsdM.Column(i);
                                     wexV = wexM.Column(i);
                                     wexV = wexV + (qwexsV + sig * qwexsdV * Vector<double>.Build.DenseOfArray(dy.Slice(1, sd.n))) * dt;
+                                    wexM.Column(i, wexV);
                                 }
                                 wex = wexM.ToArray();
                             }
@@ -768,8 +733,7 @@ namespace SWIMFrame
             qw[0] = r * win;
 
             // Compounding errors due to float/double issues start here. May or may not be a problem.
-            for (int x =1; x < thf.Length; x++)
-                tht[x] = r * (thf[x] - thi[x]);
+            tht = MathUtilities.Multiply_Value(MathUtilities.Subtract(thf, thi), r);
             for (i = 1; i <= n; i++)
                 qw[i] = qw[i - 1] - dx[i] * tht[i] - r * dwex[i];
 
@@ -850,9 +814,7 @@ namespace SWIMFrame
 
                     dmax = MathUtilities.Max(absQ);
                     if (dmax == 0.0)
-                    {
                         dt = tfin - t;
-                    }
                     else if (dmax < 0.0)
                     {
                         Console.WriteLine("solute: errors in fluxes prevent continuation");
@@ -869,7 +831,8 @@ namespace SWIMFrame
                     else
                         t = t + dt;
 
-                    sigdt = sig * dt; rsigdt = 1.0 / sigdt;
+                    sigdt = sig * dt;
+                    rsigdt = 1.0 / sigdt;
                     //adjust q for change in theta
                     for (int x = 1; x <= n - 1; x++)
                         q[x] = q[x] - sigdt * (qya[x] * tht[x] * c[j, x] + qyb[x] * tht[x + 1] * c[j, x]);
@@ -928,9 +891,7 @@ namespace SWIMFrame
 
                         Vector<double> dysub = Vector<double>.Build.DenseOfArray(dy.Slice(1, n));
                         for (i = 1; i <= nex; i++)
-                        {
                             sexM.SetRow(i, sexM.Row(i) + (qsexsM.Row(i) + sig * qsexsdM.Row(i) * Vector<double>.Build.DenseOfArray(csm) * dysub) * dt);
-                        }
 
                         for (int x = 0; x < sex.GetLength(0); x++)
                             for (int y = 0; y < sex.GetLength(1); y++)
