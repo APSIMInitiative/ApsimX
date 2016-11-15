@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using APSIM.Shared.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
 {
     /// <summary>
     /// This class will form the main input interface for APSIM.
-    /// This will need to be linked to the flux code so the tables can be
-    /// generated as well.
     /// </summary>
     static class Input
     {
@@ -31,7 +27,7 @@ namespace SWIMFrame
         static double drn, evap, h0, h1, h2, infil, qevap, qprec, runoff;
         static double S1, S2, ti, tf, ts, win, wp, wpi;
         static double[] bd, dis; //nt
-        static double[] c0, cin, sdrn, sinfil, soff, sp, spi;//ns
+        static double[] c0, cin, sdrn, sinfil, soff, spi;//ns
         static double[] h, S, x;//n
         static double[,] sm;//(n, ns)
         //define isotype and isopar for solute 2
@@ -75,7 +71,7 @@ namespace SWIMFrame
             isopar[1, 1] = 1.0;
             isopar[1, 2] = 1.0;
             isopar[2, 1] = 0.5;
-            isopar[1, 2] = 0.01;
+            isopar[2, 2] = 0.01;
             Matrix<double> isoparM = Matrix<double>.Build.DenseOfArray(isopar);
             for (j = 1; j <= nt; j++) //set params
             {
@@ -98,7 +94,7 @@ namespace SWIMFrame
             sd.Sofh(h2, 5, out S2, out Sh);
             for (int c = 1; c <= n; c++)
                 S[c] = c < 5 ? S1 : S2;
-            wpi = MathUtilities.Sum(Vector<double>.Build.DenseOfArray(sd.ths) * Vector<double>.Build.DenseOfArray(S) * Vector<double>.Build.DenseOfArray(sd.dx)); //water in profile initially
+            wpi = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths, S), sd.dx)); //water in profile initially
             nsteps = 0; //no.of time steps for water soln(cumulative)
             win = 0.0; //water input(total precip)
             evap = 0.0;
@@ -109,13 +105,12 @@ namespace SWIMFrame
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
             //solute in profile initially
-            spi = S;sp = S;    //  spi = smM.ColumnSums().ToArray();
-        //    sm = smM.ToArray();
+            spi = new []{1000.0, 1000.0};
             Flow.dsmmax = 0.1 * sm[1, 1]; //solute stepsize control param
             Flow.nwsteps = 10;
             MathUtilities.Zero(c0);
             MathUtilities.Zero(cin); //no solute input
-            Extensions.Populate(nssteps, 0); //no.of time steps for solute soln(cumulative)
+            nssteps.Populate(0); //no.of time steps for solute soln(cumulative)
             MathUtilities.Zero(soff);
             MathUtilities.Zero(sinfil);
             MathUtilities.Zero(sdrn);
@@ -131,33 +126,14 @@ namespace SWIMFrame
                 Flow.Solve(solProps, sd, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex,ref sex);
                 win = win + qprec * (tf - ti);
                 if (j == 1)
-                {
-                    Console.WriteLine(tf + " " + nsteps + " " + h0); //max depth of pond
-                    Console.WriteLine(S);
-                }
                 ti = tf;
                 qprec = 0.0;
             }
             win = win + qprec * (tf - ti);
             wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths,S), sd.dx)); //!water in profile
-     //       smM = Matrix<double>.Build.DenseOfArray(sm);
-     //       smM.Multiply(Vector<double>.Build.DenseOfArray(sd.dx));
-      //      sp = smM.ColumnSums().ToArray();
             double hS = 0; //hS is not used used here, but is a required parameter
             for (j = 1; j <= n; j++)
                 sd.hofS(S[j], j, out h[j], out hS);
-
-            int foo = 0;
-            foo++;
-         /* write(2, "(f10.1,i10,10f10.4)") tf,nsteps,h0; //max depth of pond
-            write(2, "(10f8.4)") S;
-            write(2, "(5e16.4)") h;
-            write(2, "(5g16.6)") wp,evap,infil,drn;
-            write(2, "(2f16.6,e16.2)") wp - wpi,infil - drn,win - (wp - wpi + h0 + evap + drn);
-            write(2, "(g16.6,12i5)") tf,nssteps;
-            write(2, "(6g16.6)") sp,sdrn;
-            write(2, "(6g16.6)") sp - spi,sp - spi + sdrn; //solute balance
-            write(2, "(10f8.3)") sm;*/
         }
 
         /// <summary>

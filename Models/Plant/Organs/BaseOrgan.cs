@@ -31,11 +31,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The surface organic matter model</summary>
         [Link]
-        protected ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+        public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The summary</summary>
         [Link]
-        protected ISummary Summary = null;
+        public ISummary Summary = null;
         #endregion
 
         #region Arbitration methods
@@ -73,39 +73,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Soil Arbitrator interface
-        /// <summary>Gets the nitrogen supply from the specified zone.</summary>
-        /// <param name="zone">The zone.</param>
-        /// <param name="NO3Supply">The returned NO3 supply</param>
-        /// <param name="NH4Supply">The returned NH4 supply</param>
-        virtual public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
-        {
-            NO3Supply = null;
-            NH4Supply = null;
-        }
-
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        virtual public double WaterDemand { get { return 0; } set { } }
-
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <param name="zone">The zone.</param>
-        virtual public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
-        
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        virtual public double WaterAllocation
-        {
-            get { return 0; }
-            set { throw new Exception("Cannot set water allocation for " + Name); }
-        }
-        /// <summary>Does the water uptake.</summary>
-        /// <param name="Amount">The amount.</param>
-        /// <param name="zoneName">Zone name to do water uptake in</param>
-        virtual public void DoWaterUptake(double[] Amount, string zoneName) { }
-
-        /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        virtual public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
 
         /// <summary>Gets the n supply uptake.</summary>
         [Units("g/m^2")]
@@ -128,20 +95,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
-        public double DetachedWt { get; set; }
-
-        /// <summary>Gets the N amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
-        public double DetachedN { get; set; }
+        public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public double RemovedWt { get; set; }
-
-        /// <summary>Gets the N amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
-        public double RemovedN { get; set; }
-
+        public Biomass Removed { get; set; }
+        
         /// <summary>Gets the dm supply photosynthesis.</summary>
         [Units("g/m^2")]
         virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
@@ -151,67 +110,13 @@ namespace Models.PMF.Organs
 
         #endregion
 
-            #region Biomass removal
-            /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-            /// <param name="value">The fractions of biomass to remove</param>
-            virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        #region Biomass removal
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
-
-            double totalLiveFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double totalDeadFractionToRemove = value.FractionDeadToRemove + value.FractionDeadToResidue;
-
-            if (totalLiveFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalDeadFractionToRemove > 1.0)
-            {
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + value.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            }
-            if (totalFractionToRemove > 0.0)
-            {
-                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
-
-                double detachingWt = Live.Wt * value.FractionLiveToResidue + Dead.Wt * value.FractionDeadToResidue;
-                double detachingN = Live.N * value.FractionLiveToResidue + Dead.N * value.FractionDeadToResidue;
-                RemovedWt += Live.Wt * value.FractionLiveToRemove + Dead.Wt * value.FractionDeadToRemove;
-                RemovedN += Live.N * value.FractionLiveToRemove + Dead.N * value.FractionDeadToRemove;
-                DetachedWt += detachingWt;
-                DetachedN += detachingN;
-
-                Live.StructuralWt *= RemainingLiveFraction;
-                Live.NonStructuralWt *= RemainingLiveFraction;
-                Live.MetabolicWt *= RemainingLiveFraction;
-                Dead.StructuralWt *= RemainingDeadFraction;
-                Dead.NonStructuralWt *= RemainingDeadFraction;
-                Dead.MetabolicWt *= RemainingDeadFraction;
-
-                Live.StructuralN *= RemainingLiveFraction;
-                Live.NonStructuralN *= RemainingLiveFraction;
-                Live.MetabolicN *= RemainingLiveFraction;
-                Dead.StructuralN *= RemainingDeadFraction;
-                Dead.NonStructuralN *= RemainingDeadFraction;
-                Dead.MetabolicN *= RemainingDeadFraction;
-
-                SurfaceOrganicMatter.Add(detachingWt * 10, detachingN * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + Plant.Name
-                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-            }
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -222,8 +127,10 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Detached = new Biomass();
+            Removed = new Biomass();
             Clear();
         }
         /// <summary>Called when [do daily initialisation].</summary>
@@ -234,20 +141,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
                 DoDailyCleanup();
-        }
-
-        /// <summary>Called when crop is ending</summary>
-        ///[EventSubscribe("PlantEnding")]
-        virtual public void DoPlantEnding()
-        {
-            if (Wt > 0.0)
-            {
-                DetachedWt += Wt;
-                DetachedN += N;
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-            }
-
-            Clear();
         }
 
         /// <summary>Do harvest logic for this organ</summary>
@@ -301,10 +194,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some varibles.</summary>
         virtual protected void DoDailyCleanup()
         {
-            DetachedWt = 0.0;
-            DetachedN = 0.0;
-            RemovedWt = 0.0;
-            RemovedN = 0.0;
+            Detached.Clear();
+            Removed.Clear();
         }
 
         #endregion

@@ -12,8 +12,8 @@ namespace UserInterface.Views
     interface ITitleView
     {
         event TitleChangedDelegate OnTitleChanged;
+
         void Populate(string title);
-        
     }
 
     /// <summary>
@@ -27,8 +27,10 @@ namespace UserInterface.Views
 
         [Widget]
         private HBox hbox1 = null;
+
         [Widget]
         private Entry entry1 = null;
+
         /// <summary>
         /// Construtor
         /// </summary>

@@ -131,8 +131,14 @@ namespace Models.Graph
                 // Find a parent that heads the scope that we're going to graph
                 IModel parent = FindParent();
 
-                // Create a list of all simulation/zone objects that we're going to graph.
-                List<SimulationZone> simulationZones = BuildListFromModel(parent);
+                List<SimulationZone> simulationZones = null;
+                do
+                {
+                    // Create a list of all simulation/zone objects that we're going to graph.
+                    simulationZones = BuildListFromModel(parent);
+                    parent = parent.Parent;
+                }
+                while (simulationZones.Count == 0 && parent != null);
 
                 // Get rid of factors that don't vary across objects.
                 RemoveFactorsThatDontVary(simulationZones);
@@ -158,8 +164,9 @@ namespace Models.Graph
 
                 // Get data for each simulation / zone object
                 DataStore dataStore = new DataStore(this);
-                simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(dataStore, TableName, Filter));
+                DataTable baseData = GetBaseData(dataStore, simulationZones);
                 dataStore.Disconnect();
+                simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
                 // Setup all colour, marker, line types etc in all simulation / zone objects.
                 PaintAllSimulationZones(simulationZones);
@@ -330,8 +337,13 @@ namespace Models.Graph
                     foreach (FactorValue value in combination)
                     {
                         simulationName += value.Name;
-                        string factorValue = value.Name.Replace(value.Factor.Name, "");
-                        simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(value.Factor.Name, factorValue));
+                        string factorName = value.Factor.Name;
+                        if (value.Factor.Parent is Factor)
+                        {
+                            factorName = value.Factor.Parent.Name;
+                        }
+                        string factorValue = value.Name.Replace(factorName, "");
+                        simulationZone.factorNameValues.Add(new KeyValuePair<string, string>(factorName, factorValue));
                     }
                     simulationZone.factorNameValues.Add(new KeyValuePair<string, string>("Experiment", (model as Experiment).Name));
                     simulationZone.simulationNames.Add(simulationName);
@@ -433,12 +445,20 @@ namespace Models.Graph
             seriesDefinition.yAxis = YAxis;
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
-            seriesDefinition.data = simulationZone.data;
-            seriesDefinition.x = GetDataFromTable(simulationZone.data, XFieldName);
-            seriesDefinition.y = GetDataFromTable(simulationZone.data, YFieldName);
-            seriesDefinition.x2 = GetDataFromTable(simulationZone.data, X2FieldName);
-            seriesDefinition.y2 = GetDataFromTable(simulationZone.data, Y2FieldName);
-            //seriesDefinition.simulationNamesForEachPoint = StringUtilities.CreateStringArray(seriesDefinition.title, seriesDefinition.x;
+            if (IncludeSeriesNameInLegend)
+                seriesDefinition.title += ": " + Name;
+            if (simulationZone.data.Count > 0)
+            {
+                seriesDefinition.data = simulationZone.data.ToTable();
+                seriesDefinition.x = GetDataFromTable(seriesDefinition.data, XFieldName);
+                seriesDefinition.y = GetDataFromTable(seriesDefinition.data, YFieldName);
+                seriesDefinition.x2 = GetDataFromTable(seriesDefinition.data, X2FieldName);
+                seriesDefinition.y2 = GetDataFromTable(seriesDefinition.data, Y2FieldName);
+                if (Cumulative)
+                    seriesDefinition.y = MathUtilities.Cumulative(seriesDefinition.y as IEnumerable<double>);
+                if (CumulativeX)
+                    seriesDefinition.x = MathUtilities.Cumulative(seriesDefinition.x as IEnumerable<double>);
+            }
             return seriesDefinition;
         }
 
@@ -541,6 +561,10 @@ namespace Models.Graph
                         return obj as Array;
                 }
             }
+            else
+            {
+                return Apsim.Get(this, fieldName) as IEnumerable;
+            }
 
             return null;
         }
@@ -554,14 +578,47 @@ namespace Models.Graph
                 series.GetAnnotationsToPutOnGraph(annotations);
         }
 
+        /// <summary>
+        /// Create a data view from the specified table and filter.
+        /// </summary>
+        /// <param name="dataStore">The datastore to read from.</param>
+        /// <param name="simulationZones">The list of simulation / zone pairs.</param>
+        private DataTable GetBaseData(DataStore dataStore, List<SimulationZone> simulationZones)
+        {
+            // Get a list of all simulation names in all simulationZones.
+            List<string> simulationNames = new List<string>();
+            simulationZones.ForEach(sim => simulationNames.AddRange(sim.simulationNames));
 
+            string filter = null;
+            foreach (string simulationName in simulationNames.Distinct())
+            {
+                if (filter != null)
+                    filter += ",";
+                filter += "'" + simulationName + "'";
+            }
+            filter = "SimulationName in (" + filter + ")";
+            if (Filter != string.Empty)
+                filter = AddToFilter(filter, Filter);
+
+            List<string> fieldNames = new List<string>();
+            if (dataStore.ColumnNames(TableName).Contains("Zone"))
+                fieldNames.Add("Zone");
+            fieldNames.Add(XFieldName);
+            fieldNames.Add(YFieldName);
+            if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
+                fieldNames.Add(X2FieldName);
+            if (Y2FieldName != null && !fieldNames.Contains(Y2FieldName))
+                fieldNames.Add(Y2FieldName);
+
+            return dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+        }
 
         /// <summary>This class encapsulates a simulation / zone pair to put onto graph</summary>
         private class SimulationZone : IEquatable<SimulationZone>
         {
             public List<string> simulationNames = new List<string>();
             public List<KeyValuePair<string, string>> factorNameValues = new List<KeyValuePair<string, string>>();
-            public DataTable data;
+            public DataView data;
             public VisualElements visualElement;
 
             /// <summary>Constructor</summary>
@@ -585,10 +642,9 @@ namespace Models.Graph
             /// <summary>
             /// Create a data view from the specified table and filter.
             /// </summary>
-            /// <param name="dataStore">The datastore to read from.</param>
-            /// <param name="tableName">The name of the table to read from.</param>
-            /// <param name="baseFilter">The filter the user entered in the view.</param>
-            internal void CreateDataView(DataStore dataStore, string tableName, string baseFilter)
+            /// <param name="baseData">The datastore to read from.</param>
+            /// <param name="series">The parent series.</param>
+            internal void CreateDataView(DataTable baseData, Series series)
             {
                 string filter = null;
                 foreach (string simulationName in simulationNames)
@@ -598,12 +654,12 @@ namespace Models.Graph
                     filter += "'" + simulationName + "'";
                 }
                 filter = "SimulationName in (" + filter + ")";
-                filter = AddToFilter(filter, baseFilter);
                 string zoneName = GetValueOf("Zone");
                 if (zoneName != "?")
                     filter = AddToFilter(filter, "Zone='" + zoneName + "'");
 
-                data = dataStore.GetFilteredData(tableName, filter);
+                data = new DataView(baseData);
+                data.RowFilter = filter;
             }
 
             /// <summary>

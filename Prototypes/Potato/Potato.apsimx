@@ -289,6 +289,8 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <GenericOrgan>
         <Name>Tuber</Name>
@@ -379,21 +381,28 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <StartStageName>TuberInitiation</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </PotentialSizeDemandFunction>
-        <LinearInterpolationFunction>
-          <Name>DryMatterContent</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>4</double>
-              <double>4.5</double>
-            </X>
-            <Y>
-              <double>0.13</double>
-              <double>0.22</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
+        <DivideFunction>
+          <Name>LiveFWt</Name>
+          <VariableReference>
+            <Name>VariableReference</Name>
+            <VariableName>[Tuber].Live.Wt</VariableName>
+          </VariableReference>
+          <LinearInterpolationFunction>
+            <Name>DryMatterContent</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>4</double>
+                <double>4.5</double>
+              </X>
+              <Y>
+                <double>0.13</double>
+                <double>0.22</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+        </DivideFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -436,7 +445,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -466,7 +475,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -487,8 +496,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
@@ -608,7 +625,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </XYPairs>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -638,7 +655,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -922,6 +939,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Value>1</Value>
             <Units>0-1</Units>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1096,7 +1125,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Propertys>
           <ArraySize>[Leaf].MaxNodeNo</ArraySize>
         </ArrayBiomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1126,7 +1155,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
@@ -1204,7 +1233,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1234,7 +1263,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -1255,8 +1284,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1316,7 +1353,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
         <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.Value = 3</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
       </Cultivar>
       <Cultivar>
         <Name>IlamHardy</Name>
@@ -1324,7 +1361,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>IlamHardy</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 26</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1349,7 +1386,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Horizon</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 28</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
       </Cultivar>
       <Cultivar>
         <Name>Karaka</Name>
@@ -1357,7 +1394,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Karaka</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1366,7 +1403,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Nooksac</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 36</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1374,7 +1411,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Alias>
           <Name>RedRascal</Name>
         </Alias>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1383,7 +1420,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Rua</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1392,7 +1429,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Nadine</Name>
         </Alias>
         <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -1408,7 +1445,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Alias>
           <Name>Coliban</Name>
         </Alias>
-        <Command>[Tuber].DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
+        <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
         <Command />
       </Cultivar>
       <Cultivar>
@@ -4496,7 +4533,7 @@ namespace Models
           <string>Potato.Tuber.Dead.N</string>
           <string>Potato.Tuber.Dead.NConc</string>
           <string>Potato.Tuber.Dead.Wt</string>
-          <string>Potato.Tuber.DryMatterContent.Value</string>
+          <string>Potato.Tuber.LiveFWt.DryMatterContent.Value</string>
           <string>Potato.Tuber.Live.N</string>
           <string>Potato.Tuber.Live.NConc</string>
           <string>Potato.Tuber.Live.Wt</string>

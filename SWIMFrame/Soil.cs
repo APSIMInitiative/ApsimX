@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace SWIMFrame
@@ -30,7 +28,7 @@ namespace SWIMFrame
       /* ! soilprops - derived type definition for properties.
          ! gensptbl  - subroutine to generate the property values.
          ! sp        - variable of type soilprops containing the properties.
-        */
+      */
         static int nliapprox = 70; // approx no. of log intervals
         static double qsmall = 1.0e-5; // smaller fluxes negligible
         static double vhmax = -10000; // for vapour - rel humidity > 0.99 at vhmax
@@ -116,14 +114,13 @@ namespace SWIMFrame
             nld = nli1 + 1;
             nc = 1 + sp.n / 3; // n-1 has been made divisible by 3
             // fill out the rest of the structure.
-             sp.nld = nld; sp.nc = nc;
-             sp.h = h; 
-             sp.lnh = new double[nld+1];
-             sp.Sd = new double[nld+1];
-             sp.Kco = new double[3, nc];
-             sp.phico = new double[3, nc];
-             sp.Sco = new double[3, nc];
-
+            sp.nld = nld; sp.nc = nc;
+            sp.h = h;
+            sp.lnh = new double[nld + 1];
+            sp.Sd = new double[nld + 1];
+            sp.Kco = new double[3 + 1, nc + 1];
+            sp.phico = new double[3 + 1, nc + 1];
+            sp.Sco = new double[3 + 1, nc + 1];
             // Store Sd and lnh in sp.
             sp.lnh[1] = lhd;
             for (j = 2; j <= nld; j++)
@@ -168,20 +165,18 @@ namespace SWIMFrame
                 if (i == sp.n)
                     break;
 
-                cco = Cuco(sp.phi.Slice(i,i+3), sp.K.Slice(i, i+3));
-                double[] temp = cco.Slice(2, 4).Skip(1).ToArray();
-                KcoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.Kco = KcoM.ToArray();
+                cco = Cuco(sp.phi.Slice(i, i + 3), sp.K.Slice(i, i + 3));
+                KcoM.SetColumn(j, cco.Slice(2, 4).ToArray());
 
                 cco = Cuco(sp.S.Slice(i, i + 3), sp.phi.Slice(i, i + 3));
-                phicoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.phico = phicoM.ToArray();
+                phicoM.SetColumn(j, cco.Slice(2, 4).ToArray());
 
                 cco = Cuco(sp.phi.Slice(i, i + 3), sp.S.Slice(i, i + 3));
-                ScoM.SetColumn(j, cco.Slice(2, 4).Skip(1).ToArray());
-                sp.Sco = ScoM.ToArray();
+                ScoM.SetColumn(j, cco.Slice(2, 4).ToArray());
             }
-            // diags - end timing
+            sp.Kco = KcoM.ToArray();
+            sp.phico = phicoM.ToArray();
+            sp.Sco = ScoM.ToArray();
             return sp;
         }
 
@@ -197,9 +192,10 @@ namespace SWIMFrame
                 nli = 3 * (j + 1) - 1; // to allow for extra points
             dlhr = -Math.Log(hdry / hwet) / nli; // even spacing in log(-h)
 
+            // lhr(1:nli + 1) = (/ (-i * dlhr,i = nli,0,-1)/)
             double[] slice = lhr.Slice(1, nli + 1);
-            for (int idx = nli; idx > 0; idx--)    //
-                slice[idx] = -idx * dlhr;              // will need to check this, fortran syntax is unknown: lhr(1:nli+1)=(/(-i*dlhr,i=nli,0,-1)/)
+            for (int idx = nli; idx > 0; idx--)    
+                slice[idx] = -idx * dlhr;
             Array.Reverse(slice);
             Array.Copy(slice, 0, lhr, 0, slice.Length);
             for (int idx = 1; idx <= nli + 1; idx++)
@@ -222,7 +218,6 @@ namespace SWIMFrame
             {
                 for (i = 1; i <= sp.n; i++)
                 {
-
                     sp.S[i] = MVG.Sofh(h[i]);
                     sp.K[i] = MVG.KofhS(h[i], sp.S[i]);
                 }
@@ -230,7 +225,6 @@ namespace SWIMFrame
             }
             else // calculate relative K by integration using dln(-h)
             {
-
                 for (i = 1; i <= sp.n; i++)
                     MVG.Sdofh(h[i], out sp.S[i], out dSdhg[i]);
 

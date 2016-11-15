@@ -172,7 +172,7 @@ namespace UserInterface.Views
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
-            //modLMC - 11/05/2016 - Need to clear the chart title as well
+            // modLMC - 11/05/2016 - Need to clear the chart title as well
             this.FormatTitle("");
         }
 
@@ -493,8 +493,8 @@ namespace UserInterface.Views
             annotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
             // Line type.
-            //LineStyle oxyLineType;
-            //if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
+            // LineStyle oxyLineType;
+            // if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
             //    annotation.LineStyle = oxyLineType;
 
             // Line thickness
@@ -560,7 +560,7 @@ namespace UserInterface.Views
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
-            //this.plot1.Model.LegendSymbolLength = 60;
+            // this.plot1.Model.LegendSymbolLength = 60;
         }
 
         /// <summary>
@@ -583,7 +583,7 @@ namespace UserInterface.Views
             {
                 captionLabel.Text = text;
                 if (italics)
-                    text = "<i>" + text + "<i/>";
+                    text = "<i>" + text + "</i>";
                 captionLabel.Markup = text;
             }
             else
@@ -681,7 +681,7 @@ namespace UserInterface.Views
         /// <param name="axis">The axis to format</param>
         private void FormatAxisTickLabels(OxyPlot.Axes.Axis axis)
         {
-            //axis.IntervalLength = 100;
+            // axis.IntervalLength = 100;
 
             if (axis is DateTimeAxis)
             {
@@ -749,7 +749,7 @@ namespace UserInterface.Views
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
                 // Create data points
-                for (int i = 0; i < Math.Min(xValues.Length,yValues.Length); i++)
+                for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
                     if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                         points.Add(new DataPoint(xValues[i], yValues[i]));
 
@@ -810,7 +810,6 @@ namespace UserInterface.Views
 
             return dataPointValues.ToArray();
         }
-
 
         /// <summary>
         /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn
@@ -989,7 +988,6 @@ namespace UserInterface.Views
             if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && OnCaptionClick != null)
                 OnCaptionClick.Invoke(this, e);
         }
-
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

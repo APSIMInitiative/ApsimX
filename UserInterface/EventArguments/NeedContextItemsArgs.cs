@@ -162,16 +162,32 @@ namespace UserInterface.EventArguments
             object o = null;
             IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
             if (replacementModel != null)
-                o = Apsim.Get(replacementModel, objectName) as IModel;
-            
+            {
+                try
+                {
+                    o = Apsim.Get(replacementModel, objectName) as IModel;
+                }
+                catch (Exception) {  }
+            }
+
             if (o == null)
-                o = Apsim.Get(relativeTo, objectName);
+            {
+                try
+                {
+                    o = Apsim.Get(relativeTo, objectName);
+                }
+                catch (Exception) { }
+            }
             
             if (o == null && relativeTo.Parent is Replacements)
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
                 IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
-                o = Apsim.Get(simulation, objectName) as IModel;
+                try
+                {
+                    o = Apsim.Get(simulation, objectName) as IModel;
+                }
+                catch (Exception) { }
             }
 
             if (o != null)

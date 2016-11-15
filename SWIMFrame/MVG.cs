@@ -33,6 +33,7 @@ namespace SWIMFrame
         /// <summary>
         /// Helper function for unit testing. Only tests values that are modified by Params
         /// </summary>
+        /// <param name="sidTest">The id of the test soil</param>
         /// <param name="etaTest">Expected eta</param>
         /// <param name="fheTest">Expected fhe</param>
         /// <param name="fhdTest">Expected fhd</param>
@@ -66,8 +67,8 @@ namespace SWIMFrame
 
             if (etaTest == eta && fheTest == fhe && fhdTest == fhd)
                 return true;
-            else
-                return false;
+            
+            return false;
         }
 
         public static double Sofh(double h)
@@ -78,8 +79,7 @@ namespace SWIMFrame
                 f = Math.Pow(1.0 + Math.Pow(h / hg, n), -m);
                 return (f - fhd) / (fhe - fhd);
             }
-            else
-                return 1.0;
+            return 1.0;
         }
 
         public static double GetP()

@@ -33,7 +33,7 @@ namespace Models
         {
             List<Coordinate> coordinates = new List<Coordinate>();
 
-            foreach (Weather weather in Apsim.FindAll(Apsim.Parent(this, typeof(Simulations)), typeof(Weather)))
+            foreach (Weather weather in Apsim.FindAll(this, typeof(Weather)))
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;
