@@ -146,6 +146,7 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
+    <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
     <Compile Include="Core\ModelTypes.cs" />

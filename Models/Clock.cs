@@ -155,7 +155,7 @@ namespace Models
             while (Today <= EndDate)
             {
                 // If this is being run on a background worker thread then check for cancellation
-                if (e.workerThread.CancellationPending)
+                if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
                 {
                     Summary.WriteMessage(this, "Simulation cancelled");
                     return;
