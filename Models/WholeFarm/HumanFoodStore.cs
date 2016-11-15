@@ -21,14 +21,15 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Resources))]
-    public class Pasture: Model
+    public class HumanFoodStore: Model
     {
+
 
         /// <summary>
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<PastureType> Items;
+        public List<HumanFoodStoreType> Items;
 
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -37,15 +38,15 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<PastureType>();
+            Items = new List<HumanFoodStoreType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                PastureType pasture = childModel as PastureType;
-                Items.Add(pasture);
+                HumanFoodStoreType food = childModel as HumanFoodStoreType;
+                Items.Add(food);
             }
         }
 

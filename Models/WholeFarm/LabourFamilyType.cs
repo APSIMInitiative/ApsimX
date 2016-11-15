@@ -11,7 +11,7 @@ namespace Models.WholeFarm
 
     /// <summary>
     /// This stores the initialisation parameters for a person who can do labour 
-    ///  who is a family member.
+    /// who is a family member.
     /// eg. AdultMale, AdultFemale etc.
     /// </summary>
     [Serializable]

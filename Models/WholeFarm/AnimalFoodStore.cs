@@ -21,15 +21,14 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Resources))]
-    public class Fodder: Model
+    public class AnimalFoodStore: Model
     {
 
-
         /// <summary>
-        /// List of all the Fodder Types in this Resource Group.
+        /// List of all the Food Types in this Resource Group.
         /// </summary>
         [XmlIgnore]
-        public List<FodderType> Items;
+        public List<AnimalFoodStoreType> Items;
 
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace Models.WholeFarm
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public FodderType GetByName(string Name)
+        public AnimalFoodStoreType GetByName(string Name)
         {
             return Items.Find(x => x.Name == Name);
         }
@@ -50,14 +49,14 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<FodderType>();
+            Items = new List<AnimalFoodStoreType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                FodderType fodder = childModel as FodderType;
+                AnimalFoodStoreType fodder = childModel as AnimalFoodStoreType;
                 Items.Add(fodder);
             }
         }
