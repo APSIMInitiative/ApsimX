@@ -15,39 +15,41 @@ namespace Models.WholeFarm
 {
 
     ///<summary>
-    /// Virtual store for all the pasture growing in the fields
-	/// This acts like an AnimalFoodStore but in reality the pasture is in a field
+    /// Store for all the food designated for Household to eat (eg. Grain, Tree Crops (nuts) etc.)
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Resources))]
-    public class GrazeFoodStore: Model
+    public class FoodStore: Model
     {
+
 
         /// <summary>
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
-        public List<GrazeFoodStoreType> Items;
+        public List<FoodStoreType> Items;
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<GrazeFoodStoreType>();
+            Items = new List<FoodStoreType>();
 
             List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
             foreach (IModel childModel in childNodes)
             {
                 //cast the generic IModel to a specfic model.
-                GrazeFoodStoreType pasture = childModel as GrazeFoodStoreType;
-                Items.Add(pasture);
+                FoodStoreType fodder = childModel as FoodStoreType;
+                Items.Add(fodder);
             }
         }
+
     }
 
 

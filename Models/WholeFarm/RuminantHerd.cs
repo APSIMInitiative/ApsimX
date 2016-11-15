@@ -23,6 +23,8 @@ namespace Models.WholeFarm
     [ValidParent(ParentType = typeof(Resources))]
     public class RuminantHerd: Model
     {
+
+
         /// <summary>
         /// Current state of this resource.
         /// </summary>
@@ -48,70 +50,7 @@ namespace Models.WholeFarm
             }
         }
 
-		/// <summary>
-		/// Remove individual/cohort from the herd
-		/// </summary>
-		/// <param name="ind">Individual Ruminant to remove</param>
-		/// <param name="reason">Reason for removal</param>
-		public void RemoveRuminant(Ruminant ind, HerdChangeReason reason)
-		{
-			// report removal
-
-			Herd.Remove(ind);
-		}
-
-		/// <summary>
-		/// Remove list of Ruminants from the herd
-		/// </summary>
-		/// <param name="list">List of Ruminants to remove</param>
-		/// <param name="reason">Reason for removal</param>
-		public void RemoveRuminant(List<Ruminant> list, HerdChangeReason reason)
-		{
-			foreach (var item in list)
-			{
-				// report removal
-
-				Herd.Remove(item);
-			}
-		}
-
-
-	}
-
-	/// <summary>
-	/// Reasons for a change in herd
-	/// </summary>
-	public enum HerdChangeReason
-	{
-		/// <summary>
-		/// Individual died
-		/// </summary>
-		Died,
-		/// <summary>
-		/// Individual born
-		/// </summary>
-		Born,
-		/// <summary>
-		/// Individual culled
-		/// </summary>
-		Culled,
-		/// <summary>
-		/// Dry breeder sold
-		/// </summary>
-		DryBreeder,
-		/// <summary>
-		/// Consumed by household
-		/// </summary>
-		Consumed,
-		/// <summary>
-		/// Purchased
-		/// </summary>
-		Purchased,
-		/// <summary>
-		/// Sold
-		/// </summary>
-		Sold
-	}
+    }
 
 
 }

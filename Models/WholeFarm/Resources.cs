@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+
 using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
@@ -13,7 +15,7 @@ namespace Models.WholeFarm
 {
 
     ///<summary>
-    /// Manger for all resources available to the model
+    /// Store for all the food designated for animals to eat (eg. Forages and Supplements)
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -45,69 +47,32 @@ namespace Models.WholeFarm
         [XmlIgnore]
         private List<IModel> Groups;
 
-		[Link]
-		ISummary Summary = null;
 
-		private IModel GetByName(string Name)
+        private IModel GetByName(string Name)
         {
             return Groups.Find(x => x.Name == Name);
         }
 
-		/// <summary>
-		/// Retrieve a ResourceType from a ResourceGroup with specified names
-		/// </summary>
-		/// <param name="ResourceGroupName">Name of the resource group</param>
-		/// <param name="ResourceTypeName">Name of the resource item</param>
-		/// <returns>A reference to the item of type object</returns>
-		public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName)
-		{
-			if(ResourceGroupName==null)
-			{
-				Summary.WriteWarning(this, $"ResourceGroup name must be supplied");
-				return null;
-			}
-			if (ResourceTypeName == null)
-			{
-				Summary.WriteWarning(this, $"ResourceType name must be supplied");
-				return null;
-			}
 
-			// locate specified resource
-			Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
-			if (resourceGroup != null)
-			{
-				Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
-				if (resource == null)
-				{
-					Summary.WriteWarning(this, $"Resource of name {((ResourceTypeName.Length == 0) ? "[Blank]" : ResourceTypeName)} not found in {ResourceGroupName}");
-				}
-				return resource;
-			}
-			else
-			{
-				Summary.WriteWarning(this, $"No resource group named {((ResourceGroupName.Length==0)?"[Blank]":ResourceGroupName)} found in Resources!");
-				return null;
-			}
-		}
 
-		/// <summary>
-		/// Get the Resource Group for Fodder
-		/// </summary>
-		/// <returns></returns>
-		public AnimalFoodStore AnimalFoodStore()
+        /// <summary>
+        /// Get the Resource Group for Fodder
+        /// </summary>
+        /// <returns></returns>
+        public Fodder Fodder()
         {
-            IModel model = GetByName("AnimalFoodStore");
-            return model as AnimalFoodStore;
+            IModel model = GetByName("Fodder");
+            return model as Fodder;
         }
 
         /// <summary>
         /// Get the Resource Group for FoodStore
         /// </summary>
         /// <returns></returns>
-        public HumanFoodStore HumanFoodStore()
+        public FoodStore FoodStore()
         {
-            IModel model = GetByName("HumanFoodStore");
-            return model as HumanFoodStore;
+            IModel model = GetByName("FoodStore");
+            return model as FoodStore;
         }
 
         /// <summary>
@@ -144,10 +109,10 @@ namespace Models.WholeFarm
         /// Get the Resource Group for Pasture
         /// </summary>
         /// <returns></returns>
-        public GrazeFoodStore Pasture()
+        public Pasture Pasture()
         {
             IModel model = GetByName("Pasture");
-            return model as GrazeFoodStore;
+            return model as Pasture;
         }
 
 
@@ -157,7 +122,7 @@ namespace Models.WholeFarm
         /// <returns></returns>
         public RuminantHerd RuminantHerd()
         {
-            IModel model = GetByName("Ruminants");
+            IModel model = GetByName("RuminantHerd");
             return model as RuminantHerd;
         }
 
