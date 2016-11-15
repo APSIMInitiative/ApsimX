@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
   <Name>Simulations</Name>
-  <Replacements>
-    <Name>Replacements</Name>
-    <Plant>
-      <Name>Grapevine</Name>
-      <Memo>
-        <Name>TitlePage</Name>
-        <MemoText><![CDATA[
+  <Memo>
+    <Name>TitlePage</Name>
+    <MemoText><![CDATA[
 # The APSIM Grapevine Model
 
 ZHU, J., Brown, H.E., Parker, A.K.,Trought, M.C.T.
@@ -32,7 +28,11 @@ To indluce a Grapevine crop in a simulation the grapevine plant needs to be adde
 The Grapevine Management script sets the number of stems that will appear from plant.  
 ###Setting final leaf number (Crop duration)
 The duration of a Grapevine crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.]]></MemoText>
-      </Memo>
+  </Memo>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Grapevine</Name>
       <Cultivar>
         <Name>SauvignonBlanc</Name>
       </Cultivar>
