@@ -583,7 +583,7 @@ namespace UserInterface.Views
             {
                 captionLabel.Text = text;
                 if (italics)
-                    text = "<i>" + text + "<i/>";
+                    text = "<i>" + text + "</i>";
                 captionLabel.Markup = text;
             }
             else
