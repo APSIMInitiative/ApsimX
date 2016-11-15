@@ -15,13 +15,15 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Pasture))]
-    public class PastureType : Model
+    [ValidParent(ParentType = typeof(HumanFoodStore))]
+    public class HumanFoodStoreType : Model, IResourceType
     {
         [Link]
         ISummary Summary = null;
 
-        event EventHandler PastureChanged;
+
+        event EventHandler FoodStoreChanged;
+
 
         /// <summary>
         /// Dry Matter (%)
@@ -46,6 +48,12 @@ namespace Models.WholeFarm
 
 
 
+        /// <summary>
+        /// Starting Age of the Fodder (Months)
+        /// </summary>
+        [Description("Starting Age of Human Food (Months)")]
+        public double StartingAge { get; set; }
+
 
         /// <summary>
         /// Starting Amount (kg)
@@ -54,6 +62,11 @@ namespace Models.WholeFarm
         public double StartingAmount { get; set; }
 
 
+        /// <summary>
+        /// Age of this Human Food (Months)
+        /// </summary>
+        [XmlIgnore]
+        public double Age { get; set; } 
 
 
         /// <summary>
@@ -65,59 +78,65 @@ namespace Models.WholeFarm
         private double _Amount;
 
 
+		/// <summary>
+		/// Add Food
+		/// </summary>
+		/// <param name="AddAmount">Amount to add to resource</param>
+		/// <param name="ActivityName">Name of activity requesting resource</param>
+		/// <param name="UserName">Name of individual requesting resource</param>
+		public void Add(double AddAmount, string ActivityName, string UserName)
+		{
+			this._Amount = this._Amount + AddAmount;
 
-        /// <summary>
-        /// Add Pasture
-        /// </summary>
-        /// <param name="AddAmount"></param>
-        public void Add(double AddAmount)
-        {
-            this._Amount = this._Amount + AddAmount;
-
-            if (PastureChanged != null)
-                PastureChanged.Invoke(this, new EventArgs());
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
         }
 
-        /// <summary>
-        /// Remove Pasture
-        /// </summary>
-        /// <param name="RemoveAmount"></param>
-        public void Remove(double RemoveAmount)
-        {
-            if (this._Amount - RemoveAmount < 0)
+		/// <summary>
+		/// Remove Food
+		/// </summary>
+		/// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
+		/// <param name="ActivityName">Name of activity requesting resource</param>
+		/// <param name="UserName">Name of individual requesting resource</param>
+		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		{
+			if (this._Amount - RemoveAmount < 0)
             {
                 string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
                     + "Current Amount: " + this._Amount + Environment.NewLine
                     + "Tried to Remove: " + RemoveAmount;
                 Summary.WriteWarning(this, message);
                 this._Amount = 0;
-
-                if (PastureChanged != null)
-                    PastureChanged.Invoke(this, new EventArgs());
             }
             else
             {
                 this._Amount = this._Amount - RemoveAmount;
-
-                if (PastureChanged != null)
-                    PastureChanged.Invoke(this, new EventArgs());
             }
 
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
         }
 
-        /// <summary>
-        /// Set Amount of Pasture
-        /// </summary>
-        /// <param name="NewValue"></param>
-        public void Set(double NewValue)
+		/// <summary>
+		/// Remove Food
+		/// </summary>
+		/// <param name="RemoveRequest">A feed request object with required information</param>
+		public void Remove(object RemoveRequest)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Set Amount of Fodder
+		/// </summary>
+		/// <param name="NewValue"></param>
+		public void Set(double NewValue)
         {
             this._Amount = NewValue;
 
-            if (PastureChanged != null)
-                PastureChanged.Invoke(this, new EventArgs());
+            if (FoodStoreChanged != null)
+                FoodStoreChanged.Invoke(this, new EventArgs());
         }
-
-
 
 
         /// <summary>
@@ -125,6 +144,7 @@ namespace Models.WholeFarm
         /// </summary>
         public void Initialise()
         {
+            this.Age = this.StartingAge;
             this._Amount = this.StartingAmount;
         }
 
@@ -138,7 +158,8 @@ namespace Models.WholeFarm
             Initialise();
         }
 
-    }
+	}
+
 
 
 }
