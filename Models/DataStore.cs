@@ -45,7 +45,7 @@ namespace Models
         private bool DoingPostProcessing = false;
 
         /// <summary>A sub class for holding information about a table write.</summary>
-        private class TableToWrite
+        public class TableToWrite
         {
             /// <summary>The file name</summary>
             public string FileName;
@@ -60,7 +60,7 @@ namespace Models
         }
 
         /// <summary>A collection of datatables that need writing.</summary>
-        private static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
+        public static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
 
 
         /// <summary>

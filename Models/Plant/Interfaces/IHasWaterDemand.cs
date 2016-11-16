@@ -14,5 +14,10 @@ namespace Models.PMF.Interfaces
         /// <summary>Sets the organs water allocation.</summary>
         /// <param name="allocation">The water allocation (mm)</param>
         void SetWaterAllocation(double allocation);
+
+        /// <summary>
+        /// Flag to test is Microclimate is setting PotentialEP value 
+        /// </summary>
+        bool MicroClimatePresent {get; set;}
     }
 }

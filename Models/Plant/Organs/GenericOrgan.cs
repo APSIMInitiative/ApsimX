@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -44,6 +45,7 @@ namespace Models.PMF.Organs
     /// </summary>
 
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration
     {
         #region Class Parameter Function Links
@@ -65,9 +67,9 @@ namespace Models.PMF.Organs
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>The summary</summary>
-        [Link]
-        public ISummary Summary = null;
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
         [Link]
@@ -168,10 +170,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Removed { get; set; }
 
-        /// <summary>Gets the dm supply photosynthesis.</summary>
-        [Units("g/m^2")]
-        virtual public double DMSupplyPhotosynthesis { get { return DMSupply.Fixation; } }
-
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         [XmlIgnore]
         public double MaintenanceRespiration { get; private set; }
@@ -182,47 +180,13 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        #region Organ functions
+        #region IOrgan interface
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The fractions of biomass to remove</param>
-        virtual public void DoRemoveBiomass(OrganBiomassRemovalType value)
+        virtual public void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionDeadToRemove
-                                           + value.FractionLiveToResidue + value.FractionDeadToResidue;
-            
-            if (totalFractionToRemove > 0.0)
-            {
-                double RemainingLiveFraction = 1.0 - (value.FractionLiveToResidue + value.FractionLiveToRemove);
-                double RemainingDeadFraction = 1.0 - (value.FractionDeadToResidue + value.FractionDeadToRemove);
-
-                Biomass detaching = Live * value.FractionLiveToResidue + Dead * value.FractionDeadToResidue;
-                Removed = Live * value.FractionLiveToRemove + Dead * value.FractionDeadToRemove;
-                Detached.Add(detaching);
-
-                Live.StructuralWt *= RemainingLiveFraction;
-                Live.NonStructuralWt *= RemainingLiveFraction;
-                Live.MetabolicWt *= RemainingLiveFraction;
-                Dead.StructuralWt *= RemainingDeadFraction;
-                Dead.NonStructuralWt *= RemainingDeadFraction;
-                Dead.MetabolicWt *= RemainingDeadFraction;
-
-                Live.StructuralN *= RemainingLiveFraction;
-                Live.NonStructuralN *= RemainingLiveFraction;
-                Live.MetabolicN *= RemainingLiveFraction;
-                Dead.StructuralN *= RemainingDeadFraction;
-                Dead.NonStructuralN *= RemainingDeadFraction;
-                Dead.MetabolicN *= RemainingDeadFraction;
-
-                SurfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0.0, Plant.CropType, Name);
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-
-                double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-                double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-                Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                         + "% of " + Name + " Biomass from " + Plant.Name
-                                         + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                         + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-            }
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
         #endregion
 
