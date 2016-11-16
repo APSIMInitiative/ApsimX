@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Runners;
     using Presenters;
     using System;
     using System.Collections.Generic;
@@ -38,27 +39,35 @@
         /// <param name="job">The job to run.</param>
         /// <param name="name">The name of the job</param>
         /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter)
+        /// <param name="multiProcess">Use the multi-process runner?</param>
+        public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter, bool multiProcess)
         {
             jobs = new List<JobManager.IRunnable>();
             this.jobs.Add(job);
             this.jobName = name;
             this.explorerPresenter = presenter;
 
-            jobManager = new JobManager();
+            if (multiProcess)
+                jobManager = new JobManagerMultiProcess();
+            else
+                jobManager = new JobManager();
         }
 
         /// <summary>Constructor</summary>
         /// <param name="job">The job to run.</param>
         /// <param name="name">The name of the job</param>
         /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter)
+        /// <param name="multiProcess">Use the multi-process runner?</param>
+        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter, bool multiProcess)
         {
             this.jobs = jobs;
             this.jobName = name;
             this.explorerPresenter = presenter;
 
-            jobManager = new JobManager();
+            if (multiProcess)
+                jobManager = new JobManagerMultiProcess();
+            else
+                jobManager = new JobManager();
         }
 
         /// <summary>Perform the command</summary>
@@ -122,6 +131,7 @@
             {
                 timer.Stop();
                 stopwatch.Stop();
+                jobManager.Stop();
 
                 string errorMessage = GetErrorsFromSimulations();
                 if (errorMessage == null)
