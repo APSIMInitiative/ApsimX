@@ -60,7 +60,7 @@ namespace Models
         }
 
         /// <summary>A collection of datatables that need writing.</summary>
-        public static List<TableToWrite> TablesToWrite { get; private set; }
+        public static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
 
 
         /// <summary>
@@ -117,7 +117,6 @@ namespace Models
         /// </summary>
         public DataStore()
         {
-            TablesToWrite = new List<TableToWrite>();
         }
 
         /// <summary>A constructor that needs to know the calling model.</summary>
@@ -137,8 +136,6 @@ namespace Models
 
             if (Filename != null && baseline)
                 Filename += ".baseline";
-
-            TablesToWrite = new List<TableToWrite>();
         }
 
         /// <summary>Destructor. Close our DB connection.</summary>
