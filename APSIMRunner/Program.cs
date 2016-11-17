@@ -63,7 +63,9 @@ namespace APSIMJobRunner
             }
             catch (Exception err)
             {
-                Console.Error.WriteLine(err);
+                SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "Error" };
+                command.data = err.ToString();
+                SocketServer.Send("127.0.0.1", 2222, command);
                 return 1;
             }
             finally

@@ -65,9 +65,18 @@ namespace Models.Core.Runners
         {
             if (job.RunnableJob is Simulation)
             {
-                if (runners == null)
-                    CreateRunners();
-                jobs.Add(job);
+                try
+                {
+                    if (runners == null || runners.Count != MaximumNumOfProcessors)
+                        CreateRunners();
+                    jobs.Add(job);
+                }
+                catch (Exception err)
+                {
+                    job.Error = err;
+                    job.isCompleted = true;
+                    job.IsRunning = false;
+                }
             }
             else
                 base.RunJob(job);
@@ -76,8 +85,9 @@ namespace Models.Core.Runners
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
-            runners = new List<ProcessUtilities.ProcessWithRedirectedOutput>();
-            for (int i = 0; i < MaximumNumOfProcessors; i++)
+            if (runners == null)
+                runners = new List<ProcessUtilities.ProcessWithRedirectedOutput>();
+            for (int i = runners.Count; i < MaximumNumOfProcessors; i++)
             {
                 string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
@@ -91,8 +101,11 @@ namespace Models.Core.Runners
         /// <summary>Kill all child runners</summary>
         private void KillRunners()
         {
-            runners.ForEach(runner => runner.Kill());
-            runners.Clear();
+            if (runners != null)
+            {
+                runners.ForEach(runner => runner.Kill());
+                runners.Clear();
+            }
         }
 
         /// <summary>Stop all jobs currently running in the scheduler.</summary>
