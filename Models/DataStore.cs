@@ -624,6 +624,12 @@ namespace Models
             }
         }
 
+        /// <summary>Clear all tables to be written.</summary>
+        public static void ClearTablesToWritten()
+        {
+            TablesToWrite.Clear();
+        }
+
         /// <summary>Write a single summary file.</summary>
         /// <param name="dataStore">The data store containing the data</param>
         /// <param name="fileName">The file name to create</param>
