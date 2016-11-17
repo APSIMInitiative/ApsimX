@@ -99,7 +99,7 @@ namespace Utility
             string text = ReplaceMode ? "Find & replace" : "Find";
             if (_editor != null && _editor.FileName != null)
                 text += " - " + System.IO.Path.GetFileName(_editor.FileName);
-            if (selectionOnly)
+            if (this.selectionOnly)
               text += " (selection only)";
             window1.Title = text;
         }
@@ -107,7 +107,7 @@ namespace Utility
         public void ShowFor(MonoTextEditor editor, bool replaceMode)
         {
             Editor = editor;
-            selectionOnly = false;
+            this.selectionOnly = false;
             window1.TransientFor = Editor.Toplevel as Window;
             Mono.TextEditor.Selection selected = Editor.MainSelection;
             if (Editor.SelectedText != null)
@@ -117,7 +117,7 @@ namespace Utility
                 else
                 {
                     Editor.SearchEngine.SearchRequest.SearchRegion = Editor.SelectionRange;
-                    selectionOnly = true;
+                    this.selectionOnly = true;
                 }
             }
             else
@@ -255,7 +255,7 @@ namespace Utility
     /// </summary>
     public class HighlightSegmentMarker : TextSegmentMarker
     {
-        public HighlightSegmentMarker(int Offset, int Length) : base (Offset, Length) {}
+        public HighlightSegmentMarker(int Offset, int Length) : base(Offset, Length) {}
 
         public override void DrawBackground(MonoTextEditor editor, Context cr, LineMetrics metrics, int startOffset, int endOffset)
         {

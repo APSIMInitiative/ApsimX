@@ -372,6 +372,8 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -610,6 +612,44 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>1</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.8</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -776,6 +816,44 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
         <ZoneInitialDM />
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
       </Root>
       <Leaf>
         <Name>Leaf</Name>
@@ -1414,8 +1492,54 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Rachis</Name>
@@ -1538,8 +1662,54 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -1692,8 +1862,54 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -3017,6 +3233,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -3235,7 +3453,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -3272,7 +3490,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
@@ -3406,7 +3624,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -3443,7 +3661,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -3849,6 +4067,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>0.1</Value>
             <Units>0-1</Units>
           </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -4003,7 +4225,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -4040,7 +4262,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
@@ -4136,7 +4358,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -4173,7 +4395,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
           <Value>0</Value>
@@ -4184,8 +4406,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -4300,7 +4530,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -4337,7 +4567,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <DivideFunction>
           <Name>PercentWSC</Name>
           <VariableReference>
@@ -4359,8 +4589,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

@@ -249,7 +249,7 @@ namespace UserInterface.Presenters
                     ProcessStartupScript(File.ReadAllText(argument));
 
                 else if (Path.GetExtension(argument) == ".apsimx")
-                    OpenApsimXFileInTab(argument, onLeftTabControl:true);
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 

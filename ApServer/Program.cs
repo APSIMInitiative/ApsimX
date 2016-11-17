@@ -30,7 +30,7 @@ namespace ApServer
 
         public static void Main(string[] args)
         {
-            Server server = new Server();
+            new Server();
         }
 
         public Server()

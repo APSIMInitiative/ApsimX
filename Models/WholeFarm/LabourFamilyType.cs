@@ -11,7 +11,7 @@ namespace Models.WholeFarm
 
     /// <summary>
     /// This stores the initialisation parameters for a person who can do labour 
-    ///  who is a family member.
+    /// who is a family member.
     /// eg. AdultMale, AdultFemale etc.
     /// </summary>
     [Serializable]
@@ -20,20 +20,19 @@ namespace Models.WholeFarm
     [ValidParent(ParentType = typeof(LabourFamily))]
     public class LabourFamilyType : Model
     {
-
         /// <summary>
         /// Get the Clock.
         /// </summary>
         [Link]
         Clock Clock = null;
 
-
         [Link]
         ISummary Summary = null;
 
-
-        event EventHandler LabourChanged;
-
+		/// <summary>
+		/// labour changed event handler
+		/// </summary>
+        public event EventHandler LabourChanged;
 
         /// <summary>
         /// Age in years.
@@ -45,7 +44,7 @@ namespace Models.WholeFarm
         /// Male or Female
         /// </summary>
         [Description("Gender")]
-        public string Gender { get; set; }
+        public Sex Gender { get; set; }
 
         /// <summary>
         /// Name of each column in the grid. Used as the column header.
@@ -59,33 +58,24 @@ namespace Models.WholeFarm
         [Description("Max Labour Supply (in days) for each month of the year")]
         public double[] MaxLabourSupply { get; set; }
 
+        ///// <summary>
+        ///// Does this family member do Non Farm labour ?
+        ///// </summary>
+        //[Description("Does Non Farm Labour ?")]
+        //public bool DoesNonFarmLabour { get; set; }
 
-
-
-
-
-        /// <summary>
-        /// Does this family member do Non Farm labour ?
-        /// </summary>
-        [Description("Does Non Farm Labour ?")]
-        public bool DoesNonFarmLabour { get; set; }
-
-        /// <summary>
-        /// If this family member does Non Farm labour
-        /// then what is their default Non Farm pay rate.
-        /// </summary>
-        [Description("Default Non Farm Pay rate")]
-        public double DefaultNonFarmPayRate { get; set; }
-
-
-
+        ///// <summary>
+        ///// If this family member does Non Farm labour
+        ///// then what is their default Non Farm pay rate.
+        ///// </summary>
+        //[Description("Default Non Farm Pay rate")]
+        //public double DefaultNonFarmPayRate { get; set; }
 
         /// <summary>
         /// Age in years.
         /// </summary>
         [XmlIgnore]
         public double Age { get; set; }
-
 
         /// <summary>
         /// Available Labour (in days) in the current month. 
@@ -94,8 +84,6 @@ namespace Models.WholeFarm
         public double AvailableDays { get { return _AvailableDays; } }
 
         private double _AvailableDays;
-
-
 
         /// <summary>
         /// Add Fodder
@@ -181,8 +169,14 @@ namespace Models.WholeFarm
         /// </summary>
         private void ResetAvailabilityEachMonth()
         {
-            int currentmonth = Clock.Today.Month;
-            this._AvailableDays = this.MaxLabourSupply[currentmonth - 1];
+			if(MaxLabourSupply.Length != 12)
+			{
+				string message = "Invalid number of values provided for MaxLabourSupply for " + this.Name;
+				Summary.WriteWarning(this, message);
+				throw new Exception("Invalid entry");
+			}
+			int currentmonth = Clock.Today.Month;
+            this._AvailableDays = Math.Min(30.4,this.MaxLabourSupply[currentmonth - 1]);
         }
 
 

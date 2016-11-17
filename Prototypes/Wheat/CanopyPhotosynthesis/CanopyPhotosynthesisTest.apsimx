@@ -1101,7 +1101,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>EndGrainFill</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1138,7 +1138,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <HoldFunction>
           <Name>NumberFunction</Name>
           <MultiplyFunction>
@@ -1276,7 +1276,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Germination</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1313,7 +1313,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1827,6 +1827,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1950,7 +1954,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1987,7 +1991,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0.05</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>ExtinctionCoeff</Name>
           <Value>0.5</Value>
@@ -2090,7 +2094,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Structure].TotalStemPopn</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2127,7 +2131,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Start>Emergence</Start>
@@ -2170,7 +2174,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2309,7 +2322,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2346,7 +2359,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <DivideFunction>
           <Name>PercentWSC</Name>
           <VariableReference>
@@ -2374,7 +2387,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>

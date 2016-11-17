@@ -183,7 +183,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            //this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            // this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
             BuildScript();
             if (this.manager.Script != null)
             {

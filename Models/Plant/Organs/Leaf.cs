@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -17,7 +18,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : BaseOrgan, ICanopy, ILeaf
+    public class Leaf : BaseOrgan, ICanopy, ILeaf, IHasWaterDemand
     {
 
         /// <summary>The met data</summary>
@@ -29,15 +30,15 @@ namespace Models.PMF.Organs
         public string CanopyType { get { return Plant.CropType; } }
 
         /// <summary>Albedo.</summary>
-        [Description("Albedo")]
+        [Description("Canopy Albedo")]
         public double Albedo { get; set; }
 
         /// <summary>Gets or sets the gsmax.</summary>
-        [Description("GSMAX")]
+        [Description("GSMAX: maximum canopy conductance(m/s)")]
         public double Gsmax { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
-        [Description("R50")]
+        [Description("R50: solar radiation at which stomatal conductance decreases to 50% (W/m^2)")]
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
@@ -105,27 +106,53 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double FRGR { get; set; }
         
+        private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
-        public double PotentialEP { get;  set; }
-
-        /// <summary>
-        /// This paramater is applied to ETDemand.  It is a fudge for testing
-        /// </summary>
-        public double FudgeToGetETDemandRight { get; set; }
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
+        #endregion
+
+        #region Has Water Demand Interface
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool MicroClimatePresent {get; set;}
+        
+        /// <summary>Calculates the water demand.</summary>
+        public double CalculateWaterDemand()
+        {
+            return PotentialEP;
+        }
+
+        /// <summary>Gets or sets the water allocation.</summary>
+        [XmlIgnore]
+        public double WaterAllocation { get; private set; }
+
+        /// <summary>Sets the organs water allocation.</summary>
+        /// <param name="allocation">The water allocation (mm)</param>
+        public void SetWaterAllocation(double allocation)
+        {
+            WaterAllocation = allocation;
+        }
+
         #endregion
 
         #region Links
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-
         #endregion
-
-    
 
         #region Structures
         /// <summary>
@@ -180,7 +207,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
             [Link]
@@ -207,7 +234,7 @@ namespace Models.PMF.Organs
             [Link(IsOptional = true)]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
             [Link(IsOptional = true)]
@@ -215,7 +242,7 @@ namespace Models.PMF.Organs
             /// <summary>
             /// The proportion of mass that is respired each day
             /// </summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
         }
         #endregion
@@ -251,6 +278,10 @@ namespace Models.PMF.Organs
 
         [Link(IsOptional = true)]
         IFunction DMConversionEfficiencyFunction = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>
         [Description("Extinction Coefficient (Dead)")]
@@ -791,7 +822,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]
-        public double Fw { get { return MathUtilities.Divide(WaterAllocation, WaterDemand, 1); } }
+        public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
         [Units("0-1")]
@@ -853,6 +884,9 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                if (MicroClimatePresent == false)
+                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
+
                 if (FrostFraction.Value > 0)
                     foreach (LeafCohort L in Leaves)
                         L.DoFrost(FrostFraction.Value);
@@ -882,7 +916,6 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             Leaves = new List<LeafCohort>();
-            WaterDemand = 0;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
@@ -980,25 +1013,22 @@ namespace Models.PMF.Organs
         /// <summary>
         /// remove biomass from the leaf.
         /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="value">The frations of biomass to remove</param>
-        public override void DoRemoveBiomass(OrganBiomassRemovalType value)
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
+            bool writeToSummary = true;
             foreach (LeafCohort leaf in Leaves)
             {
-                leaf.DoLeafBiomassRemoval(value);
-                DetachedWt += leaf.DetachedWt;
-                DetachedN += leaf.DetachedN;
-                RemovedWt += leaf.RemovedWt;
-                RemovedN += leaf.RemovedN;
+                if (leaf.IsInitialised)
+                {
+                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    leaf.LiveArea *= remainingLiveFraction;
+                    writeToSummary = false; // only want it written once.
+                    Detached.Add(leaf.Detached);
+                    Removed.Add(leaf.Removed);
+                }
             }
-
-            double totalFractionToRemove = value.FractionLiveToRemove + value.FractionLiveToResidue;
-            double toResidue = (value.FractionLiveToResidue + value.FractionDeadToResidue) / totalFractionToRemove * 100;
-            double removedOff = (value.FractionLiveToRemove + value.FractionDeadToRemove) / totalFractionToRemove * 100;
-            Summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                     + "% of " + Name + " Biomass from " + Plant.Name
-                                     + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                     + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
         }
 
         /// <summary>
@@ -1254,7 +1284,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Supply = Math.Min(remainder, L.DMRetranslocationSupply);
+                        double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
                         DMRetranslocationCohort[i] = Supply;
                         remainder -= Supply;
                     }
@@ -1306,20 +1336,6 @@ namespace Models.PMF.Organs
                     throw new Exception(Name + "Leaf DM allocation has gone squiffy");
             }
         }
-        /// <summary>Gets or sets the water demand.</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public override double WaterDemand
-        {
-           get
-            {
-                return PotentialEP * FudgeToGetETDemandRight;
-            }
-        }
-        /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
-        public override double WaterAllocation { get; set;}
-
         /// <summary>Gets or sets the n demand.</summary>
         [Units("g/m^2")]
         public override BiomassPoolType NDemand
@@ -1526,15 +1542,6 @@ namespace Models.PMF.Organs
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
 
-        /// <summary>Called when [prune].</summary>
-        /// <param name="Prune">The prune.</param>
-        [EventSubscribe("Prune")]
-        private void OnPrune(PruneType Prune)
-        {
-            Structure.PrimaryBudNo = Prune.BudNumber;
-            ZeroLeaves();
-        }
-
         /// <summary>Called when [remove lowest leaf].</summary>
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
@@ -1551,11 +1558,11 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
+                MicroClimatePresent = false;
                 Clear();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
-                FudgeToGetETDemandRight = 1.0;
             }
         }
 
@@ -1590,12 +1597,38 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Structure.PotLeafTipsAppeared = 0;
+            Structure.CohortToInitialise = 0;
+            Structure.TipToAppear = 0;
+            Structure.Emerged = false;
+            //Structure.Initialised = false;
+            Structure.Clear();
+            Structure.ResetStemPopn();
+            Structure.LeafTipsAppeared = 0;
+            Structure.NextLeafProportion = 1.0;
+
+            Leaves.Clear();
+            CohortsAtInitialisation = 0;
+            TipsAtEmergence = 0;
+            Structure.Germinated = false;
+            //OnInitialiseLeafCohorts(this, e);
+            // Structure.Initialised = true;
+
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
+            base.OnSimulationCommencing(sender, e);
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
             foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
                 initialLeaves.Add(initialLeaf);
@@ -1608,6 +1641,14 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
             CohortsAtInitialisation = 0;
         }
 

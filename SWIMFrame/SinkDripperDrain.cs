@@ -53,6 +53,7 @@ namespace SWIMFrame
         /// </summary>
         /// <param name="t">Current time.</param>
         /// <param name="isat">Layer saturation 0 for unsat, 1 for sat.</param>
+        /// <param name="he">he - need to get definition.</param>
         /// <param name="var">Layer sat S or head diff h - he.</param>
         /// <param name="qwex">Layer extraction rates.</param>
         /// <param name="qwexd">Partial derivs of qwex wrt S or h.</param>
@@ -82,6 +83,7 @@ namespace SWIMFrame
         /// <param name="t">Current time.</param>
         /// <param name="ti">Initial time.</param>
         /// <param name="tf">Final time.</param>
+        /// <param name="isol">isol</param>
         /// <param name="dwex">Water extraction from layers.</param>
         /// <param name="c">Layer concentrations.</param>
         /// <param name="qsex">Layer extraction rates.</param>
