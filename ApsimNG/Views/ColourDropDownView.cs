@@ -134,31 +134,31 @@ namespace UserInterface.Views
                 TreeIter iter;
                 if (comboModel.GetIterFirst(out iter))
                 {
-                    ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
-                    if (typeEnum == ColourDropTypeEnum.Text)
+                    do
                     {
-                        string entry = (string)comboModel.GetValue(iter, 0);
-                        while (!entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matching be case-insensitive?
-                            entry = (string)comboModel.GetValue(iter, 0);
-                        if (entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase))
-                            combobox1.SetActiveIter(iter);
-                        else // Could not find a matching entry; perhaps this should result in appending a new entry?
-                            combobox1.Active = -1;
-                    }
-                    else
-                    {
-                        Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                        Color rgb = Color.FromArgb(entry.Red, entry.Green, entry.Blue);
-                        while (!rgb.Equals((Color)value) && comboModel.IterNext(ref iter))
+                        ColourDropTypeEnum typeEnum = (ColourDropTypeEnum)comboModel.GetValue(iter, 2);
+                        if (typeEnum == ColourDropTypeEnum.Text)
                         {
-                            entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            string entry = (string)comboModel.GetValue(iter, 0);
+                            if (entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                combobox1.SetActiveIter(iter);
+                                return;
+                            }
                         }
-                        if (rgb.Equals((Color)value))
-                            combobox1.SetActiveIter(iter);
-                        else // Could not find a matching entry; perhaps this should result in appending a new entry?
-                            combobox1.Active = -1;
-                    }
+                        else if (value.GetType() == typeof(Color))
+                        {
+                            Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
+                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            if (rgb.Equals((Color)value))
+                            {
+                                combobox1.SetActiveIter(iter);
+                                return;
+                            }
+                        }
+                    } while (comboModel.IterNext(ref iter));
+                    // Could not find a matching entry; perhaps this should result in appending a new entry?
+                    combobox1.Active = -1;
                 }
             }
         }
