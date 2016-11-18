@@ -9,6 +9,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.IO;
     using Gtk;
 
     /// <summary>An interface for a list box</summary>
@@ -120,11 +121,7 @@ namespace UserInterface.Views
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
             List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
 
-
-            // A filename was detected so add the path as a sub item.
-            int posLastSlash = fileName.LastIndexOfAny("\\/".ToCharArray());
-
-            string result = fileName.Substring(posLastSlash + 1);
+            string result = Path.GetFileName(fileName) + "\n" + Path.GetDirectoryName(fileName);
 
             listview.ItemPadding = 6; // Restore padding if we have images to display
 
