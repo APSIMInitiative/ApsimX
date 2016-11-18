@@ -15,9 +15,6 @@ namespace UnitTests
     /// A suite of tests for the SWIM framework.
     /// All input and output values were retrieved from FORTRAN version using WRITE statements
     /// at start and end of method.
-    /// 
-    /// NOTE: A number of tests have been disabled so that SWIM can be added to the main repo.
-    /// It is not currently part of APSIM yet and will not affect production code.
     /// </summary>
     [TestFixture]
     class SWIMTests
