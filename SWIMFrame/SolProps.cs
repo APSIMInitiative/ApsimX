@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SWIMFrame
 {
@@ -32,7 +29,7 @@ namespace SWIMFrame
         /// <summary>
         /// Set soil solute property parameters.
         /// </summary>
-        /// <param name="">Soil type number.</param>
+        /// <param name="j">Soil type number.</param>
         /// <param name="bdj">Soil bulk density.</param>
         /// <param name="disj">Dispersivity.</param>
         public void Solpar(int j, double bdj, double disj)
@@ -53,7 +50,7 @@ namespace SWIMFrame
             isotype[isol, j] = isotypeji;
             np = isoparji.Length - 1; // -1 to ignore 0th element
             if (isotypeji == "Fr")
-                isopar[isol, j] = new double[np + 2 + 1]; //check these
+                isopar[isol, j] = new double[np + 2 + 1];
             else
                 isopar[isol, j] = new double[np + 1];
             Array.Copy(isoparji, isopar[isol, j], isoparji.Length);

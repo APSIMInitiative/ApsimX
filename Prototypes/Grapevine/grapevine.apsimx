@@ -10,40 +10,32 @@
         <MemoText><![CDATA[
 # The APSIM Grapevine Model
 
-_Brown, H.E., Huth, N.I. and Holzworth, D.P._
+ZHU, J., Brown, H.E., Parker, A.K.,Trought, M.C.T.
 
 ##Building the model.
-The APSIM Grapevine model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+The APSIM Grapevine model has been adapted from the potato model [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
 
 The model consists of:
-
-* a phenology model to simulate development between growth phases  
+* a phenology model to simulate development between growth phases   
 * a structure model to simulate plant morphology  
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
 
 ##Pecularities of Grapevine
-Grapevine is a challenging crop to model because it is vegetatviely propigated.  For seed propigate crops, plants are always equally dormant at planting and their development begins there on.  With Grapevine the physiological status of the seed tubers vary depending on:
-* the conditions the mother plant encountered late in its life (Stress, Desication etc)
-* the conditions that the tuber was stored (Cool store, ground store, dry store etc)
-* treatment of the seed prior to planting (chitting, cutting etc)
-All of these factors infuence the developmental behaviour of the crop that is produced including
-* The timing of emergence
-* The number of stems produced per plant and subsequent tuber number and canopy development
-* The timing of tuber initiation and subsequent growth and partitioning
-* The duration of haulm growth and subsequent tuber filling duration
-
-There are an enormous number of Grapevine cultivars and they, they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed Grapevine prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the Grapevine model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. 
+Grapevine is a challenging crop to model because it is a perennial woody plant. 
+A budding phase was added for simulating the start of the vegetative phase. This budding phase was similar to the emergence phase for annual crop.
+There are an enormous number of Grapevine cultivars and trainning systems. They differ in phenology and vegetative growth. 
 
 ##Including a Grapevine crop in an APSIM simulation
-To indluce a Grapevine crop in a simulation the Grapevine model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the paddock, selecting Add from the drop down menu and then selecting Grapevine from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the Grapevine crop so the next crop can be simulated.  The PlantGrapevines manager module that is included in the Grapevine Example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.
-###Setting sowing depth (emergence date)
-The Grapevine model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  
-###Setting stem number (tuber number and early canopy growth)
-The GrapevineManagement script sets the number of stems that will appear from each seed piece.  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.
+To indluce a Grapevine crop in a simulation the grapevine plant needs to be added to the vineyard, field or zone in which it is to be grown.  This can be done by right clicking on the vineyard, selecting Add from the drop down menu and then selecting Plant from the list that comes up.  
+###Setting plant density and bud number (budNumber number and early canopy growth)
+The Grapevine Management script sets the number of stems that will appear from plant.  
 ###Setting final leaf number (Crop duration)
-The duration of a Grapevine crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the GrapevineManagement script if more is know about the expected determinany of the Grapevinees under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.]]></MemoText>
+The duration of a Grapevine crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.]]></MemoText>
       </Memo>
+      <Cultivar>
+        <Name>SauvignonBlanc</Name>
+      </Cultivar>
       <Phenology>
         <Name>Phenology</Name>
         <AirTemperatureFunction>
@@ -297,6 +289,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
           <Value>24</Value>
+          <Units>number</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightModel</Name>
@@ -509,10 +502,12 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>DetachmentLagDuration</Name>
             <Value>1000000</Value>
+            <Units>degreeDay</Units>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
             <Value>1000000</Value>
+            <Units>degreeDay</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMax</Name>
@@ -537,6 +532,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>StructuralFraction</Name>
             <Value>0.99</Value>
+            <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
@@ -556,10 +552,12 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>NReallocationFactor</Name>
             <Value>0</Value>
+            <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
             <Value>0</Value>
+            <Units>percentage</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -579,10 +577,12 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>CriticalNConc</Name>
             <Value>0.01</Value>
+            <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
             <Value>0</Value>
+            <Units>percentage</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -606,6 +606,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>NonStructuralFraction</Name>
             <Value>0.2</Value>
+            <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
@@ -615,14 +616,17 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>DMReallocationFactor</Name>
             <Value>0</Value>
+            <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
             <Value>0.01</Value>
+            <Units>parameter controls the logistic growth of the leaf in growth stage</Units>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
             <Value>0</Value>
+            <Units>g/g</Units>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
@@ -773,10 +777,10 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionLiveToRemove>0.2</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0.4</FractionDeadToResidue>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>1</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
@@ -803,6 +807,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.99</Value>
+          <Units>percentage</Units>
         </Constant>
         <PhaseLookupValue>
           <Name>FrostFraction</Name>
@@ -864,12 +869,19 @@ A function is used to provide flowering date as days after sowing(DAS).
           <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0.01</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
           <Value>1000000</Value>
+          <Units>mm</Units>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaxDailyNUptake</Name>
@@ -886,10 +898,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           </XYPairs>
           <XProperty>[Root].Length</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
-        </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -1009,10 +1017,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>RootFrontVelocity</Name>
           <Value>10</Value>
+          <Units>mm/d</Units>
         </Constant>
         <Constant>
           <Name>PartitionFraction</Name>
           <Value>0.2</Value>
+          <Units>percentage</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1025,10 +1035,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>NReallocationFactor</Name>
           <Value>0</Value>
+          <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
           <Value>0.05</Value>
+          <Units>percentage</Units>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1038,6 +1050,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>DMRetranslocationFactor</Name>
           <Value>0</Value>
+          <Units>percentage</Units>
         </Constant>
         <InternodeDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1066,6 +1079,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.006</Value>
+          <Units>g/g</Units>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -1117,7 +1131,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
-          <Units>/d</Units>
+          <Units>1/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -1134,6 +1148,240 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Value>1</Value>
           <Units>0-1</Units>
         </Constant>
+      </GenericOrgan>
+      <GenericOrgan>
+        <Name>Cordon</Name>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+          <Units>percentage</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0.05</Value>
+          <Units>percentage</Units>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>BudBurst</Start>
+          <End>LeafFall</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>percentage</Units>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaximumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>3</double>
+              <double>4</double>
+              <double>5.3</double>
+            </X>
+            <Y>
+              <double>0.06</double>
+              <double>0.05</double>
+              <double>0.025</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.006</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>200</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>percentage</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0.001</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>0.01</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+      </GenericOrgan>
+      <GenericOrgan>
+        <Name>Trunk</Name>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0.05</Value>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>BudBurst</Start>
+          <End>LeafFall</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaximumNConc</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>3</double>
+              <double>4</double>
+              <double>5.3</double>
+            </X>
+            <Y>
+              <double>0.06</double>
+              <double>0.05</double>
+              <double>0.025</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.006</Value>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>2000</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0.001</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>0.05</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
       </GenericOrgan>
       <ReproductiveOrgan>
         <Name>Berry</Name>
@@ -1185,6 +1433,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1</double>
             </Y>
           </XYPairs>
+          <XProperty>[Berry].ThermalTimeAfterVeraison.Value</XProperty>
         </LinearInterpolationFunction>
         <AccumulateFunction>
           <Name>ThermalTimeAfterFlowering</Name>
@@ -1409,244 +1658,11 @@ A function is used to provide flowering date as days after sowing(DAS).
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
-      <Cultivar>
-        <Name>SauvignonBlanc</Name>
-      </Cultivar>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <NArbitrationOption>RelativeAllocation</NArbitrationOption>
         <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
       </OrganArbitrator>
-      <GenericOrgan>
-        <Name>Trunk</Name>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>BudBurst</Start>
-          <End>LeafFall</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>MaximumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>3</double>
-              <double>4</double>
-              <double>5.3</double>
-            </X>
-            <Y>
-              <double>0.06</double>
-              <double>0.05</double>
-              <double>0.025</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-        </Constant>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <BiomassRemoval>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </BiomassRemoval>
-        <Constant>
-          <Name>InitialWtFunction</Name>
-          <Value>2000</Value>
-          <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
-          <Value>0.001</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
-          <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>PartitionFraction</Name>
-            <Value>0.05</Value>
-          </Constant>
-        </PartitionFractionDemandFunction>
-      </GenericOrgan>
-      <GenericOrgan>
-        <Name>Cane</Name>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>BudBurst</Start>
-          <End>LeafFall</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <LinearInterpolationFunction>
-          <Name>MaximumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>3</double>
-              <double>4</double>
-              <double>5.3</double>
-            </X>
-            <Y>
-              <double>0.06</double>
-              <double>0.05</double>
-              <double>0.025</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-        </Constant>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <BiomassRemoval>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </BiomassRemoval>
-        <Constant>
-          <Name>InitialWtFunction</Name>
-          <Value>200</Value>
-          <Units>g/m^2</Units>
-        </Constant>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-          <Units>g/g</Units>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
-          <Value>0.001</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
-          <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>PartitionFraction</Name>
-            <Value>0.05</Value>
-          </Constant>
-        </PartitionFractionDemandFunction>
-      </GenericOrgan>
       <CropType>Grapevine</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
@@ -1688,14 +1704,14 @@ A function is used to provide flowering date as days after sowing(DAS).
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
-      <Name>ExcelInput</Name>
+      <Name>PhenoObs</Name>
       <FileName>Observations\PhenoDataObservation.xlsx</FileName>
       <SheetNames>
         <string>Data</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
-      <Name>PredictedObserved</Name>
+      <Name>PhenoPredObs</Name>
       <Tests>
         <Name>Tests</Name>
         <AcceptedStats>
@@ -1755,22 +1771,6 @@ A function is used to provide flowering date as days after sowing(DAS).
   </DataStore>
   <Simulation>
     <Name>BaseSim</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
-      <ExcelWorkSheetName />
-    </Weather>
-    <Clock>
-      <Name>Clock</Name>
-      <StartDate>2005-04-30T00:00:00</StartDate>
-      <EndDate>2007-09-05T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>Summary</Name>
-    </Summary>
-    <SoilArbitrator>
-      <Name>Soil Arbitrator</Name>
-    </SoilArbitrator>
     <Zone>
       <Name>Vineyard</Name>
       <Soil>
@@ -2233,79 +2233,25 @@ namespace Models
 			
 				]]></Code>
       </Manager>
-      <Graph>
-        <Name>FN</Name>
-        <Series>
-          <Name>Cohort</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Grapevine.Leaf.Fn</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Cohort1</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Grapevine.Leaf.Fw</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
+      <ExcelWorkSheetName />
+    </Weather>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>2005-04-30T00:00:00</StartDate>
+      <EndDate>2007-09-05T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Graph>
       <Name>Phenology</Name>
       <Series>
@@ -2350,10 +2296,10 @@ namespace Models
     <Graph>
       <Name>LeafNum</Name>
       <Series>
-        <Name>Cohort</Name>
+        <Name>Initiated</Name>
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
-          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+          <ColumnName>[Grapevine].Phenology.CurrentStageName</ColumnName>
         </EventNamesOnGraph>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -2375,7 +2321,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>tips</Name>
+        <Name>AppTips</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2416,27 +2362,6 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
-      <Series>
-        <Name>Series3</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Grapevine.Leaf.InitialisedCohortNo</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -2456,7 +2381,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>LeafSize2</Name>
+      <Name>LeafSize</Name>
       <Series>
         <Name>1</Name>
         <Type>Scatter</Type>
@@ -2858,9 +2783,9 @@ namespace Models
     <Folder>
       <Name>Berry</Name>
       <Graph>
-        <Name>BerryWT</Name>
+        <Name>MeanFloweringTemp</Name>
         <Series>
-          <Name>Cohort</Name>
+          <Name>MeanFloweringTemp</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2874,22 +2799,18 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Grapevine.Berry.Live.Wt</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>Berry.MeanFloweringTemp.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Cohort1</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>[Grapevine].Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
+          <Name>MeanFloweringTempY0</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-3376729</ColourArgb>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2899,9 +2820,9 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Grapevine.Phenology.CurrentStageName</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -2919,25 +2840,35 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>BerryNum</Name>
+        <Name>ShootandBunchNum</Name>
         <Series>
-          <Name>Cohort</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
+          <Name>ShootNum</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.NumberFunction.Shoots.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>BunchPerShoot</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2951,21 +2882,37 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.Value</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <YFieldName>Berry.NumberFunction.BunchesPerShoot.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>BerryNum</Name>
         <Series>
           <Name>BerryPerBunch</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
+          <YAxis>Left</YAxis>
           <ColourArgb>-2793984</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -2977,6 +2924,27 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Berry.NumberFunction.PotentialBerriesPerBunch.Value</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>TotalNumberPerM2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Berry.NumberFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3003,18 +2971,14 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>MeanFloweringTemp</Name>
+        <Name>BerryWT</Name>
         <Series>
-          <Name>Cohort</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
+          <Name>dryMass</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3028,124 +2992,9 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.MeanFloweringTemp.Value</YFieldName>
+          <YFieldName>Grapevine.Berry.Live.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Cohort1</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>MeanFloweringTempY0</Name>
-        <Series>
-          <Name>Cohort</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>BunchPerShoot</Name>
-        <Series>
-          <Name>Cohort</Name>
-          <EventNamesOnGraph>
-            <Name>EventNamesOnGraph</Name>
-            <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-          </EventNamesOnGraph>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.Shoots.Value</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
@@ -3168,6 +3017,76 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Graph>
+      <Name>NWaterStress</Name>
+      <Series>
+        <Name>NStress</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.Fn</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>WaterStress</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-2793984</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Leaf.Fw</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Simulation>
   <Experiment>
     <Name>PhenoTest</Name>
@@ -3660,76 +3579,6 @@ namespace Models
 			
 				]]></Code>
         </Manager>
-        <Graph>
-          <Name>FN</Name>
-          <Series>
-            <Name>Cohort</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-            </EventNamesOnGraph>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-1663232</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Grapevine.Leaf.Fn</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Cohort1</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
-            </EventNamesOnGraph>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-2793984</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Grapevine.Leaf.Fw</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
