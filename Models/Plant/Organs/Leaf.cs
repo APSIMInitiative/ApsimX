@@ -915,14 +915,17 @@ namespace Models.PMF.Organs
             Leaves.Clear();
             Summary.WriteMessage(this, "Removing leaves from plant");
         }
+
         /// <summary>Fractional interception "above" a given node position</summary>
         /// <param name="cohortno">cohort position</param>
         /// <returns>fractional interception (0-1)</returns>
         public double CoverAboveCohort(double cohortno)
         {
             int MM2ToM2 = 1000000; // Conversion of mm2 to m2
-            double LAIabove = Leaves.Sum( l => l.LiveArea) / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
+            double LAIabove = 0;
+            for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
+                LAIabove += Leaves[i].LiveArea/MM2ToM2;
+            return 1 - Math.Exp(-ExtinctionCoeff.Value*LAIabove);
         }
 
         /// <summary>
