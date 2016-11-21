@@ -815,7 +815,6 @@ namespace Models
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
-            object[] values = new object[names.Count];
             try
             {
                 // Go through all tables and write the data.
@@ -824,6 +823,7 @@ namespace Models
                     // Write each row to the .db
                     if (table.Data != null)
                     {
+                        object[] values = new object[names.Count];
                         foreach (DataRow row in table.Data.Rows)
                         {
                             for (int i = 0; i < names.Count; i++)
