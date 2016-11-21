@@ -582,9 +582,9 @@ namespace Models.PMF.Organs
                 //Firstly allocate DM
                 if (value.Structural + value.NonStructural + value.Metabolic < -0.0000000001)
                     throw new Exception("-ve DM Allocation to Leaf Cohort");
-                if ((value.Structural + value.NonStructural + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand)) > 0.0000000001)
+                if (value.Structural + value.NonStructural + value.Metabolic - (StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand) > 0.0000000001)
                     throw new Exception("DM Allocated to Leaf Cohort is in excess of its Demand");
-                if ((StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand) > 0)
+                if (StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand > 0)
                 {
                     StructuralDMAllocation = value.Structural;
                     MetabolicDMAllocation = value.Metabolic;
@@ -704,8 +704,6 @@ namespace Models.PMF.Organs
                 if (MetabolicDMDemand > 0)
                     PotentialMetabolicDMAllocation = value.Metabolic;
             }
-
-
         }
         #endregion
 
@@ -804,9 +802,7 @@ namespace Models.PMF.Organs
             {
                 CellDivisionStressDays += 1;
                 CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value;
-                //FIXME HEB  The limitation below should be used to avoid zero values for maximum leaf size.
-                //CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
-                CellDivisionStressFactor = CellDivisionStressAccumulation/CellDivisionStressDays;
+                CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
             }
 
             if (IsAppeared)
@@ -863,9 +859,9 @@ namespace Models.PMF.Organs
                 LeafStartNonStructuralNReallocationSupply = SenescedFrac*liveBiomass.NonStructuralN*NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
-                    (liveBiomass.MetabolicN*NRetranslocationFactor) - LeafStartMetabolicNReallocationSupply);
+                    liveBiomass.MetabolicN*NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
                 LeafStartNonStructuralNRetranslocationSupply = Math.Max(0.0,
-                    (liveBiomass.NonStructuralN*NRetranslocationFactor) - LeafStartNonStructuralNReallocationSupply);
+                    liveBiomass.NonStructuralN*NRetranslocationFactor - LeafStartNonStructuralNReallocationSupply);
                 LeafStartNReallocationSupply = LeafStartNonStructuralNReallocationSupply + LeafStartMetabolicNReallocationSupply;
                 LeafStartNRetranslocationSupply = LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
@@ -895,7 +891,7 @@ namespace Models.PMF.Organs
 
             //Acellerate thermal time accumulation if crop is water stressed.
             double thermalTime;
-            if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
+            if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && IsFullyExpanded)
                 thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value;
             else thermalTime = tt;
 
@@ -909,7 +905,7 @@ namespace Models.PMF.Organs
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
-            if ((Live.MetabolicNConc <= MinimumNConc) & ((MetabolicNRetranslocated - MetabolicNAllocation) > 0.0))
+            if ((Live.MetabolicNConc <= MinimumNConc) & (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
                 areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
 
             double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
@@ -937,9 +933,9 @@ namespace Models.PMF.Organs
             Dead.MetabolicWt += Math.Max(0.0, metabolicWtSenescing - MetabolicWtReallocated);
 
 
-            Live.MetabolicN -= Math.Max(0.0, (metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated));
+            Live.MetabolicN -= Math.Max(0.0, metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated);
             //Don't Seness todays N if it has been taken for reallocation
-            Dead.MetabolicN += Math.Max(0.0, (metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated));
+            Dead.MetabolicN += Math.Max(0.0, metabolicNSenescing - MetabolicNReallocated - MetabolicNRetranslocated);
 
             Live.NonStructuralN -= Math.Max(0.0,
                 nonStructuralNSenescing - NonStructuralNReallocated - NonStructuralNRetrasnlocated);
@@ -970,24 +966,17 @@ namespace Models.PMF.Organs
                 double detachedWt = Dead.Wt*DetachedFrac;
                 double detachedN = Dead.N*DetachedFrac;
 
-                DeadArea *= (1 - DetachedFrac);
-                Dead.StructuralWt *= (1 - DetachedFrac);
-                Dead.StructuralN *= (1 - DetachedFrac);
-                Dead.NonStructuralWt *= (1 - DetachedFrac);
-                Dead.NonStructuralN *= (1 - DetachedFrac);
-                Dead.MetabolicWt *= (1 - DetachedFrac);
-                Dead.MetabolicN *= (1 - DetachedFrac);
+                DeadArea *= 1 - DetachedFrac;
+                Dead.StructuralWt *= 1 - DetachedFrac;
+                Dead.StructuralN *= 1 - DetachedFrac;
+                Dead.NonStructuralWt *= 1 - DetachedFrac;
+                Dead.NonStructuralN *= 1 - DetachedFrac;
+                Dead.MetabolicWt *= 1 - DetachedFrac;
+                Dead.MetabolicN *= 1 - DetachedFrac;
 
                 if (detachedWt > 0)
                     SurfaceOrganicMatter.Add(detachedWt*10, detachedN*10, 0, Plant.CropType, "Leaf");
             }
-        }
-
-        /// <summary>Removes leaves for cohort due to thin event.  </summary>
-        /// <param name="proportionRemoved">The fraction.</param>
-        public void DoThin(double proportionRemoved)
-        {
-            CohortPopulation *= 1 - proportionRemoved;
         }
 
         /// <summary>Does the kill.</summary>
