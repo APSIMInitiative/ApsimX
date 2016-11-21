@@ -39,6 +39,7 @@ namespace Models.Core.Runners
             server.AddCommand("GetJob", OnGetJob);
             server.AddCommand("GetJobFailed", OnGetJobFailed);
             server.AddCommand("TransferOutputs", OnTransferOutputs);
+            server.AddCommand("TransferData", OnTransferData);
             server.AddCommand("EndJob", OnEndJob);
             server.AddCommand("Error", OnError);
 
@@ -112,6 +113,7 @@ namespace Models.Core.Runners
             lock (this)
             {
                 server.StopListening();
+                server = null;
                 KillRunners();
                 base.Stop();
             }
@@ -206,6 +208,20 @@ namespace Models.Core.Runners
             server.Send(args.socket, "OK");
         }
 
+        /// <summary>Called by the client to send its output data.</summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="args">The command arguments</param>
+        private void OnTransferData(object sender, SocketServer.CommandArgs args)
+        {
+            TransferData arguments = args.obj as TransferData;
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            MemoryStream stream = new MemoryStream(arguments.data, 0, (int) arguments.dataLength);
+            DataTable data = formatter.Deserialize(stream) as DataTable;
+            DataStore store = new DataStore();
+            store.Filename = Path.ChangeExtension(dbFileName, ".db");
+            store.WriteTable(arguments.simulationName, arguments.tableName, data);
+            server.Send(args.socket, "OK");
+        }
         /// <summary>Called by the client to get the next job to run.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
@@ -252,6 +268,24 @@ namespace Models.Core.Runners
 
             /// <summary>Data</summary>
             public string fileName;
+        }
+
+
+        /// <summary>A transfer data command.</summary>
+        [Serializable]
+        public class TransferData
+        {
+            /// <summary>Simulation name</summary>
+            public string simulationName;
+
+            /// <summary>Table name</summary>
+            public string tableName;
+
+            /// <summary>Data</summary>
+            public byte[] data;
+
+            /// <summary>length of data to use</summary>
+            public long dataLength;
         }
 
 
