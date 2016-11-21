@@ -68,14 +68,9 @@ namespace UserInterface.Views
                 ToolButton button = new ToolButton(image, null);
                 button.Homogeneous = false;
                 Label btnLabel = new Label(text);
-                Pango.FontDescription font = new Pango.FontDescription();
-                font.Size = (int)(8 * Pango.Scale.PangoScale);
-                btnLabel.ModifyFont(font);
                 btnLabel.LineWrap = true;
                 btnLabel.LineWrapMode = Pango.WrapMode.Word;
                 btnLabel.Justify = Justification.Center;
-                btnLabel.HeightRequest = 38;
-                btnLabel.WidthRequest = 80;
                 btnLabel.Realized += BtnLabel_Realized;
                 button.LabelWidget = btnLabel;
                 if (handler != null)

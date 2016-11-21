@@ -122,7 +122,7 @@ namespace UserInterface.Views
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
             List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
 
-            string result = Path.GetFileName(fileName) + "\n<i>" + Path.GetDirectoryName(fileName) + "</i>";
+            string result = Path.GetFileName(fileName) + "\n<span foreground=\"gray\"><i>" + Path.GetDirectoryName(fileName) + "</i></span>";
 
             listview.ItemPadding = 6; // Restore padding if we have images to display
 
