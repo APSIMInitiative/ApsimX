@@ -495,10 +495,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
-
+                int i;
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+
+                for (i = 0; i <= MaximumMainStemLeafNumber - 1; i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
@@ -538,16 +538,19 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsEmerged)
                     if (ExpandedCohortNo < InitialisedCohortNo)
-                        if (Leaves[(int)ExpandedCohortNo].Age > 0)
-                            if(AppearedCohortNo < InitialisedCohortNo)
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration));
+                        if (Leaves[(int) ExpandedCohortNo].Age > 0)
+                            if (AppearedCohortNo < InitialisedCohortNo)
+                                return Math.Min(1,
+                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration);
                             else
-                                return Math.Min(1, (Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration)*Structure.NextLeafProportion);
+                                return Math.Min(1,
+                                    Leaves[(int) ExpandedCohortNo].Age/Leaves[(int) ExpandedCohortNo].GrowthDuration*
+                                    Structure.NextLeafProportion);
                         else
                             return 0;
                     else
                         return Structure.NextLeafProportion - 1;
-                    return 0;
+                return 0;
             }
         }
 
@@ -691,17 +694,17 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int i = 0;
+                int i;
 
                 double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= (MaximumMainStemLeafNumber - 1); i++)
+                for (i = 0; i <= MaximumMainStemLeafNumber - 1; i++)
                     values[i] = 0;
                 i = 0;
                 foreach (LeafCohort L in Leaves)
-                {
-                    if ((L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt) > 0.0)
+                    if (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt > 0.0)
                     {
-                        values[i] = L.Live.StructuralWt / (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
+                        values[i] = L.Live.StructuralWt/
+                                    (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
                         i++;
                     }
                     else
@@ -709,8 +712,6 @@ namespace Models.PMF.Organs
                         values[i] = 0;
                         i++;
                     }
-                }
-
                 return values;
             }
         }
@@ -914,6 +915,7 @@ namespace Models.PMF.Organs
             Leaves.Clear();
             Summary.WriteMessage(this, "Removing leaves from plant");
         }
+
         /// <summary>Fractional interception "above" a given node position</summary>
         /// <param name="cohortno">cohort position</param>
         /// <returns>fractional interception (0-1)</returns>
@@ -922,8 +924,8 @@ namespace Models.PMF.Organs
             int MM2ToM2 = 1000000; // Conversion of mm2 to m2
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
-                LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
+                LAIabove += Leaves[i].LiveArea/MM2ToM2;
+            return 1 - Math.Exp(-ExtinctionCoeff.Value*LAIabove);
         }
 
         /// <summary>
@@ -954,7 +956,7 @@ namespace Models.PMF.Organs
         public void DoThin(double ProportionRemoved)
         {
             foreach (LeafCohort leaf in Leaves)
-                leaf.DoThin(ProportionRemoved);
+                leaf.CohortPopulation *= 1 - ProportionRemoved;
         }
         #endregion
 
@@ -1007,7 +1009,6 @@ namespace Models.PMF.Organs
                     Reallocation += L.LeafStartDMReallocationSupply;
                 }
 
-
                 return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
             }
         }
@@ -1038,7 +1039,7 @@ namespace Models.PMF.Organs
                         CohortPotentialStructualDMAllocation[i] = PotentialAllocation;
                         DMPotentialallocated += PotentialAllocation;
                     }
-                    if ((DMPotentialallocated - value.Structural) > 0.000000001)
+                    if (DMPotentialallocated - value.Structural > 0.000000001)
                         throw new Exception("the sum of poteitial DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1094,22 +1095,15 @@ namespace Models.PMF.Organs
 
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
                 double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
-                double check = Live.StructuralWt;
                 //Structural DM allocation
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of DM in Leaf");
-                if (value.Structural == 0.0)
-                { }// do nothing
-                else
+                if (DMDemand.Structural <= 0 && value.Structural > 0.000000000001)
+                    throw new Exception("Invalid allocation of DM in Leaf");
+                if (value.Structural > 0.0)
                 {
                     double DMsupply = value.Structural * DMConversionEfficiency;
                     double DMallocated = 0;
-                    double TotalDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalDemand += L.StructuralDMDemand;
-                    double DemandFraction = (value.Structural * DMConversionEfficiency) / TotalDemand;//
+                    double TotalDemand = Leaves.Sum(l => l.StructuralDMDemand);
+                    double DemandFraction = value.Structural * DMConversionEfficiency / TotalDemand;
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1121,27 +1115,21 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Structural * DMConversionEfficiency) > 0.000000001)
+                    if (DMallocated - value.Structural * DMConversionEfficiency > 0.000000001)
                         throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
                 //Metabolic DM allocation
                 double[] MetabolicDMAllocationCohort = new double[Leaves.Count + 2];
 
-                if (DMDemand.Metabolic == 0)
-                    if (value.Metabolic < 0.000000000001) { }//All OK
-                    else
+                if (DMDemand.Metabolic <= 0 && value.Metabolic > 0.000000000001) 
                         throw new Exception("Invalid allocation of DM in Leaf");
-                if (value.Metabolic == 0.0)
-                { }// do nothing
-                else
+                if (value.Metabolic > 0.0)
                 {
                     double DMsupply = value.Metabolic * DMConversionEfficiency;
                     double DMallocated = 0;
-                    double TotalDemand = 0;
-                    foreach (LeafCohort L in Leaves)
-                        TotalDemand += L.MetabolicDMDemand;
-                    double DemandFraction = (value.Metabolic * DMConversionEfficiency) / TotalDemand;//
+                    double TotalDemand = Leaves.Sum(l => l.MetabolicDMDemand);
+                    double DemandFraction = value.Metabolic * DMConversionEfficiency / TotalDemand;
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
@@ -1153,7 +1141,7 @@ namespace Models.PMF.Organs
                     }
                     if (DMsupply > 0.0000000001)
                         throw new Exception("Metabolic DM allocated to Leaf left over after allocation to leaf cohorts");
-                    if ((DMallocated - value.Metabolic * DMConversionEfficiency) > 0.000000001)
+                    if (DMallocated - value.Metabolic * DMConversionEfficiency > 0.000000001)
                         throw new Exception("the sum of Metabolic DM allocation to leaf cohorts is more that that allocated to leaf organ");
                 }
 
@@ -1162,7 +1150,7 @@ namespace Models.PMF.Organs
                 double TotalSinkCapacity = 0;
                 foreach (LeafCohort L in Leaves)
                     TotalSinkCapacity += L.NonStructuralDMDemand;
-                if ((value.NonStructural * DMConversionEfficiency) > TotalSinkCapacity)
+                if (value.NonStructural * DMConversionEfficiency > TotalSinkCapacity)
                 //Fixme, this exception needs to be turned on again
                 { }
                     //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
@@ -1236,10 +1224,10 @@ namespace Models.PMF.Organs
 
                 double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
                 double CheckValue = StartWt + value.Structural*DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.NonStructural * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
-                double ExtentOfCockUp = Math.Abs(EndWt - CheckValue);
+                double ExtentOfError = Math.Abs(EndWt - CheckValue);
                 double FloatingPointError = 0.00000001;
-                if (ExtentOfCockUp > FloatingPointError)
-                    throw new Exception(Name + "Leaf DM allocation has gone squiffy");
+                if (ExtentOfError > FloatingPointError)
+                    throw new Exception(Name + "Not all leaf DM allocation was used");
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
