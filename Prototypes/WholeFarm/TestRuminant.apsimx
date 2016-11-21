@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Simulation</Name>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>Harwood.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>clock</Name>
+      <StartDate>1993-09-21T00:00:00</StartDate>
+      <EndDate>1995-09-29T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>summaryfile</Name>
+    </Summary>
+    <Zone>
+      <Name>WholeFarm</Name>
+      <Resources>
+        <Name>Resources</Name>
+        <AnimalFoodStore>
+          <Name>AnimalFoodStore</Name>
+          <AnimalFoodStoreType>
+            <Name>Lucerne</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <StartingAmount>100</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Maize</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <StartingAmount>100</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>CutGrass</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <StartingAmount>100</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>BoughtSupplement</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <StartingAmount>100</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+        </AnimalFoodStore>
+        <GrazeFoodStore>
+          <Name>GrazeFoodStore</Name>
+          <GrazeFoodStoreType>
+            <Name>Native Pasture</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>1000</StartingAmount>
+            <DecayNitrogen>0.35</DecayNitrogen>
+            <MinimumNitrogen>0.4</MinimumNitrogen>
+            <DecayDMD>0.1</DecayDMD>
+            <MinimumDMD>0.43</MinimumDMD>
+            <DetachRate>0.03</DetachRate>
+            <CarryoverDetachRate>0.12</CarryoverDetachRate>
+          </GrazeFoodStoreType>
+        </GrazeFoodStore>
+        <Land>
+          <Name>Land</Name>
+          <LandType>
+            <Name>Sandy loam country</Name>
+            <LandArea>100</LandArea>
+            <UnusablePortion>0</UnusablePortion>
+            <BundedPortion>0</BundedPortion>
+            <SoilType>1</SoilType>
+            <NDecline>1000</NDecline>
+          </LandType>
+          <LandType>
+            <Name>Cracking clay plains</Name>
+            <LandArea>50</LandArea>
+            <UnusablePortion>0</UnusablePortion>
+            <BundedPortion>0</BundedPortion>
+            <SoilType>2</SoilType>
+            <NDecline>1000</NDecline>
+          </LandType>
+          <UnitOfArea>Hectares</UnitOfArea>
+        </Land>
+        <LabourFamily>
+          <Name>LabourFamily</Name>
+          <LabourFamilyType>
+            <Name>Joe B.</Name>
+            <InitialAge>42</InitialAge>
+            <Gender>Male</Gender>
+            <MaxLabourSupply>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+            </MaxLabourSupply>
+          </LabourFamilyType>
+          <LabourFamilyType>
+            <Name>Jane D.</Name>
+            <InitialAge>40</InitialAge>
+            <Gender>Female</Gender>
+            <MaxLabourSupply>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+              <double>25</double>
+            </MaxLabourSupply>
+          </LabourFamilyType>
+          <AllowAging>false</AllowAging>
+        </LabourFamily>
+        <LabourHired>
+          <Name>LabourHired</Name>
+        </LabourHired>
+        <RuminantHerd>
+          <Name>Ruminants</Name>
+          <RuminantType>
+            <Name>Breeding</Name>
+            <RuminantTypeCohort>
+              <Name>Female1_2</Name>
+              <Gender>Female</Gender>
+              <StartingAge>18</StartingAge>
+              <StartingNumber>1</StartingNumber>
+              <StartingWeight>270</StartingWeight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <Suckling>false</Suckling>
+            </RuminantTypeCohort>
+            <Breed>Bos indicus</Breed>
+            <EMaintCoefficient>0.35</EMaintCoefficient>
+            <EMaintIntercept>0.503</EMaintIntercept>
+            <EMaintExponent>0</EMaintExponent>
+            <EGrowthCoefficient>0.79</EGrowthCoefficient>
+            <EGrowthIntercept>0</EGrowthIntercept>
+            <ELactationCoefficient>0.35</ELactationCoefficient>
+            <ELactationIntercept>0.42</ELactationIntercept>
+            <Kme>1</Kme>
+            <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
+            <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
+            <GrowthEfficiency>1.09</GrowthEfficiency>
+            <SRWFemale>500</SRWFemale>
+            <SRWMaleMultiplier>1.2</SRWMaleMultiplier>
+            <SRWBirth>0.08</SRWBirth>
+            <AgeGrowthRateCoefficient>0.0115</AgeGrowthRateCoefficient>
+            <SRWGrowthScalar>0.32</SRWGrowthScalar>
+            <IntakeCoefficient>0.024</IntakeCoefficient>
+            <IntakeIntercept>1.7</IntakeIntercept>
+            <ProteinCoefficient>120</ProteinCoefficient>
+            <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
+            <GreenDietMax>98</GreenDietMax>
+            <GreenDietCoefficient>0.15</GreenDietCoefficient>
+            <GreenDietZero>4</GreenDietZero>
+            <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
+            <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
+            <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
+            <StrictFeedingLimits>true</StrictFeedingLimits>
+            <MilkIntakeCoefficient>0.1206</MilkIntakeCoefficient>
+            <MilkIntakeIntercept>3.8146</MilkIntakeIntercept>
+            <MilkIntakeMaximum>20</MilkIntakeMaximum>
+            <MilkLWTFodderSubstitutionProportion>0.2</MilkLWTFodderSubstitutionProportion>
+            <MaxJuvenileIntake>0.035</MaxJuvenileIntake>
+            <ProportionalDiscountDueToMilk>0.3</ProportionalDiscountDueToMilk>
+            <ProportionOfMaxWeightToSurvive>0.5</ProportionOfMaxWeightToSurvive>
+            <LactatingPotentialModifierConstantA>0.42</LactatingPotentialModifierConstantA>
+            <LactatingPotentialModifierConstantB>61</LactatingPotentialModifierConstantB>
+            <LactatingPotentialModifierConstantC>1.7</LactatingPotentialModifierConstantC>
+            <MaximumSizeOfIndividual>1.2</MaximumSizeOfIndividual>
+            <MortalityBase>0.03</MortalityBase>
+            <MortalityCoefficient>2.5</MortalityCoefficient>
+            <MortalityIntercept>0.05</MortalityIntercept>
+            <MortalityExponent>3</MortalityExponent>
+            <JuvenileMortalityCoefficient>3</JuvenileMortalityCoefficient>
+            <JuvenileMortalityMaximum>0.2</JuvenileMortalityMaximum>
+            <JuvenileMortalityExponent>1.8</JuvenileMortalityExponent>
+            <WoolCoefficient>0</WoolCoefficient>
+            <CashmereCoefficient>0</CashmereCoefficient>
+            <MilkCurveSuckling>0.6</MilkCurveSuckling>
+            <MilkCurveNonSuckling>0.11</MilkCurveNonSuckling>
+            <MilkingDays>300</MilkingDays>
+            <MilkPeakYield>20</MilkPeakYield>
+            <MilkOffsetDay>4</MilkOffsetDay>
+            <MilkPeakDay>45</MilkPeakDay>
+            <InterParturitionIntervalIntercept>10.847</InterParturitionIntervalIntercept>
+            <InterParturitionIntervalCoefficient>-0.7994</InterParturitionIntervalCoefficient>
+            <GestationLength>9</GestationLength>
+            <MinimumAge1stMating>24</MinimumAge1stMating>
+            <MinimumSize1stMating>0.5</MinimumSize1stMating>
+            <TwinRate>0</TwinRate>
+            <CriticalCowWeight>0.5</CriticalCowWeight>
+            <ConceptionRateCoefficent />
+            <ConceptionRateIntercept />
+            <ConceptionRateAsymptote />
+            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
+            <PrenatalMortality>7.9</PrenatalMortality>
+            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
+          </RuminantType>
+        </RuminantHerd>
+      </Resources>
+      <Arbitrators>
+        <Name>Arbitrators</Name>
+        <RuminantArbitratorFeed>
+          <Name>Ruminant feed arbitrator</Name>
+        </RuminantArbitratorFeed>
+      </Arbitrators>
+      <Activities>
+        <Name>Activities</Name>
+        <RuminantActivityFeed>
+          <Name>Feed female Bos indicus lucerne</Name>
+          <RuminantFilterGroup>
+            <Name>FemaleBosIndicus</Name>
+            <RuminantFilter>
+              <Name>Filter[HerdName=Breeding]</Name>
+              <Parameter>HerdName</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Breeding</Value>
+            </RuminantFilter>
+            <RuminantFilter>
+              <Name>Filter[Gender=Female]</Name>
+              <Parameter>Gender</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Female</Value>
+            </RuminantFilter>
+            <MonthlyValues>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+            </MonthlyValues>
+          </RuminantFilterGroup>
+          <FeedArbitratorName>Ruminant feed arbitrator</FeedArbitratorName>
+          <FeedTypeName>Lucerne</FeedTypeName>
+          <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
+          <FeedPriority>10</FeedPriority>
+          <LabourPriority>10</LabourPriority>
+        </RuminantActivityFeed>
+        <RuminantActivityGrow>
+          <Name>Grow all ruminants</Name>
+          <EnergyGross>18.4</EnergyGross>
+        </RuminantActivityGrow>
+        <SummariseRuminantHerd>
+          <Name>SummariseHerd</Name>
+        </SummariseRuminantHerd>
+      </Activities>
+      <Report>
+        <Name>HerdLedger</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>Name as ZoneName</string>
+          <string>[Clock].Today</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.ID as UId</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.Breed as Breed</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.HerdName as Herd</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.GenderAsString as Sex</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.Age as Age</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.Weight as Weight</string>
+          <string>[Resources].Ruminants.LastIndividualChanged.SaleFlagAsString as Reason</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Resources].Ruminants.OnHerdChanged</string>
+        </EventNames>
+      </Report>
+      <Report>
+        <Name>HerdSummary</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>Name as ZoneName</string>
+          <string>[Clock].Today</string>
+          <string>[Activities].SummariseHerd.ReportDetails.Breed as Breed</string>
+          <string>[Activities].SummariseHerd.ReportDetails.Herd as Herd</string>
+          <string>[Activities].SummariseHerd.ReportDetails.Age as AgeGroup</string>
+          <string>[Activities].SummariseHerd.ReportDetails.Sex as Sex</string>
+          <string>[Activities].SummariseHerd.ReportDetails.Number as Num</string>
+          <string>[Activities].SummariseHerd.ReportDetails.AverageWeight as AvgWt</string>
+          <string>[Activities].SummariseHerd.ReportDetails.AverageWeightGain as AvgWtGn</string>
+          <string>[Activities].SummariseHerd.ReportDetails.AverageIntake as AvgIntake</string>
+          <string>[Activities].SummariseHerd.ReportDetails.AdultEquivalents as AE</string>
+          <string>[Activities].SummariseHerd.ReportDetails.NumberPregnant as NoPregnant</string>
+          <string>[Activities].SummariseHerd.ReportDetails.NumberOfBirths as Births</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
+        </EventNames>
+      </Report>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>Series</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GeneralLedger</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Credit</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+  </DataStore>
+  <ExplorerWidth>281</ExplorerWidth>
+</Simulations>

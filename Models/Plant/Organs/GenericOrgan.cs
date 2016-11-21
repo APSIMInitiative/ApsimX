@@ -45,6 +45,7 @@ namespace Models.PMF.Organs
     /// </summary>
 
     [Serializable]
+    [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration
     {
         #region Class Parameter Function Links
