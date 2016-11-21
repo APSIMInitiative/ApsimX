@@ -9345,6 +9345,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <Name>0</Name>
               <Operations>
                 <Name>0</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[Uniques fertigation event]]></MemoText>
+                </Memo>
                 <Operation>
                   <Date>2015-10-09</Date>
                   <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
@@ -10071,8 +10075,8 @@ namespace Models
                 <WinterDate>1-Apr</WinterDate>
                 <WinterU>2</WinterU>
                 <WinterCona>3</WinterCona>
-                <DiffusConst>88</DiffusConst>
-                <DiffusSlope>35</DiffusSlope>
+                <DiffusConst>0</DiffusConst>
+                <DiffusSlope>0</DiffusSlope>
                 <Salb>0.13</Salb>
                 <CN2Bare>77</CN2Bare>
                 <CNRed>0</CNRed>
@@ -10229,7 +10233,7 @@ namespace Models
                 </NH4>
                 <SW>
                   <double>0.07</double>
-                  <double>0.16</double>
+                  <double>0.18</double>
                   <double>0.24</double>
                   <double>0.34</double>
                   <double>0.24</double>
@@ -10247,7 +10251,7 @@ namespace Models
                   <Name>WheatSoil</Name>
                   <LL>
                     <double>0.12</double>
-                    <double>0.12</double>
+                    <double>0.08</double>
                     <double>0.12</double>
                     <double>0.12</double>
                     <double>0.12</double>
@@ -10581,12 +10585,13 @@ namespace Models
 					Irrigation.Apply(24);
 				else
 				{
-					if (NitFactor == 0)
+					Irrigation.Apply(20);
+/*					if (NitFactor == 0)
 						Irrigation.Apply(20);
 					if (NitFactor == 50)
 						Irrigation.Apply(10);
 					if (NitFactor == 250)
-						Irrigation.Apply(20);
+						Irrigation.Apply(20);*/
 				}
 	    
 			}
@@ -13743,8 +13748,6 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
-                <string>0Nil</string>
-                <string>50Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -13811,7 +13814,6 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
-                <string>50Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
