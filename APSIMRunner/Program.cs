@@ -50,21 +50,17 @@ namespace APSIMJobRunner
                     }
 
                     // Send all output tables back to socket server.
+                    JobManagerMultiProcess.TransferData transferArguments = new JobManagerMultiProcess.TransferData();
+                    SocketServer.CommandObject transferCommand = new SocketServer.CommandObject() { name = "TransferData", data = transferArguments };
                     foreach (DataStore.TableToWrite table in DataStore.TablesToWrite)
                     {
-                        string tempFileName = Path.GetTempFileName();
-
                         stream.Seek(0, SeekOrigin.Begin);
                         formatter.Serialize(stream, table.Data);
 
-                        MemoryStream s = ReflectionUtilities.BinarySerialise(table.Data) as MemoryStream;
-                        File.WriteAllBytes(tempFileName, s.ToArray());
-
-                        JobManagerMultiProcess.TransferArguments transferArguments = new JobManagerMultiProcess.TransferArguments();
                         transferArguments.simulationName = table.SimulationName;
                         transferArguments.tableName = table.TableName;
-                        transferArguments.fileName = tempFileName;
-                        SocketServer.CommandObject transferCommand = new SocketServer.CommandObject() { name = "TransferOutputs", data = transferArguments };
+                        transferArguments.data = stream.GetBuffer();
+                        transferArguments.dataLength = stream.Position;
                         SocketServer.Send("127.0.0.1", 2222, transferCommand);
                     }
 
@@ -81,6 +77,11 @@ namespace APSIMJobRunner
                     response = GetNextJob();
                 }
 
+            }
+            catch (SocketException)
+            {
+                // Couldn't connect to socket. Server not running?
+                return 1;
             }
             catch (Exception err)
             {
@@ -99,70 +100,14 @@ namespace APSIMJobRunner
         /// <summary>Get the next job to run. Returns the job to run or null if no more jobs.</summary>
         private static object GetNextJob()
         {
-            try
+            SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
+            object response = SocketServer.Send("127.0.0.1", 2222, command);
+            while (response is string)
             {
-                SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
-                object response = SocketServer.Send("127.0.0.1", 2222, command);
-                while (response is string)
-                {
-                    Thread.Sleep(300);
-                    response = SocketServer.Send("127.0.0.1", 2222, command);
-                }
-                return response;
+                Thread.Sleep(300);
+                response = SocketServer.Send("127.0.0.1", 2222, command);
             }
-            catch (Exception err)
-            {
-                SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "Error", data = err.ToString() };
-                SocketServer.Send("127.0.0.1", 2222, command);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Send an object to the socket server, wait for a response and return the
-        /// response as an object.
-        /// </summary>
-        /// <param name="serverName">The server name.</param>
-        /// <param name="port">The port number.</param>
-        /// <param name="obj">The object to send.</param>
-        public object Send(string serverName, int port, object obj)
-        {
-            TcpClient Server = new TcpClient(serverName, Convert.ToInt32(port));
-            MemoryStream s = new MemoryStream();
-            try
-            {
-                Byte[] bData = SocketServer.EncodeData(obj);
-                Server.GetStream().Write(bData, 0, bData.Length);
-                
-
-                // Loop to receive all the data sent by the client.
-                int numBytesExpected = 0;
-                int totalNumBytes = 0;
-                int i = 0;
-                int NumBytesRead;
-                bool allDone = false;
-                do
-                {
-                    NumBytesRead = Server.GetStream().Read(bytes, 0, bytes.Length);
-                    s.Write(bytes, 0, NumBytesRead);
-                    totalNumBytes += NumBytesRead;
-
-                    if (numBytesExpected == 0 && totalNumBytes > 4)
-                        numBytesExpected = BitConverter.ToInt32(bytes, 0);
-                    if (numBytesExpected + 4 == totalNumBytes)
-                        allDone = true;
-
-                    i++;
-                }
-                while (!allDone);
-
-                // Decode the bytes and return.
-                return SocketServer.DecodeData(s.ToArray());
-            }
-            finally
-            {
-                if (Server != null) Server.Close();
-            }
+            return response;
         }
     }
 }
