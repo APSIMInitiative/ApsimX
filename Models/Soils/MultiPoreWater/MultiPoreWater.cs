@@ -436,7 +436,6 @@ namespace Models.Soils
             PoreCompartments = PoreBounds.Length - 1;
             AdsorptionCapacity = new double[ProfileLayers];
             TransmissionCapacity = new double[ProfileLayers];
-            AdsorptionCapacityBelow = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
             Ksat = new double[ProfileLayers];
@@ -675,15 +674,11 @@ namespace Models.Soils
             {//Then step through each layer and work out how much water the profile below can take
                 if (l == ProfileLayers - 1)
                 {
-                    //In the bottom layer of the profile absorption capaicity below is the amount of water this layer can absorb
-                    AdsorptionCapacityBelow[l] = AdsorptionCapacity[l];
                     //In the bottom layer of the profile percolation capacity below is the conductance of the bottom of the profile
                     PercolationCapacityBelow[l] = SubProfileConductance;
                 }
                 else
                 {
-                    //For subsequent layers up the profile absorpbion capacity below adds the current layer to the sum of the layers below
-                    AdsorptionCapacityBelow[l] = AdsorptionCapacityBelow[l + 1] + AdsorptionCapacity[l];
                     //For subsequent layers up the profile the percolation capacity below is the amount that the layer below may absorb
                     //plus the minimum of what may drain through the layer below (ksat of layer below) and what may potentially percolate
                     //Into the rest of the profile below that
