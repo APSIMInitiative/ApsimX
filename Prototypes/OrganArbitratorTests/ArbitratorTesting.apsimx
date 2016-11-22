@@ -1238,7 +1238,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1500</Value>
+          <Value>2000</Value>
         </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
@@ -10214,6 +10214,7 @@ namespace Models
                   <double>300</double>
                   <double>300</double>
                   <double>300</double>
+                  <double>300</double>
                 </Thickness>
                 <NO3>
                   <double>7.9</double>
@@ -10222,6 +10223,7 @@ namespace Models
                   <double>1.31</double>
                   <double>2.6</double>
                   <double>4.56</double>
+                  <double>0.1</double>
                 </NO3>
                 <NH4>
                   <double>1.065</double>
@@ -10230,14 +10232,16 @@ namespace Models
                   <double>1.09</double>
                   <double>0.93</double>
                   <double>0</double>
+                  <double>0</double>
                 </NH4>
                 <SW>
-                  <double>0.07</double>
                   <double>0.18</double>
-                  <double>0.24</double>
-                  <double>0.34</double>
-                  <double>0.24</double>
-                  <double>0.3</double>
+                  <double>0.18</double>
+                  <double>0.26</double>
+                  <double>0.26</double>
+                  <double>0.23</double>
+                  <double>0.28</double>
+                  <double>0.29</double>
                 </SW>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -10261,11 +10265,11 @@ namespace Models
                   <KL>
                     <double>0.06</double>
                     <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
                     <double>0.05</double>
                     <double>0.03</double>
                     <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.001</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -10386,27 +10390,27 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 			 
-				ThisSoil.LL15[0] = 0.08;
-				ThisSoil.LL15[1] = 0.08;
-				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[0] = 0.06;
+				ThisSoil.LL15[1] = 0.06;
+				ThisSoil.LL15[2] = 0.08;
 				ThisSoil.LL15[3] = 0.14;
-				ThisSoil.LL15[4] = 0.25;
-				ThisSoil.LL15[5] = 0.28;
-				ThisSoil.LL15[6] = 0.27;
-				ThisSoil.DUL[0] = 0.30;
-				ThisSoil.DUL[1] = 0.25;
-				ThisSoil.DUL[2] = 0.26;
-				ThisSoil.DUL[3] = 0.23;
-				ThisSoil.DUL[4] = 0.28;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.11;
+				ThisSoil.DUL[0] = 0.34;
+				ThisSoil.DUL[1] = 0.3;
+				ThisSoil.DUL[2] = 0.28;
+				ThisSoil.DUL[3] = 0.3;
+				ThisSoil.DUL[4] = 0.3;
 				ThisSoil.DUL[5] = 0.30;
-				ThisSoil.DUL[6] = 0.27;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.DUL[6] = 0.3;
+				ThisSoil.SAT[0] = 0.4;
+				ThisSoil.SAT[1] = 0.4;
+				ThisSoil.SAT[2] = 0.4;
+				ThisSoil.SAT[3] = 0.4;
+				ThisSoil.SAT[4] = 0.4;
+				ThisSoil.SAT[5] = 0.4;
+				ThisSoil.SAT[6] = 0.4;
 				ThisSoil.SoilWater.Reset();
 			}   
 			if ((IrrFactor == false) && (NitFactor == 50))
@@ -13748,6 +13752,8 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -13814,6 +13820,8 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -13880,8 +13888,8 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
-                <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -13948,8 +13956,8 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
-                <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -14016,8 +14024,144 @@ namespace Models
                 <string>0Full</string>
                 <string>50Full</string>
                 <string>250Full</string>
-                <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>120_50</Name>
+              <Series>
+                <Name>Series</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>DailyLayerPC</TableName>
+                <XFieldName>Clock.today</XFieldName>
+                <YFieldName>depth_120_150</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Series1</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>250Full</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>150_180</Name>
+              <Series>
+                <Name>Series</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>DailyLayerPC</TableName>
+                <XFieldName>Clock.today</XFieldName>
+                <YFieldName>depth_150_180</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Series1</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>250Full</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
