@@ -5614,7 +5614,7 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1995-10-09</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1995-11-21</Date>
@@ -5622,19 +5622,19 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1995-12-01</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1996-01-30</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1996-02-28</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1996-11-26</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1996-12-22</Date>
@@ -5642,11 +5642,11 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-01-14</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1997-03-04</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1997-06-26</Date>
@@ -5654,11 +5654,11 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-11-17</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1998-04-07</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1998-10-09</Date>
@@ -5666,15 +5666,15 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1998-12-17</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1999-02-16</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1999-06-02</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>1999-11-10</Date>
@@ -5682,11 +5682,11 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1999-09-29</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
             <Operation>
               <Date>2000-02-02</Date>
-              <Action>[CuttingManagement].Script.DoCut(0.5, 0.5);</Action>
+              <Action>[CuttingManagement].Script.DoCut(100, 100);</Action>
             </Operation>
           </Operations>
           <Report>
@@ -5806,11 +5806,22 @@ namespace Models
 		public void DoCut(double LeafResidue, double StemResidue)
 		{
 			double L = (double)Apsim.Get(Bambatsi, "Leaf.Live.Wt");
-			double LeafFraction = 0;
+			double LeafRemovalFraction = 0;
 			if (L > 0)
-				LeafFraction = (L - LeafResidue) / L;
-			Remove.SetFractionToRemove("Leaf", 0.0);
-			Remove.SetFractionToRemove("Stem", 0.9);
+				LeafRemovalFraction = (L - LeafResidue) / L;
+			if (LeafRemovalFraction < 0)
+				LeafRemovalFraction = 0;
+			   
+			double S = (double)Apsim.Get(Bambatsi, "Stem.Live.Wt");
+			double StemRemovalFraction = 0;
+			if (S > 0)
+				StemRemovalFraction = (S - StemResidue) / S;			   
+			if (StemRemovalFraction < 0)
+				StemRemovalFraction = 0;
+			   
+			   
+			Remove.SetFractionToRemove("Leaf", LeafRemovalFraction);
+			Remove.SetFractionToRemove("Stem", StemRemovalFraction);
 			Remove.SetFractionToResidue("Leaf", 0.0);
 			Remove.SetFractionToResidue("Stem", 0.0);
 			Bambatsi.RemoveBiomass("Harvest", Remove);
@@ -5823,7 +5834,7 @@ namespace Models
           <Graph>
             <Name>Biomass</Name>
             <Series>
-              <Name>Series</Name>
+              <Name>Leaf</Name>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -5837,7 +5848,28 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Bambatsi.AboveGround.Wt</YFieldName>
+              <YFieldName>Bambatsi.Leaf.Live.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Stem</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-1663232</ColourArgb>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Bambatsi.Stem.Live.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
