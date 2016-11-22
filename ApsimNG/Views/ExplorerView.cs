@@ -80,6 +80,7 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
+            RightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
