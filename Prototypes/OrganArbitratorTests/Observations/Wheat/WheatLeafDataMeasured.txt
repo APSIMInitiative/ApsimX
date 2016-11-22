@@ -1,4 +1,4 @@
-Clock.Today   Nit   Full   LeafTips   LeafLigules   SenescingLeaves   DeadLeaves   SimulationName
+Clock.Today   Nit   Irr   LeafTips   LeafLigules   SenescingLeaves   DeadLeaves   SimulationName
 ()   ()   ()   ()   ()   ()   ()   ()
 2015-10-07   0   Nil   2   1   0   0   Lincoln2015Nit0IrrNil
 2015-10-07   50   Nil   2   1   0   0   Lincoln2015Nit50IrrNil
