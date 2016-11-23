@@ -131,6 +131,29 @@ namespace UserInterface.Presenters
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
+            RunAPSIMInternal(multiProcessRunner: false);
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Run APSIM multi-process (experimental)" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Run APSIM multi-process (experimental)",
+                     AppliesTo = new Type[] { typeof(Simulation),
+                                              typeof(Simulations),
+                                              typeof(Experiment),
+                                              typeof(Folder) },
+                     ShortcutKey = "F6")]
+        public void RunAPSIMMultiProcess(object sender, EventArgs e)
+        {
+            RunAPSIMInternal(multiProcessRunner: true);
+        }
+
+        /// <summary>Run APSIM.</summary>
+        /// <param name="multiProcessRunner">Use the multi-process runner?</param>
+        private void RunAPSIMInternal(bool multiProcessRunner)
+        {
             if (this.explorerPresenter.Save())
             {
                 List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
@@ -146,7 +169,7 @@ namespace UserInterface.Presenters
                     List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                     jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
 
-                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter);
+                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter, multiProcessRunner);
                     this.command.Do(null);
                 }
             }

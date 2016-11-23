@@ -9,6 +9,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.IO;
     using Gtk;
 
     /// <summary>An interface for a list box</summary>
@@ -51,7 +52,7 @@ namespace UserInterface.Views
         public event EventHandler DoubleClicked;
 
         public IkonView listview;
-        private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+        private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
@@ -62,6 +63,7 @@ namespace UserInterface.Views
             listview.TextColumn = 0;
             listview.PixbufColumn = 1;
             listview.TooltipColumn = 2;
+            listview.MarkupColumn = 3;
             listview.SelectionMode = SelectionMode.Browse;
             listview.Orientation = Gtk.Orientation.Horizontal;
             listview.RowSpacing = 0;
@@ -106,7 +108,7 @@ namespace UserInterface.Views
                     {
                         text = AddFileNameListItem(val, ref image);
                     }
-                    listmodel.AppendValues(text, image, val);
+                    listmodel.AppendValues(text, image, val, text);
                 }
             }
         }
@@ -120,11 +122,7 @@ namespace UserInterface.Views
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
             List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
 
-
-            // A filename was detected so add the path as a sub item.
-            int posLastSlash = fileName.LastIndexOfAny("\\/".ToCharArray());
-
-            string result = fileName.Substring(posLastSlash + 1);
+            string result = Path.GetFileName(fileName) + "\n<span foreground=\"gray\"><i>" + Path.GetDirectoryName(fileName) + "</i></span>";
 
             listview.ItemPadding = 6; // Restore padding if we have images to display
 

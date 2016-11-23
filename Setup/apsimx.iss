@@ -129,6 +129,7 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 [Files]
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\..\..\..\DeploymentSupport\Windows\Assemblies\*.dll; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\..\..\..\DeploymentSupport\Windows\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\..\..\..\DeploymentSupport\Windows\etc\gtk-2.0\gtkrc; DestDir: {app}\etc\gtk-2.0; Flags: ignoreversion;
 Source: ..\..\..\..\DeploymentSupport\Windows\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion;

@@ -271,6 +271,15 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Reset();
+            // notifify apsim about solutes
+            AdvertiseMySolutes();
+        }
+
+        /// <summary>Reset the state values to those set during the initialisation</summary>
+        public void Reset()
+        {
+
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
@@ -290,6 +299,7 @@ namespace Models.Soils
             salb = Soil.SoilWater.Salb;
             NO3ppm = Soil.InitialNO3N;
             NH4ppm = Soil.InitialNH4N;
+            ureappm = new double[Soil.Thickness.Length];
             num_residues = 0;
             Tsoil = null;
             simpleST = null;
@@ -305,7 +315,7 @@ namespace Models.Soils
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
                 rd_biom = new double[] { 0.0324, 0.015 };
-                wfmin_values = new double[] {0.05, 1.0, 1.0, 0.5 };
+                wfmin_values = new double[] { 0.05, 1.0, 1.0, 0.5 };
             }
             else
             {
@@ -325,51 +335,6 @@ namespace Models.Soils
 
             // perform initial calculations and setup
             InitCalc();
-
-            // notifify apsim about solutes
-            AdvertiseMySolutes();
-        }
-
-        /// <summary>Reset the state values to those set during the initialisation</summary>
-        public void Reset()
-        {
-
-            inReset = true;
-
-            // Save present state
-            SaveState();
-
-            // reset the size of arrays - so it zeroes them
-            ResizeLayerArrays(dlayer.Length);
-
-            // reset patches
-            Patch.Clear();
-            soilCNPatch newPatch = new soilCNPatch(this);
-            Patch.Add(newPatch);
-
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.ResizeLayerArrays(dlayer.Length);
-
-            // reset C and N variables to their initial state
-            oc = OC_reset;
-            NO3ppm = no3ppm_reset;
-            NH4ppm = nh4ppm_reset;
-            ureappm = ureappm_reset;
-
-            // perform initial calculations and setup
-            InitCalc();
-
-            // reset soil temperature
-            if (!use_external_st)
-            {
-                simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
-            }
-
-            // get the changes of state and publish (let other component to know)
-            DeltaState();
-
-            inReset = false;
         }
 
         /// <summary>Check general initialisation parameters, and let user know of some settings</summary>
@@ -938,14 +903,16 @@ namespace Models.Soils
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
-
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-            if (Math.Abs(dltC) <= EPSILON)
-                dltC = 0.0;
-            massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
-            massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltC);
-            ExternalMassFlow.Invoke(massBalanceChange);
+            if (ExternalMassFlow != null)
+            {
+                ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+                if (Math.Abs(dltC) <= EPSILON)
+                    dltC = 0.0;
+                massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
+                massBalanceChange.PoolClass = "soil";
+                massBalanceChange.N = (float)Math.Abs(dltC);
+                ExternalMassFlow.Invoke(massBalanceChange);
+            }
         }
 
         #endregion

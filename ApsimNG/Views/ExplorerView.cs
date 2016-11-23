@@ -80,6 +80,7 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
+            RightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -341,9 +342,6 @@ namespace UserInterface.Views
                     ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
                     button.Homogeneous = false;
                     button.LabelWidget = new Label(description.Name);
-                    Pango.FontDescription font = new Pango.FontDescription();
-                    font.Size = (int)(8 * Pango.Scale.PangoScale);
-                    button.LabelWidget.ModifyFont(font);
                     if (description.OnClick != null)
                         button.Clicked += description.OnClick;
                     toolStrip.Add(button);

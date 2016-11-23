@@ -102,28 +102,63 @@ namespace Models
         /// <summary> Process a Pest and Disease lifecycle object </summary>
         public event EventHandler DoLifecycle;
 
+		/// <summary>WholeFarm cut and carry</summary>
+		public event EventHandler WFDoCutAndCarry;
+		/// <summary>WholeFarm update pasture</summary>
+		public event EventHandler WFUpdatePasture;
+		/// <summary>WholeFarm buy fodder</summary>
+		public event EventHandler WFBuyFoodStores;
+		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
+		public event EventHandler WFAnimalBreeding;
+		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
+		public event EventHandler WFPotentialIntake;
+		/// <summary>WholeFarm Activities Request Resources for this month</summary>
+		public event EventHandler WFRequestResources;
+		/// <summary>WholeFarm Resources do Arbitration based on what Activities have asked for it's resource</summary>
+		public event EventHandler WFDoResourceAllocation;
+		/// <summary>WholeFarm Activities now make decisions based on the resources they were given this month</summary>
+		public event EventHandler WFResourcesAllocated;
+		/// <summary>WholeFarm Event to call all feed requests for the time step</summary>
+		public event EventHandler WFRequestFeed;
+		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) actual intake from amount give by the Fodder, pasture and supplement Resource</summary>
+		public event EventHandler WFFeedAllocation;
+		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
+		public event EventHandler WFAnimalMilkProduction;
+		/// <summary>WholeFarm Calculate Animals(Ruminant and Other) weight gain</summary>
+		public event EventHandler WFAnimalWeightGain;
+		/// <summary>WholeFarm Do Animal (Ruminant and Other) death</summary>
+		public event EventHandler WFAnimalDeath;
+		/// <summary>WholeFarm Do Animal (Ruminant and Other) milking</summary>
+		public event EventHandler WFAnimalMilking;
+		/// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+		public event EventHandler WFAnimalManage;
+		/// <summary>WholeFarm stock animals to pasture availability or other metrics</summary>
+		public event EventHandler WFAnimalStock;
+		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
+		public event EventHandler WFAnimalSell;
+		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+		public event EventHandler WFAgeResources;
 
-        /// <summary>WholeFarm Activities Request Resources for this month</summary>
-        public event EventHandler WFRequestResources;
-        /// <summary>WholeFarm Resources do Arbitration based on what Activities have asked for it's resource</summary>
-        public event EventHandler WFDoResourceAllocation;
-        /// <summary>WholeFarm Activities now make decisions based on the resources they were given this month</summary>
-        public event EventHandler WFResourcesAllocated;
-        /// <summary>WholeFarm Calculate Ruminant Animals actual intake from the amount given by the Pasture Resource</summary>
-        public event EventHandler WFRuminantGraze;
-        /// <summary>WholeFarm Calculate Animals (Ruminant and Other) actual intake from amount give by the Fodder Resource</summary>
-        public event EventHandler WFAnimalFeed;
-        /// <summary>WholeFarm Calculate Animals (Ruminant and Other) Growth</summary>
-        public event EventHandler WFAnimalGrowth;
-        /// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding</summary>
-        public event EventHandler WFAnimalBreed;
-        /// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
-        public event EventHandler WFAnimalManageHerd;
-        /// <summary>WholeFarm Trade Animals (Ruminant and Other)</summary>
-        public event EventHandler WFAnimalTrade;
-        /// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
-        public event EventHandler WFAgeResources;
-
+		///// <summary>WholeFarm Activities Request Resources for this month</summary>
+		//public event EventHandler WFRequestResources;
+  //      /// <summary>WholeFarm Resources do Arbitration based on what Activities have asked for it's resource</summary>
+  //      public event EventHandler WFDoResourceAllocation;
+  //      /// <summary>WholeFarm Activities now make decisions based on the resources they were given this month</summary>
+  //      public event EventHandler WFResourcesAllocated;
+  //      /// <summary>WholeFarm Calculate Ruminant Animals actual intake from the amount given by the Pasture Resource</summary>
+  //      public event EventHandler WFRuminantGraze;
+  //      /// <summary>WholeFarm Calculate Animals (Ruminant and Other) actual intake from amount give by the Fodder Resource</summary>
+  //      public event EventHandler WFAnimalFeed;
+  //      /// <summary>WholeFarm Calculate Animals (Ruminant and Other) Growth</summary>
+  //      public event EventHandler WFAnimalGrowth;
+  //      /// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding</summary>
+  //      public event EventHandler WFAnimalBreed;
+  //      /// <summary>WholeFarm Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+  //      public event EventHandler WFAnimalManageHerd;
+  //      /// <summary>WholeFarm Trade Animals (Ruminant and Other)</summary>
+  //      public event EventHandler WFAnimalTrade;
+  //      /// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+  //      public event EventHandler WFAgeResources;
 
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
@@ -155,7 +190,7 @@ namespace Models
             while (Today <= EndDate)
             {
                 // If this is being run on a background worker thread then check for cancellation
-                if (e.workerThread.CancellationPending)
+                if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
                 {
                     Summary.WriteMessage(this, "Simulation cancelled");
                     return;
@@ -174,26 +209,63 @@ namespace Models
                 {
                     StartOfMonth.Invoke(this, args);
 
-                    if (WFRequestResources != null)
-                        WFRequestResources.Invoke(this, args);
-                    if (WFDoResourceAllocation != null)
-                        WFDoResourceAllocation.Invoke(this, args);
-                    if (WFResourcesAllocated != null)
-                        WFResourcesAllocated.Invoke(this, args);
-                    if (WFRuminantGraze != null)
-                        WFRuminantGraze.Invoke(this, args);
-                    if (WFAnimalFeed != null)
-                        WFAnimalFeed.Invoke(this, args);
-                    if (WFAnimalGrowth != null)
-                        WFAnimalGrowth.Invoke(this, args);
-                    if (WFAnimalBreed != null)
-                        WFAnimalBreed.Invoke(this, args);
-                    if (WFAnimalManageHerd != null)
-                        WFAnimalManageHerd.Invoke(this, args);
-                    if (WFAnimalTrade != null)
-                        WFAnimalTrade.Invoke(this, args);
-                    if (WFAgeResources != null)
-                        WFAgeResources.Invoke(this, args);
+					if (WFUpdatePasture != null)
+						WFUpdatePasture.Invoke(this, args);
+					if (WFRequestResources != null)
+						WFRequestResources.Invoke(this, args);
+					if (WFDoResourceAllocation != null)
+						WFDoResourceAllocation.Invoke(this, args);
+					if (WFResourcesAllocated != null)
+						WFResourcesAllocated.Invoke(this, args);
+					if (WFDoCutAndCarry != null)
+						WFDoCutAndCarry.Invoke(this, args);
+					if (WFBuyFoodStores != null)
+						WFBuyFoodStores.Invoke(this, args);
+					if (WFAnimalBreeding != null)
+						WFAnimalBreeding.Invoke(this, args);
+					if (WFPotentialIntake != null)
+						WFPotentialIntake.Invoke(this, args);
+					if (WFRequestFeed != null)
+						WFRequestFeed.Invoke(this, args);
+					if (WFFeedAllocation != null)
+						WFFeedAllocation.Invoke(this, args);
+					if (WFAnimalMilkProduction != null)
+						WFAnimalMilkProduction.Invoke(this, args);
+					if (WFAnimalWeightGain != null)
+						WFAnimalWeightGain.Invoke(this, args);
+					if (WFAnimalDeath != null)
+						WFAnimalDeath.Invoke(this, args);
+					if (WFAnimalMilking != null)
+						WFAnimalMilking.Invoke(this, args);
+					if (WFAnimalManage != null)
+						WFAnimalManage.Invoke(this, args);
+					if (WFAnimalStock != null)
+						WFAnimalStock.Invoke(this, args);
+					if (WFAnimalSell != null)
+						WFAnimalSell.Invoke(this, args);
+					if (WFAgeResources != null)
+						WFAgeResources.Invoke(this, args);
+
+					//if (WFRequestResources != null)
+     //                   WFRequestResources.Invoke(this, args);
+     //               if (WFDoResourceAllocation != null)
+     //                   WFDoResourceAllocation.Invoke(this, args);
+     //               if (WFResourcesAllocated != null)
+     //                   WFResourcesAllocated.Invoke(this, args);
+     //               if (WFRuminantGraze != null)
+     //                   WFRuminantGraze.Invoke(this, args);
+     //               if (WFAnimalFeed != null)
+     //                   WFAnimalFeed.Invoke(this, args);
+     //               if (WFAnimalGrowth != null)
+     //                   WFAnimalGrowth.Invoke(this, args);
+     //               if (WFAnimalBreed != null)
+     //                   WFAnimalBreed.Invoke(this, args);
+     //               if (WFAnimalManageHerd != null)
+     //                   WFAnimalManageHerd.Invoke(this, args);
+     //               if (WFAnimalTrade != null)
+     //                   WFAnimalTrade.Invoke(this, args);
+     //               if (WFAgeResources != null)
+     //                   WFAgeResources.Invoke(this, args);
                 }
 
                 if (Today.DayOfYear == 1 && StartOfYear != null)
