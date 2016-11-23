@@ -12,6 +12,7 @@ namespace UserInterface.Views
     using System.IO;
     using Gtk;
     using Glade;
+    using System.Reflection;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -158,6 +159,9 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
+            Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
+                                      ".gtkrc"));
+
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
             gxml.Autoconnect(this);
             _mainWidget = window1;

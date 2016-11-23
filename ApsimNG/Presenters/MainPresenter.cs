@@ -214,15 +214,15 @@ namespace UserInterface.Presenters
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
                                           OnExample);
 
-            startPage.AddButton("Open standard toolbox",
+            startPage.AddButton("Standard toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnStandardToolboxClick);
 
-            startPage.AddButton("Open management toolbox",
+            startPage.AddButton("Management toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnManagementToolboxClick);
 
-            startPage.AddButton("Open training toolbox",
+            startPage.AddButton("Training toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnTrainingToolboxClick);
 

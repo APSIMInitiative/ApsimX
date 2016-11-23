@@ -23,19 +23,22 @@ namespace Models.WholeFarm
     [ValidParent(ParentType = typeof(Resources))]
     public class Land: Model
     {
-
-
         /// <summary>
         /// Current state of this resource.
         /// </summary>
         [XmlIgnore]
         public List<LandType> Items;
 
+		/// <summary>
+		/// Unit of area to be used in this simulation
+		/// </summary>
+		[Description("Unit of area to be used in this simulation")]
+		public Common.UnitsOfAreaType UnitOfArea { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<LandType>();

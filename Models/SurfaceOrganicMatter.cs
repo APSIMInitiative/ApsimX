@@ -1592,6 +1592,13 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+
+            Reset();
+        }
+
+        /// <summary>Called when [reset].</summary>
+        public void Reset()
+        {
             if (ResidueTypes == null)
                 ResidueTypes = new ResidueTypesList();
             if (TillageTypes == null)
@@ -1607,13 +1614,6 @@
             PondActive = "no";
             oldSOMState = new OMFractionType();
             ZeroVariables();
-            OnReset();
-        }
-
-        /// <summary>Called when [reset].</summary>
-        [EventSubscribe("Reset")]
-        private void OnReset()
-        {
             initialised = true; 
             SurfomReset();
         }
