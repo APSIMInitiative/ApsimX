@@ -52,7 +52,7 @@ namespace UserInterface.Views
         public event EventHandler DoubleClicked;
 
         public IkonView listview;
-        private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string));
+        private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
@@ -60,10 +60,9 @@ namespace UserInterface.Views
             listview = new IkonView(listmodel);
             //listview = new TreeView(listmodel);
             _mainWidget = listview;
-            listview.TextColumn = 0;
+            listview.MarkupColumn = 0;
             listview.PixbufColumn = 1;
             listview.TooltipColumn = 2;
-            listview.MarkupColumn = 3;
             listview.SelectionMode = SelectionMode.Browse;
             listview.Orientation = Gtk.Orientation.Horizontal;
             listview.RowSpacing = 0;
@@ -108,7 +107,7 @@ namespace UserInterface.Views
                     {
                         text = AddFileNameListItem(val, ref image);
                     }
-                    listmodel.AppendValues(text, image, val, text);
+                    listmodel.AppendValues(text, image, val);
                 }
             }
         }
