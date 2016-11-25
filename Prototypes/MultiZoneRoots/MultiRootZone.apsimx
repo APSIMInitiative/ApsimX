@@ -348,6 +348,7 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>Slurp</Name>
@@ -373,6 +374,7 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -1174,6 +1176,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -1616,6 +1619,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -1807,8 +1811,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>229</ExplorerWidth>
 </Simulations>

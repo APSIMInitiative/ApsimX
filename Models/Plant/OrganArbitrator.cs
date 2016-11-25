@@ -658,14 +658,17 @@ namespace Models.PMF
                 List<string> zoneNames = new List<string>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    foreach (IArbitration o in Organs)
+                    foreach (IOrgan o in Organs)
                     {
-                        double[] organSupply = o.WaterSupply(zone);
-                        if (organSupply != null)
+                        if (o is IWaterNitrogenUptake)
                         {
-                            supplies.Add(organSupply);
-                            zoneNames.Add(zone.Name);
-                            waterSupply += MathUtilities.Sum(organSupply);
+                            double[] organSupply = (o as IWaterNitrogenUptake).CalculateWaterSupply(zone);
+                            if (organSupply != null)
+                            {
+                                supplies.Add(organSupply);
+                                zoneNames.Add(zone.Name);
+                                waterSupply += MathUtilities.Sum(organSupply);
+                            }
                         }
                     }
                 }
@@ -673,7 +676,10 @@ namespace Models.PMF
                 // Calculate total water demand.
                 double waterDemand = 0;
                 foreach (IArbitration o in Organs)
-                    waterDemand += o.WaterDemand;
+                {
+                    if (o is IHasWaterDemand)
+                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+                }
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
@@ -714,7 +720,10 @@ namespace Models.PMF
             // Calculate total plant water demand.
             waterDemand = 0.0;
             foreach (IArbitration o in Organs)
-                waterDemand += o.WaterDemand;
+            {
+                if (o is IHasWaterDemand)
+                    waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+            }
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
@@ -724,10 +733,15 @@ namespace Models.PMF
             // Proportionally allocate supply across organs.
             waterUptake = 0.0;
             foreach (IArbitration o in Organs)
-                if (o.WaterDemand > 0)
+                if (o is IHasWaterDemand)
                 {
-                    o.WaterAllocation = fraction * o.WaterDemand;
-                    waterUptake += o.WaterAllocation;
+                    double demand = (o as IHasWaterDemand).CalculateWaterDemand();
+                    if (demand > 0)
+                    {
+                        double allocation = fraction * demand;
+                        (o as IHasWaterDemand).SetWaterAllocation(allocation);
+                        waterUptake += allocation;
+                    }
                 }
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
@@ -967,6 +981,8 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].DMSupply;
+                if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation+Supply.Retranslocation+Supply.Uptake, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative DM supply.  Check your parameterisation");
                 DM.ReallocationSupply[i] = Supply.Reallocation;
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
@@ -984,6 +1000,12 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].DMDemand;
+                if (MathUtilities.IsLessThan(Demand.Structural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Structural DM demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural DM demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic DM demand.  Check your parameterisation");
                 DM.StructuralDemand[i] = Demand.Structural;
                 DM.MetabolicDemand[i] = Demand.Metabolic;
                 DM.NonStructuralDemand[i] = Demand.NonStructural;
@@ -1083,6 +1105,12 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
+                if (MathUtilities.IsLessThan(Demand.Structural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Structural N demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural N demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic N demand.  Check your parameterisation");
                 N.StructuralDemand[i] = Organs[i].NDemand.Structural;
                 N.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
                 N.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
@@ -1161,21 +1189,24 @@ namespace Models.PMF
             //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
             for (int i = 0; i < Organs.Length; i++)
             {
-                double[] organNO3Supply;
-                double[] organNH4Supply;
-
-                Organs[i].CalcNSupply(MyZone, out organNO3Supply, out organNH4Supply);
-
-                if (organNO3Supply != null)
+                if (Organs[i] is IWaterNitrogenUptake)
                 {
-                    PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                    BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
-                }
+                    double[] organNO3Supply;
+                    double[] organNH4Supply;
 
-                if (organNH4Supply != null)
-                {
-                    PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
-                    BAT.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
+                    (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(MyZone, out organNO3Supply, out organNH4Supply);
+
+                    if (organNO3Supply != null)
+                    {
+                        PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                        BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
+                    }
+
+                    if (organNH4Supply != null)
+                    {
+                        PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
+                        BAT.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
+                    }
                 }
             }
             

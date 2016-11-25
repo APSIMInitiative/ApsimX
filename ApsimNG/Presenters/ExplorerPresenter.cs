@@ -128,6 +128,7 @@ namespace UserInterface.Presenters
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             HideRightHandPanel();
+            this.contextMenu = null;
             this.CommandHistory.Clear();
         }
 
@@ -358,7 +359,7 @@ namespace UserInterface.Presenters
                 {
                     document.LoadXml(xml);
                 }
-                catch(XmlException)
+                catch (XmlException)
                 {
                     MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
                 }

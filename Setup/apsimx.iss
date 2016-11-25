@@ -31,9 +31,6 @@ VersionInfoProductVersion={#AppVerNo}
 
 
 [Code]
-var
-  DataDirPage: TInputDirWizardPage;
-  OptionPage: TInputOptionWizardPage;
 
 type
   //
@@ -59,7 +56,6 @@ type
 function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): boolean;
   var
     KeyName      : string;
-    Check45      : boolean;
     Success      : boolean;
     InstallFlag  : cardinal; 
     ReleaseVer   : cardinal;
@@ -100,29 +96,10 @@ function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): bo
     Result := Success and (InstallFlag = 1) and (ServiceCount >= ServicePack);
   end;
 
-// .net v4.0 requires a fix that is not in the v4.0 installer. On Win7 and Win8
-// this will eventually be installed in the Windows Updates.
-function Isv40FixInstalled(): boolean;
-var
-    KeyName      : string;
-    Success      : boolean;
-    Flag         : string;
-begin
-    KeyName := 'SOFTWARE\Microsoft\Updates\Microsoft .NET Framework 4 Extended\KB2468871';
-    RegQueryStringValue(HKLM, KeyName,'ThisVersionInstalled', Flag);
-    Success := Flag = 'Y';
-
-    KeyName := 'SOFTWARE\Wow6432Node\Microsoft\Updates\Microsoft .NET Framework 4 Extended\KB2468871';
-    RegQueryStringValue(HKLM, KeyName,'ThisVersionInstalled', Flag);
-    Success := Success or (Flag = 'Y');
-
-    result := Success;
-end;
-
 // this is the main function that detects the required version
 function IsRequiredDotNetDetected(): Boolean;  
 begin
-    result := IsDotNetInstalled(DotNet_v4_Full, 0);
+    result := IsDotNetInstalled(DotNet_v45, 0);
 end;
 
 function InitializeSetup(): Boolean;
@@ -133,27 +110,16 @@ begin
     //check for the .net runtime. If it is not found then show a message.
     if not IsRequiredDotNetDetected() then 
     begin
-        answer := MsgBox('The Microsoft .NET Framework 4.0 is required.' + #13#10 + #13#10 +
+        answer := MsgBox('The Microsoft .NET Framework 4.5 is required.' + #13#10 + #13#10 +
         'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
         result := false;
         if (answer = MROK) then
         begin
-          ShellExecAsOriginalUser('open', 'http://www.microsoft.com/en-au/download/details.aspx?id=17718', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+          ShellExecAsOriginalUser('open', 'http://www.microsoft.com/en-au/download/details.aspx?id=42643', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         end;
     end
     else
-      if not Isv40FixInstalled() then
-      begin
-        answer := MsgBox('A fix pack for .NET Framework 4.0 is required.' + #13#10 + #13#10 +
-        'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
-        result := false;
-        if (answer = MROK) then
-        begin
-          ShellExecAsOriginalUser('open', 'http://support.microsoft.com/kb/2468871', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-        end;
-      end
-      else
-        result := true;
+      result := true;
 end; 
 
 [InstallDelete]
@@ -163,7 +129,12 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 [Files]
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\..\..\..\DeploymentSupport\Windows\Assemblies\*.dll; DestDir: {app}\Bin; Flags: ignoreversion;
+Source: ..\..\..\..\DeploymentSupport\Windows\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion;
+Source: ..\..\..\..\DeploymentSupport\Windows\etc\gtk-2.0\gtkrc; DestDir: {app}\etc\gtk-2.0; Flags: ignoreversion;
+Source: ..\..\..\..\DeploymentSupport\Windows\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion;
 Source: ..\Bin\UserInterface.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion; 
 
@@ -179,12 +150,12 @@ Name: commondesktopicon; Description: Create a &desktop icon for all users; Flag
 Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe
-Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
-Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
+Name: {commonprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
+Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
+Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
 
 [Registry]
 
 
 [Run]
-Filename: {app}\Bin\UserInterface.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent
+Filename: {app}\Bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

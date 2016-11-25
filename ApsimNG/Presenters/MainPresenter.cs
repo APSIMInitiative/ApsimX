@@ -214,15 +214,15 @@ namespace UserInterface.Presenters
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
                                           OnExample);
 
-            startPage.AddButton("Open standard toolbox",
+            startPage.AddButton("Standard toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnStandardToolboxClick);
 
-            startPage.AddButton("Open management toolbox",
+            startPage.AddButton("Management toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnManagementToolboxClick);
 
-            startPage.AddButton("Open training toolbox",
+            startPage.AddButton("Training toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnTrainingToolboxClick);
 
@@ -249,7 +249,7 @@ namespace UserInterface.Presenters
                     ProcessStartupScript(File.ReadAllText(argument));
 
                 else if (Path.GetExtension(argument) == ".apsimx")
-                    OpenApsimXFileInTab(argument, onLeftTabControl:true);
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 
@@ -504,7 +504,8 @@ namespace UserInterface.Presenters
                 // ensure that they are saved in another file before running by opening them in memory
                 StreamReader reader = new StreamReader(fileName);
                 bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                this.OpenApsimXFromMemoryInTab(string.Empty, reader.ReadToEnd(), onLeftTabControl);
+                string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
+                this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
                 reader.Close();
             }
         }

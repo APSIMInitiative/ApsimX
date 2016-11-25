@@ -292,7 +292,7 @@
   </ResidueType>
   <ResidueType>
     <derived_from>base_type</derived_from>
-    <fom_type>grandis</fom_type>
+    <fom_type>Eucalyptus</fom_type>
     <specific_area description="specific area of residue (ha/kg">0.0002  </specific_area>
   </ResidueType>
   <ResidueType>
@@ -459,6 +459,11 @@
   <ResidueType>
     <derived_from>base_type</derived_from>
     <fom_type>wheat</fom_type>
+    <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
+  </ResidueType>
+  <ResidueType>
+    <derived_from>base_type</derived_from>
+    <fom_type>Grapevine</fom_type>
     <specific_area description="specific area of residue (ha/kg">0.0005  </specific_area>
   </ResidueType>
   <ResidueType>

@@ -9,8 +9,6 @@ namespace Models.PMF.Functions
     /// <summary>
     /// Starting with the first child function, recursively divide by the values of the subsequent child functions
     /// </summary>
-    /// \pre All children have to contain a public function "Value"
-    /// \retval Starting with the first child function, recursively divide by the values of the subsequent child functions. Return 0 if no child. The value of first child if only one child.
     [Serializable]
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
     public class DivideFunction : Model, IFunction

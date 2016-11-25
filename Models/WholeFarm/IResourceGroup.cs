@@ -12,15 +12,18 @@ namespace Models.WholeFarm
     public interface IResourceGroup
     {
 
-        //event EventHandler ResourceChanged;
 
+		// This is not implemented AL
+
+
+
+        //event EventHandler ResourceChanged;
 
         /// <summary>
         /// Initialise the variables that store the current state of the resource.
         /// </summary>
         /// <param name="Name"></param>
         IResourceType GetByName(string Name);
-
 
         /// <summary>
         /// Add this Amount to the existing Amount.
@@ -30,7 +33,7 @@ namespace Models.WholeFarm
         void Add(string[] Names, double[] AddAmounts);
 
         /// <summary>
-        /// Remove this Amount to the existing Amount
+        /// Remove this Amount from the existing Amount
         /// </summary>
         /// <param name="Names"></param>
         /// <param name="RemoveAmounts">nb. This is a positive value not a negative value.</param>

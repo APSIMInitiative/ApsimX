@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -11,7 +10,7 @@ namespace Models.PMF.Organs
     /// A harvest index reproductive organ
     /// </summary>
     [Serializable]
-    public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class HIReproductiveOrgan : BaseOrgan
     {
         /// <summary>Gets or sets the above ground.</summary>
         [Link]
@@ -26,6 +25,10 @@ namespace Models.PMF.Organs
         /// <summary>The n conc</summary>
         [Link]
         IFunction NConc = null;
+
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
@@ -53,6 +56,22 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
                 Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
         }
 
         /// <summary>
@@ -124,14 +143,12 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
         {
-            Clear();
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
         }
-
     }
 }

@@ -161,7 +161,6 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -202,6 +201,7 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -344,6 +344,7 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -405,11 +406,13 @@
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
         <Name>SCRUM</Name>
         <ResourceName>SCRUM</ResourceName>
         <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -2140,8 +2143,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>BiomassRemoveCutTest</Name>
@@ -2298,7 +2299,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -2339,6 +2339,7 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2481,6 +2482,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -2542,11 +2544,13 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
         <Name>SCRUM</Name>
         <ResourceName>SCRUM</ResourceName>
         <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -4277,8 +4281,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>BiomassRemovePrunTest</Name>
@@ -4435,7 +4437,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -4476,6 +4477,7 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4618,6 +4620,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -4679,11 +4682,13 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
         <Name>SCRUM</Name>
         <ResourceName>SCRUM</ResourceName>
         <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -6414,8 +6419,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>BiomassRemoveGrazeTest</Name>
@@ -6572,7 +6575,6 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -6613,6 +6615,7 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -6755,6 +6758,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -6816,11 +6820,13 @@ namespace Models
         <emissivity>0.96</emissivity>
         <gsmax>0.01</gsmax>
         <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
         <Name>SCRUM</Name>
         <ResourceName>SCRUM</ResourceName>
         <CropType>SCRUM</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -8551,8 +8557,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Graph>
     <Name>Stover</Name>

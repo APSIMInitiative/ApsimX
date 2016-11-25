@@ -142,14 +142,14 @@ namespace Models.Core
                     }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    Model foundModel = this.Find(modelName, relativeToModel);
+                    Model foundModel = Apsim.Find(relativeToModel, modelName) as Model;
                     if (foundModel == null)
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = this.Find(modelTypes[0], relativeToModel);
+                            foundModel = Apsim.Find(relativeToModel, modelTypes[0]) as Model;
                     }
                     if (foundModel == null)
                         return null;
@@ -324,153 +324,6 @@ namespace Models.Core
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Return a model with the specified name is in scope. Returns null if none found.
-        /// </summary>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <param name="relativeTo">The model calling this method</param>
-        /// <returns>The found model or null if not found</returns>
-        public Model Find(string namePath, Model relativeTo)
-        {
-            // Look in cache first.
-            string cacheKey = "INSCOPENAME|" + namePath;
-            object value = GetFromCache(cacheKey, relativeTo);
-            if (value != null)
-            {
-                return (value as IVariable).Value as Model;
-            }
-
-            // Not in cache - get all in scope and return the one matching namePath.
-            foreach (Model model in this.FindAll(relativeTo))
-            {
-                if (model.Name.Equals(namePath, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    AddToCache(cacheKey, relativeTo, new VariableObject(model));
-                    return model;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Return a model with the specified type is in scope. Returns null if none found.
-        /// </summary>
-        /// <param name="type">The type of the object to return</param>
-        /// <param name="relativeTo">The model calling this method</param>
-        /// <returns>The found model or null if not found</returns>
-        public Model Find(Type type, Model relativeTo)
-        {
-            // Look in cache first.
-            string cacheKey = "INSCOPETYPE|" + type.Name;
-            object value = GetFromCache(cacheKey, relativeTo);
-            if (value != null)
-            {
-                return (value as IVariable).Value as Model;
-            }
-
-            // Not in cache - get all in scope and return the one matching namePath.
-            foreach (Model model in this.FindAll(relativeTo))
-            {
-                if (type.IsAssignableFrom(model.GetType()))
-                {
-                    AddToCache(cacheKey, relativeTo, new VariableObject(model));
-                    return model;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Return all models within scope of the specified relative model.
-        /// </summary>
-        /// <param name="relativeTo">The model calling this method</param>
-        /// <returns>The found models or an empty array if not found.</returns>
-        public Model[] FindAll(Model relativeTo)
-        {
-            // Look in cache first.
-            string cacheKey = "ALLINSCOPE";
-            object value = GetFromCache(cacheKey, relativeTo);
-            if (value != null)
-            {
-                return value as Model[];
-            }
-
-            // Get all children first.
-            List<Model> modelsInScope = new List<Model>();
-            foreach (Model child in Apsim.ChildrenRecursively(relativeTo))
-                modelsInScope.Add(child);
-
-            // Add relativeTo.
-            //modelsInScope.Add(relativeTo);
-
-            // Get siblings and parents siblings and parents, parents siblings etc
-            // until we reach a Simulations or Simulation model.
-            if (!(relativeTo is Simulations))
-            {
-                Model relativeToParent = relativeTo;
-                do
-                {
-                    foreach (IModel model in Apsim.Siblings(relativeToParent))
-                        modelsInScope.Add(model as Model);
-                    relativeToParent = relativeToParent.Parent as Model;
-
-                    // Add in the top level model that we stopped on.
-                    if (relativeToParent != null)
-                    {
-                        modelsInScope.Add(relativeToParent);
-                    }
-                }
-                while (relativeToParent != null && !(relativeToParent is Simulation) && !(relativeToParent is Simulations));
-            }
-
-            // Add the in scope models to the cache and return them
-            AddToCache(cacheKey, relativeTo, modelsInScope.ToArray());
-            return modelsInScope.ToArray();
-        }
-
-        /// <summary>
-        /// Return all models of the specified type within scope of the specified relative model.
-        /// </summary>
-        /// <param name="type">The type of the models to return</param>
-        /// <param name="relativeTo">The model calling this method</param>
-        /// <returns>The found models or an empty array if not found.</returns>
-        public Model[] FindAll(Type type, Model relativeTo)
-        {
-            // Look in cache first.
-            string cacheKey = "ALLINSCOPEOFTYPE|" + type.Name;
-            object value = GetFromCache(cacheKey, relativeTo);
-            if (value != null)
-            {
-                return value as Model[];
-            }
-
-            List<Model> modelsToReturn = new List<Model>();
-            foreach (Model model in this.FindAll(relativeTo))
-            {
-                if (type.IsAssignableFrom(model.GetType()))
-                {
-                    modelsToReturn.Add(model);
-                }
-                else
-                {
-                    if (model is Manager)
-                    {
-                        Manager manager = model as Manager;
-                        if (manager.Script != null && type.IsAssignableFrom(manager.Script.GetType()))
-                        {
-                            if (manager.Script != relativeTo)
-                                modelsToReturn.Add(manager.Script);
-                        }
-                    }
-                }
-            }
-
-            AddToCache(cacheKey, relativeTo, modelsToReturn.ToArray());
-            return modelsToReturn.ToArray();
         }
     }
 }

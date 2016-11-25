@@ -13,6 +13,7 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
+        #region Class descriptors
         private double FloatingPointTolerance = 0.0000000001;
         /// <summary>The layer that this pore compartment is located in</summary>
         [XmlIgnore]
@@ -20,22 +21,48 @@ namespace Models.Soils
         /// <summary>The size compartment that this pore represents</summary>
         [XmlIgnore]
         public double Compartment { get; set; }/// <summary>The thickness of the layer that the pore is within</summary>
+        /// <summary>
+        /// Allows Sorption processes to be switched off from the UI
+        /// </summary>
+        [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
+        public bool IncludeSorption { get; set; }
+        #endregion
+
+        #region Pore Geometry
+        /// <summary>
+        /// The depth of the soil layer this pore compartment sits within
+        /// </summary>
         [XmlIgnore]
         [Units("mm")]
         public double Thickness { get; set; }
         /// <summary>The diameter of the upper boundry of the pore</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("um")]
         public double DiameterUpper { get; set; }
         /// <summary>The diameter of the lower boundry of the pore</summary>
         [XmlIgnore]
-        [Units("nm")]
+        [Units("um")]
         public double DiameterLower { get; set; }
-        /// <summary>The diameter of the lower boundry of the pore</summary>
+        /// <summary>The mean horizontal area of the pores in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("um2")]
+        public double Area { get { return Math.PI * Math.Pow(Radius,2); } }
+        /// <summary>The mean horizontal radius of pores in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("um")]
+        public double Radius { get { return (DiameterLower + DiameterUpper) / 4; } }
+        /// <summary>The number of pore 'cylinders' in this pore compartment</summary>
+        [XmlIgnore]
+        [Units("/m2")]
+        public double Number { get { return Volume / (Area / 1000000000000); } }
+        #endregion
+
+        #region Porosity and Water
+        /// <summary>The water potential when this pore is empty but all smaller pores are full</summary>
         [XmlIgnore]
         [Units("cm")]
         public double PsiLower { get { return -3000 / DiameterLower; } }
-        /// <summary>The mean pore diameter</summary>
+        /// <summary>The water potential when this pore is full but all larger pores are empty</summary>
         [XmlIgnore]
         [Units("cm")]
         public double PsiUpper { get { return -3000 / DiameterUpper; } }
@@ -88,36 +115,69 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("ml/ml")]
         public double AirDepth { get { return AirFilledVolume * Thickness; } }
-        /// <summary>The conductivity of water moving into a pore, The net result of gravity driving it in, capilary forces drawing it in and repellency stopping it</summary>
+        #endregion
+
+        #region Pore hydraulics
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// divide values from Arya 1999 etal by 10000 to convert from cm to um
+        /// </summary>
+        [Description("Pore flow Rate coefficient")]
+        public double CFlow { get { return 0.01; } }
+        /// <summary>
+        /// Empirical parameter for estimating hydraulic conductivity of pore compartments
+        /// </summary>
+        [Description("Pore flow Shape coefficient")]
+        public double XFlow { get { return 1.6 + 2 * Math.Exp(Radius*-0.008); } }
+        /// <summary>
+        /// The volumetirc flow rate of a single pore
+        /// Radius is divided by 10000 to convert from micron to cm
+        /// </summary>
+        [XmlIgnore]
+        [Units("cm3/s")]
+        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius/10000,XFlow); } }
+        /// <summary>The volume flow rate of water through this pore compartment</summary>
+        [XmlIgnore]
+        [Units("cm3/s/m2")]
+        public double VolumetricFlowRate { get { return PoreFlowRate * Number ; } }
+        /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivity { get { return HydraulicConductivityUpper - HydraulicConductivityLower; } }
-        /// <summary>The conductivity from a conductivity curve when this pore is full but larger pores are empty</summary>
+        public double Capillarity { get { return VolumetricFlowRate/1000*3600; } }
+        /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double HydraulicConductivityUpper { get; set; }
-        /// <summary>The conductivity from a conductivity curve when this pore is empty but smaller pores are full</summary>
+        public double Diffusivity { get { return Capillarity * RelativeWaterContent * (1- TensionFactor); } }
+        /// <summary>The potential diffusion into this pore</summary>
         [XmlIgnore]
-        [Units("mm/h")]
-        public double HydraulicConductivityLower { get; set; }
-        /// <summary>The maximum possible conductivity through a pore of given size</summary>
+        [Units("mm")]
+        public double DiffusionCapacity { get { return AirDepth * (1 - TensionFactor); } }
+        /// <summary>
+        /// The rate of water movement into a pore space due to the chemical attraction from the matris
+        /// </summary>
         [XmlIgnore]
-        [Units("mm/h")]
-        public double HydraulicConductivityIn
+        [Units("mm s^-1/2")]
+        public double Sorptivity
         {
             get
             {
-                return HydraulicConductivity + Adsorption;
+                return Math.Sqrt(((7.4/Radius*1000) * Capillarity * Math.Max(0,Volume - WaterFilledVolume))/0.5);
             }
         }
-        /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
+        /// <summary>
+        /// Factor describing the effects of soil water content on hydrophobosity
+        /// equals 1
+        /// </summary>
         [XmlIgnore]
-        [Units("mm/h")]
-        public double HydraulicConductivityOut
+        [Units("0-1")]
+        public double RepelancyFactor
         {
             get
             {
-                return HydraulicConductivity * TensionFactor;
+                double RepFac = 1;
+                if (RelativeWaterContent < 0.3)
+                    RepFac = 0.3;
+                return RepFac;
             }
         }
         /// <summary>
@@ -125,20 +185,32 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Adsorption
+        public double Sorption { get { return 0.5 * Sorptivity * Math.Pow(1, -0.5) * RepelancyFactor; } }
+        /// <summary>The maximum possible conductivity through a pore of given size</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double HydraulicConductivityIn
         {
             get
             {
-                double AbsFac = 1;
-                if (RelativeWaterContent < 0.3)
-                    AbsFac = 0.3;
-                return AbsFac;
+                if (Double.IsNaN(Sorption))
+                    throw new Exception("Sorption is NaN");
+                if (IncludeSorption)
+                    return Capillarity + Sorption;
+                else
+                    return Capillarity;
             }
         }
+        /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double GravitationalPotential { get; set; }
         /// <summary>
         /// Factor describing the effects of water surface tension holding water in pores.  Is zero where surface tension exceeds the forces of gravity and neglegable where suction is low in larger pores
         /// equals 1
         /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
         public double TensionFactor
         {
             get
@@ -148,10 +220,16 @@ namespace Models.Soils
                     factor = 1;
                 return factor;
             }
-        }
-        /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
+        }/// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double GravitationalPotential { get; set; }
+        public double HydraulicConductivityOut
+        {
+            get
+            {
+                return Capillarity * TensionFactor;
+            }
+        }
+        #endregion
     }
 }
