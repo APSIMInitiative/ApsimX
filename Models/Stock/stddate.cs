@@ -14,9 +14,13 @@ namespace StdUnits
     {
         //TODO: may need to change this if overloaded operators are required
         /// <summary>
-        /// Day, Month
+        /// Day
         /// </summary>
-        public int D, M;
+        public int D;
+        /// <summary>
+        /// Month
+        /// </summary>
+        public int M;
         /// <summary>
         /// Year
         /// </summary>
