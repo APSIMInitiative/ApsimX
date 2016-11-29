@@ -25,7 +25,15 @@ namespace Models.PMF.OldPlant
 
         /// <summary>Gets the mean t.</summary>
         /// <value>The mean t.</value>
-        public double MeanT { get { return (MetData.MaxT + MetData.MinT) / 2.0; } }
+        public double MeanT
+        {
+            get
+            {
+                if (MetData == null)
+                    return 0;
+                return  (MetData.MaxT + MetData.MinT) / 2.0;
+            }
+        }
 
         /// <summary>Gets the VPD.</summary>
         /// <value>The VPD.</value>

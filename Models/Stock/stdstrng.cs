@@ -171,7 +171,7 @@ namespace StdUnits
 
             if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  // Number is in exponential format
             {
-                bool dummy = MatchToken(ref parseSt, "+");
+                MatchToken(ref parseSt, "+");
                 int exponent = 0;
                 if (TokenInt(ref parseSt, ref exponent))
                     token = token + exponent.ToString();  // Add the exponent to token
@@ -215,7 +215,7 @@ namespace StdUnits
 
             if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  // Number is in exponential format
             {
-                bool dummy = MatchToken(ref parseSt, "+");
+                MatchToken(ref parseSt, "+");
                 int exponent = 0;
                 if (TokenInt(ref parseSt, ref exponent))
                     token = token + exponent.ToString();  // Add the exponent to token
