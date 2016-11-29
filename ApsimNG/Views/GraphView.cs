@@ -89,6 +89,7 @@ namespace UserInterface.Views
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+            BackColor = OxyPlot.OxyColors.White;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -583,7 +584,7 @@ namespace UserInterface.Views
             {
                 captionLabel.Text = text;
                 if (italics)
-                    text = "<i>" + text + "<i/>";
+                    text = "<i>" + text + "</i>";
                 captionLabel.Markup = text;
             }
             else

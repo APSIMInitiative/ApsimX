@@ -50,7 +50,8 @@ namespace UserInterface.Presenters
 
                 Commands.RunCommand run = new Commands.RunCommand(jobs, 
                                                                   simulation.Name,
-                                                                  ExplorerPresenter);
+                                                                  ExplorerPresenter,
+                                                                  false);
                 run.Do(null);
             }
             catch (Exception err)
