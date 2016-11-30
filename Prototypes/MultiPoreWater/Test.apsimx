@@ -4686,17 +4686,6 @@ namespace Models
           </Water>
           <MultiPoreWater>
             <Name>MultiPoreWater</Name>
-            <XYPairs>
-              <Name>AdsorptionResponse</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
             <Salb>0.15</Salb>
             <SubProfileConductance>100</SubProfileConductance>
             <WaterTableDepth>3</WaterTableDepth>
@@ -4756,34 +4745,6 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
           </SoilNitrogen>
-          <Sample>
-            <Name>InitialWater</Name>
-            <Thickness>
-              <double>20</double>
-              <double>180</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-            </Thickness>
-            <SW>
-              <double>0.253</double>
-              <double>0.253</double>
-              <double>0.175</double>
-              <double>0.15</double>
-              <double>0.1</double>
-              <double>0.13</double>
-              <double>0.25</double>
-              <double>0.29</double>
-            </SW>
-            <NO3Units>ppm</NO3Units>
-            <NH4Units>ppm</NH4Units>
-            <SWUnits>Volumetric</SWUnits>
-            <OCUnits>Total</OCUnits>
-            <PHUnits>Water</PHUnits>
-          </Sample>
           <HydraulicProperties>
             <Name>HydraulicProperties</Name>
             <psidul>-100</psidul>
@@ -4889,9 +4850,10 @@ namespace Models
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
           <Sample>
-            <Name>InitialN</Name>
+            <Name>InitialConditions</Name>
             <Thickness>
-              <double>200</double>
+              <double>10</double>
+              <double>190</double>
               <double>200</double>
               <double>200</double>
               <double>200</double>
@@ -4900,24 +4862,27 @@ namespace Models
               <double>200</double>
             </Thickness>
             <NO3>
-              <double>115.55558228565495</double>
-              <double>77.037054857103129</double>
-              <double>57.777791142827347</double>
-              <double>33.777785591191524</double>
-              <double>33.777785591191524</double>
+              <double>5.6</double>
+              <double>110</double>
+              <double>77</double>
+              <double>57.8</double>
+              <double>33.8</double>
+              <double>33.8</double>
               <double>0</double>
               <double>0</double>
             </NO3>
             <NH4>
               <double>0.26</double>
               <double>0.26</double>
-              <double>0.26</double>
-              <double>0.304</double>
-              <double>0.304</double>
-              <double>0.304</double>
-              <double>0.33</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
             </NH4>
             <SW>
+              <double>0.253</double>
               <double>0.253</double>
               <double>0.175</double>
               <double>0.15</double>
@@ -5033,9 +4998,10 @@ namespace Models
             <string>[Soil].SoilWater.DUL</string>
             <string>[Soil].SoilWater.LL15mm</string>
             <string>[Soil].SoilWater.DULmm</string>
-            <string>sum([Soil].SoilWater.SWmm[1:4] as ProfileWater</string>
-            <string>sum([Soil].SoilWater.SWmm[1:2] as Water1</string>
+            <string>sum([Soil].SoilWater.SWmm[1:4]) as ProfileWater</string>
+            <string>sum([Soil].SoilWater.SWmm[1:2]) as Water1</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalProfileWater</string>
+            <string>sum([Soil].SoilWater.SWmm[1:2])/200 as WC1</string>
             <string>[ExtraVariables].Script.SWDep60</string>
             <string>[ExtraVariables].Script.FomN</string>
             <string>[ExtraVariables].Script.HumN</string>
@@ -5228,6 +5194,19 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
+        <Report>
+          <Name>Params</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Soil].SoilWater.HydraulicConductivityIn</string>
+            <string>[Soil].SoilWater.PsiUpper</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].StartOfSimulation</string>
+          </EventNames>
+        </Report>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -5674,7 +5653,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+          <YFieldName>WC1</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5800,7 +5779,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>SoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5884,7 +5863,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>SoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5948,6 +5927,27 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Soil.Water.DUL(4)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Obs</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>SoilWater</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6252,7 +6252,70 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>Drainage</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.Drainage</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Irrigation.IrrigationApplied</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Soil water (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>261</ExplorerWidth>
+  <ExplorerWidth>304</ExplorerWidth>
 </Simulations>
