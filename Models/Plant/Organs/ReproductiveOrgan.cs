@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Interfaces;
 using System.Xml;
 using System.Xml.Serialization;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -14,7 +13,7 @@ namespace Models.PMF.Organs
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
-    public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
+    public class ReproductiveOrgan : BaseOrgan
     {
         #region Parameter Input Classes
         /// <summary>The phenology</summary>
@@ -47,30 +46,30 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+
         /// <summary>The dm demand function</summary>
         [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
 
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
+
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(IsOptional = true)]
         public IFunction DMConversionEfficiencyFunction = null;
-
-  
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
 
-
-        /// <summary>Growth Respiration</summary>
-        public double GrowthRespiration { get; set; }
-
         #endregion
 
         #region Class Fields
         /// <summary>The ripe stage</summary>
-        public string RipeStage = "";
+        [Description("Stage at which this organ becomes ripe")]
+        public string RipeStage { get; set; }
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
         /// <summary>The potential dm allocation</summary>
@@ -90,7 +89,6 @@ namespace Models.PMF.Organs
         public double MaximumSize { get; set; }
 
         /// <summary>Gets the live f wt.</summary>
-        /// <value>The live f wt.</value>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -104,7 +102,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the size.</summary>
-        /// <value>The size.</value>
         [Units("g")]
         public double Size
         {
@@ -118,7 +115,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the size of the f.</summary>
-        /// <value>The size of the f.</value>
         [Units("g")]
         private double FSize
         {
@@ -137,7 +133,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the ready for harvest.</summary>
-        /// <value>The ready for harvest.</value>
         public int ReadyForHarvest
         {
             get
@@ -205,15 +200,6 @@ namespace Models.PMF.Organs
 
         #region Event handlers
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
-
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -229,6 +215,22 @@ namespace Models.PMF.Organs
                 Number = 0;
                 _ReadyForHarvest = false;
             }
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
         }
         #endregion
 
@@ -256,7 +258,6 @@ namespace Models.PMF.Organs
 
         }
         /// <summary>Gets or sets the dm demand.</summary>
-        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -265,8 +266,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
-        /// <value>The dm potential allocation.</value>
-        /// <exception cref="System.Exception">Invalid allocation of potential DM in + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -280,18 +279,15 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the dm allocation.</summary>
-        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set
-        
-
             {
-                GrowthRespiration = 0;
-                GrowthRespiration += value.Structural *(1- DMConversionEfficiency);
-                Live.StructuralWt += value.Structural * DMConversionEfficiency; } }
+                GrowthRespiration = value.Structural *(1- DMConversionEfficiency);
+                Live.StructuralWt += value.Structural * DMConversionEfficiency;
+            }
+        }
         /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -302,7 +298,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Sets the n allocation.</summary>
-        /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -311,7 +306,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
-        /// <value>The maximum nconc.</value>
         public double MaxNconc
         {
             get
@@ -320,7 +314,6 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        /// <value>The minimum nconc.</value>
         public override double MinNconc
         {
             get
@@ -329,5 +322,13 @@ namespace Models.PMF.Organs
             }
         }
         #endregion
+        
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        {
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
     }
 }

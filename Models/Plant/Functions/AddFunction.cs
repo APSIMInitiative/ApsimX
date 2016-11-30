@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 
 namespace Models.PMF.Functions
@@ -17,7 +15,6 @@ namespace Models.PMF.Functions
         private List<IModel> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         public double Value
         {
             get
@@ -28,9 +25,7 @@ namespace Models.PMF.Functions
                 double returnValue = 0.0;
 
                 foreach (IFunction F in ChildFunctions)
-                {
                     returnValue = returnValue + F.Value;
-                }
 
                 return returnValue;
             }

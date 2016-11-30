@@ -6,11 +6,9 @@
 namespace UserInterface.Classes
 {
     using System;
-    using System.Collections.Generic;
-    //using System.Windows.Forms;
     using Interfaces;
+    using Gtk;
     using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents a grid cell.
@@ -18,7 +16,7 @@ namespace UserInterface.Classes
     public class GridCell : IGridCell
     {
         /// <summary>
-        /// The parent grid that this column belongs to
+        /// The parent grid that this column belongs to.
         /// </summary>
         private GridView gridView;
 
@@ -76,10 +74,10 @@ namespace UserInterface.Classes
                     return EditorTypeEnum.Button;
                 }
                 */
-                else
-                {
+                else if (gridView.comboLookup.ContainsKey(new Tuple<int, int>(this.RowIndex, this.ColumnIndex)))
                     return EditorTypeEnum.DropDown;
-                }
+                else
+                    return EditorTypeEnum.TextBox;
             }
 
             set
@@ -120,26 +118,12 @@ namespace UserInterface.Classes
 
                     case EditorTypeEnum.DropDown:
                         {
-                            /* TBI
-                            DataGridViewComboBoxCell combo = new DataGridViewComboBoxCell();
-                            combo.FlatStyle = FlatStyle.Flat;
-                            combo.ToolTipText = this.ToolTip;
-
-                            // Normally you set a cell editor like this:
-                            //    Grid[Col, Row] = Combo;
-                            // But this doesn't work on MONO OSX. The two lines
-                            // below seem to work ok though.
-                            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                                Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                            Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
+                            if (!gridView.comboLookup.ContainsKey(key))
                             {
-                                this.gridView.Grid[this.ColumnIndex, this.RowIndex] = combo;
+                                ListStore store = new ListStore(typeof(string));
+                                gridView.comboLookup.Add(key, store);
                             }
-                            else
-                            {
-                                this.gridView.Grid.Rows[this.RowIndex].Cells.RemoveAt(this.ColumnIndex);
-                                this.gridView.Grid.Rows[this.RowIndex].Cells.Insert(this.ColumnIndex, combo);
-                            }
-                            */
                             break;
                         }
                 }
@@ -154,42 +138,34 @@ namespace UserInterface.Classes
         public string[] DropDownStrings
         {
             get
-            {   /* TBI
-                DataGridViewComboBoxCell combo = this.gridView.Grid[this.ColumnIndex, this.RowIndex] as DataGridViewComboBoxCell;
-                if (combo != null)
+            {
+                ListStore store;
+                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
-                    List<string> strings = new List<string>();
-                    foreach (DataGridViewComboBoxCell comboItem in combo.Items)
-                    {
-                        strings.Add(comboItem.ToString());
-                    }
+                    int nNames = store.IterNChildren();
+                    string[] result = new string[nNames];
+                    TreeIter iter;
+                    int i = 0;
+                    if (store.GetIterFirst(out iter))
+                        do
+                            result[i++] = (string)store.GetValue(iter, 0);
+                        while (store.IterNext(ref iter) && i < nNames);
+                    return result;
                 }
-                */
                 return null;
             }
 
             set
             {
-                /* TBI
-                DataGridViewComboBoxCell combo = this.gridView.Grid[this.ColumnIndex, this.RowIndex] as DataGridViewComboBoxCell;
-
-                if (combo != null)
+                ListStore store;
+                if (gridView.comboLookup.TryGetValue(new Tuple<int, int>(this.RowIndex, this.ColumnIndex), out store))
                 {
-                    combo.Items.Clear();
+                    store.Clear();
                     foreach (string st in value)
                     {
-                        if (st != null)
-                        {
-                            combo.Items.Add(st);
-                        }
-
-                        if (this.Value != null)
-                        {
-                            combo.Value = this.Value.ToString();
-                        }
+                        store.AppendValues(st);
                     }
                 }
-                */
             }
         }
 

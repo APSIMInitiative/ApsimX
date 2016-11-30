@@ -89,7 +89,13 @@ namespace Models.Core
             }
             else
             {
-                ModelWrapper child = new ModelWrapper(model) { Name = model.GetType().Name };
+                string name;
+                if (model is IModel)
+                    name = (model as IModel).Name;
+                else
+                    name = model.GetType().Name;
+
+                ModelWrapper child = new ModelWrapper(model,  name );
                 child.depth = depth + 1;
                 Children.Add(child);
                 return child;
@@ -165,7 +171,25 @@ namespace Models.Core
             return relativeTo;
         }
 
+        /// <summary>Set the Parent field of all iModels</summary>
+        public void ParentAllModels()
+        {
+            ParentAllModelsInternal(null);            
+        }
 
+        /// <summary>Internal routine to parent all models. Uses recursion.</summary>
+        /// <param name="parent">The parent of all child models.</param>
+        private void ParentAllModelsInternal(IModel parent)
+        {
+            if (Model != null && Model is IModel)
+                (Model as IModel).Parent = parent;
+            foreach (ModelWrapper child in Children)
+            {
+                if (Model is IModel && child.Model is IModel)
+                    (Model as IModel).Children.Add(child.Model as Model);
+                child.ParentAllModelsInternal(Model as IModel);
+            }
 
+        }
     }
 }

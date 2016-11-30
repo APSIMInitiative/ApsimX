@@ -1303,6 +1303,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="TEWaterDemandFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="InternodeDemandFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
@@ -1420,11 +1425,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
-  <Type name="SimpleRoot">
+  <Type name="PerennialLeaf">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
-  </Type>
+  </Type>  
   <Type name="Biomass">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

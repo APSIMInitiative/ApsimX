@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using System.Xml.Serialization;
-using System.IO;
-using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -31,10 +26,6 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            //if (headingLevel > 0)
-            //    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);

@@ -110,6 +110,7 @@ namespace Models.PMF.OldPlant
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
+    [ScopedModel]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
     {
         /// <summary>The phenology</summary>
@@ -736,24 +737,25 @@ namespace Models.PMF.OldPlant
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="Data">The data.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType Data)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (SWStress != null && NStress != null)
             {
                 PhenologyEventToday = true;
                 AverageStressMessage += String.Format("{0,36}{1,13:F3}{2,13:F3}{3,13:F3}{4,13:F3}\r\n",
-                                                      Data.OldPhaseName,
+                                                      phaseChange.OldPhaseName,
                                                       1 - SWStress.PhotoAverage, 1 - SWStress.ExpansionAverage,
                                                       1 - NStress.PhotoAverage, 1 - NStress.GrainAverage);
                 SWStress.ResetAverage();
                 NStress.ResetAverage();
             }
 
-            if (Data.NewPhaseName.Contains("FloweringTo"))
+            if (phaseChange.NewPhaseName.Contains("FloweringTo"))
                 FloweringDate = Clock.Today;
-            else if (Data.NewPhaseName.Contains("MaturityTo"))
+            else if (phaseChange.NewPhaseName.Contains("MaturityTo"))
                 MaturityDate = Clock.Today;
         }
 

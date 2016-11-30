@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 
 namespace Models.PMF.Functions
@@ -24,19 +21,14 @@ namespace Models.PMF.Functions
         [Link] Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         public double Value
         {
             get
             {
-                double LeafSizePerNode = 0; // Current Size of a leaf at a given node position (mm2/leaf)
-
                 double LeafNo = Structure.LeafTipsAppeared;
 
-                LeafSizePerNode = AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
+                return AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
                                   + Skewness.Value * (Math.Pow(LeafNo - LargestLeafPosition.Value, 3.0)));
-
-                return LeafSizePerNode;
 
             }
         }

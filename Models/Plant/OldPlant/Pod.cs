@@ -56,11 +56,6 @@ namespace Models.PMF.OldPlant
         [Link]
         Plant15 Plant = null;
 
-        /// <summary>The total live</summary>
-        [Link]
-        CompositeBiomass TotalLive = null;
-
-
         /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
@@ -338,7 +333,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Pod.Growth.StructuralWt=%f", Growth.StructuralWt);
 
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
@@ -576,11 +571,12 @@ namespace Models.PMF.OldPlant
             Live.Clear();
         }
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhenologyChange">The phenology change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhenologyChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhenologyChange.NewPhaseName == "EmergenceToEndOfJuvenile")
+            if (phaseChange.NewPhaseName == "EmergenceToEndOfJuvenile")
             {
                 Live.StructuralWt = InitialWt * Population.Density;
                 Live.StructuralN = InitialNConcentration * Live.StructuralWt;

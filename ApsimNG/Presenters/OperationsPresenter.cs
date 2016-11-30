@@ -57,7 +57,7 @@ namespace UserInterface.Presenters
             string st = "";
             foreach (Operation operation in Operations.Schedule)
             {
-                //st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
                 string dateStr = DateUtilities.validateDateString(operation.Date);
                 st += dateStr + " " + operation.Action + Environment.NewLine;
             }

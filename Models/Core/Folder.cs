@@ -11,6 +11,7 @@ namespace Models.Core
     /// </summary>
     [ViewName("UserInterface.Views.FolderView")]
     [PresenterName("UserInterface.Presenters.FolderPresenter")]
+    [ScopedModel]
     [Serializable]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]

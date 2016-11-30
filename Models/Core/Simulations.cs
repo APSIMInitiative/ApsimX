@@ -17,6 +17,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
+    [ScopedModel]
     public class Simulations : Model
     {
         /// <summary>The _ file name</summary>
@@ -26,9 +27,9 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
-    //    /// <summary>Gets or sets the version.</summary>
-    //    [XmlAttribute("Version")]
-    //    public int Version { get; set; }
+        /// <summary>Gets or sets the version.</summary>
+        [XmlAttribute("Version")]
+        public int Version { get; set; }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
@@ -59,7 +60,7 @@ namespace Models.Core
         public static Simulations Read(string FileName)
         {
             // Run the converter.
-            Converter.ConvertToLatestVersion(FileName);
+            APSIMFileConverter.ConvertToLatestVersion(FileName);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
@@ -71,9 +72,10 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
+                Events events = new Core.Events();
+                events.AddModelEvents(simulations);
                 object[] args = new object[] { true };
-                foreach (Model model in Apsim.ChildrenRecursively(simulations))
-                    Apsim.CallEventHandler(model, "Deserialised", args);
+                events.CallEventHandler(simulations, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -85,7 +87,7 @@ namespace Models.Core
                 {
                     try
                     {
-                        Apsim.CallEventHandler(child, "Loaded", null);
+                        events.CallEventHandler(child, "Loaded", null);
                     }
                     catch (ApsimXException err)
                     {
@@ -109,7 +111,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            Converter.ConvertToLatestVersion(node);
+            APSIMFileConverter.ConvertToLatestVersion(node);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -121,8 +123,9 @@ namespace Models.Core
 
                 // Call the OnSerialised method in each model.
                 object[] args = new object[] { true };
-                foreach (Model model in Apsim.ChildrenRecursively(simulations))
-                    Apsim.CallEventHandler(model, "Deserialised", args);
+                Events events = new Events();
+                events.AddModelEvents(simulations);
+                events.CallEventHandler(simulations, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -169,10 +172,9 @@ namespace Models.Core
         /// <param name="model">The model.</param>
         public static void CallOnLoaded(IModel model)
         {
-            // Call OnLoaded in all models.
-            Apsim.CallEventHandler(model, "Loaded", null);
-            foreach (Model child in Apsim.ChildrenRecursively(model))
-                Apsim.CallEventHandler(child, "Loaded", null);
+            Events events = new Events();
+            events.AddModelEvents(model);
+            events.CallEventHandler(model, "Loaded", null);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -200,8 +202,10 @@ namespace Models.Core
         public void Write(TextWriter stream)
         {
             object[] args = new object[] { true };
-            foreach (Model model in Apsim.ChildrenRecursively(this))
-                Apsim.CallEventHandler(model, "Serialising", args);
+
+            Events events = new Events();
+            events.AddModelEvents(this);
+            events.CallEventHandler(this, "Serialising", args);
 
             try
             {
@@ -209,15 +213,14 @@ namespace Models.Core
             }
             finally
             {
-                foreach (Model model in Apsim.ChildrenRecursively(this))
-                    Apsim.CallEventHandler(model, "Serialised", args);
-
+                events.CallEventHandler(this, "Serialised", args);
             }
         }
 
         /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
         public Simulations()
         {
+            Version = APSIMFileConverter.LastestVersion;
         }
 
         /// <summary>Find all simulation names that are going to be run.</summary>
@@ -303,17 +306,14 @@ namespace Models.Core
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
 
                 // resolve all links in cloned simulation.
-                Apsim.ResolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.ResolveLinks(child);
+                Links links = new Core.Links();
+                links.Resolve(clonedSimulation);
 
                 // Document the model.
                 modelToDocument.Document(tags, headingLevel, 0);
 
                 // Unresolve links.
-                Apsim.UnresolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.UnresolveLinks(child);
+                links.Unresolve(clonedSimulation);
             }
         }
     }

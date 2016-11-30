@@ -15,15 +15,18 @@ namespace Models.Core
     public class ContextMenuAttribute : System.Attribute
     {
         /// <summary>
-        /// Gets or sets the menu name
+        /// Gets or sets the menu name.
         /// </summary>
         public string MenuName { get; set; }
 
         /// <summary>
-        /// Gets or sets the model types that this menu applies to
+        /// Gets or sets the model types that this menu applies to.
         /// </summary>
         public Type[] AppliesTo { get; set; }
 
+        /// <summary>
+        /// Key to be treated as a shortcut for the menu item.
+        /// </summary>
         public string ShortcutKey { get; set; }
     } 
 }

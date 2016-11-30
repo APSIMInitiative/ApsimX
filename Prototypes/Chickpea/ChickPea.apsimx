@@ -132,6 +132,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
+          <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -312,6 +313,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Emergence</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
@@ -931,6 +933,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -952,7 +956,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -989,7 +993,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PhaseLookup>
           <Name>HIIncrement</Name>
           <PhaseLookupValue>
@@ -1034,6 +1038,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </HIReproductiveOrgan>
       <Root>
@@ -1201,7 +1206,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1231,7 +1236,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1287,10 +1292,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>40</Value>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
-        <NuptakeSupply>0</NuptakeSupply>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Shell</Name>
         <Biomass>
           <Name>Live</Name>
@@ -1307,10 +1315,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Value>0.1</Value>
         </Constant>
         <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
-        </Constant>
-        <Constant>
           <Name>MaximumNConc</Name>
           <Memo>
             <Name>Memo</Name>
@@ -1321,6 +1325,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>MinimumNConc</Name>
           <Value>0.007</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -1388,7 +1397,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1418,10 +1427,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+        </BiomassRemoval>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.7</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+      </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
         <CompositeBiomass>
@@ -1452,20 +1484,26 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </ArrayBiomass>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>1</Rank>
           <Area>224</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>2</Rank>
           <Area>224</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
+          <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+          <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>3</Rank>
-          <Area>0</Area>
+          <Area>224</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <VariableReference>
@@ -1754,6 +1792,18 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <Name>NonStructuralFraction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>
@@ -2022,7 +2072,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2052,7 +2102,17 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <Value>0.7</Value>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -2068,12 +2128,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericAboveGroundOrgan>
+      <GenericOrgan>
         <Name>Stem</Name>
         <Memo>
           <Name>Memo</Name>
@@ -2137,11 +2196,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2171,7 +2226,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2215,9 +2270,37 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-      </GenericAboveGroundOrgan>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>  
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+      </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
         <Biomass>
@@ -2231,14 +2314,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <Constant>
-          <Name>SpecificNitrogenaseActivity</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
           <Name>FixationMetabolicCost</Name>
           <Memo>
             <Name>Memo</Name>
@@ -2246,62 +2321,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0</Value>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>FT</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>20</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
-        <LinearInterpolationFunction>
-          <Name>FW</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>FWlog</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2364,6 +2383,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0</Value>
         </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
           <Memo>
@@ -2373,7 +2396,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2403,10 +2426,116 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-        <NFixationOption>Majic</NFixationOption>
+        </BiomassRemoval>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>FixationRate</Name>
+          <Value>10000</Value>
+          <Units>g/m^2/d</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>FixationRate2</Name>
+          <Memo>
+            <Name>Memo1</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>NoduleWt</Name>
+            <VariableName>[Nodule].Live.Wt</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>SpecificNitrogenaseActivity</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <Value>0</Value>
+          </Constant>
+          <MinimumFunction>
+            <Name>MinimumFunction</Name>
+            <AirTemperatureFunction>
+              <Name>FT</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <LinearInterpolationFunction>
+              <Name>FW</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>FWlog</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+          </MinimumFunction>
+        </MultiplyFunction>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant> 
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2534,16 +2663,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.91287932221741563</Slope>
-            <Intercept>308.827921547124</Intercept>
-            <SEslope>0.1114079374080907</SEslope>
-            <SEintercept>88.146366616667237</SEintercept>
-            <R2>0.48603622192452223</R2>
-            <RMSE>359.7414839048385</RMSE>
-            <NSE>-0.65024774184940459</NSE>
-            <ME>244.35966185584331</ME>
-            <MAE>290.60070221553008</MAE>
-            <RSR>1.2757905817176316</RSR>
+            <Slope>0.91312923251408962</Slope>
+            <Intercept>335.17590768260675</Intercept>
+            <SEslope>0.11448117904179643</SEslope>
+            <SEintercept>90.577926611840056</SEintercept>
+            <R2>0.47259102676262121</R2>
+            <RMSE>383.33661670445139</RMSE>
+            <NSE>-0.87382364406178015</NSE>
+            <ME>270.89257862221143</ME>
+            <MAE>309.16296797005089</MAE>
+            <RSR>1.3594685825791775</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chickpea.Shell.PodNumber.Value</Name>
@@ -2590,16 +2719,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.68798781349375138</Slope>
-            <Intercept>202.96533952706017</Intercept>
-            <SEslope>0.091318983996129727</SEslope>
-            <SEintercept>19.764288515837027</SEintercept>
-            <R2>0.15475969146794977</R2>
-            <RMSE>232.14919377369446</RMSE>
-            <NSE>-3.3961515987613184</NSE>
-            <ME>144.94170091026282</ME>
-            <MAE>179.94071726962997</MAE>
-            <RSR>2.0933373758852416</RSR>
+            <Slope>0.70283197955370136</Slope>
+            <Intercept>203.177835853479</Intercept>
+            <SEslope>0.09232138741107726</SEslope>
+            <SEintercept>19.981240013053892</SEintercept>
+            <R2>0.15750795665400807</R2>
+            <RMSE>235.27139553416006</RMSE>
+            <NSE>-3.5151954870910362</NSE>
+            <ME>147.91470648689685</ME>
+            <MAE>181.42233652722948</MAE>
+            <RSR>2.121490916003105</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -2991,9 +3120,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3038,9 +3167,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3085,9 +3214,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3132,9 +3261,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3267,6 +3396,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -3459,7 +3589,6 @@ A selection of data from Kenya has been included from the work of Keating et al 
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -3498,6 +3627,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -3697,6 +3827,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -3872,8 +4003,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -4271,6 +4400,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -4453,7 +4583,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -4492,6 +4621,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -4691,6 +4821,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -4865,8 +4996,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>MSLeafNo</Name>
@@ -6611,6 +6740,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -6785,7 +6915,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -6824,6 +6953,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -7023,6 +7153,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -7255,8 +7386,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -7872,6 +8001,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -8046,7 +8176,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -8085,6 +8214,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -8284,6 +8414,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -8458,8 +8589,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -8671,6 +8800,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -8845,7 +8975,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -8884,6 +9013,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -9083,6 +9213,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -9257,8 +9388,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -9477,6 +9606,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -9651,7 +9781,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -9690,6 +9819,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -9889,6 +10019,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10063,8 +10194,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -10249,6 +10378,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -10423,7 +10553,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>9</SummerU>
                 <SummerCona>3</SummerCona>
@@ -10462,6 +10591,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -10661,6 +10791,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10835,8 +10966,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -11008,6 +11137,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -11247,7 +11377,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -11282,6 +11411,7 @@ namespace Models
                   <double>0.4</double>
                   <double>0.4</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -11441,6 +11571,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -11607,8 +11738,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -12091,6 +12220,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -12317,7 +12447,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -12352,6 +12481,7 @@ namespace Models
                   <double>0.3</double>
                   <double>0.3</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -12537,6 +12667,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -12703,8 +12834,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -12973,6 +13102,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -13107,7 +13237,6 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -13136,6 +13265,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
                   <double>0.1</double>
                   <double>0.1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -13287,6 +13417,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -13461,8 +13592,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -13626,6 +13755,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -13760,7 +13890,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -13789,6 +13918,7 @@ namespace Models
                   <double>0.1</double>
                   <double>0.1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -13940,6 +14070,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14114,8 +14245,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -14428,6 +14557,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -14677,7 +14807,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -14714,6 +14843,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -14890,6 +15020,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -14998,8 +15129,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -15949,6 +16078,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -16198,7 +16328,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -16235,6 +16364,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -16411,6 +16541,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -16519,8 +16650,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -17434,6 +17563,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -17692,7 +17822,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -17731,6 +17860,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -17917,12 +18047,11 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -18894,6 +19023,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -19152,7 +19282,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -19191,6 +19320,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -19377,12 +19507,11 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -20305,6 +20434,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -20620,7 +20750,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -20669,6 +20798,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -20903,6 +21033,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -21011,8 +21142,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -21284,6 +21413,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -21587,7 +21717,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>21-Sep</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -21636,6 +21765,7 @@ namespace Models
                   <double>0.7</double>
                   <double>0.7</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -21870,6 +22000,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -21978,8 +22109,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -22318,6 +22447,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -22542,7 +22672,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -22575,6 +22704,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -22724,6 +22854,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>NRateSchedule</Name>
@@ -22842,8 +22973,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -23326,6 +23455,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -23552,7 +23682,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -23587,6 +23716,7 @@ namespace Models
                   <double>0.3</double>
                   <double>0.3</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -23772,6 +23902,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -23938,8 +24069,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -24422,6 +24551,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -24648,7 +24778,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>3.5</SummerCona>
@@ -24683,6 +24812,7 @@ namespace Models
                   <double>0.3</double>
                   <double>0.3</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -24868,6 +24998,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -25034,8 +25165,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -25369,6 +25498,7 @@ Several minimal datasets are available with only flowering dates for a ranges of
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -25631,7 +25761,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -25672,6 +25801,7 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -25898,12 +26028,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -26100,6 +26229,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -26362,7 +26492,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -26403,6 +26532,7 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -26629,12 +26759,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -26824,6 +26953,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -27086,7 +27216,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -27127,6 +27256,7 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -27353,12 +27483,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -27548,6 +27677,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -27810,7 +27940,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -27851,6 +27980,7 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -28077,12 +28207,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -28470,6 +28599,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -28694,7 +28824,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -28727,6 +28856,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -28876,12 +29006,11 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -29239,6 +29368,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -29463,7 +29593,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Nov</SummerDate>
                 <SummerU>6</SummerU>
                 <SummerCona>2</SummerCona>
@@ -29496,6 +29625,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -29645,12 +29775,11 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -29944,6 +30073,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -30144,7 +30274,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>6.86</SummerU>
                 <SummerCona>3</SummerCona>
@@ -30173,6 +30302,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -30454,14 +30584,13 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -30755,6 +30884,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -30955,7 +31085,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>6.86</SummerU>
                 <SummerCona>3</SummerCona>
@@ -30984,6 +31113,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -31265,14 +31395,13 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -31566,6 +31695,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -31766,7 +31896,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>6.86</SummerU>
                 <SummerCona>3</SummerCona>
@@ -31795,6 +31924,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -32076,14 +32206,13 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -32377,6 +32506,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -32568,7 +32698,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.44</SummerU>
                 <SummerCona>3</SummerCona>
@@ -32595,6 +32724,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -32866,14 +32996,13 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -33167,6 +33296,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -33358,7 +33488,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.44</SummerU>
                 <SummerCona>3</SummerCona>
@@ -33385,6 +33514,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -33656,14 +33786,13 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -34485,6 +34614,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -34867,7 +34997,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.2</SummerU>
                 <SummerCona>3</SummerCona>
@@ -34900,6 +35029,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -35347,14 +35477,13 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -36387,6 +36516,7 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
               <Name>Irrigation</Name>
@@ -36768,7 +36898,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.2</SummerU>
                 <SummerCona>3</SummerCona>
@@ -36801,6 +36930,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -37248,14 +37378,13 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -37527,6 +37656,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -37747,7 +37877,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.2</SummerU>
                 <SummerCona>3</SummerCona>
@@ -37780,6 +37909,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -38227,6 +38357,7 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -38340,8 +38471,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -38912,6 +39041,7 @@ namespace Models
               <emissivity>0.96</emissivity>
               <gsmax>0.01</gsmax>
               <r50>200</r50>
+              <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
               <Name>Fertiliser</Name>
@@ -39132,7 +39262,6 @@ namespace Models
               </Water>
               <SoilWater>
                 <Name>SoilWater</Name>
-                <residueinterception>0</residueinterception>
                 <SummerDate>1-Apr</SummerDate>
                 <SummerU>9.2</SummerU>
                 <SummerCona>3</SummerCona>
@@ -39165,6 +39294,7 @@ namespace Models
                   <double>0.5</double>
                   <double>0.5</double>
                 </SWCON>
+                <residueinterception>0</residueinterception>
               </SoilWater>
               <SoilNitrogen>
                 <Name>SoilNitrogen</Name>
@@ -39612,6 +39742,7 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
+              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -39725,8 +39856,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -39859,5 +39988,5 @@ namespace Models
       </Experiment>
     </Folder>
   </Folder>
-  <ExplorerWidth>304</ExplorerWidth>
+  <ExplorerWidth>415</ExplorerWidth>
 </Simulations>

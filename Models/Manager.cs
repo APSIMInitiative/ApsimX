@@ -33,12 +33,12 @@ namespace Models
         private string assemblyName = null;
 
         /// <summary>The _ script</summary>
-        [NonSerialized] private Model _Script;
+        private Model _Script;
         /// <summary>The _elements</summary>
         [NonSerialized] private XmlElement[] _elements;
 
         /// <summary>The compiled code</summary>
-        [NonSerialized] private string CompiledCode = "";
+        private string CompiledCode = "";
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
@@ -239,9 +239,15 @@ namespace Models
         /// <returns></returns>
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
-            foreach (string fileName in Directory.GetFiles(Path.GetTempPath(), "*.dll"))
-                if (args.Name == Path.GetFileNameWithoutExtension(fileName))
-                    return Assembly.LoadFrom(fileName);
+            string tempDLLPath = Path.GetTempPath();
+            if (!Path.GetTempPath().Contains("ApsimX"))
+                tempDLLPath = Path.Combine(tempDLLPath, "ApsimX");
+            if (Directory.Exists(tempDLLPath))
+            {
+                foreach (string fileName in Directory.GetFiles(tempDLLPath, "*.dll"))
+                    if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
+                        return Assembly.LoadFrom(fileName);
+            }
             return null;
         }
 
