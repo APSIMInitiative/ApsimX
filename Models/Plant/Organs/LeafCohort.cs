@@ -432,6 +432,30 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the size.</summary>
+        /// <value>The size.</value>
+        public double Size
+        {
+            get
+            {
+                if (IsAppeared)
+                    return LiveArea / CohortPopulation;
+                return 0;
+            }
+        }
+
+        /// <summary>Gets the specific area.</summary>
+        /// <value>The specific area.</value>
+        public double SpecificArea
+        {
+            get
+            {
+                if (Live.Wt > 0)
+                    return LiveArea / Live.Wt;
+                return 0;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -669,7 +693,7 @@ namespace Models.PMF.Organs
             double propnStemMortality = (startPopulation - CohortPopulation)/startPopulation;
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
-            if (IsNotAppeared && (leafCohortParameters.CellDivisionStress != null))
+            if (IsNotAppeared)
             {
                 CellDivisionStressDays += 1;
                 CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value;
@@ -680,7 +704,7 @@ namespace Models.PMF.Organs
             {
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
-                if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
+                if (IsFullyExpanded)
                     thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value;
                 else thermalTime = tt;
 

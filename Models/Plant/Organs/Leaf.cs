@@ -100,15 +100,15 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double FRGR { get; set; }
         
-        private double _PotentialEP = 0;
+        private double potentialEp;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP
         {
-            get { return _PotentialEP; }
+            get { return potentialEp; }
             set
             {
-                _PotentialEP = value;
+                potentialEp = value;
                 MicroClimatePresent = true;
             }
         }
@@ -131,15 +131,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public double WaterAllocation { get; private set; }
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
-
+        public double WaterAllocation { get; set; }
         #endregion
 
         #region Links
@@ -219,13 +211,13 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
             /// <summary>The drought induced sen acceleration</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link]
             public IFunction NonStructuralFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
             [Link]
@@ -353,10 +345,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the appeared cohort no.</summary>
         [Description("Number of leaf cohort that have appeared")] 
         public double AppearedCohortNo { get { return CohortCounter("IsAppeared"); } }
-
-        /// <summary>Gets the expanding cohort no.</summary>
-        [Description("Number of leaf cohorts that have appeared but not yet fully expanded")]
-        public double ExpandingCohortNo { get { return CohortCounter("IsGrowing"); } }
 
         /// <summary>Gets the expanded cohort no.</summary>
         [Description("Number of leaf cohorts that are fully expanded")]
@@ -566,7 +554,8 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.Size;
+                    if (L.IsAppeared)
+                        values[i] = L.LiveArea / L.CohortPopulation;
                     i++;
                 }
                 return values;
@@ -666,52 +655,6 @@ namespace Models.PMF.Organs
                     values[i] = L.MaxArea;
                     i++;
                 }
-                return values;
-            }
-        }
-
-        /// <summary>Gets the cohort sla.</summary>
-        [Units("mm2/g")]
-        public double[] CohortSLA
-        {
-            get
-            {
-                int i = 0;
-                double[] values = new double[MaximumMainStemLeafNumber];
-
-                foreach (LeafCohort L in Leaves)
-                {
-                    values[i] = L.SpecificArea;
-                    i++;
-                }
-                return values;
-            }
-        }
-
-        /// <summary>Gets the cohort structural frac.</summary>
-        [Units("0-1")]
-        public double[] CohortStructuralFrac
-        {
-            get
-            {
-                int i;
-
-                double[] values = new double[MaximumMainStemLeafNumber];
-                for (i = 0; i <= MaximumMainStemLeafNumber - 1; i++)
-                    values[i] = 0;
-                i = 0;
-                foreach (LeafCohort L in Leaves)
-                    if (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt > 0.0)
-                    {
-                        values[i] = L.Live.StructuralWt/
-                                    (L.Live.StructuralWt + L.Live.MetabolicWt + L.Live.NonStructuralWt);
-                        i++;
-                    }
-                    else
-                    {
-                        values[i] = 0;
-                        i++;
-                    }
                 return values;
             }
         }
@@ -1005,8 +948,8 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    Retranslocation += L.LeafStartDMRetranslocationSupply;
-                    Reallocation += L.LeafStartDMReallocationSupply;
+                    Retranslocation += L.LeafStartDmRetranslocationSupply;
+                    Reallocation += L.LeafStartDmReallocationSupply;
                 }
 
                 return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
@@ -1178,7 +1121,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double Supply = Math.Min(remainder, L.LeafStartDMRetranslocationSupply);
+                        double Supply = Math.Min(remainder, L.LeafStartDmRetranslocationSupply);
                         DMRetranslocationCohort[i] = Supply;
                         remainder -= Supply;
                     }
@@ -1199,7 +1142,7 @@ namespace Models.PMF.Organs
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double ReAlloc = Math.Min(remainder, L.LeafStartDMReallocationSupply);
+                        double ReAlloc = Math.Min(remainder, L.LeafStartDmReallocationSupply);
                         remainder = Math.Max(0.0, remainder - ReAlloc);
                         DMReAllocationCohort[i] = ReAlloc;
                     }

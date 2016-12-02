@@ -1656,7 +1656,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -12496,7 +12495,6 @@ namespace Models
             <string>[FieldPea].Leaf.Dead.Wt</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
             <string>[FieldPea].Leaf.ExpandedCohortNo</string>
-            <string>[FieldPea].Leaf.ExpandingCohortNo</string>
             <string>[FieldPea].Leaf.Fn</string>
             <string>[FieldPea].Leaf.Fw</string>
             <string>[FieldPea].Leaf.LAI</string>
@@ -14460,27 +14458,6 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>FieldPea.Structure.TotalStemPopn</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Expanding Nodes</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16711936</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Report</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Leaf.ExpandingCohortNo</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
