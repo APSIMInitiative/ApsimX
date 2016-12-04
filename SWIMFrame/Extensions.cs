@@ -67,7 +67,7 @@ namespace SWIMFrame
         /// <returns></returns>
         public static T[,] Populate2D<T>(this T[,] arr, T value)
         {
-            for (int x = 0; x > arr.GetLength(0); x++)
+            for (int x = 0; x < arr.GetLength(0); x++)
                 for (int y = 0; y < arr.GetLength(1); y++)
                     arr[x, y] = value;
             return arr;

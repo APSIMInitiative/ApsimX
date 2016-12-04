@@ -165,7 +165,6 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
             gxml.Autoconnect(this);
             _mainWidget = window1;
-            Pango.FontDescription font = Pango.FontDescription.FromString("segoe ui 19");
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
