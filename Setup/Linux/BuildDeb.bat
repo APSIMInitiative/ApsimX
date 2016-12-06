@@ -87,7 +87,7 @@ tar zcf ..\data.tar.gz .
 cd ..\DEBIAN
 tar zcf ..\control.tar.gz .
 cd ..
-ar r Apsim.deb debian-binary control.tar.gz data.tar.gz
+ar r ..\Apsim.deb debian-binary control.tar.gz data.tar.gz
 cd ..
 rmdir /S /Q .\DebPackage
 exit /B 0
