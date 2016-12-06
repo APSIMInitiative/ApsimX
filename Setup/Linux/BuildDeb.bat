@@ -50,7 +50,7 @@ echo Priority: optional
 echo Maintainer: APSIM Initiative ^<apsim@daf.qld.gov.au^>
 echo Homepage: www.apsim.info
 echo Installed-Size: %INSTALL_SIZE%
-echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkit1.1-cil, mono-runtime ^(^>=4.4^), sqlite3
+echo Depends: gtk-sharp2 ^(^>=2.12^), libwebkit1.1-cil, mono-runtime ^(^>=4.0^), sqlite3
 echo Description: The Agricultural Production Systems Simulator.
 echo ^ The Agricultural Production Systems sIMulator ^(APSIM^) is internationally recognised 
 echo ^ as a highly advanced simulator of agricultural systems. It contains a suite of modules 
