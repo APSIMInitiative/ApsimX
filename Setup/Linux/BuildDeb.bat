@@ -3,8 +3,9 @@ set PATH=C:\Jenkins\Utilities;%PATH%
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
+set APSIMX_BUILD_DIR="..\.."
 if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
-sigcheck64 -n -nobanner ..\..\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
 del Version.tmp
@@ -27,12 +28,12 @@ echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/ApsimNG.exe "$@
 dos2unix -q .\DebPackage\data\usr\local\bin\apsim
 
 rem Copy the binaries and examples to their destinations
-xcopy /S /I /Y /Q ..\..\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
-xcopy /I /Y /Q ..\..\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q ..\..\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q ..\..\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q ..\..\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q ..\..\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /S /I /Y /Q %APSIMX_BUILD_DIR%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 
 rem Determine the approximate size of the package
 du.exe -k -s DebPackage > size.temp
