@@ -40,7 +40,7 @@ namespace Updater
         /// <param name="newInstallDirectory"></param>
         private static void DoUpate(string uninstallDirectory, string newInstallDirectory)
         {
-            WaitForProcess("UserInterface");
+            WaitForProcess("ApsimNG");
 
             // Uninstall old version.
             string uninstaller = Path.Combine(uninstallDirectory, "unins000.exe");
@@ -58,7 +58,7 @@ namespace Updater
             // Write to the downloads database.
 
             // Run the user interface.
-            string userInterface = Path.Combine(newInstallDirectory, "Bin", "UserInterface.exe");
+            string userInterface = Path.Combine(newInstallDirectory, "Bin", "ApsimNG.exe");
             if (!File.Exists(userInterface))
                 throw new Exception("Cannot find user interface: " + userInterface);
             Process.Start(userInterface);

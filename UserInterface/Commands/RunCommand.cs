@@ -147,6 +147,7 @@
                     player.Stream = Properties.Resources.success;
                 player.Play();
                 IsRunning = false;
+                jobManager = null;
             }
         }
     }

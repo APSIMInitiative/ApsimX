@@ -21,9 +21,7 @@ namespace SWIMFrame
             bd = new double[nt + 1];
             dis = new double[nt + 1];
             isopar = new double[ns + 1, nt + 1][];
-            for (int j = 1; j < isotype.GetLength(0); j++)
-                for (int x = 1; x < isotype.GetLength(1); x++)
-                isotype[j, x] = "no"; //will be changed if required in sub setiso
+            isotype.Populate2D("no"); //will be changed if required in sub setiso
         }
 
         /// <summary>
