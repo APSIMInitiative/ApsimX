@@ -1,7 +1,10 @@
 @echo off
+set PATH=C:\Jenkins\Utilities;%PATH%
+if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
-C:\Jenkins\Utilities\sigcheck64 -n -nobanner ..\..\Bin\Models.exe > Version.tmp
+if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
+sigcheck64 -n -nobanner ..\..\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
 del Version.tmp
@@ -15,13 +18,13 @@ mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
 
 rem Create the main execution script; must have Unix newline
 echo 2.0>.\DebPackage\debian-binary
-C:\Jenkins\Utilities\dos2unix -q .\DebPackage\debian-binary
+dos2unix -q .\DebPackage\debian-binary
 
 (
 echo #!/bin/sh
 echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/ApsimNG.exe "$@"
 )> .\DebPackage\data\usr\local\bin\apsim
-C:\Jenkins\Utilities\dos2unix -q .\DebPackage\data\usr\local\bin\apsim
+dos2unix -q .\DebPackage\data\usr\local\bin\apsim
 
 rem Copy the binaries and examples to their destinations
 xcopy /S /I /Y /Q ..\..\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
@@ -32,7 +35,7 @@ xcopy /I /Y /Q ..\..\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\dat
 xcopy /I /Y /Q ..\..\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 
 rem Determine the approximate size of the package
-C:\Jenkins\Utilities\du.exe -k -s DebPackage > size.temp
+du.exe -k -s DebPackage > size.temp
 for /F "tokens=1" %%i in (size.temp) do set INSTALL_SIZE=%%i
 del size.temp
 
@@ -57,31 +60,34 @@ echo ^ climate and management interactions.
 rem Calculate the md5sums
 setlocal enabledelayedexpansion
 cd DebPackage/data
-C:\Jenkins\Utilities\fciv usr/local/bin/apsim | findstr /r /v "^//" >..\DEBIAN\md5sums
+fciv usr/local/bin/apsim | findstr /r /v "^//" >..\DEBIAN\md5sums
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Bin/*) do (
-C:\Jenkins\Utilities\fciv "usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a" | findstr /r /v "^//" > Temp.out
+fciv "usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a" | findstr /r /v "^//" > Temp.out
 set /p CHECKSUM_TMP=<Temp.out
 for /F "tokens=1" %%i in ("!CHECKSUM_TMP!") do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a >> ..\DEBIAN\md5sums
 del Temp.out
 )
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/*) do (
-C:\Jenkins\Utilities\fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a" | findstr /r /v "^//" > Temp.out
+fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a" | findstr /r /v "^//" > Temp.out
 set /p CHECKSUM_TMP=<Temp.out
 for /F "tokens=1" %%i in ("!CHECKSUM_TMP!") do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a >> ..\DEBIAN\md5sums
 del Temp.out
 )
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/*) do (
-C:\Jenkins\Utilities\fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a" | findstr /r /v "^//" > Temp.out
+fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a" | findstr /r /v "^//" > Temp.out
 set /p CHECKSUM_TMP=<Temp.out
 for /F "tokens=1" %%i in ("!CHECKSUM_TMP!") do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a >> ..\DEBIAN\md5sums
 del Temp.out
 )
 
 rem Create the tarballs and ar them together
-C:\Jenkins\Utilities\tar zcf ..\data.tar.gz .
+tar zcf ..\data.tar.gz .
 cd ..\DEBIAN
-C:\Jenkins\Utilities\tar zcf ..\control.tar.gz .
+tar zcf ..\control.tar.gz .
 cd ..
-C:\Jenkins\Utilities\ar r Apsim.deb debian-binary control.tar.gz data.tar.gz
+ar r Apsim.deb debian-binary control.tar.gz data.tar.gz
+cd ..
+rmdir /S /Q .\DebPackage
+exit /B 0

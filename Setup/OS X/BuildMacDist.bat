@@ -2,7 +2,7 @@
 if Exist ApsimSetup.dmg Del ApsimSetup.dmg
 if Exist Version.tmp Del Version.tmp
 set APSIMX_BUILD_DIR="..\.."
-if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit
+if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
 C:\Jenkins\Utilities\sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
@@ -58,3 +58,4 @@ echo ^</plist^>>>%PLIST_FILE%
 
 C:\Jenkins\Utilities\genisoimage -V APSIM%APSIM_VERSION% -D -R -apple -no-pad -o ApsimSetup.dmg MacBundle
 rmdir /S /Q .\MacBundle
+exit /B 0
