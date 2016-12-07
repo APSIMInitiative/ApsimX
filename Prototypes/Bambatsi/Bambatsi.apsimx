@@ -5824,7 +5824,7 @@ namespace Models
 			Remove.SetFractionToRemove("Stem", StemRemovalFraction);
 			Remove.SetFractionToResidue("Leaf", 0.0);
 			Remove.SetFractionToResidue("Stem", 0.0);
-			Bambatsi.RemoveBiomass("Harvest", Remove);
+			Bambatsi.RemoveBiomass("Cut", Remove);
 		}
 		
 	}
