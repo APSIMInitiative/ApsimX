@@ -937,10 +937,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <Name>CellDivisionStress</Name>
             <Value>1</Value>
           </Constant>
-          <Constant>
-            <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
-          </Constant>          <BellCurveFunction>
+		  <BellCurveFunction>
             <Name>MaxArea</Name>
             <Memo>
               <Name>Memo</Name>
