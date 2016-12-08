@@ -603,7 +603,8 @@ namespace Models.Graph
             List<string> fieldNames = new List<string>();
             if (dataStore.ColumnNames(TableName).Contains("Zone"))
                 fieldNames.Add("Zone");
-            fieldNames.Add(XFieldName);
+            if (!XFieldName.Equals("SimulationName"))
+                fieldNames.Add(XFieldName);
             fieldNames.Add(YFieldName);
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
                 fieldNames.Add(X2FieldName);
@@ -628,6 +629,7 @@ namespace Models.Graph
             {
                 if (simulationName != null)
                     simulationNames.Add(simulationName);
+                factorNameValues.Add(new KeyValuePair<string, string>("Simulation", simulationName));
                 factorNameValues.Add(new KeyValuePair<string, string>("Zone", zoneName));
             }
 
@@ -659,7 +661,13 @@ namespace Models.Graph
                     filter = AddToFilter(filter, "Zone='" + zoneName + "'");
 
                 data = new DataView(baseData);
-                data.RowFilter = filter;
+                try
+                {
+                    data.RowFilter = filter;
+                }
+                catch (Exception)
+                {
+                }
             }
 
             /// <summary>
