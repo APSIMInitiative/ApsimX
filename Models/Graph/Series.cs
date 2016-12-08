@@ -628,6 +628,7 @@ namespace Models.Graph
             {
                 if (simulationName != null)
                     simulationNames.Add(simulationName);
+                factorNameValues.Add(new KeyValuePair<string, string>("Simulation", simulationName));
                 factorNameValues.Add(new KeyValuePair<string, string>("Zone", zoneName));
             }
 
