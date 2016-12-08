@@ -349,6 +349,10 @@ namespace UserInterface.Presenters
                     string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                     explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
                 }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage(err.ToString(), DataStore.ErrorLevel.Error);
+                }
                 finally
                 {
                     explorerPresenter.MainPresenter.ShowWaitCursor(false);
