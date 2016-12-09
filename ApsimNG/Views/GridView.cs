@@ -360,8 +360,8 @@ namespace UserInterface.Views
                 Type dataType = dataVal.GetType();
                 if (dataType == typeof(DBNull))
                     text = String.Empty;
-                else if ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
-                    (dataType == typeof(double) && !Double.IsNaN((double)dataVal)))
+                else if (NumericFormat != null && ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
+                    (dataType == typeof(double) && !Double.IsNaN((double)dataVal))))
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
