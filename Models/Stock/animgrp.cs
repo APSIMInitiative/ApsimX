@@ -1691,7 +1691,6 @@ namespace Models.GrazPlan
         protected void LoseYoung(TAnimalGroup aGroup, int N)
         {
             TDifferenceRecord YoungDiffs;
-            TAnimalGroup LoseGroup;
             int iMaleYoung;
             int iFemaleYoung;
             int iYoungToLose;
@@ -1722,8 +1721,7 @@ namespace Models.GrazPlan
                     iFemalesToLose = iFemaleYoung;
                 }
 
-                LoseGroup = aGroup.Young.SplitSex(iMalesToLose, iFemalesToLose, false, YoungDiffs);
-                LoseGroup = null;
+                aGroup.Young.SplitSex(iMalesToLose, iFemalesToLose, false, YoungDiffs);
                 aGroup.FNoOffspring -= N;
                 aGroup.Young.FNoOffspring -= N;
             }
@@ -2170,7 +2168,7 @@ namespace Models.GrazPlan
         {
             // these will have to go into the parameter set eventually...
             double[] dFaecesDensity = { 1000.0, 1000.0 };       // kg/m^3
-            double[] dFaecesMoisture = { 4.0, 5.0 };            // kg water/kg DM
+            // double[] dFaecesMoisture = { 4.0, 5.0 };            // kg water/kg DM
             double[] dRefNormalWt = { 50.0, 600.0 };            // kg
             double[] dFaecesRefLength = { 0.012, 0.30 };        // m
             double[] dFaecesPower = { 0.00, 1.0 / 3.0 };

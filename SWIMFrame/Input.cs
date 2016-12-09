@@ -120,6 +120,7 @@ namespace SWIMFrame
             double[,] wex = new double[1,1]; //unused option params in FORTRAN... must be a better way of doing this
             double[,,] sex=new double[1,1,1];
 
+            //timer here in FORTRAN, this basically runs the solution for 100 days
             for (j = 1; j <= 100; j++)
             {
                 tf = ti + 24.0;

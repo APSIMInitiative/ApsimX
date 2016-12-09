@@ -76,8 +76,8 @@ namespace UserInterface.Presenters
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
             this.xyPairs.Children.Add(this.graph);
             this.graph.Parent = this.xyPairs;
-            (this.graph.Series[0] as Series).XFieldName = "[" + graph.Parent.Name + "].X";
-            (this.graph.Series[0] as Series).YFieldName = "[" + graph.Parent.Name + "].Y";
+            (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
+            (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.xyPairsView.Graph, this.explorerPresenter);
             string xAxisTitle = LookForXAxisTitle();
