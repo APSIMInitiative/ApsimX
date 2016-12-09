@@ -340,34 +340,6 @@ But their data suggests a value of 0.3]]></MemoText>
           <Name>DetachmentRateFunction</Name>
           <Value>0</Value>
         </Constant>
-        <MultiplyFunction>
-          <Name>LAIFunction</Name>
-          <VariableReference>
-            <Name>LeafWt</Name>
-            <VariableName>[Leaf].Live.Wt</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>SLA</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>6</double>
-              </X>
-              <Y>
-                <double>0.016</double>
-                <double>0.013</double>
-                <double>0.011</double>
-                <double>0.01</double>
-                <double>0.008</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Eucalyptus].Age.Value</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
         <Constant>
           <Name>LeafResidenceTime</Name>
           <Value>365</Value>
@@ -613,6 +585,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>MinimumLAI</Name>
           <Value>0.1</Value>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>SpecificLeafAreaFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+              <double>2</double>
+              <double>3</double>
+              <double>6</double>
+            </X>
+            <Y>
+              <double>0.016</double>
+              <double>0.013</double>
+              <double>0.011</double>
+              <double>0.01</double>
+              <double>0.008</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Eucalyptus].Age.Value</XProperty>
+        </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -624,11 +617,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
-        <LAI>0</LAI>
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <LAIDead>0</LAIDead>
+        <MicroClimatePresent>true</MicroClimatePresent>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
@@ -755,11 +747,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Value>100</Value>
           <Units>m/g</Units>
         </Constant>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -791,6 +778,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </BiomassRemoval>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <GenericOrgan>
         <Name>Stem</Name>

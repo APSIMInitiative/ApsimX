@@ -335,28 +335,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </BiomassRemoval>
-        <MultiplyFunction>
-          <Name>LAIFunction</Name>
-          <VariableReference>
-            <Name>LeafWt</Name>
-            <VariableName>[Leaf].Live.Wt</VariableName>
-          </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>SLA</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0.0175</double>
-                <double>0.0125</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Bambatsi].Age.Value</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
         <Constant>
           <Name>LeafResidenceTime</Name>
           <Value>130</Value>
@@ -649,6 +627,21 @@ But their data suggests a value of 0.3]]></MemoText>
           </Memo>
           <Value>0.57</Value>
         </Constant>
+        <LinearInterpolationFunction>
+          <Name>SpecificLeafAreaFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0.0175</double>
+              <double>0.0125</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Bambatsi].Age.Value</XProperty>
+        </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -660,12 +653,10 @@ But their data suggests a value of 0.3]]></MemoText>
         <Albedo>0.2</Albedo>
         <Gsmax>0.0075</Gsmax>
         <R50>200</R50>
-        <LAI>0</LAI>
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
         <MicroClimatePresent>true</MicroClimatePresent>
-        <LAIDead>0</LAIDead>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>
