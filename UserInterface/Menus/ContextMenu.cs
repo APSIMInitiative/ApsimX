@@ -325,13 +325,13 @@ namespace UserInterface.Presenters
 
 
         /// <summary>
-        /// Export the data store to text files
+        /// Export output in the data store to text files
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to text files",
+        [ContextMenu(MenuName = "Export output to text files",
                      AppliesTo = new Type[] { typeof(DataStore) })]
-        public void ExportDataStoreToTextFiles(object sender, EventArgs e)
+        public void ExportOutputToTextFiles(object sender, EventArgs e)
         {
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
@@ -339,7 +339,37 @@ namespace UserInterface.Presenters
                 Cursor.Current = Cursors.WaitCursor;
                 try
                 {
-                    dataStore.WriteToTextFiles();
+                    dataStore.WriteOutputToTextFiles();
+                    string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage(err.ToString(), DataStore.ErrorLevel.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Export summary in the data store to text files
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export summary to text files",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportSummaryToTextFiles(object sender, EventArgs e)
+        {
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    dataStore.WriteSummaryToTextFiles();
                     string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                     explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
                 }
