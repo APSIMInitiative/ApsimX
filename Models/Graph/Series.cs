@@ -603,7 +603,7 @@ namespace Models.Graph
             List<string> fieldNames = new List<string>();
             if (dataStore.ColumnNames(TableName).Contains("Zone"))
                 fieldNames.Add("Zone");
-            if (!XFieldName.Equals("SimulationName"))
+            if (XFieldName != null && !XFieldName.Equals("SimulationName"))
                 fieldNames.Add(XFieldName);
             fieldNames.Add(YFieldName);
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
