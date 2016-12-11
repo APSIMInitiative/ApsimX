@@ -23,6 +23,8 @@ xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
 
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist
 (
