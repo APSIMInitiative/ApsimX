@@ -34,6 +34,8 @@ xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsi
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\APSIM.bib .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%
 
 rem Determine the approximate size of the package
 du.exe -k -s DebPackage > size.temp
