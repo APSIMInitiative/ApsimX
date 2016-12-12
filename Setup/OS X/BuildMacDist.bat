@@ -1,9 +1,10 @@
 @echo off
+set PATH=C:\Jenkins\Utilities;%PATH%
 if Exist ApsimSetup.dmg Del ApsimSetup.dmg
 if Exist Version.tmp Del Version.tmp
 set APSIMX_BUILD_DIR="..\.."
 if not exist %APSIMX_BUILD_DIR%\Bin\Models.exe exit /B 1
-C:\Jenkins\Utilities\sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %APSIMX_BUILD_DIR%\Bin\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
 del Version.tmp
@@ -15,6 +16,7 @@ mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 
+dos2unix .\Template\Contents\MacOS\ApsimNG
 copy .\Template\Contents\MacOS\ApsimNG .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS\ApsimNG
 copy .\Template\Contents\Resources\ApsimNG.icns .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG.icns
 xcopy /S /I /Y /Q %APSIMX_BUILD_DIR%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Examples
@@ -23,8 +25,8 @@ xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\MonoMac.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
 xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
-xcopy /I /Y /Q %APSIMX_BUILD_DIR%\ApsimNG\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
+xcopy /I /Y /Q %APSIMX_BUILD_DIR%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
 
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist
 (
@@ -58,6 +60,6 @@ echo    ^<string^>%SHORT_VERSION%^</string^>>>%PLIST_FILE%
 echo ^</dict^>>>%PLIST_FILE%
 echo ^</plist^>>>%PLIST_FILE%
 
-C:\Jenkins\Utilities\genisoimage -V APSIM%APSIM_VERSION% -D -R -apple -no-pad -o ApsimSetup.dmg MacBundle
+genisoimage -V APSIM%APSIM_VERSION% -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o ApsimSetup.dmg MacBundle
 rmdir /S /Q .\MacBundle
 exit /B 0
