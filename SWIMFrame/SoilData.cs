@@ -9,8 +9,6 @@ namespace SWIMFrame
     public class SoilData
     {
         public int n, nsp, nft;
-        int[] soilloc, pathloc;
-        int[,] philoc;
         public double[] x, dx, ths, he;
         SoilProps[] sp;
         FluxTable[] ft;
@@ -19,6 +17,8 @@ namespace SWIMFrame
         int nphi = 101;
         double[] rdS;
         double[,] S, phi, dphidS, K, dKdS;
+        int[] soilloc, pathloc;
+        int[,] philoc;
 
         /// <summary>
         /// Reads tables and sets up data
