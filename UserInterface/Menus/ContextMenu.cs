@@ -392,25 +392,28 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Create documentation")]
         public void CreateDocumentation(object sender, EventArgs e)
         {
-            string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-            if (destinationFolder != null)
+            if (this.explorerPresenter.Save())
             {
-                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
-                Cursor.Current = Cursors.WaitCursor;
-
-                try
+                string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
+                if (destinationFolder != null)
                 {
-                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                    this.explorerPresenter.CommandHistory.Add(command, true);
-                    explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
-                    Process.Start(command.FileNameWritten);
-                }
-                catch (Exception err)
-                {
-                    explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
-                }
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                    Cursor.Current = Cursors.WaitCursor;
 
-                Cursor.Current = Cursors.Default;
+                    try
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                        Process.Start(command.FileNameWritten);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    }
+
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 
