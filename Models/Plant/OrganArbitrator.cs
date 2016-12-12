@@ -739,7 +739,7 @@ namespace Models.PMF
                     if (demand > 0)
                     {
                         double allocation = fraction * demand;
-                        (o as IHasWaterDemand).SetWaterAllocation(allocation);
+                        (o as IHasWaterDemand).WaterAllocation = allocation;
                         waterUptake += allocation;
                     }
                 }

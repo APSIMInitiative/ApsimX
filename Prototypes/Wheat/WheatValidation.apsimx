@@ -2051,7 +2051,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
         <Name>Spike</Name>
