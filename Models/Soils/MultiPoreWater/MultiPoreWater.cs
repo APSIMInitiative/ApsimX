@@ -206,7 +206,7 @@ namespace Models.Soils
         [Link]
         private Weather Met = null;
         [Link]
-        private HydraulicProperties HyProps = null;
+        private MRSpline MoistureRelease = null;
         [Link]
         private Evapotranspiration ET = null;
         [Link]
@@ -241,11 +241,45 @@ namespace Models.Soils
 
         #region Parameters
         /// <summary>
+        /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
+        /// </summary>
+        /// <remarks>
+        /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
+        /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
+        /// </remarks>
+        /// <value>
+        /// The depth.
+        /// </value>
+        [XmlIgnore]
+        [Units("cm")]
+        [Description("Soil layer thickness for each layer (cm)")]
+        public string[] Depth
+        {
+            get
+            {
+                return Soil.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = Soil.ToThickness(value);
+            }
+        }
+        /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
+        [Description("CFlow")]
+        [Display(Format = "N13")]
+        public double[] CFlow { get; set; }
+        /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
+        [Description("XFlow")]
+        public double[] XFlow { get; set; }
+        /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
+        [Description("PsiBub")]
+        public double[] PsiBub { get; set; }
+        /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
         [Units("um")]
         [Description("The pore diameters that seperate modeled pore compartments")]
-        private double[] PoreBounds = { 3000, 1687, 949, 533, 300, 70, 16.18, 3.76, 0.87, 0.202, 0.0005 };
+        private double[] PoreBounds = { 3000, 1194, 475, 189, 75, 30, 8.6, 2.47, 0.707, 0.202, 0.0005 };
         /// <summary>
         /// The hydraulic conductance below the bottom of the specified profile
         /// </summary>
@@ -337,7 +371,7 @@ namespace Models.Soils
         [Description("The hydraulic conducitivity of a layer at saturation")]
         [Display(Format = "N1")]
         [XmlIgnore]
-        public double[] Ksat { get; set; }
+        internal double[] Ksat { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
@@ -357,7 +391,7 @@ namespace Models.Soils
         /// <summary>
         /// The water potential when this pore space is full and larger pores are empty
         /// </summary>
-        [Units("cm")]
+        [Units("mm")]
         [Summary]
         [Display(Format = "N1")]
         [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
@@ -710,8 +744,8 @@ namespace Models.Soils
                         LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1] / 1000;
                 }
                 for (int c = PoreCompartments - 1; c >= 0; c--)
-                {//Step through each pore and assign the gravitational potential for the layer
-                    Pores[l][c].GravitationalPotential = LayerHeight[l] / -0.1022;
+                {//Step through each pore and assign the gravitational potential for the layer  Multiply by 10 to convert from cm to mm
+                    Pores[l][c].GravitationalPotential = LayerHeight[l] / -0.1022 * 10;
                 }
             }
         }
@@ -915,7 +949,7 @@ namespace Models.Soils
                 ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
             }
 
-            HyProps.SetHydraulicProperties();
+            MoistureRelease.SetHydraulicProperties();
             pond = 0;
             for (int l = 0; l < ProfileLayers; l++)
             {
@@ -927,8 +961,10 @@ namespace Models.Soils
                     Pores[l][c].DiameterUpper = PoreBounds[c];
                     Pores[l][c].DiameterLower = PoreBounds[c + 1];
                     Pores[l][c].Thickness = Water.Thickness[l];
-                    Pores[l][c].ThetaUpper = HyProps.SimpleTheta(l, Pores[l][c].PsiUpper);
-                    Pores[l][c].ThetaLower = HyProps.SimpleTheta(l, Pores[l][c].PsiLower);
+                    Pores[l][c].ThetaUpper = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiUpper);
+                    Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
+                    Pores[l][c].CFlow = CFlow[l];
+                    Pores[l][c].XFlow = XFlow[l];
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];

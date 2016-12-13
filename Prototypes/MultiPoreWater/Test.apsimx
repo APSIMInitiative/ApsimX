@@ -228,39 +228,39 @@
           </BD>
           <AirDry>
             <double>0.130250054518252</double>
-            <double>0.198689390775399</double>
-            <double>0.28</double>
-            <double>0.28</double>
-            <double>0.28</double>
-            <double>0.28</double>
-            <double>0.28</double>
+            <double>0.13</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
           </AirDry>
           <LL15>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
-            <double>0.25</double>
+            <double>0.15</double>
+            <double>0.15</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.17</double>
           </LL15>
           <DUL>
-            <double>0.5</double>
-            <double>0.49</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.45</double>
-            <double>0.44</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.33</double>
+            <double>0.33</double>
+            <double>0.33</double>
+            <double>0.33</double>
+            <double>0.33</double>
           </DUL>
           <SAT>
-            <double>0.55</double>
-            <double>0.5</double>
-            <double>0.49</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
+            <double>0.57</double>
+            <double>0.57</double>
+            <double>0.48</double>
+            <double>0.48</double>
+            <double>0.48</double>
+            <double>0.48</double>
+            <double>0.48</double>
           </SAT>
           <KS>
             <double>10</double>
@@ -274,18 +274,43 @@
         </Water>
         <MultiPoreWater>
           <Name>MultiPoreWater</Name>
-          <XYPairs>
-            <Name>AdsorptionResponse</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
           <Salb>0.15</Salb>
+          <Thickness>
+            <double>10</double>
+            <double>290</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <CFlow>
+            <double>4E-12</double>
+            <double>2E-12</double>
+            <double>4E-12</double>
+            <double>4E-12</double>
+            <double>4E-12</double>
+            <double>4E-12</double>
+            <double>4E-12</double>
+          </CFlow>
+          <XFlow>
+            <double>4</double>
+            <double>4</double>
+            <double>3.8</double>
+            <double>3.7</double>
+            <double>3.7</double>
+            <double>3.7</double>
+            <double>3.7</double>
+          </XFlow>
+          <PsiBub>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+          </PsiBub>
           <SubProfileConductance>100</SubProfileConductance>
           <WaterTableDepth>3</WaterTableDepth>
           <CalculateInfiltration>true</CalculateInfiltration>
@@ -482,31 +507,12 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
-        <HydraulicProperties>
-          <Name>HydraulicProperties</Name>
-          <psidul>-100</psidul>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <kdul>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </kdul>
-        </HydraulicProperties>
         <Evapotranspiration>
           <Name>Evapotranspiration</Name>
         </Evapotranspiration>
+        <MRSpline>
+          <Name>MRSpline</Name>
+        </MRSpline>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
