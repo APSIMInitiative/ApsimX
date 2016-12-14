@@ -12,11 +12,6 @@ namespace Models
     public partial class MicroClimate
     {
 
-        private double CalcDayLength(double latitude, int day, double sunAngle)
-        {
-            return MathUtilities.DayLength(day, sunAngle, latitude);
-        }
-
         private double CalcAverageT(double mint, double maxt)
         {
             return 0.75 * maxt + 0.25 * mint;
@@ -25,19 +20,12 @@ namespace Models
         private double CalcSunshineHours(double rand, double dayLengthLight, double latitude, double day)
         {
             double maxSunHrs = dayLengthLight;
-
             double relativeDistance = 1.0 + 0.033 * Math.Cos(0.0172 * day);
-
             double solarDeclination = 0.409 * Math.Sin(0.0172 * day - 1.39);
-
             double sunsetAngle = Math.Acos(-Math.Tan(latitude * Deg2Rad) * Math.Tan(solarDeclination));
-
             double extraTerrestrialRadn = 37.6 * relativeDistance * (sunsetAngle * Math.Sin(latitude * Deg2Rad) * Math.Sin(solarDeclination) + Math.Cos(latitude * Deg2Rad) * Math.Cos(solarDeclination) * Math.Sin(sunsetAngle));
-
             double maxRadn = 0.75 * extraTerrestrialRadn;
-
-            // finally calculate the sunshine hours as the ratio of
-            // maximum possible radiation
+            // finally calculate the sunshine hours as the ratio of maximum possible radiation
             return Math.Min(maxSunHrs * weather.Radn / maxRadn, maxSunHrs);
         }
 
@@ -68,24 +56,17 @@ namespace Models
         /// </summary>
         private double AerodynamicConductanceFAO(double windSpeed, double refHeight, double topHeight, double LAItot)
         {
-            const double vonKarman = 0.41;
-            double mterm = 0.0;
-            // momentum term in Ga calculation
-            double hterm = 0.0;
-            // heat term in Ga calculation
-            // Calculate site properties
-            double d = 0.666 * topHeight;
-            // zero plane displacement height (m)
-            double Zh = topHeight + refHeight;
-            // height of humidity measurement (m) - assume reference above canopy
-            double Zm = topHeight + refHeight;
-            // height of wind measurement (m)
-            double Z0m = 0.123 * topHeight;
-            // roughness length governing transfer of momentum (m)
-            double Z0h = 0.1 * Z0m;
-            // roughness length governing transfer of heat and vapour (m)
-            // Calcuate conductance
 
+            // Calculate site properties
+            double d = 0.666 * topHeight;        // zero plane displacement height (m)
+            double Zh = topHeight + refHeight;   // height of humidity measurement (m) - assume reference above canopy
+            double Zm = topHeight + refHeight;   // height of wind measurement (m)
+            double Z0m = 0.123 * topHeight;      // roughness length governing transfer of momentum (m)
+            double Z0h = 0.1 * Z0m;              // roughness length governing transfer of heat and vapour (m)
+
+            // Calcuate conductance
+            double mterm = 0.0; // momentum term in Ga calculation
+            double hterm = 0.0; // heat term in Ga calculation
             if ((Z0m != 0) && (Z0h != 0))
             {
                 mterm = MathUtilities.Divide(vonKarman, Math.Log(MathUtilities.Divide(Zm - d, Z0m, 0.0)), 0.0);
@@ -106,8 +87,7 @@ namespace Models
             double lambda = CalcLambda(averageT);
 
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
-            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
-            // unitless
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;    // unitless
 
             double PETr = MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
 
@@ -172,12 +152,9 @@ namespace Models
         /// </summary>
         private double CalcNondQsdT(double temperature, double airPressure)
         {
-            double esat = CalcSVP(temperature);
-            // saturated vapour pressure (mb)
-            double desdt = esat * svp_B * svp_C / Math.Pow(svp_C + temperature, 2.0);
-            // d(sat VP)/dT : (mb/K)
-            double dqsdt = (mwh2o / mwair) * desdt / airPressure;
-            // d(sat spec hum)/dT : (kg/kg)/K
+            double esat = CalcSVP(temperature);                                        // saturated vapour pressure (mb)
+            double desdt = esat * svp_B * svp_C / Math.Pow(svp_C + temperature, 2.0);  // d(sat VP)/dT : (mb/K)
+            double dqsdt = (mwh2o / mwair) * desdt / airPressure;                      // d(sat spec hum)/dT : (kg/kg)/K
             return CalcLambda(temperature) / Cp * dqsdt;
         }
 
@@ -220,10 +197,8 @@ namespace Models
         /// </summary>
         private double CalcVPD(double vp, double mint, double maxt)
         {
-            double VPDmint = Math.Max(0.0, CalcSVP(mint) - vp);
-            // VPD at minimum temperature
-            double VPDmaxt = Math.Max(0.0, CalcSVP(maxt) - vp);
-            // VPD at maximum temperature
+            double VPDmint = Math.Max(0.0, CalcSVP(mint) - vp);  // VPD at minimum temperature
+            double VPDmaxt = Math.Max(0.0, CalcSVP(maxt) - vp);  // VPD at maximum temperature
             return svp_fract * VPDmaxt + (1 - svp_fract) * VPDmint;
         }
 
@@ -232,8 +207,7 @@ namespace Models
         /// </summary>
         private double CalcLambda(double temperature)
         {
-            return (2501.0 - 2.38 * temperature) * 1000.0;
-            // J/kg
+            return (2501.0 - 2.38 * temperature) * 1000.0;  // J/kg
         }
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
@@ -247,11 +221,8 @@ namespace Models
             for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
                 Rint = Rin * (1.0 - Math.Exp(-MyZone.layerKtot[i] * MyZone.layerLAIsum[i]));
-
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                {
                     MyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MyZone.Canopies[j].Ftot[i] * MyZone.Canopies[j].Ktot, MyZone.layerKtot[i], 0.0);
-                }
                 Rin -= Rint;
             }
             RadIntTotal = 1 - weather.Radn / Rin;
@@ -267,14 +238,12 @@ namespace Models
             emissivity = 0.0;
 
             for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
-            {
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
                     MyZone._albedo += MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.Canopies[j].Canopy.Albedo;
                     emissivity += MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.Emissivity;
                     MyZone.sumRs += MyZone.Canopies[j].Rs[i];
                 }
-            }
 
             MyZone._albedo += (1.0 - MathUtilities.Divide(MyZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
             emissivity += (1.0 - MathUtilities.Divide(MyZone.sumRs, weather.Radn, 0.0)) * soil_emissivity;
@@ -285,17 +254,12 @@ namespace Models
         /// </summary>
         private void LongWaveRadiation()
         {
-            MyZone.netLongWave = LongWave(MyZone.averageT, MyZone.fractionClearSky, emissivity) * MyZone.dayLength * hr2s / 1000000.0;
-            // W to MJ
+            MyZone.netLongWave = LongWave(MyZone.averageT, MyZone.fractionClearSky, emissivity) * MyZone.dayLength * hr2s / 1000000.0;             // W to MJ
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
-            {
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                {
                     MyZone.Canopies[j].Rl[i] = MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.netLongWave;
-                }
-            }
         }
 
         /// <summary>
@@ -307,20 +271,11 @@ namespace Models
         /// </summary>
         private double LongWave(double temperature, double fracClearSkyRad, double emmisCanopy)
         {
-            //  Notes
-            //   Emissivity of the sky comes from Swinbank, W.C. (1963).
-            //   Longwave radiation from clear skies Quart. J. Roy. Meteorol.
-            //   Soc. 89, 339-348.
-
-            double emmisSky = 0;          // emmisivity of the sky
-            double cloudEffect = 0;       // cloud effect on net long wave (0-1)
-            emmisSky = 9.37E-06 * Math.Pow(temperature + abs_temp, 2.0);
-
+            //  Notes: Emissivity of the sky comes from Swinbank, W.C. (1963) Longwave radiation from clear skies Quart. J. Roy. Meteorol. Soc. 89, 339-348.
             fracClearSkyRad = Math.Max(0.0, Math.Min(1.0, fracClearSkyRad));
-            cloudEffect = (c_cloud + (1.0 - c_cloud) * fracClearSkyRad);
-
+            double emmisSky = 9.37E-06 * Math.Pow(temperature + abs_temp, 2.0);   // emmisivity of the sky
+            double cloudEffect = (c_cloud + (1.0 - c_cloud) * fracClearSkyRad);   // cloud effect on net long wave (0-1)
             return cloudEffect * (emmisSky - emmisCanopy) * stef_boltz * Math.Pow(temperature + abs_temp, 4.0);
-
         }
 
         /// <summary>
@@ -328,22 +283,14 @@ namespace Models
         /// </summary>
         private void SoilHeatRadiation()
         {
-            double radnint = 0;
-            // Intercepted SW radiation
-            radnint = MyZone.sumRs;
+            double radnint = MyZone.sumRs;   // Intercepted SW radiation
             MyZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, soil_heat_flux_fraction);
-
-            // soil_heat = -0.1 * ((1.0 - albedo) * radn * netLongWave;
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
-            {
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                {
                     MyZone.Canopies[j].Rsoil[i] = MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.soil_heat;
-                }
-            }
         }
 
         /// <summary>

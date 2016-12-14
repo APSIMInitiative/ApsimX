@@ -74,6 +74,8 @@ namespace Models
         // hours to seconds
         /// <summary>The HR2S</summary>
         private const double hr2s = 60.0 * 60.0;
+
+        private const double vonKarman = 0.41;
         #endregion
 
 
@@ -91,6 +93,7 @@ namespace Models
         [Serializable]
         private class MicroClimateZone
         {
+            public Zone zone = null;
 
             /// <summary>The _albedo</summary>
             public double _albedo = 0;
@@ -358,6 +361,8 @@ namespace Models
         {
             Reset();
 
+            MyZone.zone = this.Parent as Zone;
+
             // Create all canopy objects.
             foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
                 MyZone.Canopies.Add(new CanopyType(canopy));
@@ -435,11 +440,11 @@ namespace Models
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            MyZone.dayLength = CalcDayLength(weather.Latitude, Clock.Today.Day, sun_angle);
+            MyZone.dayLength = MathUtilities.DayLength(Clock.Today.Day, sun_angle, weather.Latitude); 
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            MyZone.dayLengthLight = CalcDayLength(weather.Latitude, Clock.Today.Day, SunSetAngle);
+            MyZone.dayLengthLight = MathUtilities.DayLength(Clock.Today.Day, SunSetAngle, weather.Latitude);
 
             MyZone.sunshineHours = CalcSunshineHours(weather.Radn, MyZone.dayLengthLight, weather.Latitude, Clock.Today.Day);
 
