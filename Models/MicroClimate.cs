@@ -234,6 +234,30 @@ namespace Models
                     }
                 }
             }
+
+            /// <summary>
+            /// Reset class state
+            /// </summary>
+            public void Reset()
+            {
+                soil_heat = 0.0;
+                dryleaffraction = 0.0;
+                _albedo = 0.0;// albedo;
+                netLongWave = 0;
+                sumRs = 0;
+                averageT = 0;
+                sunshineHours = 0;
+                fractionClearSky = 0;
+                dayLength = 0;
+                dayLengthLight = 0;
+                numLayers = 0;
+                DeltaZ = new double[-1 + 1];
+                layerKtot = new double[-1 + 1];
+                layerLAIsum = new double[-1 + 1];
+                Canopies.Clear();
+
+            }
+
         }
 
         private MicroClimateZone MyZone = new MicroClimateZone();
@@ -484,21 +508,7 @@ namespace Models
             refheight = 2.0;
             albedo = 0.15;
             emissivity = 0.96;
-            MyZone.soil_heat = 0.0;
-            MyZone.dryleaffraction = 0.0;
-            MyZone._albedo = albedo;
-            MyZone.netLongWave = 0;
-            MyZone.sumRs = 0;
-            MyZone.averageT = 0;
-            MyZone.sunshineHours = 0;
-            MyZone.fractionClearSky = 0;
-            MyZone.dayLength = 0;
-            MyZone.dayLengthLight = 0;
-            MyZone.numLayers = 0;
-            MyZone.DeltaZ = new double[-1 + 1];
-            MyZone.layerKtot = new double[-1 + 1];
-            MyZone.layerLAIsum = new double[-1 + 1];
-            MyZone.Canopies.Clear();
+            MyZone.Reset();
         }
 
         /// <summary>Canopies the compartments.</summary>
