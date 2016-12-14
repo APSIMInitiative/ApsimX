@@ -48,7 +48,7 @@ namespace Models.Soils
         /// <summary>The number of pore 'cylinders' in this pore compartment</summary>
         [XmlIgnore]
         [Units("/m2")]
-        public double Number { get { return Volume / (Area / 1000000000000); } }
+        public double Number { get { return Volume / (Area / 1e12); } }
         #endregion
 
         #region Porosity and Water
@@ -60,11 +60,11 @@ namespace Models.Soils
         public double Thickness { get; set; }
         /// <summary>The water potential when this pore is empty but all smaller pores are full</summary>
         [XmlIgnore]
-        [Units("cm")]
+        [Units("mm")]
         public double PsiLower { get { return -30000 / DiameterLower; } }
         /// <summary>The water potential when this pore is full but all larger pores are empty</summary>
         [XmlIgnore]
-        [Units("cm")]
+        [Units("mm")]
         public double PsiUpper { get { return -30000 / DiameterUpper; } }
         /// <summary>The water content of the soil when this pore is full and larger pores are empty</summary>
         [XmlIgnore]
@@ -142,7 +142,7 @@ namespace Models.Soils
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Capillarity { get { return VolumetricFlowRate/1000000*3600; } }
+        public double Capillarity { get { return VolumetricFlowRate/1e6*3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -174,8 +174,8 @@ namespace Models.Soils
             get
             {
                 double RepFac = 1;
-                if (RelativeWaterContent < 0.3)
-                    RepFac = 0.3;
+                //if (RelativeWaterContent < 0.3)
+                //    RepFac = 0.3;
                 return RepFac;
             }
         }
@@ -229,6 +229,6 @@ namespace Models.Soils
                 return Capillarity * TensionFactor;
             }
         }
-        #endregion
+#endregion
     }
 }

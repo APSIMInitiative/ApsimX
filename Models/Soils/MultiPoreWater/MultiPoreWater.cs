@@ -377,16 +377,16 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Summary]
-        [Description("The hydraulic conducitivity of water into the pore")]
+        [Description("The Capillarity of each pore")]
         [Display(Format = "N1")]
-        public double[][] HydraulicConductivityIn { get; set; }
+        public double[][] Capillarity { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy out of each pore
         /// </summary>
         [Units("mm/h")]
         [Summary]
         [Display(Format = "N1")]
-        [Description("The hydraulic conducitivity of water out of the pore")]
+        [Description("The Potential hydraulic conducitivity of water out of the pore")]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
         /// The water potential when this pore space is full and larger pores are empty
@@ -479,7 +479,7 @@ namespace Models.Soils
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
-            HydraulicConductivityIn = new double[ProfileLayers][];
+            Capillarity = new double[ProfileLayers][];
             HydraulicConductivityOut = new double[ProfileLayers][];
             PsiUpper = new double[ProfileLayers][];
             RelativePoreVolume = new double[ProfileLayers][];
@@ -487,7 +487,7 @@ namespace Models.Soils
             {
                 Pores[l] = new Pore[PoreCompartments];
                 PoreWater[l] = new double[PoreCompartments];
-                HydraulicConductivityIn[l] = new double[PoreCompartments];
+                Capillarity[l] = new double[PoreCompartments];
                 HydraulicConductivityOut[l] = new double[PoreCompartments];
                 PsiUpper[l] = new double[PoreCompartments];
                 RelativePoreVolume[l] = new double[PoreCompartments];
@@ -495,7 +495,7 @@ namespace Models.Soils
                 {
                     Pores[l][c] = new Pore();
                     PoreWater[l][c] = new double();
-                    HydraulicConductivityIn[l][c] = new double();
+                    Capillarity[l][c] = new double();
                     HydraulicConductivityOut[l][c] = new double();
                     PsiUpper[l][c] = new double();
                     RelativePoreVolume[l][c] = new double();
@@ -738,7 +738,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    if ((Ksat[l + 1] < 0.001) || (SW[l + 1] == Water.SAT[l + 1]))
+                    if (Ksat[l + 1] < 0.001) //Need a better method to establish zero potential base above impervious layer|| (SW[l + 1] == Water.SAT[l + 1]))
                         LayerHeight[l] = 0;
                     else
                         LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1] / 1000;
@@ -983,7 +983,7 @@ namespace Models.Soils
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
-                    HydraulicConductivityIn[l][c] = Pores[l][c].HydraulicConductivityIn;
+                    Capillarity[l][c] = Pores[l][c].Capillarity;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
                 }
