@@ -85,54 +85,64 @@ namespace Models
         [Link]
         private IWeather weather = null;
 
-        /// <summary>The _albedo</summary>
-        private double _albedo = 0;
+        /// <summary>
+        /// MicroClimateZone
+        /// </summary>
+        [Serializable]
+        private class MicroClimateZone
+        {
 
-        /// <summary>The net long wave</summary>
-        private double netLongWave;
+            /// <summary>The _albedo</summary>
+            public double _albedo = 0;
 
-        /// <summary>The sum rs</summary>
-        private double sumRs;
-        
-        /// <summary>The average t</summary>
-        private double averageT;
-        
-        /// <summary>The sunshine hours</summary>
-        private double sunshineHours;
-        
-        /// <summary>The fraction clear sky</summary>
-        private double fractionClearSky;
-        
-        /// <summary>The day length</summary>
-        private double dayLength;
-        
-        /// <summary>The day length light</summary>
-        private double dayLengthLight;
-        
-        /// <summary>The delta z</summary>
-        private double[] DeltaZ = new double[-1 + 1];
-        
-        /// <summary>The layer ktot</summary>
-        private double[] layerKtot = new double[-1 + 1];
-        
-        /// <summary>The layer la isum</summary>
-        private double[] layerLAIsum = new double[-1 + 1];
-        
-        /// <summary>The number layers</summary>
-        private int numLayers;
+            /// <summary>The net long wave</summary>
+            public double netLongWave;
 
-        /// <summary>The soil_heat</summary>
-        private double soil_heat = 0;
+            /// <summary>The sum rs</summary>
+            public double sumRs;
 
-        /// <summary>The dryleaffraction</summary>
-        private double dryleaffraction = 0;
+            /// <summary>The average t</summary>
+            public double averageT;
 
-        /// <summary>The emissivity</summary>
-        private double Emissivity = 0.96;
-        
-        /// <summary>Gets or sets the component data.</summary>
-        private List<CanopyType> Canopies = new List<CanopyType>();
+            /// <summary>The sunshine hours</summary>
+            public double sunshineHours;
 
+            /// <summary>The fraction clear sky</summary>
+            public double fractionClearSky;
+
+            /// <summary>The day length</summary>
+            public double dayLength;
+
+            /// <summary>The day length light</summary>
+            public double dayLengthLight;
+
+            /// <summary>The delta z</summary>
+            public double[] DeltaZ = new double[-1 + 1];
+
+            /// <summary>The layer ktot</summary>
+            public double[] layerKtot = new double[-1 + 1];
+
+            /// <summary>The layer la isum</summary>
+            public double[] layerLAIsum = new double[-1 + 1];
+
+            /// <summary>The number layers</summary>
+            public int numLayers;
+
+            /// <summary>The soil_heat</summary>
+            public double soil_heat = 0;
+
+            /// <summary>The dryleaffraction</summary>
+            public double dryleaffraction = 0;
+
+            /// <summary>The emissivity</summary>
+            public double Emissivity = 0.96;
+
+            /// <summary>Gets or sets the component data.</summary>
+            public List<CanopyType> Canopies = new List<CanopyType>();
+
+        }
+
+        private MicroClimateZone MyZone = new MicroClimateZone();
 
         /// <summary>Constructor</summary>
         public MicroClimate()
@@ -244,11 +254,11 @@ namespace Models
             get
             {
                 double totalInterception = 0.0;
-                for (int i = 0; i <= numLayers - 1; i++)
+                for (int i = 0; i <= MyZone.numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                     {
-                        totalInterception += Canopies[j].interception[i];
+                        totalInterception += MyZone.Canopies[j].interception[i];
                     }
                 }
                 return totalInterception;
@@ -261,7 +271,7 @@ namespace Models
         public double gc
         {
             // Should this be returning a sum or an array instead of just the first value???
-            get { return ((Canopies.Count > 0) && (numLayers > 0)) ? Canopies[0].Gc[0] : 0.0; }
+            get { return ((MyZone.Canopies.Count > 0) && (MyZone.numLayers > 0)) ? MyZone.Canopies[0].Gc[0] : 0.0; }
         }
 
         /// <summary>Gets the ga.</summary>
@@ -270,7 +280,7 @@ namespace Models
         public double ga
         {
             // Should this be returning a sum or an array instead of just the first value???
-            get { return ((Canopies.Count > 0) && (numLayers > 0)) ? Canopies[0].Ga[0] : 0.0; }
+            get { return ((MyZone.Canopies.Count > 0) && (MyZone.numLayers > 0)) ? MyZone.Canopies[0].Ga[0] : 0.0; }
         }
 
         /// <summary>Gets the petr.</summary>
@@ -281,11 +291,11 @@ namespace Models
             get
             {
                 double totalPetr = 0.0;
-                for (int i = 0; i <= numLayers - 1; i++)
+                for (int i = 0; i <= MyZone.numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                     {
-                        totalPetr += Canopies[j].PETr[i];
+                        totalPetr += MyZone.Canopies[j].PETr[i];
                     }
                 }
                 return totalPetr;
@@ -300,11 +310,11 @@ namespace Models
             get
             {
                 double totalPeta = 0.0;
-                for (int i = 0; i <= numLayers - 1; i++)
+                for (int i = 0; i <= MyZone.numLayers - 1; i++)
                 {
-                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                     {
-                        totalPeta += Canopies[j].PETa[i];
+                        totalPeta += MyZone.Canopies[j].PETa[i];
                     }
                 }
                 return totalPeta;
@@ -316,7 +326,7 @@ namespace Models
         [Units("MJ/m2/day")]
         public double net_radn
         {
-            get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
+            get { return weather.Radn * (1.0 - MyZone._albedo) + MyZone.netLongWave; }
         }
 
         /// <summary>Gets the net_rs.</summary>
@@ -324,7 +334,7 @@ namespace Models
         [Units("MJ/m2/day")]
         public double net_rs
         {
-            get { return weather.Radn * (1.0 - _albedo); }
+            get { return weather.Radn * (1.0 - MyZone._albedo); }
         }
 
         /// <summary>Gets the net_rl.</summary>
@@ -332,7 +342,7 @@ namespace Models
         [Units("MJ/m2/day")]
         public double net_rl
         {
-            get { return netLongWave; }
+            get { return MyZone.netLongWave; }
         }
 
         /// <summary>The proportion of radiation that is intercepted by all canopies</summary>
@@ -350,7 +360,7 @@ namespace Models
 
             // Create all canopy objects.
             foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
-                Canopies.Add(new CanopyType(canopy));
+                MyZone.Canopies.Add(new CanopyType(canopy));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -392,21 +402,21 @@ namespace Models
             emissivity = 0.96;
             gsmax = 0.01;
             r50 = 200;
-            soil_heat = 0.0;
-            dryleaffraction = 0.0;
-            _albedo = albedo;
-            netLongWave = 0;
-            sumRs = 0;
-            averageT = 0;
-            sunshineHours = 0;
-            fractionClearSky = 0;
-            dayLength = 0;
-            dayLengthLight = 0;
-            numLayers = 0;
-            DeltaZ = new double[-1 + 1];
-            layerKtot = new double[-1 + 1];
-            layerLAIsum = new double[-1 + 1];
-            Canopies.Clear();
+            MyZone.soil_heat = 0.0;
+            MyZone.dryleaffraction = 0.0;
+            MyZone._albedo = albedo;
+            MyZone.netLongWave = 0;
+            MyZone.sumRs = 0;
+            MyZone.averageT = 0;
+            MyZone.sunshineHours = 0;
+            MyZone.fractionClearSky = 0;
+            MyZone.dayLength = 0;
+            MyZone.dayLengthLight = 0;
+            MyZone.numLayers = 0;
+            MyZone.DeltaZ = new double[-1 + 1];
+            MyZone.layerKtot = new double[-1 + 1];
+            MyZone.layerLAIsum = new double[-1 + 1];
+            MyZone.Canopies.Clear();
         }
 
         /// <summary>Canopies the compartments.</summary>
@@ -421,30 +431,30 @@ namespace Models
         private void MetVariables()
         {
             // averageT = (maxt + mint) / 2.0;
-            averageT = CalcAverageT(weather.MinT, weather.MaxT);
+            MyZone.averageT = CalcAverageT(weather.MinT, weather.MaxT);
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = CalcDayLength(weather.Latitude, Clock.Today.Day, sun_angle);
+            MyZone.dayLength = CalcDayLength(weather.Latitude, Clock.Today.Day, sun_angle);
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = CalcDayLength(weather.Latitude, Clock.Today.Day, SunSetAngle);
+            MyZone.dayLengthLight = CalcDayLength(weather.Latitude, Clock.Today.Day, SunSetAngle);
 
-            sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.Day);
+            MyZone.sunshineHours = CalcSunshineHours(weather.Radn, MyZone.dayLengthLight, weather.Latitude, Clock.Today.Day);
 
-            fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
+            MyZone.fractionClearSky = MathUtilities.Divide(MyZone.sunshineHours, MyZone.dayLengthLight, 0.0);
         }
 
         /// <summary>Break the combined Canopy into layers</summary>
         private void DefineLayers()
         {
-            double[] nodes = new double[2 * Canopies.Count];
+            double[] nodes = new double[2 * MyZone.Canopies.Count];
             int numNodes = 1;
-            for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
+            for (int compNo = 0; compNo <= MyZone.Canopies.Count - 1; compNo++)
             {
-                double height = Canopies[compNo].HeightMetres;
-                double canopyBase = height - Canopies[compNo].DepthMetres;
+                double height = MyZone.Canopies[compNo].HeightMetres;
+                double canopyBase = height - MyZone.Canopies[compNo].DepthMetres;
                 if (Array.IndexOf(nodes, height) == -1)
                 {
                     nodes[numNodes] = height;
@@ -458,80 +468,80 @@ namespace Models
             }
             Array.Resize<double>(ref nodes, numNodes);
             Array.Sort(nodes);
-            numLayers = numNodes - 1;
-            if (DeltaZ.Length != numLayers)
+            MyZone.numLayers = numNodes - 1;
+            if (MyZone.DeltaZ.Length != MyZone.numLayers)
             {
                 // Number of layers has changed; adjust array lengths
-                Array.Resize<double>(ref DeltaZ, numLayers);
-                Array.Resize<double>(ref layerKtot, numLayers);
-                Array.Resize<double>(ref layerLAIsum, numLayers);
+                Array.Resize<double>(ref MyZone.DeltaZ, MyZone.numLayers);
+                Array.Resize<double>(ref MyZone.layerKtot, MyZone.numLayers);
+                Array.Resize<double>(ref MyZone.layerLAIsum, MyZone.numLayers);
 
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Array.Resize<double>(ref Canopies[j].Ftot, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Fgreen, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rs, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rl, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rsoil, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Gc, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Ga, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PET, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PETr, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PETa, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Omega, numLayers);
-                    Array.Resize<double>(ref Canopies[j].interception, numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Ftot, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Fgreen, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Rs, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Rl, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Rsoil, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Gc, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Ga, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].PET, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].PETr, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].PETa, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].Omega, MyZone.numLayers);
+                    Array.Resize<double>(ref MyZone.Canopies[j].interception, MyZone.numLayers);
                 }
             }
             for (int i = 0; i <= numNodes - 2; i++)
             {
-                DeltaZ[i] = nodes[i + 1] - nodes[i];
+                MyZone.DeltaZ[i] = nodes[i + 1] - nodes[i];
             }
         }
 
         /// <summary>Break the components into layers</summary>
         private void DivideComponents()
         {
-            double[] Ld = new double[Canopies.Count];
-            for (int j = 0; j <= Canopies.Count - 1; j++)
+            double[] Ld = new double[MyZone.Canopies.Count];
+            for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
             {
-                CanopyType componentData = Canopies[j];
+                CanopyType componentData = MyZone.Canopies[j];
 
-                componentData.layerLAI = new double[numLayers];
-                componentData.layerLAItot = new double[numLayers];
+                componentData.layerLAI = new double[MyZone.numLayers];
+                componentData.layerLAItot = new double[MyZone.numLayers];
                 Ld[j] = MathUtilities.Divide(componentData.Canopy.LAITotal, componentData.DepthMetres, 0.0);
             }
             double top = 0.0;
             double bottom = 0.0;
 
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
                 bottom = top;
-                top = top + DeltaZ[i];
-                layerLAIsum[i] = 0.0;
+                top = top + MyZone.DeltaZ[i];
+                MyZone.layerLAIsum[i] = 0.0;
 
                 // Calculate LAI for layer i and component j
                 // ===========================================
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
                     if ((componentData.HeightMetres > bottom) && (componentData.HeightMetres - componentData.DepthMetres < top))
                     {
-                        componentData.layerLAItot[i] = Ld[j] * DeltaZ[i];
+                        componentData.layerLAItot[i] = Ld[j] * MyZone.DeltaZ[i];
                         componentData.layerLAI[i] = componentData.layerLAItot[i] * MathUtilities.Divide(componentData.Canopy.LAI, componentData.Canopy.LAITotal, 0.0);
-                        layerLAIsum[i] += componentData.layerLAItot[i];
+                        MyZone.layerLAIsum[i] += componentData.layerLAItot[i];
                     }
                 }
 
                 // Calculate fractional contribution for layer i and component j
                 // ====================================================================
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
-                    componentData.Ftot[i] = MathUtilities.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
+                    componentData.Ftot[i] = MathUtilities.Divide(componentData.layerLAItot[i], MyZone.layerLAIsum[i], 0.0);
                     // Note: Sum of Fgreen will be < 1 as it is green over total
-                    componentData.Fgreen[i] = MathUtilities.Divide(componentData.layerLAI[i], layerLAIsum[i], 0.0);
+                    componentData.Fgreen[i] = MathUtilities.Divide(componentData.layerLAI[i], MyZone.layerLAIsum[i], 0.0);
                 }
             }
         }
@@ -541,11 +551,11 @@ namespace Models
         {
             // Calculate effective K from LAI and cover
             // =========================================
-            for (int j = 0; j <= Canopies.Count - 1; j++)
+            for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
             {
-                CanopyType componentData = Canopies[j];
+                CanopyType componentData = MyZone.Canopies[j];
 
-                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
+                if (MathUtilities.FloatsAreEqual(MyZone.Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
                 {
                     throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
                 }
@@ -556,14 +566,14 @@ namespace Models
 
             // Calculate extinction for individual layers
             // ============================================
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                layerKtot[i] = 0.0;
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                MyZone.layerKtot[i] = 0.0;
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
-                    layerKtot[i] += componentData.Ftot[i] * componentData.Ktot;
+                    MyZone.layerKtot[i] += componentData.Ftot[i] * componentData.Ktot;
 
                 }
             }
@@ -583,16 +593,16 @@ namespace Models
         {
             double Rin = weather.Radn;
 
-            for (int i = numLayers - 1; i >= 0; i += -1)
+            for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
-                double Rflux = Rin * 1000000.0 / (dayLength * hr2s) * (1.0 - _albedo);
+                double Rflux = Rin * 1000000.0 / (MyZone.dayLength * hr2s) * (1.0 - MyZone._albedo);
                 double Rint = 0.0;
 
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
-                    componentData.Gc[i] = CanopyConductance(componentData.Canopy.Gsmax, componentData.Canopy.R50, componentData.Canopy.FRGR, componentData.Fgreen[i], layerKtot[i], layerLAIsum[i], Rflux);
+                    componentData.Gc[i] = CanopyConductance(componentData.Canopy.Gsmax, componentData.Canopy.R50, componentData.Canopy.FRGR, componentData.Fgreen[i], MyZone.layerKtot[i], MyZone.layerLAIsum[i], Rflux);
 
                     Rint += componentData.Rs[i];
                 }
@@ -607,21 +617,21 @@ namespace Models
             double windspeed = weather.Wind;
             double sumDeltaZ = 0.0;
             double sumLAI = 0.0;
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                sumDeltaZ += DeltaZ[i];
+                sumDeltaZ += MyZone.DeltaZ[i];
                 // top height
                 // total lai
-                sumLAI += layerLAIsum[i];
+                sumLAI += MyZone.layerLAIsum[i];
             }
 
             double totalGa = AerodynamicConductanceFAO(windspeed, refheight, sumDeltaZ, sumLAI);
 
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Canopies[j].Ga[i] = totalGa * MathUtilities.Divide(Canopies[j].Rs[i], sumRs, 0.0);
+                    MyZone.Canopies[j].Ga[i] = totalGa * MathUtilities.Divide(MyZone.Canopies[j].Rs[i], MyZone.sumRs, 0.0);
                 }
             }
         }
@@ -631,12 +641,12 @@ namespace Models
         {
             double sumLAI = 0.0;
             double sumLAItot = 0.0;
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    sumLAI += Canopies[j].layerLAI[i];
-                    sumLAItot += Canopies[j].layerLAItot[i];
+                    sumLAI += MyZone.Canopies[j].layerLAI[i];
+                    sumLAItot += MyZone.Canopies[j].layerLAItot[i];
                 }
             }
 
@@ -644,11 +654,11 @@ namespace Models
 
             totalInterception = Math.Max(0.0, Math.Min(0.99 * weather.Rain, totalInterception));
 
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Canopies[j].interception[i] = MathUtilities.Divide(Canopies[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
+                    MyZone.Canopies[j].interception[i] = MathUtilities.Divide(MyZone.Canopies[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
                 }
             }
         }
@@ -661,11 +671,11 @@ namespace Models
             double sumRsoil = 0.0;
             double sumInterception = 0.0;
             double freeEvapGa = 0.0;
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
                     componentData.PET[i] = 0.0;
                     componentData.PETr[i] = 0.0;
                     componentData.PETa[i] = 0.0;
@@ -676,31 +686,31 @@ namespace Models
                 }
             }
 
-            double netRadiation = ((1.0 - _albedo) * sumRs + sumRl + sumRsoil) * 1000000.0;
+            double netRadiation = ((1.0 - MyZone._albedo) * MyZone.sumRs + sumRl + sumRsoil) * 1000000.0;
             // MJ/J
             netRadiation = Math.Max(0.0, netRadiation);
             double freeEvapGc = freeEvapGa * 1000000.0;
             // =infinite surface conductance
-            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, air_pressure, dayLength, freeEvapGa, freeEvapGc);
+            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, air_pressure, MyZone.dayLength, freeEvapGa, freeEvapGc);
 
-            dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
-            dryleaffraction = Math.Max(0.0, dryleaffraction);
+            MyZone.dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
+            MyZone.dryleaffraction = Math.Max(0.0, MyZone.dryleaffraction);
 
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
-                    netRadiation = 1000000.0 * ((1.0 - _albedo) * componentData.Rs[i] + componentData.Rl[i] + componentData.Rsoil[i]);
+                    netRadiation = 1000000.0 * ((1.0 - MyZone._albedo) * componentData.Rs[i] + componentData.Rl[i] + componentData.Rsoil[i]);
                     // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
                     if (j == 39) 
                         netRadiation += 0.0;
-                    componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
+                    componentData.PETr[i] = CalcPETr(netRadiation * MyZone.dryleaffraction, weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
 
-                    componentData.PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
+                    componentData.PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, air_pressure, MyZone.dayLength * MyZone.dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
 
                     componentData.PET[i] = componentData.PETr[i] + componentData.PETa[i];
                 }
@@ -710,11 +720,11 @@ namespace Models
         /// <summary>Calculate the aerodynamic decoupling for system compartments</summary>
         private void CalculateOmega()
         {
-            for (int i = 0; i <= numLayers - 1; i++)
+            for (int i = 0; i <= MyZone.numLayers - 1; i++)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    CanopyType componentData = Canopies[j];
+                    CanopyType componentData = MyZone.Canopies[j];
 
                     componentData.Omega[i] = CalcOmega(weather.MinT, weather.MaxT, air_pressure, componentData.Ga[i], componentData.Gc[i]);
                 }
@@ -724,19 +734,19 @@ namespace Models
         /// <summary>Send an energy balance event</summary>
         private void SendEnergyBalanceEvent()
         {
-            for (int j = 0; j <= Canopies.Count - 1; j++)
+            for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
             {
-                CanopyType componentData = Canopies[j];
+                CanopyType componentData = MyZone.Canopies[j];
 
                 if (componentData.Canopy != null)
                 {
-                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[MyZone.numLayers];
                     double totalPotentialEp = 0;
                     double totalInterception = 0.0;
-                    for (int i = 0; i <= numLayers - 1; i++)
+                    for (int i = 0; i <= MyZone.numLayers - 1; i++)
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                        lightProfile[i].thickness = Convert.ToSingle(DeltaZ[i]);
+                        lightProfile[i].thickness = Convert.ToSingle(MyZone.DeltaZ[i]);
                         lightProfile[i].amount = Convert.ToSingle(componentData.Rs[i] * RadnGreenFraction(j));
                         totalPotentialEp += componentData.PET[i];
                         totalInterception += componentData.interception[i];

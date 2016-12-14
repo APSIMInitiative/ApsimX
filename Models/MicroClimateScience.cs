@@ -244,13 +244,13 @@ namespace Models
             // ==============================
             double Rin = weather.Radn;
             double Rint = 0;
-            for (int i = numLayers - 1; i >= 0; i += -1)
+            for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
-                Rint = Rin * (1.0 - Math.Exp(-layerKtot[i] * layerLAIsum[i]));
+                Rint = Rin * (1.0 - Math.Exp(-MyZone.layerKtot[i] * MyZone.layerLAIsum[i]));
 
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Canopies[j].Rs[i] = Rint * MathUtilities.Divide(Canopies[j].Ftot[i] * Canopies[j].Ktot, layerKtot[i], 0.0);
+                    MyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MyZone.Canopies[j].Ftot[i] * MyZone.Canopies[j].Ktot, MyZone.layerKtot[i], 0.0);
                 }
                 Rin -= Rint;
             }
@@ -262,22 +262,22 @@ namespace Models
         /// </summary>
         private void EnergyTerms()
         {
-            sumRs = 0.0;
-            _albedo = 0.0;
+            MyZone.sumRs = 0.0;
+            MyZone._albedo = 0.0;
             emissivity = 0.0;
 
-            for (int i = numLayers - 1; i >= 0; i += -1)
+            for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    _albedo += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * Canopies[j].Canopy.Albedo;
-                    emissivity += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * Emissivity;
-                    sumRs += Canopies[j].Rs[i];
+                    MyZone._albedo += MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.Canopies[j].Canopy.Albedo;
+                    emissivity += MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.Emissivity;
+                    MyZone.sumRs += MyZone.Canopies[j].Rs[i];
                 }
             }
 
-            _albedo += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soil_albedo;
-            emissivity += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soil_emissivity;
+            MyZone._albedo += (1.0 - MathUtilities.Divide(MyZone.sumRs, weather.Radn, 0.0)) * soil_albedo;
+            emissivity += (1.0 - MathUtilities.Divide(MyZone.sumRs, weather.Radn, 0.0)) * soil_emissivity;
         }
 
         /// <summary>
@@ -285,15 +285,15 @@ namespace Models
         /// </summary>
         private void LongWaveRadiation()
         {
-            netLongWave = LongWave(averageT, fractionClearSky, emissivity) * dayLength * hr2s / 1000000.0;
+            MyZone.netLongWave = LongWave(MyZone.averageT, MyZone.fractionClearSky, emissivity) * MyZone.dayLength * hr2s / 1000000.0;
             // W to MJ
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = numLayers - 1; i >= 0; i += -1)
+            for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Canopies[j].Rl[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * netLongWave;
+                    MyZone.Canopies[j].Rl[i] = MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.netLongWave;
                 }
             }
         }
@@ -312,31 +312,15 @@ namespace Models
             //   Longwave radiation from clear skies Quart. J. Roy. Meteorol.
             //   Soc. 89, 339-348.
 
-            //  Changes
-            //      291098 - NIH Adapted from Grandis module
-            //       050799 - VOS Changed sign so that is net INWARDS longwave
-            //       060799 - VOS Changed arguments from sunhine hours and daylength
-            //          to FracClearSkyRadn for compatability with variable timestep
-
-            double emmisSky = 0;
-            // emmisivity of the sky
-            double cloudEffect = 0;
-            // cloud effect on net long wave (0-1)
+            double emmisSky = 0;          // emmisivity of the sky
+            double cloudEffect = 0;       // cloud effect on net long wave (0-1)
             emmisSky = 9.37E-06 * Math.Pow(temperature + abs_temp, 2.0);
-
-            // assume constant value for now
-            // emmisSky = 0.80
 
             fracClearSkyRad = Math.Max(0.0, Math.Min(1.0, fracClearSkyRad));
             cloudEffect = (c_cloud + (1.0 - c_cloud) * fracClearSkyRad);
 
-            // remove cloud effect for now
-            // cloud_effect = 1.0
-
             return cloudEffect * (emmisSky - emmisCanopy) * stef_boltz * Math.Pow(temperature + abs_temp, 4.0);
 
-            // Try Monteith approach
-            // return -(107. - 0.3 * temperature);
         }
 
         /// <summary>
@@ -346,18 +330,18 @@ namespace Models
         {
             double radnint = 0;
             // Intercepted SW radiation
-            radnint = sumRs;
-            soil_heat = SoilHeatFlux(weather.Radn, radnint, soil_heat_flux_fraction);
+            radnint = MyZone.sumRs;
+            MyZone.soil_heat = SoilHeatFlux(weather.Radn, radnint, soil_heat_flux_fraction);
 
             // soil_heat = -0.1 * ((1.0 - albedo) * radn * netLongWave;
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
-            for (int i = numLayers - 1; i >= 0; i += -1)
+            for (int i = MyZone.numLayers - 1; i >= 0; i += -1)
             {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
+                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
                 {
-                    Canopies[j].Rsoil[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * soil_heat;
+                    MyZone.Canopies[j].Rsoil[i] = MathUtilities.Divide(MyZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MyZone.soil_heat;
                 }
             }
         }
@@ -378,8 +362,8 @@ namespace Models
         /// </summary>
         private double RadnGreenFraction(int j)
         {
-            double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
-            double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
+            double klGreen = -Math.Log(1.0 - MyZone.Canopies[j].Canopy.CoverGreen);
+            double klTot = -Math.Log(1.0 - MyZone.Canopies[j].Canopy.CoverTotal);
             return MathUtilities.Divide(klGreen, klTot, 0.0);
         }
     }
