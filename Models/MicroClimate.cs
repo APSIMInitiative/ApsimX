@@ -551,9 +551,7 @@ namespace Models
                 CanopyType componentData = MyZone.Canopies[j];
 
                 if (MathUtilities.FloatsAreEqual(MyZone.Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
-                {
                     throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
-                }
 
                 componentData.K = MathUtilities.Divide(-Math.Log(1.0 - componentData.Canopy.CoverGreen), componentData.Canopy.LAI, 0.0);
                 componentData.Ktot = MathUtilities.Divide(-Math.Log(1.0 - componentData.Canopy.CoverTotal), componentData.Canopy.LAITotal, 0.0);
@@ -623,12 +621,8 @@ namespace Models
             double totalGa = AerodynamicConductanceFAO(windspeed, refheight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= MyZone.numLayers - 1; i++)
-            {
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                {
                     MyZone.Canopies[j].Ga[i] = totalGa * MathUtilities.Divide(MyZone.Canopies[j].Rs[i], MyZone.sumRs, 0.0);
-                }
-            }
         }
 
         /// <summary>Calculate the interception loss of water from the canopy</summary>
@@ -650,12 +644,8 @@ namespace Models
             totalInterception = Math.Max(0.0, Math.Min(0.99 * weather.Rain, totalInterception));
 
             for (int i = 0; i <= MyZone.numLayers - 1; i++)
-            {
                 for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                {
                     MyZone.Canopies[j].interception[i] = MathUtilities.Divide(MyZone.Canopies[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
-                }
-            }
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>
