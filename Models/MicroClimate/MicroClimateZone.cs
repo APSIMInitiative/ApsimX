@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using System.Collections.Generic;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -14,6 +15,9 @@ namespace Models
         private class MicroClimateZone
         {
             public Zone zone = null;
+            /// <summary>The weather</summary>
+            [Link]
+            private IWeather weather = null;
 
             /// <summary>The _albedo</summary>
             public double _albedo = 0;
@@ -63,8 +67,16 @@ namespace Models
             /// <summary>Gets or sets the component data.</summary>
             public List<CanopyType> Canopies = new List<CanopyType>();
 
+            /// <summary>Canopies the compartments.</summary>
+            public void DoCanopyCompartments()
+            {
+                DefineLayers();
+                DivideComponents();
+                LightExtinction();
+            }
+
             /// <summary>Break the combined Canopy into layers</summary>
-            public void DefineLayers()
+            private void DefineLayers()
             {
                 double[] nodes = new double[2 * Canopies.Count];
                 int numNodes = 1;
@@ -116,7 +128,7 @@ namespace Models
             }
 
             /// <summary>Break the components into layers</summary>
-            public void DivideComponents()
+            private void DivideComponents()
             {
                 double[] Ld = new double[Canopies.Count];
                 for (int j = 0; j <= Canopies.Count - 1; j++)
@@ -162,6 +174,29 @@ namespace Models
                     }
                 }
             }
+            /// <summary>Calculate light extinction parameters</summary>
+            private void LightExtinction()
+            {
+                // Calculate effective K from LAI and cover
+                // =========================================
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                {
+                    if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
+                        throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
+
+                    Canopies[j].K = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverGreen), Canopies[j].Canopy.LAI, 0.0);
+                    Canopies[j].Ktot = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverTotal), Canopies[j].Canopy.LAITotal, 0.0);
+                }
+
+                // Calculate extinction for individual layers
+                // ============================================
+                for (int i = 0; i <= numLayers - 1; i++)
+                {
+                    layerKtot[i] = 0.0;
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                        layerKtot[i] += Canopies[j].Ftot[i] * Canopies[j].Ktot;
+                }
+            }
 
             /// <summary>
             /// Reset class state
@@ -184,6 +219,73 @@ namespace Models
                 layerLAIsum = new double[-1 + 1];
                 Canopies.Clear();
 
+            }
+
+            /// <summary>Gets the interception.</summary>
+            [Description("Intercepted rainfall")]
+            [Units("mm")]
+            public double interception
+            {
+                get
+                {
+                    double totalInterception = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalInterception += Canopies[j].interception[i];
+                    return totalInterception;
+                }
+            }
+            /// <summary>Gets the petr.</summary>
+            [Description("Radiation component of PET")]
+            [Units("mm/day")]
+            public double petr
+            {
+                get
+                {
+                    double totalPetr = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalPetr += Canopies[j].PETr[i];
+                    return totalPetr;
+                }
+            }
+
+            /// <summary>Gets the peta.</summary>
+            [Description("Aerodynamic component of PET")]
+            [Units("mm/day")]
+            public double peta
+            {
+                get
+                {
+                    double totalPeta = 0.0;
+                    for (int i = 0; i <= numLayers - 1; i++)
+                        for (int j = 0; j <= Canopies.Count - 1; j++)
+                            totalPeta += Canopies[j].PETa[i];
+                    return totalPeta;
+                }
+            }
+            /// <summary>Gets the net_radn.</summary>
+            [Description("Net all-wave radiation of the whole system")]
+            [Units("MJ/m2/day")]
+            public double net_radn
+            {
+                get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
+            }
+
+            /// <summary>Gets the net_rs.</summary>
+            [Description("Net short-wave radiation of the whole system")]
+            [Units("MJ/m2/day")]
+            public double net_rs
+            {
+                get { return weather.Radn * (1.0 - _albedo); }
+            }
+
+            /// <summary>Gets the net_rl.</summary>
+            [Description("Net long-wave radiation of the whole system")]
+            [Units("MJ/m2/day")]
+            public double net_rl
+            {
+                get { return netLongWave; }
             }
 
         }

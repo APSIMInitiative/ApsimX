@@ -171,24 +171,6 @@ namespace Models
         [Units("0-1")]
         public double emissivity { get; set; }
 
-        /// <summary>Gets the interception.</summary>
-        [Description("Intercepted rainfall")]
-        [Units("mm")]
-        public double interception
-        {
-            get
-            {
-                double totalInterception = 0.0;
-                for (int i = 0; i <= MyZone.numLayers - 1; i++)
-                {
-                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                    {
-                        totalInterception += MyZone.Canopies[j].interception[i];
-                    }
-                }
-                return totalInterception;
-            }
-        }
 
         /// <summary>Gets the gc.</summary>
         [Description("Canopy conductance of the whole system")]
@@ -208,67 +190,7 @@ namespace Models
             get { return ((MyZone.Canopies.Count > 0) && (MyZone.numLayers > 0)) ? MyZone.Canopies[0].Ga[0] : 0.0; }
         }
 
-        /// <summary>Gets the petr.</summary>
-        [Description("Radiation component of PET")]
-        [Units("mm/day")]
-        public double petr
-        {
-            get
-            {
-                double totalPetr = 0.0;
-                for (int i = 0; i <= MyZone.numLayers - 1; i++)
-                {
-                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                    {
-                        totalPetr += MyZone.Canopies[j].PETr[i];
-                    }
-                }
-                return totalPetr;
-            }
-        }
 
-        /// <summary>Gets the peta.</summary>
-        [Description("Aerodynamic component of PET")]
-        [Units("mm/day")]
-        public double peta
-        {
-            get
-            {
-                double totalPeta = 0.0;
-                for (int i = 0; i <= MyZone.numLayers - 1; i++)
-                {
-                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                    {
-                        totalPeta += MyZone.Canopies[j].PETa[i];
-                    }
-                }
-                return totalPeta;
-            }
-        }
-
-        /// <summary>Gets the net_radn.</summary>
-        [Description("Net all-wave radiation of the whole system")]
-        [Units("MJ/m2/day")]
-        public double net_radn
-        {
-            get { return weather.Radn * (1.0 - MyZone._albedo) + MyZone.netLongWave; }
-        }
-
-        /// <summary>Gets the net_rs.</summary>
-        [Description("Net short-wave radiation of the whole system")]
-        [Units("MJ/m2/day")]
-        public double net_rs
-        {
-            get { return weather.Radn * (1.0 - MyZone._albedo); }
-        }
-
-        /// <summary>Gets the net_rl.</summary>
-        [Description("Net long-wave radiation of the whole system")]
-        [Units("MJ/m2/day")]
-        public double net_rl
-        {
-            get { return MyZone.netLongWave; }
-        }
 
         /// <summary>The proportion of radiation that is intercepted by all canopies</summary>
         [Description("The proportion of radiation that is intercepted by all canopies")]
@@ -297,7 +219,7 @@ namespace Models
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
             MetVariables();
-            CanopyCompartments();
+            MyZone.DoCanopyCompartments();
             BalanceCanopyEnergy();
 
             CalculateGc();
@@ -330,13 +252,6 @@ namespace Models
             MyZone.Reset();
         }
 
-        /// <summary>Canopies the compartments.</summary>
-        private void CanopyCompartments()
-        {
-            MyZone.DefineLayers();
-            MyZone.DivideComponents();
-            LightExtinction();
-        }
 
         /// <summary>Mets the variables.</summary>
         private void MetVariables()
@@ -359,29 +274,6 @@ namespace Models
 
 
 
-        /// <summary>Calculate light extinction parameters</summary>
-        private void LightExtinction()
-        {
-            // Calculate effective K from LAI and cover
-            // =========================================
-            for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-            {
-                if (MathUtilities.FloatsAreEqual(MyZone.Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
-                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
-
-                MyZone.Canopies[j].K = MathUtilities.Divide(-Math.Log(1.0 - MyZone.Canopies[j].Canopy.CoverGreen), MyZone.Canopies[j].Canopy.LAI, 0.0);
-                MyZone.Canopies[j].Ktot = MathUtilities.Divide(-Math.Log(1.0 - MyZone.Canopies[j].Canopy.CoverTotal), MyZone.Canopies[j].Canopy.LAITotal, 0.0);
-            }
-
-            // Calculate extinction for individual layers
-            // ============================================
-            for (int i = 0; i <= MyZone.numLayers - 1; i++)
-            {
-                MyZone.layerKtot[i] = 0.0;
-                for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
-                    MyZone.layerKtot[i] += MyZone.Canopies[j].Ftot[i] * MyZone.Canopies[j].Ktot;
-            }
-        }
 
         /// <summary>Perform the overall Canopy Energy Balance</summary>
         private void BalanceCanopyEnergy()
