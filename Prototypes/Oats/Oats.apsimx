@@ -69,7 +69,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           </Constant>
         </DivideFunction>
         <AirTemperatureFunction>
-          <Name>ThermalTime</Name>
+          <Name>ThermalTime1</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
@@ -88,6 +88,24 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
           </Memo>
         </AirTemperatureFunction>
+        <SoilTemperatureFunction>
+          <Name>SoilTemperatureFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>30</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>30</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <maxt_soil_surface>20</maxt_soil_surface>
+          <mint_soil_surface>10</mint_soil_surface>
+        </SoilTemperatureFunction>
         <MultiplyFunction>
           <Name>DailyVernalisation</Name>
           <Memo>
@@ -241,7 +259,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
 ]]></MemoText>
           </Memo>
-          <Value>7</Value>
+          <Value>9</Value>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -509,12 +527,59 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
+        <PhaseLookup>
+          <Name>ThermalTime</Name>
+          <PhaseLookupValue>
+            <Name>SoilTemperature</Name>
+            <SoilTemperatureFunction>
+              <Name>SoilTemperatureFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>25</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <maxt_soil_surface>20</maxt_soil_surface>
+              <mint_soil_surface>10</mint_soil_surface>
+            </SoilTemperatureFunction>
+            <Start>Sowing</Start>
+            <End>TerminalSpikelet</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>AirTemperature</Name>
+            <AirTemperatureFunction>
+              <Name>AirTemperatureFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <Start>TerminalSpikelet</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
         <VariableReference>
-          <Name>ThermalTime</Name>
+          <Name>ThermalTime1</Name>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
         <MultiplyFunction>
@@ -550,7 +615,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
-            <Value>120</Value>
+            <Value>100</Value>
             <Units>oC.d</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -901,6 +966,53 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Leaf].NextExpandingLeafProportion</VariableName>
           </VariableReference>
         </AddFunction>
+        <PhaseLookup>
+          <Name>ThermalTime</Name>
+          <PhaseLookupValue>
+            <Name>SoilTemperature</Name>
+            <SoilTemperatureFunction>
+              <Name>SoilTemperatureFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <maxt_soil_surface>20</maxt_soil_surface>
+              <mint_soil_surface>10</mint_soil_surface>
+            </SoilTemperatureFunction>
+            <Start>Sowing</Start>
+            <End>TerminalSpikelet</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>AirTemperature</Name>
+            <AirTemperatureFunction>
+              <Name>AirTemperatureFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>30</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <Start>TerminalSpikelet</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
@@ -2726,6 +2838,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -2734,7 +2847,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4415,7 +4527,15 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>Full: Series</string>
+        <string>LD1: Series</string>
+        <string>LD4: Series</string>
+        <string>Nill: Series1</string>
+        <string>Full: Series1</string>
+        <string>LD1: Series1</string>
+        <string>LD4: Series1</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -4543,5 +4663,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>383</ExplorerWidth>
+  <ExplorerWidth>382</ExplorerWidth>
 </Simulations>
