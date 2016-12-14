@@ -1,10 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Text;
+﻿using System;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -41,13 +35,9 @@ namespace Models
         /// </summary>
         private double CanopyConductance(double cropGsMax, double cropR50, double cropRGfac, double cropLAIfac, double layerK, double layerLAI, double layerSolRad)
         {
-
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
-            double hyperbolic = MathUtilities.Divide(numerator, denominator, 0.0);
-
-            hyperbolic = Math.Max(1.0, hyperbolic);
-
+            double hyperbolic = Math.Max(1.0, MathUtilities.Divide(numerator, denominator, 0.0));
             return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropRGfac * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
         }
 
@@ -56,14 +46,12 @@ namespace Models
         /// </summary>
         private double AerodynamicConductanceFAO(double windSpeed, double refHeight, double topHeight, double LAItot)
         {
-
             // Calculate site properties
             double d = 0.666 * topHeight;        // zero plane displacement height (m)
             double Zh = topHeight + refHeight;   // height of humidity measurement (m) - assume reference above canopy
             double Zm = topHeight + refHeight;   // height of wind measurement (m)
             double Z0m = 0.123 * topHeight;      // roughness length governing transfer of momentum (m)
             double Z0h = 0.1 * Z0m;              // roughness length governing transfer of heat and vapour (m)
-
             // Calcuate conductance
             double mterm = 0.0; // momentum term in Ga calculation
             double hterm = 0.0; // heat term in Ga calculation
@@ -72,7 +60,6 @@ namespace Models
                 mterm = MathUtilities.Divide(vonKarman, Math.Log(MathUtilities.Divide(Zm - d, Z0m, 0.0)), 0.0);
                 hterm = MathUtilities.Divide(vonKarman, Math.Log(MathUtilities.Divide(Zh - d, Z0h, 0.0)), 0.0);
             }
-
             return Math.Max(0.001, windSpeed * mterm * hterm);
         }
 
@@ -85,14 +72,10 @@ namespace Models
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double RhoA = CalcRhoA(averageT, airPressure);
             double lambda = CalcLambda(averageT);
-
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
             double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;    // unitless
-
             double PETr = MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
-
             double PETa = MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
-
             return PETr + PETa;
         }
 
@@ -105,7 +88,6 @@ namespace Models
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
             double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
-
             return MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
 
         }
@@ -119,13 +101,9 @@ namespace Models
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
             double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
-
             double RhoA = CalcRhoA(averageT, airPressure);
-
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
-
             return MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
-
         }
 
         /// <summary>
@@ -133,8 +111,7 @@ namespace Models
         /// </summary>
         private double CalcRhoA(double temperature, double airPressure)
         {
-            // air pressure converted to Pa
-            return MathUtilities.Divide(mwair * airPressure * 100.0, (abs_temp + temperature) * r_gas, 0.0);
+            return MathUtilities.Divide(mwair * airPressure * 100.0, (abs_temp + temperature) * r_gas, 0.0);            // air pressure converted to Pa
         }
 
         /// <summary>

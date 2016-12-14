@@ -1,14 +1,6 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Text;
 using Models.Core;
-using Models;
-using Models.PMF;
-using System.Xml.Serialization;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 
@@ -237,18 +229,6 @@ namespace Models
         [Units("0-1")]
         public double emissivity { get; set; }
 
-        /// <summary>The gsmax</summary>
-        [Description("Maximum stomatal conductance of the plant")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("m/s")]
-        public double gsmax { get; set; }
-
-        /// <summary>The R50</summary>
-        [Description("Radiation at which the stomatal conductance of the plant drops to 50% of maximum")]
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [Units("W/m2")]
-        public double r50 { get; set; }
-
         /// <summary>Gets the interception.</summary>
         [Description("Intercepted rainfall")]
         [Units("mm")]
@@ -405,8 +385,6 @@ namespace Models
             refheight = 2.0;
             albedo = 0.15;
             emissivity = 0.96;
-            gsmax = 0.01;
-            r50 = 200;
             MyZone.soil_heat = 0.0;
             MyZone.dryleaffraction = 0.0;
             MyZone._albedo = albedo;
