@@ -161,17 +161,42 @@
             </Y>
           </XYPairs>
           <Salb>0.15</Salb>
-          <PoreBounds>
-            <double>30598</double>
-            <double>3059</double>
-            <double>305</double>
-            <double>76</double>
-            <double>30</double>
-            <double>3</double>
-            <double>0.75</double>
-            <double>0.2</double>
-            <double>0.0005</double>
-          </PoreBounds>
+          <Thickness>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+            <double>400</double>
+            <double>200</double>
+            <double>200</double>
+            <double>200</double>
+          </Thickness>
+          <CFlow>
+            <double>7E-12</double>
+            <double>7E-12</double>
+            <double>7E-12</double>
+            <double>7E-12</double>
+            <double>7E-12</double>
+            <double>7E-12</double>
+            <double>7E-12</double>
+          </CFlow>
+          <XFlow>
+            <double>3.6</double>
+            <double>3.6</double>
+            <double>3.6</double>
+            <double>3.6</double>
+            <double>3.6</double>
+            <double>3.6</double>
+            <double>3.6</double>
+          </XFlow>
+          <PsiBub>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+            <double>-15</double>
+          </PsiBub>
           <SubProfileConductance>100</SubProfileConductance>
           <WaterTableDepth>3</WaterTableDepth>
           <CalculateInfiltration>true</CalculateInfiltration>
@@ -187,30 +212,6 @@
           <ReportLayer>0</ReportLayer>
           <TimeStep>0</TimeStep>
         </MultiPoreWater>
-        <HydraulicProperties>
-          <Name>HydraulicProperties</Name>
-          <psidul>-100</psidul>
-          <Thickness>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>400</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-            <double>200</double>
-          </Thickness>
-          <kdul>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </kdul>
-        </HydraulicProperties>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
           <fom_type>
@@ -539,6 +540,9 @@
         <Evapotranspiration>
           <Name>Evapotranspiration</Name>
         </Evapotranspiration>
+        <MRSpline>
+          <Name>MRSpline</Name>
+        </MRSpline>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
