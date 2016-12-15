@@ -258,7 +258,6 @@
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />
     <Compile Include="Soils\MultiPoreWater\SubHourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
-    <Compile Include="Soils\MultiPoreWater\ProfileParameters.cs" />
     <Compile Include="Soils\MultiPoreWater\MultiPoreWater.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
