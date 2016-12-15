@@ -208,6 +208,8 @@ namespace Models
             MicroClimateZone MyZone = new MicroClimateZone();
             MyZone.zone = this.Parent as Zone;
             MCZones.Add(MyZone);
+            MCZones[0].Reset();
+
 
             // Create all canopy objects.
             foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
@@ -251,7 +253,7 @@ namespace Models
             refheight = 2.0;
             albedo = 0.15;
             emissivity = 0.96;
-            MCZones[0].Reset();
+
         }
 
 
