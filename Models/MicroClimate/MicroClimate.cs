@@ -395,6 +395,21 @@ namespace Models
                 }
         }
 
+        /// <summary>Gets the interception.</summary>
+        [Description("Intercepted rainfall")]
+        [Units("mm")]
+        public double interception
+        {
+            get
+            {
+                double totalInterception = 0.0;
+                for (int i = 0; i <= MyZone.numLayers - 1; i++)
+                    for (int j = 0; j <= MyZone.Canopies.Count - 1; j++)
+                        totalInterception += MyZone.Canopies[j].interception[i];
+                return totalInterception;
+            }
+        }
+
         /// <summary>Calculate the aerodynamic decoupling for system compartments</summary>
         private void CalculateOmega()
         {

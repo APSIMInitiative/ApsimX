@@ -151,26 +151,20 @@ namespace Models
                     // Calculate LAI for layer i and component j
                     // ===========================================
                     for (int j = 0; j <= Canopies.Count - 1; j++)
-                    {
-                        CanopyType componentData = Canopies[j];
-
-                        if ((componentData.HeightMetres > bottom) && (componentData.HeightMetres - componentData.DepthMetres < top))
+                        if ((Canopies[j].HeightMetres > bottom) && (Canopies[j].HeightMetres - Canopies[j].DepthMetres < top))
                         {
-                            componentData.layerLAItot[i] = Ld[j] * DeltaZ[i];
-                            componentData.layerLAI[i] = componentData.layerLAItot[i] * MathUtilities.Divide(componentData.Canopy.LAI, componentData.Canopy.LAITotal, 0.0);
-                            layerLAIsum[i] += componentData.layerLAItot[i];
+                            Canopies[j].layerLAItot[i] = Ld[j] * DeltaZ[i];
+                            Canopies[j].layerLAI[i] = Canopies[j].layerLAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
+                            layerLAIsum[i] += Canopies[j].layerLAItot[i];
                         }
-                    }
 
                     // Calculate fractional contribution for layer i and component j
                     // ====================================================================
                     for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
-                        CanopyType componentData = Canopies[j];
-
-                        componentData.Ftot[i] = MathUtilities.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
+                        Canopies[j].Ftot[i] = MathUtilities.Divide(Canopies[j].layerLAItot[i], layerLAIsum[i], 0.0);
                         // Note: Sum of Fgreen will be < 1 as it is green over total
-                        componentData.Fgreen[i] = MathUtilities.Divide(componentData.layerLAI[i], layerLAIsum[i], 0.0);
+                        Canopies[j].Fgreen[i] = MathUtilities.Divide(Canopies[j].layerLAI[i], layerLAIsum[i], 0.0);
                     }
                 }
             }
@@ -218,23 +212,8 @@ namespace Models
                 layerKtot = new double[-1 + 1];
                 layerLAIsum = new double[-1 + 1];
                 Canopies.Clear();
-
             }
 
-            /// <summary>Gets the interception.</summary>
-            [Description("Intercepted rainfall")]
-            [Units("mm")]
-            public double interception
-            {
-                get
-                {
-                    double totalInterception = 0.0;
-                    for (int i = 0; i <= numLayers - 1; i++)
-                        for (int j = 0; j <= Canopies.Count - 1; j++)
-                            totalInterception += Canopies[j].interception[i];
-                    return totalInterception;
-                }
-            }
             /// <summary>Gets the petr.</summary>
             [Description("Radiation component of PET")]
             [Units("mm/day")]
