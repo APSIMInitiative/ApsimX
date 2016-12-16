@@ -178,6 +178,7 @@
     <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
@@ -298,8 +299,8 @@
     <Compile Include="Irrigation.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
-    <Compile Include="MicroClimate.cs" />
-    <Compile Include="MicroClimateScience.cs" />
+    <Compile Include="MicroClimate\MicroClimate.cs" />
+    <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Plant\OrganArbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
