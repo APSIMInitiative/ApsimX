@@ -266,7 +266,15 @@ namespace Models
             {
                 get { return netLongWave; }
             }
-
+            /// <summary>
+            /// Calculate the proportion of light intercepted by a given component that corresponds to green leaf
+            /// </summary>
+            public double RadnGreenFraction(int j)
+            {
+                double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+                double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
+                return MathUtilities.Divide(klGreen, klTot, 0.0);
+            }
         }
     }
 }
