@@ -111,7 +111,7 @@ namespace Updater
             }
 
             int exitCode;
-            string output = ReadProcessOutput("/bin/sh", "./updater.sh ApsimSetup.deb", out exitCode);
+            string output = ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.deb", out exitCode);
             if (exitCode == 0)
             {
                 File.Delete("updater.sh");
