@@ -49,8 +49,8 @@ namespace UserInterface.Presenters
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnHoverOverPoint += OnHoverOverPoint;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
-            this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
-            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
+            this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
 
             DrawGraph();
         }
@@ -351,7 +351,7 @@ namespace UserInterface.Presenters
         private void IncludeInDocumentationClicked(object sender, EventArgs e)
         {
             graph.IncludeInDocumentation = !graph.IncludeInDocumentation; // toggle
-            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
+            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
         }
 
         /// <summary>
