@@ -491,8 +491,7 @@ namespace Models.PMF.Organs
             if (soil == null)
                 throw new Exception("Cannot find soil");
             if (soil.Crop(Plant.Name) == null)
-                throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-
+                    throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
             PlantZone = new ZoneState(soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
             Zones = new List<ZoneState>();
             base.OnSimulationCommencing(sender, e);

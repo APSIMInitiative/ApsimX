@@ -31,130 +31,144 @@
             <RSR>0.502900366790381</RSR>
           </RegrStats>
           <RegrStats>
+            <Name>Slurp.Leaf.CoverTotal</Name>
+            <n>808</n>
+            <Slope>1.0127336695256641</Slope>
+            <Intercept>-0.041363173244855167</Intercept>
+            <SEslope>0.00721456122030479</SEslope>
+            <SEintercept>0.0057299445754939379</SEintercept>
+            <R2>0.96070350938272719</R2>
+            <RMSE>0.06883352047033528</RMSE>
+            <NSE>0.94628945007569221</NSE>
+            <ME>-0.031983635797561617</ME>
+            <MAE>0.033066558484006206</MAE>
+            <RSR>0.23161190917444471</RSR>
+          </RegrStats>
+          <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>8568</n>
-            <Slope>1.0089793397693732</Slope>
-            <Intercept>0.0086082460204149336</Intercept>
-            <SEslope>0.0093368055973995969</SEslope>
-            <SEintercept>0.0022162994159650343</SEintercept>
-            <R2>0.57686196733396045</R2>
-            <RMSE>0.056006382920821135</RMSE>
-            <NSE>0.22508811289662245</NSE>
-            <ME>0.010661705289453781</ME>
-            <MAE>0.040671942387074805</MAE>
-            <RSR>0.880239424554208</RSR>
+            <Slope>0.81213857462782046</Slope>
+            <Intercept>-0.1231464212734163</Intercept>
+            <SEslope>0.016842460910742083</SEslope>
+            <SEintercept>0.0039979343995646477</SEintercept>
+            <R2>0.21348915837518834</R2>
+            <RMSE>0.19383122250431412</RMSE>
+            <NSE>-8.2816404753607458</NSE>
+            <ME>-0.16610790787859228</ME>
+            <MAE>0.17217556712841298</MAE>
+            <RSR>3.046400693275384</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>8568</n>
-            <Slope>1.0751218767970781</Slope>
-            <Intercept>-0.020631300193167112</Intercept>
-            <SEslope>0.0081966512611764235</SEslope>
-            <SEintercept>0.002073666849179747</SEintercept>
-            <R2>0.66760464959500354</R2>
-            <RMSE>0.040846227208631729</RMSE>
-            <NSE>0.417372656074091</NSE>
-            <ME>-0.00205627241317888</ME>
-            <MAE>0.032390736799436985</MAE>
-            <RSR>0.76325575237637633</RSR>
+            <Slope>0.22186904918189213</Slope>
+            <Intercept>0.22860321170213244</Intercept>
+            <SEslope>0.0041897319933934182</SEslope>
+            <SEintercept>0.0010599582762291086</SEintercept>
+            <R2>0.24663227062787008</R2>
+            <RMSE>0.058947414079034234</RMSE>
+            <NSE>-0.2134349001687359</NSE>
+            <ME>0.03619848695120112</ME>
+            <MAE>0.0421092537508063</MAE>
+            <RSR>1.101495926508171</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>1128</n>
-            <Slope>0.44129340508768283</Slope>
-            <Intercept>0.11776246337372327</Intercept>
-            <SEslope>0.019904728419424356</SEslope>
-            <SEintercept>0.0055314708094808939</SEintercept>
-            <R2>0.30387316372930384</R2>
-            <RMSE>0.064389950930052689</RMSE>
-            <NSE>-0.03814812656437705</NSE>
-            <ME>-0.0334326781243414</ME>
-            <MAE>0.045498112755510918</MAE>
-            <RSR>1.0184438042820743</RSR>
+            <Slope>0.32815950741383337</Slope>
+            <Intercept>0.18363389290033691</Intercept>
+            <SEslope>0.014522039753619999</SEslope>
+            <SEintercept>0.0039837644039084968</SEintercept>
+            <R2>0.31200503823481152</R2>
+            <RMSE>0.050778119704342609</RMSE>
+            <NSE>0.30698629522574439</NSE>
+            <ME>0.0039447051970605725</ME>
+            <MAE>0.035221013945886066</MAE>
+            <RSR>0.83210536046975769</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>456</n>
-            <Slope>0.20231731819754509</Slope>
-            <Intercept>0.096366915729439145</Intercept>
-            <SEslope>0.025112324502603936</SEslope>
-            <SEintercept>0.0040395989807441935</SEintercept>
-            <R2>0.12508426076951518</R2>
-            <RMSE>0.0593401401902485</RMSE>
-            <NSE>-0.09836798187780138</NSE>
-            <ME>-0.023737808450758249</ME>
-            <MAE>0.039479747137383024</MAE>
-            <RSR>1.0468807382711542</RSR>
+            <Slope>0.26717639507139096</Slope>
+            <Intercept>0.26588263759539432</Intercept>
+            <SEslope>0.0219427911659115</SEslope>
+            <SEintercept>0.0026930649101931446</SEintercept>
+            <R2>0.24616780810934991</R2>
+            <RMSE>0.18018547263569276</RMSE>
+            <NSE>-38.2875935300376</NSE>
+            <ME>0.17844429061013398</ME>
+            <MAE>0.17844429061013398</MAE>
+            <RSR>6.2611050563524522</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>456</n>
-            <Slope>0.48659787370916308</Slope>
-            <Intercept>0.039017505321022473</Intercept>
-            <SEslope>0.041818738749462556</SEslope>
-            <SEintercept>0.0040862796483807353</SEintercept>
-            <R2>0.22971695000912673</R2>
-            <RMSE>0.024271316255222598</RMSE>
-            <NSE>-0.26935592345169224</NSE>
-            <ME>-0.0099147288645806738</ME>
-            <MAE>0.018622347662183319</MAE>
-            <RSR>1.1254209204475296</RSR>
+            <Slope>0.43678749818174178</Slope>
+            <Intercept>0.10826510768672941</Intercept>
+            <SEslope>0.038980476005638615</SEslope>
+            <SEintercept>0.0034742050615844764</SEintercept>
+            <R2>0.21664508563635</R2>
+            <RMSE>0.061393329015283556</RMSE>
+            <NSE>-12.09567984810953</NSE>
+            <ME>0.05898555616224075</ME>
+            <MAE>0.058997268121281733</MAE>
+            <RSR>3.6148252035128055</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>456</n>
-            <Slope>0.29686025200424704</Slope>
-            <Intercept>0.027865999577508856</Intercept>
-            <SEslope>0.024901174337612089</SEslope>
-            <SEintercept>0.0024767883184073363</SEintercept>
-            <R2>0.23841224016174256</R2>
-            <RMSE>0.044643294000008028</RMSE>
-            <NSE>-3.2975795613651222</NSE>
-            <ME>-0.040412727622709817</ME>
-            <MAE>0.040503540542422389</MAE>
-            <RSR>2.0707860934396822</RSR>
+            <Slope>0.20252443643668242</Slope>
+            <Intercept>0.0805490917884098</Intercept>
+            <SEslope>0.031698071701960324</SEslope>
+            <SEintercept>0.002992116336479925</SEintercept>
+            <R2>0.082497463970726215</R2>
+            <RMSE>0.021215647549096776</RMSE>
+            <NSE>-0.21915228116133356</NSE>
+            <ME>0.0068480060416058076</ME>
+            <MAE>0.01638392555198567</MAE>
+            <RSR>1.1029409329594142</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>456</n>
-            <Slope>0.64660521387041114</Slope>
-            <Intercept>0.057860899909041391</Intercept>
-            <SEslope>0.058362587676202761</SEslope>
-            <SEintercept>0.0064445230918770188</SEintercept>
-            <R2>0.21282581917747689</R2>
-            <RMSE>0.038626568419503154</RMSE>
-            <NSE>-1.2753485044840165</NSE>
-            <ME>0.019902080301577991</ME>
-            <MAE>0.032320303086554383</MAE>
-            <RSR>1.5067709531086926</RSR>
+            <Slope>0.10649913372382196</Slope>
+            <Intercept>0.088276352111815573</Intercept>
+            <SEslope>0.022075332661702172</SEslope>
+            <SEintercept>0.0023222504743161147</SEintercept>
+            <R2>0.048765147047751478</R2>
+            <RMSE>0.023160172404436193</RMSE>
+            <NSE>-0.043528415994832148</NSE>
+            <ME>-0.0035080241256478877</ME>
+            <MAE>0.017934854012686022</MAE>
+            <RSR>1.0204116701048021</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>456</n>
-            <Slope>0.51052832698327466</Slope>
-            <Intercept>0.031186109496333707</Intercept>
-            <SEslope>0.034946278796361252</SEslope>
-            <SEintercept>0.0042475949807518187</SEintercept>
-            <R2>0.31977001278890671</R2>
-            <RMSE>0.033564826509086966</RMSE>
-            <NSE>-1.3587874245977303</NSE>
-            <ME>-0.02733782703543999</ME>
-            <MAE>0.02825613990212612</MAE>
-            <RSR>1.5341494859230054</RSR>
+            <Slope>0.14503219289740241</Slope>
+            <Intercept>0.1301665978191647</Intercept>
+            <SEslope>0.023317509116129686</SEslope>
+            <SEintercept>0.0028341596901476111</SEintercept>
+            <R2>0.078522380213845611</R2>
+            <RMSE>0.035323806828762294</RMSE>
+            <NSE>-1.6124921402920354</NSE>
+            <ME>0.027941924895401409</ME>
+            <MAE>0.029625501046098342</MAE>
+            <RSR>1.6145473021443411</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(9)</Name>
             <n>456</n>
-            <Slope>0.7459829549541096</Slope>
-            <Intercept>0.035158226514978574</Intercept>
-            <SEslope>0.04591991570303243</SEslope>
-            <SEintercept>0.0051090341752082881</SEintercept>
-            <R2>0.36760864490765532</R2>
-            <RMSE>0.021555144389076689</RMSE>
-            <NSE>-0.15665121027507478</NSE>
-            <ME>0.0073587167174488264</ME>
-            <MAE>0.017126540875807492</MAE>
-            <RSR>1.0742973026416234</RSR>
+            <Slope>0.12122030684857051</Slope>
+            <Intercept>0.087212775398197134</Intercept>
+            <SEslope>0.022990396630506688</SEslope>
+            <SEintercept>0.002340317218196082</SEintercept>
+            <R2>0.057701922442752629</R2>
+            <RMSE>0.01881983307193372</RMSE>
+            <NSE>-0.01371084062540362</NSE>
+            <ME>-0.0007219146327572351</ME>
+            <MAE>0.014325077018506213</MAE>
+            <RSR>1.0057274931790983</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SWmm(1)</Name>
@@ -215,6 +229,39 @@
       <Name>Soil</Name>
       <Water>
         <Name>Water</Name>
+        <SoilCrop>
+          <Name>SlurpSoil</Name>
+          <LL>
+            <double>0.08</double>
+            <double>0.08</double>
+            <double>0.12</double>
+            <double>0.08</double>
+            <double>0.07</double>
+            <double>0.12</double>
+            <double>0.15</double>
+            <double>0.15</double>
+          </LL>
+          <KL>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </KL>
+          <XF>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </XF>
+        </SoilCrop>
         <Thickness>
           <double>50</double>
           <double>150</double>
@@ -235,6 +282,16 @@
           <double>1.52</double>
           <double>1.65</double>
         </BD>
+        <AirDry>
+          <double>0.08</double>
+          <double>0.08</double>
+          <double>0.12</double>
+          <double>0.08</double>
+          <double>0.07</double>
+          <double>0.12</double>
+          <double>0.15</double>
+          <double>0.15</double>
+        </AirDry>
         <LL15>
           <double>0.08</double>
           <double>0.08</double>
@@ -515,6 +572,150 @@
         <OCUnits>Total</OCUnits>
         <PHUnits>Water</PHUnits>
       </Sample>
+      <Graph>
+        <Name>Graph</Name>
+        <Series>
+          <Name>LL15</Name>
+          <Type>Area</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3479297</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].LL15</XFieldName>
+          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <X2FieldName>[Soil].DUL</X2FieldName>
+          <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Air dry</Name>
+          <Type>Scatter</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].AirDry</XFieldName>
+          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LL15</Name>
+          <Type>Scatter</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711681</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].LL15</XFieldName>
+          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>DUL</Name>
+          <Type>Scatter</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].DUL</XFieldName>
+          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SAT</Name>
+          <Type>Scatter</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16760704</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].SAT</XFieldName>
+          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LL15</Name>
+          <Type>Scatter</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <XFieldName>[Soil].LL15</XFieldName>
+          <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Depth (mm)</Title>
+          <Inverted>true</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Title>Volumetric water (mm/mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <RecordNumber>0</RecordNumber>
       <ASCOrder>Vertosol</ASCOrder>
       <ASCSubOrder>Black</ASCSubOrder>
@@ -6416,82 +6617,14 @@ namespace Models
         <Name>Field</Name>
         <Soil>
           <Name>Soil1</Name>
-          <Analysis>
-            <Name>Analysis</Name>
+          <MultiPoreWater>
+            <Name>MultiPoreWater</Name>
+            <Salb>0.15</Salb>
             <Thickness>
+              <double>50</double>
               <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <PH>
-              <double>6.6</double>
-              <double>6.2</double>
-              <double>5.7</double>
-              <double>5.5</double>
-              <double>5.5</double>
-              <double>5.5</double>
-            </PH>
-            <PHUnits>Water</PHUnits>
-            <BoronUnits>HotWater</BoronUnits>
-          </Analysis>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>SlurpSoil</Name>
-              <LL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.09</double>
-                <double>0.021</double>
-                <double>0.036</double>
-                <double>0.041</double>
-                <double>0.043</double>
-                <double>0.037</double>
-                <double>0.052</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
               <double>150</double>
               <double>100</double>
-              <double>200</double>
               <double>200</double>
               <double>200</double>
               <double>200</double>
@@ -6502,147 +6635,66 @@ namespace Models
               <double>200</double>
               <double>400</double>
             </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.05</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.021</double>
-              <double>0.036</double>
-              <double>0.041</double>
-              <double>0.043</double>
-              <double>0.037</double>
-              <double>0.052</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </AirDry>
-            <LL15>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.021</double>
-              <double>0.036</double>
-              <double>0.041</double>
-              <double>0.043</double>
-              <double>0.037</double>
-              <double>0.052</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </LL15>
-            <DUL>
-              <double>0.29</double>
-              <double>0.28</double>
-              <double>0.31</double>
-              <double>0.145</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.11</double>
-              <double>0.12</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-            </DUL>
-            <SAT>
-              <double>0.46</double>
-              <double>0.46</double>
-              <double>0.48</double>
-              <double>0.4</double>
-              <double>0.38</double>
-              <double>0.37</double>
-              <double>0.38</double>
-              <double>0.39</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-            </SAT>
-          </Water>
-          <SoilWater>
-            <Name>SoilWater</Name>
-            <SummerDate>1-Nov</SummerDate>
-            <SummerU>9</SummerU>
-            <SummerCona>4.4</SummerCona>
-            <WinterDate>1-Apr</WinterDate>
-            <WinterU>9</WinterU>
-            <WinterCona>4.4</WinterCona>
-            <DiffusConst>0</DiffusConst>
-            <DiffusSlope>0</DiffusSlope>
-            <Salb>0.18</Salb>
-            <CN2Bare>68</CN2Bare>
-            <CNRed>20</CNRed>
-            <CNCov>0.8</CNCov>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <max_pond>0</max_pond>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>400</double>
-            </Thickness>
-            <SWCON>
-              <double>0.7</double>
-              <double>0.7</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-            </SWCON>
-            <KLAT>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KLAT>
-            <residueinterception>0</residueinterception>
-          </SoilWater>
+            <CFlow>
+              <double>8E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+              <double>7E-12</double>
+            </CFlow>
+            <XFlow>
+              <double>3.9</double>
+              <double>3.8</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+              <double>3.6</double>
+            </XFlow>
+            <PsiBub>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+              <double>-15</double>
+            </PsiBub>
+            <SubProfileConductance>100</SubProfileConductance>
+            <WaterTableDepth>10</WaterTableDepth>
+            <CalculateInfiltration>true</CalculateInfiltration>
+            <CalculateDrainage>true</CalculateDrainage>
+            <ReportDetail>false</ReportDetail>
+            <IncludeSorption>true</IncludeSorption>
+            <CalculateEvaporation>true</CalculateEvaporation>
+            <CalculateDiffusion>true</CalculateDiffusion>
+            <DiffusivityMultiplier>5</DiffusivityMultiplier>
+            <TotalCover>0</TotalCover>
+            <ResidueWater>0</ResidueWater>
+            <Hour>0</Hour>
+            <ReportLayer>0</ReportLayer>
+            <TimeStep>0</TimeStep>
+          </MultiPoreWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
             <fom_type>
@@ -6685,103 +6737,134 @@ namespace Models
               <double>0.1</double>
               <double>1</double>
             </wfpsN2N2O_y>
-            <oc>
-              <double>1.8356606676098439</double>
-              <double>1.4633385968844384</double>
-              <double>1.1988393325681357</double>
-              <double>1.0301002994895852</double>
-              <double>0.4703383219429832</double>
-              <double>0.47013790451920212</double>
-            </oc>
           </SoilNitrogen>
+          <Evapotranspiration>
+            <Name>Evapotranspiration</Name>
+          </Evapotranspiration>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <RootCN>30</RootCN>
-            <RootWt>3000</RootWt>
-            <SoilCN>11.5</SoilCN>
+            <RootCN>40</RootCN>
+            <RootWt>1000</RootWt>
+            <SoilCN>11</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
             <Thickness>
-              <double>100</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
             </Thickness>
             <Depth>
-              <string>0-10</string>
-              <string>10-30</string>
-              <string>30-60</string>
-              <string>60-90</string>
-              <string>90-120</string>
-              <string>120-150</string>
+              <string>0-20</string>
+              <string>20-40</string>
+              <string>40-60</string>
+              <string>60-80</string>
+              <string>80-100</string>
+              <string>100-120</string>
+              <string>120-140</string>
             </Depth>
             <OC>
-              <double>1.82</double>
-              <double>1.47</double>
-              <double>1.2</double>
-              <double>1.03</double>
-              <double>0.47</double>
-              <double>0.47</double>
+              <double>2.63</double>
+              <double>1.25</double>
+              <double>0.32</double>
+              <double>0.21</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
             </OC>
             <FBiom>
-              <double>0.025</double>
-              <double>0.025</double>
-              <double>0.015</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
             </FBiom>
             <FInert>
-              <double>0.3</double>
               <double>0.4</double>
-              <double>0.75</double>
+              <double>0.7</double>
+              <double>0.8</double>
               <double>0.9</double>
-              <double>0.96</double>
-              <double>0.96</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
-          <Sample>
-            <Name>Initial nitrogen</Name>
+          <Analysis>
+            <Name>Analysis</Name>
             <Thickness>
-              <double>100</double>
               <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </Thickness>
+            <Texture />
+            <MunsellColour />
+            <PH>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+              <double>6</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <MRSpline>
+            <Name>MRSpline</Name>
+          </MRSpline>
+          <Sample>
+            <Name>InitialN</Name>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
               <double>300</double>
               <double>300</double>
               <double>300</double>
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>217</double>
-              <double>30</double>
-              <double>5</double>
-              <double>5</double>
-              <double>0</double>
-              <double>0</double>
+              <double>10</double>
+              <double>10</double>
+              <double>10</double>
+              <double>10</double>
+              <double>10</double>
+              <double>1</double>
+              <double>1</double>
             </NO3>
             <NH4>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
             </NH4>
-            <NO3Units>kgha</NO3Units>
+            <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
           <Sample>
-            <Name>Initial water</Name>
+            <Name>InitialWater</Name>
             <Thickness>
-              <double>150</double>
+              <double>50</double>
+              <double>100</double>
               <double>150</double>
               <double>100</double>
-              <double>200</double>
               <double>200</double>
               <double>200</double>
               <double>200</double>
@@ -6793,36 +6876,185 @@ namespace Models
               <double>400</double>
             </Thickness>
             <SW>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.166</double>
-              <double>0.102</double>
-              <double>0.105</double>
-              <double>0.115</double>
-              <double>0.117</double>
-              <double>0.126</double>
-              <double>0.126</double>
-              <double>0.126</double>
-              <double>0.126</double>
-              <double>0.126</double>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.13</double>
             </SW>
-            <NO3Units>kgha</NO3Units>
+            <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>SlurpSoil</Name>
+              <LL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.12</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.06</double>
+                <double>0.04</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <Thickness>
+              <double>50</double>
+              <double>100</double>
+              <double>150</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>400</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.1</double>
+              <double>0.12</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </AirDry>
+            <LL15>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.12</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.13</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+              <double>0.44</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
+          </Water>
           <RecordNumber>0</RecordNumber>
-          <SoilType />
+          <ASCOrder>Vertosol</ASCOrder>
+          <ASCSubOrder>Black</ASCSubOrder>
+          <SoilType>Clay</SoilType>
           <LocalName />
-          <Site />
-          <NearestTown />
-          <Region />
-          <NaturalVegetation />
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
+          <Site>Norwin</Site>
+          <NearestTown>Norwin</NearestTown>
+          <Region>Darling Downs and Granite Belt</Region>
+          <State>Queensland</State>
+          <Country>Australia</Country>
+          <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+          <ApsoilNumber>900</ApsoilNumber>
+          <Latitude>-27.581836</Latitude>
+          <Longitude>151.320206</Longitude>
           <Area>0</Area>
+          <LocationAccuracy> +/- 20m</LocationAccuracy>
+          <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+          <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
         </Soil>
         <Plant>
           <Name>Slurp</Name>
@@ -7033,9 +7265,9 @@ namespace Models
         <Manager>
           <Name>SlurpSowingRule</Name>
           <Script>
+            <SowingDate>2011-03-14</SowingDate>
             <CultivarName>Lucerne</CultivarName>
             <InitialRootDepth>15</InitialRootDepth>
-            <SowingDate>2011-03-14</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -7114,7 +7346,7 @@ namespace Models
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
             <string>[SetLAIofCrop].Script.leaflai</string>
-            <string>sum([Soil].SoilWater.SWmm[1:9]) as PSWC</string>
+            <string>sum([Soil].SoilWater.SWmm[1:8]) as PSWC</string>
             <string>SetCropVariables.Script.Treatment</string>
             <string>SetCropVariables.Script.CoverRead</string>
             <string>SetCropVariables.Script.Cover as Cover</string>
@@ -7126,13 +7358,13 @@ namespace Models
         <Manager>
           <Name>SetCropVariables</Name>
           <Script>
-            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
-            <Ext_coef>0.8</Ext_coef>
+            <Irrigation>
+            </Irrigation>
             <MaximumHeight>600</MaximumHeight>
             <Cover>
             </Cover>
-            <Irrigation>
-            </Irrigation>
+            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <Ext_coef>0.8</Ext_coef>
             <Treatment>
             </Treatment>
             <leaflai>0</leaflai>
