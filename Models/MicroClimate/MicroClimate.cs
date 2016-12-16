@@ -55,6 +55,8 @@ namespace Models
         private const double vonKarman = 0.41;
         /// <summary>Canopy emissivity</summary>
         private const double Emissivity = 0.96;
+        /// <summary>The soil_emissivity</summary>
+        private const double soil_emissivity = 0.96;
 
         #endregion
 
@@ -106,18 +108,6 @@ namespace Models
         [Units("MJ/MJ")]
         public double soil_albedo { get; set; }
         
-        /// <summary>The air_pressure</summary>
-        [Bounds(Lower = 900.0, Upper = 1100.0)]
-        [Units("hPa")]
-        [Description("Air pressure")]
-        public double air_pressure { get; set; }
-
-        /// <summary>The soil_emissivity</summary>
-        [Bounds(Lower = 0.9, Upper = 1.0)]
-        [Units("0-1")]
-        [Description("Soil emissivity")]
-        public double soil_emissivity { get; set; }
-
         /// <summary>Sun angle at twilight</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
@@ -204,7 +194,7 @@ namespace Models
                 CalculatePM(MCZone);
                 CalculateOmega(MCZone);
 
-                SendEnergyBalanceEvent(MCZone);
+                SetCanopyEnergyTerms(MCZone);
             }
         }
 
@@ -216,8 +206,6 @@ namespace Models
             c_interception = 0.0;
             d_interception = 0.0;
             soil_albedo = 0.23;
-            air_pressure = 1010;
-            soil_emissivity = 0.96;
             sun_angle = 15.0;
 
             soil_heat_flux_fraction = 0.4;
@@ -279,18 +267,9 @@ namespace Models
         /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa(MicroClimateZone MCZone)
         {
-            double windspeed = weather.Wind;
-            double sumDeltaZ = 0.0;
-            double sumLAI = 0.0;
-            for (int i = 0; i <= MCZone.numLayers - 1; i++)
-            {
-                sumDeltaZ += MCZone.DeltaZ[i];
-                // top height
-                // total lai
-                sumLAI += MCZone.layerLAIsum[i];
-            }
-
-            double totalGa = AerodynamicConductanceFAO(windspeed, refheight, sumDeltaZ, sumLAI);
+            double sumDeltaZ = MathUtilities.Sum(MCZone.DeltaZ);
+            double sumLAI = MathUtilities.Sum(MCZone.layerLAIsum);
+            double totalGa = AerodynamicConductanceFAO(weather.Wind, refheight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
@@ -328,26 +307,20 @@ namespace Models
             double sumRsoil = 0.0;
             double sumInterception = 0.0;
             double freeEvapGa = 0.0;
-            for (int i = 0; i <= MCZone.numLayers - 1; i++)
+
+            for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
             {
-                for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                {
-                    MCZone.Canopies[j].PET[i] = 0.0;
-                    MCZone.Canopies[j].PETr[i] = 0.0;
-                    MCZone.Canopies[j].PETa[i] = 0.0;
-                    sumRl += MCZone.Canopies[j].Rl[i];
-                    sumRsoil += MCZone.Canopies[j].Rsoil[i];
-                    sumInterception += MCZone.Canopies[j].interception[i];
-                    freeEvapGa += MCZone.Canopies[j].Ga[i];
-                }
+                sumRl += MathUtilities.Sum(MCZone.Canopies[j].Rl);
+                sumRsoil += MathUtilities.Sum(MCZone.Canopies[j].Rsoil);
+                sumInterception += MathUtilities.Sum(MCZone.Canopies[j].interception);
+                freeEvapGa += MathUtilities.Sum(MCZone.Canopies[j].Ga);                
             }
 
             double netRadiation = ((1.0 - MCZone._albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;
             // MJ/J
             netRadiation = Math.Max(0.0, netRadiation);
-            double freeEvapGc = freeEvapGa * 1000000.0;
-            // =infinite surface conductance
-            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, air_pressure, MCZone.dayLength, freeEvapGa, freeEvapGc);
+            double freeEvapGc = freeEvapGa * 1000000.0; // infinite surface conductance
+            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, MCZone.dayLength, freeEvapGa, freeEvapGc);
 
             MCZone.dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
             MCZone.dryleaffraction = Math.Max(0.0, MCZone.dryleaffraction);
@@ -356,13 +329,10 @@ namespace Models
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
                     netRadiation = 1000000.0 * ((1.0 - MCZone._albedo) * MCZone.Canopies[j].Rs[i] + MCZone.Canopies[j].Rl[i] + MCZone.Canopies[j].Rsoil[i]);
-                    // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
-                    if (j == 39) 
-                        netRadiation += 0.0;
-                    MCZone.Canopies[j].PETr[i] = CalcPETr(netRadiation * MCZone.dryleaffraction, weather.MinT, weather.MaxT, air_pressure, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
-                    MCZone.Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, air_pressure, MCZone.dayLength * MCZone.dryleaffraction, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
+                    MCZone.Canopies[j].PETr[i] = CalcPETr(netRadiation * MCZone.dryleaffraction, weather.MinT, weather.MaxT, weather.AirPressure, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
+                    MCZone.Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, MCZone.dayLength * MCZone.dryleaffraction, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
                     MCZone.Canopies[j].PET[i] = MCZone.Canopies[j].PETr[i] + MCZone.Canopies[j].PETa[i];
                 }
         }
@@ -387,11 +357,11 @@ namespace Models
         {
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Omega[i] = CalcOmega(weather.MinT, weather.MaxT, air_pressure, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
+                    MCZone.Canopies[j].Omega[i] = CalcOmega(weather.MinT, weather.MaxT, weather.AirPressure, MCZone.Canopies[j].Ga[i], MCZone.Canopies[j].Gc[i]);
         }
 
         /// <summary>Send an energy balance event</summary>
-        private void SendEnergyBalanceEvent(MicroClimateZone MCZone)
+        private void SetCanopyEnergyTerms(MicroClimateZone MCZone)
         {
             for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
             {
@@ -403,8 +373,8 @@ namespace Models
                     for (int i = 0; i <= MCZone.numLayers - 1; i++)
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
-                        lightProfile[i].thickness = Convert.ToSingle(MCZone.DeltaZ[i]);
-                        lightProfile[i].amount = Convert.ToSingle(MCZone.Canopies[j].Rs[i] * MCZone.RadnGreenFraction(j));
+                        lightProfile[i].thickness = MCZone.DeltaZ[i];
+                        lightProfile[i].amount = MCZone.Canopies[j].Rs[i] * MCZone.RadnGreenFraction(j);
                         totalPotentialEp += MCZone.Canopies[j].PET[i];
                         totalInterception += MCZone.Canopies[j].interception[i];
                     }
