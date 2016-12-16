@@ -197,7 +197,7 @@ namespace Models
             double Rint = 0;
             for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
             {
-                Rint = Rin * (1.0 - Math.Exp(-MCZone.layerKtot[i] * MCZone.layerLAIsum[i]));
+                Rint = Rin * (1.0 - Math.Exp(-MCZone.layerKtot[i] * MCZone.LAItotsum[i]));
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                     MCZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(MCZone.Canopies[j].Ftot[i] * MCZone.Canopies[j].Ktot, MCZone.layerKtot[i], 0.0);
                 Rin -= Rint;

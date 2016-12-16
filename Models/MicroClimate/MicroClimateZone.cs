@@ -50,7 +50,7 @@ namespace Models
             public double[] layerKtot = new double[-1 + 1];
 
             /// <summary>The layer la isum</summary>
-            public double[] layerLAIsum = new double[-1 + 1];
+            public double[] LAItotsum = new double[-1 + 1];
 
             /// <summary>The number layers</summary>
             public int numLayers;
@@ -100,7 +100,7 @@ namespace Models
                     // Number of layers has changed; adjust array lengths
                     Array.Resize<double>(ref DeltaZ, numLayers);
                     Array.Resize<double>(ref layerKtot, numLayers);
-                    Array.Resize<double>(ref layerLAIsum, numLayers);
+                    Array.Resize<double>(ref LAItotsum, numLayers);
 
                     for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
@@ -127,41 +127,34 @@ namespace Models
             /// <summary>Break the components into layers</summary>
             private void DivideComponents()
             {
-                double[] Ld = new double[Canopies.Count];
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                {
-                    CanopyType componentData = Canopies[j];
-
-                    componentData.layerLAI = new double[numLayers];
-                    componentData.layerLAItot = new double[numLayers];
-                    Ld[j] = MathUtilities.Divide(componentData.Canopy.LAITotal, componentData.DepthMetres, 0.0);
-                }
                 double top = 0.0;
                 double bottom = 0.0;
-
                 for (int i = 0; i <= numLayers - 1; i++)
                 {
                     bottom = top;
                     top = top + DeltaZ[i];
-                    layerLAIsum[i] = 0.0;
+                    LAItotsum[i] = 0.0;
 
                     // Calculate LAI for layer i and component j
                     // ===========================================
                     for (int j = 0; j <= Canopies.Count - 1; j++)
+                    {
+                        Array.Resize(ref Canopies[j].LAI, numLayers);
+                        Array.Resize(ref Canopies[j].LAItot, numLayers);
                         if ((Canopies[j].HeightMetres > bottom) && (Canopies[j].HeightMetres - Canopies[j].DepthMetres < top))
                         {
-                            Canopies[j].layerLAItot[i] = Ld[j] * DeltaZ[i];
-                            Canopies[j].layerLAI[i] = Canopies[j].layerLAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
-                            layerLAIsum[i] += Canopies[j].layerLAItot[i];
+                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, Canopies[j].DepthMetres, 0.0);
+                            Canopies[j].LAItot[i] = Ld * DeltaZ[i];
+                            Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
+                            LAItotsum[i] += Canopies[j].LAItot[i];
                         }
-
+                    }
                     // Calculate fractional contribution for layer i and component j
                     // ====================================================================
                     for (int j = 0; j <= Canopies.Count - 1; j++)
                     {
-                        Canopies[j].Ftot[i] = MathUtilities.Divide(Canopies[j].layerLAItot[i], layerLAIsum[i], 0.0);
-                        // Note: Sum of Fgreen will be < 1 as it is green over total
-                        Canopies[j].Fgreen[i] = MathUtilities.Divide(Canopies[j].layerLAI[i], layerLAIsum[i], 0.0);
+                        Canopies[j].Ftot[i] = MathUtilities.Divide(Canopies[j].LAItot[i], LAItotsum[i], 0.0);
+                        Canopies[j].Fgreen[i] = MathUtilities.Divide(Canopies[j].LAI[i], LAItotsum[i], 0.0);  // Note: Sum of Fgreen will be < 1 as it is green over total
                     }
                 }
             }
@@ -207,7 +200,7 @@ namespace Models
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];
-                layerLAIsum = new double[-1 + 1];
+                LAItotsum = new double[-1 + 1];
                 Canopies.Clear();
             }
 

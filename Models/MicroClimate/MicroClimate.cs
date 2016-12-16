@@ -256,7 +256,7 @@ namespace Models
 
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
-                    MCZone.Canopies[j].Gc[i] = CanopyConductance(MCZone.Canopies[j].Canopy.Gsmax, MCZone.Canopies[j].Canopy.R50, MCZone.Canopies[j].Canopy.FRGR, MCZone.Canopies[j].Fgreen[i], MCZone.layerKtot[i], MCZone.layerLAIsum[i], Rflux);
+                    MCZone.Canopies[j].Gc[i] = CanopyConductance(MCZone.Canopies[j].Canopy.Gsmax, MCZone.Canopies[j].Canopy.R50, MCZone.Canopies[j].Canopy.FRGR, MCZone.Canopies[j].Fgreen[i], MCZone.layerKtot[i], MCZone.LAItotsum[i], Rflux);
                     Rint += MCZone.Canopies[j].Rs[i];
                 }
                 // Calculate Rin for the next layer down
@@ -268,7 +268,7 @@ namespace Models
         private void CalculateGa(MicroClimateZone MCZone)
         {
             double sumDeltaZ = MathUtilities.Sum(MCZone.DeltaZ);
-            double sumLAI = MathUtilities.Sum(MCZone.layerLAIsum);
+            double sumLAI = MathUtilities.Sum(MCZone.LAItotsum);
             double totalGa = AerodynamicConductanceFAO(weather.Wind, refheight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
@@ -285,8 +285,8 @@ namespace Models
             {
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
-                    sumLAI += MCZone.Canopies[j].layerLAI[i];
-                    sumLAItot += MCZone.Canopies[j].layerLAItot[i];
+                    sumLAI += MCZone.Canopies[j].LAI[i];
+                    sumLAItot += MCZone.Canopies[j].LAItot[i];
                 }
             }
 
@@ -296,7 +296,7 @@ namespace Models
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].interception[i] = MathUtilities.Divide(MCZone.Canopies[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
+                    MCZone.Canopies[j].interception[i] = MathUtilities.Divide(MCZone.Canopies[j].LAI[i], sumLAI, 0.0) * totalInterception;
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>
@@ -419,10 +419,10 @@ namespace Models
             }
                         
             /// <summary>The layer lai</summary>
-            public double[] layerLAI;
+            public double[] LAI;
 
             /// <summary>The layer la itot</summary>
-            public double[] layerLAItot;
+            public double[] LAItot;
 
             /// <summary>The ftot</summary>
             public double[] Ftot;
