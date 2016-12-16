@@ -447,6 +447,7 @@ namespace UserInterface.Presenters
                 parentGraph != null)
             {
                 List<string> fieldNames = new List<string>();
+                fieldNames.Add("SimulationName");
                 fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
                 fieldNames.Sort();
 
