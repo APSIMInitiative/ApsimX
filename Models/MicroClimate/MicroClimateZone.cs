@@ -61,9 +61,6 @@ namespace Models
             /// <summary>The dryleaffraction</summary>
             public double dryleaffraction = 0;
 
-            /// <summary>The emissivity</summary>
-            public double Emissivity = 0.96;
-
             /// <summary>Gets or sets the component data.</summary>
             public List<CanopyType> Canopies = new List<CanopyType>();
 

@@ -18,56 +18,44 @@ namespace Models
     public partial class MicroClimate : Model
     {
 
-        #region "Useful constants"
-        // Teten coefficients
-        /// <summary>The SVP_ a</summary>
-        private const double svp_A = 6.106;
-        // Teten coefficients
-        /// <summary>The SVP_ b</summary>
-        private const double svp_B = 17.27;
-        // Teten coefficients
-        /// <summary>The SVP_ c</summary>
+        #region Constants
+        /// <summary>The SVP_ a Teten coefficient</summary>
+        private const double svp_A = 6.106;        
+        /// <summary>The SVP_ b Teten coefficient</summary>
+        private const double svp_B = 17.27;       
+        /// <summary>The SVP_ c Teten coefficient</summary> 
         private const double svp_C = 237.3;
-        // 0 C in Kelvin (g_k)
-        /// <summary>The abs_temp</summary>
+        /// <summary>0 C in Kelvin (k)</summary>
         private const double abs_temp = 273.16;
-        // universal gas constant (J/mol/K)
-        /// <summary>The r_gas</summary>
+        /// <summary>universal gas constant (J/mol/K)</summary>
         private const double r_gas = 8.3143;
-        // molecular weight water (kg/mol)
-        /// <summary>The mwh2o</summary>
+        /// <summary>molecular weight water (kg/mol)</summary>
         private const double mwh2o = 0.018016;
-        // molecular weight air (kg/mol)
-        /// <summary>The mwair</summary>
+        /// <summary>molecular weight air (kg/mol)</summary>
         private const double mwair = 0.02897;
-        // molecular fraction of water to air ()
-        /// <summary>The molef</summary>
+         /// <summary>molecular fraction of water to air ()</summary>
         private const double molef = mwh2o / mwair;
-        // Specific heat of air at constant pressure (J/kg/K)
-        /// <summary>The cp</summary>
+        /// <summary>Specific heat of air at constant pressure (J/kg/K)</summary>
         private const double Cp = 1010.0;
-        // Stefan-Boltzman constant
-        /// <summary>The stef_boltz</summary>
+        /// <summary>Stefan-Boltzman constant</summary>
         private const double stef_boltz = 5.67E-08;
-        // constant for cloud effect on longwave radiation
-        /// <summary>The c_cloud</summary>
+        /// <summary>constant for cloud effect on longwave radiation</summary>
         private const double c_cloud = 0.1;
-        // convert degrees to radians
-        /// <summary>The deg2 RAD</summary>
+        /// <summary>convert degrees to radians</summary>
         private const double Deg2Rad = Math.PI / 180.0;
-        // kg/m3
-        /// <summary>The rho w</summary>
+        /// <summary>Density of water (kg/m3)</summary>
         private const double RhoW = 998.0;
-        // weights vpd towards vpd at maximum temperature
-        /// <summary>The svp_fract</summary>
+        /// <summary>weights vpd towards vpd at maximum temperature</summary>
         private const double svp_fract = 0.66;
-        /// <summary>The sun set angle</summary>
+        /// <summary>The sun set angle (degrees)</summary>
         private const double SunSetAngle = 0.0;
-        // hours to seconds
-        /// <summary>The HR2S</summary>
+        /// <summary>Convert hours to seconds</summary>
         private const double hr2s = 60.0 * 60.0;
-
+        /// <summary>von Karman constant</summary>
         private const double vonKarman = 0.41;
+        /// <summary>Canopy emissivity</summary>
+        private const double Emissivity = 0.96;
+
         #endregion
 
 
@@ -130,43 +118,36 @@ namespace Models
         [Description("Soil emissivity")]
         public double soil_emissivity { get; set; }
 
-        /// <summary>The sun_angle</summary>
+        /// <summary>Sun angle at twilight</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
-        [Description("Sun angle at twilight")]
         public double sun_angle { get; set; }
 
-        /// <summary>The soil_heat_flux_fraction</summary>
+        /// <summary>Fraction of solar radiation reaching the soil surface that results in soil heating</summary>
         [Description("Fraction of solar radiation reaching the soil surface that results in soil heating")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("MJ/MJ")]
         public double soil_heat_flux_fraction { get; set; }
 
-        /// <summary>The night_interception_fraction</summary>
+        /// <summary>The fraction of intercepted rainfall that evaporates at night</summary>
         [Description("The fraction of intercepted rainfall that evaporates at night")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double night_interception_fraction { get; set; }
 
-        /// <summary>The windspeed_default</summary>
-        [Description("Default windspeed to use if not supplied in the met file")]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("m/s")]
-        public double windspeed_default { get; set; }
-
-        /// <summary>The refheight</summary>
+        /// <summary>Height of the weather instruments</summary>
         [Description("Height of the weather instruments")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
         public double refheight { get; set; }
 
-        /// <summary>The albedo</summary>
+        /// <summary>Albedo of the combined plant-soil system</summary>
         [Description("Albedo of the combined plant-soil system")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double albedo { get; set; }
 
-        /// <summary>The emissivity</summary>
+        /// <summary>Emissivity of the combined plant-soil system</summary>
         [Description("Emissivity of the combined plant-soil system")]
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("0-1")]
@@ -191,7 +172,10 @@ namespace Models
                 CreateMCZone(this.Parent as Zone);
 
         }
-
+        /// <summary>
+        /// Create a new MicroClimateZone for a given simulation zone
+        /// </summary>
+        /// <param name="newZone"></param>
         private void CreateMCZone(Zone newZone)
         {
             MicroClimateZone myZone = new MicroClimateZone();
@@ -209,18 +193,18 @@ namespace Models
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
             foreach (MicroClimateZone MCZone in microClimateZones)
-            { 
-            MetVariables(MCZone);
-            MCZone.DoCanopyCompartments();
-            BalanceCanopyEnergy(MCZone);
+            {
+                MetVariables(MCZone);
+                MCZone.DoCanopyCompartments();
+                BalanceCanopyEnergy(MCZone);
 
-            CalculateGc(MCZone);
-            CalculateGa(MCZone);
-            CalculateInterception(MCZone);
-            CalculatePM(MCZone);
-            CalculateOmega(MCZone);
+                CalculateGc(MCZone);
+                CalculateGa(MCZone);
+                CalculateInterception(MCZone);
+                CalculatePM(MCZone);
+                CalculateOmega(MCZone);
 
-            SendEnergyBalanceEvent(MCZone);
+                SendEnergyBalanceEvent(MCZone);
             }
         }
 
@@ -238,7 +222,6 @@ namespace Models
 
             soil_heat_flux_fraction = 0.4;
             night_interception_fraction = 0.5;
-            windspeed_default = 3.0;
             refheight = 2.0;
             albedo = 0.15;
             emissivity = 0.96;

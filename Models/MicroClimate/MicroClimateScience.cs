@@ -218,7 +218,7 @@ namespace Models
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
                 {
                     MCZone._albedo += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Canopies[j].Canopy.Albedo;
-                    emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.Emissivity;
+                    emissivity += MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * Emissivity;
                     MCZone.sumRs += MCZone.Canopies[j].Rs[i];
                 }
 
