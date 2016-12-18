@@ -230,9 +230,6 @@ namespace Models
             // the sun is above the horizon
             MCZone.dayLengthLight = MathUtilities.DayLength(Clock.Today.Day, SunSetAngle, weather.Latitude);
 
-            MCZone.sunshineHours = CalcSunshineHours(weather.Radn, MCZone.dayLengthLight, weather.Latitude, Clock.Today.Day);
-
-            MCZone.fractionClearSky = MathUtilities.Divide(MCZone.sunshineHours, MCZone.dayLengthLight, 0.0);
         }
 
         /// <summary>Perform the overall Canopy Energy Balance</summary>

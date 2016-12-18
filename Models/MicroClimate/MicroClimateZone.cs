@@ -33,12 +33,6 @@ namespace Models
             /// <summary>The average t</summary>
             public double averageT;
 
-            /// <summary>The sunshine hours</summary>
-            public double sunshineHours;
-
-            /// <summary>The fraction clear sky</summary>
-            public double fractionClearSky;
-
             /// <summary>The day length</summary>
             public double dayLength;
 
@@ -193,8 +187,6 @@ namespace Models
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
                 averageT = 0;
-                sunshineHours = 0;
-                fractionClearSky = 0;
                 dayLength = 0;
                 dayLengthLight = 0;
                 numLayers = 0;
