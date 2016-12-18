@@ -22,8 +22,10 @@ namespace Models
             /// <summary>The _albedo</summary>
             public double _albedo = 0;
 
-            /// <summary>The net long wave</summary>
-            public double netLongWave;
+            /// <summary>Net long-wave radiation of the whole system</summary>
+            [Description("Net long-wave radiation of the whole system")]
+            [Units("MJ/m2/day")]
+            public double NetLongWaveRadiation;
 
             /// <summary>The sum rs</summary>
             public double sumRs;
@@ -119,9 +121,7 @@ namespace Models
                     }
                 }
                 for (int i = 0; i <= numNodes - 2; i++)
-                {
                     DeltaZ[i] = nodes[i + 1] - nodes[i];
-                }
             }
 
             /// <summary>Break the components into layers</summary>
@@ -190,7 +190,7 @@ namespace Models
                 soil_heat = 0.0;
                 dryleaffraction = 0.0;
                 _albedo = 0.0;// albedo;
-                netLongWave = 0;
+                NetLongWaveRadiation = 0;
                 sumRs = 0;
                 averageT = 0;
                 sunshineHours = 0;
@@ -236,26 +236,19 @@ namespace Models
             /// <summary>Gets the net_radn.</summary>
             [Description("Net all-wave radiation of the whole system")]
             [Units("MJ/m2/day")]
-            public double net_radn
+            public double NetRadiation
             {
-                get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
+                get { return weather.Radn * (1.0 - _albedo) + NetLongWaveRadiation; }
             }
 
             /// <summary>Gets the net_rs.</summary>
             [Description("Net short-wave radiation of the whole system")]
             [Units("MJ/m2/day")]
-            public double net_rs
+            public double NetShortWaveRadiation
             {
                 get { return weather.Radn * (1.0 - _albedo); }
             }
 
-            /// <summary>Gets the net_rl.</summary>
-            [Description("Net long-wave radiation of the whole system")]
-            [Units("MJ/m2/day")]
-            public double net_rl
-            {
-                get { return netLongWave; }
-            }
             /// <summary>
             /// Calculate the proportion of light intercepted by a given component that corresponds to green leaf
             /// </summary>
