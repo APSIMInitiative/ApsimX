@@ -66,11 +66,12 @@ namespace Models
                 int numNodes = 1;
                 for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
                 {
-                    double height = Canopies[compNo].HeightMetres;
-                    double canopyBase = height - Canopies[compNo].DepthMetres;
-                    if (Array.IndexOf(nodes, height) == -1)
+                    double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    double canopyBase = HeightMetres - DepthMetres;
+                    if (Array.IndexOf(nodes, HeightMetres) == -1)
                     {
-                        nodes[numNodes] = height;
+                        nodes[numNodes] = HeightMetres;
                         numNodes = numNodes + 1;
                     }
                     if (Array.IndexOf(nodes, canopyBase) == -1)
@@ -126,9 +127,11 @@ namespace Models
                     {
                         Array.Resize(ref Canopies[j].LAI, numLayers);
                         Array.Resize(ref Canopies[j].LAItot, numLayers);
-                        if ((Canopies[j].HeightMetres > bottom) && (Canopies[j].HeightMetres - Canopies[j].DepthMetres < top))
+                        double HeightMetres = Math.Round(Canopies[j].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                        double DepthMetres = Math.Round(Canopies[j].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                        if ((HeightMetres > bottom) && (HeightMetres - DepthMetres < top))
                         {
-                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, Canopies[j].DepthMetres, 0.0);
+                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
                             Canopies[j].LAItot[i] = Ld * DeltaZ[i];
                             Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
                             LAItotsum[i] += Canopies[j].LAItot[i];

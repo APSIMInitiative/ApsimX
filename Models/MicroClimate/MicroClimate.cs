@@ -192,13 +192,11 @@ namespace Models
             {
                 MCZone.DoCanopyCompartments();
                 BalanceCanopyEnergy(MCZone);
-
                 CalculateGc(MCZone);
                 CalculateGa(MCZone);
                 CalculateInterception(MCZone);
                 CalculatePM(MCZone);
                 CalculateOmega(MCZone);
-
                 SetCanopyEnergyTerms(MCZone);
             }
         }
@@ -234,7 +232,7 @@ namespace Models
         private void BalanceCanopyEnergy(MicroClimateZone MCZone)
         {
             ShortWaveRadiation(MCZone);
-            EnergyTerms( MCZone);
+            EnergyTerms(MCZone);
             LongWaveRadiation( MCZone);
             SoilHeatRadiation( MCZone);
         }
@@ -284,7 +282,6 @@ namespace Models
                 }
 
             double totalInterception = a_interception * Math.Pow(weather.Rain, b_interception) + c_interception * sumLAItot + d_interception;
-
             totalInterception = Math.Max(0.0, Math.Min(0.99 * weather.Rain, totalInterception));
 
             for (int i = 0; i <= MCZone.numLayers - 1; i++)
@@ -309,9 +306,9 @@ namespace Models
                 freeEvapGa += MathUtilities.Sum(MCZone.Canopies[j].Ga);                
             }
 
-            double netRadiation = ((1.0 - MCZone._albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;
-            // MJ/J
+            double netRadiation = ((1.0 - MCZone._albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
             netRadiation = Math.Max(0.0, netRadiation);
+
             double freeEvapGc = freeEvapGa * 1000000.0; // infinite surface conductance
             double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLength, freeEvapGa, freeEvapGc);
 
@@ -386,73 +383,38 @@ namespace Models
         {
             /// <summary>The canopy.</summary>
             public ICanopy Canopy;
-
             /// <summary>The ktot</summary>
             public double Ktot;
-
             /// <summary>The k</summary>
             public double K;
-
-            /// <summary>The height</summary>
-            public double HeightMetres
-            {
-                get
-                {
-                    return Math.Round(Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                }
-            }
-
-            /// <summary>The depth</summary>
-            public double DepthMetres
-            {
-                get
-                {
-                    return Math.Round(Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                }
-            }
-                        
             /// <summary>The layer lai</summary>
             public double[] LAI;
-
             /// <summary>The layer la itot</summary>
             public double[] LAItot;
-
             /// <summary>The ftot</summary>
             public double[] Ftot;
-
             /// <summary>The fgreen</summary>
             public double[] Fgreen;
-
             /// <summary>The rs</summary>
             public double[] Rs;
-
             /// <summary>The rl</summary>
             public double[] Rl;
-
             /// <summary>The rsoil</summary>
             public double[] Rsoil;
-
             /// <summary>The gc</summary>
             public double[] Gc;
-
             /// <summary>The ga</summary>
             public double[] Ga;
-
             /// <summary>The pet</summary>
             public double[] PET;
-
             /// <summary>The pe tr</summary>
             public double[] PETr;
-
             /// <summary>The pe ta</summary>
             public double[] PETa;
-
             /// <summary>The omega</summary>
             public double[] Omega;
-
             /// <summary>The interception</summary>
             public double[] interception;
-
             /// <summary>Constructor</summary>
             /// <param name="canopy">The canopy to wrap.</param>
             public CanopyType(ICanopy canopy)
