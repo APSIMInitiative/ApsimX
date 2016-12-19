@@ -316,8 +316,16 @@ namespace UserInterface.Forms
                                                StringUtilities.DQuote(newDirectory);
 
                             ProcessStartInfo info = new ProcessStartInfo();
-                            info.FileName = upgraderFileName;
-                            info.Arguments = arguments;
+                            if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                info.FileName = "mono";
+                                info.Arguments = upgraderFileName + " " + arguments;
+                            }
+                            else
+                            {
+                                info.FileName = upgraderFileName;
+                                info.Arguments = arguments;
+                            }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
 

@@ -81,6 +81,45 @@ namespace Updater
 
         private static void DoMacUpdate(string uninstallDirectory, string newInstallDirectory)
         {
+            // Write the updater script to a temporary file.
+            // We assume that we are in the same folder as the .deb file, and that
+            // we have write-access to that folder.
+
+            using (StreamWriter outputFile = new StreamWriter("updater.sh", false))
+            {
+                outputFile.WriteLine("#!/bin/sh");
+                outputFile.WriteLine("if [ $# -ge 1 ] && [ -e $1 ]");
+                outputFile.WriteLine("then");
+                outputFile.WriteLine("  APSIMDMG=`hdiutil attach $1`");
+                outputFile.WriteLine("  if [ $? -ne 0 ]");
+                outputFile.WriteLine("  then");
+                outputFile.WriteLine("    echo \"Unable to mount $1.\"");
+                outputFile.WriteLine("    exit 1");
+                outputFile.WriteLine("  fi");
+                outputFile.WriteLine("  DMGDevice=$(echo $APSIMDMG | cut -f1 -d' ')");
+                outputFile.WriteLine("  DMGPath=$(echo $APSIMDMG | cut -f2 -d' ')");
+                outputFile.WriteLine("  appPath=$(echo $DMGPath)/`ls $DMGPath`");
+                outputFile.WriteLine("  if [ $# -eq 2 ] && [ -d $2 ]");
+                outputFile.WriteLine("  then");
+                outputFile.WriteLine("    rm -rf $2");
+                outputFile.WriteLine("  fi");
+                outputFile.WriteLine("  cp -R $appPath /Applications");
+                outputFile.WriteLine("  hdiutil detach -quiet $DMGDevice");
+                outputFile.WriteLine("fi");
+            }
+
+            int exitCode;
+            string output = ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.dmg " + uninstallDirectory, out exitCode);
+            if (exitCode == 0)
+            {
+                File.Delete("updater.sh");
+                // Run the user interface.
+                if (!Directory.Exists(newInstallDirectory))
+                    throw new Exception("Cannot find apsim at: " + newInstallDirectory);
+                Process.Start("/usr/bin/open", "-a " + newInstallDirectory);
+            }
+            else
+                MessageBox.Show("Update failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private static void DoLinuxUpdate(string uninstallDirectory, string newInstallDirectory)
