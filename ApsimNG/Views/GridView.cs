@@ -407,6 +407,10 @@ namespace UserInterface.Views
                     col.CellRenderers[1].Visible = false;
                     col.CellRenderers[2].Visible = false;
                 }
+                else
+                {
+                    text = dataVal.ToString();
+                }
             }
             cell.Visible = true;
             (cell as CellRendererText).Text = text;
