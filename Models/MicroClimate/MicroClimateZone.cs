@@ -30,15 +30,6 @@ namespace Models
             /// <summary>The sum rs</summary>
             public double sumRs;
 
-            /// <summary>The average t</summary>
-            public double averageT;
-
-            /// <summary>The day length</summary>
-            public double dayLength;
-
-            /// <summary>The day length light</summary>
-            public double dayLengthLight;
-
             /// <summary>The delta z</summary>
             public double[] DeltaZ = new double[-1 + 1];
 
@@ -186,9 +177,6 @@ namespace Models
                 _albedo = 0.0;// albedo;
                 NetLongWaveRadiation = 0;
                 sumRs = 0;
-                averageT = 0;
-                dayLength = 0;
-                dayLengthLight = 0;
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];
