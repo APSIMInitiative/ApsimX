@@ -22,26 +22,13 @@ namespace Models
             /// <summary>The _albedo</summary>
             public double _albedo = 0;
 
-            /// <summary>The net long wave</summary>
-            public double netLongWave;
+            /// <summary>Net long-wave radiation of the whole system</summary>
+            [Description("Net long-wave radiation of the whole system")]
+            [Units("MJ/m2/day")]
+            public double NetLongWaveRadiation;
 
             /// <summary>The sum rs</summary>
             public double sumRs;
-
-            /// <summary>The average t</summary>
-            public double averageT;
-
-            /// <summary>The sunshine hours</summary>
-            public double sunshineHours;
-
-            /// <summary>The fraction clear sky</summary>
-            public double fractionClearSky;
-
-            /// <summary>The day length</summary>
-            public double dayLength;
-
-            /// <summary>The day length light</summary>
-            public double dayLengthLight;
 
             /// <summary>The delta z</summary>
             public double[] DeltaZ = new double[-1 + 1];
@@ -79,11 +66,12 @@ namespace Models
                 int numNodes = 1;
                 for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
                 {
-                    double height = Canopies[compNo].HeightMetres;
-                    double canopyBase = height - Canopies[compNo].DepthMetres;
-                    if (Array.IndexOf(nodes, height) == -1)
+                    double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    double canopyBase = HeightMetres - DepthMetres;
+                    if (Array.IndexOf(nodes, HeightMetres) == -1)
                     {
-                        nodes[numNodes] = height;
+                        nodes[numNodes] = HeightMetres;
                         numNodes = numNodes + 1;
                     }
                     if (Array.IndexOf(nodes, canopyBase) == -1)
@@ -119,9 +107,7 @@ namespace Models
                     }
                 }
                 for (int i = 0; i <= numNodes - 2; i++)
-                {
                     DeltaZ[i] = nodes[i + 1] - nodes[i];
-                }
             }
 
             /// <summary>Break the components into layers</summary>
@@ -141,9 +127,11 @@ namespace Models
                     {
                         Array.Resize(ref Canopies[j].LAI, numLayers);
                         Array.Resize(ref Canopies[j].LAItot, numLayers);
-                        if ((Canopies[j].HeightMetres > bottom) && (Canopies[j].HeightMetres - Canopies[j].DepthMetres < top))
+                        double HeightMetres = Math.Round(Canopies[j].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                        double DepthMetres = Math.Round(Canopies[j].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                        if ((HeightMetres > bottom) && (HeightMetres - DepthMetres < top))
                         {
-                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, Canopies[j].DepthMetres, 0.0);
+                            double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
                             Canopies[j].LAItot[i] = Ld * DeltaZ[i];
                             Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
                             LAItotsum[i] += Canopies[j].LAItot[i];
@@ -190,13 +178,8 @@ namespace Models
                 soil_heat = 0.0;
                 dryleaffraction = 0.0;
                 _albedo = 0.0;// albedo;
-                netLongWave = 0;
+                NetLongWaveRadiation = 0;
                 sumRs = 0;
-                averageT = 0;
-                sunshineHours = 0;
-                fractionClearSky = 0;
-                dayLength = 0;
-                dayLengthLight = 0;
                 numLayers = 0;
                 DeltaZ = new double[-1 + 1];
                 layerKtot = new double[-1 + 1];
@@ -236,26 +219,19 @@ namespace Models
             /// <summary>Gets the net_radn.</summary>
             [Description("Net all-wave radiation of the whole system")]
             [Units("MJ/m2/day")]
-            public double net_radn
+            public double NetRadiation
             {
-                get { return weather.Radn * (1.0 - _albedo) + netLongWave; }
+                get { return weather.Radn * (1.0 - _albedo) + NetLongWaveRadiation; }
             }
 
             /// <summary>Gets the net_rs.</summary>
             [Description("Net short-wave radiation of the whole system")]
             [Units("MJ/m2/day")]
-            public double net_rs
+            public double NetShortWaveRadiation
             {
                 get { return weather.Radn * (1.0 - _albedo); }
             }
 
-            /// <summary>Gets the net_rl.</summary>
-            [Description("Net long-wave radiation of the whole system")]
-            [Units("MJ/m2/day")]
-            public double net_rl
-            {
-                get { return netLongWave; }
-            }
             /// <summary>
             /// Calculate the proportion of light intercepted by a given component that corresponds to green leaf
             /// </summary>
