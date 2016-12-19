@@ -20,9 +20,9 @@ namespace Models
 
         #region Constants
         /// <summary>The SVP_ a Teten coefficient</summary>
-        private const double svp_A = 6.106;        
+        private const double svp_A = 6.106;
         /// <summary>The SVP_ b Teten coefficient</summary>
-        private const double svp_B = 17.27;       
+        private const double svp_B = 17.27;
         /// <summary>The SVP_ c Teten coefficient</summary> 
         private const double svp_C = 237.3;
         /// <summary>0 C in Kelvin (k)</summary>
@@ -33,7 +33,7 @@ namespace Models
         private const double mwh2o = 0.018016;
         /// <summary>molecular weight air (kg/mol)</summary>
         private const double mwair = 0.02897;
-         /// <summary>molecular fraction of water to air ()</summary>
+        /// <summary>molecular fraction of water to air ()</summary>
         private const double molef = mwh2o / mwair;
         /// <summary>Specific heat of air at constant pressure (J/kg/K)</summary>
         private const double Cp = 1010.0;
@@ -93,7 +93,7 @@ namespace Models
         [Description("Power on rainfall to calculate interception losses")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
         [Units("-")]
-        public double b_interception { get; set;}
+        public double b_interception { get; set; }
 
         /// <summary>Gets or sets the c_interception.</summary>
         [Description("Multiplier on LAI to calculate interception losses")]
@@ -112,7 +112,7 @@ namespace Models
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("MJ/MJ")]
         public double soil_albedo { get; set; }
-        
+
         /// <summary>Sun angle at twilight</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
@@ -222,7 +222,7 @@ namespace Models
         {
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = MathUtilities.DayLength(Clock.Today.Day, sun_angle, weather.Latitude); 
+            dayLength = MathUtilities.DayLength(Clock.Today.Day, sun_angle, weather.Latitude);
             // This is the length of time within the day during which
             // the sun is above the horizon
             dayLengthLight = MathUtilities.DayLength(Clock.Today.Day, SunSetAngle, weather.Latitude);
@@ -233,8 +233,8 @@ namespace Models
         {
             ShortWaveRadiation(MCZone);
             EnergyTerms(MCZone);
-            LongWaveRadiation( MCZone);
-            SoilHeatRadiation( MCZone);
+            LongWaveRadiation(MCZone);
+            SoilHeatRadiation(MCZone);
         }
 
         /// <summary>Calculate the canopy conductance for system compartments</summary>
@@ -303,7 +303,7 @@ namespace Models
                 sumRl += MathUtilities.Sum(MCZone.Canopies[j].Rl);
                 sumRsoil += MathUtilities.Sum(MCZone.Canopies[j].Rsoil);
                 sumInterception += MathUtilities.Sum(MCZone.Canopies[j].interception);
-                freeEvapGa += MathUtilities.Sum(MCZone.Canopies[j].Ga);                
+                freeEvapGa += MathUtilities.Sum(MCZone.Canopies[j].Ga);
             }
 
             double netRadiation = ((1.0 - MCZone._albedo) * MCZone.sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
@@ -354,7 +354,6 @@ namespace Models
         private void SetCanopyEnergyTerms(MicroClimateZone MCZone)
         {
             for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-            {
                 if (MCZone.Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[MCZone.numLayers];
@@ -368,59 +367,9 @@ namespace Models
                         totalPotentialEp += MCZone.Canopies[j].PET[i];
                         totalInterception += MCZone.Canopies[j].interception[i];
                     }
-
                     MCZone.Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     MCZone.Canopies[j].Canopy.LightProfile = lightProfile;
                 }
-            }
-        }
-
-
-
-        /// <summary>Wraps a canopy object.</summary>
-        [Serializable]
-        private class CanopyType
-        {
-            /// <summary>The canopy.</summary>
-            public ICanopy Canopy;
-            /// <summary>The ktot</summary>
-            public double Ktot;
-            /// <summary>The k</summary>
-            public double K;
-            /// <summary>The layer lai</summary>
-            public double[] LAI;
-            /// <summary>The layer la itot</summary>
-            public double[] LAItot;
-            /// <summary>The ftot</summary>
-            public double[] Ftot;
-            /// <summary>The fgreen</summary>
-            public double[] Fgreen;
-            /// <summary>The rs</summary>
-            public double[] Rs;
-            /// <summary>The rl</summary>
-            public double[] Rl;
-            /// <summary>The rsoil</summary>
-            public double[] Rsoil;
-            /// <summary>The gc</summary>
-            public double[] Gc;
-            /// <summary>The ga</summary>
-            public double[] Ga;
-            /// <summary>The pet</summary>
-            public double[] PET;
-            /// <summary>The pe tr</summary>
-            public double[] PETr;
-            /// <summary>The pe ta</summary>
-            public double[] PETa;
-            /// <summary>The omega</summary>
-            public double[] Omega;
-            /// <summary>The interception</summary>
-            public double[] interception;
-            /// <summary>Constructor</summary>
-            /// <param name="canopy">The canopy to wrap.</param>
-            public CanopyType(ICanopy canopy)
-            {
-                Canopy = canopy;
-            }
         }
     }
 }

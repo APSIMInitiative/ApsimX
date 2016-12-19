@@ -5,7 +5,6 @@ namespace Models
 {
     public partial class MicroClimate
     {
-
         private double CalcAverageT(double mint, double maxt)
         {
             return 0.75 * maxt + 0.25 * mint;
@@ -284,7 +283,5 @@ namespace Models
         {
             return Math.Max(-radn * 0.1, Math.Min(0.0, -soilHeatFluxFraction * (radn - radnint)));
         }
-
-
     }
 }
