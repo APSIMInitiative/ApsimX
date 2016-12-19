@@ -5,7 +5,6 @@ namespace Models
 {
     public partial class MicroClimate
     {
-
         private double CalcAverageT(double mint, double maxt)
         {
             return 0.75 * maxt + 0.25 * mint;
@@ -231,12 +230,16 @@ namespace Models
         /// </summary>
         private void LongWaveRadiation(MicroClimateZone MCZone)
         {
-            MCZone.netLongWave = LongWave(MCZone.averageT, MCZone.fractionClearSky, emissivity) * MCZone.dayLength * hr2s / 1000000.0;             // W to MJ
+            double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.Day);
+            double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
+            double averageT = CalcAverageT(weather.MinT, weather.MaxT);
+            MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, emissivity) * dayLength * hr2s / 1000000.0;             // W to MJ
+
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = MCZone.numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= MCZone.Canopies.Count - 1; j++)
-                    MCZone.Canopies[j].Rl[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.netLongWave;
+                    MCZone.Canopies[j].Rl[i] = MathUtilities.Divide(MCZone.Canopies[j].Rs[i], weather.Radn, 0.0) * MCZone.NetLongWaveRadiation;
         }
 
         /// <summary>
@@ -280,7 +283,5 @@ namespace Models
         {
             return Math.Max(-radn * 0.1, Math.Min(0.0, -soilHeatFluxFraction * (radn - radnint)));
         }
-
-
     }
 }
