@@ -8,7 +8,8 @@ using APSIM.Shared.Utilities;
 namespace SWIMFrame
 {
     // Calculates flux tables given soil properties and path lengths.
-    public class Fluxes
+    // Static; there should not be more than one of these per simulation.
+    public static class Fluxes
     {
         /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
         public static Dictionary<string, FluxTable> FluxTables {get;set;}
@@ -38,27 +39,12 @@ namespace SWIMFrame
 
         static StringBuilder diags = new StringBuilder();
 
-        /// <summary>
-        /// Public accessor to set a SoilProps object.
-        /// Only required for unit testing.
-        /// </summary>
-        /// <param name="setsp"></param>
-        /// <param name="setnu"></param>
-        /// <param name="sethpK"></param>
-        public static void SetupSsflux(SoilProps setsp, int setnu, double[] sethpK)
-        {
-            sp = setsp;
-            nu = setnu;
-            hpK = sethpK;
-        }
-
         public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
             // Assumes soil props available in sp of module soil.
             // dz - path length.
 
-            //diags - timer start here
             sp = props;
             ft.fend = new FluxEnd[2];
             nu = sp.nc;
@@ -551,6 +537,20 @@ namespace SWIMFrame
         public static FluxTable ReadFluxTable(string key)
         {
             return FluxTables[key];
+        }
+
+        /// <summary>
+        /// Public accessor to set a SoilProps object.
+        /// Only required for unit testing.
+        /// </summary>
+        /// <param name="setsp"></param>
+        /// <param name="setnu"></param>
+        /// <param name="sethpK"></param>
+        public static void SetupSsflux(SoilProps setsp, int setnu, double[] sethpK)
+        {
+            sp = setsp;
+            nu = setnu;
+            hpK = sethpK;
         }
     }
     
