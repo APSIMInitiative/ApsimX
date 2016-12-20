@@ -131,7 +131,7 @@ namespace Updater
             using (StreamWriter outputFile = new StreamWriter("updater.sh", false))
             {
                 outputFile.WriteLine("#!/bin/sh");
-                outputFile.WriteLine("sudo -v");
+                outputFile.WriteLine("zenity --password --title \"sudo access required\" --timeout 30 | sudo -v -S");
                 outputFile.WriteLine("if [ $? -eq 0 ]");
                 outputFile.WriteLine("then");
                 outputFile.WriteLine("  if dpkg-query -Wf'${db:Status-abbrev}' apsim 2>/dev/null | grep -q '^i'; then");
