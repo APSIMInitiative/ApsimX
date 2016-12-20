@@ -112,6 +112,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when a tab is closing.</summary>
         event EventHandler<TabClosingEventArgs> TabClosing;
+
+        /// <summary>Invoked when application tries to close</summary>
+        event EventHandler<EventArgs> StopSimulation;
     }
 
     /// <summary>
@@ -134,6 +137,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when a tab is closing.</summary>
         public event EventHandler<TabClosingEventArgs> TabClosing;
 
+        /// <summary>Invoked when application tries to close</summary>
+        public event EventHandler<EventArgs> StopSimulation;
+
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
@@ -143,6 +149,8 @@ namespace UserInterface.Views
         private ProgressBar progressBar = null;
         [Widget]
         private TextView StatusWindow = null;
+        [Widget]
+        private Button stopButton = null;
         [Widget]
         private Notebook notebook1 = null;
         [Widget]
@@ -189,6 +197,10 @@ namespace UserInterface.Views
             tag.Foreground = "blue";
             StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             StatusWindow.Visible = false;
+            stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
+            stopButton.ImagePosition = PositionType.Right;
+            stopButton.Image.Visible = true;
+            stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
             //window1.ShowAll();
         }
@@ -559,6 +571,7 @@ namespace UserInterface.Views
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;
+                stopButton.Visible = false;
             });
         }
 
@@ -589,6 +602,7 @@ namespace UserInterface.Views
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
+                stopButton.Visible = true;
             });
         }
 
@@ -609,6 +623,18 @@ namespace UserInterface.Views
                 Close(false);
             }
         }
+
+        /// <summary>User is trying to stop all currently executing simulations.
+        /// <param name="e">Event arguments.</param>
+        protected void OnStopClicked(object o, EventArgs e)
+        {
+            if (StopSimulation != null)
+            {
+                EventArgs args = new EventArgs();
+                StopSimulation.Invoke(this, args);
+            }
+        }
+
     }
 
     /// <summary>An event argument structure with a string.</summary>
