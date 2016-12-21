@@ -331,21 +331,14 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <MultiplyFunction>
-            <Name>Target</Name>
-            <VariableReference>
-              <Name>Phyllochron</Name>
-              <VariableName>[Structure].MeanPhyllochron.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>HSTS</Name>
-              <VariableName>[Structure].HaunStageTerminalSpikelet.Value</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
           <Memo>
             <Name>Memo1</Name>
-            <MemoText><![CDATA[HSTS decreases as vernalisation is accumulated and as photoperiod extends, capturing the effect of these responses on the duration of the Vegetative phase]]></MemoText>
+            <MemoText><![CDATA[Currently just using a contsant target, look into Drought response]]></MemoText>
           </Memo>
+          <Constant>
+            <Name>Target</Name>
+            <Value>60</Value>
+          </Constant>
           <Start>Emergence</Start>
           <End>TerminalSpikelet</End>
         </GenericPhase>
@@ -368,42 +361,25 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <MultiplyFunction>
+          <LinearInterpolationFunction>
             <Name>Target</Name>
-            <VariableReference>
-              <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
-            </VariableReference>
-            <AddFunction>
-              <Name>Phyllochrons</Name>
-              <VariableReference>
-                <Name>LongDayBase</Name>
-                <VariableName>[Phenology].EarlyReproductiveLongDayBase.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>IncreaseDueToShortPhotoPeriod</Name>
-                <LinearInterpolationFunction>
-                  <Name>PhotoPeriodResponse</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>11</double>
-                      <double>16</double>
-                    </X>
-                    <Y>
-                      <double>1</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
-                </LinearInterpolationFunction>
-                <VariableReference>
-                  <Name>PpSensitivity</Name>
-                  <VariableName>[Phenology].EarlyReproductivePpSensitivity.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </AddFunction>
-          </MultiplyFunction>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>10</double>
+                <double>16</double>
+                <double>24</double>
+              </X>
+              <Y>
+                <double>650</double>
+                <double>650</double>
+                <double>400</double>
+                <double>400</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+          </LinearInterpolationFunction>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
@@ -2838,7 +2814,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Manager>
             <Name>Fertilise</Name>
             <Script>
-              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -2847,6 +2822,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
+              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
