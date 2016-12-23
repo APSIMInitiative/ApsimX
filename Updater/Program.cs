@@ -109,14 +109,22 @@ namespace Updater
             }
 
             int exitCode;
+            // If we're in a application bundle, go up two more levels to get the main folder
+            if (Path.GetFileName(uninstallDirectory) == "Resources")
+            {
+                uninstallDirectory = Path.GetDirectoryName(uninstallDirectory);
+                uninstallDirectory = Path.GetDirectoryName(uninstallDirectory);
+            }
+            string newInstallName = Path.Combine("/Applications", Path.GetFileName(newInstallDirectory) + ".app");
+
             string output = ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.dmg " + uninstallDirectory, out exitCode);
             if (exitCode == 0)
             {
                 File.Delete("updater.sh");
                 // Run the user interface.
-                if (!Directory.Exists(newInstallDirectory))
-                    throw new Exception("Cannot find apsim at: " + newInstallDirectory);
-                Process.Start("/usr/bin/open", "-a " + newInstallDirectory);
+                if (!Directory.Exists(newInstallName))
+                    throw new Exception("Cannot find apsim at: " + newInstallName);
+                Process.Start("/usr/bin/open", "-a " + newInstallName);
             }
             else
                 MessageBox.Show("Update failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
