@@ -203,6 +203,12 @@ namespace Models
         public double CO2 { get; set; }
 
         /// <summary>
+        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
+        /// </summary>
+        [Description("Air Pressure (hPa")]
+        public double AirPressure { get; set; }
+
+        /// <summary>
         /// Gets the latitude
         /// </summary>
         [Description("Latitude (deg)")]        
@@ -247,6 +253,13 @@ namespace Models
             return DayLength;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ControlledEnvironment()
+        {
+            AirPressure = 1010;
+        }
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>

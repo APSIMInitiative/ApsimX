@@ -37,6 +37,7 @@ namespace UserInterface.Views
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
+            gridView.NumericFormat = null;
         }
 
         /// <summary>
