@@ -11,6 +11,7 @@ namespace UserInterface.Views
     using System.Linq;
     using System.Drawing;
     using System.IO;
+    using System.Reflection;
     using Gtk;
     using Glade;
     using Interfaces;
@@ -50,6 +51,8 @@ namespace UserInterface.Views
         /// <summary>The largest date used on any axis</summary>
         private DateTime largestDate = DateTime.MinValue;
 
+        private bool inRightClick = false;
+
         private OxyPlot.GtkSharp.PlotView plot1;
         [Widget]
         private VBox vbox1 = null;
@@ -63,6 +66,7 @@ namespace UserInterface.Views
         private EventBox captionEventBox = null;
         [Widget]
         private Label label2 = null;
+        private Menu Popup = new Menu();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -85,6 +89,9 @@ namespace UserInterface.Views
             captionEventBox.Visible = true;
 
             plot1.Model.MouseDown += OnChartClick;
+            plot1.Model.MouseUp += OnChartMouseUp;
+            plot1.Model.MouseMove += OnChartMouseMove;
+            Popup.AttachToWidget(plot1, null);
 
             captionLabel.Text = null;
             captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
@@ -95,7 +102,30 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             plot1.Model.MouseDown -= OnChartClick;
+            plot1.Model.MouseUp -= OnChartMouseUp;
             captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in Popup)
+            {
+                if (w is ImageMenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as ImageMenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
             Clear();
         }
 
@@ -636,6 +666,7 @@ namespace UserInterface.Views
             pngExporter.Width = 800;
             pngExporter.Height = 600;
             pngExporter.Export(plot1.Model, stream);
+            stream.Seek(0, SeekOrigin.Begin);
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(stream);
         }
@@ -646,20 +677,59 @@ namespace UserInterface.Views
         /// <param name="menuText">Menu item text</param>
         /// <param name="ticked">Menu ticked?</param>
         /// <param name="onClick">Event handler for menu item click</param>
-        public void AddContextAction(string menuText, bool ticked, System.EventHandler onClick)
+        public void AddContextAction(string menuText, System.EventHandler onClick)
         {
-            /* TBI
-            ToolStripMenuItem item = null;
-            foreach (ToolStripMenuItem i in contextMenuStrip1.Items)
-                if (i.Text == menuText)
-                    item = i;
+            ImageMenuItem item = new ImageMenuItem(menuText);
+            item.Activated += onClick;
+            Popup.Append(item);
+            Popup.ShowAll();
+        }
+
+        /// <summary>
+        /// Add an action (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
+        {
+            CheckMenuItem item = null;
+            foreach (Widget w in Popup)
+            {
+                CheckMenuItem oldItem = w as CheckMenuItem;
+                if (oldItem != null)
+                {
+                    AccelLabel itemText = oldItem.Child as AccelLabel;
+                    if (itemText.Text == menuItemText)
+                    {
+                        item = oldItem;
+                        // Deactivate the "Activate" handler
+                        PropertyInfo pi = item.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (pi != null)
+                        {
+                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                            if (handlers != null && handlers.ContainsKey("activate"))
+                            {
+                                EventHandler handler = (EventHandler)handlers["activate"];
+                                item.Activated -= handler;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
             if (item == null)
             {
-                item = contextMenuStrip1.Items.Add(menuText) as ToolStripMenuItem;
-                item.Click += onClick;
+                item = new CheckMenuItem(menuItemText);
+                item.DrawAsRadio = false;
+                Popup.Append(item);
+                Popup.ShowAll();
             }
-            item.Checked = ticked;
-            */
+            // Be sure to set the Active property before attaching the Activated event, since
+            // the event handler will call this function again when Active is changed.
+            // This can lead to infinite recursion. This is also why we deactivate the handler
+            // (done above) when the item is already found in the menu
+            item.Active = active;
+            item.Activated += onClick;
         }
 
         /// <summary>
@@ -1058,13 +1128,36 @@ namespace UserInterface.Views
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
             e.Handled = false;
+            inRightClick = e.ChangedButton == OxyMouseButton.Right;
             if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
             {
                 if (e.ClickCount == 1 && SingleClick != null)
                     SingleClick.Invoke(this, e);
-                else if (e.ClickCount == 2)  
+                else if (e.ClickCount == 2)
                     OnMouseDoubleClick(sender, e);
             }
+        }
+
+        /// <summary>Mouse up event on chart. If in a right click, display the popup menu.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChartMouseUp(object sender, OxyMouseEventArgs e)
+        {
+            e.Handled = false;
+            if (inRightClick)
+                Popup.Popup();
+            inRightClick = false;
+        }
+
+        /// <summary>Mouse has moved on the chart.
+        /// If the user was just dragging the chart, we won't want to 
+        /// display the popup menu when the mouse is released</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChartMouseMove(object sender, OxyMouseEventArgs e)
+        {
+            e.Handled = false;
+            inRightClick = false;
         }
 
         public void ShowControls(bool visible)

@@ -241,7 +241,15 @@ namespace UserInterface.Interfaces
         /// <param name="menuText">Menu item text</param>
         /// <param name="ticked">Menu ticked?</param>
         /// <param name="onClick">Event handler for menu item click</param>
-        void AddContextAction(string menuText, bool ticked, System.EventHandler onClick);
+        void AddContextAction(string menuText, System.EventHandler onClick);
+
+        /// <summary>
+        /// Add an option (on context menu) on the series grid.
+        /// </summary>
+        /// <param name="menuItemText">The text of the menu item</param>
+        /// <param name="onClick">The event handler to call when menu is selected</param>
+        /// <param name="active">Indicates whether the option is current selected</param>
+        void AddContextOption(string menuItemText, System.EventHandler onClick, bool active);
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
