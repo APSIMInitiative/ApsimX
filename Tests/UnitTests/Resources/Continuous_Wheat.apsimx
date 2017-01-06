@@ -870,8 +870,7 @@
           <DeadNodesYesterday>0</DeadNodesYesterday>
           <MaxCover>0</MaxCover>
           <KDead>0</KDead>
-          <FractionDied>0</FractionDied>
-        </Leaf>
+          </Leaf>
       </Plant>
       <Folder>
         <Name>Manager folder</Name>

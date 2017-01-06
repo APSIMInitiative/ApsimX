@@ -485,6 +485,14 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
             <Name>SenessingLeafRelativeSize</Name>
             <Value>1</Value>
             <Units>0-1</Units>
@@ -814,7 +822,6 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
         <Name>Root</Name>

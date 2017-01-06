@@ -1424,6 +1424,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
             <Name>NReallocationFactor</Name>
             <Value>1</Value>
           </Constant>
@@ -2018,7 +2026,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
         <Name>Spike</Name>

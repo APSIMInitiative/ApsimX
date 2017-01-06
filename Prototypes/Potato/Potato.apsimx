@@ -610,21 +610,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </XYPairs>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>SenescenceRate</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0.1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].FractionDied</XProperty>
-        </LinearInterpolationFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -749,7 +734,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <LinearInterpolationFunction>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>          <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -1182,7 +1174,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -3406,27 +3397,6 @@ namespace Models
             <CumulativeX>false</CumulativeX>
           </Series>
           <Series>
-            <Name>Expanding Nodes</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Leaf.ExpandingCohortNo</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
             <Name>TotalNodes</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -4478,7 +4448,6 @@ namespace Models
           <string>Potato.Leaf.Dead.Wt</string>
           <string>Potato.Leaf.DeadCohortNo</string>
           <string>Potato.Leaf.ExpandedCohortNo</string>
-          <string>Potato.Leaf.ExpandingCohortNo</string>
           <string>Potato.Leaf.Fn</string>
           <string>Potato.Leaf.Fw</string>
           <string>Potato.Leaf.LAI</string>

@@ -1240,6 +1240,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
           <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
             <Name>SenessingLeafRelativeSize</Name>
             <Value>1</Value>
             <Units>0-1</Units>
@@ -1797,7 +1805,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <GenericOrgan>
         <Name>Panicle</Name>

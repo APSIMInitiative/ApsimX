@@ -423,7 +423,14 @@ A function is used to provide flowering date as days after sowing(DAS).
         </LeafCohort>
         <LeafCohortParameters>
           <Name>CohortParameters</Name>
-          <LinearInterpolationFunction>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>          <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -847,7 +854,6 @@ A function is used to provide flowering date as days after sowing(DAS).
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
-        <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
         <Name>Root</Name>
@@ -912,21 +918,6 @@ A function is used to provide flowering date as days after sowing(DAS).
             </Y>
           </XYPairs>
           <XProperty>[Leaf].LAI</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>SenescenceRate</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0.1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
