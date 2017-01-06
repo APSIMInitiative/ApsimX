@@ -198,7 +198,8 @@ namespace Models
 
             if (AutoExport)
             {
-                WriteToTextFiles();
+                WriteOutputToTextFiles();
+                WriteSummaryToTextFiles();
             }
 
             // Disconnect.
@@ -589,40 +590,35 @@ namespace Models
         }
 
         /// <summary>Write all outputs to a text file (.csv)</summary>
-        public void WriteToTextFiles()
+        public void WriteOutputToTextFiles()
         {
-            string originalFileName = Filename;
-
             try
             {
                 // Write the output CSV file.
                 Open(forWriting: false);
                 WriteAllTables(this, Filename + ".csv");
-
-                // Write the summary file.
-                WriteSummaryFile(this, Filename + ".sum");
-
-                // If the baseline file exists then write the .CSV and .SUM files
-                string baselineFileName = Filename + ".baseline";
-                if (File.Exists(baselineFileName))
-                {
-                    DataStore baselineDataStore = new DataStore(this, baseline: true);
-
-                    // Write the CSV output file.
-                    WriteAllTables(baselineDataStore, baselineFileName + ".csv");
-
-                    // Write the SUM file.
-                    WriteSummaryFile(baselineDataStore, baselineFileName + ".sum");
-
-                    baselineDataStore.Disconnect();
-                }
             }
             finally
             {
-                Filename = originalFileName;
                 Disconnect();
             }
         }
+
+        /// <summary>Write all summary to a text file (.sum)</summary>
+        public void WriteSummaryToTextFiles()
+        {
+            try
+            {
+                // Write the summary file.
+                Open(forWriting: false);
+                WriteSummaryFile(this, Filename + ".sum");
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+
 
         /// <summary>Clear all tables to be written.</summary>
         public static void ClearTablesToWritten()

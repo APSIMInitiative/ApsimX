@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using APSIM.Shared.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 namespace SWIMFrame
@@ -109,7 +108,7 @@ namespace SWIMFrame
                           ref double[] c0, ref double[,] sm, ref double[] soff, ref double[] sinfil, ref double[] sdrn, ref int[] nssteps, ref double[,] wex, ref double[,,] sex)
         {
             // Since S.Length is one greater in Fortran to account for the 0 based index, this line is included
-            // so that the +1 nomenclature can be kept below to avoid confusion.
+            // so that the +1 nomenclature can be kept below to avoid (further) confusion.
             int sLength = S.Length - 1; 
 
             bool again, extraction, initpond, maxpond;
@@ -200,21 +199,17 @@ namespace SWIMFrame
             {
                 //set solute info
                 thi = MathUtilities.Multiply(sd.ths, S); //initial th
-                for (int x = 0; x < dwexs.GetLength(0); x++)
-                    for (int y = 0; y < dwexs.GetLength(1); y++)
-                        dwexs[x, y] = 0; //initial water extracted from layers
+                dwexs.Populate2D(0); //initial water extracted from layers
 
                 ti = t;
                 infili = infil;
                 sinfili = sinfil;
-                double c0temp = c0[1];
-                if (h0 > 0 && (cin.Select(x => x != c0temp).Count() > 0)) // count(c0 /= cin) > 0)
+                double c0Temp = c0[1];
+                if (h0 > 0 && cin.Any(x => x != c0Temp)) // count(c0 /= cin) > 0)
                     initpond = true; //initial pond with different solute concn
                 else
                     initpond = false;
-                for (int x = 0; x > c.GetLength(0); x++)
-                    for (int y = 0; y < c.GetLength(1); y++)
-                        c[x, y] = 0; //temp storage for soln concns
+                c.Populate2D(0); //temp storage for soln concns
             }
             //-----end initialise
             //-----solve until tfin
@@ -540,7 +535,6 @@ namespace SWIMFrame
 
                         if (extraction)
                         {
-
                             Matrix<double> dwexsM = Matrix<double>.Build.DenseOfArray(dwexs);
                             Matrix<double> qwexsM = Matrix<double>.Build.DenseOfArray(qwexs);
                             Matrix<double> qwexsdM = Matrix<double>.Build.DenseOfArray(qwexsd);
