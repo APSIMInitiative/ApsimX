@@ -464,7 +464,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1140,6 +1140,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DroughtInducedSenAcceleration</Name>
+          <Value>0</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
@@ -1152,7 +1156,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -1275,7 +1279,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -26671,7 +26675,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>
               <Units>0-1</Units>
-            </Constant> 
+            </Constant>
             <Constant>
               <Name>DMConversionEfficiency</Name>
               <Value>1</Value>
@@ -27262,13 +27266,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <R50>200</R50>
             <FRGR>1</FRGR>
             <PotentialEP>0</PotentialEP>
-            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
             <LightProfile>
               <CanopyEnergyBalanceInterceptionlayerType>
                 <thickness>0.079549208283424377</thickness>
                 <amount>0</amount>
               </CanopyEnergyBalanceInterceptionlayerType>
             </LightProfile>
+            <MicroClimatePresent>true</MicroClimatePresent>
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -27357,7 +27361,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>
               <Units>0-1</Units>
-            </Constant> 
+            </Constant>
             <Constant>
               <Name>DMConversionEfficiency</Name>
               <Value>1</Value>
@@ -32163,7 +32167,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>
               <Units>0-1</Units>
-            </Constant> 
+            </Constant>
             <Constant>
               <Name>DMConversionEfficiency</Name>
               <Value>1</Value>
@@ -32738,7 +32742,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <R50>200</R50>
             <FRGR>0</FRGR>
             <PotentialEP>0</PotentialEP>
-            <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+            <MicroClimatePresent>true</MicroClimatePresent>
             <KDead>0.3</KDead>
             <MaximumMainStemLeafNumber>0</MaximumMainStemLeafNumber>
             <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -32827,7 +32831,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Name>MaintenanceRespirationFunction</Name>
               <Value>0</Value>
               <Units>0-1</Units>
-            </Constant> 
+            </Constant>
             <Constant>
               <Name>DMConversionEfficiency</Name>
               <Value>1</Value>
