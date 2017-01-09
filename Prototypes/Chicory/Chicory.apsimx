@@ -842,83 +842,153 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Name>StemElongation</Name>
               <DivideFunction>
                 <Name>StemFraction</Name>
-                <SubtractFunction>
-                  <Name>ShootRootRatioMinusOne</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
                   <VariableReference>
-                    <Name>ShootRootRatio</Name>
-                    <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                    <Name>TargetSR1</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
                   </VariableReference>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                </SubtractFunction>
-                <AddFunction>
-                  <Name>ShootRootRatioPlusOne</Name>
                   <VariableReference>
-                    <Name>ShootRootRatio</Name>
-                    <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                    <Name>TargetSR2</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
                   </VariableReference>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                </AddFunction>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <VariableName>[ShootRootRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <VariableName>[StalkLeafRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                </MultiplyFunction>
               </DivideFunction>
               <Start>Bolting</Start>
               <End>Flowering</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>Reproductive</Name>
-              <MultiplyFunction>
+              <DivideFunction>
                 <Name>StemFraction</Name>
-                <DivideFunction>
-                  <Name>BasePartition</Name>
-                  <SubtractFunction>
-                    <Name>ShootRootRatioMinusOne</Name>
-                    <VariableReference>
-                      <Name>ShootRootRatio</Name>
-                      <VariableName>[AdjustedShootRootRatio].Value</VariableName>
-                    </VariableReference>
-                    <Constant>
-                      <Name>One</Name>
-                      <Value>1</Value>
-                    </Constant>
-                  </SubtractFunction>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentFS</Name>
+                    <VariableName>[FlowerStemRatio].Value</VariableName>
+                  </VariableReference>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
                   <AddFunction>
-                    <Name>ShootRootRatioPlusOne</Name>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
                     <VariableReference>
-                      <Name>ShootRootRatio</Name>
-                      <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                      <Name>CurrentSR</Name>
+                      <VariableName>[ShootRootRatio].Value</VariableName>
                     </VariableReference>
-                    <Constant>
-                      <Name>One</Name>
-                      <Value>1</Value>
-                    </Constant>
                   </AddFunction>
-                </DivideFunction>
-                <LinearInterpolationFunction>
-                  <Name>StageEffect</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>6</double>
-                      <double>6.25</double>
-                      <double>6.5</double>
-                      <double>6.75</double>
-                      <double>7</double>
-                    </X>
-                    <Y>
-                      <double>0.5</double>
-                      <double>0.25</double>
-                      <double>0</double>
-                      <double>0</double>
-                      <double>0</double>
-                    </Y>
-                  </XYPairs>
-                  <XProperty>[Phenology].Stage</XProperty>
-                </LinearInterpolationFunction>
-              </MultiplyFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <VariableName>[StalkLeafRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <VariableName>[FlowerStemRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                </MultiplyFunction>
+              </DivideFunction>
               <Start>Flowering</Start>
               <End>Ripening</End>
             </PhaseLookupValue>
@@ -937,8 +1007,8 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
-            <Name>MaxRate</Name>
-            <Value>1</Value>
+            <Name>ReferenceRate</Name>
+            <Value>0.1</Value>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -946,48 +1016,88 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
+                <double>3</double>
+                <double>4.99</double>
                 <double>5</double>
-                <double>5.5</double>
                 <double>6</double>
                 <double>6.5</double>
+                <double>6.75</double>
                 <double>7</double>
               </X>
               <Y>
+                <double>1</double>
+                <double>1</double>
                 <double>0</double>
-                <double>0.05</double>
+                <double>0</double>
                 <double>0.1</double>
-                <double>0.2</double>
+                <double>0.3</double>
                 <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
-        </MultiplyFunction>
-        <MultiplyFunction>
-          <Name>DetachmentRateFunction</Name>
-          <Constant>
-            <Name>MaxRate</Name>
-            <Value>0.25</Value>
-            <Units>/day</Units>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>DMFactor</Name>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>100</double>
-                <double>500</double>
-                <double>1000</double>
+                <double>5</double>
+                <double>20</double>
+                <double>30</double>
               </X>
               <Y>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.4</double>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Stem].Dead.Wt</XProperty>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>DetachmentRateFunction</Name>
+          <Constant>
+            <Name>ReferenceRate</Name>
+            <Value>0.1</Value>
+            <Units>/day</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>0.75</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>0.25</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -1075,55 +1185,93 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
               <Name>Reproductive</Name>
-              <MultiplyFunction>
+              <DivideFunction>
                 <Name>FlowerFraction</Name>
-                <DivideFunction>
-                  <Name>BasePartition</Name>
-                  <SubtractFunction>
-                    <Name>ShootRootRatioMinusOne</Name>
-                    <VariableReference>
-                      <Name>ShootRootRatio</Name>
-                      <VariableName>[AdjustedShootRootRatio].Value</VariableName>
-                    </VariableReference>
-                    <Constant>
-                      <Name>One</Name>
-                      <Value>1</Value>
-                    </Constant>
-                  </SubtractFunction>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
+                  <VariableReference>
+                    <Name>TargetSR1</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL1</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetSL2</Name>
+                    <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS1</Name>
+                    <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>TargetFS2</Name>
+                    <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                  </VariableReference>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
                   <AddFunction>
-                    <Name>ShootRootRatioPlusOne</Name>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
                     <VariableReference>
-                      <Name>ShootRootRatio</Name>
-                      <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                      <Name>CurrentSR</Name>
+                      <VariableName>[ShootRootRatio].Value</VariableName>
                     </VariableReference>
-                    <Constant>
-                      <Name>One</Name>
-                      <Value>1</Value>
-                    </Constant>
                   </AddFunction>
-                </DivideFunction>
-                <LinearInterpolationFunction>
-                  <Name>StageEffect</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>6</double>
-                      <double>6.25</double>
-                      <double>6.5</double>
-                      <double>6.75</double>
-                      <double>7</double>
-                    </X>
-                    <Y>
-                      <double>0.5</double>
-                      <double>0.75</double>
-                      <double>1</double>
-                      <double>1</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
-                  <XProperty>[Phenology].Stage</XProperty>
-                </LinearInterpolationFunction>
-              </MultiplyFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <VariableName>[StalkLeafRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>FSs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetFSs</Name>
+                      <VariableReference>
+                        <Name>TargetFS1</Name>
+                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetFS2</Name>
+                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentFS</Name>
+                      <VariableName>[FlowerStemRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                </MultiplyFunction>
+              </DivideFunction>
               <Start>Flowering</Start>
               <End>Ripening</End>
             </PhaseLookupValue>
@@ -1142,55 +1290,91 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
-            <Name>MaxRate</Name>
-            <Value>1</Value>
+            <Name>ReferenceRate</Name>
+            <Value>0.25</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>StageFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
+                <double>3</double>
+                <double>5.99</double>
                 <double>6</double>
-                <double>6.25</double>
                 <double>6.5</double>
-                <double>6.75</double>
                 <double>7</double>
               </X>
               <Y>
+                <double>1</double>
+                <double>1</double>
                 <double>0</double>
-                <double>0.05</double>
-                <double>0.1</double>
-                <double>0.3</double>
+                <double>0.25</double>
                 <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
-        </MultiplyFunction>
-        <MultiplyFunction>
-          <Name>DetachmentRateFunction</Name>
-          <Constant>
-            <Name>MaxRate</Name>
-            <Value>0.25</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>DMFactor</Name>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>100</double>
-                <double>500</double>
-                <double>1000</double>
+                <double>5</double>
+                <double>20</double>
+                <double>30</double>
               </X>
               <Y>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.4</double>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Inflorescence].Dead.Wt</XProperty>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>DetachmentRateFunction</Name>
+          <Constant>
+            <Name>ReferenceRate</Name>
+            <Value>0.25</Value>
+            <Units>/day</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.5</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -1206,6 +1390,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         <Constant>
           <Name>NReallocationFactor</Name>
           <Value>1</Value>
+          <Units>/day</Units>
         </Constant>
         <Biomass>
           <Name>Live</Name>
