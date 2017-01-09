@@ -430,7 +430,8 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
             <Value>1</Value>
-          </Constant>          <LinearInterpolationFunction>
+          </Constant>
+          <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
@@ -854,6 +855,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <DMConversionEfficiency>0</DMConversionEfficiency>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <FractionDied>0</FractionDied>
       </Leaf>
       <Root>
         <Name>Root</Name>
@@ -918,6 +920,21 @@ A function is used to provide flowering date as days after sowing(DAS).
             </Y>
           </XYPairs>
           <XProperty>[Leaf].LAI</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>SenescenceRate</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -2131,17 +2148,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.15</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
@@ -3477,17 +3489,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
