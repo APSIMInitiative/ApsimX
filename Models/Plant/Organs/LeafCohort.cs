@@ -998,12 +998,10 @@ namespace Models.PMF.Organs
         public double FractionDetaching(double tt)
         {
             double fracDetach;
-            double ttInDetachPhase = Math.Max(0.0,
-                Age + tt - LagDuration - GrowthDuration - SenescenceDuration - DetachmentLagDuration);
+            double ttInDetachPhase = Math.Max(0.0,Age + tt - LagDuration - GrowthDuration - SenescenceDuration - DetachmentLagDuration);
             if (ttInDetachPhase > 0)
             {
-                double leafDuration = GrowthDuration + LagDuration + SenescenceDuration + DetachmentLagDuration +
-                                      DetachmentDuration;
+                double leafDuration = GrowthDuration + LagDuration + SenescenceDuration + DetachmentLagDuration + DetachmentDuration;
                 double remainingTt = Math.Max(0, leafDuration - Age);
 
                 if (remainingTt <= 0)
