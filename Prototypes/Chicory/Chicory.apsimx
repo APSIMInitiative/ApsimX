@@ -3,7 +3,7 @@
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
-    <MemoText><![CDATA[# The APSim Chicory Model
+    <MemoText><![CDATA[# The APSIM Chicory Model
 ]]></MemoText>
   </Memo>
   <Replacements>
@@ -13,45 +13,45 @@
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-# Forage chicory
+# Forage Chicory
 
 _Rogerio Cichota and Russel McAuliffe, AgResearch, New Zealand_
 
-This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a forage chicory crop.   
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  To simulate the aboveground plant structure, including the photosynthesis process, the Chicory model uses the SimpleLeaf procedure of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
 
 
 ##Inclusion in APSIM simulations
 A forage chicory crop can be included in a simulation the same as any other APSIM crop.
 
  * - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
- * - To become active, chicory needs to be sown using a manager script with a sowing rule:
+ * - To become active, chicory needs to be sown using a manager script with a sowing rule. e.g.:
 <pre><code class='language-cs'>
  Chicory.Sow(cultivar: Puna, population: 200, depth: 10, rowSpacing: 150);  
 </code></pre>
-If a specified cultivar is not available, an error is raised.
+If a specified cultivar is not available, a fatal error will be thrown.
 
 
 ##Harvest and biomass removal
-Chicory can be Harvested, Cut or Grazed like other crops using a manager script.  The proportions of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified or defaults will be used.  Note that the sum of removed and added to residue fractions should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
+Chicory biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, like for other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
 private void OnSimulationCommencing(object sender, EventArgs e)  
 {  
-  Remove = new RemovalFractions(Chicory.Organs);  
+  RemoveFraction = new RemovalFractions(Chicory.Organs);  
 }  
 [EventSubscribe("DoManagement")]    
 private void OnDoManagement(object sender, EventArgs e)  
 {  
   if (Clock.Today.Date == HarvestDate)  
   {  
-    Remove.SetFractionToRemove("Leaf", 0.80);  
-    Remove.SetFractionToRemove("Stem", 0.50);  
-    Remove.SetFractionToResidue("leaf",0.05);
-    Chicory.Harvest(Remove);  
+    RemoveFraction.SetFractionToRemove("Leaf", 0.80);  
+    RemoveFraction.SetFractionToRemove("Stem", 0.50);  
+    RemoveFraction.SetFractionToResidue("leaf",0.05);
+    Chicory.Harvest(RemoveFraction);  
   }
 }  
  </code></pre>
-The RemovalFractions class as can be sent with Harvest, Cut or Graze events; default is used if values for any organ is not specified.
+The RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.
 
 
 ##Crop termination
@@ -59,19 +59,21 @@ To fully terminate a crop the EndCrop event should be raised:
 <pre><code class='language-cs'>
  Chicory.EndCrop();  
 </code></pre>
-Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition between crops will then take place.]]></MemoText>
+Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.
+]]></MemoText>
       </Memo>
       <Phenology>
         <Name>Phenology</Name>
         <Memo>
           <Name>Description</Name>
-          <MemoText><![CDATA[As ThermalTime accumulates the crop progresses through the following phases:]]></MemoText>
+          <MemoText><![CDATA[The duration of each phenologic phase in Chicory is controlled in general by the accumulation of thermal time; for the reproductive phase, vernalisation and photoperiod are also used.]]></MemoText>
         </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress]]></MemoText>
+            <MemoText><![CDATA[The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  For chicory, the minimum temperature seem to be around 3-5oC (Amaducci & Pritoni, 1998; Moot et al., 2000; Clapham et al., 2001), although growth and emergence have been reported to be greatly reduced for temperatures below 10-14oC (Jung et al., 1996; Schittenhelm, 2001).  Optimum temperature is reported to be around 20-25oC (Moot et al., 2000; Schittenhelm, 2001; Mathieu et al., 2014) whereas the maximum temperature should be close to 35oC (Mathieu et al., 2014; Langworthy et al., 2015).
+]]></MemoText>
           </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -82,7 +84,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
             </X>
             <Y>
               <double>0</double>
-              <double>30</double>
+              <double>25</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -94,12 +96,14 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </PhotoperiodFunction>
         <Model xsi:type="VernalisationC">
           <Name>Vernalisation</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Vernalisation is the process whereby the plant acquires the ability to go into reproductive phase after been exposed to a period of time at low temperatures (Wiebe, 1990; Demeulemeester & De Proft, 1999).  For chicory the temperature range for vernalisation is between 0 and 12oC, with optimum about 4-6oC (Wiebe, 1989; Wiebe, 1990; Gianquinto, 1997; Dielen et al., 2005).  
+The reversal of vernalisation, or de-vernalisation, can happen on chicory (Wiebe, 1990; Gianquinto, 1997), if plants are exposed to sufficiently high temperatures soon after the period under vernalisation the effects of vernalisation are cancelled out.  Most plants show small reversal at relatively lower temperatures (above something in between 15 and 20oC), and larger at temperatures above 30oC.  For chicory, the more effective temperature to reverse vernalisation seem to be around 30-35oC (Gianquinto, 1997; Goodger, 2013).  Intermediate temperatures stabilise the vernalisation, and after 5-10 days reversal is no longer possible.  
+The number of days required for full vernalisation is quite variable in chicory and specific to each cultivar, with 30-50 days often given for full vernalisation (Wiebe, 1990; Gianquinto, 1997; Dielen et al., 2005).  However, some plants of leafy cultivars can go into reproductive phase if exposed to cold conditions for about a week or less (Gianquinto, 1997).  For forage chicory (cv. Puna) at field conditions in the USA, about 50-60% of the plants reached reproductive stage after winter (Clapham et al., 2001; Sanderson et al., 2003), and plants that bolted on one year tended to remain vegetative the following year and vice-versa.  In New Zealand conditions, reproductive phase seems to occur every year after winter (Hare 1986), although the extent of it has not been reported.  The data published suggest a minimum number of days for vernalisation (approximately 10 days) and a progressive increase in the number of plants vernalised as the number of days the plants are kept under cold conditions increases.  This is simulated by the model by assuming that the change in biomass fixation during stem elongation and reproductive phases (prioritising stems and flowers) is a function of vernalisation.]]></MemoText>
+          </Memo>
           <AirTemperatureFunction>
             <Name>VernalisingDays</Name>
-            <Memo>
-              <Name>Description</Name>
-              <MemoText><![CDATA[Vernalisation]]></MemoText>
-            </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -118,15 +122,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           </AirTemperatureFunction>
           <AirTemperatureFunction>
             <Name>DevernalisingDays</Name>
-            <Memo>
-              <Name>Description</Name>
-              <MemoText><![CDATA[Devernalisation]]></MemoText>
-            </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>20</double>
+                <double>15</double>
                 <double>30</double>
                 <double>40</double>
               </X>
@@ -140,7 +140,8 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           </AirTemperatureFunction>
           <Constant>
             <Name>DaysToStabilise</Name>
-            <Value>5</Value>
+            <Value>10</Value>
+            <Units>days</Units>
           </Constant>
           <StartStage>Emergence</StartStage>
           <EndStage>Bolting</EndStage>
@@ -148,19 +149,24 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Model>
         <GerminatingPhase>
           <Name>Germinating</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Germination will occur one day after sowing, provided that soil extractable water is greater than zero.  Germination rates in chicory typically vary between 70 and 95% when sown close to the surface (<10mm), with plenty of moisture and at good temperature (Moot et al., 2000; Sanderson & Elwinger, 2000b; Reed et al., 2008; Lee et al., 2015).  The chicory model assumes 100% germination, and therefore the user must correct sowing rate if considered important. ]]></MemoText>
+          </Memo>
           <Start>Sowing</Start>
           <End>Germination</End>
         </GerminatingPhase>
         <EmergingPhase>
           <Name>Emerging</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[ Chicory has small seeds and emergence has been shown to be srongly affected by sowing depth (Peri et al., 2000; Sanderson & Elwinger, 2000a), with best performace for seeds at <10mm and practically no emergence from a depth of 60 mm (for forage cultivars).  This effect is not explicitly simulated by the Chicory model in the current version.
+]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[Currently the duration of the Emergence phase is set to zero because the period of zero cover and biomass production following sowing is accounted for in the cover and biomass accumulation functions.  However this phase is included if parameterisations of other crops in the future wish to give this phase a duration.]]></MemoText>
-          </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>75</ShootLag>
@@ -170,7 +176,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Vegetative</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.]]></MemoText>
+            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase start after emergence but also after the end of the reproductive phase (phenology reset).  It ends when a minimum level of vernalisation has been reached.]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
@@ -186,9 +192,14 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </GenericPhase>
         <GenericPhase>
           <Name>Inductive</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[This phase represents the period when the plant awaits for the cue to start of the reproductive growth, for chicory this is given by photoperiod (Wiebe, 1990; Moloney & Milne, 1993). For forage chicory the end of this phase seem to occur when the daylight is around 12-14 hours (Hare et al., 1990; Moloney & Milne, 1993; Gianquinto, 1997; Clapham et al., 2001).  During this phase the plant still only partitions biomass to leaf and root+taproot organs.
+]]></MemoText>
+          </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <Value>30</Value>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -197,8 +208,8 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
               <Name>XYPairs</Name>
               <X>
                 <double>10</double>
-                <double>12</double>
-                <double>13.5</double>
+                <double>11.5</double>
+                <double>14</double>
                 <double>15</double>
               </X>
               <Y>
@@ -217,11 +228,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>StemElongation</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to root+taproot, leaf, and stem organs.]]></MemoText>
+            <MemoText><![CDATA[During this phase the plant switch biomass partitioning strongly prioritising stem organs, although leaf and root+taproot can still grow; stem growth intensity decreases when flower buds start to appear (Hare, 1986; Clapham et al., 2001).  In the USA, stem growth of forage chicory has been observed to occur for a period of time equivalent to the accumulation of thermal time of about 800-1000 oCd after bolting (Clapham et al., 2001).  These values agreed well with the qualitative description of chicory development in New Zealand  (Hare, 1986).]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>1000</Value>
+            <Value>800</Value>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
@@ -235,7 +246,9 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Reproductive</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to root+taproot, stem, leaves and reproductive organs.]]></MemoText>
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, but prioritising reproductive organs (flowers and seed). In the current model, seeds are not explicitly described and only a generic organ refered to as inflorescence is defined.  This was done partly due to lack of data and partly because of the complex physiology of chicory. There is a great level of variability among chicory plants on when and for how long flowering occurs plus even the same plant can have flowers, young seeds as well as ripen seed at the same time (Hare et al., 1990; Moloney & Milne, 1993; Clapham et al. 2001).  
+Data from the USA and New Zealand suggest that the reporductive phase last for the equivalent of the accumualtion of thermal time of about 800-1000oCd (Hare 1986; Clapham et al. 2001).
+]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
@@ -251,6 +264,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </GenericPhase>
         <GotoPhase>
           <Name>GotoPhase</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[For chicory, the phase used to reset phenology is 'Vegetative'.
+]]></MemoText>
+          </Memo>
           <Start>Ripening</Start>
           <End>Ripening</End>
           <FractionComplete>0</FractionComplete>
@@ -284,7 +302,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
-          <Units>0-1</Units>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -293,14 +311,14 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.045</Value>
+          <Value>0.05</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.2</Value>
+            <Value>2</Value>
             <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
@@ -399,7 +417,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
               <VariableName>[Leaf].Photosynthesis.RUE.Value</VariableName>
             </VariableReference>
             <MaximumFunction>
-              <Name>Maximum</Name>
+              <Name>Radiation</Name>
               <VariableReference>
                 <Name>RadnInt</Name>
                 <VariableName>[Leaf].RadIntTot</VariableName>
@@ -411,42 +429,11 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
             </MaximumFunction>
           </MultiplyFunction>
         </DivideFunction>
-        <MultiplyFunction>
-          <Name>ExtinctionCoefficientFunction</Name>
-          <Constant>
-            <Name>MaxExtinctionCoefficient</Name>
-            <Memo>
-              <Name>Description</Name>
-              <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
-            </Memo>
-            <Value>0.75</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>PopulationEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>50</double>
-                <double>150</double>
-                <double>250</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0.65</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Chicory].Population</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[
-DM demand is based on ...
+            <MemoText><![CDATA[DM demand function attempts to keep the shoot to root ratio and then the leaf to stem ratio close to a target value, which varies according to the development phase.  This is necessary to ensure that the chicory plants will recovery after grazing by growing leaves even during reproductive phase.
 ]]></MemoText>
           </Memo>
           <PhaseLookup>
@@ -513,50 +500,78 @@ DM demand is based on ...
           <Name>LAIFunction</Name>
           <Constant>
             <Name>SpecificLeafArea</Name>
-            <Value>0.04</Value>
+            <Value>0.03</Value>
             <Units>m^2/g</Units>
           </Constant>
           <VariableReference>
-            <Name>LeafWeight</Name>
+            <Name>LiveLeafWeight</Name>
             <VariableName>[Leaf].Live.Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Constant>
+        <MultiplyFunction>
           <Name>LaiDeadFunction</Name>
-          <Value>0</Value>
-          <Units>m^2/m^2</Units>
-        </Constant>
+          <VariableReference>
+            <Name>SpecificLeafArea</Name>
+            <VariableName>[Leaf].LAIFunction.SpecificLeafArea.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>DeadLeafWeight</Name>
+            <VariableName>[Leaf].Dead.Wt</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Constant>
+            <Name>MaxExtinctionCoefficient</Name>
+            <Memo>
+              <Name>Description</Name>
+              <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
+            </Memo>
+            <Value>0.75</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>PopulationEffect</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>50</double>
+                <double>150</double>
+                <double>250</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.65</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Chicory].Population</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>3</double>
-              <double>5</double>
-              <double>6</double>
+              <double>10</double>
+              <double>100</double>
+              <double>500</double>
             </X>
             <Y>
               <double>100</double>
-              <double>800</double>
+              <double>400</double>
               <double>1200</double>
             </Y>
           </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
+          <XProperty>[Chicory].AboveGround.Wt</XProperty>
         </LinearInterpolationFunction>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.1</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>DMFactor</Name>
@@ -583,6 +598,7 @@ DM demand is based on ...
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.25</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>DMFactor</Name>
@@ -604,6 +620,21 @@ DM demand is based on ...
             <XProperty>[Leaf].Dead.Wt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>1</Value>
+          <Units>/day</Units>
+        </Constant>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -613,13 +644,6 @@ DM demand is based on ...
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
@@ -627,14 +651,21 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -682,25 +713,40 @@ DM demand is based on ...
               <double>5</double>
               <double>5.5</double>
               <double>6</double>
+              <double>6.5</double>
+              <double>7</double>
             </X>
             <Y>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.008</double>
+              <double>0.007</double>
               <double>0.007</double>
             </Y>
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
-          <Value>0.02</Value>
-          <Units>gN/gDM</Units>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseBasedSwitch>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>5</double>
+              <double>5.5</double>
+              <double>6</double>
+              <double>6.5</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0.025</double>
+              <double>0.025</double>
+              <double>0.02</double>
+              <double>0.015</double>
+              <double>0.015</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -801,15 +847,12 @@ DM demand is based on ...
           <Value>0</Value>
           <Units>0-1</Units>
         </Constant>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>1</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>StageFactor</Name>
@@ -838,6 +881,7 @@ DM demand is based on ...
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.25</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>DMFactor</Name>
@@ -859,6 +903,21 @@ DM demand is based on ...
             <XProperty>[Stem].Dead.Wt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>1</Value>
+          <Units>/day</Units>
+        </Constant>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -868,13 +927,6 @@ DM demand is based on ...
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
@@ -882,14 +934,21 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -993,10 +1052,6 @@ DM demand is based on ...
           <Value>0</Value>
           <Units>0-1</Units>
         </Constant>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
@@ -1051,6 +1106,20 @@ DM demand is based on ...
             <XProperty>[Inflorescence].Dead.Wt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>1</Value>
+        </Constant>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1060,13 +1129,6 @@ DM demand is based on ...
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
@@ -1074,14 +1136,21 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1104,6 +1173,7 @@ DM demand is based on ...
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>1</Value>
+          <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -1161,19 +1231,12 @@ DM demand is based on ...
           <Value>0</Value>
           <Units>0-1</Units>
         </Constant>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0</Value>
-        </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.1</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>DMFactor</Name>
@@ -1200,6 +1263,7 @@ DM demand is based on ...
           <Constant>
             <Name>MaxRate</Name>
             <Value>0.25</Value>
+            <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
             <Name>DMFactor</Name>
@@ -1221,6 +1285,21 @@ DM demand is based on ...
             <XProperty>[Taproot].Dead.Wt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>1</Value>
+          <Units>/day</Units>
+        </Constant>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1230,13 +1309,6 @@ DM demand is based on ...
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
             <Name>Cut</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
@@ -1244,14 +1316,21 @@ DM demand is based on ...
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1273,8 +1352,13 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Units>g/plant</Units>
         </Constant>
         <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.015</Value>
+          <Value>0.01</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1287,90 +1371,6 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           <Start>Germination</Start>
           <End>Ripening</End>
         </PhaseBasedSwitch>
-        <Constant>
-          <Name>MaxDailyNUptake</Name>
-          <Value>12</Value>
-          <Units>kgN/ha</Units>
-        </Constant>
-        <Constant>
-          <Name>SoilWaterEffect</Name>
-          <Memo>
-            <Name>memo</Name>
-            <MemoText><![CDATA[
-No effect of soil water content on root growth is currently captured in the model.
-]]></MemoText>
-          </Memo>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumRootDepth</Name>
-          <Value>1500</Value>
-          <Units>mm</Units>
-        </Constant>
-        <PhaseLookup>
-          <Name>RootFrontVelocity</Name>
-          <PhaseLookupValue>
-            <Name>PreEmergence</Name>
-            <Constant>
-              <Name>Value</Name>
-              <Value>1</Value>
-              <Units>mm/day</Units>
-            </Constant>
-            <Start>Germination</Start>
-            <End>Emergence</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Vegetative</Name>
-            <Constant>
-              <Name>Value</Name>
-              <Value>3</Value>
-              <Units>mm/day</Units>
-            </Constant>
-            <Start>Emergence</Start>
-            <End>Bolting</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Reproductive</Name>
-            <Constant>
-              <Name>Value</Name>
-              <Value>2</Value>
-              <Units>mm/day</Units>
-            </Constant>
-            <Start>Bolting</Start>
-            <End>Ripening</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <Constant>
-          <Name>SpecificRootLength</Name>
-          <Value>40</Value>
-          <Units>m/g</Units>
-        </Constant>
-        <MultiplyFunction>
-          <Name>SenescenceRate</Name>
-          <Constant>
-            <Name>MaxRate</Name>
-            <Value>0.1</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>DMFactor</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>300</double>
-                <double>700</double>
-                <double>1000</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0.1</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Root].Live.Wt</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
           <PhaseLookupValue>
@@ -1421,6 +1421,111 @@ No effect of soil water content on root growth is currently captured in the mode
             <End>Ripening</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1500</Value>
+          <Units>mm</Units>
+        </Constant>
+        <PhaseLookup>
+          <Name>RootFrontVelocity</Name>
+          <PhaseLookupValue>
+            <Name>PreEmergence</Name>
+            <Constant>
+              <Name>Value</Name>
+              <Value>1</Value>
+              <Units>mm/day</Units>
+            </Constant>
+            <Start>Germination</Start>
+            <End>Emergence</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Vegetative</Name>
+            <Constant>
+              <Name>Value</Name>
+              <Value>3</Value>
+              <Units>mm/day</Units>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>Bolting</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Reproductive</Name>
+            <Constant>
+              <Name>Value</Name>
+              <Value>2</Value>
+              <Units>mm/day</Units>
+            </Constant>
+            <Start>Bolting</Start>
+            <End>Ripening</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <Constant>
+          <Name>TemperatureEffect</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+No effect of temperature on root growth is currently captured in the model.
+]]></MemoText>
+          </Memo>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>SoilWaterEffect</Name>
+          <Memo>
+            <Name>memo</Name>
+            <MemoText><![CDATA[
+No effect of soil water content on root growth is currently captured in the model.
+]]></MemoText>
+          </Memo>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>SenescenceRate</Name>
+          <Constant>
+            <Name>MaxRate</Name>
+            <Value>0.1</Value>
+            <Units>/day</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>DMFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>300</double>
+                <double>700</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.1</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Root].Live.Wt</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>1</Value>
+          <Units>/day</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
@@ -1437,6 +1542,21 @@ No effect of soil water content on root growth is currently captured in the mode
           <XProperty>[Root].RootLengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.01</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDensity</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -1446,36 +1566,28 @@ No effect of soil water content on root growth is currently captured in the mode
             </X>
             <Y>
               <double>0.02</double>
-              <double>0.02</double>
+              <double>0.03</double>
             </Y>
           </XYPairs>
           <XProperty>[Root].RootLengthDensity</XProperty>
         </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>KNH4</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0.02</double>
-              <double>0.02</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
-        </LinearInterpolationFunction>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>10</Value>
+          <Units>kgN/ha</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
               <double>0</double>
+              <double>0.5</double>
               <double>1</double>
             </X>
             <Y>
               <double>0</double>
+              <double>1</double>
               <double>1</double>
             </Y>
           </XYPairs>
@@ -1496,7 +1608,7 @@ No effect of soil water content on root growth is currently captured in the mode
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
+            <Name>Graze</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1510,14 +1622,14 @@ No effect of soil water content on root growth is currently captured in the mode
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Prune</Name>
+            <Name>Harvest</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
-            <Name>Graze</Name>
+            <Name>Prune</Name>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1617,6 +1729,7 @@ No effect of soil water content on root growth is currently captured in the mode
           <Constant>
             <Name>TargetSR</Name>
             <Value>1.5</Value>
+            <Units>g/g</Units>
           </Constant>
           <Start>Emergence</Start>
           <End>Vernalised</End>
@@ -1634,6 +1747,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <Constant>
                 <Name>MaxTargetIncrease</Name>
                 <Value>1.5</Value>
+                <Units>g/g</Units>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>VernalisationEffect</Name>
