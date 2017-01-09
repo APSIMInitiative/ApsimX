@@ -442,20 +442,34 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Name>VegetativeAndInductive</Name>
               <DivideFunction>
                 <Name>LeafFraction</Name>
-                <VariableReference>
-                  <Name>ShootRootRatio</Name>
-                  <VariableName>[AdjustedShootRootRatio].Value</VariableName>
-                </VariableReference>
-                <AddFunction>
-                  <Name>ShootRootRatioPlusOne</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
                   <VariableReference>
-                    <Name>ShootRootRatio</Name>
-                    <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                    <Name>TargetSR1</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
                   </VariableReference>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                </MultiplyFunction>
+                <AddFunction>
+                  <Name>Denominator</Name>
+                  <MultiplyFunction>
+                    <Name>TargetSRs</Name>
+                    <VariableReference>
+                      <Name>TargetSR1</Name>
+                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>TargetSR2</Name>
+                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    </VariableReference>
+                  </MultiplyFunction>
+                  <VariableReference>
+                    <Name>CurrentSR</Name>
+                    <VariableName>[ShootRootRatio].Value</VariableName>
+                  </VariableReference>
                 </AddFunction>
               </DivideFunction>
               <Start>Emergence</Start>
@@ -465,21 +479,60 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Name>StemElongationAndReproductive</Name>
               <DivideFunction>
                 <Name>LeafFraction</Name>
-                <Constant>
-                  <Name>One</Name>
-                  <Value>1</Value>
-                </Constant>
-                <AddFunction>
-                  <Name>ShootRootRatioPlusOne</Name>
+                <MultiplyFunction>
+                  <Name>Numerator</Name>
                   <VariableReference>
-                    <Name>ShootRootRatio</Name>
-                    <VariableName>[AdjustedShootRootRatio].Value</VariableName>
+                    <Name>TargetSR1</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
                   </VariableReference>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                </AddFunction>
+                  <VariableReference>
+                    <Name>TargetSR2</Name>
+                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>CurrentSL</Name>
+                    <VariableName>[StalkLeafRatio].Value</VariableName>
+                  </VariableReference>
+                </MultiplyFunction>
+                <MultiplyFunction>
+                  <Name>Denominator</Name>
+                  <AddFunction>
+                    <Name>SRs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSRs</Name>
+                      <VariableReference>
+                        <Name>TargetSR1</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSR2</Name>
+                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSR</Name>
+                      <VariableName>[ShootRootRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                  <AddFunction>
+                    <Name>SLs</Name>
+                    <MultiplyFunction>
+                      <Name>TargetSLs</Name>
+                      <VariableReference>
+                        <Name>TargetSL1</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>TargetSL2</Name>
+                        <VariableName>[TargetStalkLeafRatio].Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                    <VariableReference>
+                      <Name>CurrentSL</Name>
+                      <VariableName>[StalkLeafRatio].Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                </MultiplyFunction>
               </DivideFunction>
               <Start>Bolting</Start>
               <End>Ripening</End>
@@ -519,36 +572,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
             <VariableName>[Leaf].Dead.Wt</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <MultiplyFunction>
+        <Constant>
           <Name>ExtinctionCoefficientFunction</Name>
-          <Constant>
-            <Name>MaxExtinctionCoefficient</Name>
-            <Memo>
-              <Name>Description</Name>
-              <MemoText><![CDATA[The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover]]></MemoText>
-            </Memo>
-            <Value>0.75</Value>
-          </Constant>
-          <LinearInterpolationFunction>
-            <Name>PopulationEffect</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>50</double>
-                <double>150</double>
-                <double>250</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0.65</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Chicory].Population</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
+          <Value>0.6</Value>
+          <Units>0-1</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -569,55 +597,114 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
-            <Name>MaxRate</Name>
-            <Value>0.1</Value>
+            <Name>ReferenceRate</Name>
+            <Value>0.005</Value>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
-            <Name>DMFactor</Name>
+            <Name>StageFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>300</double>
-                <double>700</double>
-                <double>1000</double>
+                <double>3</double>
+                <double>4</double>
+                <double>5</double>
+                <double>6</double>
+                <double>7</double>
               </X>
               <Y>
-                <double>0</double>
-                <double>0.1</double>
+                <double>0.5</double>
+                <double>1</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].Live.Wt</XProperty>
+            <XProperty>[Phenology].Stage</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>CoverFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>0.9</double>
+                <double>0.95</double>
+                <double>0.99</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1.1</double>
+                <double>2</double>
+                <double>3</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].CoverTotal</XProperty>
+          </LinearInterpolationFunction>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>5</double>
+                <double>20</double>
+                <double>30</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>2</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>DetachmentRateFunction</Name>
           <Constant>
-            <Name>MaxRate</Name>
-            <Value>0.25</Value>
+            <Name>ReferenceRate</Name>
+            <Value>0.1</Value>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
-            <Name>DMFactor</Name>
+            <Name>SoilMoistureFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>100</double>
-                <double>500</double>
-                <double>1000</double>
+                <double>0.5</double>
+                <double>1</double>
               </X>
               <Y>
+                <double>0.5</double>
+                <double>0.5</double>
                 <double>0.1</double>
-                <double>0.15</double>
-                <double>0.4</double>
-                <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].Dead.Wt</XProperty>
+            <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -1743,29 +1830,46 @@ No effect of soil water content on root growth is currently captured in the mode
               <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
             </VariableReference>
             <MultiplyFunction>
-              <Name>PlusTarget</Name>
-              <Constant>
-                <Name>MaxTargetIncrease</Name>
-                <Value>1.5</Value>
-                <Units>g/g</Units>
-              </Constant>
+              <Name>DeltaTarget</Name>
+              <SubtractFunction>
+                <Name>MaximumIncrease</Name>
+                <Constant>
+                  <Name>MaximumSR</Name>
+                  <Value>4</Value>
+                  <Units>g/g</Units>
+                </Constant>
+                <VariableReference>
+                  <Name>MinTargetSR</Name>
+                  <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
+                </VariableReference>
+              </SubtractFunction>
               <LinearInterpolationFunction>
                 <Name>VernalisationEffect</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>0</double>
+                    <double>9.9</double>
                     <double>10</double>
                     <double>20</double>
                     <double>30</double>
-                    <double>35</double>
                     <double>40</double>
+                    <double>50</double>
+                    <double>60</double>
+                    <double>70</double>
+                    <double>80</double>
+                    <double>90</double>
+                    <double>100</double>
                   </X>
                   <Y>
-                    <double>0.15</double>
-                    <double>0.15</double>
+                    <double>0</double>
+                    <double>0.05</double>
+                    <double>0.1</double>
+                    <double>0.18</double>
                     <double>0.3</double>
-                    <double>0.65</double>
+                    <double>0.45</double>
+                    <double>0.6</double>
+                    <double>0.8</double>
+                    <double>0.95</double>
                     <double>1</double>
                     <double>1</double>
                   </Y>
@@ -1778,13 +1882,19 @@ No effect of soil water content on root growth is currently captured in the mode
                   <Name>XYPairs</Name>
                   <X>
                     <double>4</double>
+                    <double>4.1</double>
+                    <double>4.25</double>
                     <double>4.5</double>
+                    <double>4.7</double>
                     <double>5</double>
                     <double>6</double>
                   </X>
                   <Y>
-                    <double>0</double>
-                    <double>0.5</double>
+                    <double>0.01</double>
+                    <double>0.35</double>
+                    <double>0.65</double>
+                    <double>0.91</double>
+                    <double>0.98</double>
                     <double>1</double>
                     <double>1</double>
                   </Y>
@@ -1823,14 +1933,20 @@ No effect of soil water content on root growth is currently captured in the mode
                   <Name>XYPairs</Name>
                   <X>
                     <double>6</double>
-                    <double>6.5</double>
+                    <double>6.25</double>
+                    <double>6.4</double>
+                    <double>6.6</double>
+                    <double>6.8</double>
                     <double>6.9</double>
                     <double>7</double>
                   </X>
                   <Y>
                     <double>1</double>
-                    <double>0.5</double>
-                    <double>0</double>
+                    <double>1</double>
+                    <double>0.95</double>
+                    <double>0.75</double>
+                    <double>0.25</double>
+                    <double>0.05</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1902,6 +2018,53 @@ No effect of soil water content on root growth is currently captured in the mode
         </PhaseLookupValue>
       </PhaseLookup>
       <PhaseLookup>
+        <Name>TargetStalkLeafRatio</Name>
+        <PhaseLookupValue>
+          <Name>AllPhasesWithStems</Name>
+          <MultiplyFunction>
+            <Name>TargetSL</Name>
+            <Constant>
+              <Name>MaximumSL</Name>
+              <Value>1.5</Value>
+              <Units>g/g</Units>
+            </Constant>
+            <VariableReference>
+              <Name>VernalisationEffect</Name>
+              <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect.Value</VariableName>
+            </VariableReference>
+            <LinearInterpolationFunction>
+              <Name>StageEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>5</double>
+                  <double>5.1</double>
+                  <double>5.25</double>
+                  <double>5.4</double>
+                  <double>5.5</double>
+                  <double>6.5</double>
+                  <double>6.75</double>
+                  <double>7</double>
+                </X>
+                <Y>
+                  <double>0.1</double>
+                  <double>0.45</double>
+                  <double>0.8</double>
+                  <double>0.97</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.9</double>
+                  <double>0.5</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
+          <Start>Bolting</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+      </PhaseLookup>
+      <PhaseLookup>
         <Name>FlowerStemRatio</Name>
         <PhaseLookupValue>
           <Name>Reproductive</Name>
@@ -1921,6 +2084,45 @@ No effect of soil water content on root growth is currently captured in the mode
         </PhaseLookupValue>
       </PhaseLookup>
       <PhaseLookup>
+        <Name>TargetFlowerStemRatio</Name>
+        <PhaseLookupValue>
+          <Name>Reproductive</Name>
+          <MultiplyFunction>
+            <Name>TargetSL</Name>
+            <Constant>
+              <Name>MaximumFS</Name>
+              <Value>0.1</Value>
+              <Units>g/g</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>StageEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>6</double>
+                  <double>6.1</double>
+                  <double>6.25</double>
+                  <double>6.4</double>
+                  <double>6.5</double>
+                  <double>7</double>
+                </X>
+                <Y>
+                  <double>0.05</double>
+                  <double>0.4</double>
+                  <double>0.75</double>
+                  <double>0.96</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
+          <Start>Flowering</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+      </PhaseLookup>
+      <PhaseLookup>
         <Name>TaprootRootRatio</Name>
         <PhaseLookupValue>
           <Name>AllPhases</Name>
@@ -1935,6 +2137,47 @@ No effect of soil water content on root growth is currently captured in the mode
               <VariableName>[Root].Live.Wt</VariableName>
             </VariableReference>
           </DivideFunction>
+          <Start>Emergence</Start>
+          <End>Ripening</End>
+        </PhaseLookupValue>
+      </PhaseLookup>
+      <PhaseLookup>
+        <Name>TargetTaprootRootRatio</Name>
+        <PhaseLookupValue>
+          <Name>AllPhases</Name>
+          <MultiplyFunction>
+            <Name>TargetTR</Name>
+            <Constant>
+              <Name>MaximumTR</Name>
+              <Value>2</Value>
+              <Units>g/g</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>BiomassFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>0.05</double>
+                  <double>0.5</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                  <double>2</double>
+                  <double>2.5</double>
+                </X>
+                <Y>
+                  <double>1E-05</double>
+                  <double>1E-05</double>
+                  <double>0.4</double>
+                  <double>0.74</double>
+                  <double>0.93</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[PerPlantBelowGroundWt].Value</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
           <Start>Emergence</Start>
           <End>Ripening</End>
         </PhaseLookupValue>
