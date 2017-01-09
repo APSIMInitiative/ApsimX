@@ -77,14 +77,9 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant != null)
-                {
-                    if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                         return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
-                    return 0;
-                }
                 return 0;
-
             } 
         }
 
@@ -223,7 +218,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction SenessingLeafRelativeSize = null;
             /// <summary>
             /// The proportion of mass that is respired each day
@@ -435,10 +430,11 @@ namespace Models.PMF.Organs
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
         /// <summary>Gets the specific area.</summary>
+        // Only used in Potato.apsim for a single observed trait. Not sure if we want to keep it. - JF
         [Units("mm^2/g")]
         public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
 
-        /// <summary>Gets the growth duration of the cohort.</summary>
+/*        /// <summary>Gets the growth duration of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortGrowthDuration
@@ -456,8 +452,8 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
-        /// <summary>Gets the lag duration of the cohort.</summary>
+*/
+/*        /// <summary>Gets the lag duration of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortLagDuration
@@ -475,8 +471,8 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
-        /// <summary>Gets the delta water constrained area of the cohort.</summary>
+*/
+/*        /// <summary>Gets the delta water constrained area of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortDeltaWaterConstrainedArea
@@ -497,7 +493,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]

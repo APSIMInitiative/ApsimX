@@ -2372,17 +2372,12 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -6399,17 +6394,12 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -9861,17 +9851,12 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -13613,17 +13598,12 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -17538,17 +17518,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -22246,17 +22221,12 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -26231,17 +26201,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -31716,17 +31681,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
