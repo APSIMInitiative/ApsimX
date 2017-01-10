@@ -77,14 +77,9 @@ namespace Models.PMF.Organs
         { 
             get 
             {
-                if (Plant != null)
-                {
-                    if (Plant.IsAlive)
+                if (Plant != null && Plant.IsAlive)
                         return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
-                    return 0;
-                }
                 return 0;
-
             } 
         }
 
