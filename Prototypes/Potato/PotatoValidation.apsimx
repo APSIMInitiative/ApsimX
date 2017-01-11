@@ -2580,12 +2580,12 @@ namespace Models
           <Manager>
             <Name>PotatoPlantAndHarvest</Name>
             <Script>
-              <CultivarName>RussetBurbank</CultivarName>
-              <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-              <PlantingDepth>120</PlantingDepth>
               <PlantingDate>2003-10-20</PlantingDate>
+              <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>280</RowSpace>
               <RowWidth>770</RowWidth>
+              <PlantingDepth>120</PlantingDepth>
+              <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
               <HarvestDate>2004-06-01</HarvestDate>
             </Script>
