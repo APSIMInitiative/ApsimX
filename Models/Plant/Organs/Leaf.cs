@@ -95,7 +95,7 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double FRGR { get; set; }
         
-        private double _PotentialEP = 0;
+        private double _PotentialEP;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP
@@ -126,14 +126,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public double WaterAllocation { get; private set; }
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
+        public double WaterAllocation { get; set; }
 
         #endregion
 
