@@ -632,6 +632,11 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>DroughtInducedSenAcceleration</Name>
             <Value>1</Value>
           </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -1763,7 +1768,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
-        <POName>PredictedObserved</POName>
+        <POName>PhenoPredObs</POName>
       </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Data</ObservedTableName>

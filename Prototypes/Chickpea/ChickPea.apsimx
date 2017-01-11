@@ -1808,6 +1808,11 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <Name>DroughtInducedSenAcceleration</Name>
             <Value>1</Value>
           </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>

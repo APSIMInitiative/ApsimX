@@ -213,7 +213,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction NonStructuralFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
             [Link]

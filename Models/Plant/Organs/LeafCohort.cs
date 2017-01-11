@@ -798,7 +798,7 @@ namespace Models.PMF.Organs
             double propnStemMortality = (startPopulation - CohortPopulation)/startPopulation;
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
-            if (IsNotAppeared && (leafCohortParameters.CellDivisionStress != null))
+            if (IsNotAppeared)
             {
                 CellDivisionStressDays += 1;
                 CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value;
@@ -809,7 +809,7 @@ namespace Models.PMF.Organs
             {
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
-                if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && (IsFullyExpanded))
+                if (IsFullyExpanded)
                     thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value;
                 else thermalTime = tt;
 

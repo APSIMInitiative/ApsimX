@@ -1455,6 +1455,35 @@
             <Name>DroughtInducedSenAcceleration</Name>
             <Value>1</Value>
           </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress1</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress2</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress3</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress4</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration1</Name>
+            <Value>1</Value>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>
@@ -2798,11 +2827,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingDate>1997-12-23</SowingDate>
             <SowingDepth>20</SowingDepth>
             <SowingRate>100</SowingRate>
+            <RowSpacing>150</RowSpacing>
             <CultivarName>Primo</CultivarName>
-            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -6310,11 +6339,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingDate>1997-12-23</SowingDate>
             <SowingDepth>20</SowingDepth>
             <SowingRate>50</SowingRate>
+            <RowSpacing>150</RowSpacing>
             <CultivarName>Massey</CultivarName>
-            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -9182,11 +9211,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingDate>1997-12-23</SowingDate>
             <SowingDepth>20</SowingDepth>
             <SowingRate>50</SowingRate>
+            <RowSpacing>150</RowSpacing>
             <CultivarName>Primo</CultivarName>
-            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -12594,12 +12623,12 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingFert>300</SowingFert>
             <SowingDepth>20</SowingDepth>
+            <RowSpacing>150</RowSpacing>
             <SowingRate>50</SowingRate>
             <CultivarName>Primo</CultivarName>
             <SowingDate>1997-12-23</SowingDate>
-            <SowingFert>300</SowingFert>
           </Script>
           <Code><![CDATA[
         using System;
