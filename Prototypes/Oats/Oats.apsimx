@@ -120,6 +120,59 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>TempResponseProfile</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>2</double>
+                  <double>3</double>
+                  <double>4</double>
+                  <double>5</double>
+                  <double>6</double>
+                  <double>7</double>
+                  <double>8</double>
+                  <double>9</double>
+                  <double>10</double>
+                  <double>11</double>
+                  <double>12</double>
+                  <double>13</double>
+                  <double>14</double>
+                  <double>15</double>
+                  <double>16</double>
+                  <double>17</double>
+                  <double>18</double>
+                  <double>19</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>32</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1.204991167</double>
+                  <double>1.037145509</double>
+                  <double>0.892679412</double>
+                  <double>0.768336291</double>
+                  <double>0.661313174</double>
+                  <double>0.569197524</double>
+                  <double>0.489912849</double>
+                  <double>0.421671897</double>
+                  <double>0.362936365</double>
+                  <double>0.312382224</double>
+                  <double>0.268869872</double>
+                  <double>0.231418444</double>
+                  <double>0.1991837</double>
+                  <double>0.171439</double>
+                  <double>0.147558914</double>
+                  <double>0.127005135</double>
+                  <double>0.109314332</double>
+                  <double>0.094087718</double>
+                  <double>0.080982049</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>-0.5</double>
+                </Y>
+              </XYPairs>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -147,25 +200,25 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
               </X>
               <Y>
                 <double>0</double>
-                <double>1.204991167</double>
-                <double>1.037145509</double>
-                <double>0.892679412</double>
-                <double>0.768336291</double>
-                <double>0.661313174</double>
-                <double>0.569197524</double>
-                <double>0.489912849</double>
-                <double>0.421671897</double>
-                <double>0.362936365</double>
-                <double>0.312382224</double>
-                <double>0.268869872</double>
-                <double>0.231418444</double>
-                <double>0.1991837</double>
-                <double>0.171439</double>
-                <double>0.147558914</double>
-                <double>0.127005135</double>
-                <double>0.109314332</double>
-                <double>0.094087718</double>
-                <double>0.080982049</double>
+                <double>2.2</double>
+                <double>2</double>
+                <double>1.8</double>
+                <double>1.5</double>
+                <double>1.3</double>
+                <double>1.2</double>
+                <double>1</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.5</double>
+                <double>0.4</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.156</double>
                 <double>0</double>
                 <double>0</double>
                 <double>-0.5</double>
@@ -259,7 +312,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
 ]]></MemoText>
           </Memo>
-          <Value>9</Value>
+          <Value>6</Value>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -357,29 +410,14 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         </LeafAppearancePhase>
         <GenericPhase>
           <Name>EarlyReproductive</Name>
+          <Constant>
+            <Name>Target</Name>
+            <Value>90</Value>
+          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <LinearInterpolationFunction>
-            <Name>Target</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>10</double>
-                <double>16</double>
-                <double>24</double>
-              </X>
-              <Y>
-                <double>650</double>
-                <double>650</double>
-                <double>400</double>
-                <double>400</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
-          </LinearInterpolationFunction>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
@@ -1618,7 +1656,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>MaxArea</Name>
             <Constant>
               <Name>AreaLargestLeaves</Name>
-              <Value>2600</Value>
+              <Value>5500</Value>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -4615,6 +4653,112 @@ namespace Models
         <TableName>ObsStructure</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Grain1</Name>
+      <Series>
+        <Name>Series</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Oats.Structure.LeafTipsAppeared</XFieldName>
+        <YFieldName>Oats.Grain.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Spike</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Spike.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Observations</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Grain.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
