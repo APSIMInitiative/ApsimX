@@ -207,7 +207,7 @@ namespace Models.PMF.Organs
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
             /// <summary>The drought induced sen acceleration</summary>
-            [Link(IsOptional = true)]
+            [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link]
