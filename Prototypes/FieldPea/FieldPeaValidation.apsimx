@@ -1671,6 +1671,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2827,11 +2831,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <SowingDate>1997-12-23</SowingDate>
+            <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>100</SowingRate>
-            <RowSpacing>150</RowSpacing>
             <CultivarName>Primo</CultivarName>
+            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -6339,11 +6343,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <SowingDate>1997-12-23</SowingDate>
+            <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>50</SowingRate>
-            <RowSpacing>150</RowSpacing>
             <CultivarName>Massey</CultivarName>
+            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;
@@ -9211,11 +9215,11 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <SowingDate>1997-12-23</SowingDate>
+            <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>50</SowingRate>
-            <RowSpacing>150</RowSpacing>
             <CultivarName>Primo</CultivarName>
+            <SowingDate>1997-12-23</SowingDate>
           </Script>
           <Code><![CDATA[
         using System;

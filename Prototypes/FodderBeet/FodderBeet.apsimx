@@ -805,6 +805,10 @@ Needs test and imperovement to isolate soil temperature effects of different the
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -8956,9 +8960,9 @@ namespace Models
           <Manager>
             <Name>SowDateCv</Name>
             <Script>
+              <InitialRootDepth>5</InitialRootDepth>
               <CropToSow>Rivage</CropToSow>
               <SowingDate>0001-01-01</SowingDate>
-              <InitialRootDepth>5</InitialRootDepth>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

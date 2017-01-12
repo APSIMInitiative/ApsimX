@@ -255,10 +255,10 @@ namespace Models.PMF.Organs
         [Link]
         IFunction StructuralFraction = null;
         /// <summary>The dm demand function</summary>
-        [Link(IsOptional = true)]
+        [Link(IsOptional = true)] //leaving as optional. The code is different for a missing object, not just the value - JF
         IFunction DMDemandFunction = null;
 
-        [Link(IsOptional = true)]
+        [Link]
         IFunction DMConversionEfficiencyFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
@@ -956,14 +956,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (DMConversionEfficiencyFunction == null)
-                    DMConversionEfficiency = 1;
-                else
-                    DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
                 double StructuralDemand = 0.0;
                 double NonStructuralDemand = 0.0;
                 double MetabolicDemand = 0.0;
 
+                DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
                 if (DMDemandFunction != null)
                 {
                     StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;

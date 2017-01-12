@@ -838,6 +838,10 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Start>Veraison</Start>
           <End>LeafFall</End>
         </PhaseLookupValue>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
