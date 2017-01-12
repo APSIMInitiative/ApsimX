@@ -46958,7 +46958,7 @@ namespace Models
       </Clock>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Chicory\Ruakura.met</FileName>
+        <FileName>Ruakura.met</FileName>
       </Weather>
       <Summary>
         <Name>Summary</Name>
