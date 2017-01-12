@@ -403,10 +403,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                Biomass Biomass = new Biomass();
+                Biomass biomass = new Biomass();
                 foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Live;
-                return Biomass;
+                    biomass = biomass + L.Live;
+                return biomass;
             }
             
         }
@@ -418,10 +418,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                Biomass Biomass = new Biomass();
+                Biomass biomass = new Biomass();
                 foreach (LeafCohort L in Leaves)
-                    Biomass = Biomass + L.Dead;
-                return Biomass;
+                    biomass = biomass + L.Dead;
+                return biomass;
             }
         }
 
@@ -438,7 +438,7 @@ namespace Models.PMF.Organs
         [Units("mm^2/g")]
         public double SpecificArea { get { return MathUtilities.Divide(LAI * 1000000, Live.Wt , 0); } }
 
-        /// <summary>Gets the growth duration of the cohort.</summary>
+/*        /// <summary>Gets the growth duration of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortGrowthDuration
@@ -455,9 +455,9 @@ namespace Models.PMF.Organs
                 }
                 return values;
             }
-        }
+        }*/
 
-        /// <summary>Gets the lag duration of the cohort.</summary>
+/*        /// <summary>Gets the lag duration of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortLagDuration
@@ -475,8 +475,8 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
-        /// <summary>Gets the delta water constrained area of the cohort.</summary>
+*/
+/*        /// <summary>Gets the delta water constrained area of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortDeltaWaterConstrainedArea
@@ -497,8 +497,8 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
-        /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
+*/
+/*        /// <summary>Gets the delta carbon constrained area of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
         public double[] CohortDeltaCarbonConstrainedArea
@@ -516,7 +516,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         /// <summary>
         /// Returns the relative expansion of the next leaf to produce its ligule
         /// </summary>
