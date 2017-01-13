@@ -969,10 +969,12 @@ namespace Models.PMF.Organs
                     //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
                 if (TotalSinkCapacity > 0.0)
                 {
-                    double sinkFraction = value.NonStructural * DMConversionEfficiency / TotalSinkCapacity;
-                    for (int i = 0; i < Leaves.Count; i++)
+                    double SinkFraction = (value.NonStructural * DMConversionEfficiency )/ TotalSinkCapacity;
+                    int i = 0;
+                    foreach (LeafCohort L in Leaves)
                     {
-                        double allocation = Math.Min(Leaves[i].NonStructuralDMDemand * sinkFraction, value.NonStructural * DMConversionEfficiency);
+                        i++;
+                        double allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural * DMConversionEfficiency);
                         NonStructuralDMAllocationCohort[i] = allocation;
                     }
                 }
