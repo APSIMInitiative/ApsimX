@@ -324,11 +324,9 @@ namespace Models.PMF
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
-            if (cultivarDefinition != null)
-            {
-                cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
-                cultivarDefinition.Apply(this);
-            }
+            cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition.Apply(this);
+
 
             // Invoke an AboutToSow event.
             if (Sowing != null)
