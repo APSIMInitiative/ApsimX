@@ -561,7 +561,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Returns the area of the largest leaf.</summary>
+/*        /// <summary>Returns the area of the largest leaf.</summary>
         [Units("mm2")]
         public double AreaLargestLeaf
         {
@@ -585,7 +585,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         /// <summary>Gets the cohort area.</summary>
         [Units("mm2")]
         public double[] CohortArea
@@ -604,7 +604,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the cohort age.</summary>
+/*        /// <summary>Gets the cohort age.</summary>
         [Units("mm2")]
         public double[] CohortAge
         {
@@ -622,7 +622,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         /// <summary>Gets the maximum size of the cohort.</summary>
         [Units("mm2")]
         public double[] CohortMaxSize
@@ -641,7 +641,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the cohort maximum area.</summary>
+ /*       /// <summary>Gets the cohort maximum area.</summary>
         [Units("mm2")]
         public double[] CohortMaxArea
         {
@@ -657,7 +657,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         /// <summary>Gets the cohort sla.</summary>
         [Units("mm2/g")]
         public double[] CohortSLA
@@ -676,7 +676,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the cohort structural frac.</summary>
+/*        /// <summary>Gets the cohort structural frac.</summary>
         [Units("0-1")]
         public double[] CohortStructuralFrac
         {
@@ -703,7 +703,7 @@ namespace Models.PMF.Organs
                 return values;
             }
         }
-
+*/
         //General Leaf State variables
 
         /// <summary>Gets the live n conc.</summary>
