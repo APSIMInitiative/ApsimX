@@ -172,11 +172,8 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.01)
-                {
-                    // the plant is dying due to population decline
-                    EndCrop();
-                }
+                if (IsAlive && value <= 0.01)                    
+                    EndCrop();  // the plant is dying due to population decline
                 else
                 {
                     plantPopulation = value;
