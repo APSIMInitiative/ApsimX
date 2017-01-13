@@ -172,7 +172,7 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.1)
+                if (IsAlive && value <= 0.01)
                 {
                     // the plant is dying due to population decline
                     EndCrop();
@@ -324,9 +324,12 @@ namespace Models.PMF
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
-            cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
-            cultivarDefinition.Apply(this);
-            
+            if (cultivarDefinition != null)
+            {
+                cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
+                cultivarDefinition.Apply(this);
+            }
+
             // Invoke an AboutToSow event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -400,7 +403,8 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
-            cultivarDefinition.Unapply();
+            if (cultivarDefinition != null)
+                cultivarDefinition.Unapply();
         }
         #endregion
 
