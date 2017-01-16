@@ -475,7 +475,9 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.Size;
+                    if (L.IsAppeared)
+                        values[i] = L.LiveArea / L.CohortPopulation;
+                    else values[i] = 0;
                     i++;
                 }
                 return values;
@@ -511,7 +513,7 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    values[i] = L.MaxSize;
+                    values[i] = L.MaxLiveArea / L.MaxCohortPopulation;
                     i++;
                 }
                 return values;
@@ -1221,14 +1223,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc
-        {
-            get
-            {
-                return CohortParameters.MaximumNConc.Value;
-            }
-        }
         /// <summary>Gets or sets the minimum nconc.</summary>
         public override double MinNconc
         {
