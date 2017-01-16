@@ -325,22 +325,62 @@ namespace UserInterface.Presenters
 
 
         /// <summary>
-        /// Export the data store to text files
+        /// Export output in the data store to text files
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to text files",
+        [ContextMenu(MenuName = "Export output to text files",
                      AppliesTo = new Type[] { typeof(DataStore) })]
-        public void ExportDataStoreToTextFiles(object sender, EventArgs e)
+        public void ExportOutputToTextFiles(object sender, EventArgs e)
         {
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                dataStore.WriteToTextFiles();
-                string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
-                Cursor.Current = Cursors.Default;
+                try
+                {
+                    dataStore.WriteOutputToTextFiles();
+                    string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage(err.ToString(), DataStore.ErrorLevel.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Export summary in the data store to text files
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export summary to text files",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportSummaryToTextFiles(object sender, EventArgs e)
+        {
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    dataStore.WriteSummaryToTextFiles();
+                    string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage(err.ToString(), DataStore.ErrorLevel.Error);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 
@@ -352,25 +392,28 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Create documentation")]
         public void CreateDocumentation(object sender, EventArgs e)
         {
-            string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-            if (destinationFolder != null)
+            if (this.explorerPresenter.Save())
             {
-                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
-                Cursor.Current = Cursors.WaitCursor;
-
-                try
+                string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
+                if (destinationFolder != null)
                 {
-                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                    this.explorerPresenter.CommandHistory.Add(command, true);
-                    explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
-                    Process.Start(command.FileNameWritten);
-                }
-                catch (Exception err)
-                {
-                    explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
-                }
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                    Cursor.Current = Cursors.WaitCursor;
 
-                Cursor.Current = Cursors.Default;
+                    try
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                        Process.Start(command.FileNameWritten);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    }
+
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 

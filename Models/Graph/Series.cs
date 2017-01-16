@@ -381,18 +381,38 @@ namespace Models.Graph
             if (FactorIndexToVaryColours != -1 && FactorIndexToVaryColours < FactorNamesForVarying.Count)
             {
                 string factorNameToVaryByColours = FactorNamesForVarying[FactorIndexToVaryColours];
-                if (FactorIndexToVaryLines != -1)
-                    painter = new SimulationZonePainter.DualPainter() { FactorName = factorNameToVaryByColours,
+                if (FactorIndexToVaryLines == FactorIndexToVaryColours)
+                    painter = new SimulationZonePainter.SequentialPainterTwoFactors() { FactorName = factorNameToVaryByColours,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
                         Setter2 = VisualElements.SetLineType };
-                else if (FactorIndexToVaryMarkers != -1)
-                    painter = new SimulationZonePainter.DualPainter() { FactorName = factorNameToVaryByColours,
+                else if (FactorIndexToVaryMarkers == FactorIndexToVaryColours)
+                    painter = new SimulationZonePainter.SequentialPainterTwoFactors() { FactorName = factorNameToVaryByColours,
                         MaximumIndex1 = ColourUtilities.Colours.Length,
                         MaximumIndex2 = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                         Setter1 = VisualElements.SetColour,
                         Setter2 = VisualElements.SetMarker };
+                else if (FactorIndexToVaryLines != -1)
+                    painter = new SimulationZonePainter.DualPainter()
+                    {
+                        FactorName1 = factorNameToVaryByColours,
+                        FactorName2 = FactorNamesForVarying[FactorIndexToVaryLines],
+                        MaximumIndex1 = ColourUtilities.Colours.Length,
+                        MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
+                        Setter1 = VisualElements.SetColour,
+                        Setter2 = VisualElements.SetLineType
+                    };
+                else if (FactorIndexToVaryMarkers != -1)
+                    painter = new SimulationZonePainter.DualPainter()
+                    {
+                        FactorName1 = factorNameToVaryByColours,
+                        FactorName2 = FactorNamesForVarying[FactorIndexToVaryMarkers],
+                        MaximumIndex1 = ColourUtilities.Colours.Length,
+                        MaximumIndex2 = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
+                        Setter1 = VisualElements.SetColour,
+                        Setter2 = VisualElements.SetMarker
+                    };
                 else
                     painter = new SimulationZonePainter.SequentialPainter() { FactorName = factorNameToVaryByColours,
                                                                               MaximumIndex = ColourUtilities.Colours.Length,
@@ -603,7 +623,8 @@ namespace Models.Graph
             List<string> fieldNames = new List<string>();
             if (dataStore.ColumnNames(TableName).Contains("Zone"))
                 fieldNames.Add("Zone");
-            fieldNames.Add(XFieldName);
+            if (XFieldName != null && !XFieldName.Equals("SimulationName"))
+                fieldNames.Add(XFieldName);
             fieldNames.Add(YFieldName);
             if (X2FieldName != null && !fieldNames.Contains(X2FieldName))
                 fieldNames.Add(X2FieldName);
@@ -628,6 +649,7 @@ namespace Models.Graph
             {
                 if (simulationName != null)
                     simulationNames.Add(simulationName);
+                factorNameValues.Add(new KeyValuePair<string, string>("Simulation", simulationName));
                 factorNameValues.Add(new KeyValuePair<string, string>("Zone", zoneName));
             }
 
@@ -659,7 +681,13 @@ namespace Models.Graph
                     filter = AddToFilter(filter, "Zone='" + zoneName + "'");
 
                 data = new DataView(baseData);
-                data.RowFilter = filter;
+                try
+                {
+                    data.RowFilter = filter;
+                }
+                catch (Exception)
+                {
+                }
             }
 
             /// <summary>
@@ -832,7 +860,7 @@ namespace Models.Graph
             }
 
             /// <summary>A painter for setting a simulation / zone pair to consecutive values of two visual elements.</summary>
-            public class DualPainter : IPainter
+            public class SequentialPainterTwoFactors : IPainter
             {
                 private List<string> values = new List<string>();
 
@@ -855,6 +883,45 @@ namespace Models.Graph
                     int index2 = index1 / MaximumIndex1;
                     index2 = index2 % MaximumIndex2;
                     index1 = index1 % MaximumIndex1;
+                    Setter1(simulationZonePair.visualElement, index1);
+                    Setter2(simulationZonePair.visualElement, index2);
+                }
+            }
+
+            /// <summary>A painter for setting a simulation / zone pair to values of two visual elements.</summary>
+            public class DualPainter : IPainter
+            {
+                private List<string> values1 = new List<string>();
+                private List<string> values2 = new List<string>();
+
+                public int MaximumIndex1 { get; set; }
+                public int MaximumIndex2 { get; set; }
+                public string FactorName1 { get; set; }
+                public string FactorName2 { get; set; }
+                public SetFunction Setter1 { get; set; }
+                public SetFunction Setter2 { get; set; }
+
+                public void PaintSimulationZone(SimulationZone simulationZonePair)
+                {
+                    string factorValue1 = simulationZonePair.GetValueOf(FactorName1);
+                    string factorValue2 = simulationZonePair.GetValueOf(FactorName2);
+
+                    int index1 = values1.IndexOf(factorValue1);
+                    if (index1 == -1)
+                    {
+                        values1.Add(factorValue1);
+                        index1 = values1.Count - 1;
+                    }
+
+                    int index2 = values2.IndexOf(factorValue2);
+                    if (index2 == -1)
+                    {
+                        values2.Add(factorValue2);
+                        index2 = values2.Count - 1;
+                    }
+
+                    index1 = index1 % MaximumIndex1;
+                    index2 = index2 % MaximumIndex2;
                     Setter1(simulationZonePair.visualElement, index1);
                     Setter2(simulationZonePair.visualElement, index2);
                 }

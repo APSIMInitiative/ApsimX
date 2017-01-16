@@ -858,28 +858,6 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </BiomassRemoval>
-        <MultiplyFunction>
-          <Name>LAIFunction</Name>
-          <Constant>
-            <Name>SLA</Name>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[0.0232 m2/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
-(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421
-
-Value of 0.0195 for whole leaf or 0.024 for leaf lamina from Leaf area index estimates obtained for clumped canopies
-using hemispherical photography
-P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
-Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
-            </Memo>
-            <Value>0.00232</Value>
-            <Units>m^2/g</Units>
-          </Constant>
-          <VariableReference>
-            <Name>LeafWt</Name>
-            <VariableName>[Leaf].Live.Wt</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
         <Constant>
           <Name>LeafResidenceTime</Name>
           <Value>1000</Value>
@@ -908,6 +886,21 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           <Name>MinimumLAI</Name>
           <Value>0.1</Value>
         </Constant>
+        <Constant>
+          <Name>SpecificLeafAreaFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[0.0232 m2/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
+(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421
+
+Value of 0.0195 for whole leaf or 0.024 for leaf lamina from Leaf area index estimates obtained for clumped canopies
+using hemispherical photography
+P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
+Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
+          </Memo>
+          <Value>0.00232</Value>
+          <Units>m^2/g</Units>
+        </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
         <CohortsInitialised>false</CohortsInitialised>
@@ -919,11 +912,10 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Albedo>0.18</Albedo>
         <Gsmax>0.015</Gsmax>
         <R50>150</R50>
-        <LAI>0</LAI>
         <Height>0</Height>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <LAIDead>0</LAIDead>
+        <MicroClimatePresent>true</MicroClimatePresent>
       </PerennialLeaf>
       <Root>
         <Name>Root</Name>

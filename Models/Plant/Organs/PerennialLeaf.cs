@@ -124,12 +124,25 @@ namespace Models.PMF.Organs
         [Description("R50")]
         public double R50 { get; set; }
 
+
+
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
-        public double LAI { get; set; }
+        public double LAI
+        {
+            get
+            {
+                double lai = 0;
+                foreach (PerrenialLeafCohort L in Leaves)
+                    lai = lai + L.Area;
+                return lai;
+            }
+        }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
+        /// <summary>Gets the SLA</summary>
+        public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt,0.0); } }
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
@@ -193,9 +206,6 @@ namespace Models.PMF.Organs
         /// <summary>The dm demand function</summary>
         [Link]
         IFunction DMDemandFunction = null;
-        /// <summary>The lai function</summary>
-        [Link]
-        IFunction LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
         [Link]
         IFunction ExtinctionCoefficient = null;
@@ -208,9 +218,6 @@ namespace Models.PMF.Organs
         /// <summary>The height function</summary>
         [Link]
         IFunction HeightFunction = null;
-        /// <summary>The lai dead function</summary>
-        [Link]
-        IFunction LaiDeadFunction = null;
         /// <summary>The structural fraction</summary>
         [Link]
         IFunction StructuralFraction = null;
@@ -226,6 +233,10 @@ namespace Models.PMF.Organs
         /// <summary>Leaf Detachment Time</summary>
         [Link]
         IFunction LeafDetachmentTime = null;
+        /// <summary>SpecificLeafArea</summary>
+        [Link]
+        IFunction SpecificLeafAreaFunction = null;
+
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
@@ -274,8 +285,18 @@ namespace Models.PMF.Organs
         /// <summary>Gets the function.</summary>
         public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
 
-        /// <summary>Gets or sets the lai dead.</summary>
-        public double LAIDead { get; set; }
+        /// <summary>Gets the LAI</summary>
+        [Units("m^2/m^2")]
+        public double LAIDead
+        {
+            get
+            {
+                double lai = 0;
+                foreach (PerrenialLeafCohort L in Leaves)
+                    lai = lai + L.AreaDead;
+                return lai;
+            }
+        }
 
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value * LAIDead); } }
@@ -366,7 +387,6 @@ namespace Models.PMF.Organs
         protected void Clear()
         {
             Height = 0;
-            LAI = 0;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             PotentialDMAllocation = 0;
@@ -458,28 +478,38 @@ namespace Models.PMF.Organs
         private class PerrenialLeafCohort
         {
             public double Age = 0;
+            public double Area = 0;
+            public double AreaDead = 0;
             public Biomass Live = new Biomass();
             public Biomass Dead = new Biomass();
         }
 
         private List<PerrenialLeafCohort> Leaves = new List<PerrenialLeafCohort>();
-        private void AddNewLeafMaterial(double StructuralWt, double NonStructuralWt, double StructuralN, double NonStructuralN)
+
+        private void AddNewLeafMaterial(double StructuralWt, double NonStructuralWt, double StructuralN, double NonStructuralN, double SLA)
         {
             Leaves[Leaves.Count - 1].Live.StructuralWt += StructuralWt;
             Leaves[Leaves.Count - 1].Live.NonStructuralWt += NonStructuralWt;
             Leaves[Leaves.Count - 1].Live.StructuralN += StructuralN;
             Leaves[Leaves.Count - 1].Live.NonStructuralN += NonStructuralN;
+            Leaves[Leaves.Count - 1].Area += (StructuralWt + NonStructuralWt) * SLA;
         }
 
         private void ReduceLeavesUniformly(double fraction)
         {
             foreach (PerrenialLeafCohort L in Leaves)
+            {
                 L.Live.Multiply(fraction);
+                L.Area *= fraction;
+            }
         }
         private void ReduceDeadLeavesUniformly(double fraction)
         {
             foreach (PerrenialLeafCohort L in Leaves)
+            {
                 L.Dead.Multiply(fraction);
+                L.AreaDead *= fraction;
+            }
         }
         private void RespireLeafFraction(double fraction)
         {
@@ -504,7 +534,9 @@ namespace Models.PMF.Organs
                 if (L.Age >= LeafResidenceTime.Value)
                 {
                     L.Dead.Add(L.Live);
+                    L.AreaDead += L.Area;
                     L.Live.Clear();
+                    L.Area = 0;
                 }
         }
 
@@ -517,6 +549,8 @@ namespace Models.PMF.Organs
                 Loss.Multiply(fraction);
                 L.Dead.Add(Loss);
                 L.Live.Subtract(Loss);
+                L.AreaDead += L.Area * fraction;
+                L.Area *= (1 - fraction);
             }
         }
         private void DetachLeaves(out Biomass Detached)
@@ -579,7 +613,8 @@ namespace Models.PMF.Organs
                 AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand),
                                    NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value - value.Retranslocation,
                                    StructuralN: 0,
-                                   NonStructuralN: 0);
+                                   NonStructuralN: 0,
+                                   SLA: SpecificLeafAreaFunction.Value);
             }
         }
         /// <summary>Sets the n allocation.</summary>
@@ -590,7 +625,8 @@ namespace Models.PMF.Organs
                AddNewLeafMaterial(StructuralWt: 0,
                    NonStructuralWt: 0,
                    StructuralN: value.Structural,
-                   NonStructuralN: value.NonStructural- value.Retranslocation- value.Reallocation);
+                   NonStructuralN: value.NonStructural- value.Retranslocation- value.Reallocation,
+                   SLA: SpecificLeafAreaFunction.Value);
             }
         }
 
@@ -624,6 +660,14 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Kill a fraction of the green leaf</summary>
+        /// <param name="fraction">The fraction of leaf to kill</param>
+        public void Kill(double fraction)
+        {
+            Summary.WriteMessage(this, "Killing " + fraction + " of live leaf on plant");
+            KillLeavesUniformly(fraction);
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -637,10 +681,7 @@ namespace Models.PMF.Organs
 
                 Detached.Clear();
                 FRGR = FRGRFunction.Value;
-                LAI = LAIFunction.Value;
                 Height = HeightFunction.Value;
-                LAIDead = LaiDeadFunction.Value;
-
                 //Initialise biomass and nitrogen
 
                 Leaves.Add(new PerrenialLeafCohort());
@@ -648,7 +689,8 @@ namespace Models.PMF.Organs
                     AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value,
                                        NonStructuralWt: 0, 
                                        StructuralN: InitialWtFunction.Value * MinimumNConc.Value, 
-                                       NonStructuralN: InitialWtFunction.Value * (MaximumNConc.Value - MinimumNConc.Value));
+                                       NonStructuralN: InitialWtFunction.Value * (MaximumNConc.Value - MinimumNConc.Value),
+                                       SLA: SpecificLeafAreaFunction.Value);
              
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age++;

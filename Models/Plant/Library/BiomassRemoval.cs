@@ -65,10 +65,11 @@ namespace Models.PMF.Library
                 {
                     double toResidue = (amount.FractionLiveToResidue + amount.FractionDeadToResidue) / totalFractionToRemove * 100;
                     double removedOff = (amount.FractionLiveToRemove + amount.FractionDeadToRemove) / totalFractionToRemove * 100;
-                    summary.WriteMessage(this, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
+                    summary.WriteMessage(Parent, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
                                              + "% of " + Parent.Name + " Biomass from " + plant.Name
                                              + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                              + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
+                    summary.WriteMessage(Parent, "Removing " + Removed.Wt.ToString("0.0") + " g/m2 of mass and " + Removed.N.ToString("0.0") + " g/m2 of N");
                 }
                 return remainingLiveFraction;
             }
