@@ -90,93 +90,93 @@ namespace Models.PMF.Organs
         //Leaf coefficients
         /// <summary>The age</summary>
         [XmlIgnore]
-        public double Age = 0;
+        public double Age;
 
         /// <summary>The n reallocation factor</summary>
-        private double NReallocationFactor = 0;
+        private double NReallocationFactor;
 
         /// <summary>The dm reallocation factor</summary>
-        private double DMReallocationFactor = 0;
+        private double DMReallocationFactor;
 
         /// <summary>The n retranslocation factor</summary>
-        private double NRetranslocationFactor = 0;
+        private double NRetranslocationFactor;
 
         /// <summary>The dm retranslocation factor</summary>
-        private double DMRetranslocationFactor = 0;
+        private double DMRetranslocationFactor;
 
         /// <summary>The functional n conc</summary>
-        private double FunctionalNConc = 0;
+        private double FunctionalNConc;
 
         /// <summary>The luxary n conc</summary>
-        private double LuxaryNConc = 0;
+        private double LuxaryNConc;
 
         /// <summary>The structural fraction</summary>
         [XmlIgnore]
-        public double StructuralFraction = 0;
+        public double StructuralFraction;
 
         /// <summary>The non structural fraction</summary>
         [XmlIgnore]
-        public double NonStructuralFraction = 0;
+        public double NonStructuralFraction;
 
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
-        public double MaxLiveArea = 0;
+        public double MaxLiveArea;
 
         /// <summary>The maximum live area</summary>
         [XmlIgnore]
-        public double MaxCohortPopulation = 0;
+        public double MaxCohortPopulation;
 
         /// <summary>The growth duration</summary>
         [XmlIgnore]
-        public double GrowthDuration = 0;
+        public double GrowthDuration;
 
         /// <summary>The lag duration</summary>
         [XmlIgnore]
-        public double LagDuration = 0;
+        public double LagDuration;
 
         /// <summary>The senescence duration</summary>
         [XmlIgnore]
-        public double SenescenceDuration = 0;
+        public double SenescenceDuration;
 
         /// <summary>The detachment lag duration</summary>
         [XmlIgnore]
-        public double DetachmentLagDuration = 0;
+        public double DetachmentLagDuration;
 
         /// <summary>The detachment duration</summary>
         [XmlIgnore]
-        public double DetachmentDuration = 0;
+        public double DetachmentDuration;
 
         /// <summary>The specific leaf area maximum</summary>
         [XmlIgnore]
-        public double SpecificLeafAreaMax = 0;
+        public double SpecificLeafAreaMax;
 
         /// <summary>The specific leaf area minimum</summary>
         [XmlIgnore]
-        public double SpecificLeafAreaMin = 0;
+        public double SpecificLeafAreaMin;
 
         /// <summary>The maximum n conc</summary>
         [XmlIgnore]
-        public double MaximumNConc = 0;
+        public double MaximumNConc;
 
         /// <summary>The minimum n conc</summary>
         [XmlIgnore]
-        public double MinimumNConc = 0;
+        public double MinimumNConc;
 
         /// <summary>The initial n conc</summary>
         [XmlIgnore]
-        public double InitialNConc = 0;
+        public double InitialNConc;
 
         /// <summary>The live area</summary>
         [XmlIgnore]
-        public double LiveArea = 0;
+        public double LiveArea;
 
         /// <summary>The dead area</summary>
         [XmlIgnore]
-        public double DeadArea = 0;
+        public double DeadArea;
 
         /// <summary>The maximum area</summary>
         [XmlIgnore]
-        public double MaxArea = 0;
+        public double MaxArea;
 
         /// <summary>The maximum area</summary>
         [XmlIgnore]
@@ -416,7 +416,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Age == 0)
+                if (Age <= 0)
                     return 0;
                 if (Age >= GrowthDuration)
                     return 1;
@@ -436,9 +436,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; set; }
 
         #endregion
