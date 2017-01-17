@@ -31,8 +31,8 @@ annual_average_rainfall = 613.1           !Average annual rainfall (mm/yr)
 annual_average_pet = 929.1                !Average annual PET (mm/yr)
 average_windspeed = 3.7                   !Average windspeed (m/s)
 
-Location                  xDate      year     month       day      rain      mint      maxt      avgt      radn   windspeed      evap        vp    rhmean
-()                           ()        ()        ()        ()      (mm)      (oC)      (oC)      (oC)  (MJ/m^2)       (m/s)      (mm)    (mbar)       (%)
+Location                  date      year     month       day      rain      mint      maxt      avgt      radn   windspeed      evap        vp    rhmean
+()                     (dd/mm/yyyy)     ()        ()        ()      (mm)      (oC)      (oC)      (oC)  (MJ/m^2)       (m/s)      (mm)    (mbar)       (%)
 LINCOLN-BroadFields    1/01/1970      1970         1         1       0.0      12.0      27.3      19.6      32.6         2.2       7.7      11.9      42.9
 LINCOLN-BroadFields    2/01/1970      1970         1         2       0.0      12.4      27.7      20.1      34.1         2.7       7.0      15.5      58.9
 LINCOLN-BroadFields    3/01/1970      1970         1         3       0.0      14.8      23.6      19.2      31.8         2.5       7.0      16.2      61.4

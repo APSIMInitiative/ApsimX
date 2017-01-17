@@ -251,14 +251,7 @@ namespace Models.PMF.Organs
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public double WaterAllocation { get; private set; }
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
+        public double WaterAllocation { get; set; }
 
         /// <summary>Gets or sets the dm demand.</summary>
         public override BiomassPoolType DMDemand
