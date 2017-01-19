@@ -45,6 +45,9 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         public double PotentialDM(double radiationInterceptedGreen)
         {
+            if (RUEFactor == 0)
+                RUEFactor = 1.0;
+
             double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),
