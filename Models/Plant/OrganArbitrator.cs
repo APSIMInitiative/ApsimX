@@ -739,7 +739,7 @@ namespace Models.PMF
                     if (demand > 0)
                     {
                         double allocation = fraction * demand;
-                        (o as IHasWaterDemand).SetWaterAllocation(allocation);
+                        (o as IHasWaterDemand).WaterAllocation = allocation;
                         waterUptake += allocation;
                     }
                 }
@@ -762,7 +762,7 @@ namespace Models.PMF
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
                     if (Plant.Phenology != null)
                     {
-                        if (Plant.Phenology.Emerged == true)
+                        if (Plant.Phenology.Emerged)
                         {
                             DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
