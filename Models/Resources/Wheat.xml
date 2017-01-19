@@ -736,6 +736,10 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         </Biomass>
         <RUEModel1>
           <Name>Photosynthesis</Name>
+        <Constant>
+          <Name>RUEFactor</Name>
+          <Value>1</Value>
+        </Constant>          
           <StageBasedInterpolation>
             <Name>RUE</Name>
             <Stages>
