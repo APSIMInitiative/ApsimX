@@ -9,7 +9,9 @@ namespace APSIMJobRunner
     using Models;
     using Models.Core;
     using Models.Core.Runners;
+    using Models.Report;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Net.Sockets;
     using System.Runtime.Serialization;
@@ -31,6 +33,7 @@ namespace APSIMJobRunner
                 IFormatter formatter = new BinaryFormatter();
 
                 // Send a command to socket server to get the job to run.
+                List<ReportColumn> columns = new List<ReportColumn>();
                 object response = GetNextJob();
                 while (response != null)
                 {
@@ -50,18 +53,8 @@ namespace APSIMJobRunner
                     }
 
                     // Send all output tables back to socket server.
-                    foreach (DataStore.TableToWrite table in DataStore.TablesToWrite)
-                    {
-                        string outFileName = Path.Combine(job.workingFolder,
-                                                          simulation.Name + "." + table.TableName + ".binary");
-
-                        MemoryStream stream = new MemoryStream();
-                        stream.Seek(0, SeekOrigin.Begin);
-                        formatter.Serialize(stream, table.Data);
-                        File.WriteAllBytes(outFileName, stream.ToArray());
-                    }
-
-                    DataStore.ClearTablesToWritten();
+                    foreach (Report report in Apsim.FindAll(simulation, typeof(Report)))
+                        columns.AddRange(report.GetColumns());
 
                     // Signal end of job.
                     JobManagerMultiProcess.EndJobArguments endJobArguments = new JobManagerMultiProcess.EndJobArguments();
@@ -74,6 +67,10 @@ namespace APSIMJobRunner
                     response = GetNextJob();
                 }
 
+                JobManagerMultiProcess.TransferData returnData = new JobManagerMultiProcess.TransferData();
+                returnData.data = columns;
+                SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = returnData };
+                SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
             }
             catch (SocketException)
             {
@@ -99,6 +96,9 @@ namespace APSIMJobRunner
         {
             SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
             object response = SocketServer.Send("127.0.0.1", 2222, command);
+            if (response is string && response.ToString() == "NULL")
+                return null;
+
             while (response is string)
             {
                 Thread.Sleep(300);

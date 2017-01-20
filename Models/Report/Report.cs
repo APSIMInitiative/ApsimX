@@ -31,11 +31,11 @@ namespace Models.Report
         /// </summary>
         private List<ReportColumn> columns = null;
 
-        /// <summary>
-        /// A reference to the simulation
-        /// </summary>
-        [Link]
-        private Simulation simulation = null;
+        ///// <summary>
+        ///// A reference to the simulation
+        ///// </summary>
+        ////[Link]
+        ////private Simulation simulation = null;
 
         /// <summary>Experiment factor names</summary>
         public List<string> ExperimentFactorNames { get; set; }
@@ -150,13 +150,19 @@ namespace Models.Report
             //dataStore = null;
 
 
-            string outFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName),
-                                                simulation.Name + "." + Name + ".binary");
+            //string outFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName),
+            //                                    simulation.Name + "." + Name + ".binary");
 
-            MemoryStream stream = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, columns);
-            File.WriteAllBytes(outFileName, stream.ToArray());
+            //MemoryStream stream = new MemoryStream();
+            //var formatter = new BinaryFormatter();
+            //formatter.Serialize(stream, columns);
+            //File.WriteAllBytes(outFileName, stream.ToArray());
+        }
+       
+        /// <summary></summary>    
+        public List<ReportColumn> GetColumns()
+        {
+            return columns;
         }
     }
 }

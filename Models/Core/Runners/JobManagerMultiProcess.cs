@@ -6,6 +6,7 @@
 namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Report;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -22,6 +23,7 @@ namespace Models.Core.Runners
         private SocketServer server;
         private List<ProcessUtilities.ProcessWithRedirectedOutput> runners = null;
         private string dbFileName = null;
+        private List<ReportColumn> allData = new List<ReportColumn>();
 
         /// <summary>
         /// Start the jobs asynchronously. If 'waitUntilFinished'
@@ -102,8 +104,8 @@ namespace Models.Core.Runners
         {
             if (runners != null)
             {
-                runners.ForEach(runner => runner.Kill());
-                runners.Clear();
+                //runners.ForEach(runner => runner.Kill());
+                //runners.Clear();
             }
         }
 
@@ -117,6 +119,7 @@ namespace Models.Core.Runners
                 KillRunners();
                 base.Stop();
             }
+            ProcessModelOutput();
         }
 
         /// <summary>An error has occurred in the socket server.</summary>
@@ -133,8 +136,8 @@ namespace Models.Core.Runners
         /// <param name="e">The event arguments</param>
         private void OnExited(object sender, EventArgs e)
         {
-            ProcessUtilities.ProcessWithRedirectedOutput runner = sender as ProcessUtilities.ProcessWithRedirectedOutput;
-            runners.Remove(runner);
+            //ProcessUtilities.ProcessWithRedirectedOutput runner = sender as ProcessUtilities.ProcessWithRedirectedOutput;
+            //runners.Remove(runner);
         }
 
         /// <summary>Called by the client to get the next job to run.</summary>
@@ -214,13 +217,11 @@ namespace Models.Core.Runners
         /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            TransferData arguments = args.obj as TransferData;
-            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-            MemoryStream stream = new MemoryStream(arguments.data, 0, (int) arguments.dataLength);
-            DataTable data = formatter.Deserialize(stream) as DataTable;
-            DataStore store = new DataStore();
-            store.Filename = Path.ChangeExtension(dbFileName, ".db");
-            store.WriteTable(arguments.simulationName, arguments.tableName, data);
+            lock (this)
+            {
+                TransferData arguments = args.obj as TransferData;
+                allData.AddRange(arguments.data);
+            }
             server.Send(args.socket, "OK");
         }
         /// <summary>Called by the client to get the next job to run.</summary>
@@ -245,6 +246,15 @@ namespace Models.Core.Runners
             internalExceptions.Add(new Exception(errorMessage));
             server.Send(args.socket, "OK");
         }
+
+        /// <summary>
+        /// Process all data returned from model runs.
+        /// </summary>
+        private void ProcessModelOutput()
+        {
+            
+        }
+
 
         /// <summary>An class for encapsulating a response to a GetJob command</summary>
         [Serializable]
@@ -280,16 +290,7 @@ namespace Models.Core.Runners
         public class TransferData
         {
             /// <summary>Simulation name</summary>
-            public string simulationName;
-
-            /// <summary>Table name</summary>
-            public string tableName;
-
-            /// <summary>Data</summary>
-            public byte[] data;
-
-            /// <summary>length of data to use</summary>
-            public long dataLength;
+            public List<ReportColumn> data;
         }
 
 
