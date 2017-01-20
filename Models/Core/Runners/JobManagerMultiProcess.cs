@@ -159,6 +159,7 @@ namespace Models.Core.Runners
                 GetJobReturnData returnData = new GetJobReturnData();
                 returnData.key = jobToRun.Key;
                 returnData.job = jobToRun.RunnableJob;
+                returnData.workingFolder = Path.GetDirectoryName(dbFileName);
                 server.Send(args.socket, returnData);
             }
         }
@@ -254,6 +255,9 @@ namespace Models.Core.Runners
 
             /// <summary>Table name</summary>
             public IRunnable job;
+
+            /// <summary>Folder to work from</summary>
+            public string workingFolder;
         }
 
         /// <summary>An integer / DataTable pair</summary>

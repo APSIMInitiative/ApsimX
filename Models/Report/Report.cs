@@ -12,6 +12,8 @@ namespace Models.Report
     using APSIM.Shared.Utilities;
     using Factorial;
     using System.Xml.Serialization;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -124,28 +126,37 @@ namespace Models.Report
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            // Get rid of old data in .db
-            DataStore dataStore = new DataStore(this);
+            //// Get rid of old data in .db
+            //DataStore dataStore = new DataStore(this);
 
-            // Write and store a table in the DataStore
-            if (this.columns != null && this.columns.Count > 0)
-            {
-                DataTable table = new DataTable();
+            //// Write and store a table in the DataStore
+            //if (this.columns != null && this.columns.Count > 0)
+            //{
+            //    DataTable table = new DataTable();
 
-                foreach (ReportColumn variable in this.columns)
-                    variable.AddColumnsToTable(table);
+            //    foreach (ReportColumn variable in this.columns)
+            //        variable.AddColumnsToTable(table);
 
-                foreach (ReportColumn variable in this.columns)
-                    variable.AddRowsToTable(table);
+            //    foreach (ReportColumn variable in this.columns)
+            //        variable.AddRowsToTable(table);
 
-                dataStore.WriteTable(this.simulation.Name, this.Name, table);
+            //    dataStore.WriteTable(this.simulation.Name, this.Name, table);
 
-                this.columns.Clear();
-                this.columns = null;
-            }
-            
-            dataStore.Disconnect();
-            dataStore = null;
+            //    this.columns.Clear();
+            //    this.columns = null;
+            //}
+
+            //dataStore.Disconnect();
+            //dataStore = null;
+
+
+            string outFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName),
+                                                simulation.Name + "." + Name + ".binary");
+
+            MemoryStream stream = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(stream, columns);
+            File.WriteAllBytes(outFileName, stream.ToArray());
         }
     }
 }

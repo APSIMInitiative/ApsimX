@@ -29,7 +29,6 @@ namespace APSIMJobRunner
 
                 // Setup a binary formatter and a stream for writing to.
                 IFormatter formatter = new BinaryFormatter();
-                MemoryStream stream = new MemoryStream(524288);
 
                 // Send a command to socket server to get the job to run.
                 object response = GetNextJob();
@@ -39,9 +38,10 @@ namespace APSIMJobRunner
 
                     // Run the simulation.
                     string errorMessage = null;
+                    Simulation simulation = null;
                     try
                     {
-                        Simulation simulation = job.job as Simulation;
+                        simulation = job.job as Simulation;
                         simulation.Run(null, null);
                     }
                     catch (Exception err)
@@ -50,18 +50,15 @@ namespace APSIMJobRunner
                     }
 
                     // Send all output tables back to socket server.
-                    JobManagerMultiProcess.TransferData transferArguments = new JobManagerMultiProcess.TransferData();
-                    SocketServer.CommandObject transferCommand = new SocketServer.CommandObject() { name = "TransferData", data = transferArguments };
                     foreach (DataStore.TableToWrite table in DataStore.TablesToWrite)
                     {
+                        string outFileName = Path.Combine(job.workingFolder,
+                                                          simulation.Name + "." + table.TableName + ".binary");
+
+                        MemoryStream stream = new MemoryStream();
                         stream.Seek(0, SeekOrigin.Begin);
                         formatter.Serialize(stream, table.Data);
-
-                        transferArguments.simulationName = table.SimulationName;
-                        transferArguments.tableName = table.TableName;
-                        transferArguments.data = stream.GetBuffer();
-                        transferArguments.dataLength = stream.Position;
-                        SocketServer.Send("127.0.0.1", 2222, transferCommand);
+                        File.WriteAllBytes(outFileName, stream.ToArray());
                     }
 
                     DataStore.ClearTablesToWritten();
