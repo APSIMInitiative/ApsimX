@@ -77,7 +77,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public Biomass Removed { get; set; }
+        public Biomass Removed = new Biomass();
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
