@@ -327,15 +327,14 @@ namespace Models.PMF.Organs
         {
             if (NRetranslocationFactor != null)
             {
-                double labileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                double availableN = (labileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+                double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                double availableN = Math.Max(0.0, labileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
                 if (availableN < -BiomassTolleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
                 return availableN;
             }
             else
-            {
-                // By default retranslocation is turned off!!!!
+            {  // By default retranslocation is turned off!!!!
                 return 0.0;
             }
         }
