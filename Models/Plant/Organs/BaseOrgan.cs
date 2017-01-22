@@ -142,6 +142,7 @@ namespace Models.PMF.Organs
             Removed = new Biomass();
             Clear();
         }
+
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -200,7 +201,7 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
-        /// <summary>Does the zeroing of some varibles.</summary>
+        /// <summary>Does the zeroing of some variables.</summary>
         virtual protected void DoDailyCleanup()
         {
             Detached.Clear();

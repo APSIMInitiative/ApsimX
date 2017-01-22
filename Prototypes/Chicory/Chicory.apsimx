@@ -2825,21 +2825,13 @@ namespace Models
 				DefoliatedDM = existingWt - postHarvestWt;
 				DefoliatedN = existingN - postHarvestN;
 
-				// get total harvested (plant stuff removed)
-				HarvestedDM = (leafLiveWt + leafDeadWt) * leafFracToRemove
-				+ (stemLiveWt + stemDeadWt) * stemFracToRemove
-				+ (flowerLiveWt + flowerDeadWt) * flowerFracToRemove;
-				HarvestedN = (leafLiveN + leafDeadN) * leafFracToRemove
-				+ (stemLiveN + stemDeadN) * stemFracToRemove
-				+ (flowerLiveN + flowerDeadN) * flowerFracToRemove;
-				
-				double Harv = (double)zone.Get("Chicory.Leaf.Removed.Wt")
-				              + (double)zone.Get("Chicory.Stem.Removed.Wt")
-				              + (double)zone.Get("Chicory.Inflorescence.Removed.Wt");
-
-				summary.WriteMessage(this, "   Harvested WT: " + HarvestedDM.ToString());
-				summary.WriteMessage(this, "   Removed WT: " + Harv.ToString());
-
+				// get total harvested (plant stuff removed from plants)
+				HarvestedDM = (double)zone.Get("Chicory.Leaf.Removed.Wt")
+				+ (double)zone.Get("Chicory.Stem.Removed.Wt")
+				+ (double)zone.Get("Chicory.Inflorescence.Removed.Wt");
+				HarvestedN = (double)zone.Get("Chicory.Leaf.Removed.N")
+				+ (double)zone.Get("Chicory.Stem.Removed.N")
+				+ (double)zone.Get("Chicory.Inflorescence.Removed.N");
 
 				// get amounts actually removed from field and that to be returned (residue or dung/urine)
 				RemovedDM = HarvestedDM * fracDM2Remove;

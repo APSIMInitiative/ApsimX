@@ -158,6 +158,14 @@ namespace Models.PMF.Organs
             Detached.Clear();
             Removed.Clear();
         }
+
+        /// <summary>Does the zeroing of some variables.</summary>
+        virtual protected void DoDailyCleanup()
+        {
+            Detached.Clear();
+            Removed.Clear();
+        }
+
         #endregion
 
         #region Class properties
@@ -166,7 +174,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
-        /// <summary>Gets the biomass removed from the system (harvested, grazed, etc)</summary>
+        /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [XmlIgnore]
         public Biomass Removed { get; set; }
 
@@ -402,6 +410,16 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
             Clear();
+        }
+
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        virtual protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            if (Plant.IsAlive)
+                DoDailyCleanup();
         }
 
         /// <summary>Called when crop is ending</summary>
