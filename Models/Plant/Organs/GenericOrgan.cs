@@ -364,19 +364,29 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the maximum nconc.</summary>
+        /// <summary>Gets the maximum N concentration.</summary>
         public double MaxNconc { get { return MaximumNConc.Value; } }
-        /// <summary>Gets or sets the minimum nconc.</summary>
+
+        /// <summary>Gets the minimum N concentration.</summary>
         public double MinNconc { get { return MinimumNConc.Value; } }
 
-        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
-        /// <summary>Gets the total (live + dead) n (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
-        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
-        public double Nconc { get { return N / Wt; } }
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
 
         #endregion
 
