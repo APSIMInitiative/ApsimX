@@ -229,12 +229,12 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         virtual public void Clear()
         {
-            _StructuralWt = 0;
-            _NonStructuralWt = 0;
-            _MetabolicWt = 0;
-            _StructuralN = 0;
-            _NonStructuralN = 0;
-            _MetabolicN = 0;
+            _StructuralWt = 0.0;
+            _NonStructuralWt = 0.0;
+            _MetabolicWt = 0.0;
+            _StructuralN = 0.0;
+            _NonStructuralN = 0.0;
+            _MetabolicN = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
         /// <param name="a">a.</param>

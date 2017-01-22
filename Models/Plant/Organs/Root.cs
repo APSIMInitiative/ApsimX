@@ -623,6 +623,10 @@ namespace Models.PMF.Organs
                 TotalDMAllocated = value.Structural;
                 PlantZone.DMAllocated = new double[PlantZone.soil.Thickness.Length];
 
+                Allocated.StructuralWt = value.Structural;
+                Allocated.NonStructuralWt = value.NonStructural;
+                Allocated.MetabolicWt = value.Metabolic;
+
                 if (PlantZone.Depth > 0)
                 {
                     double[] RAw;
@@ -712,6 +716,11 @@ namespace Models.PMF.Organs
                 double totalNDemand = totalStructuralNDemand + MathUtilities.Sum(PlantZone.NonStructuralNDemand);
                 NTakenUp = value.Uptake;
                 TotalNAllocated = value.Structural + value.NonStructural;
+
+                Allocated.StructuralN = value.Structural;
+                Allocated.NonStructuralN = value.NonStructural;
+                Allocated.MetabolicN = value.Metabolic;
+
                 double surpluss = TotalNAllocated - totalNDemand;
                 if (surpluss > 0.000000001)
                      { throw new Exception("N Allocation to roots exceeds Demand"); }

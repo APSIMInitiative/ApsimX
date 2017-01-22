@@ -102,6 +102,14 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public Biomass Detached { get; set; }
@@ -138,6 +146,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
             Clear();
@@ -204,6 +214,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the zeroing of some variables.</summary>
         virtual protected void DoDailyCleanup()
         {
+            Allocated.Clear();
+            Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
         }
