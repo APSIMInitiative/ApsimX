@@ -615,6 +615,8 @@ namespace Models.PMF.OilPalm
             public double Age = 0;
             /// <summary>The female fraction</summary>
             public double FemaleFraction = 1;
+            /// <summary>Duration of Bunch Filling</summary>
+            public double FillDuration = 0;
         }
 
 
@@ -1043,7 +1045,15 @@ namespace Models.PMF.OilPalm
 
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
+            {
+                Bunches[i].FillDuration += DeltaT/frondAppearanceRate;
                 BunchDMD[i] = BunchSizeMax.Value / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
+            }
+            if (FrondNumber > HarvestFrondNumber.Value)  // start growing the 7th as well so that it can be ready to harvest on time
+            {
+                Bunches[6].FillDuration += DeltaT / frondAppearanceRate;
+                BunchDMD[6] = BunchSizeMax.Value / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[7].FemaleFraction * BunchOilConversionFactor.Value;
+            }
             double TotBunchDMD = MathUtilities.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
@@ -1065,7 +1075,7 @@ namespace Models.PMF.OilPalm
 
             BunchGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual bunches
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
             {
                 double IndividualBunchGrowth = BunchDMD[i] * Fr / Population / BunchOilConversionFactor.Value;
                 Bunches[i].Mass += IndividualBunchGrowth;
@@ -1121,8 +1131,10 @@ namespace Models.PMF.OilPalm
             }
 
             //if (Fronds[0].Age >= (40 * FrondAppRate.Value))
-            if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
-            {
+            //if (FrondNumber > Math.Round(HarvestFrondNumber.Value)&&Bunches[0].FillDuration>6)
+            //if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
+            if (FrondNumber > HarvestFrondNumber.Value && Bunches[0].FillDuration > 6)
+                {
                 HarvestBunches = Bunches[0].FemaleFraction;
                 double HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
                 HarvestFFB = HarvestYield / 100;
