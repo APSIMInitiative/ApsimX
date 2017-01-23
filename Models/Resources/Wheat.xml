@@ -735,7 +735,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>Dead</Name>
         </Biomass>
         <RUEModel1>
-          <Name>Photosynthesis</Name>
+          <Name>Photosynthesis</Name>       
           <StageBasedInterpolation>
             <Name>RUE</Name>
             <Stages>
