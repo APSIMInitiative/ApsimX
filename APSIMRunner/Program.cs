@@ -33,7 +33,6 @@ namespace APSIMJobRunner
                 IFormatter formatter = new BinaryFormatter();
 
                 // Send a command to socket server to get the job to run.
-                List<ReportColumn> columns = new List<ReportColumn>();
                 object response = GetNextJob();
                 while (response != null)
                 {
@@ -52,10 +51,6 @@ namespace APSIMJobRunner
                         errorMessage = err.ToString();
                     }
 
-                    // Send all output tables back to socket server.
-                    foreach (Report report in Apsim.FindAll(simulation, typeof(Report)))
-                        columns.AddRange(report.GetColumns());
-
                     // Signal end of job.
                     JobManagerMultiProcess.EndJobArguments endJobArguments = new JobManagerMultiProcess.EndJobArguments();
                     endJobArguments.key = job.key;
@@ -67,9 +62,7 @@ namespace APSIMJobRunner
                     response = GetNextJob();
                 }
 
-                JobManagerMultiProcess.TransferData returnData = new JobManagerMultiProcess.TransferData();
-                returnData.data = columns;
-                SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = returnData };
+                SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
                 SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
             }
             catch (SocketException)

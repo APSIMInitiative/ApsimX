@@ -29,13 +29,13 @@ namespace Models.Report
         /// <summary>
         /// The columns to write to the data store.
         /// </summary>
-        private List<ReportColumn> columns = null;
+        private List<IReportColumn> columns = null;
 
-        ///// <summary>
-        ///// A reference to the simulation
-        ///// </summary>
-        ////[Link]
-        ////private Simulation simulation = null;
+        /// <summary>
+        /// A reference to the simulation
+        /// </summary>
+        [Link]
+        private Simulation simulation = null;
 
         /// <summary>Experiment factor names</summary>
         public List<string> ExperimentFactorNames { get; set; }
@@ -88,8 +88,11 @@ namespace Models.Report
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            foreach (ReportColumn column in columns)
-                column.StoreValue();
+            foreach (IReportColumn column in columns)
+            {
+                if (column is ReportColumn)
+                    (column as ReportColumn).StoreValue();
+            }
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace Models.Report
         /// </summary>
         private void FindVariableMembers()
         {
-            this.columns = new List<ReportColumn>();
+            this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
@@ -114,7 +117,7 @@ namespace Models.Report
             if (ExperimentFactorValues != null)
             {
                 for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorNames[i], this.EventNames, this, ExperimentFactorValues[i]));
+                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
             }
         }
 
@@ -126,43 +129,27 @@ namespace Models.Report
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            //// Get rid of old data in .db
-            //DataStore dataStore = new DataStore(this);
+            // Get rid of old data in .db
+            DataStore dataStore = new DataStore(this);
 
-            //// Write and store a table in the DataStore
-            //if (this.columns != null && this.columns.Count > 0)
-            //{
-            //    DataTable table = new DataTable();
+            // Write and store a table in the DataStore
+            if (this.columns != null && this.columns.Count > 0)
+            {
+                ReportTable table = new ReportTable();
+                table.FileName = Path.ChangeExtension(simulation.FileName, ".db");
+                table.SimulationName = simulation.Name;
+                table.TableName = this.Name;
+                table.Data = new List<IReportColumn>();
+                table.Data.AddRange(columns);
 
-            //    foreach (ReportColumn variable in this.columns)
-            //        variable.AddColumnsToTable(table);
+                dataStore.WriteTable(this.simulation.Name, this.Name, table);
 
-            //    foreach (ReportColumn variable in this.columns)
-            //        variable.AddRowsToTable(table);
+                this.columns.Clear();
+                this.columns = null;
+            }
 
-            //    dataStore.WriteTable(this.simulation.Name, this.Name, table);
-
-            //    this.columns.Clear();
-            //    this.columns = null;
-            //}
-
-            //dataStore.Disconnect();
-            //dataStore = null;
-
-
-            //string outFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName),
-            //                                    simulation.Name + "." + Name + ".binary");
-
-            //MemoryStream stream = new MemoryStream();
-            //var formatter = new BinaryFormatter();
-            //formatter.Serialize(stream, columns);
-            //File.WriteAllBytes(outFileName, stream.ToArray());
-        }
-       
-        /// <summary></summary>    
-        public List<ReportColumn> GetColumns()
-        {
-            return columns;
+            dataStore.Disconnect();
+            dataStore = null;
         }
     }
 }
