@@ -521,18 +521,23 @@ namespace Models.Report
         public int NumRows {  get { return values.Count; } }
 
         /// <summary>
-        /// Get values for the specified row. Will add no values if rowIndex is out of bounds.
+        /// Insert values into the dataValues array for the specified row.
         /// </summary>
         /// <param name="rowIndex">The index of the row to return values for.</param>
+        /// <param name="names">The names of each value to provide a value for.</param>
         /// <param name="dataValues">The values for the specified row.</param>
-        public void GetRowValues(int rowIndex, List<object> dataValues)
+        public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
             if (rowIndex < values.Count)
             {
                 List<FlattenedValue> flattenedValues = FlattenValue(this.values[rowIndex], this.heading, this.valueType);
 
-                foreach (FlattenedValue column in flattenedValues)
-                    dataValues.Add(column.Value);
+                for (int valueIndex = 0; valueIndex < names.Count; valueIndex++)
+                {
+                    FlattenedValue column = flattenedValues.Find(value => value.Name == names[valueIndex]);
+                    if (column != null)
+                        dataValues[valueIndex] = column.Value;
+                }
             }
         }
 
@@ -630,7 +635,7 @@ namespace Models.Report
         /// <summary>
         /// A structure to hold a name, type and value. Used in the flattening process.
         /// </summary>
-        private struct FlattenedValue
+        private class FlattenedValue
         {
             /// <summary>
             /// The name of a column

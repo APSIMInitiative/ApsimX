@@ -18,10 +18,11 @@ namespace Models.Report
         void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes);
 
         /// <summary>
-        /// Get values for the specified row.
+        /// Insert values into the dataValues array for the specified row.
         /// </summary>
         /// <param name="rowIndex">The index of the row to return values for.</param>
+        /// <param name="names">The names of each value to provide a value for.</param>
         /// <param name="dataValues">The values for the specified row.</param>
-        void GetRowValues(int rowIndex, List<object> dataValues);
+        void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues);
     }
 }

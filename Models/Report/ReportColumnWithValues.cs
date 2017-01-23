@@ -48,13 +48,20 @@ namespace Models.Report
             }
         }
 
-        /// <summary>Return the row values</summary>
-        public void GetRowValues(int rowIndex, List<object> dataValues)
+        /// <summary>
+        /// Insert values into the dataValues array for the specified row.
+        /// </summary>
+        /// <param name="rowIndex">The index of the row to return values for.</param>
+        /// <param name="names">The names of each value to provide a value for.</param>
+        /// <param name="dataValues">The values for the specified row.</param>
+        public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
             if (rowIndex < values.Count)
-                dataValues.Add(values[rowIndex]);
-            else
-                dataValues.Add(null);
+            {
+                int valueIndex = names.IndexOf(name);
+                if (valueIndex != -1)
+                    dataValues[valueIndex] = values[rowIndex];
+            }
         }
     }
 }

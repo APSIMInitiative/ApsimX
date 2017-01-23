@@ -846,13 +846,15 @@ namespace Models
                         int numRows = 0;
                         table.Data.ForEach(col => numRows = Math.Max(numRows, col.NumRows));
 
-                        List<object> values = new List<object>();
+                        object[] values = new object[names.Count];
+                        values[0] = simulationID;
                         for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
                         {
-                            values.Clear();
-                            values.Add(simulationID);
+                            for (int i = 1; i < values.Length; i++)
+                                values[i] = null;
+
                             foreach (IReportColumn column in table.Data)
-                                column.GetRowValues(rowIndex, values);
+                                column.InsertValuesForRow(rowIndex, names, values);
 
                             // Write the row to the .db
                             Connection.BindParametersAndRunQuery(query, values.ToArray());
