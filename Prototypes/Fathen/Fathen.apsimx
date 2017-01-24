@@ -23,19 +23,15 @@
           <End>Germination</End>
         </GerminatingPhase>
         <EmergingPhase>
-          <Name>Germinating</Name>
+          <Name>Germinated</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Turned off the lag and used only the Tt per mm to empirically fit simulations to FRNL data of emergence.]]></MemoText>
-          </Memo>
           <Start>Germination</Start>
           <End>PreEmerge</End>
-          <ShootLag>1</ShootLag>
-          <ShootRate>20</ShootRate>
+          <ShootLag>50</ShootLag>
+          <ShootRate>1.5</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Emerging</Name>
@@ -162,7 +158,7 @@
             </Memo>
             <Value>17</Value>
           </Constant>
-          <Start>Emergence</Start>
+          <Start>Emerged</Start>
           <End>Maturity</End>
         </PhaseLookupValue>
         <Constant>
@@ -309,10 +305,22 @@
             <Name>FVPD</Name>
             <Value>1</Value>
           </Constant>
+          <RUECO2Function>
+            <Name>FCO2</Name>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+          </RUECO2Function>
+          <VariableReference>
+            <Name>RadnInt</Name>
+            <VariableName>[Leaf].RadIntTot</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>RUEact</Name>
+            <VariableName>[RUEModel].RueAct</VariableName>
+          </VariableReference>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
-              <Name>ft</Name>
+              <Name>XYPairs</Name>
               <X>
                 <double>0</double>
                 <double>18</double>
@@ -331,48 +339,19 @@
           <LinearInterpolationFunction>
             <Name>FW</Name>
             <XYPairs>
-              <Name>fw</Name>
+              <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.4</double>
-                <double>1.5</double>
+                <double>0.1</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
                 <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
-          <RUECO2Function>
-            <Name>FCO2</Name>
-            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-          </RUECO2Function>
-          <VariableReference>
-            <Name>RadnInt</Name>
-            <VariableName>[Leaf].RadIntTot</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>RUEact</Name>
-            <VariableName>[RUEModel].RueAct</VariableName>
-          </VariableReference>
         </RUEModel>
-        <LinearInterpolationFunction>
-          <Name>FrostFraction</Name>
-          <XYPairs>
-            <Name>frost</Name>
-            <X>
-              <double>-1</double>
-              <double>0</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Weather].MinT</XProperty>
-        </LinearInterpolationFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Constant>
@@ -382,7 +361,7 @@
           <LinearInterpolationFunction>
             <Name>WaterStress</Name>
             <XYPairs>
-              <Name>stress</Name>
+              <Name>XYPairs</Name>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -405,81 +384,45 @@
           <LinearInterpolationFunction>
             <Name>MaxArea</Name>
             <XYPairs>
-              <Name>area</Name>
+              <Name>XYPairs</Name>
               <X>
                 <double>0</double>
                 <double>1</double>
-                <double>4</double>
                 <double>7</double>
-                <double>12</double>
-                <double>18</double>
-                <double>24</double>
-                <double>32</double>
+                <double>20</double>
                 <double>40</double>
-                <double>50</double>
+                <double>60</double>
               </X>
               <Y>
                 <double>500</double>
                 <double>16000</double>
-                <double>120000</double>
                 <double>190000</double>
-                <double>135000</double>
-                <double>113000</double>
-                <double>60000</double>
-                <double>20000</double>
+                <double>100000</double>
                 <double>1200</double>
-                <double>400</double>
+                <double>500</double>
               </Y>
             </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Data source ?]]></MemoText>
-            </Memo>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
-            <Name>GrowthDuration</Name>
-            <XYPairs>
-              <Name>growth</Name>
-              <X>
-                <double>1</double>
-                <double>50</double>
-              </X>
-              <Y>
-                <double>240</double>
-                <double>240</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[A Data source 
-]]></MemoText>
-            </Memo>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LagDuration</Name>
             <XYPairs>
-              <Name>duration</Name>
+              <Name>XYPairs</Name>
               <X>
-                <double>1</double>
-                <double>6</double>
+                <double>0</double>
                 <double>11</double>
                 <double>15</double>
                 <double>21</double>
                 <double>35</double>
                 <double>45</double>
-                <double>50</double>
               </X>
               <Y>
                 <double>100</double>
-                <double>200</double>
                 <double>300</double>
                 <double>300</double>
                 <double>300</double>
                 <double>200</double>
                 <double>100</double>
-                <double>80</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -512,21 +455,6 @@
             </Memo>
             <Value>18000</Value>
           </Constant>
-          <LinearInterpolationFunction>
-            <Name>ExpansionStress</Name>
-            <XYPairs>
-              <Name>expansion</Name>
-              <X>
-                <double>0.5</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Fathen].WaterSupplyDemandRatio</XProperty>
-          </LinearInterpolationFunction>
           <Constant>
             <Name>MinimumNConc</Name>
             <Value>0.02</Value>
@@ -563,29 +491,50 @@
             </Constant>
             <Value>0.2</Value>
           </Constant>
-          <LinearInterpolationFunction>
-            <Name>ShadeInducedSenescenceRate</Name>
-            <XYPairs>
-              <Name>shade</Name>
-              <X>
-                <double>0</double>
-                <double>0.5</double>
-                <double>0.95</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
-          </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
             <Value>0.18</Value>
           </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <Value>0</Value>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <Value>0.01</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>240</Value>
+          </Constant>
+          <Constant>
+            <Name>ShadeInducedSenescenceRate</Name>
+            <Value>0</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>ExpansionStress</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
@@ -644,6 +593,21 @@
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </BiomassRemoval>
+        <LinearInterpolationFunction>
+          <Name>FrostFraction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>-1</double>
+              <double>0</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Weather].MinT</XProperty>
+        </LinearInterpolationFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -667,29 +631,9 @@
       <Root>
         <Name>Root</Name>
         <Constant>
-          <Name>KLModifier</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
           <Name>SoilWaterEffect</Name>
           <Value>1</Value>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>TemperatureEffect</Name>
-          <XYPairs>
-            <Name>temperature</Name>
-            <X>
-              <double>0</double>
-              <double>26</double>
-              <double>35</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
           <PhaseLookupValue>
@@ -699,7 +643,7 @@
               <Value>1</Value>
             </Constant>
             <Start>Germination</Start>
-            <End>Emergence</End>
+            <End>Emerged</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
             <Name>Emerged</Name>
@@ -707,7 +651,7 @@
               <Name>Constant</Name>
               <Value>10</Value>
             </Constant>
-            <Start>Emergence</Start>
+            <Start>Emerged</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
@@ -721,24 +665,9 @@
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
-          <Start>Emergence</Start>
+          <Start>Emerged</Start>
           <End>Maturity</End>
         </PhaseBasedSwitch>
-        <LinearInterpolationFunction>
-          <Name>SenescenceRate</Name>
-          <XYPairs>
-            <Name>senescense</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0.001</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].FractionDied</XProperty>
-        </LinearInterpolationFunction>
         <CompositeBiomass>
           <Name>Live</Name>
           <Propertys>
@@ -759,82 +688,6 @@
           <Name>StructuralFraction</Name>
           <Value>1</Value>
         </Constant>
-        <Folder>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.3</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.15</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </Folder>
-        <LinearInterpolationFunction>
-          <Name>KNO3</Name>
-          <XYPairs>
-            <Name>kno3</Name>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0.02</double>
-              <double>0.02</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>KNH4</Name>
-          <XYPairs>
-            <Name>knh4</Name>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>NUptakeSWFactor</Name>
-          <XYPairs>
-            <Name>nuptake</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RWC</XProperty>
-        </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
           <Value>5</Value>
@@ -853,7 +706,7 @@
               <Name>Constant</Name>
               <Value>0.3</Value>
             </Constant>
-            <Start>Emergence</Start>
+            <Start>Emerged</Start>
             <End>Vegetative</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
@@ -893,6 +746,125 @@
             <End>Unused</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>3</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <X>
+              <double>0</double>
+              <double>3</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Leaf].LAI</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.004</double>
+            </X>
+            <Y>
+              <double>0.002</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.004</double>
+            </X>
+            <Y>
+              <double>0.001</double>
+              <double>0.01</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>300</Value>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.3</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.15</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0.005</Value>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.2</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -1265,6 +1237,8 @@
       </Soil>
       <Plant>
         <Name>Fathen</Name>
+        <ResourceName>Fathen</ResourceName>
+        <CropType>Fathen</CropType>
         <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
@@ -1337,6 +1311,9 @@
           <string>[Fathen].Stem.Total.Value</string>
           <string>[Fathen].Leaf.Total.Value</string>
           <string>[Fathen].Leaf.LAI.Value</string>
+          <string>[Fathen].IsAlive</string>
+          <string>[Fathen].IsEmerged</string>
+          <string>[Fathen].IsGerminated</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
