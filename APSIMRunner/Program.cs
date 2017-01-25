@@ -40,6 +40,10 @@ namespace APSIMJobRunner
                     {
                         simulation = job.job as Simulation;
                         simulation.Run(null, null);
+
+                        SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
+                        SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
+                        DataStore.TablesToWrite.Clear();
                     }
                     catch (Exception err)
                     {
@@ -57,8 +61,8 @@ namespace APSIMJobRunner
                     response = GetNextJob();
                 }
 
-                SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
+                //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
+                //SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
             }
             catch (SocketException)
             {

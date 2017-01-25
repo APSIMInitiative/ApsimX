@@ -490,6 +490,8 @@ namespace Models.Report
 
         #region Output methods
 
+        private int startColumnIndex = -1;
+
         /// <summary>
         /// Add the required columns to the specified data table.
         /// </summary>
@@ -503,18 +505,26 @@ namespace Models.Report
             {
                 this.valueType = firstValue.GetType();
                 if (this.valueType.IsArray)
-                    this.maximumNumberArrayElements = this.GetMaximumNumberArrayElements();
+                {
+                    int rowIndex = GetIndexOfValueWithMaximumArrayElements();
+                    maximumNumberArrayElements = (values[rowIndex] as Array).Length;
+                    firstValue = values[rowIndex];
+                }
             }
             List<FlattenedValue> flattenedValues = FlattenValue(firstValue, this.heading, this.valueType);
 
             foreach (FlattenedValue column in flattenedValues)
             {
+
                 if (!columnNames.Contains(column.Name))
                 {
                     columnNames.Add(column.Name);
                     columnTypes.Add(column.Type);
                 }
             }
+
+            if (flattenedValues.Count > 0)
+                startColumnIndex = columnNames.IndexOf(flattenedValues[0].Name);
         }
 
         /// <summary>Return the number of rows.</summary>
@@ -532,12 +542,8 @@ namespace Models.Report
             {
                 List<FlattenedValue> flattenedValues = FlattenValue(this.values[rowIndex], this.heading, this.valueType);
 
-                for (int valueIndex = 0; valueIndex < names.Count; valueIndex++)
-                {
-                    FlattenedValue column = flattenedValues.Find(value => value.Name == names[valueIndex]);
-                    if (column != null)
-                        dataValues[valueIndex] = column.Value;
-                }
+                for (int valueIndex = 0; valueIndex < flattenedValues.Count; valueIndex++)
+                    dataValues[valueIndex+startColumnIndex] = flattenedValues[valueIndex].Value;
             }
         }
 
@@ -621,15 +627,22 @@ namespace Models.Report
         /// Calculate the maximum number of array elements.
         /// </summary>
         /// <returns>The maximum number of array elements</returns>
-        private int GetMaximumNumberArrayElements()
+        private int GetIndexOfValueWithMaximumArrayElements()
         {
             int maxNumValues = 0;
-            foreach (object value in this.values)
+            int index = 0;
+            for (int i = 0; i < values.Count; i++)
             {
-                if (value != null)
-                    maxNumValues = Math.Max(maxNumValues, (value as Array).Length);
+                if (values[i] != null)
+                {
+                    if (maxNumValues < (values[i] as Array).Length)
+                    {
+                        maxNumValues = (values[i] as Array).Length;
+                        index = i;
+                    }
+                }
             }
-            return maxNumValues;
+            return index;
         }
 
         /// <summary>
