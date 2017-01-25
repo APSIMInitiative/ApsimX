@@ -736,15 +736,6 @@
             <Start>Reproductive</Start>
             <End>Maturity</End>
           </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>PostMaturity</Name>
-            <Constant>
-              <Name>Constant</Name>
-              <Value>0</Value>
-            </Constant>
-            <Start>Maturity</Start>
-            <End>Unused</End>
-          </PhaseLookupValue>
         </PhaseLookup>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
@@ -1030,7 +1021,7 @@
             <double>0.82</double>
             <double>0.82</double>
             <double>0.99</double>
-            <double>1.5</double>
+            <double>1</double>
           </BD>
           <AirDry>
             <double>0.08</double>
@@ -1049,7 +1040,7 @@
             <double>0.3</double>
           </LL15>
           <DUL>
-            <double>0.056</double>
+            <double>0.6</double>
             <double>0.51</double>
             <double>0.47</double>
             <double>0.48</double>
@@ -1057,7 +1048,7 @@
             <double>0.48</double>
           </DUL>
           <SAT>
-            <double>0.58</double>
+            <double>0.61</double>
             <double>0.61</double>
             <double>0.62</double>
             <double>0.62</double>
@@ -1307,6 +1298,7 @@
           <string>[Weather].MinT</string>
           <string>[Weather].Radn</string>
           <string>[Weather].Rain</string>
+          <string>[Fathen].Leaf.CoverGreen</string>
           <string>[Fathen].Root.Total.Value</string>
           <string>[Fathen].Stem.Total.Value</string>
           <string>[Fathen].Leaf.Total.Value</string>
