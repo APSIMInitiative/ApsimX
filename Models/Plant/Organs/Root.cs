@@ -94,7 +94,7 @@ namespace Models.PMF.Organs
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
-        IFunction RootFrontVelocity = null;
+        public IFunction RootFrontVelocity = null;
         
         /// <summary>The partition fraction</summary>
         [Link]
@@ -124,7 +124,7 @@ namespace Models.PMF.Organs
         /// <summary>The Maximum Root Depth</summary>
         [Link]
         [Units("0-1")]
-        IFunction MaximumRootDepth = null;
+        public IFunction MaximumRootDepth = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -142,132 +142,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States
-        /// <summary>The state of each zone that root knows about.</summary>
-        [Serializable]
-        public class ZoneState
-        {
-            /// <summary>The soil in this zone</summary>
-            public Soil soil = null;
-          
-            /// <summary>Name of zone.</summary>
-            public string Name { get; set; }
-
-            /// <summary>The uptake</summary>
-            public double[] Uptake { get; set; }
-
-            /// <summary>The delta n h4</summary>
-            public double[] DeltaNH4 { get; set; }
-
-            /// <summary>The delta n o3</summary>
-            public double[] DeltaNO3 { get; set; }
-
-            /// <summary>Holds actual DM allocations to use in allocating N to structural and Non-Structural pools</summary>
-            [Units("g/2")]
-            public double[] DMAllocated { get; set; }
-
-            /// <summary>Demand for structural N, set when Ndemand is called and used again in N allocation</summary>
-            [Units("g/2")]
-            public double[] StructuralNDemand { get; set; }
-
-            /// <summary>Demand for Non-structural N, set when Ndemand is called and used again in N allocation</summary>
-            [Units("g/m2")]
-            public double[] NonStructuralNDemand { get; set; }
-
-            /// <summary>The Nuptake</summary>
-            public double[] NitUptake { get; set; }
-
-            /// <summary>Gets or sets the nuptake supply.</summary>
-            public double NuptakeSupply { get; set; }
-
-            /// <summary>Gets or sets the layer live.</summary>
-            public Biomass[] LayerLive { get; set; }
-
-            /// <summary>Gets or sets the layer dead.</summary>
-            public Biomass[] LayerDead { get; set; }
-
-            /// <summary>Gets or sets the length.</summary>
-            public double Length { get; set; }
-
-            /// <summary>Gets or sets the depth.</summary>
-            [Units("mm")]
-            public double Depth { get; set; }
-
-            /// <summary>Constructor</summary>
-            /// <param name="soil">The soil in the zone.</param>
-            /// <param name="depth">Root depth (mm)</param>
-            /// <param name="initialDM">Initial dry matter</param>
-            /// <param name="population">plant population</param>
-            /// <param name="maxNConc">maximum n concentration</param>
-            public ZoneState(Soil soil, double depth, double initialDM, double population, double maxNConc)
-            {
-                this.soil = soil;
-
-                Clear();
-                Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
-                if (zone == null)
-                    throw new Exception("Soil " + soil + " is not in a zone.");
-                Name = zone.Name;
-                Initialise(depth, initialDM, population, maxNConc);
-            }
-
-            /// <summary>Initialise the zone.</summary>
-            /// <param name="depth">Root depth (mm)</param>
-            /// <param name="initialDM">Initial dry matter</param>
-            /// <param name="population">plant population</param>
-            /// <param name="maxNConc">maximum n concentration</param>
-            public void Initialise(double depth, double initialDM, double population, double maxNConc)
-            {
-                Depth = depth;
-                double AccumulatedDepth = 0;
-                double InitialLayers = 0;
-                for (int layer = 0; layer < soil.Thickness.Length; layer++)
-                {
-                    if (AccumulatedDepth < Depth)
-                        InitialLayers += 1;
-                    AccumulatedDepth += soil.Thickness[layer];
-                }
-                for (int layer = 0; layer < soil.Thickness.Length; layer++)
-                {
-                    if (layer <= InitialLayers - 1)
-                    {
-                        //distribute root biomass evenly through root depth
-                        LayerLive[layer].StructuralWt = initialDM / InitialLayers * population;
-                        LayerLive[layer].StructuralN = initialDM / InitialLayers * maxNConc * population;
-                    }
-                }
-            }
-
-            /// <summary>Clears this instance.</summary>
-            public void Clear()
-            {
-                Uptake = null;
-                NitUptake = null;
-                DeltaNO3 = new double[soil.Thickness.Length];
-                DeltaNH4 = new double[soil.Thickness.Length];
-
-                Length = 0.0;
-                Depth = 0.0;
-
-                if (LayerLive == null || LayerLive.Length == 0)
-                {
-                    LayerLive = new Biomass[soil.Thickness.Length];
-                    LayerDead = new Biomass[soil.Thickness.Length];
-                    for (int i = 0; i < soil.Thickness.Length; i++)
-                    {
-                        LayerLive[i] = new Biomass();
-                        LayerDead[i] = new Biomass();
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < soil.Thickness.Length; i++)
-                    {
-                        LayerLive[i].Clear();
-                        LayerDead[i].Clear();
-                    }
-                }
-            }
-        }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [XmlIgnore]
@@ -361,7 +235,7 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         public Root()
         {
-            Zones = new List<Organs.Root.ZoneState>();
+            Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
             ZoneInitialDM = new List<double>();
@@ -386,7 +260,7 @@ namespace Models.PMF.Organs
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     if (soil.Crop(Plant.Name) == null)
                         throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-                    ZoneState newZone = new ZoneState(soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
+                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
                     Zones.Add(newZone);
                 }
             }
@@ -493,7 +367,7 @@ namespace Models.PMF.Organs
             if (soil.Crop(Plant.Name) == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
 
-            PlantZone = new ZoneState(soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+            PlantZone = new ZoneState(Plant, this, soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
             Zones = new List<ZoneState>();
             base.OnSimulationCommencing(sender, e);
         }
@@ -529,23 +403,11 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                // Do Root Front Advance
-                int RootLayer = Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness);
 
-                SoilCrop crop = PlantZone.soil.Crop(Plant.Name) as SoilCrop;
-                PlantZone.Depth = PlantZone.Depth + RootFrontVelocity.Value * crop.XF[RootLayer];
-
-                // Limit root depth for impeded layers
-                double MaxDepth = 0;
-                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    if (crop.XF[i] > 0)
-                        MaxDepth += PlantZone.soil.Thickness[i];
-
-                // Limit root depth for the crop specific maximum depth
-                MaxDepth = Math.Min(MaximumRootDepth.Value, MaxDepth);
-
-                PlantZone.Depth = Math.Min(PlantZone.Depth, MaxDepth);
-
+                foreach(ZoneState Z in Zones)
+                {
+                    Z.GrowRootDepth();
+                }
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
             }
