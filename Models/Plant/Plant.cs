@@ -360,7 +360,7 @@ namespace Models.PMF
             // Invoke an event.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
 
             // Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)

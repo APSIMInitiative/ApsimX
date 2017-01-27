@@ -466,6 +466,10 @@ namespace Models.PMF.Organs
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
                 TotalDMAllocated = value.Structural;
+                Allocated.StructuralWt = value.Structural;
+                Allocated.NonStructuralWt = value.NonStructural;
+                Allocated.MetabolicWt = value.Metabolic;
+
                 if (TotalRAw==0 && TotalDMAllocated>0)
                     throw new Exception("Error trying to partition root biomass");
 
@@ -562,6 +566,10 @@ namespace Models.PMF.Organs
                 }
                 NTakenUp = value.Uptake;
                 TotalNAllocated = value.Structural + value.NonStructural;
+                Allocated.StructuralN = value.Structural;
+                Allocated.NonStructuralN = value.NonStructural;
+                Allocated.MetabolicN = value.Metabolic;
+
                 double surplus = TotalNAllocated - totalNDemand;
                 if (surplus > 0.000000001)
                     throw new Exception("N Allocation to roots exceeds Demand");
