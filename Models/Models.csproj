@@ -196,6 +196,7 @@
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
+    <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
     <Compile Include="Plant\Phenology\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />

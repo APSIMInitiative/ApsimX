@@ -757,6 +757,7 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
@@ -789,13 +790,10 @@ namespace Models.PMF
 
                     UptakeDemands.Name = zone.Name;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
-                    List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                     zones.Add(UptakeDemands);
-                    return zones;
                 }
+                return zones;
             }
-
             return null;
         }
         
