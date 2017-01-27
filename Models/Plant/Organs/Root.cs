@@ -293,16 +293,17 @@ namespace Models.PMF.Organs
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Name);
-                if (zone == null)
-                    throw new Exception("Cannot find a zone called " + thisZone.Name);
+                if (zone != null)
+                {
 
-                // Send the delta water back to SoilN that we're going to uptake.
-                NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-                NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
-                NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
+                    // Send the delta water back to SoilN that we're going to uptake.
+                    NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
+                    NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
+                    NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
 
-                zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-                zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                    zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+                    zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                }
             }
         }
 
@@ -480,18 +481,29 @@ namespace Models.PMF.Organs
         {
             get
             {
-                PlantZone.StructuralNDemand = new double[PlantZone.soil.Thickness.Length];
-                PlantZone.NonStructuralNDemand = new double[PlantZone.soil.Thickness.Length];
-            
+                double TotalStructuralNDemand = 0;
+                double TotalNonStructuralNDemand = 0;
+
                 //Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-                for (int i = 0; i < PlantZone.LayerLive.Length; i++)
+                foreach (ZoneState Z in Zones)
                 {
-                    PlantZone.StructuralNDemand[i] = PlantZone.LayerLive[i].PotentialDMAllocation * MinNconc *  NitrogenDemandSwitch.Value;
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * (PlantZone.LayerLive[i].Wt + PlantZone.LayerLive[i].PotentialDMAllocation) - (PlantZone.LayerLive[i].N + PlantZone.StructuralNDemand[i]));
-                    PlantZone.NonStructuralNDemand[i] = Math.Max(0, NDeficit - PlantZone.StructuralNDemand[i]) * NitrogenDemandSwitch.Value;
+                    Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
+                    Z.NonStructuralNDemand = new double[Z.soil.Thickness.Length];
+
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                    {
+                        Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinNconc * NitrogenDemandSwitch.Value;
+                        double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                        Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenDemandSwitch.Value;
+
+                        TotalStructuralNDemand += Z.StructuralNDemand[i];
+                        TotalNonStructuralNDemand += Z.NonStructuralNDemand[i];
+                    }
                 }
-                return new BiomassPoolType { Structural = MathUtilities.Sum(PlantZone.StructuralNDemand),
-                                             NonStructural = MathUtilities.Sum(PlantZone.NonStructuralNDemand) };
+                return new BiomassPoolType { Structural = TotalStructuralNDemand,
+                                             NonStructural = TotalNonStructuralNDemand
+                };
+
             }
         }
 
@@ -540,34 +552,44 @@ namespace Models.PMF.Organs
         {
             set
             {
-                double totalStructuralNDemand = MathUtilities.Sum(PlantZone.StructuralNDemand);
-                double totalNDemand = totalStructuralNDemand + MathUtilities.Sum(PlantZone.NonStructuralNDemand);
+                double totalStructuralNDemand = 0;
+                double totalNDemand = 0;
+
+                foreach (ZoneState Z in Zones)
+                {
+                    totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
+                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.NonStructuralNDemand);
+                }
                 NTakenUp = value.Uptake;
                 TotalNAllocated = value.Structural + value.NonStructural;
-                double surpluss = TotalNAllocated - totalNDemand;
-                if (surpluss > 0.000000001)
-                     { throw new Exception("N Allocation to roots exceeds Demand"); }
-                
+                double surplus = TotalNAllocated - totalNDemand;
+                if (surplus > 0.000000001)
+                    throw new Exception("N Allocation to roots exceeds Demand");
                 double NAllocated = 0;
-                for (int i = 0; i < PlantZone.LayerLive.Length; i++)
+
+                foreach (ZoneState Z in Zones)
                 {
-                    if (totalStructuralNDemand > 0)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
                     {
-                        double StructFrac = PlantZone.StructuralNDemand[i] / totalStructuralNDemand;
-                        PlantZone.LayerLive[i].StructuralN += value.Structural * StructFrac;
-                        NAllocated += value.Structural * StructFrac;
-                    }
-                    double totalNonStructuralNDemand = MathUtilities.Sum(PlantZone.NonStructuralNDemand);
-                    if (totalNonStructuralNDemand > 0)
-                    {
-                        double NonStructFrac = PlantZone.NonStructuralNDemand[i] / totalNonStructuralNDemand;
-                        PlantZone.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
-                        NAllocated += value.NonStructural * NonStructFrac;
+                        if (totalStructuralNDemand > 0)
+                        {
+                            double StructFrac = Z.StructuralNDemand[i] / totalStructuralNDemand;
+                            Z.LayerLive[i].StructuralN += value.Structural * StructFrac;
+                            NAllocated += value.Structural * StructFrac;
+                        }
+                        double totalNonStructuralNDemand = MathUtilities.Sum(Z.NonStructuralNDemand);
+                        if (totalNonStructuralNDemand > 0)
+                        {
+                            double NonStructFrac = Z.NonStructuralNDemand[i] / totalNonStructuralNDemand;
+                            Z.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
+                            NAllocated += value.NonStructural * NonStructFrac;
+                        }
                     }
                 }
 
                 if (!MathUtilities.FloatsAreEqual(NAllocated - TotalNAllocated, 0.0))
                     throw new Exception("Error in N Allocation: " + Name);
+
             }
         }
 
