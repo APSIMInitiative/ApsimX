@@ -6,6 +6,7 @@
 namespace Models.Core.Runners
 {
     using APSIM.Shared.Utilities;
+    using Report;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -20,8 +21,6 @@ namespace Models.Core.Runners
     public class JobManagerMultiProcess : JobManager
     {
         private SocketServer server;
-        private List<ProcessUtilities.ProcessWithRedirectedOutput> runners = null;
-        private string dbFileName = null;
 
         /// <summary>
         /// Start the jobs asynchronously. If 'waitUntilFinished'
@@ -30,7 +29,7 @@ namespace Models.Core.Runners
         /// <param name="waitUntilFinished">if set to <c>true</c> [wait until finished].</param>
         public override void Start(bool waitUntilFinished)
         {
-            CleanupOldRunners();
+            DeleteRunners();
 
             AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
@@ -38,7 +37,6 @@ namespace Models.Core.Runners
             server = new SocketServer();
             server.AddCommand("GetJob", OnGetJob);
             server.AddCommand("GetJobFailed", OnGetJobFailed);
-            server.AddCommand("TransferOutputs", OnTransferOutputs);
             server.AddCommand("TransferData", OnTransferData);
             server.AddCommand("EndJob", OnEndJob);
             server.AddCommand("Error", OnError);
@@ -50,13 +48,6 @@ namespace Models.Core.Runners
             base.Start(waitUntilFinished);
         }
 
-        /// <summary>Cleanup old runners.</summary>
-        private void CleanupOldRunners()
-        {
-            foreach (Process runner in Process.GetProcessesByName("APSIMRunner"))
-                runner.Kill();
-        }
-
         /// <summary>Run the specified job.</summary>
         /// <param name="job">Job to run.</param>
         protected override void RunJob(Job job)
@@ -65,10 +56,7 @@ namespace Models.Core.Runners
             {
                 try
                 {
-                    if (runners == null || runners.Count != MaximumNumOfProcessors)
-                        CreateRunners();
-                    if (dbFileName == null)
-                        dbFileName = (job.RunnableJob as Simulation).FileName;
+                    CreateRunners();
                 }
                 catch (Exception err)
                 {
@@ -84,27 +72,22 @@ namespace Models.Core.Runners
         /// <summary>Create one job runner process for each CPU</summary>
         private void CreateRunners()
         {
-            if (runners == null)
-                runners = new List<ProcessUtilities.ProcessWithRedirectedOutput>();
-            for (int i = runners.Count; i < MaximumNumOfProcessors; i++)
+            int numRunners = Process.GetProcessesByName("APSIMRunner").Length;
+            for (int i = numRunners; i < MaximumNumOfProcessors; i++)
             {
                 string workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string runnerFileName = Path.Combine(workingDirectory, "APSIMRunner.exe");
                 ProcessUtilities.ProcessWithRedirectedOutput runnerProcess = new ProcessUtilities.ProcessWithRedirectedOutput();
                 runnerProcess.Exited += OnExited;
                 runnerProcess.Start(runnerFileName, null, workingDirectory, false);
-                runners.Add(runnerProcess);
             }
         }
 
-        /// <summary>Kill all child runners</summary>
-        private void KillRunners()
+        /// <summary>Delete any runners that may exist.</summary>
+        private void DeleteRunners()
         {
-            if (runners != null)
-            {
-                runners.ForEach(runner => runner.Kill());
-                runners.Clear();
-            }
+            foreach (Process runner in Process.GetProcessesByName("APSIMRunner"))
+                runner.Kill();
         }
 
         /// <summary>Stop all jobs currently running in the scheduler.</summary>
@@ -114,7 +97,7 @@ namespace Models.Core.Runners
             {
                 server.StopListening();
                 server = null;
-                KillRunners();
+                DeleteRunners();
                 base.Stop();
             }
         }
@@ -133,8 +116,6 @@ namespace Models.Core.Runners
         /// <param name="e">The event arguments</param>
         private void OnExited(object sender, EventArgs e)
         {
-            ProcessUtilities.ProcessWithRedirectedOutput runner = sender as ProcessUtilities.ProcessWithRedirectedOutput;
-            runners.Remove(runner);
         }
 
         /// <summary>Called by the client to get the next job to run.</summary>
@@ -192,34 +173,13 @@ namespace Models.Core.Runners
         /// <summary>Called by the client to send its output data.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="args">The command arguments</param>
-        private void OnTransferOutputs(object sender, SocketServer.CommandArgs args)
-        {
-            TransferArguments arguments = args.obj as TransferArguments;
-
-            // Read from temp file.
-            byte[] bytes = File.ReadAllBytes(arguments.fileName);
-            MemoryStream s = new MemoryStream(bytes);
-            DataTable table = ReflectionUtilities.BinaryDeserialise(s) as DataTable;
-            File.Delete(arguments.fileName);
-
-            DataStore store = new DataStore();
-            store.Filename = Path.ChangeExtension(dbFileName, ".db");
-            store.WriteTable(arguments.simulationName, arguments.tableName, table);
-            server.Send(args.socket, "OK");
-        }
-
-        /// <summary>Called by the client to send its output data.</summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            TransferData arguments = args.obj as TransferData;
-            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-            MemoryStream stream = new MemoryStream(arguments.data, 0, (int) arguments.dataLength);
-            DataTable data = formatter.Deserialize(stream) as DataTable;
-            DataStore store = new DataStore();
-            store.Filename = Path.ChangeExtension(dbFileName, ".db");
-            store.WriteTable(arguments.simulationName, arguments.tableName, data);
+            lock (DataStore.TablesToWrite)
+            {
+                List<ReportTable> arguments = args.obj as List<ReportTable>;
+                DataStore.TablesToWrite.AddRange(arguments);
+            }
             server.Send(args.socket, "OK");
         }
         /// <summary>Called by the client to get the next job to run.</summary>
@@ -269,25 +229,6 @@ namespace Models.Core.Runners
             /// <summary>Data</summary>
             public string fileName;
         }
-
-
-        /// <summary>A transfer data command.</summary>
-        [Serializable]
-        public class TransferData
-        {
-            /// <summary>Simulation name</summary>
-            public string simulationName;
-
-            /// <summary>Table name</summary>
-            public string tableName;
-
-            /// <summary>Data</summary>
-            public byte[] data;
-
-            /// <summary>length of data to use</summary>
-            public long dataLength;
-        }
-
 
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>
         [Serializable]

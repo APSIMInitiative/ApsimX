@@ -1437,6 +1437,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>StructuralFraction</Name>
       <Value>0.7</Value>
     </Constant>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
+    </Constant>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
