@@ -167,20 +167,10 @@ namespace Models.PMF.Organs
             }
         }
 
-        ///<Summary>Total N Allocated to roots</Summary>
-        [Units("g/m2")]
-        [XmlIgnore]
-        public double TotalNAllocated { get; set; }
-
         ///<Summary>Total DM Demanded by roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMDemand { get; set; }
-
-        ///<Summary>Total DM Allocated to roots</Summary>
-        [Units("g/m2")]
-        [XmlIgnore]
-        public double TotalDMAllocated { get; set; }
 
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
@@ -378,11 +368,8 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-
                 foreach(ZoneState Z in Zones)
-                {
                     Z.GrowRootDepth();
-                }
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
             }
@@ -400,7 +387,6 @@ namespace Models.PMF.Organs
                 Detached.Add(Dead);
                 SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
             }
-
             Clear();
         }
 
@@ -465,16 +451,15 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                TotalDMAllocated = value.Structural;
                 Allocated.StructuralWt = value.Structural;
                 Allocated.NonStructuralWt = value.NonStructural;
                 Allocated.MetabolicWt = value.Metabolic;
 
-                if (TotalRAw==0 && TotalDMAllocated>0)
+                if (TotalRAw==0 && Allocated.Wt>0)
                     throw new Exception("Error trying to partition root biomass");
 
                 foreach (ZoneState Z in Zones)
-                    Z.PartitionRootMass(TotalRAw, TotalDMAllocated);
+                    Z.PartitionRootMass(TotalRAw, Allocated.Wt);
 
             }
         }
@@ -565,12 +550,11 @@ namespace Models.PMF.Organs
                     totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.NonStructuralNDemand);
                 }
                 NTakenUp = value.Uptake;
-                TotalNAllocated = value.Structural + value.NonStructural;
                 Allocated.StructuralN = value.Structural;
                 Allocated.NonStructuralN = value.NonStructural;
                 Allocated.MetabolicN = value.Metabolic;
 
-                double surplus = TotalNAllocated - totalNDemand;
+                double surplus = Allocated.N - totalNDemand;
                 if (surplus > 0.000000001)
                     throw new Exception("N Allocation to roots exceeds Demand");
                 double NAllocated = 0;
@@ -595,7 +579,7 @@ namespace Models.PMF.Organs
                     }
                 }
 
-                if (!MathUtilities.FloatsAreEqual(NAllocated - TotalNAllocated, 0.0))
+                if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
                     throw new Exception("Error in N Allocation: " + Name);
 
             }

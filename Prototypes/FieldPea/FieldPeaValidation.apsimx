@@ -12557,7 +12557,7 @@ namespace Models
             <string>[FieldPea].Root.NSupplyUptake</string>
             <string>[FieldPea].Root.NTakenUp</string>
             <string>[FieldPea].Root.NUptake</string>
-            <string>[FieldPea].Root.TotalNAllocated</string>
+            <string>[FieldPea].Root.Allocated.N</string>
             <string>[FieldPea].Root.PlantZone.TotalNDemand</string>
             <string>[FieldPea].Root.WaterSupply</string>
             <string>[FieldPea].Root.WaterUptake</string>
@@ -12781,7 +12781,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FieldPea.Root.TotalDMAllocated</YFieldName>
+            <YFieldName>FieldPea.Root.Allocation.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12823,7 +12823,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Fieldpea.Root.TotalNAllocated</YFieldName>
+            <YFieldName>Fieldpea.Root.Allocated.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
