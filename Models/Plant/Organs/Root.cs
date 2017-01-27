@@ -323,32 +323,6 @@ namespace Models.PMF.Organs
             Zones.Clear();
         }
 
-        /// <summary>
-        /// Calculate Root Activity Values for water and nitrogen
-        /// </summary>
-        /// <param name="RAw"></param>
-        /// <param name="TotalRAw"></param>
-        private void CalculateRootActivityValues(out double[] RAw, out double TotalRAw)
-        {
-            RAw = new double[PlantZone.soil.Thickness.Length];
-            TotalRAw = 0;
-            for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
-            {
-                if (layer <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
-                    if (PlantZone.LayerLive[layer].Wt > 0)
-                    {
-                        RAw[layer] = PlantZone.Uptake[layer] / PlantZone.LayerLive[layer].Wt
-                                   * PlantZone.soil.Thickness[layer]
-                                   * Soil.ProportionThroughLayer(layer, PlantZone.Depth, PlantZone.soil.Thickness);
-                        RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
-                    }
-                    else if (layer > 0)
-                        RAw[layer] = RAw[layer - 1];
-                    else
-                        RAw[layer] = 0;
-                TotalRAw += RAw[layer];
-            }
-        }
 
         #endregion
 
@@ -460,19 +434,23 @@ namespace Models.PMF.Organs
                     if (value.Structural < 0.000000000001) { }//All OK
                     else
                         throw new Exception("Invalid allocation of potential DM in" + Name);
+                
 
-                double[] RAw;
-                double TotalRAw;
-                CalculateRootActivityValues(out RAw, out TotalRAw);
+                double TotalRAw = 0;
+                foreach (ZoneState Z in Zones)
+                    TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                double allocated = 0;
-                for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
+                if (TotalRAw==0 && value.Structural>0)
+                    throw new Exception("Error trying to partition potential root biomass");
+
+                if (TotalRAw > 0)
                 {
-                    if (TotalRAw > 0)
-                        PlantZone.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
-                    else if (value.Structural > 0)
-                        throw new Exception("Error trying to partition potential root biomass");
-                    allocated += (TotalRAw > 0) ? value.Structural * RAw[layer] / TotalRAw : 0;
+                    foreach (ZoneState Z in Zones)
+                    {
+                        double[] RAw = Z.CalculateRootActivityValues();
+                        for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
+                            Z.LayerLive[layer].PotentialDMAllocation = value.Structural * RAw[layer] / TotalRAw;
+                    }
                 }
             }
         }
@@ -482,25 +460,17 @@ namespace Models.PMF.Organs
         {
             set
             {
-                TotalDMAllocated = value.Structural;
-                PlantZone.DMAllocated = new double[PlantZone.soil.Thickness.Length];
+                double TotalRAw = 0;
+                foreach (ZoneState Z in Zones)
+                    TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                if (PlantZone.Depth > 0)
-                {
-                    double[] RAw;
-                    double TotalRAw;
-                    CalculateRootActivityValues(out RAw, out TotalRAw);
-                    for (int layer = 0; layer < PlantZone.soil.Thickness.Length; layer++)
-                    {
-                        if (TotalRAw > 0)
-                        {
-                            PlantZone.LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
-                            PlantZone.DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
-                        }
-                        else if (value.Structural > 0)
-                            throw new Exception("Error trying to partition root biomass");
-                    }
-                }
+                TotalDMAllocated = value.Structural;
+                if (TotalRAw==0 && TotalDMAllocated>0)
+                    throw new Exception("Error trying to partition root biomass");
+
+                foreach (ZoneState Z in Zones)
+                    Z.PartitionRootMass(TotalRAw, TotalDMAllocated);
+
             }
         }
 

@@ -161,6 +161,50 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
         }
+        /// <summary>
+        /// Calculate Root Activity Values for water and nitrogen
+        /// </summary>
+        public double[] CalculateRootActivityValues()
+        {
+            double[] RAw = new double[soil.Thickness.Length];
+            for (int layer = 0; layer < soil.Thickness.Length; layer++)
+            {
+                if (layer <= Soil.LayerIndexOfDepth(Depth, soil.Thickness))
+                    if (LayerLive[layer].Wt > 0)
+                    {
+                        RAw[layer] = Uptake[layer] / LayerLive[layer].Wt
+                                   * soil.Thickness[layer]
+                                   * Soil.ProportionThroughLayer(layer, Depth, soil.Thickness);
+                        RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
+                    }
+                    else if (layer > 0)
+                        RAw[layer] = RAw[layer - 1];
+                    else
+                        RAw[layer] = 0;
+            }
+            return RAw;
+        }
+
+        /// <summary>
+        /// Partition root mass into layers
+        /// </summary>
+        public void PartitionRootMass(double TotalRAw, double TotalDMAllocated)
+        {
+            DMAllocated = new double[soil.Thickness.Length];
+
+            if (Depth > 0)
+            {
+                double[] RAw = CalculateRootActivityValues();
+
+                for (int layer = 0; layer < soil.Thickness.Length; layer++)
+                    if (TotalRAw > 0)
+                    {
+                        LayerLive[layer].StructuralWt += TotalDMAllocated * RAw[layer] / TotalRAw;
+                        DMAllocated[layer] += TotalDMAllocated * RAw[layer] / TotalRAw;
+                    }
+            }
+        }
     }
+
 
 }
