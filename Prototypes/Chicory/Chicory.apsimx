@@ -350,8 +350,8 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Name>XYPairs</Name>
               <X>
                 <double>5</double>
-                <double>10</double>
-                <double>15</double>
+                <double>11</double>
+                <double>16</double>
                 <double>21</double>
                 <double>26</double>
                 <double>35</double>
@@ -359,7 +359,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Y>
                 <double>0</double>
                 <double>0.1</double>
-                <double>0.4</double>
+                <double>0.35</double>
                 <double>1</double>
                 <double>1</double>
                 <double>0</double>
@@ -1173,16 +1173,48 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Value>1</Value>
           <Units>g/g</Units>
         </Constant>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
-          <Value>0.02</Value>
-          <Units>gN/gDM</Units>
-        </Constant>
-        <Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>6</double>
+              <double>6.25</double>
+              <double>6.5</double>
+              <double>6.75</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.03</double>
+              <double>0.075</double>
+              <double>0.075</double>
+              <double>0.07</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
-          <Value>0.075</Value>
-          <Units>gN/gDM</Units>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>6</double>
+              <double>6.25</double>
+              <double>6.5</double>
+              <double>6.75</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0.03</double>
+              <double>0.05</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2448,7 +2480,8 @@ No effect of soil water content on root growth is currently captured in the mode
         </Cultivar>
         <Cultivar>
           <Name>Choice</Name>
-          <Command />
+          <Command>[Leaf].Photosynthesis.FT.XYPairs.X = 4, 10, 15, 20, 26, 34</Command>
+          <Command>[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.1, 0.4, 1.0, 1.0, 0.0</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Chicory</CropType>
@@ -22512,7 +22545,7 @@ Data supplied by Julia Lee, DairyNZ.
                   <Name>Sowing</Name>
                   <Operation>
                     <Date>2010-10-30</Date>
-                    <Action> [Chicory].Sow(population: 90, cultivar: "Choice", depth: 10, rowSpacing: 150)</Action>
+                    <Action> [Chicory].Sow(population: 75, cultivar: "Choice", depth: 10, rowSpacing: 150)</Action>
                   </Operation>
                 </Operations>
                 <Operations>
@@ -29046,8 +29079,8 @@ namespace Models
           <Name>ScottFarmFD902</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[This simulation was setup based on observed data from a defoliation trial at Scott farm, Hamilton, New Zealand, run from 2010 to 2012.  The study investigated the effect of cut height (i.e. rotation length) and residual height on chicory growth.  The treatments consisted of trigerring cuts when the sward reached heights of 150, 250, 350, and 500 mm, crosses with two residual heights, 30-50 or 60-80 mm.  Harvest was avoided over winter.  
-Trial plots were sown with chicory, cultivar choice (6.7 kg/ha), after previous pasture was sprayed with herbicide and conventionally drilled.  Irrigation was applied in the first year and fertiliser was applied over summer.  Results reported include yield, botanical composition, plant density, leaf area and light interception.
+            <MemoText><![CDATA[This simulation was setup based on observed data from a defoliation trial at Scott farm, Hamilton, New Zealand, run from 2010 to 2012.  The study investigated the effect of cut height (i.e. rotation length) and residual height on chicory growth.  The treatments consisted of trigerring cuts when the sward reached heights of 150, 250, 350, and 500 mm, in factorial combination with two residual heights, 30-50 or 60-80 mm.  Harvest was avoided over winter.  
+Trial plots were sown with chicory, cultivar choice (6.7 kg/ha), after previous pasture was sprayed with herbicide and conventionally drilled.  Irrigation was applied in the first year and fertiliser was applied over summer.  Results reported include yield, botanical composition, plant density, leaf area and light interception (the later two only during one growing period - between two cuts).  
 
 References:  
 Lee, J.M.;  Hemmingson, N.R.; Minnee, E.M.K.; Clark, C.E.F. 2015. Management strategies for chicory (Cichorium intybus) and plantain (Plantago lanceolata): impact on dry matter yield, nutritive characteristics and plant density. Crop and Pasture Science, 66, 168–183.
@@ -50847,6 +50880,53 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
+            <Name>HerbageNconc</Name>
+            <Series>
+              <Name>PO</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.Chicory.AboveGroundLive.NConc</XFieldName>
+              <YFieldName>Predicted.Chicory.AboveGroundLive.NConc</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
             <Name>Harvests</Name>
             <Series>
               <Name>Predicted1</Name>
@@ -57558,6 +57638,53 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
+            <Name>HerbageNconc</Name>
+            <Series>
+              <Name>PO</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>PredictedObserved</TableName>
+              <XFieldName>Observed.Chicory.AboveGroundLive.NConc</XFieldName>
+              <YFieldName>Predicted.Chicory.AboveGroundLive.NConc</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
             <Name>AboveGroundWt1</Name>
             <Series>
               <Name>Predicted</Name>
@@ -57800,6 +57927,100 @@ namespace Models
           </Graph>
         </Folder>
       </Experiment>
+      <Graph>
+        <Name>AboveGroundWt</Name>
+        <Series>
+          <Name>PO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Chicory.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Chicory.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>HerbageNconc</Name>
+        <Series>
+          <Name>PO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Chicory.AboveGroundLive.NConc</XFieldName>
+          <YFieldName>Predicted.Chicory.AboveGroundLive.NConc</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
       <Graph>
         <Name>HarvestedBiomass</Name>
         <Series>
@@ -64396,9 +64617,12 @@ namespace Models
         <Name>AFSRC_02</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[This simulation setup was based on a field experiment run for 3 yr on a Ramsey soil (loamy, siliceous, subactive, mesic Lithic Dystrudept) in southern West Virginia, USA.  The study aimed to determine whether fertilizer N would influenc forage chicory nutritive value and NO3-N concentration.  The treatments consisted of five N rates (0, 80, 160, 240, or 480 kg N ha-1) replicated three times in a randomized block design. Swards were clipped at 6-wk intervals during the growing season.  
+          <MemoText><![CDATA[This simulation setup was based on a field experiment run for 3 yr on a Ramsey soil (loamy, siliceous, subactive, mesic Lithic Dystrudept) in southern West Virginia, USA.  The study aimed to determine whether fertilizer N would influenc forage chicory nutritive value and NO3-N concentration.  The treatments consisted of five N rates (0, 80, 160, 240, or 480 kg N ha-1) replicated three times in a randomized block design. Swards were clipped at 6-wk intervals during the growing season.  Yield was reported either as annual totals or seasonal, using these were the values for each harvest event were inferred.  
 Met data for this location was obtained from NOAA.  The data set was largely complete except for solar radiation, which was added from an alternative interpolated set for this location, also from NOAA.  
 Information to construct the soil data was obtained from USGS.
+
+The inferred values for harvested biomass are quite low compared with other studies, one potential issue is damage from cold winter. this is not capture as yet by the model, however even adding a 'grazing' event in winter to remove excess biomass did not reduce growth as much as that reported.  These values were then removed from the overall comparison.  
+
 
 References:  
 Belesky, D.P.; Turner, K.E.; Ruckle, J.M. 2000. Influence of nitrogen on productivity and nutritive value of forage chicory. Agronomy Journal, 92(3): 472-478.
@@ -64633,6 +64857,10 @@ namespace Models
                 </Operation>
                 <Operation>
                   <Date>1993-09-25</Date>
+                  <Action> [Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                </Operation>
+                <Operation>
+                  <Date>1994-01-30</Date>
                   <Action> [Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
               </Operations>
@@ -70873,8 +71101,8 @@ namespace Models
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
               <TableName>PredictedObserved</TableName>
-              <XFieldName>Observed.RotationHarvestedWt</XFieldName>
-              <YFieldName>Predicted.RotationHarvestedWt</YFieldName>
+              <XFieldName>Observed.HarvestedWt</XFieldName>
+              <YFieldName>Predicted.HarvestedWt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -70949,9 +71177,56 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>HerbageNconc</Name>
+        <Series>
+          <Name>PO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Chicory.AboveGroundLive.NConc</XFieldName>
+          <YFieldName>Predicted.Chicory.AboveGroundLive.NConc</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Graph>
-      <Name>HarvestedBiomass</Name>
+      <Name>AboveGroundWt</Name>
       <Series>
         <Name>PO</Name>
         <Regression>
@@ -70963,15 +71238,15 @@ namespace Models
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Small</MarkerSize>
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.RotationHarvestedWt</XFieldName>
-        <YFieldName>Predicted.RotationHarvestedWt</YFieldName>
+        <XFieldName>Observed.Chicory.AboveGround.Wt</XFieldName>
+        <YFieldName>Predicted.Chicory.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -70998,7 +71273,7 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>AboveGroundWt</Name>
+      <Name>HerbageNconc</Name>
       <Series>
         <Name>PO</Name>
         <Regression>
@@ -71017,8 +71292,55 @@ namespace Models
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Chicory.AboveGround.Wt</XFieldName>
-        <YFieldName>Predicted.Chicory.AboveGround.Wt</YFieldName>
+        <XFieldName>Observed.Chicory.AboveGroundLive.NConc</XFieldName>
+        <YFieldName>Predicted.Chicory.AboveGroundLive.NConc</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>HarvestedBiomass</Name>
+      <Series>
+        <Name>PO</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Small</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.RotationHarvestedWt</XFieldName>
+        <YFieldName>Predicted.RotationHarvestedWt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
