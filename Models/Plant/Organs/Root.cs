@@ -86,6 +86,31 @@ namespace Models.PMF.Organs
         [Link]
         IFunction NitrogenDemandSwitch = null;
 
+        /// <summary>The N retranslocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction NRetranslocationFactor = null;
+
+        /// <summary>The N reallocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction NReallocationFactor = null;
+
+        /// <summary>The structural fraction</summary>
+        [Link(IsOptional = true)]
+        [Units("g/g")]
+        IFunction StructuralFraction = null;
+
+        /// <summary>The fraction of live non structural DM remobilised to new growth</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMRetranslocationFactor = null;
+
+        /// <summary>The fraction of senescing non structural DM remobilised to new growth</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMReallocationFactor = null;
+
         /// <summary>The senescence rate</summary>
         [Link]
         [Units("/d")]
@@ -95,9 +120,9 @@ namespace Models.PMF.Organs
         [Link]
         [Units("mm/d")]
         public IFunction RootFrontVelocity = null;
-        
+
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(IsOptional = true)]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         
@@ -106,15 +131,15 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction MaximumNConc = null;
         
-        /// <summary>The maximum daily n uptake</summary>
-        [Link]
-        [Units("kg N/ha")]
-        IFunction MaxDailyNUptake = null;
-        
         /// <summary>The minimum n conc</summary>
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
+        /// <summary>The maximum daily n uptake</summary>
+        [Link]
+        [Units("kg N/ha")]
+        IFunction MaxDailyNUptake = null;
         
         /// <summary>The kl modifier</summary>
         [Link]
@@ -125,6 +150,18 @@ namespace Models.PMF.Organs
         [Link]
         [Units("0-1")]
         public IFunction MaximumRootDepth = null;
+
+        /// <summary>The proportion of live biomass consumed due to respiration</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        public IFunction MaintenanceRespirationFunction = null;
+
+        private double BiomassTolleranceValue = 0.0000000001;   // 10E-10
+
+        /// <summary>Dry matter conversion efficiency</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMConversionEfficiencyFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
         [ChildLink]
@@ -399,10 +436,71 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
-                    Demand = Arbitrator.DMSupply * PartitionFraction.Value;
+                if (StructuralFraction != null)
+                    if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
+                    {
+                        Demand = Arbitrator.DMSupply * PartitionFraction.Value;
+                        if (StructuralFraction != null)
+                            Demand *= StructuralFraction.Value;
+                        if (DMConversionEfficiencyFunction != null)
+                            Demand /= DMConversionEfficiencyFunction.Value;
+                    }
                 TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
+            }
+        }
+
+        /// <summary>Gets or sets the DM supply.</summary>
+        public override BiomassSupplyType DMSupply
+        {
+            get
+            {
+                return new BiomassSupplyType
+                {
+                    Fixation = 0.0,
+                    Retranslocation = AvailableDMRetranslocation(),
+                    Reallocation = AvailableDMReallocation()
+                };
+            }
+        }
+
+        /// <summary>Gets the amount of DM available for retranslocation</summary>
+        public double AvailableDMRetranslocation()
+        {
+            if (DMRetranslocationFactor != null)
+            {
+                double availableDM = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        availableDM += Z.LayerLive[i].NonStructuralWt * (1.0 - SenescenceRate.Value) * DMRetranslocationFactor.Value;
+
+                if (availableDM < -BiomassTolleranceValue)
+                    throw new Exception("Negative DM retranslocation value computed for " + Name);
+                return availableDM;
+            }
+            else
+            { // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the amount of DM available for reallocation</summary>
+        public double AvailableDMReallocation()
+        {
+            if (DMReallocationFactor != null)
+            {
+                double availableDM = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        availableDM += Z.LayerLive[i].NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+
+                if (availableDM < -BiomassTolleranceValue)
+                    throw new Exception("Negative DM reallocation value computed for " + Name);
+                return availableDM;
+            }
+            else
+            { // By default reallocation is turned off!!!!
+                return 0.0;
             }
         }
 
@@ -493,6 +591,63 @@ namespace Models.PMF.Organs
                                              NonStructural = TotalNonStructuralNDemand
                 };
 
+            }
+        }
+
+        /// <summary>Gets or sets the N supply.</summary>
+        [XmlIgnore]
+        public override BiomassSupplyType NSupply
+        {
+            get
+            {
+                return new BiomassSupplyType()
+                {
+                    Fixation = 0.0,
+                    Retranslocation = AvailableNRetranslocation(),
+                    Reallocation = AvailableNReallocation(),
+                    Uptake = 0.0 // computed via arbitrator
+                };
+            }
+            set { }
+        }
+
+        /// <summary>Gets the N amount available for retranslocation</summary>
+        public double AvailableNRetranslocation()
+        {
+            if (NRetranslocationFactor != null)
+            {
+                double availableN = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        availableN += Z.LayerLive[i].NonStructuralN * (1.0 - SenescenceRate.Value) * NRetranslocationFactor.Value;
+
+                if (availableN < -BiomassTolleranceValue)
+                    throw new Exception("Negative N retranslocation value computed for " + Name);
+                return availableN;
+            }
+            else
+            {  // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the N amount available for reallocation</summary>
+        public double AvailableNReallocation()
+        {
+            if (NReallocationFactor != null)
+            {
+                double availableN = 0.0;
+            foreach (ZoneState Z in Zones)
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                    availableN += Z.LayerLive[i].NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
+
+            if (availableN < -BiomassTolleranceValue)
+                throw new Exception("Negative N reallocation value computed for " + Name);
+            return availableN;
+            }
+            else
+            {  // By default reallocation is turned off!!!!
+                return 0.0;
             }
         }
 

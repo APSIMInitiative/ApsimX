@@ -253,7 +253,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double WaterAllocation { get; set; }
 
-        /// <summary>Gets or sets the dm demand.</summary>
+        /// <summary>Gets or sets the DM demand.</summary>
         public override BiomassPoolType DMDemand
         {
             get
@@ -264,7 +264,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the dm supply.</summary>
+        /// <summary>Gets or sets the DM supply.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -273,7 +273,7 @@ namespace Models.PMF.Organs
                 {
                     Fixation = Photosynthesis.Value,
                     Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = 0.0
+                    Reallocation = AvailableDMReallocation()
                 };
             }
         }

@@ -82,48 +82,71 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
-        /// <summary>The n reallocation factor</summary>
+
+        /// <summary>The nitrogen demand switch</summary>
+        [Link(IsOptional = true)]
+        IFunction NitrogenDemandSwitch = null;
+
+        /// <summary>The N retranslocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction NRetranslocationFactor = null;
+
+        /// <summary>The N reallocation factor</summary>
         [Link]
         [Units("/d")]
         IFunction NReallocationFactor = null;
 
-        /// <summary>The n retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction NRetranslocationFactor = null;
-        /// <summary>The nitrogen demand switch</summary>
-        [Link(IsOptional = true)]
-        IFunction NitrogenDemandSwitch = null;
-        /// <summary>The dm retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction DMRetranslocationFactor = null;
         /// <summary>The structural fraction</summary>
         [Link]
         [Units("g/g")]
         IFunction StructuralFraction = null;
+
+        /// <summary>The fraction of live non structural DM remobilised to new growth</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMRetranslocationFactor = null;
+
+        /// <summary>The fraction of senescing non structural DM remobilised to new growth</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMReallocationFactor = null;
+
         /// <summary>The dm demand Function</summary>
         [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
+
         /// <summary>The initial wt function</summary>
         [Link]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
-        /// <summary>The maximum n conc</summary>
+
+        /// <summary>The maximum N concentration</summary>
         [Link]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
-        /// <summary>The minimum n conc</summary>
+
+        /// <summary>The minimum N concentration</summary>
+        [Link]
         [Units("g/g")]
-        [Link]
         public IFunction MinimumNConc = null;
-        /// <summary>The proportion of biomass repired each day</summary>
+
+        /// <summary>The critical N concentration</summary>
+        [Link(IsOptional = true)]
+        [Units("g/g")]
+        public IFunction CriticalNConc = null;
+
+        /// <summary>The proportion of live biomass consumed due to respiration</summary>
         [Link]
+        [Units("/d")]
         public IFunction MaintenanceRespirationFunction = null;
+
         /// <summary>Dry matter conversion efficiency</summary>
         [Link]
+        [Units("/d")]
         public IFunction DMConversionEfficiency = null;
+
         #endregion
 
         #region States
@@ -261,25 +284,40 @@ namespace Models.PMF.Organs
                 {
                     Fixation = 0.0,
                     Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = 0.0
+                    Reallocation = AvailableDMReallocation()
                 };
             }
             set { }
         }
 
         /// <summary>Gets the amount of DM available for retranslocation</summary>
-        /// <returns>DM available to retranslocate</returns>
         public double AvailableDMRetranslocation()
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
+                double availableDM = StartLive.NonStructuralWt * (1.0 - SenescenceRate.Value) * DMRetranslocationFactor.Value;
                 if (availableDM < -BiomassTolleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
                 return availableDM;
             }
             else
             { // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the amount of DM available for reallocation</summary>
+        public double AvailableDMReallocation()
+        {
+            if (DMReallocationFactor != null)
+            {
+                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+                if (availableDM < -BiomassTolleranceValue)
+                    throw new Exception("Negative DM reallocation value computed for " + Name);
+                return availableDM;
+            }
+            else
+            { // By default reallocation is turned off!!!!
                 return 0.0;
             }
         }
@@ -301,6 +339,7 @@ namespace Models.PMF.Organs
             }
             set { }
         }
+
         /// <summary>Gets or sets the N supply.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType NSupply
@@ -309,26 +348,23 @@ namespace Models.PMF.Organs
             {
                 return new BiomassSupplyType()
                 {
-                    Reallocation = AvailableNReallocation(),
+                    Fixation = 0.0,
                     Retranslocation = AvailableNRetranslocation(),
+                    Reallocation = AvailableNReallocation(),
                     Uptake = 0.0
                 };
             }
             set { }
         }
 
-        /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
-        public virtual double NFixationCost { get { return 0; } set { } }
-
         /// <summary>Gets the N amount available for retranslocation</summary>
-        /// <returns>N available to retranslocate</returns>
         public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
             {
-                double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                double availableN = Math.Max(0.0, labileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+                //double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                //double availableN = Math.Max(0.0, labileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+                double availableN = StartLive.NonStructuralN * (1.0 - SenescenceRate.Value) * NRetranslocationFactor.Value;
                 if (availableN < -BiomassTolleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
                 return availableN;
@@ -340,15 +376,17 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the N amount available for reallocation</summary>
-        /// <returns>N available to reallocate</returns>
         public double AvailableNReallocation()
         {
-            double availableN = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
+            double availableN = StartLive.NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
             if (availableN < -BiomassTolleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
-
             return availableN;
         }
+
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public virtual double NFixationCost { get { return 0; } set { } }
 
         /// <summary>Sets the dm allocation.</summary>
         [XmlIgnore]
