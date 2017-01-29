@@ -6,21 +6,507 @@
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Slurp</Name>
+      <Memo>
+        <Name>TitlePage</Name>
+        <MemoText><![CDATA[
+# SLURP: the Sound of a crop using water
+
+This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  
+
+SLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  
+   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  
+   2. Root which extracts water and nitrogen from the soil for plant growth  
+ 
+
+##Inclusion in APSIM simulations
+A Slurp crop is included in a simulation the same as any other APSIM crop  
+ * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  
+ * It is then planted with a sowing rule  
+<pre><code class='language-cs'>
+Slurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  
+</code></pre>
+  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  
+  * depth in the Sow arguement is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation
+
+##Altering Slurp properties during runs
+In some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.
+
+<pre><code class='language-cs'>
+object LAIResetValue = leaflai;  
+zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+object HeightResetValue = CoverToday * MaximumHeight;  
+zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+</code></pre>]]></MemoText>
+      </Memo>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+      <Root>
+        <Name>Root</Name>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <MultiplyFunction>
+          <Name>RootFrontVelocity</Name>
+          <AirTemperatureFunction>
+            <Name>TemperatureEffect</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>26</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+          </AirTemperatureFunction>
+          <Constant>
+            <Name>Potential</Name>
+            <Value>5</Value>
+            <Units>mm/d</Units>
+          </Constant>
+        </MultiplyFunction>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>100</Value>
+          <Units>g/m2</Units>
+        </Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1000</Value>
+          <Units>mm</Units>
+        </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>400</double>
+              <double>1500</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+This is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species
+]]></MemoText>
+          </Memo>
+          <XProperty>[Root].LayerMidPointDepth</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>InitialDM</Name>
+          <Value>50</Value>
+          <Units>g/plant</Units>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0.2</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>SpecificRootLength</Name>
+          <Value>40</Value>
+          <Units>m/g</Units>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0.02</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
+          <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>0.003</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RootLengthDenisty</XProperty>
+        </LinearInterpolationFunction>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <LinearInterpolationFunction>
+          <Name>NUptakeSWFactor</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].RWC</XProperty>
+        </LinearInterpolationFunction>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
+      </Root>
+      <SimpleLeaf>
+        <Name>Leaf</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <Value>0</Value>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <Constant>
+          <Name>LaiDeadFunction</Name>
+          <Value>0</Value>
+          <Units>m^2/m^2</Units>
+        </Constant>
+        <Constant>
+          <Name>Photosynthesis</Name>
+          <Value>5</Value>
+          <Units>g/m2/d</Units>
+        </Constant>
+        <AirTemperatureFunction>
+          <Name>FRGRFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <Graph>
+              <Name>Graph</Name>
+              <Series>
+                <Name>Series</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <XFieldName>[XYPairs].X</XFieldName>
+                <YFieldName>[XYPairs].Y</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>25</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.05</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.05</Value>
+          <Units>g/g</Units>
+        </Constant>
+        <Constant>
+          <Name>LAIFunction</Name>
+          <Value>5</Value>
+          <Units>m2/m2</Units>
+        </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Value>0.7</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>HeightFunction</Name>
+          <Value>400</Value>
+          <Units>mm</Units>
+        </Constant>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+        </Constant>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <CohortsInitialised>false</CohortsInitialised>
+        <TipsAtEmergence>0</TipsAtEmergence>
+        <CohortsAtInitialisation>0</CohortsAtInitialisation>
+        <InitialisedCohortNo>0</InitialisedCohortNo>
+        <AppearedCohortNo>0</AppearedCohortNo>
+        <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
+        <Albedo>0.018</Albedo>
+        <Gsmax>0.01</Gsmax>
+        <R50>200</R50>
+        <LAI>0</LAI>
+        <Height>0</Height>
+        <FRGR>0</FRGR>
+        <PotentialEP>0</PotentialEP>
+        <MicroClimatePresent>true</MicroClimatePresent>
+        <KDead>0</KDead>
+        <LAIDead>0</LAIDead>
+      </SimpleLeaf>
+      <Cultivar>
+        <Name>StaticCrop</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The static crop is the base crop and uses all the paramaters values specified above.
+]]></MemoText>
+        </Memo>
+      </Cultivar>
+      <Cultivar>
+        <Name>StaticTree</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The static tree is similar to the static crop but is taller, has a deeper root system and a lower extinction coefficient
+]]></MemoText>
+        </Memo>
+        <Command>[Root].MaximumRootDepth.Value = 2600</Command>
+        <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+        <Command>[Leaf].HeightFunction.Value = 5000</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 400, 500, 1000, 1500, 2000</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Pasture</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The pasture differs from the base crop because its has a RootFrontVelocity of 15 (as opposed to zero) which means the roots grow downward from sowing untill the MaximumRootDepth is reached.  It ExtinctionCoefficient and MaximumRootDepth are different to the base StaticCrop and it has a different pattern of kl with depth.
+]]></MemoText>
+        </Memo>
+        <Command>[Root].MaximumRootDepth.Value = 800</Command>
+        <Command>[Root].RootFrontVelocity.Potential.Value = 15</Command>
+        <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.65</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.0</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Lucerne</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[Lucerne also grows root depth like pasture but has a greater root depth, different kl pattern and different extinction coefficient
+]]></MemoText>
+        </Memo>
+        <Command>[Root].MaximumRootDepth.Value = 2500</Command>
+        <Command>[Root].RootFrontVelocity.Potential.Value = 15</Command>
+        <Command>[Leaf].ExtinctionCoefficientFunction.Value = 0.8</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1</Command>
+      </Cultivar>
+      <CropType>Slurp</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+  </Replacements>
   <Simulation>
     <Name>MultiRootZone</Name>
     <Memo>
       <Name>Memo</Name>
       <MemoText><![CDATA[This is a simple test that plants SLURP, changes its leaf area index and potential biomass production on one occasion and presents some graphs of Plant, N and Water balance components to show things are working.]]></MemoText>
     </Memo>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
-    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-05-01T00:00:00</EndDate>
+      <EndDate>1999-02-01T00:00:00</EndDate>
     </Clock>
+    <ControlledEnvironment>
+      <Name>ControlledEnvironment</Name>
+      <MaxT>25</MaxT>
+      <MinT>10</MinT>
+      <Rain>0</Rain>
+      <Radn>20</Radn>
+      <PanEvap>0</PanEvap>
+      <VP>0</VP>
+      <Wind>3</Wind>
+      <CO2>350</CO2>
+      <AirPressure>1010</AirPressure>
+      <Latitude>0</Latitude>
+      <DayLength>12</DayLength>
+    </ControlledEnvironment>
     <Summary>
       <Name>Summary</Name>
     </Summary>
@@ -166,13 +652,13 @@
         <SoilWater>
           <Name>SoilWater</Name>
           <SummerDate>1-Nov</SummerDate>
-          <SummerU>9</SummerU>
-          <SummerCona>4.4</SummerCona>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
-          <WinterU>9</WinterU>
-          <WinterCona>4.4</WinterCona>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
+          <DiffusConst>0</DiffusConst>
+          <DiffusSlope>0</DiffusSlope>
           <Salb>0.18</Salb>
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
@@ -261,7 +747,7 @@
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>11.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -290,20 +776,20 @@
             <double>0.47</double>
           </OC>
           <FBiom>
-            <double>0.025</double>
-            <double>0.025</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </FBiom>
           <FInert>
-            <double>0.3</double>
-            <double>0.4</double>
-            <double>0.75</double>
-            <double>0.9</double>
-            <double>0.96</double>
-            <double>0.96</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
           </FInert>
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
@@ -363,17 +849,12 @@
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
@@ -386,7 +867,7 @@
         <Name>SlurpSowingRule</Name>
         <Script>
           <CultivarName>StaticCrop</CultivarName>
-          <InitialRootDepth>600</InitialRootDepth>
+          <InitialRootDepth>200</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
         <Code><![CDATA[
@@ -442,6 +923,7 @@ using Models.PMF;
 using Models;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -451,7 +933,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;
+		[Link] IWeather Met;
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;
 		[Link] Plant Slurp;
@@ -586,7 +1068,7 @@ namespace Models
           <Pool>
             <PoolName>wheat</PoolName>
             <ResidueType>wheat</ResidueType>
-            <Mass>2000</Mass>
+            <Mass>0</Mass>
             <CNRatio>80</CNRatio>
             <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
@@ -594,7 +1076,7 @@ namespace Models
         </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
-        <mass>2000</mass>
+        <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
@@ -614,48 +1096,12 @@ namespace Models
       <Operations>
         <Name>operations</Name>
         <Operation>
-          <Date>1998-10-02T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
+          <Date>1999-03-09</Date>
+          <Action>[Irrigation].Apply(0);</Action>
         </Operation>
         <Operation>
-          <Date>1998-10-26T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-15T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-30T00:00:00</Date>
-          <Action>[Irrigation].Apply(55);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-07T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-21T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-10T00:00:00</Date>
-          <Action>[Irrigation].Apply(28);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-19T00:00:00</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-03-09T00:00:00</Date>
-          <Action>[Irrigation].Apply(25);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 10);</Action>
+          <Date>1998-12-29</Date>
+          <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
       </Operations>
       <Report>
@@ -702,6 +1148,9 @@ namespace Models
           <string>[Slurp].Leaf.Transpiration</string>
           <string>[Slurp].Leaf.WaterDemand</string>
           <string>[Slurp].Root.Depth</string>
+          <string>[Slurp].Root.Zones[1].Depth</string>
+          <string>[Slurp].Root.Zones[2].Depth</string>
+          <string>[Slurp].Root.Zones[3].Depth</string>
           <string>[Slurp].Leaf.CoverTotal</string>
           <string>[Slurp].Leaf.CoverDead</string>
           <string>[Slurp].Leaf.LAI</string>
@@ -843,8 +1292,8 @@ namespace Models
 		{
 			Slurp.Root.ZoneNamesToGrowRootsIn.Add("Zone2");
 			Slurp.Root.ZoneNamesToGrowRootsIn.Add("Zone3");
-			Slurp.Root.ZoneRootDepths.Add(300);
-			Slurp.Root.ZoneRootDepths.Add(150);
+			Slurp.Root.ZoneRootDepths.Add(100);
+			Slurp.Root.ZoneRootDepths.Add(50);
 			Slurp.Root.ZoneInitialDM.Add(2000);
 			Slurp.Root.ZoneInitialDM.Add(1000);
 		}
@@ -994,13 +1443,13 @@ namespace Models
         <SoilWater>
           <Name>SoilWater</Name>
           <SummerDate>1-Nov</SummerDate>
-          <SummerU>9</SummerU>
-          <SummerCona>4.4</SummerCona>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
-          <WinterU>9</WinterU>
-          <WinterCona>4.4</WinterCona>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
+          <DiffusConst>0</DiffusConst>
+          <DiffusSlope>0</DiffusSlope>
           <Salb>0.18</Salb>
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
@@ -1089,7 +1538,7 @@ namespace Models
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>11.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1118,20 +1567,20 @@ namespace Models
             <double>0.47</double>
           </OC>
           <FBiom>
-            <double>0.025</double>
-            <double>0.025</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </FBiom>
           <FInert>
-            <double>0.3</double>
-            <double>0.4</double>
-            <double>0.75</double>
-            <double>0.9</double>
-            <double>0.96</double>
-            <double>0.96</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
           </FInert>
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
@@ -1195,7 +1644,7 @@ namespace Models
           <Pool>
             <PoolName>wheat</PoolName>
             <ResidueType>wheat</ResidueType>
-            <Mass>2000</Mass>
+            <Mass>0</Mass>
             <CNRatio>80</CNRatio>
             <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
@@ -1203,7 +1652,7 @@ namespace Models
         </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
-        <mass>2000</mass>
+        <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
@@ -1437,13 +1886,13 @@ namespace Models
         <SoilWater>
           <Name>SoilWater</Name>
           <SummerDate>1-Nov</SummerDate>
-          <SummerU>9</SummerU>
-          <SummerCona>4.4</SummerCona>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
-          <WinterU>9</WinterU>
-          <WinterCona>4.4</WinterCona>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
+          <DiffusConst>0</DiffusConst>
+          <DiffusSlope>0</DiffusSlope>
           <Salb>0.18</Salb>
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
@@ -1532,7 +1981,7 @@ namespace Models
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>11.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1561,20 +2010,20 @@ namespace Models
             <double>0.47</double>
           </OC>
           <FBiom>
-            <double>0.025</double>
-            <double>0.025</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </FBiom>
           <FInert>
-            <double>0.3</double>
-            <double>0.4</double>
-            <double>0.75</double>
-            <double>0.9</double>
-            <double>0.96</double>
-            <double>0.96</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
           </FInert>
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
@@ -1638,7 +2087,7 @@ namespace Models
           <Pool>
             <PoolName>wheat</PoolName>
             <ResidueType>wheat</ResidueType>
-            <Mass>2000</Mass>
+            <Mass>0</Mass>
             <CNRatio>80</CNRatio>
             <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
@@ -1646,7 +2095,7 @@ namespace Models
         </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
-        <mass>2000</mass>
+        <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
@@ -1742,13 +2191,13 @@ namespace Models
       <Slope>0</Slope>
     </Zone>
     <Graph>
-      <Name>Soil water layer 1</Name>
+      <Name>RootDepth</Name>
       <Series>
         <Name>Series 1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1758,18 +2207,18 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+        <YFieldName>Slurp.Root.Zones1.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Rain</Name>
-        <Type>Bar</Type>
+        <Name>Series 2</Name>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-1663232</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1779,7 +2228,28 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Weather.Rain</YFieldName>
+        <YFieldName>Slurp.Root.Zones2.Depth</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series 3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-11094807</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Slurp.Root.Zones3.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1800,17 +2270,464 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <LegendPosition>BottomLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <Folder>
+      <Name>SoilWater</Name>
+      <Graph>
+        <Name>Soil water layer 1</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SWmm(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Rain</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.Rain</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil water layer 2</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SWmm(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Rain</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.Rain</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil water layer 3</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SWmm(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Rain</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.Rain</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil water layer 4</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SWmm(4)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Rain</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Weather.Rain</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>SoilNitrogen</Name>
+      <Graph>
+        <Name>Soil NO3 layer 1</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.NO3N(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil NO3 layer 2</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.NO3N(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil NO3 layer 3</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.NO3N(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Soil NO3 layer 4</Name>
+        <Series>
+          <Name>Series 1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.NO3N(4)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Simulation>
   <ExplorerWidth>229</ExplorerWidth>
 </Simulations>
