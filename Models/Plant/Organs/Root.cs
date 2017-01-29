@@ -436,8 +436,8 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = 0.0,
-                    Retranslocation = 0.0,
-                    Reallocation = 0.0
+                    Retranslocation = AvailableDMRetranslocation(),
+                    Reallocation = AvailableDMReallocation()
                 };
             }
         }
@@ -581,8 +581,8 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType()
                 {
                     Fixation = 0.0,
-                    Retranslocation = 0.0,
-                    Reallocation = 0.0,
+                    Retranslocation = AvailableNRetranslocation(),
+                    Reallocation = AvailableNReallocation(),
                     Uptake = 0.0 // computed via arbitrator
                 };
             }

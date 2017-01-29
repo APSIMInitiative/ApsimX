@@ -280,7 +280,7 @@ namespace Models.PMF.Organs
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = StartLive.NonStructuralWt * DMRetranslocationFactor.Value; //FIXME: this should discount senesced
+                double availableDM = StartLive.NonStructuralWt * (1.0 - SenescenceRate.Value) * DMRetranslocationFactor.Value; //FIXME: this should discount senesced
                 if (availableDM < -BiomassTolleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
                 return availableDM;
