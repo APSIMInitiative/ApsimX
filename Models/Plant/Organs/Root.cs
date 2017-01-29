@@ -122,7 +122,7 @@ namespace Models.PMF.Organs
         public IFunction RootFrontVelocity = null;
 
         /// <summary>The partition fraction</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         
@@ -436,16 +436,16 @@ namespace Models.PMF.Organs
             get
             {
                 double Demand = 0;
-                if (StructuralFraction != null)
-                    if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
-                    {
-                        Demand = Arbitrator.DMSupply * PartitionFraction.Value;
-                        if (StructuralFraction != null)
-                            Demand *= StructuralFraction.Value;
-                        if (DMConversionEfficiencyFunction != null)
-                            Demand /= DMConversionEfficiencyFunction.Value;
-                    }
-                TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
+                if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
+                {
+                    Demand = Arbitrator.DMSupply * PartitionFraction.Value;
+                    if (StructuralFraction != null)
+                        Demand *= StructuralFraction.Value;
+                    if (DMConversionEfficiencyFunction != null)
+                        Demand /= DMConversionEfficiencyFunction.Value;
+                }
+
+                TotalDMDemand = Demand;//  This is currently not used, as demand is not calculated on a layer basis. However, it may some day...
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -594,22 +594,22 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the N supply.</summary>
-        [XmlIgnore]
-        public override BiomassSupplyType NSupply
-        {
-            get
-            {
-                return new BiomassSupplyType()
-                {
-                    Fixation = 0.0,
-                    Retranslocation = AvailableNRetranslocation(),
-                    Reallocation = AvailableNReallocation(),
-                    Uptake = 0.0 // computed via arbitrator
-                };
-            }
-            set { }
-        }
+        ///// <summary>Gets or sets the N supply.</summary>
+        //[XmlIgnore]
+        //public override BiomassSupplyType NSupply
+        //{
+        //    get
+        //    {
+        //        return new BiomassSupplyType()
+        //        {
+        //            Fixation = 0.0,
+        //            Retranslocation = AvailableNRetranslocation(),
+        //            Reallocation = AvailableNReallocation(),
+        //            Uptake = 0.0 // computed via arbitrator
+        //        };
+        //    }
+        //    set { }
+        //}
 
         /// <summary>Gets the N amount available for retranslocation</summary>
         public double AvailableNRetranslocation()
@@ -637,13 +637,13 @@ namespace Models.PMF.Organs
             if (NReallocationFactor != null)
             {
                 double availableN = 0.0;
-            foreach (ZoneState Z in Zones)
-                for (int i = 0; i < Z.LayerLive.Length; i++)
-                    availableN += Z.LayerLive[i].NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        availableN += Z.LayerLive[i].NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
 
-            if (availableN < -BiomassTolleranceValue)
-                throw new Exception("Negative N reallocation value computed for " + Name);
-            return availableN;
+                if (availableN < -BiomassTolleranceValue)
+                    throw new Exception("Negative N reallocation value computed for " + Name);
+                return availableN;
             }
             else
             {  // By default reallocation is turned off!!!!
