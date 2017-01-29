@@ -717,6 +717,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Units>/day</Units>
         </Constant>
         <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
           <Name>NRetranslocationFactor</Name>
           <Value>0</Value>
           <Units>/day</Units>
@@ -1110,6 +1115,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Units>/day</Units>
         </Constant>
         <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
           <Name>NRetranslocationFactor</Name>
           <Value>0</Value>
           <Units>/day</Units>
@@ -1419,6 +1429,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Units>/day</Units>
         </Constant>
         <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
           <Name>NRetranslocationFactor</Name>
           <Value>0</Value>
           <Units>/day</Units>
@@ -1631,6 +1646,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Units>/day</Units>
         </Constant>
         <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
           <Name>NRetranslocationFactor</Name>
           <Value>0</Value>
           <Units>/day</Units>
@@ -1773,6 +1793,16 @@ The root organ demands and is partitioned N and DM and its depth increases throu
           </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumRootDepth</Name>
           <Value>1500</Value>
           <Units>mm</Units>
@@ -1885,6 +1915,11 @@ No effect of soil water content on root growth is currently captured in the mode
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+          <Units>/day</Units>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
           <Value>0</Value>
           <Units>/day</Units>
         </Constant>
