@@ -82,22 +82,30 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
-        /// <summary>The n reallocation factor</summary>
+        /// <summary>The N retranslocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction NRetranslocationFactor = null;
+
+        /// <summary>The N reallocation factor</summary>
         [Link]
         [Units("/d")]
         IFunction NReallocationFactor = null;
 
-        /// <summary>The n retranslocation factor</summary>
-        [Link(IsOptional = true)]
-        [Units("/d")]
-        IFunction NRetranslocationFactor = null;
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
         IFunction NitrogenDemandSwitch = null;
-        /// <summary>The dm retranslocation factor</summary>
+
+        /// <summary>The DM retranslocation factor</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
+
+        /// <summary>The DM reallocation factor</summary>
+        [Link(IsOptional = true)]
+        [Units("/d")]
+        IFunction DMReallocationFactor = null;
+
         /// <summary>The structural fraction</summary>
         [Link]
         [Units("g/g")]
@@ -261,25 +269,40 @@ namespace Models.PMF.Organs
                 {
                     Fixation = 0.0,
                     Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = 0.0
+                    Reallocation = AvailableDMReallocation()
                 };
             }
             set { }
         }
 
         /// <summary>Gets the amount of DM available for retranslocation</summary>
-        /// <returns>DM available to retranslocate</returns>
         public double AvailableDMRetranslocation()
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = StartLive.NonStructuralWt * DMRetranslocationFactor.Value;
+                double availableDM = StartLive.NonStructuralWt * DMRetranslocationFactor.Value; //FIXME: this should discount senesced
                 if (availableDM < -BiomassTolleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
                 return availableDM;
             }
             else
             { // By default retranslocation is turned off!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Gets the amount of DM available for reallocation</summary>
+        public double AvailableDMReallocation()
+        {
+            if (DMReallocationFactor != null)
+            {
+                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+                if (availableDM < -BiomassTolleranceValue)
+                    throw new Exception("Negative DM reallocation value computed for " + Name);
+                return availableDM;
+            }
+            else
+            { // By default reallocation is turned off!!!!
                 return 0.0;
             }
         }
@@ -309,20 +332,16 @@ namespace Models.PMF.Organs
             {
                 return new BiomassSupplyType()
                 {
-                    Reallocation = AvailableNReallocation(),
+                    Fixation = 0.0,
                     Retranslocation = AvailableNRetranslocation(),
+                    Reallocation = AvailableNReallocation(),
                     Uptake = 0.0
                 };
             }
             set { }
         }
 
-        /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
-        public virtual double NFixationCost { get { return 0; } set { } }
-
         /// <summary>Gets the N amount available for retranslocation</summary>
-        /// <returns>N available to retranslocate</returns>
         public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
@@ -340,7 +359,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the N amount available for reallocation</summary>
-        /// <returns>N available to reallocate</returns>
         public double AvailableNReallocation()
         {
             double availableN = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
@@ -349,6 +367,10 @@ namespace Models.PMF.Organs
 
             return availableN;
         }
+
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        [XmlIgnore]
+        public virtual double NFixationCost { get { return 0; } set { } }
 
         /// <summary>Sets the dm allocation.</summary>
         [XmlIgnore]

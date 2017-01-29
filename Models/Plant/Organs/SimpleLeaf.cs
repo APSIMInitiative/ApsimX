@@ -273,7 +273,7 @@ namespace Models.PMF.Organs
                 {
                     Fixation = Photosynthesis.Value,
                     Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = 0.0
+                    Reallocation = AvailableDMReallocation()
                 };
             }
         }
