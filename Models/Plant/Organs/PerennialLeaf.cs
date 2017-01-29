@@ -77,7 +77,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public Biomass Removed { get; set; }
+        public Biomass Removed = new Biomass();
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
@@ -311,14 +311,7 @@ namespace Models.PMF.Organs
         #region Arbitrator Methods
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
-        public double WaterAllocation { get; private set; }
-
-        /// <summary>Sets the organs water allocation.</summary>
-        /// <param name="allocation">The water allocation (mm)</param>
-        public void SetWaterAllocation(double allocation)
-        {
-            WaterAllocation = allocation;
-        }
+        public double WaterAllocation { get; set; }
 
         /// <summary>Gets or sets the dm demand.</summary>
         [XmlIgnore]

@@ -172,11 +172,8 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.1)
-                {
-                    // the plant is dying due to population decline
-                    EndCrop();
-                }
+                if (IsAlive && value <= 0.01)                    
+                    EndCrop();  // the plant is dying due to population decline
                 else
                 {
                     plantPopulation = value;
@@ -326,7 +323,8 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
-            
+
+
             // Invoke an AboutToSow event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -362,7 +360,7 @@ namespace Models.PMF
             // Invoke an event.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
 
             // Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
@@ -400,7 +398,8 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
-            cultivarDefinition.Unapply();
+            if (cultivarDefinition != null)
+                cultivarDefinition.Unapply();
         }
         #endregion
 

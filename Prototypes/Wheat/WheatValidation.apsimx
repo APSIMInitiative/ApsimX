@@ -2033,6 +2033,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -3294,7 +3298,7 @@ namespace Models
             <RMSE>54.744523631420513</RMSE>
             <NSE>0.73477788227641161</NSE>
             <ME>3.7969097528072182</ME>
-            <MAE>37.8569102673492</MAE>
+            <MAE>37.856910267349193</MAE>
             <RSR>0.51480399317965009</RSR>
           </RegrStats>
           <RegrStats>
@@ -3330,9 +3334,9 @@ namespace Models
             <n>1329</n>
             <Slope>0.000316191393554922</Slope>
             <Intercept>0.20930557941427372</Intercept>
-            <SEslope>7.8789292978177574E-05</SEslope>
-            <SEintercept>0.0018474320752984216</SEintercept>
-            <R2>0.011991007024689249</R2>
+            <SEslope>7.8789292978177479E-05</SEslope>
+            <SEintercept>0.0018474320752984192</SEintercept>
+            <R2>0.01199100702468936</R2>
             <RMSE>23.381098678053082</RMSE>
             <NSE>-0.083965790022211939</NSE>
             <ME>-6.5315494024339689</ME>
@@ -3342,11 +3346,11 @@ namespace Models
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>1329</n>
-            <Slope>0.00039531863680858186</Slope>
-            <Intercept>0.20014860562702908</Intercept>
-            <SEslope>6.73925162665999E-05</SEslope>
-            <SEintercept>0.001965145584423302</SEintercept>
-            <R2>0.02527450375293272</R2>
+            <Slope>0.00039531863680858229</Slope>
+            <Intercept>0.20014860562702905</Intercept>
+            <SEslope>6.7392516266600008E-05</SEslope>
+            <SEintercept>0.0019651455844233051</SEintercept>
+            <R2>0.025274503752932609</R2>
             <RMSE>29.09142329387322</RMSE>
             <NSE>-0.084732036423316615</NSE>
             <ME>-8.1682434094285234</ME>
@@ -3358,9 +3362,9 @@ namespace Models
             <n>1329</n>
             <Slope>0.00044364172240659704</Slope>
             <Intercept>0.20320204046677559</Intercept>
-            <SEslope>6.0459291960653684E-05</SEslope>
-            <SEintercept>0.0019303950617159688</SEintercept>
-            <R2>0.0389936583744217</R2>
+            <SEslope>6.0459291960653758E-05</SEslope>
+            <SEintercept>0.0019303950617159712</SEintercept>
+            <R2>0.038993658374421591</R2>
             <RMSE>31.857158501334226</RMSE>
             <NSE>-0.084420809743269709</NSE>
             <ME>-8.9349141458473955</ME>
@@ -3447,7 +3451,7 @@ namespace Models
             <R2>0.55079157269755652</R2>
             <RMSE>5.4270579042117522</RMSE>
             <NSE>0.40414810413571278</NSE>
-            <ME>-0.60210844681531006</ME>
+            <ME>-0.60210844681531017</ME>
             <MAE>3.26226847614914</MAE>
             <RSR>0.77101424351700243</RSR>
           </RegrStats>
@@ -3467,17 +3471,17 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
-            <n>230</n>
-            <Slope>0.4624363685068627</Slope>
-            <Intercept>2.336126145194255</Intercept>
-            <SEslope>0.050456796212693278</SEslope>
-            <SEintercept>0.45737924983521083</SEintercept>
-            <R2>0.269224125926551</R2>
-            <RMSE>5.4282553571061385</RMSE>
-            <NSE>0.058941853245588649</NSE>
-            <ME>-1.4975182008301942</ME>
-            <MAE>3.089772949690949</MAE>
-            <RSR>0.96797034541075144</RSR>
+            <n>238</n>
+            <Slope>0.47649862097697876</Slope>
+            <Intercept>2.1431504804753083</Intercept>
+            <SEslope>0.049291082949292381</SEslope>
+            <SEintercept>0.43982398479409585</SEintercept>
+            <R2>0.28365797755202049</R2>
+            <RMSE>5.3481308154674974</RMSE>
+            <NSE>0.079780544948217069</NSE>
+            <ME>-1.5040254218778575</ME>
+            <MAE>3.04275900270968</MAE>
+            <RSR>0.95726327974765968</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Nconc</Name>
@@ -3495,31 +3499,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Wt</Name>
-            <n>419</n>
-            <Slope>0.29399118662271434</Slope>
-            <Intercept>175.84598107338502</Intercept>
-            <SEslope>0.036325609514871238</SEslope>
-            <SEintercept>22.159074707552232</SEintercept>
-            <R2>0.13575170110839641</R2>
-            <RMSE>428.39350294107339</RMSE>
-            <NSE>-0.20763835675677278</NSE>
-            <ME>-155.41314651276198</ME>
-            <MAE>237.83837946107227</MAE>
-            <RSR>1.0976138505752089</RSR>
+            <n>435</n>
+            <Slope>0.30090461247422839</Slope>
+            <Intercept>170.48038574599303</Intercept>
+            <SEslope>0.035461398254813856</SEslope>
+            <SEintercept>21.385840859144807</SEintercept>
+            <R2>0.14257805229804965</R2>
+            <RMSE>421.21788846637838</RMSE>
+            <NSE>-0.19151020168989197</NSE>
+            <ME>-153.51904954972858</ME>
+            <MAE>232.91254979189409</MAE>
+            <RSR>1.0903077995584372</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
-            <n>87</n>
-            <Slope>-0.069229506375316455</Slope>
-            <Intercept>2.8719057631932938</Intercept>
-            <SEslope>0.10417918307012658</SEslope>
-            <SEintercept>1.171911798036569</SEintercept>
-            <R2>0.005168342025856365</R2>
-            <RMSE>10.086145548694359</RMSE>
-            <NSE>-5.8426199046612668</NSE>
-            <ME>-8.4272185257729877</ME>
-            <MAE>8.5405599619924679</MAE>
-            <RSR>2.6007631766770718</RSR>
+            <n>88</n>
+            <Slope>-0.058314283803649794</Slope>
+            <Intercept>2.7371628701907955</Intercept>
+            <SEslope>0.10103559604363134</SEslope>
+            <SEintercept>1.1303220500311342</SEintercept>
+            <R2>0.0038585456164794696</R2>
+            <RMSE>10.029601654697244</RMSE>
+            <NSE>-5.496302300004551</NSE>
+            <ME>-8.345994523358673</ME>
+            <MAE>8.4580479887120248</MAE>
+            <RSR>2.5342613683199775</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -3565,31 +3569,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
-            <n>95</n>
-            <Slope>-0.14175169834562879</Slope>
-            <Intercept>1.3811765351808907</Intercept>
-            <SEslope>0.24382850289264574</SEslope>
-            <SEintercept>0.16411519967101643</SEintercept>
-            <R2>0.0036210057315847477</R2>
-            <RMSE>1.87185876672875</RMSE>
-            <NSE>-8.7911700969374067</NSE>
-            <ME>1.0289445738442027</ME>
-            <MAE>1.313024009461117</MAE>
-            <RSR>3.1125721113812919</RSR>
+            <n>119</n>
+            <Slope>-0.013200891221424177</Slope>
+            <Intercept>1.1101105517281242</Intercept>
+            <SEslope>0.22966321347058394</SEslope>
+            <SEintercept>0.14065303592004083</SEintercept>
+            <R2>2.8237451956902859E-05</R2>
+            <RMSE>1.6792705132304748</RMSE>
+            <NSE>-8.500199140520273</NSE>
+            <ME>0.82670023401923565</ME>
+            <MAE>1.0802549485961044</MAE>
+            <RSR>3.0692613988217774</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
-            <n>237</n>
-            <Slope>0.015130710193535136</Slope>
-            <Intercept>75.8208200257234</Intercept>
-            <SEslope>0.010883640654635549</SEslope>
-            <SEintercept>4.4787887288760668</SEintercept>
-            <R2>0.008157276565202598</R2>
-            <RMSE>399.67269809079693</RMSE>
-            <NSE>-0.000621643656333104</NSE>
-            <ME>-21.208168722315</ME>
-            <MAE>117.6030835658611</MAE>
-            <RSR>0.99819818242902991</RSR>
+            <n>261</n>
+            <Slope>0.017932850913987393</Slope>
+            <Intercept>70.455544513694591</Intercept>
+            <SEslope>0.010761994119365046</SEslope>
+            <SEintercept>4.2213733787318413</SEintercept>
+            <R2>0.010606750518717623</R2>
+            <RMSE>380.87498579539744</RMSE>
+            <NSE>0.0029767094026564855</NSE>
+            <ME>-19.3369143589722</ME>
+            <MAE>107.66726180585218</MAE>
+            <RSR>0.99659584485873254</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
@@ -3629,37 +3633,37 @@ namespace Models
             <R2>0.75783308570818242</R2>
             <RMSE>1.1774998287910523</RMSE>
             <NSE>0.74481669322218114</NSE>
-            <ME>0.23927198450758028</ME>
+            <ME>0.2392719845075803</ME>
             <MAE>0.86450480942572649</MAE>
             <RSR>0.50478785286787631</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
-            <n>287</n>
-            <Slope>0.78614818537524411</Slope>
-            <Intercept>1.0915583442992869</Intercept>
-            <SEslope>0.029021190232455939</SEslope>
-            <SEintercept>0.134343974338726</SEintercept>
-            <R2>0.72025944628379035</R2>
-            <RMSE>1.5585197044128665</RMSE>
-            <NSE>0.70226104135667833</NSE>
-            <ME>0.31250639541549347</ME>
-            <MAE>1.1130280265911712</MAE>
-            <RSR>0.54470316748570013</RSR>
+            <n>311</n>
+            <Slope>0.79506452660095817</Slope>
+            <Intercept>1.0830927414229694</Intercept>
+            <SEslope>0.027919084076274962</SEslope>
+            <SEintercept>0.12649159636297316</SEintercept>
+            <R2>0.72409866339398032</R2>
+            <RMSE>1.5326040171623241</RMSE>
+            <NSE>0.70122448336019416</NSE>
+            <ME>0.35376666559451087</ME>
+            <MAE>1.1014258833076305</MAE>
+            <RSR>0.54572412779742174</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>472</n>
-            <Slope>0.755848959583521</Slope>
-            <Intercept>60.431936106725942</Intercept>
-            <SEslope>0.021718629896148613</SEslope>
-            <SEintercept>3.8103996318596423</SEintercept>
-            <R2>0.72043283320124307</R2>
-            <RMSE>63.534191256296566</RMSE>
-            <NSE>0.65784258193537126</NSE>
-            <ME>26.793040741369211</ME>
-            <MAE>47.51570692804129</MAE>
-            <RSR>0.58432226406375576</RSR>
+            <n>496</n>
+            <Slope>0.76315129927004333</Slope>
+            <Intercept>58.815714075869792</Intercept>
+            <SEslope>0.021185819368213784</SEslope>
+            <SEintercept>3.6527421698461167</SEintercept>
+            <R2>0.724264178873211</R2>
+            <RMSE>62.605695015001579</RMSE>
+            <NSE>0.65955307434025934</NSE>
+            <ME>26.85076696499511</ME>
+            <MAE>46.661031936119755</MAE>
+            <RSR>0.58288981868700973</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
@@ -3719,31 +3723,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.N</Name>
-            <n>331</n>
-            <Slope>1.0827280475220229</Slope>
-            <Intercept>-0.1459593614348873</Intercept>
-            <SEslope>0.03775271289854204</SEslope>
-            <SEintercept>0.17400239317803279</SEintercept>
-            <R2>0.71428878605193891</R2>
-            <RMSE>1.8226079530868704</RMSE>
-            <NSE>0.52021070191559515</NSE>
-            <ME>0.1670900781144383</ME>
-            <MAE>1.3383442089980466</MAE>
-            <RSR>0.69162112719948166</RSR>
+            <n>355</n>
+            <Slope>1.0768997793205721</Slope>
+            <Intercept>-0.092395107903496587</Intercept>
+            <SEslope>0.035655148378680133</SEslope>
+            <SEintercept>0.15961213526616042</SEintercept>
+            <R2>0.72100014492804065</R2>
+            <RMSE>1.7752742165649815</RMSE>
+            <NSE>0.540228742956778</NSE>
+            <ME>0.18683486727052681</ME>
+            <MAE>1.2926189672261235</MAE>
+            <RSR>0.67710865209484061</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Wt</Name>
-            <n>555</n>
-            <Slope>0.6714583659416884</Slope>
-            <Intercept>47.502688899694192</Intercept>
-            <SEslope>0.024722845871132212</SEslope>
-            <SEintercept>16.788262763786367</SEintercept>
-            <R2>0.57152859721655191</R2>
-            <RMSE>285.02912506747816</RMSE>
-            <NSE>0.41489010971678808</NSE>
-            <ME>-139.00719406609463</ME>
-            <MAE>190.8886579347847</MAE>
-            <RSR>0.76423532908957281</RSR>
+            <n>579</n>
+            <Slope>0.67537457373894327</Slope>
+            <Intercept>44.1780237698581</Intercept>
+            <SEslope>0.023631876231277046</SEslope>
+            <SEintercept>15.748070609712119</SEintercept>
+            <R2>0.58601112647791043</R2>
+            <RMSE>279.31416460028078</RMSE>
+            <NSE>0.442405875313302</NSE>
+            <ME>-134.85544663364379</ME>
+            <MAE>184.77728727441243</MAE>
+            <RSR>0.74607713750682791</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value</Name>
@@ -4194,16 +4198,16 @@ namespace Models
           <RegrStats>
             <Name>MaxLeafSize.Script.MaxLeafSize</Name>
             <n>147</n>
-            <Slope>0.97086021940491385</Slope>
-            <Intercept>5.6955795304152161</Intercept>
-            <SEslope>0.022169914907263989</SEslope>
-            <SEintercept>31.921682977813994</SEintercept>
-            <R2>0.92970449239607944</R2>
-            <RMSE>197.49499730845585</RMSE>
-            <NSE>0.92611729575247281</NSE>
-            <ME>-30.527985933036884</ME>
-            <MAE>147.05432658955823</MAE>
-            <RSR>0.27088761658162214</RSR>
+            <Slope>0.97082051412362524</Slope>
+            <Intercept>5.7017431662748095</Intercept>
+            <SEslope>0.022164636554246227</SEslope>
+            <SEintercept>31.914082862415139</SEintercept>
+            <R2>0.929730265860283</R2>
+            <RMSE>197.45941889763802</RMSE>
+            <NSE>0.92614391305891786</NSE>
+            <ME>-30.57117980181981</ME>
+            <MAE>147.04055026740946</MAE>
+            <RSR>0.270838816606739</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -5490,17 +5494,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
@@ -5648,7 +5647,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5669,7 +5668,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -5716,7 +5715,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5737,7 +5736,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -5780,7 +5779,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5801,7 +5800,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -5844,7 +5843,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5865,7 +5864,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -5908,7 +5907,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5929,7 +5928,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -5965,6 +5964,414 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>LeafWt</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>LeafN</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Live.N</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Live.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>StemWt</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Stem.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Stem.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>StemN</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Stem.N</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Stem.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>EarWt</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Ear.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Ear.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>DeadLeafWt</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
+              <ShowInLegend>false</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Leaf.Dead.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
         </Folder>
         <Folder>
           <Name>SoilWater</Name>
@@ -5975,7 +6382,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -5996,7 +6403,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6039,7 +6446,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6060,7 +6467,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6103,7 +6510,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6124,7 +6531,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6167,7 +6574,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6188,7 +6595,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6231,7 +6638,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6252,7 +6659,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6295,7 +6702,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6316,7 +6723,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6359,7 +6766,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6380,7 +6787,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6423,7 +6830,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6444,7 +6851,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6574,7 +6981,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -6609,6 +7016,53 @@ namespace Models
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FloweringDate</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-1663232</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Wheat.Phenology.FloweringDAS.Value</XFieldName>
+            <YFieldName>Predicted.Wheat.Phenology.FloweringDAS.Value</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Observed</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Predicted</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Experiment>
       <Experiment>
@@ -7145,17 +7599,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -9208,17 +9657,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
@@ -10234,17 +10678,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -11293,17 +11732,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
@@ -12527,17 +12961,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -13280,17 +13709,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -13738,7 +14162,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -14198,17 +14622,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
@@ -14913,17 +15332,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
@@ -15628,17 +16042,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Report>
@@ -16663,17 +17072,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -16808,17 +17212,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -17548,17 +17947,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -18940,17 +19334,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
@@ -21220,17 +21609,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
@@ -22317,17 +22701,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
@@ -23393,17 +23772,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Manager>
@@ -25933,17 +26307,12 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -29555,17 +29924,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -33624,17 +33988,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -36956,17 +37315,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -39162,17 +39516,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.29366217672824863</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -41760,17 +42109,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -42352,17 +42696,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -42892,17 +43231,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -43794,17 +44128,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -44334,17 +44663,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -44977,17 +45301,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -45517,17 +45836,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -46057,17 +46371,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -46597,17 +46906,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -47137,17 +47441,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -47677,17 +47976,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -48217,17 +48511,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -48757,17 +49046,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.29366217672824863</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Plant>
@@ -49302,17 +49586,12 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -53798,17 +54077,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
@@ -55183,17 +55457,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Soil>
@@ -56821,17 +57090,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
@@ -57522,17 +57786,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Manager>
@@ -58801,17 +59060,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -60805,17 +61059,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Operations>
@@ -61874,17 +62123,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -62628,17 +62872,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -63382,17 +63621,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -64097,17 +64331,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.3</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Report>
@@ -64589,17 +64818,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -65233,17 +65457,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -65877,17 +66096,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -67666,17 +67880,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Operations>
@@ -69380,17 +69589,12 @@ namespace Models
                 <c_interception>0</c_interception>
                 <d_interception>0</d_interception>
                 <soil_albedo>0.3</soil_albedo>
-                <air_pressure>1010</air_pressure>
-                <soil_emissivity>0.96</soil_emissivity>
                 <sun_angle>15</sun_angle>
                 <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
                 <night_interception_fraction>0.5</night_interception_fraction>
-                <windspeed_default>3</windspeed_default>
                 <refheight>2</refheight>
                 <albedo>0.15</albedo>
                 <emissivity>0.96</emissivity>
-                <gsmax>0.01</gsmax>
-                <r50>200</r50>
                 <RadIntTotal>0</RadIntTotal>
               </MicroClimate>
               <Operations>
@@ -70423,17 +70627,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -71085,17 +71284,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -71747,17 +71941,12 @@ namespace Models
               <c_interception>0.3</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.13</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Soil>
@@ -72807,17 +72996,12 @@ namespace Models
             <c_interception>0.3</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.13</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
@@ -73744,17 +73928,12 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
