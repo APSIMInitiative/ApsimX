@@ -902,11 +902,11 @@ namespace Models.PMF.Organs
         {
             set
             {
-                GrowthRespiration = 0;
-
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
+                // get DM lost by respiration (growth respiration)
+                GrowthRespiration = 0.0;
+                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency)
+                                  + value.NonStructural * (1.0 - DMConversionEfficiency)
+                                  + value.Metabolic * (1.0 - DMConversionEfficiency);
 
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
                 double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
@@ -931,7 +931,7 @@ namespace Models.PMF.Organs
                     if (DMsupply > 0.0000000001)
                         throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
                     if (DMallocated - value.Structural * DMConversionEfficiency > 0.000000001)
-                        throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
+                        throw new Exception("the sum of DM allocation to leaf cohorts is more than that available to leaf organ");
                 }
 
                 //Metabolic DM allocation

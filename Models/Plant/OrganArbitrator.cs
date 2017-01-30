@@ -714,8 +714,7 @@ namespace Models.PMF
             // Calculate the total water supply across all zones.
             double waterSupply = 0;
             foreach (ZoneWaterAndN Z in zones)
-                if (Plant.Root.HaveRootsInZone(Z.Name))
-                    waterSupply += MathUtilities.Sum(Z.Water);
+               waterSupply += MathUtilities.Sum(Z.Water);
             
             // Calculate total plant water demand.
             waterDemand = 0.0;
@@ -757,6 +756,7 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
@@ -789,13 +789,10 @@ namespace Models.PMF
 
                     UptakeDemands.Name = zone.Name;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
-                    List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                     zones.Add(UptakeDemands);
-                    return zones;
                 }
+                return zones;
             }
-
             return null;
         }
         
@@ -811,17 +808,14 @@ namespace Models.PMF
                 double[] nh4Supply = null;
                 foreach (ZoneWaterAndN Z in zones)
                 {
-                    if (Plant.Root.HaveRootsInZone(Z.Name))
-                    {
-                        if (no3Supply == null)
-                            no3Supply = Z.NO3N;
-                        else
-                            no3Supply = MathUtilities.Add(no3Supply, Z.NO3N);
-                        if (nh4Supply == null)
-                            nh4Supply = Z.NH4N;
-                        else
-                            nh4Supply = MathUtilities.Add(nh4Supply, Z.NH4N);
-                    }
+                    if (no3Supply == null)
+                        no3Supply = Z.NO3N;
+                    else
+                        no3Supply = MathUtilities.Add(no3Supply, Z.NO3N);
+                    if (nh4Supply == null)
+                        nh4Supply = Z.NH4N;
+                    else
+                        nh4Supply = MathUtilities.Add(nh4Supply, Z.NH4N);
                 }
 
                 if (no3Supply != null && nh4Supply != null)
