@@ -1034,7 +1034,7 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>C:\apsim_dev\Data\MetFiles\Ruakura13-15.met</FileName>
+      <FileName>Observations\Ruakura13-16.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <Zone>
@@ -1789,7 +1789,7 @@
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\apsim_dev\Data\MetFiles\Ruakura13-15.met</FileName>
+        <FileName>Observations\Ruakura13-16.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Zone>
