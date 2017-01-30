@@ -1779,6 +1779,10 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1791,7 +1795,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <R50>160</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.03</KDead>
         <MaximumMainStemLeafNumber>50</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -1913,12 +1917,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Value>0</Value>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -2098,7 +2101,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -2583,17 +2586,12 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -3245,17 +3243,12 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -4862,17 +4855,12 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -6605,17 +6593,12 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -7474,17 +7457,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -8925,17 +8903,12 @@ Field Crops Research 116 (2010) 196204
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -9578,17 +9551,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -10316,17 +10284,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -11125,17 +11088,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -12576,17 +12534,12 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -14067,6 +14020,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>9</DayLength>
           </ControlledEnvironment>
@@ -14080,6 +14034,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>10.5</DayLength>
           </ControlledEnvironment>
@@ -14093,6 +14048,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>12</DayLength>
           </ControlledEnvironment>
@@ -14106,6 +14062,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>13.5</DayLength>
           </ControlledEnvironment>
@@ -14119,6 +14076,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>15</DayLength>
           </ControlledEnvironment>
@@ -14132,6 +14090,7 @@ namespace Models
             <VP>2</VP>
             <Wind>0</Wind>
             <CO2>350</CO2>
+            <AirPressure>1010</AirPressure>
             <Latitude>-2</Latitude>
             <DayLength>16.5</DayLength>
           </ControlledEnvironment>
@@ -14157,6 +14116,7 @@ namespace Models
           <VP>2</VP>
           <Wind>0</Wind>
           <CO2>350</CO2>
+          <AirPressure>1010</AirPressure>
           <Latitude>-2</Latitude>
           <DayLength>9</DayLength>
         </ControlledEnvironment>
@@ -14175,17 +14135,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>

@@ -30,7 +30,7 @@ namespace Models.Report
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
-    public class ReportColumn
+    public class ReportColumn : IReportColumn
     {
         /// <summary>
         /// The from field converted to a date.
@@ -70,12 +70,12 @@ namespace Models.Report
         /// <summary>
         /// The column heading.
         /// </summary>
-        private string heading;
+        private string heading { get; set; }
 
         /// <summary>
         /// The values for each report event (e.g. daily)
         /// </summary>
-        protected List<object> values = new List<object>();
+        private List<object> values = new List<object>();
 
         /// <summary>
         /// The values for each report event (e.g. daily)
@@ -167,7 +167,7 @@ namespace Models.Report
         /// <param name="columnName">The column name to write to the output</param>
         /// <param name="frequenciesFromReport">Reporting frequencies</param>
         /// <param name="parentModel">The parent model</param>
-        protected ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
+        private ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
         {
             this.variableName = variableName;
             this.heading = columnName;
@@ -493,8 +493,9 @@ namespace Models.Report
         /// <summary>
         /// Add the required columns to the specified data table.
         /// </summary>
-        /// <param name="table">The data table to add columns to</param>
-        public void AddColumnsToTable(DataTable table)
+        /// <param name="columnNames">The column names list to add to</param>
+        /// <param name="columnTypes">The column types list to add to</param>
+        public void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes)
         {
             object firstValue = this.FirstNonBlankValue();
             this.valueType = null;
@@ -504,30 +505,38 @@ namespace Models.Report
                 if (this.valueType.IsArray)
                     this.maximumNumberArrayElements = this.GetMaximumNumberArrayElements();
             }
-            List<FlattenedValue> flattenedValues = this.FlattenValue(firstValue, this.heading, this.valueType);
+            List<FlattenedValue> flattenedValues = FlattenValue(firstValue, this.heading, this.valueType);
 
             foreach (FlattenedValue column in flattenedValues)
-                table.Columns.Add(column.Name, column.Type);
+            {
+                if (!columnNames.Contains(column.Name))
+                {
+                    columnNames.Add(column.Name);
+                    columnTypes.Add(column.Type);
+                }
+            }
         }
 
+        /// <summary>Return the number of rows.</summary>
+        public int NumRows {  get { return values.Count; } }
+
         /// <summary>
-        /// Add the required number of rows to the table.
+        /// Insert values into the dataValues array for the specified row.
         /// </summary>
-        /// <param name="table">The data table to add rows to</param>
-        public void AddRowsToTable(DataTable table)
+        /// <param name="rowIndex">The index of the row to return values for.</param>
+        /// <param name="names">The names of each value to provide a value for.</param>
+        /// <param name="dataValues">The values for the specified row.</param>
+        public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
-            // Ensure there are enough data rows in the table.
-            while (table.Rows.Count < this.values.Count)
-                table.Rows.Add(table.NewRow());
-
-            for (int rowIndex = 0; rowIndex < this.values.Count; rowIndex++)
+            if (rowIndex < values.Count)
             {
-                List<FlattenedValue> flattenedValues = this.FlattenValue(this.values[rowIndex], this.heading, this.valueType);
+                List<FlattenedValue> flattenedValues = FlattenValue(this.values[rowIndex], this.heading, this.valueType);
 
-                foreach (FlattenedValue column in flattenedValues)
+                for (int valueIndex = 0; valueIndex < names.Count; valueIndex++)
                 {
-                    if (column.Value != null)
-                        table.Rows[rowIndex][column.Name] = column.Value;
+                    FlattenedValue column = flattenedValues.Find(value => value.Name == names[valueIndex]);
+                    if (column != null)
+                        dataValues[valueIndex] = column.Value;
                 }
             }
         }
@@ -545,7 +554,7 @@ namespace Models.Report
         }
 
         /// <summary>
-        /// 'Flatten' then object passed in, into a list of columns ready to be added
+        /// 'Flatten' the object passed in, into a list of columns ready to be added
         /// to a data table.
         /// </summary>
         /// <param name="value">The object to be analyzed and flattened</param>
@@ -585,7 +594,7 @@ namespace Models.Report
                         Array innerArray = arrayElement as Array;
                         if (innerArray != null)
                             this.maximumNumberJaggedElements = innerArray.Length;
-                        flattenedValues.AddRange(this.FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
+                        flattenedValues.AddRange(FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
                     }
                 }
             }
@@ -601,7 +610,7 @@ namespace Models.Report
                 {
                     string heading = name + "." + property.Name;
                     object classElement = property.GetValue(value, null);
-                    flattenedValues.AddRange(this.FlattenValue(classElement, heading, classElement.GetType().GetElementType()));
+                    flattenedValues.AddRange(FlattenValue(classElement, heading, classElement.GetType().GetElementType()));
                 }
             }
 
@@ -626,7 +635,7 @@ namespace Models.Report
         /// <summary>
         /// A structure to hold a name, type and value. Used in the flattening process.
         /// </summary>
-        private struct FlattenedValue
+        private class FlattenedValue
         {
             /// <summary>
             /// The name of a column

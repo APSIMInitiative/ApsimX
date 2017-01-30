@@ -45,6 +45,10 @@ namespace UserInterface.Forms
         [Widget]
         private Button button2 = null;
         [Widget]
+        private Table table1 = null;
+        [Widget]
+        private Table table2 = null;
+        [Widget]
         private Entry firstNameBox = null;
         [Widget]
         private Entry lastNameBox = null;
@@ -72,6 +76,16 @@ namespace UserInterface.Forms
         private CheckButton checkbutton1 = null;
         [Widget]
         private TreeView listview1 = null;
+        [Widget]
+        private Alignment alignment3 = null;
+        [Widget]
+        private Alignment alignment4 = null;
+        [Widget]
+        private Alignment alignment5 = null;
+        [Widget]
+        private Alignment alignment6 = null;
+        [Widget]
+        private Alignment alignment7 = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private Views.HTMLView HTMLview;
 
@@ -96,6 +110,11 @@ namespace UserInterface.Forms
             listview1.AppendColumn(column1);
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
+
+            // Make the tab order a little more sensible than the defaults
+            table1.FocusChain = new Widget[] { alignment7, button1, button2 };
+            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
+                          alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
 
             HTMLview = new HTMLView(new ViewBase(null));
             HTMLalign.Add(HTMLview.MainWidget);
@@ -242,12 +261,27 @@ namespace UserInterface.Forms
                         WebClient web = new WebClient();
 
                         string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
+
+                        string sourceURL;
+                        if (ProcessUtilities.CurrentOS.IsMac)
+                        {
+                            sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
+                            tempSetupFileName = Path.ChangeExtension(tempSetupFileName, "dmg");
+                        }
+                        else if (ProcessUtilities.CurrentOS.IsUnix)
+                        {
+                            sourceURL = System.IO.Path.ChangeExtension(upgrade.ReleaseURL, "deb");
+                            tempSetupFileName = System.IO.Path.ChangeExtension(tempSetupFileName, "deb");
+                        }
+                        else
+                            sourceURL = upgrade.ReleaseURL;
+
                         if (File.Exists(tempSetupFileName))
                             File.Delete(tempSetupFileName);
 
                         try
                         {
-                            web.DownloadFile(upgrade.ReleaseURL, tempSetupFileName);
+                            web.DownloadFile(sourceURL, tempSetupFileName);
                         }
                         catch (Exception err)
                         {
@@ -282,8 +316,16 @@ namespace UserInterface.Forms
                                                StringUtilities.DQuote(newDirectory);
 
                             ProcessStartInfo info = new ProcessStartInfo();
-                            info.FileName = upgraderFileName;
-                            info.Arguments = arguments;
+                            if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                info.FileName = "mono";
+                                info.Arguments = upgraderFileName + " " + arguments;
+                            }
+                            else
+                            {
+                                info.FileName = upgraderFileName;
+                                info.Arguments = arguments;
+                            }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
 

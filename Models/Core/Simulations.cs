@@ -305,6 +305,9 @@ namespace Models.Core
                 // Now use the path to get the model we want to document.
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
 
+                if (modelToDocument == null)
+                    throw new Exception("Cannot find model to document: " + modelNameToDocument);
+
                 // resolve all links in cloned simulation.
                 Links links = new Core.Links();
                 links.Resolve(clonedSimulation);

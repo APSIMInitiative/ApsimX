@@ -2156,6 +2156,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2898,7 +2903,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Wheat\lincoln.met</FileName>
+        <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Zone>
@@ -2911,6 +2916,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -2919,7 +2925,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -3026,17 +3031,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.29366217672824863</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -3877,7 +3877,7 @@ namespace Models
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Wheat\lincoln.met</FileName>
+        <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Zone>
@@ -4011,17 +4011,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.29366217672824863</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>
@@ -4946,7 +4941,7 @@ namespace Models
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Wheat\lincoln.met</FileName>
+        <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Zone>
@@ -4959,6 +4954,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -4967,7 +4963,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5074,17 +5069,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.3</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.29366217672824863</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Plant>

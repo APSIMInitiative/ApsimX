@@ -7,44 +7,52 @@ namespace Models.Report
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using PMF.Functions;
 
     /// <summary>A class for outputting a constant value in a report column.</summary>
     [Serializable]
-    public class ReportColumnConstantValue : ReportColumn
+    public class ReportColumnConstantValue : IReportColumn
     {
+        /// <summary>The column name for the constant</summary>
+        private string name;
+
         /// <summary>The constant value</summary>
-        private object constantValue;
+        private object value;
 
         /// <summary>
         /// Constructor for a plain report variable.
         /// </summary>
-        /// <param name="variableName">The name of the APSIM variable to retrieve</param>
         /// <param name="columnName">The column name to write to the output</param>
-        /// <param name="frequenciesFromReport">Reporting frequencies</param>
-        /// <param name="parentModel">The parent model</param>
-        /// <param name="value">The constant value</param>
-        public ReportColumnConstantValue(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel, object value)
-            : base(variableName, columnName, frequenciesFromReport, parentModel)
+        /// <param name="constantValue">The constant value</param>
+        public ReportColumnConstantValue(string columnName, object constantValue)
         {
-            constantValue = value;
+            name = columnName;
+            this.value = constantValue;
         }
 
+        /// <summary>Return the number of values</summary>
+        public int NumRows { get { return 1; } }
+
+        /// <summary>Return the names and type of columns</summary>
+        public void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes)
+        {
+            if (!columnNames.Contains(name))
+            {
+                columnNames.Add(name);
+                columnTypes.Add(value.GetType());
+            }
+        }
 
         /// <summary>
-        /// Retrieve the current value and store it in our array of values.
+        /// Insert values into the dataValues array for the specified row.
         /// </summary>
-        public override void StoreValue()
+        /// <param name="rowIndex">The index of the row to return values for.</param>
+        /// <param name="names">The names of each value to provide a value for.</param>
+        /// <param name="dataValues">The values for the specified row.</param>
+        public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
-            values.Add(constantValue);
+            int valueIndex = names.IndexOf(name);
+            if (valueIndex != -1)
+                dataValues[valueIndex] = value;
         }
-
     }
 }

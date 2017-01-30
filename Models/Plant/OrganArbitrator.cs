@@ -714,8 +714,7 @@ namespace Models.PMF
             // Calculate the total water supply across all zones.
             double waterSupply = 0;
             foreach (ZoneWaterAndN Z in zones)
-                if (Plant.Root.HaveRootsInZone(Z.Name))
-                    waterSupply += MathUtilities.Sum(Z.Water);
+               waterSupply += MathUtilities.Sum(Z.Water);
             
             // Calculate total plant water demand.
             waterDemand = 0.0;
@@ -739,7 +738,7 @@ namespace Models.PMF
                     if (demand > 0)
                     {
                         double allocation = fraction * demand;
-                        (o as IHasWaterDemand).SetWaterAllocation(allocation);
+                        (o as IHasWaterDemand).WaterAllocation = allocation;
                         waterUptake += allocation;
                     }
                 }
@@ -757,12 +756,13 @@ namespace Models.PMF
         {
             if (Plant.IsAlive)
             {
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
                     if (Plant.Phenology != null)
                     {
-                        if (Plant.Phenology.Emerged == true)
+                        if (Plant.Phenology.Emerged)
                         {
                             DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
@@ -789,13 +789,10 @@ namespace Models.PMF
 
                     UptakeDemands.Name = zone.Name;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
-                    List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                     zones.Add(UptakeDemands);
-                    return zones;
                 }
+                return zones;
             }
-
             return null;
         }
         
@@ -811,17 +808,14 @@ namespace Models.PMF
                 double[] nh4Supply = null;
                 foreach (ZoneWaterAndN Z in zones)
                 {
-                    if (Plant.Root.HaveRootsInZone(Z.Name))
-                    {
-                        if (no3Supply == null)
-                            no3Supply = Z.NO3N;
-                        else
-                            no3Supply = MathUtilities.Add(no3Supply, Z.NO3N);
-                        if (nh4Supply == null)
-                            nh4Supply = Z.NH4N;
-                        else
-                            nh4Supply = MathUtilities.Add(nh4Supply, Z.NH4N);
-                    }
+                    if (no3Supply == null)
+                        no3Supply = Z.NO3N;
+                    else
+                        no3Supply = MathUtilities.Add(no3Supply, Z.NO3N);
+                    if (nh4Supply == null)
+                        nh4Supply = Z.NH4N;
+                    else
+                        nh4Supply = MathUtilities.Add(nh4Supply, Z.NH4N);
                 }
 
                 if (no3Supply != null && nh4Supply != null)
@@ -1667,14 +1661,7 @@ namespace Models.PMF
 
         #endregion
 
-        /// <summary>Ors the specified p.</summary>
-        /// <param name="p">if set to <c>true</c> [p].</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void Or(bool p)
-        {
-            throw new NotImplementedException();
-        }
-
+ 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

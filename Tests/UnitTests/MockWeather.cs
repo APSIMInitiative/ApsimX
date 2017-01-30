@@ -14,6 +14,8 @@ namespace UnitTests
 
         public double CO2 { get; set; }
 
+        public double AirPressure { get; set; }
+
         public DateTime EndDate { get; set; }
 
         public double Latitude { get; set; }

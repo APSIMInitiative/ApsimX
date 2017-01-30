@@ -398,26 +398,29 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Create documentation")]
         public void CreateDocumentation(object sender, EventArgs e)
         {
-            string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-            if (destinationFolder != null)
+            if (this.explorerPresenter.Save())
             {
-                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
+                if (destinationFolder != null)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                try
-                {
-                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                    this.explorerPresenter.CommandHistory.Add(command, true);
-                    explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
-                    Process.Start(command.FileNameWritten);
-                }
-                catch (Exception err)
-                {
-                    explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
-                }
-                finally
-                {
-                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    try
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                        Process.Start(command.FileNameWritten);
+                    }
+                    catch (Exception err)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    }
+                    finally
+                    {
+                        explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    }
                 }
             }
         }

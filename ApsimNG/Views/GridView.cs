@@ -312,8 +312,11 @@ namespace UserInterface.Views
             {
                 Label label = GetColumnHeaderLabel(i);
                 label.Justify = Justification.Center;
+                label.Style.FontDescription.Weight = Pango.Weight.Bold;
+
                 label = GetColumnHeaderLabel(i, fixedcolview);
                 label.Justify = Justification.Center;
+                label.Style.FontDescription.Weight = Pango.Weight.Bold;
             }
 
             int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
@@ -365,37 +368,47 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
-                else if (dataType == typeof(Boolean))
+                if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
                 {
-                    CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
-                    if (toggleRend != null)
+                    if (dataType == typeof(Boolean))
                     {
-                        toggleRend.Active = (Boolean)dataVal;
-                        toggleRend.Activatable = true;
-                        cell.Visible = false;
-                        toggleRend.Visible = true;
-                        return;
-                    }
-
-                }
-                else
-                {   // This assumes that combobox grid cells are based on the "string" type
-                    ListStore store; 
-                    if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
-                    {
-                        CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
-                        if (comboRend != null)
+                        CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                        if (toggleRend != null)
                         {
-                            comboRend.Model = store;
-                            comboRend.TextColumn = 0;
-                            comboRend.Editable = true;
-                            comboRend.HasEntry = false;
+                            toggleRend.Active = (Boolean)dataVal;
+                            toggleRend.Activatable = true;
                             cell.Visible = false;
-                            comboRend.Visible = true;
-                            comboRend.Text = dataVal.ToString();
+                            col.CellRenderers[2].Visible = false;
+                            toggleRend.Visible = true;
                             return;
                         }
                     }
+                    else
+                    {   // This assumes that combobox grid cells are based on the "string" type
+                        ListStore store;
+                        if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
+                        {
+                            CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                            if (comboRend != null)
+                            {
+                                comboRend.Model = store;
+                                comboRend.TextColumn = 0;
+                                comboRend.Editable = true;
+                                comboRend.HasEntry = false;
+                                cell.Visible = false;
+                                col.CellRenderers[1].Visible = false;
+                                comboRend.Visible = true;
+                                comboRend.Text = dataVal.ToString();
+                                return;
+                            }
+                        }
+                        text = dataVal.ToString();
+                    }
+                    col.CellRenderers[1].Visible = false;
+                    col.CellRenderers[2].Visible = false;
+                }
+                else
+                {
                     text = dataVal.ToString();
                 }
             }
@@ -839,6 +852,13 @@ namespace UserInterface.Views
                             (e.Editable as Entry).Text = render.Text;
                             (e.Editable as Entry).Destroy();
                             this.userEditingCell = false;
+                            if (this.CellsChanged != null)
+                            {
+                                GridCellsChangedArgs args = new GridCellsChangedArgs();
+                                args.ChangedCells = new List<IGridCell>();
+                                args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                                this.CellsChanged(this, args);
+                            }
                         }
                     }
                 }
