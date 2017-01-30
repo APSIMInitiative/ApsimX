@@ -1661,14 +1661,7 @@ namespace Models.PMF
 
         #endregion
 
-        /// <summary>Ors the specified p.</summary>
-        /// <param name="p">if set to <c>true</c> [p].</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void Or(bool p)
-        {
-            throw new NotImplementedException();
-        }
-
+ 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
