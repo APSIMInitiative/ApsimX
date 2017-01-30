@@ -244,6 +244,160 @@
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
       </Structure>
+      <GenericOrgan>
+        <Name>Stem</Name>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>0.95</Value>
+          </Constant>
+          <Value>0.95</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.02</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.006</Value>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Germination</Start>
+          <End>Maturity</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0.8</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0.95</Value>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <Value>0.8</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFractionEh</Name>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.4</Value>
+              </Constant>
+              <Start>Emerged</Start>
+              <End>Vegetative</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Vege</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>Vegetative</Start>
+              <End>EarlyReproductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>EarlyFlowering</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.2</Value>
+              </Constant>
+              <Start>EarlyReproductive</Start>
+              <End>Reproductive</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Repro</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.1</Value>
+              </Constant>
+              <Start>Reproductive</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>0.85</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <BiomassRemoval>
+          <Name>BiomassRemovalDefaults</Name>
+          <OrganBiomassRemovalType>
+            <Name>Harvest</Name>
+            <FractionLiveToRemove>0.5</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.1</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Cut</Name>
+            <FractionLiveToRemove>0.8</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Prune</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.6</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Graze</Name>
+            <FractionLiveToRemove>0.6</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.2</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+          <OrganBiomassRemovalType>
+            <Name>Thin</Name>
+            <FractionLiveToRemove>0</FractionLiveToRemove>
+            <FractionDeadToRemove>0</FractionDeadToRemove>
+            <FractionLiveToResidue>0.05</FractionLiveToResidue>
+            <FractionDeadToResidue>0</FractionDeadToResidue>
+          </OrganBiomassRemovalType>
+        </BiomassRemoval>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+          <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Value>0</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <Value>1</Value>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>InitialWtFunction</Name>
+          <Value>0.01</Value>
+          <Units>g/m^2</Units>
+        </Constant>
+      </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
         <LeafCohort>
@@ -457,7 +611,7 @@
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.02</Value>
+            <Value>0.01</Value>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -628,152 +782,6 @@
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
       </Leaf>
-      <GenericOrgan>
-        <Name>Stem</Name>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.02</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Germination</Start>
-          <End>Maturity</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>NReallocationFactor</Name>
-          <Value>0.8</Value>
-        </Constant>
-        <Constant>
-          <Name>NRetranslocationFactor</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>DMRetranslocationFactor</Name>
-          <Value>0.95</Value>
-        </Constant>
-        <Constant>
-          <Name>DMReallocationFactor</Name>
-          <Value>0.8</Value>
-        </Constant>
-        <PartitionFractionDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>Early</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.4</Value>
-              </Constant>
-              <Start>Emerged</Start>
-              <End>Vegetative</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Vege</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.6</Value>
-              </Constant>
-              <Start>Vegetative</Start>
-              <End>EarlyReproductive</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>EarlyFlowering</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.2</Value>
-              </Constant>
-              <Start>EarlyReproductive</Start>
-              <End>Reproductive</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Repro</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.1</Value>
-              </Constant>
-              <Start>Reproductive</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
-        </PartitionFractionDemandFunction>
-        <Biomass>
-          <Name>Live</Name>
-        </Biomass>
-        <Biomass>
-          <Name>Dead</Name>
-        </Biomass>
-        <BiomassRemoval>
-          <Name>BiomassRemovalDefaults</Name>
-          <OrganBiomassRemovalType>
-            <Name>Harvest</Name>
-            <FractionLiveToRemove>0.5</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.1</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Cut</Name>
-            <FractionLiveToRemove>0.8</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Prune</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.6</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Graze</Name>
-            <FractionLiveToRemove>0.6</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.2</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-          <OrganBiomassRemovalType>
-            <Name>Thin</Name>
-            <FractionLiveToRemove>0</FractionLiveToRemove>
-            <FractionDeadToRemove>0</FractionDeadToRemove>
-            <FractionLiveToResidue>0.05</FractionLiveToResidue>
-            <FractionDeadToResidue>0</FractionDeadToResidue>
-          </OrganBiomassRemovalType>
-        </BiomassRemoval>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
-          <Units>/d</Units>
-        </Constant>
-        <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
-          <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
-          <Units>0-1</Units>
-        </Constant>
-        <Constant>
-          <Name>InitialWtFunction</Name>
-          <Value>0</Value>
-          <Units>g/m^2</Units>
-        </Constant>
-      </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <Constant>
@@ -1019,7 +1027,7 @@
     <Clock>
       <Name>clock</Name>
       <StartDate>2013-12-19T00:00:00</StartDate>
-      <EndDate>2014-06-01T00:00:00</EndDate>
+      <EndDate>2014-04-01T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -1435,7 +1443,7 @@
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Report>
-        <Name>Report</Name>
+        <Name>TestReport</Name>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -1446,8 +1454,8 @@
           <string>[Weather].Rain</string>
           <string>[Fathen].Leaf.CoverGreen</string>
           <string>[Fathen].Leaf.LAI</string>
-          <string>[Fathen].Leaf.Total.Wt</string>
-          <string>[Fathen].Stem.Wt</string>
+          <string>[Fathen].Leaf.Live.Wt</string>
+          <string>[Fathen].Stem.Live.Wt</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -1469,6 +1477,171 @@
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
+    <Graph>
+      <Name>Leaf</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>TestReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Cross</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FathenTestObs</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Stem.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Stem</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>TestReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Stem.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Cross</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FathenTestObs</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Stem.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>LAI</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>TestReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Leaf.LAI</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
@@ -1477,6 +1650,13 @@
       <FileName>Observations\FathenObs.xlsx</FileName>
       <SheetNames>
         <string>obs</string>
+      </SheetNames>
+    </ExcelInput>
+    <ExcelInput>
+      <Name>ExcelInput1</Name>
+      <FileName>Observations\FathenObs.xlsx</FileName>
+      <SheetNames>
+        <string>FathenTestObs</string>
       </SheetNames>
     </ExcelInput>
     <AutoExport>false</AutoExport>
@@ -2058,7 +2238,7 @@
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
@@ -2079,7 +2259,69 @@
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16736653</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>Cross</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Obs</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Graph1</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Fathen.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16736653</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>Cross</Marker>
