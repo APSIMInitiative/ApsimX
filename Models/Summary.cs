@@ -237,10 +237,9 @@ namespace Models
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            //DataStore dataStore = new DataStore(this);
-           // dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
-           // dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
-           // dataStore.Disconnect();
+            DataStore dataStore = new DataStore(this);
+            dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
+            dataStore.Disconnect();
         }
 
         /// <summary>
@@ -865,10 +864,9 @@ namespace Models
             }
 
             // Write to data store.
-            //DataStore dataStore = new DataStore(Simulation);
-            //dataStore.DeleteOldContentInTable(Simulation.Name, "InitialConditions");
-            //dataStore.WriteTable(Simulation.Name, "InitialConditions", table);
-            //dataStore.Disconnect();
+            DataStore dataStore = new DataStore(Simulation);
+            dataStore.WriteTable(Simulation.Name, "InitialConditions", table);
+            dataStore.Disconnect();
         }
     }
 }
