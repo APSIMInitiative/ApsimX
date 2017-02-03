@@ -758,39 +758,17 @@ namespace Models.PMF
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            if (Plant.IsAlive)
+            if (Plant.IsEmerged)
             {
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged)
-                        {
-                            DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
+                    DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
-                            //Pack results into uptake structure
-                            UptakeDemands.NO3N = PotentialNO3NUptake;
-                            UptakeDemands.NH4N = PotentialNH4NUptake;
-                        }
-                        else //Uptakes are zero
-                        {
-                            UptakeDemands.NO3N = new double[zone.NO3N.Length];
-                            for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                            UptakeDemands.NH4N = new double[zone.NH4N.Length];
-                            for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
-                        }
-                    }
-                    else
-                    {
-                        DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
-
-                        //Pack results into uptake structure
-                        UptakeDemands.NO3N = PotentialNO3NUptake;
-                        UptakeDemands.NH4N = PotentialNH4NUptake;
-                    }
-
+                    //Pack results into uptake structure
+                    UptakeDemands.NO3N = PotentialNO3NUptake;
+                    UptakeDemands.NH4N = PotentialNH4NUptake;
                     UptakeDemands.Name = zone.Name;
                     UptakeDemands.Area = zone.Area;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
