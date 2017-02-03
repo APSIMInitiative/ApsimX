@@ -245,6 +245,8 @@ namespace Models.PMF.Organs
                 Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
                 if (zone != null)
                 {
+                    if (zone.Area <= 0)
+                        throw new Exception("Root zones must have an area greater than zero. See Zone:" + zone.Name);
                     Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);

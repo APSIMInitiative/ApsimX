@@ -268,7 +268,7 @@ namespace Models.PMF
 
             // Test that the plant zone has a non-zero area
             if (Zone.Area <= 0)
-                throw new Exception("Plant zone area must be greater than zero.");
+                throw new Exception("The Area of the Plant zone must be greater than zero. See Zone: "+Zone.Name);
         }
 
         /// <summary>Called when [phase changed].</summary>
