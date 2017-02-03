@@ -1276,8 +1276,7 @@ namespace Models.AgPasture
             if (myWaterUptakeSource == "sward")
             {
                 // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                myZone.Name = this.Parent.Name;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
                 myZone.Water = mySoil.Water;
                 myZone.NO3N = mySoil.NO3N;
                 myZone.NH4N = mySoil.NH4N;
@@ -1390,8 +1389,7 @@ namespace Models.AgPasture
             if (myNUptakeSource.ToLower() == "sward")
             {
                 // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                myZone.Name = this.Parent.Name;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
                 myZone.Water = mySoil.Water;
                 myZone.NO3N = mySoil.NO3N;
                 myZone.NH4N = mySoil.NH4N;

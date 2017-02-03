@@ -656,8 +656,7 @@ namespace Models.PMF
                 double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
                 List<double[]> supplies = new List<double[]>();
-                List<string> zoneNames = new List<string>();
-                List<double> zoneAreas = new List<double>();
+                List<Zone> zones = new List<Zone>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     foreach (IOrgan o in Organs)
@@ -668,9 +667,8 @@ namespace Models.PMF
                             if (organSupply != null)
                             {
                                 supplies.Add(organSupply);
-                                zoneNames.Add(zone.Name);
-                                zoneAreas.Add(zone.Area);
-                                waterSupply += MathUtilities.Sum(organSupply)*zone.Area;
+                                zones.Add(zone.Zone);
+                                waterSupply += MathUtilities.Sum(organSupply)*zone.Zone.Area;
                             }
                         }
                     }
@@ -691,20 +689,18 @@ namespace Models.PMF
 
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
                 for (int i = 0; i < supplies.Count; i++)
                 {
                     // Just send uptake from my zone
-                    ZoneWaterAndN uptake = new ZoneWaterAndN();
-                    uptake.Name = zoneNames[i];
-                    uptake.Area = zoneAreas[i];
+                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
-                    zones.Add(uptake);
+                    ZWNs.Add(uptake);
                 }
 
-                return zones;
+                return ZWNs;
             }
             else
                 return null;
@@ -718,7 +714,7 @@ namespace Models.PMF
             // Calculate the total water supply across all zones.
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
-               waterSupply += MathUtilities.Sum(Z.Water) * Z.Area;
+               waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             
             // Calculate total plant water demand.
             waterDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -750,7 +746,7 @@ namespace Models.PMF
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN Z in zones)
-                Plant.Root.DoWaterUptake(Z.Water, Z.Name);
+                Plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
         }
 
         /// <summary>
@@ -763,14 +759,12 @@ namespace Models.PMF
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
+                    ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
                     DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
                     //Pack results into uptake structure
                     UptakeDemands.NO3N = PotentialNO3NUptake;
                     UptakeDemands.NH4N = PotentialNH4NUptake;
-                    UptakeDemands.Name = zone.Name;
-                    UptakeDemands.Area = zone.Area;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
                     zones.Add(UptakeDemands);
                 }
