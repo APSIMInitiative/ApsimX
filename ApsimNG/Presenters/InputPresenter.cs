@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FullFileName", e.FileNames[0]));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FullFileName", e.FileName));
             }
             catch (Exception err)
             {
