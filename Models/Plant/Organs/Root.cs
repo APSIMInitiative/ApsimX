@@ -278,13 +278,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Return true if the specified zone is known to ROOT</summary>
-        /// <param name="zoneName">The zone name to look for</param>
-        public bool HaveRootsInZone(string zoneName)
-        {
-            return Zones.Find(z => z.Name == zoneName) != null;
-        }
-
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
