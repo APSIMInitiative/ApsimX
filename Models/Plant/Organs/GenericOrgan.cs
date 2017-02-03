@@ -134,32 +134,45 @@ namespace Models.PMF.Organs
         public IFunction DMConversionEfficiency = null;
         #endregion
 
-        #region States
+        #region State, supply, demand, and allocation
 
-        /// <summary>The start n retranslocation supply</summary>
-        private double StartNRetranslocationSupply = 0;
-        /// <summary>The start n reallocation supply</summary>
-        private double StartNReallocationSupply = 0;
-        /// <summary>The potential dm allocation</summary>
-        protected double PotentialDMAllocation = 0;
-        /// <summary>The potential structural dm allocation</summary>
-        protected double PotentialStructuralDMAllocation = 0;
-        /// <summary>The potential metabolic dm allocation</summary>
-        protected double PotentialMetabolicDMAllocation = 0;
-        /// <summary>The structural dm demand</summary>
-        protected double StructuralDMDemand = 0;
-        /// <summary>The non structural dm demand</summary>
-        protected double NonStructuralDMDemand = 0;
-        /// <summary>The start live</summary>
+        /// <summary>The live biomass at start of the computation round</summary>
         private Biomass StartLive = null;
+
+        /// <summary>The DM supply for retranslocation</summary>
+        protected double DMRetranslocationSupply = 0.0;
+
+        /// <summary>The DM supply for reallocation</summary>
+        protected double DMReallocationSupply = 0.0;
+
+        /// <summary>The N supply for retranslocation</summary>
+        private double NRetranslocationSupply = 0.0;
+
+        /// <summary>The N supply for reallocation</summary>
+        private double NReallocationSupply = 0.0;
+
+        /// <summary>The structural DM demand</summary>
+        protected double StructuralDMDemand = 0.0;
+
+        /// <summary>The non structural DM demand</summary>
+        protected double NonStructuralDMDemand = 0.0;
+
+        /// <summary>The potential DM allocation</summary>
+        protected double PotentialDMAllocation = 0.0;
+
+        /// <summary>The potential structural DM allocation</summary>
+        protected double PotentialStructuralDMAllocation = 0.0;
+
+        /// <summary>The potential metabolic DM allocation</summary>
+        protected double PotentialMetabolicDMAllocation = 0.0;
 
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
             Live.Clear();
             Dead.Clear();
-            StartNRetranslocationSupply = 0.0;
-            StartNReallocationSupply = 0.0;
+            NRetranslocationSupply = 0.0;
+            NReallocationSupply = 0.0;
             PotentialDMAllocation = 0.0;
             PotentialStructuralDMAllocation = 0.0;
             PotentialMetabolicDMAllocation = 0.0;
@@ -171,7 +184,7 @@ namespace Models.PMF.Organs
             Removed.Clear();
         }
 
-        /// <summary>Does the zeroing of some variables.</summary>
+        /// <summary>Zeroing some variables.</summary>
         virtual protected void DoDailyCleanup()
         {
             Allocated.Clear();
@@ -259,7 +272,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the dm supply.</summary>
+        /// <summary>Gets or sets the DM supply.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType DMSupply
         {
@@ -268,21 +281,22 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = 0.0,
-                    Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = AvailableDMReallocation()
+                    Retranslocation = DMRetranslocationSupply,
+                    Reallocation = DMReallocationSupply
                 };
             }
             set { }
         }
 
-        /// <summary>Gets the amount of DM available for retranslocation</summary>
+        /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = StartLive.NonStructuralWt * (1.0 - SenescenceRate.Value) * DMRetranslocationFactor.Value; //FIXME: this should discount senesced
+                double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value;
                 if (availableDM < -BiomassTolleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
+
                 return availableDM;
             }
             else
@@ -291,7 +305,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the amount of DM available for reallocation</summary>
+        /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
             if (DMReallocationFactor != null)
@@ -299,6 +313,7 @@ namespace Models.PMF.Organs
                 double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
                 if (availableDM < -BiomassTolleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
+
                 return availableDM;
             }
             else
@@ -333,23 +348,25 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType()
                 {
                     Fixation = 0.0,
-                    Retranslocation = AvailableNRetranslocation(),
-                    Reallocation = AvailableNReallocation(),
-                    Uptake = 0.0
+                    Uptake = 0.0,
+                    Retranslocation = NRetranslocationSupply,
+                    Reallocation = NReallocationSupply
                 };
             }
             set { }
         }
 
-        /// <summary>Gets the N amount available for retranslocation</summary>
+        /// <summary>Computes the N amount available for retranslocation.</summary>
+        /// <remarks>This is limited, so N concentration does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
             {
                 double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                double availableN = Math.Max(0.0, labileN - StartNReallocationSupply) * NRetranslocationFactor.Value;
+                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value;
                 if (availableN < -BiomassTolleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
+
                 return availableN;
             }
             else
@@ -358,7 +375,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the N amount available for reallocation</summary>
+        /// <summary>Computes the N amount available for reallocation.</summary>
         public double AvailableNReallocation()
         {
             double availableN = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
@@ -422,7 +439,7 @@ namespace Models.PMF.Organs
                 Allocated.MetabolicN += value.Metabolic;
 
                 // Retranslocation
-                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
+                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - NRetranslocationSupply))
                     throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
                 Live.NonStructuralN -= value.Retranslocation;
                 Allocated.NonStructuralN -= value.Retranslocation;
@@ -518,9 +535,14 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                // save current state
                 StartLive = Live;
-                StartNReallocationSupply = NSupply.Reallocation;
-                StartNRetranslocationSupply = NSupply.Retranslocation;
+
+                // get DM and N amounts that can be used for new growth
+                DMRetranslocationSupply = AvailableDMRetranslocation();
+                DMReallocationSupply = AvailableDMReallocation();
+                NRetranslocationSupply = AvailableNRetranslocation();
+                NReallocationSupply = AvailableNReallocation();
             }
         }
 

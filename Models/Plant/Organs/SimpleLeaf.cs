@@ -264,7 +264,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the dm supply.</summary>
+        /// <summary>Gets or sets the DM supply.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -272,8 +272,8 @@ namespace Models.PMF.Organs
                 return new BiomassSupplyType
                 {
                     Fixation = Photosynthesis.Value,
-                    Retranslocation = AvailableDMRetranslocation(),
-                    Reallocation = AvailableDMReallocation()
+                    Retranslocation = DMRetranslocationSupply,
+                    Reallocation = DMReallocationSupply
                 };
             }
         }
