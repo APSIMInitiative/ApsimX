@@ -653,9 +653,11 @@ namespace Models.PMF
             if (Plant.IsAlive)
             {
                 // Get all water supplies.
-                double waterSupply = 0;
+                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+
                 List<double[]> supplies = new List<double[]>();
                 List<string> zoneNames = new List<string>();
+                List<double> zoneAreas = new List<double>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     foreach (IOrgan o in Organs)
@@ -667,18 +669,19 @@ namespace Models.PMF
                             {
                                 supplies.Add(organSupply);
                                 zoneNames.Add(zone.Name);
-                                waterSupply += MathUtilities.Sum(organSupply);
+                                zoneAreas.Add(zone.Area);
+                                waterSupply += MathUtilities.Sum(organSupply)*zone.Area;
                             }
                         }
                     }
                 }
 
                 // Calculate total water demand.
-                double waterDemand = 0;
+                double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
                 foreach (IArbitration o in Organs)
                 {
                     if (o is IHasWaterDemand)
-                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+                        waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
                 }
 
                 // Calculate demand / supply ratio.
@@ -694,6 +697,7 @@ namespace Models.PMF
                     // Just send uptake from my zone
                     ZoneWaterAndN uptake = new ZoneWaterAndN();
                     uptake.Name = zoneNames[i];
+                    uptake.Area = zoneAreas[i];
                     uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
@@ -712,16 +716,16 @@ namespace Models.PMF
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
             // Calculate the total water supply across all zones.
-            double waterSupply = 0;
+            double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
-               waterSupply += MathUtilities.Sum(Z.Water);
+               waterSupply += MathUtilities.Sum(Z.Water) * Z.Area;
             
             // Calculate total plant water demand.
-            waterDemand = 0.0;
+            waterDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
             {
                 if (o is IHasWaterDemand)
-                    waterDemand += (o as IHasWaterDemand).CalculateWaterDemand();
+                    waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
             }
 
             // Calculate the fraction of water demand that has been given to us.
@@ -788,6 +792,7 @@ namespace Models.PMF
                     }
 
                     UptakeDemands.Name = zone.Name;
+                    UptakeDemands.Area = zone.Area;
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
                     zones.Add(UptakeDemands);
                 }

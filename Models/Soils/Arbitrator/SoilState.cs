@@ -36,6 +36,7 @@ namespace Models.Soils.Arbitrator
                 {
                     ZoneWaterAndN NewZ = new ZoneWaterAndN();
                     NewZ.Name = Z.Name;
+                    NewZ.Area = Z.Area;
                     NewZ.Water = soil.Water;
                     NewZ.NO3N = soil.NO3N;
                     NewZ.NH4N = soil.NH4N;
@@ -58,6 +59,7 @@ namespace Models.Soils.Arbitrator
             {
                 ZoneWaterAndN NewZ = new ZoneWaterAndN();
                 NewZ.Name = Z.Name;
+                NewZ.Area = Z.Area;
                 NewZ.Water = Z.Water;
                 NewZ.NO3N = Z.NO3N;
                 NewZ.NH4N = Z.NH4N;

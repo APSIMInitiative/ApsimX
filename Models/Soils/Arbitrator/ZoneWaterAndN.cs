@@ -16,6 +16,9 @@ namespace Models.Soils.Arbitrator
         /// <summary>The zone</summary>
         public string Name;
 
+        /// <summary> Area of the Zone (ha)</summary>
+        public double Area;
+
         /// <summary>Amount of water (mm)</summary>
         public double[] Water;
 
@@ -39,6 +42,7 @@ namespace Models.Soils.Arbitrator
         {
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone.Name;
+            NewZ.Area = zone.Area;
             NewZ.Water = MathUtilities.Multiply_Value(zone.Water, value);
             NewZ.NO3N = MathUtilities.Multiply_Value(zone.NO3N, value);
             NewZ.NH4N = MathUtilities.Multiply_Value(zone.NH4N, value);
@@ -56,6 +60,7 @@ namespace Models.Soils.Arbitrator
                 throw new Exception("Cannot add zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone1.Name;
+            NewZ.Area = zone1.Area;
             NewZ.Water = MathUtilities.Add(zone1.Water, zone2.Water);
             NewZ.NO3N = MathUtilities.Add(zone1.NO3N, zone2.NO3N);
             NewZ.NH4N = MathUtilities.Add(zone1.NH4N, zone2.NH4N);
@@ -73,6 +78,7 @@ namespace Models.Soils.Arbitrator
                 throw new Exception("Cannot subtract zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone1.Name;
+            NewZ.Area = zone1.Area;
             NewZ.Water = MathUtilities.Subtract(zone1.Water, zone2.Water);
             NewZ.NO3N = MathUtilities.Subtract(zone1.NO3N, zone2.NO3N);
             NewZ.NH4N = MathUtilities.Subtract(zone1.NH4N, zone2.NH4N);
