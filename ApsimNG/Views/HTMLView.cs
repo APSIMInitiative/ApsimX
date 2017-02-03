@@ -175,7 +175,6 @@ namespace UserInterface.Views
 
     public class TWWebBrowserSafari : IBrowserWidget
     {
-        static bool appInited = false;
         const string LIBQUARTZ = "libgtk-quartz-2.0.dylib";
 
         [DllImport(LIBQUARTZ)]
@@ -219,11 +218,6 @@ namespace UserInterface.Views
 
         public void InitWebKit(Gtk.Box w)
         {
-            if (!appInited)
-            {
-                MonoMac.AppKit.NSApplication.Init();
-                appInited = true;
-            }
             wb = new MonoMac.WebKit.WebView(new System.Drawing.RectangleF(10, 10, 200, 200), "foo", "bar");
             scrollWindow.AddWithViewport(NSViewToGtkWidget(wb));
             w.PackStart(scrollWindow, true, true, 0);
