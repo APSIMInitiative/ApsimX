@@ -136,7 +136,7 @@ namespace Models.PMF.Organs
 
         #region State, supply, demand, and allocation
 
-        /// <summary>The live biomass at start of the computation round</summary>
+        /// <summary>The live biomass state at start of the computation round</summary>
         private Biomass StartLive = null;
 
         /// <summary>The DM supply for retranslocation</summary>
@@ -171,6 +171,8 @@ namespace Models.PMF.Organs
         {
             Live.Clear();
             Dead.Clear();
+            DMRetranslocationSupply = 0.0;
+            DMReallocationSupply = 0.0;
             NRetranslocationSupply = 0.0;
             NReallocationSupply = 0.0;
             PotentialDMAllocation = 0.0;
@@ -184,7 +186,7 @@ namespace Models.PMF.Organs
             Removed.Clear();
         }
 
-        /// <summary>Zeroing some variables.</summary>
+        /// <summary>Clears some variables.</summary>
         virtual protected void DoDailyCleanup()
         {
             Allocated.Clear();
@@ -221,7 +223,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double GrowthRespiration { get; set; }
 
-        private double BiomassTolleranceValue = 0.0000000001;   // 10E-10
+        private double BiomassToleranceValue = 0.0000000001;   // 10E-10
 
         #endregion
 
@@ -294,7 +296,7 @@ namespace Models.PMF.Organs
             if (DMRetranslocationFactor != null)
             {
                 double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value;
-                if (availableDM < -BiomassTolleranceValue)
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
                 return availableDM;
@@ -311,7 +313,7 @@ namespace Models.PMF.Organs
             if (DMReallocationFactor != null)
             {
                 double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
-                if (availableDM < -BiomassTolleranceValue)
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
 
                 return availableDM;
@@ -357,14 +359,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the N amount available for retranslocation.</summary>
-        /// <remarks>This is limited, so N concentration does not go below MinimumNConc</remarks>
+        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
             {
                 double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value;
-                if (availableN < -BiomassTolleranceValue)
+                if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
                 return availableN;
@@ -379,7 +381,7 @@ namespace Models.PMF.Organs
         public double AvailableNReallocation()
         {
             double availableN = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
-            if (availableN < -BiomassTolleranceValue)
+            if (availableN < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
             return availableN;
@@ -406,7 +408,7 @@ namespace Models.PMF.Organs
                 Live.StructuralWt += Allocated.StructuralWt;
                 
                 // allocate non structural DM
-                if ((value.NonStructural * DMConversionEfficiency.Value - DMDemand.NonStructural) > BiomassTolleranceValue)
+                if ((value.NonStructural * DMConversionEfficiency.Value - DMDemand.NonStructural) > BiomassToleranceValue)
                     throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
                 if (DMDemand.NonStructural > 0.0)
                 {
@@ -418,7 +420,7 @@ namespace Models.PMF.Organs
                 Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value;
 
                 // Retranslocation
-                if (value.Retranslocation - StartLive.NonStructuralWt > BiomassTolleranceValue)
+                if (value.Retranslocation - StartLive.NonStructuralWt > BiomassToleranceValue)
                     throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
                 Live.NonStructuralWt -= value.Retranslocation;
                 Allocated.NonStructuralWt -= value.Retranslocation;
@@ -556,7 +558,7 @@ namespace Models.PMF.Organs
             {
                 // Do senescence
                 double senescedFrac = SenescenceRate.Value;
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassTolleranceValue)
+                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
                 Biomass Loss = Live * senescedFrac;
                 Live.Subtract(Loss);
@@ -565,7 +567,7 @@ namespace Models.PMF.Organs
 
                 // Do detachment
                 double detachedFrac = DetachmentRateFunction.Value;
-                if (Dead.Wt * (1.0 - detachedFrac) < BiomassTolleranceValue)
+                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Biomass detaching = Dead * detachedFrac;
                 Dead.Multiply(1.0 - detachedFrac);

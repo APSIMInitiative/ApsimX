@@ -159,7 +159,7 @@ namespace Models.PMF.Organs
         /// <summary>The live weights for each addition zone.</summary>
         public List<double> ZoneInitialDM { get; set; }
 
-        private double BiomassTolleranceValue = 0.0000000001;   // 10E-10
+        private double BiomassToleranceValue = 0.0000000001;   // 10E-10
 
         #endregion
 
@@ -467,7 +467,7 @@ namespace Models.PMF.Organs
                         availableDM += Z.LayerLive[i].NonStructuralWt;
 
                 double labileDM = Math.Max(0.0, availableDM - DMReallocationSupply) * DMRetranslocationFactor.Value;
-                if (labileDM < -BiomassTolleranceValue)
+                if (labileDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
                 return labileDM;
@@ -489,7 +489,7 @@ namespace Models.PMF.Organs
                         availableDM += Z.LayerLive[i].NonStructuralWt;
 
                 double labileDM = availableDM * SenescenceRate.Value * DMReallocationFactor.Value;
-                if (labileDM < -BiomassTolleranceValue)
+                if (labileDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return labileDM;
             }
@@ -606,7 +606,8 @@ namespace Models.PMF.Organs
             set { }
         }
 
-        /// <summary>Computes the N amount available for retranslocation</summary>
+        /// <summary>Computes the N amount available for retranslocation.</summary>
+        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
             if (NRetranslocationFactor != null)
@@ -617,7 +618,7 @@ namespace Models.PMF.Organs
                         availableN += Z.LayerLive[i].NonStructuralN;
 
                 double labileN = Math.Max(0.0, availableN - NReallocationSupply) * (1.0 - SenescenceRate.Value) * NRetranslocationFactor.Value;
-                if (labileN < -BiomassTolleranceValue)
+                if (labileN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
                 return labileN;
@@ -628,7 +629,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Computes the N amount available for reallocation</summary>
+        /// <summary>Computes the N amount available for reallocation,</summary>
         public double AvailableNReallocation()
         {
             if (NReallocationFactor != null)
@@ -639,7 +640,7 @@ namespace Models.PMF.Organs
                         availableN += Z.LayerLive[i].NonStructuralN;
 
                 double labileN = availableN * SenescenceRate.Value * NReallocationFactor.Value;
-                if (labileN < -BiomassTolleranceValue)
+                if (labileN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
                 return labileN;
