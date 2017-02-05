@@ -760,7 +760,34 @@ namespace Models.PMF
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
-                    DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
+
+                    PotentialNO3NUptake = new double[zone.NO3N.Length];
+                    PotentialNH4NUptake = new double[zone.NH4N.Length];
+
+                    //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
+                    for (int i = 0; i < Organs.Length; i++)
+                    {
+                        if (Organs[i] is IWaterNitrogenUptake)
+                        {
+                            double[] organNO3Supply;
+                            double[] organNH4Supply;
+
+                            (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, out organNO3Supply, out organNH4Supply);
+
+                            if (organNO3Supply != null)
+                            {
+                                PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                                N.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
+                            }
+
+                            if (organNH4Supply != null)
+                            {
+                                PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
+                                N.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
+                            }
+                        }
+                    }
+
 
                     //Calculate plant level supply totals.
                     N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
@@ -1159,40 +1186,6 @@ namespace Models.PMF
                 }
                 BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
             }
-        }
-
-        /// <summary>Does the uptake from the specified zone.</summary>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="MyZone">The zone.</param>
-        virtual public void DoPotentialNutrientUptake(ref BiomassArbitrationType BAT, ZoneWaterAndN MyZone)
-        {
-            PotentialNO3NUptake = new double[MyZone.NO3N.Length];
-            PotentialNH4NUptake = new double[MyZone.NH4N.Length];
-
-            //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                if (Organs[i] is IWaterNitrogenUptake)
-                {
-                    double[] organNO3Supply;
-                    double[] organNH4Supply;
-
-                    (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(MyZone, out organNO3Supply, out organNH4Supply);
-
-                    if (organNO3Supply != null)
-                    {
-                        PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                        BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
-                    }
-
-                    if (organNH4Supply != null)
-                    {
-                        PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
-                        BAT.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
-                    }
-                }
-            }
-            
         }
         
         /// <summary>Does the uptake.</summary>
