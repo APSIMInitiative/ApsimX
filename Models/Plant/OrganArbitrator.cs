@@ -762,6 +762,18 @@ namespace Models.PMF
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
                     DoPotentialNutrientUptake(ref N, zone);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
 
+                    //Calculate plant level supply totals.
+                    N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
+                    N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
+
+                    //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
+                    if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
+                    {
+                        double ratio = Math.Min(1.0, (N.TotalPlantDemand - N.TotalReallocation) / N.TotalUptakeSupply);
+                        PotentialNO3NUptake = MathUtilities.Multiply_Value(PotentialNO3NUptake, ratio);
+                        PotentialNH4NUptake = MathUtilities.Multiply_Value(PotentialNH4NUptake, ratio);
+                    }
+
                     //Pack results into uptake structure
                     UptakeDemands.NO3N = PotentialNO3NUptake;
                     UptakeDemands.NH4N = PotentialNH4NUptake;
@@ -1181,18 +1193,6 @@ namespace Models.PMF
                 }
             }
             
-            //Calculate plant level supply totals.
-            BAT.TotalUptakeSupply = MathUtilities.Sum(BAT.UptakeSupply);
-            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
-
-            //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
-            if (BAT.TotalUptakeSupply > (BAT.TotalPlantDemand - BAT.TotalReallocation))
-            {
-                double ratio = Math.Min(1.0, (BAT.TotalPlantDemand - BAT.TotalReallocation) / BAT.TotalUptakeSupply);
-                PotentialNO3NUptake = MathUtilities.Multiply_Value(PotentialNO3NUptake, ratio);
-                PotentialNH4NUptake = MathUtilities.Multiply_Value(PotentialNH4NUptake, ratio);
-            }
-
         }
         
         /// <summary>Does the uptake.</summary>
