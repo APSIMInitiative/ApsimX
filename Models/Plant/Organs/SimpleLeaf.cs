@@ -172,9 +172,7 @@ namespace Models.PMF.Organs
         /// <summary>The FRGR function</summary>
         [Link]
         IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
-        /// <summary>The dm demand function</summary>
-        [Link]
-        IFunction DMDemandFunction = null;
+
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
         IFunction CoverFunction = null;
@@ -252,17 +250,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
         public double WaterAllocation { get; set; }
-
-        /// <summary>Gets or sets the dm demand.</summary>
-        public override BiomassPoolType DMDemand
-        {
-            get
-            {
-                StructuralDMDemand = DMDemandFunction.Value;
-                NonStructuralDMDemand = 0;
-                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
-            }
-        }
 
         /// <summary>Gets or sets the DM supply.</summary>
         public override BiomassSupplyType DMSupply

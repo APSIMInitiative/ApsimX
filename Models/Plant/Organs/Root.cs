@@ -72,12 +72,12 @@ namespace Models.PMF.Organs
         [Link]
         LinearInterpolationFunction NUptakeSWFactor = null;
 
-        /// <summary>Gets or sets the initial DM for this organ.</summary>
+        /// <summary>Gets or sets the initial biomass dry matter weight</summary>
         [Link]
         [Units("g/plant")]
         IFunction InitialDM = null;
 
-        /// <summary>Gets or sets the the specific root length.</summary>
+        /// <summary>Gets or sets the specific root length</summary>
         [Link]
         [Units("m/g")]
         IFunction SpecificRootLength = null;
@@ -106,7 +106,7 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction DMReallocationFactor = null;
 
-        /// <summary>The senescence rate</summary>
+        /// <summary>The biomass senescence rate</summary>
         [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
@@ -121,22 +121,22 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction StructuralFraction = null;
 
-        /// <summary>The partition fraction</summary>
+        /// <summary>The biomass partition fraction</summary>
         [Link]
         [Units("0-1")]
         IFunction PartitionFraction = null;
         
-        /// <summary>The maximum n conc</summary>
+        /// <summary>The maximum N concentration</summary>
         [Link]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         
-        /// <summary>The minimum n conc</summary>
+        /// <summary>The minimum N concentration</summary>
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         
-        /// <summary>The maximum daily n uptake</summary>
+        /// <summary>The maximum daily N uptake</summary>
         [Link]
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
@@ -213,7 +213,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        ///<Summary>Total DM Demanded by roots</Summary>
+        ///<Summary>Total DM demanded by roots</Summary>
         [Units("g/m2")]
         [XmlIgnore]
         public double TotalDMDemand { get; set; }
@@ -398,12 +398,29 @@ namespace Models.PMF.Organs
             if (Plant.IsEmerged)
             {
                 PlantZone.Length = MathUtilities.Sum(LengthDensity);
+                DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
+            }
+        }
 
-                // get DM and N amounts that can be used for new growth
-                DMRetranslocationSupply = AvailableDMRetranslocation();
-                DMReallocationSupply = AvailableDMReallocation();
-                NRetranslocationSupply = AvailableNRetranslocation();
-                NReallocationSupply = AvailableNReallocation();
+        /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
+        public void DoSupplyCalculations()
+        {
+            DMRetranslocationSupply = AvailableDMRetranslocation();
+            DMReallocationSupply = AvailableDMReallocation();
+            NRetranslocationSupply = AvailableNRetranslocation();
+            NReallocationSupply = AvailableNReallocation();
+        }
+
+        /// <summary>Computes the DM and N amounts demanded this computation round</summary>
+        public void DoDemandCalculations()
+        {
+            if (Plant.SowingData.Depth < PlantZone.Depth)
+            {
+                StructuralDMDemand = DemandedDMStructural();
+                NonStructuralDMDemand = DemandedDMNonStructural();
+                TotalDMDemand = StructuralDMDemand + NonStructuralDMDemand;
+                ////This is currently not necessary as demand is not calculated on a layer basis, so doesn't need summing up.
+                //// However it might be some day... and can consider non structural too
             }
         }
 
@@ -446,11 +463,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                StructuralDMDemand = 0.0;
-                NonStructuralDMDemand = 0.0;
-                if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
-                    StructuralDMDemand = DemandedDMStructural();
-                TotalDMDemand = StructuralDMDemand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
+                if (Plant.IsEmerged)
+                    DoDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
@@ -484,7 +498,18 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = 0.0;
+                double rootLiveStructuralWt = 0.0;
+                double rootLiveNonStructuralWt = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                    {
+                        rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
+                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                    }
+
+                double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value;
+                double baseAllocated = rootLiveStructuralWt + rootLiveNonStructuralWt + StructuralDMDemand;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
             }
             else

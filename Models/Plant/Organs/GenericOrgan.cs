@@ -111,19 +111,21 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction StructuralFraction = null;
 
-        /// <summary>The dm demand Function</summary>
+        /// <summary>The DM demand function</summary>
         [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
-        /// <summary>The initial wt function</summary>
+
+        /// <summary>The initial biomass dry matter weight</summary>
         [Link]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
-        /// <summary>The maximum n conc</summary>
+        
+        /// <summary>The maximum N concentration</summary>
         [Link]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
-        /// <summary>The minimum n conc</summary>
+        /// <summary>The minimum N concentration</summary>
         [Units("g/g")]
         [Link]
         public IFunction MinimumNConc = null;
@@ -254,8 +256,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                StructuralDMDemand = DemandedDMStructural();
-                NonStructuralDMDemand = DemandedDMNonStructural();
+                if (Plant.IsEmerged)
+                    DoDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
@@ -271,7 +273,7 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency.Value > 0.0)
             {
-                double demandedDM = DMDemandFunction.Value* StructuralFraction.Value / DMConversionEfficiency.Value;
+                double demandedDM = DMDemandFunction.Value * StructuralFraction.Value / DMConversionEfficiency.Value;
                 return demandedDM;
             }
             else
@@ -281,14 +283,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
+        /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
         public double DemandedDMNonStructural()
         {
             if (DMConversionEfficiency.Value > 0.0)
             {
-                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value;
-                MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
-                double demandedDM = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
-                demandedDM /= DMConversionEfficiency.Value;
+                double theoreticalMaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value;
+                double baseAllocated = StartLive.StructuralWt + StartLive.NonStructuralWt + StructuralDMDemand;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value;
                 return demandedDM;
             }
             else
@@ -574,17 +576,28 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            // save current state
             if (Plant.IsEmerged)
             {
-                // save current state
                 StartLive = Live;
-
-                // get DM and N amounts that can be used for new growth
-                DMRetranslocationSupply = AvailableDMRetranslocation();
-                DMReallocationSupply = AvailableDMReallocation();
-                NRetranslocationSupply = AvailableNRetranslocation();
-                NReallocationSupply = AvailableNReallocation();
+                DoSupplyCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
             }
+        }
+
+        /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
+        virtual public void DoSupplyCalculations()
+        {
+            DMRetranslocationSupply = AvailableDMRetranslocation();
+            DMReallocationSupply = AvailableDMReallocation();
+            NRetranslocationSupply = AvailableNRetranslocation();
+            NReallocationSupply = AvailableNReallocation();
+        }
+
+        /// <summary>Computes the DM and N amounts demanded this computation round</summary>
+        virtual public void DoDemandCalculations()
+        {
+            StructuralDMDemand = DemandedDMStructural();
+            NonStructuralDMDemand = DemandedDMNonStructural();
         }
 
         /// <summary>Does the nutrient allocations.</summary>
