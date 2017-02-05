@@ -442,7 +442,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the DM supply.</summary>
+        /// <summary>Gets or sets the DM supply for this computation round.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -461,16 +461,16 @@ namespace Models.PMF.Organs
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = 0.0;
+                double rootLiveNonStructuralWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        availableDM += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double labileDM = Math.Max(0.0, availableDM - DMReallocationSupply) * DMRetranslocationFactor.Value;
-                if (labileDM < -BiomassToleranceValue)
+                double availableDM = Math.Max(0.0, rootLiveNonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value;
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
-                return labileDM;
+                return availableDM;
             }
             else
             { // By default retranslocation is turned off!!!!
@@ -483,15 +483,15 @@ namespace Models.PMF.Organs
         {
             if (DMReallocationFactor != null)
             {
-                double availableDM = 0.0;
+                double rootLiveNonStructuralWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        availableDM += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double labileDM = availableDM * SenescenceRate.Value * DMReallocationFactor.Value;
-                if (labileDM < -BiomassToleranceValue)
+                double availableDM = rootLiveNonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+                if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
-                return labileDM;
+                return availableDM;
             }
             else
             { // By default reallocation is turned off!!!!
@@ -589,7 +589,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the N supply.</summary>
+        /// <summary>Gets or sets the N supply for this computation round.</summary>
         [XmlIgnore]
         public override BiomassSupplyType NSupply
         {
@@ -612,16 +612,16 @@ namespace Models.PMF.Organs
         {
             if (NRetranslocationFactor != null)
             {
-                double availableN = 0.0;
+                double labileN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        availableN += Z.LayerLive[i].NonStructuralN;
+                        labileN += Math.Max(0.0, Z.LayerLive[i].NonStructuralN - Z.LayerLive[i].NonStructuralWt * MinimumNConc.Value);
 
-                double labileN = Math.Max(0.0, availableN - NReallocationSupply) * (1.0 - SenescenceRate.Value) * NRetranslocationFactor.Value;
-                if (labileN < -BiomassToleranceValue)
+                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value;
+                if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
-                return labileN;
+                return availableN;
             }
             else
             {  // By default retranslocation is turned off!!!!
@@ -629,21 +629,21 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Computes the N amount available for reallocation,</summary>
+        /// <summary>Computes the N amount available for reallocation.</summary>
         public double AvailableNReallocation()
         {
             if (NReallocationFactor != null)
             {
-                double availableN = 0.0;
+                double rootLiveNonStructuralN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        availableN += Z.LayerLive[i].NonStructuralN;
+                        rootLiveNonStructuralN += Z.LayerLive[i].NonStructuralN;
 
-                double labileN = availableN * SenescenceRate.Value * NReallocationFactor.Value;
-                if (labileN < -BiomassToleranceValue)
+                double availableN = rootLiveNonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
+                if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
-                return labileN;
+                return availableN;
             }
             else
             {  // By default reallocation is turned off!!!!

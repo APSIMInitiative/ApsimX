@@ -274,7 +274,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the DM supply.</summary>
+        /// <summary>Gets or sets the DM supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType DMSupply
         {
@@ -341,7 +341,7 @@ namespace Models.PMF.Organs
             }
             set { }
         }
-        /// <summary>Gets or sets the N supply.</summary>
+        /// <summary>Gets or sets the N supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType NSupply
         {
@@ -380,7 +380,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the N amount available for reallocation.</summary>
         public double AvailableNReallocation()
         {
-            double availableN = SenescenceRate.Value * StartLive.NonStructuralN * NReallocationFactor.Value;
+            double availableN = StartLive.NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
             if (availableN < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
