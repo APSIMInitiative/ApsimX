@@ -496,7 +496,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of non structural DM demanded.</summary>
         public double DemandedDMNonStructural()
         {
-            if (DMConversionEfficiency > 0.0)
+            if ((DMConversionEfficiency > 0.0) && (StructuralFraction != null))
             {
                 double rootLiveStructuralWt = 0.0;
                 double rootLiveNonStructuralWt = 0.0;
@@ -513,7 +513,7 @@ namespace Models.PMF.Organs
                 return demandedDM;
             }
             else
-            { // Conversion efficiency is zero!!!!
+            { // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
                 return 0.0;
             }
         }
