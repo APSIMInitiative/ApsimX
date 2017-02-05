@@ -912,7 +912,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </CompositeBiomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.8</Value>
+          <Value>1</Value>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>

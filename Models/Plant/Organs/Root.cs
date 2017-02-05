@@ -115,7 +115,12 @@ namespace Models.PMF.Organs
         [Link]
         [Units("mm/d")]
         public IFunction RootFrontVelocity = null;
-        
+
+        /// <summary>The DM structural fraction</summary>
+        [Link(IsOptional = true)]
+        [Units("g/g")]
+        IFunction StructuralFraction = null;
+
         /// <summary>The partition fraction</summary>
         [Link]
         [Units("0-1")]
@@ -126,15 +131,15 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction MaximumNConc = null;
         
-        /// <summary>The maximum daily n uptake</summary>
-        [Link]
-        [Units("kg N/ha")]
-        IFunction MaxDailyNUptake = null;
-        
         /// <summary>The minimum n conc</summary>
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
+        /// <summary>The maximum daily n uptake</summary>
+        [Link]
+        [Units("kg N/ha")]
+        IFunction MaxDailyNUptake = null;
         
         /// <summary>The kl modifier</summary>
         [Link]
@@ -184,6 +189,12 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double NReallocationSupply = 0.0;
+
+        /// <summary>The structural DM demand</summary>
+        private double StructuralDMDemand = 0.0;
+
+        /// <summary>The non structural DM demand</summary>
+        private double NonStructuralDMDemand = 0.0;
 
         #endregion
 
@@ -429,16 +440,56 @@ namespace Models.PMF.Organs
         #endregion
 
         #region IArbitrator interface
-        /// <summary>Gets or sets the dm demand.</summary>
+
+        /// <summary>Gets or sets the DM demand for this computation round.</summary>
         public override BiomassPoolType DMDemand
         {
             get
             {
-                double Demand = 0;
+                StructuralDMDemand = 0.0;
+                NonStructuralDMDemand = 0.0;
                 if (Plant.IsAlive && Plant.SowingData.Depth < PlantZone.Depth)
-                    Demand = Arbitrator.DMSupply * PartitionFraction.Value;
-                TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
-                return new BiomassPoolType { Structural = Demand };
+                    StructuralDMDemand = DemandedDMStructural();
+                TotalDMDemand = StructuralDMDemand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
+                return new BiomassPoolType
+                {
+                    Structural = StructuralDMDemand,
+                    NonStructural = NonStructuralDMDemand,
+                    Metabolic = 0.0
+                };
+            }
+        }
+
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        public double DemandedDMStructural()
+        {
+            if (DMConversionEfficiency > 0.0)
+            {
+                double demandedDM = Arbitrator.DMSupply * PartitionFraction.Value;
+                if (StructuralFraction != null)
+                    demandedDM *= StructuralFraction.Value / DMConversionEfficiency;
+                else
+                    demandedDM /= DMConversionEfficiency;
+
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        public double DemandedDMNonStructural()
+        {
+            if (DMConversionEfficiency > 0.0)
+            {
+                double demandedDM = 0.0;
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
             }
         }
 

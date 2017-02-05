@@ -106,10 +106,11 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction DMReallocationFactor = null;
 
-        /// <summary>The structural fraction</summary>
+        /// <summary>The DM structural fraction</summary>
         [Link]
         [Units("g/g")]
         IFunction StructuralFraction = null;
+
         /// <summary>The dm demand Function</summary>
         [Link]
         [Units("g/m2/d")]
@@ -126,12 +127,17 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         [Link]
         public IFunction MinimumNConc = null;
-        /// <summary>The proportion of biomass repired each day</summary>
+
+        /// <summary>The proportion of biomass respired each day</summary>
         [Link]
+        [Units("/d")]
         public IFunction MaintenanceRespirationFunction = null;
+
         /// <summary>Dry matter conversion efficiency</summary>
         [Link]
+        [Units("/d")]
         public IFunction DMConversionEfficiency = null;
+
         #endregion
 
         #region State, supply, demand, and allocation
@@ -241,23 +247,56 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-        /// <summary>Gets or sets the dm demand.</summary>
+        /// <summary>Gets or sets the DM demand for this computation round.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
         public virtual BiomassPoolType DMDemand
         {
             get
             {
-                StructuralDMDemand = DMDemandFunction.Value * StructuralFraction.Value/DMConversionEfficiency.Value;
-                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / StructuralFraction.Value;
-                MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
-                NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
-                NonStructuralDMDemand /= DMConversionEfficiency.Value;
-
-                return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
+                StructuralDMDemand = DemandedDMStructural();
+                NonStructuralDMDemand = DemandedDMNonStructural();
+                return new BiomassPoolType
+                {
+                    Structural = StructuralDMDemand,
+                    NonStructural = NonStructuralDMDemand,
+                    Metabolic = 0.0
+                };
             }
             set { }
         }
+
+        /// <summary>Computes the amount of structural DM demanded.</summary>
+        public double DemandedDMStructural()
+        {
+            if (DMConversionEfficiency.Value > 0.0)
+            {
+                double demandedDM = DMDemandFunction.Value* StructuralFraction.Value / DMConversionEfficiency.Value;
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
+        }
+
+        /// <summary>Computes the amount of non structural DM demanded.</summary>
+        public double DemandedDMNonStructural()
+        {
+            if (DMConversionEfficiency.Value > 0.0)
+            {
+                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value;
+                MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
+                double demandedDM = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
+                demandedDM /= DMConversionEfficiency.Value;
+                return demandedDM;
+            }
+            else
+            { // Conversion efficiency is zero!!!!
+                return 0.0;
+            }
+        }
+
         /// <summary>Sets the dm potential allocation.</summary>
         [XmlIgnore]
         public BiomassPoolType DMPotentialAllocation
