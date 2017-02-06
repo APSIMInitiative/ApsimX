@@ -624,16 +624,6 @@ namespace Models.PMF
         }
 
 
-        /// <summary>Gets and Sets NO3 Supply</summary>
-        /// <value>NO3 supplies from each soil layer</value>
-        [XmlIgnore]
-        public double[] PotentialNO3NUptake { get; set; }
-
-        /// <summary>Gets and Sets NH4 Supply</summary>
-        /// <value>NH4 supplies from each soil layer</value>
-         [XmlIgnore]
-        public double[] PotentialNH4NUptake { get; set; }
-
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
         /// <summary>The n aware</summary>
         [XmlIgnore]
@@ -767,28 +757,29 @@ namespace Models.PMF
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
 
-                    PotentialNO3NUptake = new double[zone.NO3N.Length];
-                    PotentialNH4NUptake = new double[zone.NH4N.Length];
+                    UptakeDemands.NO3N =  new double[zone.NO3N.Length];
+                    UptakeDemands.NH4N = new double[zone.NH4N.Length];
+                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
                     for (int i = 0; i < Organs.Length; i++)
                     {
                         if (Organs[i] is IWaterNitrogenUptake)
                         {
-                            double[] organNO3Supply;
-                            double[] organNH4Supply;
+                            double[] organNO3Supply = new double[zone.NO3N.Length];
+                            double[] organNH4Supply = new double[zone.NH4N.Length];
 
                             (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, out organNO3Supply, out organNH4Supply);
 
                             if (organNO3Supply != null)
                             {
-                                PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                                UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                                 N.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                             }
 
                             if (organNH4Supply != null)
                             {
-                                PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
+                                UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
                                 N.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
                             }
                         }
@@ -799,14 +790,10 @@ namespace Models.PMF
                     if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
                     {
                         double ratio = Math.Min(1.0, (N.TotalPlantDemand - N.TotalReallocation) / N.TotalUptakeSupply);
-                        PotentialNO3NUptake = MathUtilities.Multiply_Value(PotentialNO3NUptake, ratio);
-                        PotentialNH4NUptake = MathUtilities.Multiply_Value(PotentialNH4NUptake, ratio);
+                        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
+                        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
                     }
 
-                    //Pack results into uptake structure
-                    UptakeDemands.NO3N = PotentialNO3NUptake;
-                    UptakeDemands.NH4N = PotentialNH4NUptake;
-                    UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
                     zones.Add(UptakeDemands);
                 }
                 return zones;
@@ -874,8 +861,6 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
-            PotentialNH4NUptake = new double[Soil.Thickness.Length];
-            PotentialNO3NUptake = new double[Soil.Thickness.Length];
         }
 
         /// <summary>Called when crop is ending</summary>
