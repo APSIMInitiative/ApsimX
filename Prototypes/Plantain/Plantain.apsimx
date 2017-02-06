@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -3192,9 +3192,6 @@ namespace Models
         <string>[Plantain].Arbitrator.WDemand</string>
         <string>[Plantain].Arbitrator.WAllocated</string>
         <string>[Plantain].Arbitrator.FW</string>
-        <string>sum([Plantain].Arbitrator.PotentialNO3NUptake) as PotentialPlantAvailableNO3</string>
-        <string>sum([Plantain].Arbitrator.PotentialNH4NUptake) as PotentialPlantAvailableNH4</string>
-        <string>(sum([Plantain].Arbitrator.PotentialNO3NUptake)+ sum([Plantain].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailableN</string>
         <string>[Plantain].Root.NSupplyUptake</string>
         <string>[Plantain].Root.NTakenUp</string>
         <string>[Plantain].Root.NSupply.Uptake</string>
@@ -5000,7 +4997,6 @@ namespace Models
               <Country>New Zealand</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
               <DataSource>Adapted based on data from the NZ Natioanl Soils Database</DataSource>
               <Comments>Different references name the soil at the site as either Templeton or Paparua (very similar soils)</Comments>
             </Soil>
@@ -11712,7 +11708,6 @@ namespace Models
               <Country>New Zealand</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
               <DataSource>Based primarily on data from Close et al, 2003</DataSource>
             </Soil>
             <Plant>

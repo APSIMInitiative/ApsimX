@@ -3192,9 +3192,6 @@ namespace Models
         <string>[Chicory].Arbitrator.WDemand</string>
         <string>[Chicory].Arbitrator.WAllocated</string>
         <string>[Chicory].Arbitrator.FW</string>
-        <string>sum([Chicory].Arbitrator.PotentialNO3NUptake) as PotentialPlantAvailableNO3</string>
-        <string>sum([Chicory].Arbitrator.PotentialNH4NUptake) as PotentialPlantAvailableNH4</string>
-        <string>(sum([Chicory].Arbitrator.PotentialNO3NUptake)+ sum([Chicory].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailableN</string>
         <string>[Chicory].Root.NSupplyUptake</string>
         <string>[Chicory].Root.NTakenUp</string>
         <string>[Chicory].Root.NSupply.Uptake</string>
