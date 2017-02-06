@@ -121,31 +121,25 @@ namespace Models.PMF
             public double[] ReallocationSupply { get; set; }
             /// <summary>Gets or sets the total reallocation supply.</summary>
             /// <value>Biomass available for reallocation from the entire crop</value>
-            public double TotalReallocationSupply { get; set; }
+            public double TotalReallocationSupply{get{return MathUtilities.Sum(ReallocationSupply); } }
             /// <summary>Gets or sets the uptake supply.</summary>
             /// <value>Biomass available for uptake from each absorbing organ, generally limited to ntrient uptake in roots</value>
             public double[] UptakeSupply { get; set; }
             /// <summary>Gets or sets the total uptake supply.</summary>
             /// <value>Biomass available for uptake by the crop</value>
-            public double TotalUptakeSupply
-            {
-                get
-                {
-                    return MathUtilities.Sum(UptakeSupply);
-                }
-            }
+            public double TotalUptakeSupply {get{return MathUtilities.Sum(UptakeSupply);} }
             /// <summary>Gets or sets the fixation supply.</summary>
             /// <value>Biomass that may be fixed by the crop, eg DM fixed by photosynhesis in the leaves of N fixed by nodules</value>
             public double[] FixationSupply { get; set; }
             /// <summary>Gets or sets the total fixation supply.</summary>
             /// <value>Total fixation by the crop</value>
-            public double TotalFixationSupply { get; set; }
+            public double TotalFixationSupply { get { return MathUtilities.Sum(ReallocationSupply); }}
             /// <summary>Gets or sets the retranslocation supply.</summary>
             /// <value>Supply of labile biomass that can be retranslocated from each oragn</value>
             public double[] RetranslocationSupply { get; set; }
             /// <summary>Gets or sets the total retranslocation supply.</summary>
             /// <value>The total supply of labile biomass in the crop</value>
-            public double TotalRetranslocationSupply { get; set; }
+            public double TotalRetranslocationSupply { get { return MathUtilities.Sum(RetranslocationSupply); } }
             /// <summary>Gets or sets the total crop supply.</summary>
             /// <value>crop supply from uptake, fixation, reallocation and remobilisation</value>
             public double TotalPlantSupply
@@ -1003,11 +997,7 @@ namespace Models.PMF
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
                 DM.Start += Organs[i].Wt;
             }
-
-            DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
-            DM.TotalFixationSupply = MathUtilities.Sum(DM.FixationSupply);
-            DM.TotalRetranslocationSupply = MathUtilities.Sum(DM.RetranslocationSupply);
-                        
+                
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -1107,12 +1097,7 @@ namespace Models.PMF
                 N.RetranslocationSupply[i] = Supply.Retranslocation;
                 N.Start += Organs[i].N;
             }
-
-            N.TotalReallocationSupply = MathUtilities.Sum(N.ReallocationSupply);
-            //N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);       This is done on DoNutrientUptakeCalculations
-            N.TotalFixationSupply = MathUtilities.Sum(N.FixationSupply);
-            N.TotalRetranslocationSupply = MathUtilities.Sum(N.RetranslocationSupply);
-                        
+                      
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
