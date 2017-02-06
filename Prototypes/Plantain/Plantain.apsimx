@@ -3186,7 +3186,7 @@ namespace Models
         <string />
         <string>[Plantain].Arbitrator.NSupply</string>
         <string>[Plantain].Arbitrator.NDemand</string>
-        <string>[Plantain].Arbitrator.NAllocated</string>
+        <string>[Plantain].Arbitrator.N.Allocated</string>
         <string>[Plantain].Arbitrator.FN</string>
         <string>[Plantain].Arbitrator.WSupply</string>
         <string>[Plantain].Arbitrator.WDemand</string>
@@ -6719,7 +6719,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13429,7 +13429,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

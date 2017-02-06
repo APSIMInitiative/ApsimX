@@ -467,30 +467,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
-        /// <summary>Gets the N allocations</summary>
-        /// <value>Allocation of N to each organ</value>
-        [XmlIgnore]
-        public double NAllocated
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return N.Allocated;
-                        else return 0;
-                    }
-                    else
-                        return N.Allocated;
-                }
-                else
-                    return 0.0;
-            }
-        }
-        
+              
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -561,21 +538,7 @@ namespace Models.PMF
                     return 1;
             }
         }
-
-
-        //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
-        /// <summary>The n aware</summary>
-        [XmlIgnore]
-        public bool NAware = true;
-        
-        /// <summary>The p aware</summary>
-        [XmlIgnore]
-        public bool PAware = false;
-        
-        /// <summary>The k aware</summary>
-        [XmlIgnore]
-        public bool KAware = false;
-
+       
         #endregion
 
         #region IUptake interface
@@ -769,15 +732,6 @@ namespace Models.PMF
         #endregion
 
         #region Plant interface methods
-
-        /// <summary>Called when [initialize].</summary>
-        [EventSubscribe("Initialised")]
-        private void OnInit()
-        {
-            //NAware Array.Exists(NutrientDrivers, element => element == "Nitrogen");  Fixme  Need to put this into .xml and write code to handle N unaware crops
-            PAware = Array.Exists(NutrientDrivers, element => element == "Phosphorus");
-            KAware = Array.Exists(NutrientDrivers, element => element == "Potasium");
-        }
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
