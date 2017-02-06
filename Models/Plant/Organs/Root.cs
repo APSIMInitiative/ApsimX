@@ -130,12 +130,17 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/g")]
         IFunction MaximumNConc = null;
-        
+
         /// <summary>The minimum N concentration</summary>
         [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
-        
+
+        /// <summary>The critical N concentration</summary>
+        [Link(IsOptional = true)]
+        [Units("g/g")]
+        IFunction CriticalNConc = null;
+
         /// <summary>The maximum daily N uptake</summary>
         [Link]
         [Units("kg N/ha")]
@@ -195,6 +200,18 @@ namespace Models.PMF.Organs
 
         /// <summary>The non structural DM demand</summary>
         private double NonStructuralDMDemand = 0.0;
+
+        /// <summary>The metabolic DM demand</summary>
+        private double MetabolicDMDemand = 0.0;
+
+        /// <summary>The structural N demand</summary>
+        private double StructuralNDemand = 0.0;
+
+        /// <summary>The non structural N demand</summary>
+        private double NonStructuralNDemand = 0.0;
+
+        /// <summary>The metabolic N demand</summary>
+        private double MetabolicNDemand = 0.0;
 
         #endregion
 
@@ -412,14 +429,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the DM and N amounts demanded this computation round</summary>
-        public void DoDemandCalculations()
+        public void DoDMDemandCalculations()
         {
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
                 StructuralDMDemand = DemandedDMStructural();
                 NonStructuralDMDemand = DemandedDMNonStructural();
-                TotalDMDemand = StructuralDMDemand + NonStructuralDMDemand;
-                ////This is currently not necessary as demand is not calculated on a layer basis, so doesn't need summing up.
+                TotalDMDemand = StructuralDMDemand + NonStructuralDMDemand + MetabolicDMDemand;
+                ////This sum is currently not necessary as demand is not calculated on a layer basis.
                 //// However it might be some day... and can consider non structural too
             }
         }
@@ -458,13 +475,13 @@ namespace Models.PMF.Organs
 
         #region IArbitrator interface
 
-        /// <summary>Gets or sets the DM demand for this computation round.</summary>
+        /// <summary>Gets the DM demand for this computation round.</summary>
         public override BiomassPoolType DMDemand
         {
             get
             {
                 if (Plant.IsEmerged)
-                    DoDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
+                    DoDMDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
@@ -518,7 +535,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the DM supply for this computation round.</summary>
+        /// <summary>Gets the DM supply for this computation round.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -633,39 +650,56 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the n demand.</summary>
+        /// <summary>Gets the N demand for this computation round.</summary>
         [Units("g/m2")]
         public override BiomassPoolType NDemand
         {
             get
             {
-                double TotalStructuralNDemand = 0;
-                double TotalNonStructuralNDemand = 0;
-
-                //Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-                foreach (ZoneState Z in Zones)
+                DoNDemandCalculations();
+                return new BiomassPoolType
                 {
-                    Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                    Z.NonStructuralNDemand = new double[Z.soil.Thickness.Length];
-
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                    {
-                        Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinNconc * NitrogenDemandSwitch.Value;
-                        double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                        Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenDemandSwitch.Value;
-
-                        TotalStructuralNDemand += Z.StructuralNDemand[i];
-                        TotalNonStructuralNDemand += Z.NonStructuralNDemand[i];
-                    }
-                }
-                return new BiomassPoolType { Structural = TotalStructuralNDemand,
-                                             NonStructural = TotalNonStructuralNDemand
+                    Structural = StructuralNDemand,
+                    Metabolic = MetabolicNDemand,
+                    NonStructural = NonStructuralNDemand
                 };
-
             }
         }
 
-        /// <summary>Gets or sets the N supply for this computation round.</summary>
+        /// <summary>Computes the N demanded for this organ.</summary>
+        /// <remarks>
+        /// This is basic the old/original function. with added metabolicN
+        /// Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
+        /// </remarks>
+        private void DoNDemandCalculations()
+        {
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
+
+            StructuralNDemand = 0.0;
+            MetabolicNDemand = 0.0;
+            NonStructuralNDemand = 0.0;
+            foreach (ZoneState Z in Zones)
+            {
+                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
+                Z.NonStructuralNDemand = new double[Z.soil.Thickness.Length];
+                //Note: MetabolicN is assumed to be zero
+
+                double NDeficit = 0.0;
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                {
+                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+
+                    StructuralNDemand += Z.StructuralNDemand[i];
+                    NonStructuralNDemand += Z.NonStructuralNDemand[i];
+                }
+            }
+        }
+
+
+        /// <summary>Gets the N supply for this computation round.</summary>
         [XmlIgnore]
         public override BiomassSupplyType NSupply
         {
@@ -679,7 +713,6 @@ namespace Models.PMF.Organs
                     Reallocation = NReallocationSupply
                 };
             }
-            set { }
         }
 
         /// <summary>Computes the N amount available for retranslocation.</summary>

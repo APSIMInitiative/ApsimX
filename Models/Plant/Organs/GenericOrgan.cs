@@ -267,7 +267,7 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-        /// <summary>Gets or sets the DM demand for this computation round.</summary>
+        /// <summary>Gets the DM demand for this computation round.</summary>
         [XmlIgnore]
         [Units("g/m^2")]
         public virtual BiomassPoolType DMDemand
@@ -275,7 +275,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant.IsEmerged)
-                    DoDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
+                    DoDMDemandCalculations(); //TODO: This should be called from the Arbitrator, OnDoPotentialPlantPartioning
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
@@ -333,7 +333,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the DM supply for this computation round.</summary>
+        /// <summary>Gets the DM supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType DMSupply
         {
@@ -383,13 +383,13 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the N demand for this computation round.</summary>
+        /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassPoolType NDemand
         {
             get
             {
-                DoNDemandCalculations0();
+                DoNDemandCalculations();
                 return new BiomassPoolType
                 {
                     Structural = StructuralNDemand,
@@ -404,7 +404,7 @@ namespace Models.PMF.Organs
         /// <remarks>
         /// This is basic the old/original function. with added metabolicN
         /// </remarks>
-        private void DoNDemandCalculations0()
+        private void DoNDemandCalculations()
         {
             double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
             double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
@@ -417,54 +417,7 @@ namespace Models.PMF.Organs
             NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
         }
 
-        /// <summary>Computes the N demanded for this organ.</summary>
-        /// <remarks>
-        /// The NitrogenDemandSwitch is an optional value that can be used to limit, or stop, N demand calculations (default is one, no limitation).
-        /// CriticalNConc is also optional, with default value equal to MinimumNConc. In this case metabolic N demand is zero.
-        /// Demand is calculated such that N content is kept at or above CriticalNConc, in fact it tries to keep whole organ at MaximumNConc.
-        /// </remarks>
-        private void DoNDemandCalculations()
-        {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
-
-            double remobilisedDM = DMReallocationSupply + DMRetranslocationSupply;
-            double remobilisedN = NReallocationSupply + NRetranslocationSupply;
-            double currentLabileN = Math.Max(0.0, StartLive.N - remobilisedN - (StartLive.Wt - remobilisedDM) * criticalN);
-            ////TODO: should subtract amounts made available for reallocation and retranslocation
-
-            // compute structural N demand
-            StructuralNDemand = PotentialStructuralDMAllocation * MinimumNConc.Value * NitrogenSwitch;
-            if (StructuralNDemand >= currentLabileN)
-            { // current labile N is not enough to cover structural demand
-                StructuralNDemand -= currentLabileN;
-                currentLabileN = 0.0;
-            }
-            else
-            { // current labile N is enough to cover structural demand
-                currentLabileN -= StructuralNDemand;
-                StructuralNDemand = 0.0;
-            }
-
-            // compute metabolic N demand
-            MetabolicNDemand = PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value) * NitrogenSwitch;
-            if (MetabolicNDemand >= currentLabileN)
-            { // current labile N cannot cover all metabolic demand
-                MetabolicNDemand -= currentLabileN;
-                currentLabileN = 0.0;
-            }
-            else
-            { // current labile N can cover all metabolic demand
-                currentLabileN -= MetabolicNDemand;
-                MetabolicNDemand = 0.0;
-            }
-
-            // compute non structural N demand
-            double maxNonStructuralN = (StartLive.Wt - remobilisedDM + PotentialStructuralDMAllocation) * (MaximumNConc.Value - criticalN);
-            NonStructuralNDemand = Math.Max(0, maxNonStructuralN - currentLabileN) * NitrogenSwitch;
-        }
-
-        /// <summary>Gets or sets the N supply for this computation round.</summary>
+        /// <summary>Gets the N supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType NSupply
         {
@@ -676,10 +629,11 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the DM and N amounts demanded this computation round</summary>
-        virtual public void DoDemandCalculations()
+        virtual public void DoDMDemandCalculations()
         {
             StructuralDMDemand = DemandedDMStructural();
             NonStructuralDMDemand = DemandedDMNonStructural();
+            //Note: Metabolic is assumed to be zero
         }
 
         /// <summary>Does the nutrient allocations.</summary>

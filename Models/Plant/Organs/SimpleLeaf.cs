@@ -248,7 +248,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double WaterAllocation { get; set; }
 
-        /// <summary>Gets or sets the DM supply.</summary>
+        /// <summary>Gets the DM supply for this computation round.</summary>
         public override BiomassSupplyType DMSupply
         {
             get
