@@ -752,6 +752,9 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
+                for (int i = 0; i < Organs.Length; i++)
+                    N.UptakeSupply[i] = 0;
+
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
@@ -768,33 +771,25 @@ namespace Models.PMF
                         {
                             double[] organNO3Supply = new double[zone.NO3N.Length];
                             double[] organNH4Supply = new double[zone.NH4N.Length];
-
-                            (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, out organNO3Supply, out organNH4Supply);
-
-                            if (organNO3Supply != null)
-                            {
-                                UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                                N.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
-                            }
-
-                            if (organNH4Supply != null)
-                            {
-                                UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                                N.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
-                            }
+                            (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
+                            UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                            UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
+                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm;
                         }
                     }
-                    
-                   
-                    //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
-                    if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
+                    zones.Add(UptakeDemands);
+                }
+
+                //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
+                if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
+                {
+                    double ratio = Math.Min(1.0, (N.TotalPlantDemand - N.TotalReallocation) / N.TotalUptakeSupply);
+
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
-                        double ratio = Math.Min(1.0, (N.TotalPlantDemand - N.TotalReallocation) / N.TotalUptakeSupply);
                         UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
                         UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
                     }
-
-                    zones.Add(UptakeDemands);
                 }
                 return zones;
             }
