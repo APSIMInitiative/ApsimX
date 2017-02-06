@@ -183,19 +183,19 @@ namespace Models.PMF
             public double[] StructuralAllocation { get; set; }
             /// <summary>Gets or sets the total structural allocation.</summary>
             /// <value>The total structural biomass allocation to the whole crop</value>
-            public double TotalStructuralAllocation { get; set; }
+            public double TotalStructuralAllocation { get { return MathUtilities.Sum(StructuralAllocation); } }
             /// <summary>Gets or sets the metabolic allocation.</summary>
             /// <value>The actual meatabilic biomass allocation to each organ</value>
             public double[] MetabolicAllocation { get; set; }
             /// <summary>Gets or sets the total metabolic allocation.</summary>
             /// <value>The metabolic biomass allocation to each organ</value>
-            public double TotalMetabolicAllocation { get; set; }
+            public double TotalMetabolicAllocation { get { return MathUtilities.Sum(MetabolicAllocation); } }
             /// <summary>Gets or sets the non structural allocation.</summary>
             /// <value>The actual non-structural biomass allocation to each organ</value>
             public double[] NonStructuralAllocation { get; set; }
             /// <summary>Gets or sets the total non structural allocation.</summary>
             /// <value>The total non-structural allocationed to the crop</value>
-            public double TotalNonStructuralAllocation { get; set; }
+            public double TotalNonStructuralAllocation { get {return MathUtilities.Sum(NonStructuralAllocation); } }
             /// <summary>Gets or sets the total allocation.</summary>
             /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
             public double[] TotalAllocation { get; set; }
@@ -941,9 +941,6 @@ namespace Models.PMF
                 DM.NonStructuralAllocation[i] = 0;
             }
 
-            DM.TotalStructuralAllocation = 0;
-            DM.TotalMetabolicAllocation = 0;
-            DM.TotalNonStructuralAllocation = 0;
             DM.Allocated = 0;
             DM.SinkLimitation = 0;
             DM.NutrientLimitation = 0;
@@ -966,9 +963,6 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.TotalStructuralAllocation = MathUtilities.Sum(DM.StructuralAllocation);
-            DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
-            DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             
             // Then check it all adds up
@@ -1034,10 +1028,6 @@ namespace Models.PMF
                 N.MetabolicAllocation[i] = 0;
                 N.NonStructuralAllocation[i] = 0;
             }
-
-            N.TotalStructuralAllocation = 0;
-            N.TotalMetabolicAllocation = 0;
-            N.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
             for (int i = 0; i < Organs.Length; i++)
@@ -1283,9 +1273,6 @@ namespace Models.PMF
                 }
             }
             //Recalculated DM Allocation totals
-            DM.TotalStructuralAllocation = MathUtilities.Sum(DM.StructuralAllocation);
-            DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
-            DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
