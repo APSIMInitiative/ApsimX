@@ -125,10 +125,16 @@ namespace Models.PMF.Organs
         [Link]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
+
         /// <summary>The minimum N concentration</summary>
-        [Units("g/g")]
         [Link]
+        [Units("g/g")]
         public IFunction MinimumNConc = null;
+
+        /// <summary>The critical N concentration</summary>
+        [Link(IsOptional = true)]
+        [Units("g/g")]
+        public IFunction CriticalNConc = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link]
@@ -164,6 +170,18 @@ namespace Models.PMF.Organs
 
         /// <summary>The non structural DM demand</summary>
         protected double NonStructuralDMDemand = 0.0;
+
+        /// <summary>The metabolic DM demand</summary>
+        protected double MetabolicDMDemand = 0.0;
+
+        /// <summary>The structural N demand</summary>
+        protected double StructuralNDemand = 0.0;
+
+        /// <summary>The non structural N demand</summary>
+        protected double NonStructuralNDemand = 0.0;
+
+        /// <summary>The metabolic N demand</summary>
+        protected double MetabolicNDemand = 0.0;
 
         /// <summary>The potential DM allocation</summary>
         protected double PotentialDMAllocation = 0.0;
@@ -365,23 +383,87 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the N demand.</summary>
+        /// <summary>Gets or sets the N demand for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassPoolType NDemand
         {
             get
             {
-                double _NitrogenDemandSwitch = 1;
-                if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
-                NDeficit *= _NitrogenDemandSwitch;
-                double StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value);
-                double NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand);
-                return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
+                DoNDemandCalculations0();
+                return new BiomassPoolType
+                {
+                    Structural = StructuralNDemand,
+                    NonStructural = NonStructuralNDemand,
+                    Metabolic = MetabolicNDemand
+                };
             }
             set { }
         }
+
+        /// <summary>Computes the N demanded for this organ.</summary>
+        /// <remarks>
+        /// This is basic the old/original function. with added metabolicN
+        /// </remarks>
+        private void DoNDemandCalculations0()
+        {
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
+
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
+            NDeficit *= NitrogenSwitch;
+
+            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value);
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value));
+            NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
+        }
+
+        /// <summary>Computes the N demanded for this organ.</summary>
+        /// <remarks>
+        /// The NitrogenDemandSwitch is an optional value that can be used to limit, or stop, N demand calculations (default is one, no limitation).
+        /// CriticalNConc is also optional, with default value equal to MinimumNConc. In this case metabolic N demand is zero.
+        /// Demand is calculated such that N content is kept at or above CriticalNConc, in fact it tries to keep whole organ at MaximumNConc.
+        /// </remarks>
+        private void DoNDemandCalculations()
+        {
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
+
+            double remobilisedDM = DMReallocationSupply + DMRetranslocationSupply;
+            double remobilisedN = NReallocationSupply + NRetranslocationSupply;
+            double currentLabileN = Math.Max(0.0, StartLive.N - remobilisedN - (StartLive.Wt - remobilisedDM) * criticalN);
+            ////TODO: should subtract amounts made available for reallocation and retranslocation
+
+            // compute structural N demand
+            StructuralNDemand = PotentialStructuralDMAllocation * MinimumNConc.Value * NitrogenSwitch;
+            if (StructuralNDemand >= currentLabileN)
+            { // current labile N is not enough to cover structural demand
+                StructuralNDemand -= currentLabileN;
+                currentLabileN = 0.0;
+            }
+            else
+            { // current labile N is enough to cover structural demand
+                currentLabileN -= StructuralNDemand;
+                StructuralNDemand = 0.0;
+            }
+
+            // compute metabolic N demand
+            MetabolicNDemand = PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value) * NitrogenSwitch;
+            if (MetabolicNDemand >= currentLabileN)
+            { // current labile N cannot cover all metabolic demand
+                MetabolicNDemand -= currentLabileN;
+                currentLabileN = 0.0;
+            }
+            else
+            { // current labile N can cover all metabolic demand
+                currentLabileN -= MetabolicNDemand;
+                MetabolicNDemand = 0.0;
+            }
+
+            // compute non structural N demand
+            double maxNonStructuralN = (StartLive.Wt - remobilisedDM + PotentialStructuralDMAllocation) * (MaximumNConc.Value - criticalN);
+            NonStructuralNDemand = Math.Max(0, maxNonStructuralN - currentLabileN) * NitrogenSwitch;
+        }
+
         /// <summary>Gets or sets the N supply for this computation round.</summary>
         [XmlIgnore]
         public virtual BiomassSupplyType NSupply

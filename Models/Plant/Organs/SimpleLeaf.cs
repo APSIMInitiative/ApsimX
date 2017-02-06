@@ -192,9 +192,6 @@ namespace Models.PMF.Organs
         /// <summary>The lai dead function</summary>
         [Link]
         IFunction LaiDeadFunction = null;
-        /// <summary>The structural fraction</summary>
-        [Link]
-        IFunction StructuralFraction = null;
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
@@ -262,17 +259,6 @@ namespace Models.PMF.Organs
                     Retranslocation = DMRetranslocationSupply,
                     Reallocation = DMReallocationSupply
                 };
-            }
-        }
-
-        /// <summary>Gets or sets the n demand.</summary>
-        public override BiomassPoolType NDemand
-        {
-            get
-            {
-                double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N) - StructuralDemand;
-                return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
         }
 
