@@ -142,7 +142,13 @@ namespace Models.PMF
             public double TotalRetranslocationSupply { get; set; }
             /// <summary>Gets or sets the total crop supply.</summary>
             /// <value>crop supply from uptake, fixation, reallocation and remobilisation</value>
-            public double TotalPlantSupply { get; set; }
+            public double TotalPlantSupply
+            {
+                get
+                {
+                    return TotalReallocationSupply + TotalUptakeSupply + TotalFixationSupply + TotalRetranslocationSupply; 
+                }
+            }
             
             //Biomass Allocation Variables
             /// <summary>Gets or sets the reallocation.</summary>
@@ -791,8 +797,7 @@ namespace Models.PMF
 
                     //Calculate plant level supply totals.
                     N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
-                    N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
-
+                   
                     //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
                     if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
                     {
@@ -934,8 +939,7 @@ namespace Models.PMF
             
             //Recalculate totals based on actual supply
             N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
-            N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
-            
+                        
             //Allocate N that the SoilArbitrator has allocated the plant to each organ
             DoUptake(Organs, N, NArbitrationOption);                 
         }
@@ -1004,8 +1008,7 @@ namespace Models.PMF
             DM.TotalUptakeSupply = MathUtilities.Sum(DM.UptakeSupply);
             DM.TotalFixationSupply = MathUtilities.Sum(DM.FixationSupply);
             DM.TotalRetranslocationSupply = MathUtilities.Sum(DM.RetranslocationSupply);
-            DM.TotalPlantSupply = DM.TotalReallocationSupply + DM.TotalUptakeSupply + DM.TotalFixationSupply + DM.TotalRetranslocationSupply;
-            
+                        
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -1110,8 +1113,7 @@ namespace Models.PMF
             //N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);       This is done on DoNutrientUptakeCalculations
             N.TotalFixationSupply = MathUtilities.Sum(N.FixationSupply);
             N.TotalRetranslocationSupply = MathUtilities.Sum(N.RetranslocationSupply);
-            N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
-            
+                        
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
