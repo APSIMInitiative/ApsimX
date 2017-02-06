@@ -839,18 +839,12 @@ namespace Models.PMF
         /// <param name="AllocatedNH4Nuptake">AllocatedNH4Nuptake</param>
         public void DoNUptakeAllocations(double[] AllocatedNO3Nuptake, double[] AllocatedNH4Nuptake)  //Fixme Needs to take N allocation from soil arbitrator
         {
-            //Calculation the proportion of potential N uptake from each organ
-            double[] proportion = new double[Organs.Length];
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                proportion[i] = N.UptakeSupply[i] / N.TotalUptakeSupply;
-            }
-            
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             for (int i = 0; i < Organs.Length; i++)
             {   //Allocation of n involves resetting UptakeSupply from the potential value calculated on DoNUptakeDemandCalculations to an actual value based on what soil arbitrator allocated
-                N.UptakeSupply[i] = MathUtilities.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion[i];
-                N.UptakeSupply[i] += MathUtilities.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion[i];
+                double proportion = N.UptakeSupply[i] / N.TotalUptakeSupply;
+                N.UptakeSupply[i] = MathUtilities.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion;
+                N.UptakeSupply[i] += MathUtilities.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion;
             }
                                   
             //Allocate N that the SoilArbitrator has allocated the plant to each organ
