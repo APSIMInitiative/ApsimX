@@ -520,32 +520,10 @@ namespace Models.PMF
 
         /// TODO: the water outputs calculation need to be upgraded
 
-        /// <summary>the water supply</summary>
-        private double waterSupply = 0.0;
-
-
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>
         [XmlIgnore]
-        public double WSupply
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return waterSupply;
-                        else return 0.0;
-                    }
-                    else
-                        return waterSupply;
-                }
-                else
-                    return 0.0;
-            }
-        }
+        public double WSupply { get; private set; }
 
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
@@ -570,14 +548,14 @@ namespace Models.PMF
                     {
                         if (N != null)
                         {
-                            if ((Plant.Phenology.Emerged == true) && (WDemand > 0) && (waterSupply > 0))
-                                return waterSupply / WDemand;
+                            if ((Plant.Phenology.Emerged == true) && (WDemand > 0) && (WSupply > 0))
+                                return WSupply / WDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return waterSupply / WDemand;
+                        return WSupply / WDemand;
                 }
                 else
                     return 1;
