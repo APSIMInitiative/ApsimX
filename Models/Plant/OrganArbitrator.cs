@@ -127,7 +127,13 @@ namespace Models.PMF
             public double[] UptakeSupply { get; set; }
             /// <summary>Gets or sets the total uptake supply.</summary>
             /// <value>Biomass available for uptake by the crop</value>
-            public double TotalUptakeSupply { get; set; }
+            public double TotalUptakeSupply
+            {
+                get
+                {
+                    return MathUtilities.Sum(UptakeSupply);
+                }
+            }
             /// <summary>Gets or sets the fixation supply.</summary>
             /// <value>Biomass that may be fixed by the crop, eg DM fixed by photosynhesis in the leaves of N fixed by nodules</value>
             public double[] FixationSupply { get; set; }
@@ -793,10 +799,7 @@ namespace Models.PMF
                             }
                         }
                     }
-
-
-                    //Calculate plant level supply totals.
-                    N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
+                    
                    
                     //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
                     if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
@@ -936,10 +939,7 @@ namespace Models.PMF
                 N.UptakeSupply[i] = MathUtilities.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion[i];
                 N.UptakeSupply[i] += MathUtilities.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion[i];
             }
-            
-            //Recalculate totals based on actual supply
-            N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
-                        
+                                  
             //Allocate N that the SoilArbitrator has allocated the plant to each organ
             DoUptake(Organs, N, NArbitrationOption);                 
         }
@@ -1005,7 +1005,6 @@ namespace Models.PMF
             }
 
             DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
-            DM.TotalUptakeSupply = MathUtilities.Sum(DM.UptakeSupply);
             DM.TotalFixationSupply = MathUtilities.Sum(DM.FixationSupply);
             DM.TotalRetranslocationSupply = MathUtilities.Sum(DM.RetranslocationSupply);
                         
