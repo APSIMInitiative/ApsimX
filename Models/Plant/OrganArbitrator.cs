@@ -522,8 +522,6 @@ namespace Models.PMF
 
         /// <summary>the water supply</summary>
         private double waterSupply = 0.0;
-        /// <summary>the water demand</summary>
-        private double waterDemand = 0.0;
 
 
         /// <summary>Gets the water supply.</summary>
@@ -552,25 +550,7 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]
-        public double WDemand
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return waterDemand;
-                        else return 0.0;
-                    }
-                    else
-                        return waterDemand;
-                }
-                else
-                    return 0.0;
-            }
-        }
+        public double WDemand { get; private set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
@@ -590,14 +570,14 @@ namespace Models.PMF
                     {
                         if (N != null)
                         {
-                            if ((Plant.Phenology.Emerged == true) && (waterDemand > 0) && (waterSupply > 0))
-                                return waterSupply / waterDemand;
+                            if ((Plant.Phenology.Emerged == true) && (WDemand > 0) && (waterSupply > 0))
+                                return waterSupply / WDemand;
                             else return 1;
                         }
                         else return 1;
                     }
                     else
-                        return waterSupply / waterDemand;
+                        return waterSupply / WDemand;
                 }
                 else
                     return 1;
@@ -692,19 +672,19 @@ namespace Models.PMF
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
-            
+
             // Calculate total plant water demand.
-            waterDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+            WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
             {
                 if (o is IHasWaterDemand)
-                    waterDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
             }
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
-            if (waterDemand > 0)
-                fraction = Math.Min(1.0, waterSupply / waterDemand);
+            if (WDemand > 0)
+                fraction = Math.Min(1.0, waterSupply / WDemand);
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
