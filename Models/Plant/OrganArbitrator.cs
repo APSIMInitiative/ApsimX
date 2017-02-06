@@ -87,19 +87,19 @@ namespace Models.PMF
             public double[] StructuralDemand { get; set; }
             /// <summary>Gets or sets the total structural demand.</summary>
             /// <value>Demand for structural biomass from the crop</value>
-            public double TotalStructuralDemand { get; set; }
+            public double TotalStructuralDemand { get {return MathUtilities.Sum(StructuralDemand); } }
             /// <summary>Gets or sets the metabolic demand.</summary>
             /// <value>Demand for metabolic biomass from each organ</value>
             public double[] MetabolicDemand { get; set; }
             /// <summary>Gets or sets the total metabolic demand.</summary>
             /// <value>Demand for metabolic biomass from the crop</value>
-            public double TotalMetabolicDemand { get; set; }
+            public double TotalMetabolicDemand { get {return MathUtilities.Sum(MetabolicDemand); } }
             /// <summary>Gets or sets the non structural demand.</summary>
             /// <value>Demand for non-structural biomass from each organ</value>
             public double[] NonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total non structural demand.</summary>
             /// <value>Demand for non-structural biomass from the crop</value>
-            public double TotalNonStructuralDemand { get; set; }
+            public double TotalNonStructuralDemand { get { return MathUtilities.Sum(NonStructuralDemand); } }
             /// <summary>Gets or sets the total demand.</summary>
             /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
             public double[] TotalDemand { get; set; }
@@ -114,7 +114,7 @@ namespace Models.PMF
             public double[] RelativeNonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total crop demand.</summary>
             /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
-            public double TotalPlantDemand { get; set; }
+            public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalNonStructuralDemand; } }
             //Biomass Supply Variables
             /// <summary>Gets or sets the reallocation supply.</summary>
             /// <value>Biomass available for reallocation for each organ as it dies</value>
@@ -133,7 +133,7 @@ namespace Models.PMF
             public double[] FixationSupply { get; set; }
             /// <summary>Gets or sets the total fixation supply.</summary>
             /// <value>Total fixation by the crop</value>
-            public double TotalFixationSupply { get { return MathUtilities.Sum(ReallocationSupply); }}
+            public double TotalFixationSupply { get { return MathUtilities.Sum(FixationSupply); }}
             /// <summary>Gets or sets the retranslocation supply.</summary>
             /// <value>Supply of labile biomass that can be retranslocated from each oragn</value>
             public double[] RetranslocationSupply { get; set; }
@@ -1022,11 +1022,6 @@ namespace Models.PMF
                 DM.NonStructuralAllocation[i] = 0;
             }
 
-            DM.TotalStructuralDemand = MathUtilities.Sum(DM.StructuralDemand);
-            DM.TotalMetabolicDemand = MathUtilities.Sum(DM.MetabolicDemand);
-            DM.TotalNonStructuralDemand = MathUtilities.Sum(DM.NonStructuralDemand);
-            DM.TotalPlantDemand = DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand;
-
             DM.TotalStructuralAllocation = 0;
             DM.TotalMetabolicAllocation = 0;
             DM.TotalNonStructuralAllocation = 0;
@@ -1120,11 +1115,6 @@ namespace Models.PMF
                 N.MetabolicAllocation[i] = 0;
                 N.NonStructuralAllocation[i] = 0;
             }
-
-            N.TotalStructuralDemand = MathUtilities.Sum(N.StructuralDemand);
-            N.TotalMetabolicDemand = MathUtilities.Sum(N.MetabolicDemand);
-            N.TotalNonStructuralDemand = MathUtilities.Sum(N.NonStructuralDemand);
-            N.TotalPlantDemand = N.TotalStructuralDemand + N.TotalMetabolicDemand + N.TotalNonStructuralDemand;
 
             N.TotalStructuralAllocation = 0;
             N.TotalMetabolicAllocation = 0;
