@@ -461,7 +461,7 @@ namespace Models.PMF
                         else return 0;
                     }
                     else
-                        return N.TotalPlantDemand;
+                        return N.TotalPlantSupply;
                 }
                 else
                     return 0.0;
@@ -524,8 +524,7 @@ namespace Models.PMF
         private double waterSupply = 0.0;
         /// <summary>the water demand</summary>
         private double waterDemand = 0.0;
-        /// <summary>the water uptake</summary>
-        private double waterUptake = 0.0;
+
 
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>
@@ -576,25 +575,7 @@ namespace Models.PMF
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
         [XmlIgnore]
-        public double WAllocated
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return waterUptake;
-                        else return 0.0;
-                    }
-                    else
-                        return waterUptake;
-                }
-                else
-                    return 0.0;
-            }
-        }
+        public double WAllocated { get; private set; }
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
@@ -726,7 +707,7 @@ namespace Models.PMF
                 fraction = Math.Min(1.0, waterSupply / waterDemand);
 
             // Proportionally allocate supply across organs.
-            waterUptake = 0.0;
+            WAllocated = 0.0;
             foreach (IArbitration o in Organs)
                 if (o is IHasWaterDemand)
                 {
@@ -735,7 +716,7 @@ namespace Models.PMF
                     {
                         double allocation = fraction * demand;
                         (o as IHasWaterDemand).WaterAllocation = allocation;
-                        waterUptake += allocation;
+                        WAllocated += allocation;
                     }
                 }
 
