@@ -31,6 +31,9 @@
                 catch (Exception)
                 {
                 }
+            // Ensure the system has time to complete the deletion before we go ahead and recreate the folder
+            while (Gtk.Application.EventsPending())
+                Gtk.Application.RunIteration();
             Directory.CreateDirectory(tempFolder);
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
