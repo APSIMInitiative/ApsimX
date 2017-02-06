@@ -129,6 +129,7 @@ namespace Utility
                 txtLookFor.Text = Editor.GetTextBetween(start, end);
             }
             ReplaceMode = replaceMode;
+            editor.HighlightSearchPattern = true;
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
@@ -145,7 +146,7 @@ namespace Utility
                 window1.AllowShrink = !value;
                 btnReplace.Visible = btnReplaceAll.Visible = value;
                 lblReplaceWith.Visible = txtReplaceWith.Visible = value;
-                btnHighlightAll.Visible = !value;
+                btnHighlightAll.Visible = false;  // !value;
                 window1.Default = value ? btnReplace : btnFindNext;
             }
         }
@@ -159,29 +160,27 @@ namespace Utility
             FindNext(false, true, "Text not found");
         }
 
-        public bool _lastSearchWasBackward = false;
-        public bool _lastSearchLoopedAround;
-
-        
-        public SearchResult FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
+       
+        public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
+            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
+            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
+            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
                 ShowMsg("No string specified to look for!");
                 return null;
             }
-            _lastSearchWasBackward = searchBackward;
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
 
             SearchResult range = null;
-            if (searchBackward)
+            if (searchForward)
                 range = Editor.FindNext(true);
             else
                 range = Editor.FindPrevious(true);
             if (range == null && messageIfNotFound != null)
                 ShowMsg(messageIfNotFound);
+            else
+                Editor.ScrollTo(range.Offset);
             return range;
         }
         
@@ -189,36 +188,8 @@ namespace Utility
 
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
-            if (!_highlightGroups.ContainsKey(_editor))
-                _highlightGroups[_editor] = new HighlightGroup(_editor);
-            HighlightGroup group = _highlightGroups[_editor];
-
-            if (string.IsNullOrEmpty(LookFor))
-                // Clear highlights
-                group.ClearMarkers();
-            else
-            {
-                Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-                Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-                Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-
-                int offset = 0, count = 0;
-                for (;;)
-                {
-                    SearchResult range = Editor.SearchEngine.SearchForward(offset);
-                    if (range == null || range.SearchWrapped)
-                        break;
-                    offset = range.Offset + range.Length;
-                    count++;
-
-                    HighlightSegmentMarker m = new HighlightSegmentMarker(range.Offset, range.Length);
-                    group.AddMarker(m);
-                }
-                if (count == 0)
-                    ShowMsg("Search text not found.");
-                else
-                    window1.Hide();
-            }
+            _editor.HighlightSearchPattern = true;
+            btnFindNext_Click(sender, e);
         }
         private void btnCancel_Click(object sender, EventArgs e)
         {
