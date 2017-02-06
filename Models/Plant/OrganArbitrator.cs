@@ -467,7 +467,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-              
+                  
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -703,30 +703,20 @@ namespace Models.PMF
         /// </summary>
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
-            if (Plant.IsAlive)
+            if (Plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
-                double no3Supply = 0;
-                double nh4Supply = 0;
+                double NSupply = 0;
                 foreach (ZoneWaterAndN Z in zones)
-                {
-                    no3Supply += MathUtilities.Sum(Z.NO3N);
-                    nh4Supply += MathUtilities.Sum(Z.NH4N);
-                }
+                    NSupply += MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N);
 
-                if (Plant.Phenology != null)
-                {
-                    if (Plant.Phenology.Emerged == true)
-                    {
-                        DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                        Plant.Root.DoNitrogenUptake(zones);
-                    }
-                }
-                else
-                {
-                    DoNUptakeAllocations(no3Supply, nh4Supply); //Fixme, needs to send allocations to arbitrator
-                    Plant.Root.DoNitrogenUptake(zones);
-                }
+                //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
+                for (int i = 0; i < Organs.Length; i++)
+                    N.UptakeSupply[i] = NSupply * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+
+                //Allocate N that the SoilArbitrator has allocated the plant to each organ
+                DoUptake(Organs, N, NArbitrationOption);
+                Plant.Root.DoNitrogenUptake(zones);
             }
         }
         #endregion
@@ -779,22 +769,6 @@ namespace Models.PMF
             }
         }
         
-        /// <summary>Allocates the NUptake that the soil arbitrator has returned</summary>
-        /// <param name="AllocatedNO3Nuptake">AllocatedNO3Nuptake</param>
-        /// <param name="AllocatedNH4Nuptake">AllocatedNH4Nuptake</param>
-        public void DoNUptakeAllocations(double AllocatedNO3Nuptake, double AllocatedNH4Nuptake)  //Fixme Needs to take N allocation from soil arbitrator
-        {
-            //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
-            for (int i = 0; i < Organs.Length; i++)
-            {   //Allocation of n involves resetting UptakeSupply from the potential value calculated on DoNUptakeDemandCalculations to an actual value based on what soil arbitrator allocated
-                double proportion = N.UptakeSupply[i] / N.TotalUptakeSupply;
-                N.UptakeSupply[i] = AllocatedNO3Nuptake * kgha2gsm * proportion;
-                N.UptakeSupply[i] += AllocatedNH4Nuptake * kgha2gsm * proportion;
-            }
-                                  
-            //Allocate N that the SoilArbitrator has allocated the plant to each organ
-            DoUptake(Organs, N, NArbitrationOption);                 
-        }
         
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
@@ -1033,13 +1007,7 @@ namespace Models.PMF
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
                 for (int i = 0; i < Organs.Length; i++)
-                {
-                    if (BAT.UptakeSupply[i] > 0.00000000001)
-                    {
-                        double RelativeSupply = BAT.UptakeSupply[i] / BAT.TotalUptakeSupply;
-                        BAT.Uptake[i] += BiomassTakenUp * RelativeSupply;
-                    }
-                }
+                    BAT.Uptake[i] += BiomassTakenUp * MathUtilities.Divide(BAT.UptakeSupply[i],BAT.TotalUptakeSupply,0);
             }
         }
         
