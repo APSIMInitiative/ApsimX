@@ -62,11 +62,11 @@ namespace Models.PMF
         /// <summary>The method used to arbitrate N allocations</summary>
         [Description("Select method used for Nitrogen Arbitration")]
         public ArbitrationType NArbitrationOption { get; set; }
-        
+
         /// <summary>The mentod used to arbitrate DM allocations </summary>
         [Description("Select method used for Dry Matter Arbitration")]
         public ArbitrationType DMArbitrationOption { get; set; }
-        
+
         /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
@@ -87,13 +87,13 @@ namespace Models.PMF
             public double[] StructuralDemand { get; set; }
             /// <summary>Gets or sets the total structural demand.</summary>
             /// <value>Demand for structural biomass from the crop</value>
-            public double TotalStructuralDemand { get {return MathUtilities.Sum(StructuralDemand); } }
+            public double TotalStructuralDemand { get { return MathUtilities.Sum(StructuralDemand); } }
             /// <summary>Gets or sets the metabolic demand.</summary>
             /// <value>Demand for metabolic biomass from each organ</value>
             public double[] MetabolicDemand { get; set; }
             /// <summary>Gets or sets the total metabolic demand.</summary>
             /// <value>Demand for metabolic biomass from the crop</value>
-            public double TotalMetabolicDemand { get {return MathUtilities.Sum(MetabolicDemand); } }
+            public double TotalMetabolicDemand { get { return MathUtilities.Sum(MetabolicDemand); } }
             /// <summary>Gets or sets the non structural demand.</summary>
             /// <value>Demand for non-structural biomass from each organ</value>
             public double[] NonStructuralDemand { get; set; }
@@ -103,6 +103,9 @@ namespace Models.PMF
             /// <summary>Gets or sets the total demand.</summary>
             /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
             public double[] TotalDemand { get; set; }
+            /// <summary>Gets or sets the relative non structural demand.</summary>
+            /// <value>Non-structural biomass demand relative to total biomass demand</value>
+            public double[] RelativeNonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total crop demand.</summary>
             /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
             public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalNonStructuralDemand; } }
@@ -112,19 +115,19 @@ namespace Models.PMF
             public double[] ReallocationSupply { get; set; }
             /// <summary>Gets or sets the total reallocation supply.</summary>
             /// <value>Biomass available for reallocation from the entire crop</value>
-            public double TotalReallocationSupply{get{return MathUtilities.Sum(ReallocationSupply); } }
+            public double TotalReallocationSupply { get { return MathUtilities.Sum(ReallocationSupply); } }
             /// <summary>Gets or sets the uptake supply.</summary>
             /// <value>Biomass available for uptake from each absorbing organ, generally limited to ntrient uptake in roots</value>
             public double[] UptakeSupply { get; set; }
             /// <summary>Gets or sets the total uptake supply.</summary>
             /// <value>Biomass available for uptake by the crop</value>
-            public double TotalUptakeSupply {get{return MathUtilities.Sum(UptakeSupply);} }
+            public double TotalUptakeSupply { get { return MathUtilities.Sum(UptakeSupply); } }
             /// <summary>Gets or sets the fixation supply.</summary>
             /// <value>Biomass that may be fixed by the crop, eg DM fixed by photosynhesis in the leaves of N fixed by nodules</value>
             public double[] FixationSupply { get; set; }
             /// <summary>Gets or sets the total fixation supply.</summary>
             /// <value>Total fixation by the crop</value>
-            public double TotalFixationSupply { get { return MathUtilities.Sum(FixationSupply); }}
+            public double TotalFixationSupply { get { return MathUtilities.Sum(FixationSupply); } }
             /// <summary>Gets or sets the retranslocation supply.</summary>
             /// <value>Supply of labile biomass that can be retranslocated from each oragn</value>
             public double[] RetranslocationSupply { get; set; }
@@ -137,10 +140,10 @@ namespace Models.PMF
             {
                 get
                 {
-                    return TotalReallocationSupply + TotalUptakeSupply + TotalFixationSupply + TotalRetranslocationSupply; 
+                    return TotalReallocationSupply + TotalUptakeSupply + TotalFixationSupply + TotalRetranslocationSupply;
                 }
             }
-            
+
             //Biomass Allocation Variables
             /// <summary>Gets or sets the reallocation.</summary>
             /// <value>The amount of biomass reallocated from each organ as it dies</value>
@@ -186,7 +189,7 @@ namespace Models.PMF
             public double[] NonStructuralAllocation { get; set; }
             /// <summary>Gets or sets the total non structural allocation.</summary>
             /// <value>The total non-structural allocationed to the crop</value>
-            public double TotalNonStructuralAllocation { get {return MathUtilities.Sum(NonStructuralAllocation); } }
+            public double TotalNonStructuralAllocation { get { return MathUtilities.Sum(NonStructuralAllocation); } }
             /// <summary>Gets or sets the total allocation.</summary>
             /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
             public double[] TotalAllocation { get; set; }
@@ -228,6 +231,7 @@ namespace Models.PMF
                 StructuralDemand = new double[Size];
                 MetabolicDemand = new double[Size];
                 NonStructuralDemand = new double[Size];
+                RelativeNonStructuralDemand = new double[Size];
                 TotalDemand = new double[Size];
                 ReallocationSupply = new double[Size];
                 UptakeSupply = new double[Size];
@@ -422,7 +426,7 @@ namespace Models.PMF
                     if (Plant.Phenology != null)
                     {
                         if (Plant.Phenology.Emerged == true)
-                          return N.TotalPlantDemand;
+                            return N.TotalPlantDemand;
                         else return 0;
                     }
                     else
@@ -455,7 +459,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-                  
+
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -526,7 +530,7 @@ namespace Models.PMF
                     return 1;
             }
         }
-       
+
         #endregion
 
         #region IUptake interface
@@ -554,7 +558,7 @@ namespace Models.PMF
                             {
                                 supplies.Add(organSupply);
                                 zones.Add(zone.Zone);
-                                waterSupply += MathUtilities.Sum(organSupply)*zone.Zone.Area;
+                                waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
                             }
                         }
                     }
@@ -600,7 +604,7 @@ namespace Models.PMF
             // Calculate the total water supply across all zones.
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
-               waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
 
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -652,7 +656,7 @@ namespace Models.PMF
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
 
-                    UptakeDemands.NO3N =  new double[zone.NO3N.Length];
+                    UptakeDemands.NO3N = new double[zone.NO3N.Length];
                     UptakeDemands.NH4N = new double[zone.NH4N.Length];
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
@@ -666,14 +670,14 @@ namespace Models.PMF
                             (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area/Plant.Zone.Area;
+                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;
                             NSupply += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * zone.Zone.Area;
                         }
                     }
                     zones.Add(UptakeDemands);
                 }
 
-                double NDemand = (N.TotalPlantDemand - N.TotalReallocation)/kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
 
@@ -691,7 +695,7 @@ namespace Models.PMF
             }
             return null;
         }
-        
+
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
@@ -702,11 +706,11 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N))*Z.Zone.Area;
+                    NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 for (int i = 0; i < Organs.Length; i++)
-                    N.UptakeSupply[i] = NSupply/Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                    N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
                 DoUptake(Organs, N, NArbitrationOption);
@@ -762,8 +766,8 @@ namespace Models.PMF
                 DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
             }
         }
-        
-        
+
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -815,7 +819,7 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = Organs[i].DMSupply;
-                if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation+Supply.Retranslocation+Supply.Uptake, 0))
+                if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation + Supply.Retranslocation + Supply.Uptake, 0))
                     throw new Exception(Organs[i].Name + " is returning a negative DM supply.  Check your parameterisation");
                 DM.ReallocationSupply[i] = Supply.Reallocation;
                 DM.UptakeSupply[i] = Supply.Uptake;
@@ -823,7 +827,7 @@ namespace Models.PMF
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
                 DM.Start += Organs[i].Wt;
             }
-                
+
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -851,6 +855,13 @@ namespace Models.PMF
             DM.Allocated = 0;
             DM.SinkLimitation = 0;
             DM.NutrientLimitation = 0;
+
+            //Set relative DM demands of each organ
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                if (DM.TotalNonStructuralDemand > 0)
+                    DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
+            }
         }
 
         /// <summary>Sends the potential dm allocations.</summary>
@@ -860,11 +871,11 @@ namespace Models.PMF
         {
             //  Allocate to meet Organs demands
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
-            
+
             // Then check it all adds up
-            if (Math.Round(DM.Allocated,8) > Math.Round(DM.TotalPlantSupply,8)) 
+            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantSupply, 8))
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
-            if (Math.Round(DM.Allocated,8) > Math.Round(DM.TotalPlantDemand,8))
+            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantDemand, 8))
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
@@ -878,7 +889,7 @@ namespace Models.PMF
                 };
             }
         }
-        
+
         /// <summary>Does the nutrient set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="N">The bat.</param>
@@ -901,7 +912,7 @@ namespace Models.PMF
                 N.RetranslocationSupply[i] = Supply.Retranslocation;
                 N.Start += Organs[i].N;
             }
-                      
+
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
@@ -924,8 +935,15 @@ namespace Models.PMF
                 N.MetabolicAllocation[i] = 0;
                 N.NonStructuralAllocation[i] = 0;
             }
+
+            //Set relative N demands of each organ
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                if (N.TotalNonStructuralDemand > 0)
+                    N.RelativeNonStructuralDemand[i] = N.NonStructuralDemand[i] / N.TotalNonStructuralDemand;
+            }
         }
-     
+
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -957,12 +975,12 @@ namespace Models.PMF
                 BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
             }
         }
-        
+
         /// <summary>Does the uptake.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoUptake(IArbitration[] Organs, BiomassArbitrationType BAT,  ArbitrationType Option)
+        virtual public void DoUptake(IArbitration[] Organs, BiomassArbitrationType BAT, ArbitrationType Option)
         {
             double BiomassTakenUp = 0;
             if (BAT.TotalUptakeSupply > 0.00000000001)
@@ -979,10 +997,10 @@ namespace Models.PMF
 
                 // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
                 for (int i = 0; i < Organs.Length; i++)
-                    BAT.Uptake[i] += BiomassTakenUp * MathUtilities.Divide(BAT.UptakeSupply[i],BAT.TotalUptakeSupply,0);
+                    BAT.Uptake[i] += BiomassTakenUp * MathUtilities.Divide(BAT.UptakeSupply[i], BAT.TotalUptakeSupply, 0);
             }
         }
-        
+
         /// <summary>Does the retranslocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1013,7 +1031,7 @@ namespace Models.PMF
                 }
             }
         }
-        
+
         /// <summary>Does the fixation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -1036,7 +1054,7 @@ namespace Models.PMF
 
                 //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
                 BAT.SinkLimitation = BAT.NotAllocated;
-                
+
                 // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
@@ -1107,12 +1125,12 @@ namespace Models.PMF
                             }
                         }
                         if (UnallocatedRespirationCost > 0.0000000001)
-                            throw new Exception("Crop is trying to Fix excessive amounts of " + BAT.BiomassType +" Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic");
+                            throw new Exception("Crop is trying to Fix excessive amounts of " + BAT.BiomassType + " Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic");
                     }
                 }
             }
         }
-        
+
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         /// <param name="Organs">The organs.</param>
         virtual public void DoNutrientConstrainedDMAllocation(IArbitration[] Organs)
@@ -1131,9 +1149,9 @@ namespace Models.PMF
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
                     if (N.TotalAllocation[i] == 0)
-                        N.ConstrainedGrowth[i] = 0;
-                    else
-                        N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNconc;
+                    N.ConstrainedGrowth[i] = 0;
+                else
+                    N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNconc;
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
@@ -1155,7 +1173,7 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
-       
+
         /// <summary>Sends the dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
         virtual public void SendDMAllocations(IArbitration[] Organs)
@@ -1174,7 +1192,7 @@ namespace Models.PMF
                 };
             }
         }
-        
+
         /// <summary>Sends the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
         /// <exception cref="System.Exception">
@@ -1233,11 +1251,11 @@ namespace Models.PMF
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity");
         }
-        
+
         #endregion
 
         #region Arbitrator generic allocation functions
-        
+
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1255,7 +1273,7 @@ namespace Models.PMF
                 {
                     double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand);
                     double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * BAT.MetabolicDemand[i] / BAT.TotalMetabolicDemand);
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
                     NotAllocated -= (StructuralAllocation + MetabolicAllocation);
@@ -1269,8 +1287,8 @@ namespace Models.PMF
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0), NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += Math.Max(0,NonStructuralAllocation);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
+                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
@@ -1279,7 +1297,7 @@ namespace Models.PMF
             //it must be caught in that step.  Currently only using to catch DM not allocated so we can report as sink limitaiton
             BAT.NotAllocated = NotAllocated;
         }
-        
+
         /// <summary>Priorities the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1317,7 +1335,7 @@ namespace Models.PMF
                 }
             }
         }
-        
+
         /// <summary>Prioritythens the relative allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1349,14 +1367,14 @@ namespace Models.PMF
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0), NonStructuralRequirement);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
                     BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
                 }
             }
         }
-        
+
         /// <summary>Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -1377,9 +1395,9 @@ namespace Models.PMF
                     double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
                     double NonStructuralFraction = BAT.TotalNonStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
 
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i]/BAT.TotalStructuralDemand);
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand,0));
-                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0));
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
+                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * BAT.RelativeNonStructuralDemand[i]);
 
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
@@ -1392,7 +1410,7 @@ namespace Models.PMF
 
         #endregion
 
- 
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
