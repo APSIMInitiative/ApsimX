@@ -816,7 +816,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.Supply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1068,7 +1068,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>AccumulatedGrowth</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.Supply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>

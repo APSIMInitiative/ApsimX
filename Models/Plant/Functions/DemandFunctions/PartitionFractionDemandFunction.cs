@@ -26,7 +26,7 @@ namespace Models.PMF.Functions.DemandFunctions
         {
             get
             {
-                return Arbitrator.DMSupply * PartitionFraction.Value;
+                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value;
             }
         }
 

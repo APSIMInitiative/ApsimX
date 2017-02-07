@@ -100,9 +100,6 @@ namespace Models.PMF
             /// <summary>Gets or sets the total non structural demand.</summary>
             /// <value>Demand for non-structural biomass from the crop</value>
             public double TotalNonStructuralDemand { get { return MathUtilities.Sum(NonStructuralDemand); } }
-            /// <summary>Gets or sets the total demand.</summary>
-            /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
-            public double[] TotalDemand { get; set; }
             /// <summary>Gets or sets the total crop demand.</summary>
             /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
             public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalNonStructuralDemand; } }
@@ -228,7 +225,6 @@ namespace Models.PMF
                 StructuralDemand = new double[Size];
                 MetabolicDemand = new double[Size];
                 NonStructuralDemand = new double[Size];
-                TotalDemand = new double[Size];
                 ReallocationSupply = new double[Size];
                 UptakeSupply = new double[Size];
                 FixationSupply = new double[Size];
@@ -676,8 +672,6 @@ namespace Models.PMF
                 DM.StructuralDemand[i] = Demand.Structural;
                 DM.MetabolicDemand[i] = Demand.Metabolic;
                 DM.NonStructuralDemand[i] = Demand.NonStructural;
-                DM.TotalDemand[i] = DM.StructuralDemand[i] + DM.MetabolicDemand[i] + DM.NonStructuralDemand[i];
-
                 DM.Reallocation[i] = 0;
                 DM.Uptake[i] = 0;
                 DM.Fixation[i] = 0;
@@ -753,8 +747,6 @@ namespace Models.PMF
                 N.StructuralDemand[i] = Organs[i].NDemand.Structural;
                 N.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
                 N.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
-                N.TotalDemand[i] = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.NonStructuralDemand[i];
-
                 N.Reallocation[i] = 0;
                 N.Uptake[i] = 0;
                 N.Fixation[i] = 0;
@@ -966,7 +958,8 @@ namespace Models.PMF
             // Calculate posible growth based on Minimum N requirement of organs
             for (int i = 0; i < Organs.Length; i++)
             {
-                if (N.TotalAllocation[i] >= N.TotalDemand[i])
+                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.NonStructuralDemand[i];
+                if (N.TotalAllocation[i] >= TotalNDemand)
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
                     if (N.TotalAllocation[i] == 0)
