@@ -1159,7 +1159,7 @@ namespace Models
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Slurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -1721,7 +1721,7 @@ namespace Models
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Slurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -2164,7 +2164,7 @@ namespace Models
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Slurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -3583,7 +3583,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Slurp].Arbitrator.NDemand</string>
+            <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -5269,7 +5269,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Slurp].Arbitrator.NDemand</string>
+            <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -5831,7 +5831,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Slurp].Arbitrator.NDemand</string>
+            <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>

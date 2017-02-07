@@ -3376,7 +3376,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Arbitrator.DM.TotalFixationSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3617,7 +3617,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Arbitrator.DM.TotalFixationSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

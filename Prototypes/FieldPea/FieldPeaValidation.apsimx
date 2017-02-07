@@ -2779,7 +2779,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -4327,7 +4327,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7777,7 +7777,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9168,7 +9168,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -10654,7 +10654,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12496,11 +12496,11 @@ namespace Models
             <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
             <string>[DiagnosticsVariables].Script.SWC</string>
             <string>[FieldPea].Arbitrator.DM.TotalPlantDemand</string>
-            <string>[FieldPea].Arbitrator.DMSupply</string>
+            <string>[FieldPea].Arbitrator.DM.TotalFixationSupply</string>
             <string>[FieldPea].Arbitrator.DM.Allocated</string>
-            <string>[FieldPea].Arbitrator.DMNutrientLimitation</string>
-            <string>[FieldPea].Arbitrator.DMSinkLimitation</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.DM.NutrientLimitation</string>
+            <string>[FieldPea].Arbitrator.DM.SinkLimitation</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[FieldPea].Arbitrator.NH4NSupply</string>
             <string>[FieldPea].Arbitrator.NO3NSupply</string>
             <string>[FieldPea].Arbitrator.TotalPotentialNO3Uptake</string>
@@ -15295,7 +15295,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSupply</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalFixationSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15358,7 +15358,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSinkLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.SinkLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15379,7 +15379,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMNutrientLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.NutrientLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15668,7 +15668,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

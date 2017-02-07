@@ -258,75 +258,6 @@ namespace Models.PMF
 
         #region Main outputs
 
-        /// <summary>Gets the dm supply.</summary>
-        /// <value>Supply of DM from photosynthesising organs</value>
-        [XmlIgnore]
-        public double DMSupply
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return DM.TotalFixationSupply;
-                        else return 0;
-                    }
-                    else
-                        return DM.TotalFixationSupply;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
-        /// <summary>Gets the sink limitation to growth</summary>
-        /// <value>The amount of DM that was not fixed because potential growth from organs did not require it</value>
-        [XmlIgnore]
-        public double DMSinkLimitation
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return DM.SinkLimitation;
-                        else return 0;
-                    }
-                    else
-                        return DM.SinkLimitation;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
-        /// <summary>Gets the nutrient limitation to growth</summary>
-        /// <value>The amount of DM that was not assimilated because there was not enough nutrient to meet minimum concentrations</value>
-        [XmlIgnore]
-        public double DMNutrientLimitation
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return DM.NutrientLimitation;
-                        else return 0;
-                    }
-                    else
-                        return DM.NutrientLimitation;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
@@ -361,52 +292,6 @@ namespace Models.PMF
             get
             {
                 return DM.End - DM.Start;
-            }
-        }
-
-        /// <summary>Gets the n demand.</summary>
-        /// <value>The n demand.</value>
-        [XmlIgnore]
-        public double NDemand
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return N.TotalPlantDemand;
-                        else return 0;
-                    }
-                    else
-                        return N.TotalPlantDemand;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
-        /// <summary>Gets the n supply.</summary>
-        /// <value>The n supply.</value>
-        [XmlIgnore]
-        public double NSupply
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return N.TotalPlantSupply;
-                        else return 0;
-                    }
-                    else
-                        return N.TotalPlantSupply;
-                }
-                else
-                    return 0.0;
             }
         }
 

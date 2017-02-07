@@ -3494,8 +3494,8 @@ namespace Models
           <string>[Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration as MaintenanceRespiration</string>
           <string>[Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration as GrowthRespiration</string>
           <string />
-          <string>[Wheat].Arbitrator.DMSupply as GrossPhotosynthesis</string>
-          <string>[Wheat].Arbitrator.DMSupply - ([Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration ) - ([Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration) as NetPhotosynthesis</string>
+          <string>[Wheat].Arbitrator.DM.TotalFixationSupply as GrossPhotosynthesis</string>
+          <string>[Wheat].Arbitrator.DM.TotalFixationSupply - ([Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration ) - ([Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration) as NetPhotosynthesis</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3592,7 +3592,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
