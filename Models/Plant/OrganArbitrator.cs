@@ -103,9 +103,6 @@ namespace Models.PMF
             /// <summary>Gets or sets the total demand.</summary>
             /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
             public double[] TotalDemand { get; set; }
-            /// <summary>Gets or sets the relative non structural demand.</summary>
-            /// <value>Non-structural biomass demand relative to total biomass demand</value>
-            public double[] RelativeNonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total crop demand.</summary>
             /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
             public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalNonStructuralDemand; } }
@@ -231,7 +228,6 @@ namespace Models.PMF
                 StructuralDemand = new double[Size];
                 MetabolicDemand = new double[Size];
                 NonStructuralDemand = new double[Size];
-                RelativeNonStructuralDemand = new double[Size];
                 TotalDemand = new double[Size];
                 ReallocationSupply = new double[Size];
                 UptakeSupply = new double[Size];
@@ -279,52 +275,6 @@ namespace Models.PMF
                     }
                     else
                         return DM.TotalFixationSupply;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
-        /// <summary>Gets the dm demand</summary>
-        /// <value>Demand of DM from growing organs</value>
-        [XmlIgnore]
-        public double DMDemand
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return DM.TotalPlantDemand;
-                        else return 0;
-                    }
-                    else
-                        return DM.TotalPlantDemand;
-                }
-                else
-                    return 0.0;
-            }
-        }
-
-        /// <summary>Gets the dm allocations</summary>
-        /// <value>Allocation of DM to each organ</value>
-        [XmlIgnore]
-        public double DMAllocated
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (Plant.Phenology.Emerged == true)
-                            return DM.Allocated;
-                        else return 0;
-                    }
-                    else
-                        return DM.Allocated;
                 }
                 else
                     return 0.0;
@@ -855,13 +805,6 @@ namespace Models.PMF
             DM.Allocated = 0;
             DM.SinkLimitation = 0;
             DM.NutrientLimitation = 0;
-
-            //Set relative DM demands of each organ
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                if (DM.TotalNonStructuralDemand > 0)
-                    DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
-            }
         }
 
         /// <summary>Sends the potential dm allocations.</summary>
@@ -934,13 +877,6 @@ namespace Models.PMF
                 N.StructuralAllocation[i] = 0;
                 N.MetabolicAllocation[i] = 0;
                 N.NonStructuralAllocation[i] = 0;
-            }
-
-            //Set relative N demands of each organ
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                if (N.TotalNonStructuralDemand > 0)
-                    N.RelativeNonStructuralDemand[i] = N.NonStructuralDemand[i] / N.TotalNonStructuralDemand;
             }
         }
 
@@ -1287,7 +1223,7 @@ namespace Models.PMF
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.NonStructuralDemand[i],BAT.TotalNonStructuralDemand,0), NonStructuralRequirement);
                     BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
@@ -1367,7 +1303,7 @@ namespace Models.PMF
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0), NonStructuralRequirement);
                     BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
@@ -1397,7 +1333,7 @@ namespace Models.PMF
 
                     double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
                     double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
-                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * BAT.RelativeNonStructuralDemand[i]);
+                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0));
 
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;

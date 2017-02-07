@@ -3946,7 +3946,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NSupply</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
@@ -9967,7 +9967,7 @@ namespace Models
                 <string>[Wheat].Arbitrator.NSupply</string>
                 <string>[Wheat].Arbitrator.DMSupply</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>

@@ -3169,7 +3169,7 @@ namespace Models
         <string />
         <string>[Plantain].Arbitrator.DMSupply</string>
         <string>[Plantain].Arbitrator.DM.TotalPlantDemand</string>
-        <string>[Plantain].Arbitrator.DMAllocated</string>
+        <string>[Plantain].Arbitrator.DM.Allocated</string>
         <string>[Plantain].Arbitrator.DMSinkLimitation</string>
         <string>[Plantain].Arbitrator.DMNutrientLimitation</string>
         <string>[Plantain].Arbitrator.FDM</string>
@@ -8263,7 +8263,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14973,7 +14973,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

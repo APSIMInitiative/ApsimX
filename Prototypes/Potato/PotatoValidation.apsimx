@@ -4937,7 +4937,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMAllocated</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.Allocated</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>

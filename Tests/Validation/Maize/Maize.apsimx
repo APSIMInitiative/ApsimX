@@ -26626,7 +26626,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NSupply</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
@@ -35610,7 +35610,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
@@ -36929,7 +36929,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>

@@ -5577,7 +5577,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -7668,7 +7668,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -10780,7 +10780,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -29950,7 +29950,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -34063,7 +34063,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -37390,7 +37390,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -39591,7 +39591,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
@@ -49935,7 +49935,7 @@ namespace Models
                 <string>[Wheat].Arbitrator.NSupply</string>
                 <string>[Wheat].Arbitrator.DMSupply</string>
                 <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>

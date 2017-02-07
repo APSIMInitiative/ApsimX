@@ -8411,7 +8411,7 @@ namespace Models
             <string>[SCRUM].Arbitrator.NSupply</string>
             <string>[SCRUM].Arbitrator.DMSupply</string>
             <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-            <string>[SCRUM].Arbitrator.DMAllocated</string>
+            <string>[SCRUM].Arbitrator.DM.Allocated</string>
             <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
             <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
             <string>[SCRUM].Stover.MaximumNConc.Value</string>

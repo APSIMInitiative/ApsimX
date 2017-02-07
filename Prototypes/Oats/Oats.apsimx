@@ -3111,7 +3111,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
             <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
@@ -4091,7 +4091,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
             <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
@@ -5149,7 +5149,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
             <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
