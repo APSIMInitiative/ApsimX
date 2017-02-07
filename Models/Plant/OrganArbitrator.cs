@@ -103,9 +103,6 @@ namespace Models.PMF
             /// <summary>Gets or sets the total demand.</summary>
             /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
             public double[] TotalDemand { get; set; }
-            /// <summary>Gets or sets the relative structural demand.</summary>
-            /// <value>Structural biomass demand relative to total biomass demand</value>
-            public double[] RelativeStructuralDemand { get; set; }
             /// <summary>Gets or sets the relative metabolic demand.</summary>
             /// <value>Metabolic biomass demand relative to total biomass demand</value>
             public double[] RelativeMetabolicDemand { get; set; }
@@ -237,7 +234,6 @@ namespace Models.PMF
                 StructuralDemand = new double[Size];
                 MetabolicDemand = new double[Size];
                 NonStructuralDemand = new double[Size];
-                RelativeStructuralDemand = new double[Size];
                 RelativeMetabolicDemand = new double[Size];
                 RelativeNonStructuralDemand = new double[Size];
                 TotalDemand = new double[Size];
@@ -867,8 +863,6 @@ namespace Models.PMF
             //Set relative DM demands of each organ
             for (int i = 0; i < Organs.Length; i++)
             {
-                if (DM.TotalStructuralDemand > 0)
-                    DM.RelativeStructuralDemand[i] = DM.StructuralDemand[i] / DM.TotalStructuralDemand;
                 if (DM.TotalMetabolicDemand > 0)
                     DM.RelativeMetabolicDemand[i] = DM.MetabolicDemand[i] / DM.TotalMetabolicDemand;
                 if (DM.TotalNonStructuralDemand > 0)
@@ -951,8 +945,6 @@ namespace Models.PMF
             //Set relative N demands of each organ
             for (int i = 0; i < Organs.Length; i++)
             {
-                if (N.TotalStructuralDemand > 0)
-                    N.RelativeStructuralDemand[i] = N.StructuralDemand[i] / N.TotalStructuralDemand;
                 if (N.TotalMetabolicDemand > 0)
                     N.RelativeMetabolicDemand[i] = N.MetabolicDemand[i] / N.TotalMetabolicDemand;
                 if (N.TotalNonStructuralDemand > 0)
@@ -1288,7 +1280,7 @@ namespace Models.PMF
                 if ((StructuralRequirement + MetabolicRequirement) > 0.0)
                 {
                     double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand);
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.RelativeStructuralDemand[i]);
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
                     double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * (1 - StructuralFraction) * BAT.RelativeMetabolicDemand[i]);
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
@@ -1411,7 +1403,7 @@ namespace Models.PMF
                     double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
                     double NonStructuralFraction = BAT.TotalNonStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
 
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.RelativeStructuralDemand[i]);
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i]/BAT.TotalStructuralDemand);
                     double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * BAT.RelativeMetabolicDemand[i]);
                     double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * BAT.RelativeNonStructuralDemand[i]);
 
