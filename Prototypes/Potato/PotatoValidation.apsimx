@@ -1472,7 +1472,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <string>[Potato].AboveGround.N</string>
         <string>[Potato].Arbitrator.NDemand</string>
         <string>[Potato].Arbitrator.TotalPotentialNO3Uptake</string>
-        <string>[Potato].Arbitrator.DMDemand</string>
+        <string>[Potato].Arbitrator.DM.TotalPlantDemand</string>
         <string>[Potato].Arbitrator.DMSupply</string>
         <string>[Potato].Arbitrator.DMSinkLimitation</string>
         <string>[Potato].Arbitrator.DMNutrientLimitation</string>
@@ -4916,7 +4916,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.TotalPlantDemand</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -36958,7 +36958,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.TotalPlantDemand</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

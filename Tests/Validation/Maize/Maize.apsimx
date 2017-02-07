@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -332,17 +332,12 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -1029,7 +1024,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -1407,17 +1401,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -2097,7 +2086,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -2894,7 +2882,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -3338,7 +3325,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -3767,7 +3753,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -4188,7 +4173,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -4596,7 +4580,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5004,7 +4987,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5404,7 +5386,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5758,7 +5739,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6166,7 +6146,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6520,7 +6499,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6897,7 +6875,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -7251,7 +7228,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -7651,7 +7627,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8051,7 +8026,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8459,7 +8433,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8844,7 +8817,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9252,7 +9224,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9606,7 +9577,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9945,7 +9915,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -10276,7 +10245,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -10674,7 +10642,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11080,7 +11047,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11455,7 +11421,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11884,7 +11849,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11924,17 +11888,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -12603,7 +12562,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -13497,17 +13455,12 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -14193,7 +14146,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -14644,17 +14596,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -15340,7 +15287,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -15787,17 +15733,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -16230,7 +16171,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -16729,17 +16669,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -17171,7 +17106,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -17591,17 +17525,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -18033,7 +17962,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -18541,17 +18469,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -18995,7 +18918,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -20034,17 +19956,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -20485,7 +20402,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -21426,17 +21342,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -21877,7 +21788,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -22875,17 +22785,12 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -23552,7 +23457,6 @@ namespace Models
               <Country>USA</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
               <DataSource>for Mahli al-Kaisi paper (Marsden Research farm), tes file , long term soybean</DataSource>
               <Comments>all data only from WSS</Comments>
             </Soil>
@@ -23672,17 +23576,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -24391,7 +24290,6 @@ namespace Models
             <Country>USA</Country>
             <Latitude>42.48</Latitude>
             <Longitude>-92.23</Longitude>
-            <Area>0</Area>
             <DataSource>from DSSAT soybean williams 1982</DataSource>
           </Soil>
           <Report>
@@ -24679,17 +24577,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -25338,7 +25231,6 @@ namespace Models
             <Country>USA</Country>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
             <DataSource>for varius test</DataSource>
             <Comments>from WSS and saxton</Comments>
           </Soil>
@@ -26179,7 +26071,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <MicroClimate>
@@ -26189,17 +26080,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -26739,7 +26625,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.NSupply</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DMAllocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
@@ -27518,7 +27404,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30992,7 +30878,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -32557,7 +32443,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -32722,17 +32607,12 @@ TreatNo = 2
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -35494,7 +35374,6 @@ namespace Models
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -35545,17 +35424,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -35735,7 +35609,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DMAllocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
@@ -36826,7 +36700,6 @@ namespace Models
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -36877,17 +36750,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -37060,7 +36928,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DMAllocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
@@ -38933,7 +38801,6 @@ namespace Models
             <Country>Rwanda</Country>
             <Latitude>-2.15</Latitude>
             <Longitude>30.45</Longitude>
-            <Area>0</Area>
             <DataSource>Rwanda soil database using properties for Ferralsol</DataSource>
           </Soil>
           <Plant>
@@ -38949,17 +38816,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>

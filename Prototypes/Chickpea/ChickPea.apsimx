@@ -81,7 +81,7 @@ The model consists of:
         <string>[Chickpea].Arbitrator.DMSinkLimitation</string>
         <string>[Chickpea].Arbitrator.NDemand</string>
         <string>[Chickpea].Arbitrator.NSupply</string>
-        <string>[Chickpea].Arbitrator.DMDemand</string>
+        <string>[Chickpea].Arbitrator.DM.TotalPlantDemand</string>
         <string>[Chickpea].Arbitrator.DMSupply</string>
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
@@ -5896,7 +5896,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.DM.TotalPlantDemand</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

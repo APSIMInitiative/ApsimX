@@ -12495,7 +12495,7 @@ namespace Models
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
             <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
             <string>[DiagnosticsVariables].Script.SWC</string>
-            <string>[FieldPea].Arbitrator.DMDemand</string>
+            <string>[FieldPea].Arbitrator.DM.TotalPlantDemand</string>
             <string>[FieldPea].Arbitrator.DMSupply</string>
             <string>[FieldPea].Arbitrator.DMAllocated</string>
             <string>[FieldPea].Arbitrator.DMNutrientLimitation</string>
@@ -15316,7 +15316,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -16095,7 +16095,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

@@ -3945,7 +3945,7 @@ namespace Models
                 <string>[Maize].Arbitrator.NDemand</string>
                 <string>[Maize].Arbitrator.NSupply</string>
                 <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DMAllocated</string>
                 <string>[Maize].Arbitrator.DMSinkLimitation</string>
                 <string>[Maize].Arbitrator.DMNutrientLimitation</string>
@@ -4724,7 +4724,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8543,7 +8543,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>MaizeReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -9966,7 +9966,7 @@ namespace Models
                 <string>[Wheat].Arbitrator.NDemand</string>
                 <string>[Wheat].Arbitrator.NSupply</string>
                 <string>[Wheat].Arbitrator.DMSupply</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Wheat].Arbitrator.DMAllocated</string>
                 <string>[Wheat].Arbitrator.DMSinkLimitation</string>
                 <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
@@ -12403,7 +12403,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>

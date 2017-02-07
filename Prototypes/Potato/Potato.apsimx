@@ -4243,7 +4243,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>Potato.Arbitrator.DM.TotalPlantDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4461,7 +4461,7 @@ namespace Models
           <string>[Soil].SoilWater.Runoff</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>Potato.Arbitrator.DMAllocated</string>
-          <string>Potato.Arbitrator.DMDemand</string>
+          <string>Potato.Arbitrator.DM.TotalPlantDemand</string>
           <string>Potato.Arbitrator.DMNutrientLimitation</string>
           <string>Potato.Arbitrator.DMSinkLimitation</string>
           <string>Potato.Arbitrator.DMSupply</string>

@@ -3168,7 +3168,7 @@ namespace Models
         <string>([Chicory].Root.Live.Wt / ([Chicory].BelowGround.Wt + 0.000001)) as RootFraction</string>
         <string />
         <string>[Chicory].Arbitrator.DMSupply</string>
-        <string>[Chicory].Arbitrator.DMDemand</string>
+        <string>[Chicory].Arbitrator.DM.TotalPlantDemand</string>
         <string>[Chicory].Arbitrator.DMAllocated</string>
         <string>[Chicory].Arbitrator.DMSinkLimitation</string>
         <string>[Chicory].Arbitrator.DMNutrientLimitation</string>
@@ -7421,7 +7421,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -13982,7 +13982,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                    <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19842,7 +19842,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -26414,7 +26414,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -33459,7 +33459,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -40679,7 +40679,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -48351,7 +48351,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -55062,7 +55062,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -61764,7 +61764,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -68274,7 +68274,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Chicory.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

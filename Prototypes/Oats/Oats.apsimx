@@ -2699,7 +2699,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].AboveGroundLive.Wt</string>
         <string>[Oats].AboveGroundDead.N</string>
         <string>[Oats].AboveGroundDead.Wt</string>
-        <string>[Oats].Arbitrator.DMDemand</string>
+        <string>[Oats].Arbitrator.DM.TotalPlantDemand</string>
         <string>[Oats].Arbitrator.DMSupply</string>
         <string>[Oats].Ear.N</string>
         <string>[Oats].Ear.Nconc</string>
@@ -3112,7 +3112,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
             <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
             <string>[0ats].Arbitrator.DMSupply</string>
@@ -4092,7 +4092,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
             <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
             <string>[0ats].Arbitrator.DMSupply</string>
@@ -5150,7 +5150,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
             <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
             <string>[0ats].Arbitrator.DMSupply</string>
