@@ -620,7 +620,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>GrowthGrainDevelopment</Name>
       <VariableReference>
         <Name>DailyBiomassProduction</Name>
-        <VariableName>[Arbitrator].DM.Supply</VariableName>
+        <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
       </VariableReference>
       <StartStageName>FlagLeaf</StartStageName>
       <EndStageName>StartGrainFill</EndStageName>

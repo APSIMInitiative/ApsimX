@@ -579,7 +579,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>GrowthGrainDevelopment</Name>
           <VariableReference>
             <Name>DailyBiomassProduction</Name>
-            <VariableName>[Arbitrator].DM.Supply</VariableName>
+            <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <StartStageName>FlagLeaf</StartStageName>
           <EndStageName>StartGrainFill</EndStageName>
@@ -3207,7 +3207,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DM.Supply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -3391,7 +3391,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrowthGrainDevelopment</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DM.Supply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>

@@ -797,7 +797,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>DMCaryopsis</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
-            <VariableName>[Arbitrator].DM.Supply</VariableName>
+            <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
@@ -1531,7 +1531,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               </VariableReference>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
-                <VariableName>[Arbitrator].DM.Supply</VariableName>
+                <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>Emergence</Start>
@@ -1542,7 +1542,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>DMRemaining</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
-            <VariableName>[Arbitrator].DM.Supply</VariableName>
+            <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>LeafDMDemand</Name>
@@ -1735,7 +1735,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
-                <VariableName>[Arbitrator].DM.Supply</VariableName>
+                <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
@@ -1863,7 +1863,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>DMDemandFunction</Name>
             <VariableReference>
               <Name>DMFixationSupply</Name>
-              <VariableName>[Arbitrator].DM.Supply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>LeafDemand</Name>
@@ -2875,7 +2875,7 @@ namespace Models
               <string>[Leaf].RadIntTot</string>
               <string>[Weather].Radn</string>
               <string>[Leaf].WaterDemand</string>
-              <string>[Arbitrator].DM.Supply</string>
+              <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string>[Leaf].Live.wt</string>
               <string>[Stem].Live.wt</string>
