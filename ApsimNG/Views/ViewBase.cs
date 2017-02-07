@@ -191,5 +191,63 @@ namespace UserInterface
             }
             return fileName;
         }
+
+        /// <summary>
+        /// "Native" structure for a key press event
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        public struct EventKeyStruct
+        {
+            public Gdk.EventType type;
+            public IntPtr window;
+            public sbyte send_event;
+
+            public uint time;
+            public uint state;
+            public uint keyval;
+            public uint length;
+            public string str;
+            public ushort hardware_keycode;
+            public byte group;
+            public uint is_modifier;
+        }
+
+        /// <summary>
+        /// Fires a key press event to a widget. This is not something that should be used very often,
+        /// but it provides a way to store a value of a cell being edited in a grid when the user closes the grid
+        /// (e.g., by selecting a different view).
+        /// I haven't been able to find any better way to do it.
+        /// It's placed in this unit because there may be uses in other contexts.
+        /// </summary>
+        /// <param name="widget"></param>
+        /// <param name="key"></param>
+        public static void SendKeyEvent(Gtk.Widget widget, Gdk.Key key)
+        {
+            uint keyval = (uint)key;
+            Gdk.Window window = widget.GdkWindow;
+            Gdk.KeymapKey[] keymap = Gdk.Keymap.Default.GetEntriesForKeyval(keyval);
+
+            EventKeyStruct native = new EventKeyStruct();
+            native.type = Gdk.EventType.KeyPress;
+            native.window = window.Handle;
+            native.send_event = 1;
+            native.state = (uint)Gdk.EventMask.KeyPressMask;
+            native.keyval = keyval;
+            native.length = 0;
+            native.str = null;
+            native.hardware_keycode = (ushort)keymap[0].Keycode;
+            native.group = (byte)keymap[0].Group;
+
+            IntPtr ptr = GLib.Marshaller.StructureToPtrAlloc(native);
+            try
+            {
+                Gdk.EventKey evnt = new Gdk.EventKey(ptr);
+                Gtk.Main.DoEvent(evnt);
+            }
+            finally
+            {
+                GLib.Marshaller.Free(ptr);
+            }
+        }
     }
 }
