@@ -275,7 +275,7 @@ namespace Models.PMF.Organs
         {
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
-                ZoneState zone = Zones.Find(z => z.Name == thisZone.Name);
+                ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
 
@@ -493,16 +493,12 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        public void CalculateNitrogenSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply, ref double[] NH4Supply)
         {
-            NO3Supply = null;
-            NH4Supply = null;
 
-            ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
+            ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
             {
-                NO3Supply = new double[myZone.soil.Thickness.Length];
-                NH4Supply = new double[myZone.soil.Thickness.Length];
 
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
@@ -585,7 +581,7 @@ namespace Models.PMF.Organs
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
         {
-            ZoneState myZone = Zones.Find(z => z.Name == zone.Name);
+            ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone == null)
                 return null;
 

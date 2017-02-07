@@ -32,7 +32,9 @@ namespace UserInterface.Forms
         /// <summary>
         /// A list of potential upgrades available.
         /// </summary>
-        private Upgrade[] upgrades;
+        private Upgrade[] upgrades = new Upgrade[0];
+
+        private bool loadFailure = false;
 
         /// <summary>
         /// Our explorer presenter.
@@ -142,6 +144,8 @@ namespace UserInterface.Forms
                 Gtk.Application.RunIteration();
             PopulateForm();
             window1.GdkWindow.Cursor = null;
+            if (loadFailure)
+                window1.Destroy();
         }
 
         /// <summary>
@@ -155,7 +159,16 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                PopulateUpgradeList();
+                try
+                {
+                    PopulateUpgradeList();
+                }
+                catch (Exception)
+                {
+                    ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok);
+                    loadFailure = true;
+                    return;
+                }
                 if (upgrades.Length > 0)
                 {
                     label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
@@ -190,6 +203,7 @@ namespace UserInterface.Forms
             catch (Exception)
             {
                 ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok);
+                loadFailure = true;
             }
 
         }

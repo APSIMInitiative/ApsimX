@@ -2538,7 +2538,7 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Input>
@@ -5131,7 +5131,7 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Input>
@@ -7602,7 +7602,7 @@ This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Input>
