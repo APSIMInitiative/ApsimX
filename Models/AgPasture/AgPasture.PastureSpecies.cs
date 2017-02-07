@@ -343,8 +343,7 @@ namespace Models.AgPasture
             get
             {
                 // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                myZone.Name = this.Parent.Name;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
                 myZone.Water = mySoil.Water;
                 myZone.NO3N = mySoil.NO3N;
                 myZone.NH4N = mySoil.NH4N;
@@ -386,10 +385,10 @@ namespace Models.AgPasture
             if (IsAlive)
             {
                 // Get the zone this plant is in
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                Zone parentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
+                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(parentZone);
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
-                    if (zone.Name == parentZone.Name)
+                    if (zone.Zone.Name == parentZone.Name)
                         myZone = zone;
 
                 // Get the amount of water available for this plant
@@ -399,8 +398,7 @@ namespace Models.AgPasture
                 EvaluateSoilWaterUptake();
 
                 // Pack potential uptake data for this plant
-                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN();
-                myUptakeDemand.Name = myZone.Name;
+                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN(myZone.Zone);
                 myUptakeDemand.Water = mySoilWaterUptake;
                 myUptakeDemand.NO3N = new double[nLayers];
                 myUptakeDemand.NH4N = new double[nLayers];
@@ -422,10 +420,10 @@ namespace Models.AgPasture
             if (IsAlive)
             {
                 // Get the zone this plant is in
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                Zone parentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
+                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(parentZone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == parentZone.Name)
+                    if (Z.Zone.Name == parentZone.Name)
                         myZone = Z;
 
                 // Get the N amount available in the soil
@@ -441,8 +439,7 @@ namespace Models.AgPasture
                 EvaluateSoilNitrogenUptake();
 
                 //Pack results into uptake structure
-                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN();
-                myUptakeDemand.Name = myZone.Name;
+                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN(myZone.Zone);
                 myUptakeDemand.NH4N = mySoilNH4Uptake;
                 myUptakeDemand.NO3N = mySoilNO3Uptake;
                 myUptakeDemand.Water = new double[nLayers];
@@ -461,10 +458,11 @@ namespace Models.AgPasture
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
             // Get the zone this plant is in
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone parentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
+            Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(parentZone);
+
             foreach (ZoneWaterAndN Z in zones)
-                if (Z.Name == parentZone.Name)
+                if (Z.Zone.Name == parentZone.Name)
                     MyZone = Z;
 
             // Get the water uptake from each layer
@@ -478,10 +476,11 @@ namespace Models.AgPasture
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
             // Get the zone this plant is in
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            Zone parentZone = Apsim.Parent(this, typeof (Zone)) as Zone;
+            Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(parentZone);
+
             foreach (ZoneWaterAndN Z in zones)
-                if (Z.Name == parentZone.Name)
+                if (Z.Zone.Name == parentZone.Name)
                     MyZone = Z;
 
             // Get the N uptake from each layer
@@ -4627,8 +4626,7 @@ namespace Models.AgPasture
                 // this module will compute water uptake
 
                 // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                myZone.Name = this.Parent.Name;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
                 myZone.Water = mySoil.Water;
                 myZone.NO3N = mySoil.NO3N;
                 myZone.NH4N = mySoil.NH4N;
@@ -4830,8 +4828,7 @@ namespace Models.AgPasture
                 // this module will compute nitrogen uptake
 
                 // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN();
-                myZone.Name = this.Parent.Name;
+                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
                 myZone.Water = mySoil.Water;
                 myZone.NO3N = mySoil.NO3N;
                 myZone.NH4N = mySoil.NH4N;

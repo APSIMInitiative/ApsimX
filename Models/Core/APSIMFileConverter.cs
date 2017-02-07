@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 2; } }
+        public static int LastestVersion { get { return 3; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -159,6 +159,28 @@ namespace Models.Core
                 {
                     XmlNode aliasNode = cultivarNode.AppendChild(cultivarNode.OwnerDocument.CreateElement("Alias"));
                     XmlUtilities.SetValue(aliasNode, "Name", alias);
+                }
+            }
+        }
+
+
+        /// <summary>Upgrades to version 3. Make sure all area elements are greater than zero.</summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion3(XmlNode node)
+        {
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
+            {
+                string areaString = XmlUtilities.Value(zoneNode, "Area");
+
+                try
+                {
+                    double area = Convert.ToDouble(areaString);
+                    if (area <= 0)
+                        XmlUtilities.SetValue(zoneNode, "Area", "1");
+                }
+                catch (Exception)
+                {
+                    XmlUtilities.SetValue(zoneNode, "Area", "1");
                 }
             }
         }
