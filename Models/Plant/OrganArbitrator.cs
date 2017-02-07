@@ -249,8 +249,6 @@ namespace Models.PMF
         /// <summary>The variables for N</summary>
         [XmlIgnore]
         public BiomassArbitrationType N { get; private set; }
-        //private BiomassArbitrationType P = null;
-        //private BiomassArbitrationType K = null;
 
         #endregion
 
@@ -263,21 +261,8 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (DM != null)
-                        {
-                            if ((Plant.Phenology.Emerged == true) && (DM.TotalPlantDemand > 0) && (DM.TotalPlantSupply > 0))
-                                return DM.TotalPlantSupply / DM.TotalPlantDemand;
-                            else return 1;
-                        }
-                        else return 1;
-                    }
-                    else
-                        return DM.TotalPlantSupply / DM.TotalPlantDemand;
-                }
+                if (Plant.IsEmerged)
+                    return MathUtilities.Divide(DM.TotalPlantSupply,DM.TotalPlantDemand,0);
                 else
                     return 1;
             }
@@ -300,21 +285,8 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (N != null)
-                        {
-                            if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
-                                return N.TotalPlantSupply / N.TotalPlantDemand;
-                            else return 1;
-                        }
-                        else return 1;
-                    }
-                    else
-                        return N.TotalPlantSupply / N.TotalPlantDemand;
-                }
+                if (Plant.IsEmerged)
+                    return MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0);
                 else
                     return 1;
             }
@@ -344,21 +316,8 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant != null && Plant.IsAlive)
-                {
-                    if (Plant.Phenology != null)
-                    {
-                        if (N != null)
-                        {
-                            if ((Plant.Phenology.Emerged == true) && (WDemand > 0) && (WSupply > 0))
-                                return WSupply / WDemand;
-                            else return 1;
-                        }
-                        else return 1;
-                    }
-                    else
-                        return WSupply / WDemand;
-                }
+                if (Plant.IsEmerged)
+                    return MathUtilities.Divide(WSupply, WDemand, 0);
                 else
                     return 1;
             }
@@ -442,10 +401,8 @@ namespace Models.PMF
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
-            {
                 if (o is IHasWaterDemand)
                     WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
-            }
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
@@ -579,6 +536,7 @@ namespace Models.PMF
 
                 Organs = organsToArbitrate.ToArray();
             }
+
         }
 
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
@@ -590,7 +548,7 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                DoDMSetup(Organs);                                       //Get DM demands and supplies (with water stress effects included) from each organ
+                DoDMSetup(Organs); //Get DM demands and supplies (with water stress effects included) from each organ
                 DoReAllocation(Organs, DM, DMArbitrationOption);         //Allocate supply of reallocated DM to organs
                 DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
                 DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
