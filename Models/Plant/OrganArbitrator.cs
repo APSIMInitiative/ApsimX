@@ -243,10 +243,12 @@ namespace Models.PMF
         }
 
         /// <summary>The variables for DM</summary>
-        public BiomassArbitrationType DM = null;
+        [XmlIgnore]
+        public BiomassArbitrationType DM { get; private set; }
 
         /// <summary>The variables for N</summary>
-        public BiomassArbitrationType N = null;
+        [XmlIgnore]
+        public BiomassArbitrationType N { get; private set; }
         //private BiomassArbitrationType P = null;
         //private BiomassArbitrationType K = null;
 
@@ -593,7 +595,7 @@ namespace Models.PMF
                 DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
                 DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
                 SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
-                DoNutrientSetUp(Organs, ref N);                          //Get N demands and supplies (excluding uptake supplys) from each organ
+                N = DoNutrientSetUp(Organs);                             //Get N demands and supplies (excluding uptake supplys) from each organ
                 DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
             }
         }
@@ -714,11 +716,10 @@ namespace Models.PMF
 
         /// <summary>Does the nutrient set up.</summary>
         /// <param name="Organs">The organs.</param>
-        /// <param name="N">The bat.</param>
-        virtual public void DoNutrientSetUp(IArbitration[] Organs, ref BiomassArbitrationType N)
+        virtual public BiomassArbitrationType DoNutrientSetUp(IArbitration[] Organs)
         {
             //Creat Biomass variable class
-            N = new BiomassArbitrationType(Organs.Length);
+            BiomassArbitrationType N = new BiomassArbitrationType(Organs.Length);
             N.BiomassType = "N";
 
             // GET ALL INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
@@ -755,6 +756,7 @@ namespace Models.PMF
                 N.MetabolicAllocation[i] = 0;
                 N.NonStructuralAllocation[i] = 0;
             }
+            return N;
         }
 
         /// <summary>Does the re allocation.</summary>
