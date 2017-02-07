@@ -654,6 +654,8 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
+                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
                 for (int i = 0; i < Organs.Length; i++)
                     N.UptakeSupply[i] = 0;
 
@@ -676,16 +678,20 @@ namespace Models.PMF
                             (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm;
+                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area/Plant.Zone.Area;
+                            NSupply += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * zone.Zone.Area;
                         }
                     }
                     zones.Add(UptakeDemands);
                 }
 
+                double NDemand = (N.TotalPlantDemand - N.TotalReallocation)/kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
                 //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
-                if (N.TotalUptakeSupply > (N.TotalPlantDemand - N.TotalReallocation))
+
+                if (NSupply > NDemand)
                 {
-                    double ratio = Math.Min(1.0, (N.TotalPlantDemand - N.TotalReallocation) / N.TotalUptakeSupply);
+                    double ratio = Math.Min(1.0, NDemand / NSupply);
 
                     foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
@@ -706,13 +712,13 @@ namespace Models.PMF
             if (Plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
-                double NSupply = 0;
+                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N);
+                    NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N))*Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 for (int i = 0; i < Organs.Length; i++)
-                    N.UptakeSupply[i] = NSupply * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                    N.UptakeSupply[i] = NSupply/Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
                 DoUptake(Organs, N, NArbitrationOption);
