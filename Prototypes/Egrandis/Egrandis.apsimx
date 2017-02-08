@@ -104,8 +104,12 @@
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>

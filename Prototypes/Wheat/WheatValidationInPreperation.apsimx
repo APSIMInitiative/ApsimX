@@ -42,8 +42,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -2547,8 +2551,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
