@@ -11,6 +11,12 @@ namespace Models.Report
     /// <summary>An interface for a column in a report table.</summary>
     public interface IReportColumn
     {
+        /// <summary>Name of column.</summary>
+        string Name { get; }
+
+        /// <summary>Values for each row of this column.</summary>
+        List<object> Values { get; }
+
         /// <summary>The number of rows</summary>
         int NumRows { get; }
 

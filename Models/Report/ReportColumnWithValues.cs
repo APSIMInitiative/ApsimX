@@ -12,39 +12,51 @@ namespace Models.Report
     [Serializable]
     public class ReportColumnWithValues : IReportColumn
     {
-        /// <summary>The column name for the constant</summary>
-        private string name;
+        /// <summary>Name of column</summary>
+        public string Name { get; private set; }
 
         /// <summary>The values</summary>
-        private List<object> values = new List<object>();
+        public List<object> Values { get; set; }
 
         /// <summary>Constructor for a report column that has simple values.</summary>
         /// <param name="columnName">The column name to write to the output</param>
         public ReportColumnWithValues(string columnName)
         {
-            name = columnName;
+            Name = columnName;
+            Values = new List<object>();
+        }
+
+        /// <summary>Constructor for a report column that has simple values.</summary>
+        /// <param name="columnName">The column name to write to the output</param>
+        /// <param name="initialValues">Values for column - used for testing.</param>
+        public ReportColumnWithValues(string columnName, object[] initialValues)
+        {
+            Name = columnName;
+            Values = new List<object>();
+            Values.AddRange(initialValues);
         }
 
         /// <summary>Add a value.</summary>
         /// <param name="value">The value to add</param>
         public void Add(object value)
         {
-            values.Add(value);
+            Values.Add(value);
         }
 
         /// <summary>Return the number of values</summary>
-        public int NumRows { get { return values.Count; } }
+        public int NumRows { get { return Values.Count; } }
+
 
         /// <summary>Return the names and type of columns</summary>
         public void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes)
         {
-            if (!columnNames.Contains(name))
+            if (!columnNames.Contains(Name))
             {
-                columnNames.Add(name);
-                if (values.Count == 0)
+                columnNames.Add(Name);
+                if (Values.Count == 0)
                     columnTypes.Add(typeof(int));
                 else
-                    columnTypes.Add(values[0].GetType());
+                    columnTypes.Add(Values[0].GetType());
             }
         }
 
@@ -56,11 +68,11 @@ namespace Models.Report
         /// <param name="dataValues">The values for the specified row.</param>
         public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
-            if (rowIndex < values.Count)
+            if (rowIndex < Values.Count)
             {
-                int valueIndex = names.IndexOf(name);
+                int valueIndex = names.IndexOf(Name);
                 if (valueIndex != -1)
-                    dataValues[valueIndex] = values[rowIndex];
+                    dataValues[valueIndex] = Values[rowIndex];
             }
         }
     }

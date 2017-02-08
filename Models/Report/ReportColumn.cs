@@ -32,6 +32,12 @@ namespace Models.Report
     [Serializable]
     public class ReportColumn : IReportColumn
     {
+        /// <summary>The column heading.</summary>
+        public string Name { get; set; }
+
+        /// <summary>The values for each report event (e.g. daily)</summary>
+        public List<object> Values { get; set; }
+
         /// <summary>
         /// The from field converted to a date.
         /// </summary>
@@ -67,15 +73,6 @@ namespace Models.Report
         /// </summary>
         private string variableName;
 
-        /// <summary>
-        /// The column heading.
-        /// </summary>
-        private string heading { get; set; }
-
-        /// <summary>
-        /// The values for each report event (e.g. daily)
-        /// </summary>
-        private List<object> values = new List<object>();
 
         /// <summary>
         /// The values for each report event (e.g. daily)
@@ -137,7 +134,7 @@ namespace Models.Report
         {
             this.aggregationFunction = aggregationFunction;
             this.variableName = variableName;
-            this.heading = columnName;
+            this.Name = columnName;
             this.parentModel = parentModel;
             this.inCaptureWindow = false;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
@@ -170,7 +167,7 @@ namespace Models.Report
         private ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
         {
             this.variableName = variableName;
-            this.heading = columnName;
+            this.Name = columnName;
             this.parentModel = parentModel;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
@@ -393,7 +390,7 @@ namespace Models.Report
                 if (!this.inCaptureWindow)
                     this.ApplyAggregation();
                 else
-                    this.values.Add(null);
+                    Values.Add(null);
             }
             else
                 this.StoreValue();
@@ -407,7 +404,7 @@ namespace Models.Report
             object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
             if (value == null)
-                this.values.Add(null);
+                Values.Add(null);
             else
             {
                 if (value != null && value is IFunction)
@@ -428,7 +425,7 @@ namespace Models.Report
                     }
                 }
 
-                this.values.Add(value);
+                Values.Add(value);
             }
         }
 
@@ -481,7 +478,7 @@ namespace Models.Report
                 if (!double.IsNaN(result))
                 {
                     this.valuesToAggregate.Clear();
-                    this.values.Add(result);
+                    Values.Add(result);
                 }
             }
         }
@@ -507,11 +504,11 @@ namespace Models.Report
                 if (this.valueType.IsArray)
                 {
                     int rowIndex = GetIndexOfValueWithMaximumArrayElements();
-                    maximumNumberArrayElements = (values[rowIndex] as Array).Length;
-                    firstValue = values[rowIndex];
+                    maximumNumberArrayElements = (Values[rowIndex] as Array).Length;
+                    firstValue = Values[rowIndex];
                 }
             }
-            List<FlattenedValue> flattenedValues = FlattenValue(firstValue, this.heading, this.valueType);
+            List<FlattenedValue> flattenedValues = FlattenValue(firstValue, this.Name, this.valueType);
 
             foreach (FlattenedValue column in flattenedValues)
             {
@@ -528,7 +525,7 @@ namespace Models.Report
         }
 
         /// <summary>Return the number of rows.</summary>
-        public int NumRows {  get { return values.Count; } }
+        public int NumRows {  get { return Values.Count; } }
 
         /// <summary>
         /// Insert values into the dataValues array for the specified row.
@@ -538,9 +535,9 @@ namespace Models.Report
         /// <param name="dataValues">The values for the specified row.</param>
         public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
-            if (rowIndex < values.Count)
+            if (rowIndex < Values.Count)
             {
-                List<FlattenedValue> flattenedValues = FlattenValue(this.values[rowIndex], this.heading, this.valueType);
+                List<FlattenedValue> flattenedValues = FlattenValue(Values[rowIndex], this.Name, this.valueType);
 
                 for (int valueIndex = 0; valueIndex < flattenedValues.Count; valueIndex++)
                     dataValues[valueIndex+startColumnIndex] = flattenedValues[valueIndex].Value;
@@ -553,7 +550,7 @@ namespace Models.Report
         /// <returns>Returns first non blank value or null if all are missing</returns>
         private object FirstNonBlankValue()
         {
-            foreach (object value in this.values)
+            foreach (object value in Values)
                 if (value != null)
                     return value;
             return null;
@@ -631,13 +628,13 @@ namespace Models.Report
         {
             int maxNumValues = 0;
             int index = 0;
-            for (int i = 0; i < values.Count; i++)
+            for (int i = 0; i < Values.Count; i++)
             {
-                if (values[i] != null)
+                if (Values[i] != null)
                 {
-                    if (maxNumValues < (values[i] as Array).Length)
+                    if (maxNumValues < (Values[i] as Array).Length)
                     {
-                        maxNumValues = (values[i] as Array).Length;
+                        maxNumValues = (Values[i] as Array).Length;
                         index = i;
                     }
                 }

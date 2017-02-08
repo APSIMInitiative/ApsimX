@@ -801,74 +801,71 @@ namespace Models
         /// <param name="tables">The tables.</param>
         private void WriteTables(ReportTable[] tables)
         {
-            // Open the .db for writing.
-            Open(forWriting: true);
-
-            // What table are we writing?
-            string tableName = tables[0].TableName;
-
-            // Get a list of all names and datatypes for each field in this table.
-            List<string> names = new List<string>();
-            List<Type> types = new List<Type>();
-            names.Add("SimulationID");
-            types.Add(typeof(int));
+            // Insert simulationID column into all tables.
             foreach (ReportTable table in tables)
             {
-                if (table.Data != null)
-                {
-                    // Go through all columns for this table and add to 'names' and 'types'
-                    foreach (IReportColumn column in table.Data)
-                        column.GetNamesAndTypes(names, types);
-                }
+                int simulationID = GetSimulationID(table.SimulationName);
+                table.Data.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
             }
 
-            // Create the table.
-            CreateTable(tableName, names.ToArray(), types.ToArray());
+            // Merge all tables into one table.
+            for (int tableIndex = 1; tableIndex < tables.Length; tableIndex++)
+                tables[tableIndex].MergeInto(tables[0]);
 
-            // Prepare the insert query sql
-            IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+            // Flatten the one table so that complex structures and arrays are split into
+            // separate columns.
+            List<IReportColumn> columns = tables[0].Flatten();
 
-            // Tell SQLite that we're beginning a transaction.
-            Connection.ExecuteNonQuery("BEGIN");
-
-            try
+            if (columns.Count > 0 && columns[0].Values.Count > 0)
             {
-                // Go through all tables and write the data.
-                foreach (ReportTable table in tables)
+                // Get a list of all names and datatypes for each field in this table.
+                List<string> names = new List<string>();
+                List<Type> types = new List<Type>();
+                foreach (IReportColumn column in columns)
                 {
-                    // Get simulation ID for later
-                    int simulationID = GetSimulationID(table.SimulationName);
-
-                    // Write each row to the .db
-                    if (table.Data != null && table.Data.Count > 0)
+                    object firstNonBlankValue = column.Values.Find(value => value != null);
+                    if (firstNonBlankValue != null)
                     {
-                        // Work out how many rows.
-                        int numRows = 0;
-                        table.Data.ForEach(col => numRows = Math.Max(numRows, col.NumRows));
-
-                        object[] values = new object[names.Count];
-                        values[0] = simulationID;
-                        for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
-                        {
-                            for (int i = 1; i < values.Length; i++)
-                                values[i] = null;
-
-                            foreach (IReportColumn column in table.Data)
-                                column.InsertValuesForRow(rowIndex, names, values);
-
-                            // Write the row to the .db
-                            Connection.BindParametersAndRunQuery(query, values.ToArray());
-                        }
+                        names.Add(column.Name);
+                        types.Add(firstNonBlankValue.GetType());
                     }
                 }
-            }
-            finally
-            {
-                // tell SQLite we're ending our transaction.
-                Connection.ExecuteNonQuery("END");
 
-                // finalise our query.
-                Connection.Finalize(query);
+                // Open the .db for writing.
+                Open(forWriting: true);
+
+                // Create the table.
+                string tableName = tables[0].TableName;
+                CreateTable(tableName, names.ToArray(), types.ToArray());
+
+                // Prepare the insert query sql
+                IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+
+                // Tell SQLite that we're beginning a transaction.
+                Connection.ExecuteNonQuery("BEGIN");
+
+                try
+                {
+                    // Write each row to the .db
+                    int numRows = columns[0].Values.Count;
+                    object[] values = new object[names.Count];
+                    for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+                    {
+                        for (int colIndex = 0; colIndex < values.Length; colIndex++)
+                            values[colIndex] = columns[colIndex].Values[rowIndex];
+
+                        // Write the row to the .db
+                        Connection.BindParametersAndRunQuery(query, values.ToArray());
+                    }
+                }
+                finally
+                {
+                    // tell SQLite we're ending our transaction.
+                    Connection.ExecuteNonQuery("END");
+
+                    // finalise our query.
+                    Connection.Finalize(query);
+                }
             }
         }
 
@@ -879,7 +876,7 @@ namespace Models
         /// </summary>
         /// <param name="simulationName">Name of the simulation.</param>
         /// <returns></returns>
-        private int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName)
         {
             if (!TableExists("Simulations"))
                 return -1;

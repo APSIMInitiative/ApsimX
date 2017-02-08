@@ -13,10 +13,10 @@ namespace Models.Report
     public class ReportColumnConstantValue : IReportColumn
     {
         /// <summary>The column name for the constant</summary>
-        private string name;
+        public string Name { get; private set; }
 
         /// <summary>The constant value</summary>
-        private object value;
+        public List<object> Values { get; set; }
 
         /// <summary>
         /// Constructor for a plain report variable.
@@ -25,8 +25,9 @@ namespace Models.Report
         /// <param name="constantValue">The constant value</param>
         public ReportColumnConstantValue(string columnName, object constantValue)
         {
-            name = columnName;
-            this.value = constantValue;
+            Name = columnName;
+            Values = new List<object>();
+            Values.Add(constantValue);
         }
 
         /// <summary>Return the number of values</summary>
@@ -35,10 +36,10 @@ namespace Models.Report
         /// <summary>Return the names and type of columns</summary>
         public void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes)
         {
-            if (!columnNames.Contains(name))
+            if (!columnNames.Contains(Name))
             {
-                columnNames.Add(name);
-                columnTypes.Add(value.GetType());
+                columnNames.Add(Name);
+                columnTypes.Add(Values[0].GetType());
             }
         }
 
@@ -50,9 +51,9 @@ namespace Models.Report
         /// <param name="dataValues">The values for the specified row.</param>
         public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
         {
-            int valueIndex = names.IndexOf(name);
+            int valueIndex = names.IndexOf(Name);
             if (valueIndex != -1)
-                dataValues[valueIndex] = value;
+                dataValues[valueIndex] = Values[0];
         }
     }
 }
