@@ -329,15 +329,12 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                DM = new BiomassArbitrationType();
-                DM.DoSetup("DM", Organs);// = DoDMSetup(Organs); //Get DM demands and supplies (with water stress effects included) from each organ
+                DM = BiomassArbitrationType.Create("DM", Organs);        //Get DM demands and supplies (with water stress effects included) from each organ
                 DoReAllocation(Organs, DM, DMArbitrationOption);         //Allocate supply of reallocated DM to organs
                 DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
                 DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
                 SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
-                N = new BiomassArbitrationType();
-                N.DoSetup("N", Organs);
-                //N = DoNutrientSetUp(Organs);                             //Get N demands and supplies (excluding uptake supplys) from each organ
+                N = BiomassArbitrationType.Create("N", Organs);
                 DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
             }
         }

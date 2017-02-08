@@ -167,6 +167,15 @@ namespace Models.PMF
             TotalAllocation = new double[Size];
         }
 
+        /// <summary>Create a new biomass allocation type.</summary>
+        /// <param name="organs">The organs.</param>
+        /// <param name="type">The arbitration type</param>
+        public static BiomassArbitrationType Create(string type, IArbitration[] organs)
+        {
+            BiomassArbitrationType BAT = new BiomassArbitrationType();
+            BAT.DoSetup(type, organs);
+            return BAT;
+        }
         /// <summary>Does the dm setup.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="Type">The arbitration type</param>
@@ -182,34 +191,27 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassSupplyType Supply = new BiomassSupplyType();
-                if (Type=="DM")
-                    Supply = Organs[i].DMSupply;
-                else
-                    Supply = Organs[i].NSupply;
+                BiomassPoolType Demand = new BiomassPoolType();
 
                 if (Type == "DM")
+                {
+                    Supply = Organs[i].DMSupply;
+                    Demand = Organs[i].DMDemand;
+                    Start += Organs[i].Wt;
                     if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation + Supply.Retranslocation + Supply.Uptake, 0))
                         throw new Exception(Organs[i].Name + " is returning a negative " + Type + " supply.  Check your parameterisation");
+                }
+                else
+                {
+                    Supply = Organs[i].NSupply;
+                    Demand = Organs[i].NDemand;
+                    Start += Organs[i].N;
+                }
+
                 ReallocationSupply[i] = Supply.Reallocation;
-                if (Type=="DM")
-                    UptakeSupply[i] = Supply.Uptake;  // Equivalent for N done elsewhere - not sure why NIH
                 FixationSupply[i] = Supply.Fixation;
                 RetranslocationSupply[i] = Supply.Retranslocation;
-                if (Type=="DM")
-                    Start += Organs[i].Wt;
-                else
-                    Start += Organs[i].N;
-            }
 
-            // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Length; i++)
-            {
-
-                BiomassPoolType Demand = new BiomassPoolType();
-                if (Type == "DM")
-                    Demand = Organs[i].DMDemand;
-                else
-                    Demand = Organs[i].NDemand;
                 if (MathUtilities.IsLessThan(Demand.Structural, 0))
                     throw new Exception(Organs[i].Name + " is returning a negative Structural "+Type+" demand.  Check your parameterisation");
                 if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
@@ -219,19 +221,7 @@ namespace Models.PMF
                 StructuralDemand[i] = Demand.Structural;
                 MetabolicDemand[i] = Demand.Metabolic;
                 NonStructuralDemand[i] = Demand.NonStructural;
-                Reallocation[i] = 0;
-                Uptake[i] = 0;
-                Fixation[i] = 0;
-                Retranslocation[i] = 0;
-                StructuralAllocation[i] = 0;
-                MetabolicAllocation[i] = 0;
-                NonStructuralAllocation[i] = 0;
             }
-
-            Allocated = 0;
-            SinkLimitation = 0;
-            NutrientLimitation = 0;
-
         }
     }
 }
