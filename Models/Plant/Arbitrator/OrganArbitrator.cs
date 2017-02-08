@@ -329,12 +329,15 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                DoDMSetup(Organs); //Get DM demands and supplies (with water stress effects included) from each organ
+                DM = new BiomassArbitrationType();
+                DM.DoSetup("DM", Organs);// = DoDMSetup(Organs); //Get DM demands and supplies (with water stress effects included) from each organ
                 DoReAllocation(Organs, DM, DMArbitrationOption);         //Allocate supply of reallocated DM to organs
                 DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
                 DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
                 SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
-                N = DoNutrientSetUp(Organs);                             //Get N demands and supplies (excluding uptake supplys) from each organ
+                N = new BiomassArbitrationType();
+                N.DoSetup("N", Organs);
+                //N = DoNutrientSetUp(Organs);                             //Get N demands and supplies (excluding uptake supplys) from each organ
                 DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
             }
         }
@@ -377,55 +380,6 @@ namespace Models.PMF
 
         #region Arbitration step functions
 
-        /// <summary>Does the dm setup.</summary>
-        /// <param name="Organs">The organs.</param>
-        virtual public void DoDMSetup(IArbitration[] Organs)
-        {
-            //Creat Drymatter variable class
-            DM = new BiomassArbitrationType(Organs.Length);
-            DM.BiomassType = "DM";
-
-            // GET INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
-            DM.Start = 0;
-            // GET SUPPLIES AND CALCULATE TOTAL
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                BiomassSupplyType Supply = Organs[i].DMSupply;
-                if (MathUtilities.IsLessThan(Supply.Fixation + Supply.Reallocation + Supply.Retranslocation + Supply.Uptake, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative DM supply.  Check your parameterisation");
-                DM.ReallocationSupply[i] = Supply.Reallocation;
-                DM.UptakeSupply[i] = Supply.Uptake;
-                DM.FixationSupply[i] = Supply.Fixation;
-                DM.RetranslocationSupply[i] = Supply.Retranslocation;
-                DM.Start += Organs[i].Wt;
-            }
-
-            // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                BiomassPoolType Demand = Organs[i].DMDemand;
-                if (MathUtilities.IsLessThan(Demand.Structural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Structural DM demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural DM demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic DM demand.  Check your parameterisation");
-                DM.StructuralDemand[i] = Demand.Structural;
-                DM.MetabolicDemand[i] = Demand.Metabolic;
-                DM.NonStructuralDemand[i] = Demand.NonStructural;
-                DM.Reallocation[i] = 0;
-                DM.Uptake[i] = 0;
-                DM.Fixation[i] = 0;
-                DM.Retranslocation[i] = 0;
-                DM.StructuralAllocation[i] = 0;
-                DM.MetabolicAllocation[i] = 0;
-                DM.NonStructuralAllocation[i] = 0;
-            }
-
-            DM.Allocated = 0;
-            DM.SinkLimitation = 0;
-            DM.NutrientLimitation = 0;
-        }
 
         /// <summary>Sends the potential dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
@@ -449,51 +403,6 @@ namespace Models.PMF
                     Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
                     NonStructural = DM.NonStructuralAllocation[i], //Nor will this do anything
                 };
-        }
-
-        /// <summary>Does the nutrient set up.</summary>
-        /// <param name="Organs">The organs.</param>
-        virtual public BiomassArbitrationType DoNutrientSetUp(IArbitration[] Organs)
-        {
-            //Creat Biomass variable class
-            BiomassArbitrationType N = new BiomassArbitrationType(Organs.Length);
-            N.BiomassType = "N";
-
-            // GET ALL INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
-            N.Start = 0;
-
-            // GET ALL SUPPLIES AND DEMANDS AND CALCULATE TOTALS
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                BiomassSupplyType Supply = Organs[i].NSupply;
-                N.ReallocationSupply[i] = Supply.Reallocation;
-                //N.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
-                N.FixationSupply[i] = Supply.Fixation;
-                N.RetranslocationSupply[i] = Supply.Retranslocation;
-                N.Start += Organs[i].N;
-            }
-
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                BiomassPoolType Demand = Organs[i].NDemand;
-                if (MathUtilities.IsLessThan(Demand.Structural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Structural N demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural N demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative Metabolic N demand.  Check your parameterisation");
-                N.StructuralDemand[i] = Organs[i].NDemand.Structural;
-                N.MetabolicDemand[i] = Organs[i].NDemand.Metabolic;
-                N.NonStructuralDemand[i] = Organs[i].NDemand.NonStructural;
-                N.Reallocation[i] = 0;
-                N.Uptake[i] = 0;
-                N.Fixation[i] = 0;
-                N.Retranslocation[i] = 0;
-                N.StructuralAllocation[i] = 0;
-                N.MetabolicAllocation[i] = 0;
-                N.NonStructuralAllocation[i] = 0;
-            }
-            return N;
         }
 
         /// <summary>Does the re allocation.</summary>
