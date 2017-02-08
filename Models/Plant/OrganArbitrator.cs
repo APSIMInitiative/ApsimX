@@ -571,8 +571,8 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            DM = null;
-            N = null;
+            DM = new BiomassArbitrationType();
+            N = new BiomassArbitrationType();
         }
 
         #endregion
