@@ -475,36 +475,6 @@ namespace UserInterface.Views
             return -1;
         }
 
-        /// <summary>A helper function that asks user for a folder.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFolder(string prompt)
-        {
-            string folderName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.SelectFolder, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                folderName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return folderName;
-        }
-
-        /// <summary>A helper function that asks user for a file.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected file or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFile(string prompt)
-        {
-            string fileName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return fileName;
-        }
-
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)

@@ -79,7 +79,7 @@ namespace Models.Soils.Arbitrator
             foreach (CropUptakes U in Values)
                 if (U.Crop == crop)
                     foreach (ZoneWaterAndN Z in U.Zones)
-                        if (Z.Name == ZoneName)
+                        if (Z.Zone.Name == ZoneName)
                             return Z;
 
             throw (new Exception("Cannot find uptake for" + (crop as IModel).Name + " " + ZoneName));

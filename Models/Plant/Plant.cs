@@ -63,6 +63,11 @@ namespace Models.PMF
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
+
+        /// <summary> The plant's zone</summary>
+        [Link]
+        public Zone Zone = null;
+
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
@@ -260,6 +265,7 @@ namespace Models.PMF
             Organs = organs.ToArray();
 
             Clear();
+
         }
 
         /// <summary>Called when [phase changed].</summary>
