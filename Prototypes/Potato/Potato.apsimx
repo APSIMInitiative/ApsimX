@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -159,13 +159,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>      
-	</OrganArbitrator>
+        <PrioritythenRelativeAllocation>
+          <Name>NArbitrator</Name>
+        </PrioritythenRelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
+      </OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
         <PhaseLookupValue>
@@ -1842,7 +1842,6 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -4702,7 +4701,7 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
   </Simulation>
