@@ -1867,7 +1867,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>/day</Units>
         </Constant>
         <LinearInterpolationFunction>
