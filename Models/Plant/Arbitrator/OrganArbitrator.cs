@@ -632,39 +632,5 @@ namespace Models.PMF
         }
 
         #endregion
-
-
-        /// <summary>Partitions biomass between organs based on their relative demand in a single pass so non-structural always gets some if there is a non-structural demand</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="TotalSupply">The total supply.</param>
-        /// <param name="TotalAllocated">The total allocated.</param>
-        /// <param name="BAT">The bat.</param>
-        private void RelativeAllocationSinglePass(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
-        {
-            double NotAllocated = TotalSupply;
-            ////allocate to all pools based on their relative demands
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
-                double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
-                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]);
-                if ((StructuralRequirement + MetabolicRequirement + NonStructuralRequirement) > 0.0)
-                {
-                    double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
-                    double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
-                    double NonStructuralFraction = BAT.TotalNonStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand);
-
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
-                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, TotalSupply * NonStructuralFraction * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand,0));
-
-                    BAT.StructuralAllocation[i] += StructuralAllocation;
-                    BAT.MetabolicAllocation[i] += MetabolicAllocation;
-                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
-                    NotAllocated -= (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
-                    TotalAllocated += (StructuralAllocation + MetabolicAllocation + NonStructuralAllocation);
-                }
-            }
-        }
     }
 }
