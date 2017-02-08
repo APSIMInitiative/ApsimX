@@ -159,9 +159,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-      </OrganArbitrator>
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>      
+	</OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
         <PhaseLookupValue>

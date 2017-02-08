@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -160,8 +160,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+        <PrioritythenRelativeAllocation>
+          <Name>NArbitrator</Name>
+        </PrioritythenRelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
@@ -2316,7 +2320,6 @@ All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide 
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -5005,7 +5008,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
@@ -6380,7 +6383,6 @@ Fertiliser and pesticide were applied to ensure the crop remaind unstressed and 
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -8811,7 +8813,7 @@ namespace Models
 				]]></Code>
           </Manager>
         </Folder>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
@@ -9802,7 +9804,6 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -13584,7 +13585,6 @@ This trial was run in A Block of the Plant and Food Research farm on a templeton
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -15978,7 +15978,7 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
@@ -17467,7 +17467,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -22172,7 +22171,6 @@ A range of excelent experimental data has been collected by Plant and Food Resea
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -26145,7 +26143,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -26367,8 +26364,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
           </OrganArbitrator>
           <Structure>
             <Name>Structure</Name>
@@ -31625,7 +31626,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Fertiliser>
           <Name>fertiliser</Name>
@@ -31847,8 +31847,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
           </OrganArbitrator>
           <Structure>
             <Name>Structure</Name>

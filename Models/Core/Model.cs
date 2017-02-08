@@ -117,6 +117,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.GrazPlan.Supplement))]
         [XmlElement(typeof(Models.PMF.OrganArbitrator))]
         [XmlElement(typeof(Models.PMF.RelativeAllocation))]
+        [XmlElement(typeof(Models.PMF.PrioritythenRelativeAllocation))]
         [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Biomass))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
