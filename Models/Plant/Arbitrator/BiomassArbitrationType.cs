@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 
-namespace Models.Plant
+namespace Models.PMF
 {
     /// <summary>Contains the variables need for arbitration</summary>
     [Serializable]

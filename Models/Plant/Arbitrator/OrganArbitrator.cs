@@ -6,7 +6,6 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.Plant;
 
 namespace Models.PMF
 {
