@@ -314,6 +314,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Value>0.05</Value>
           <Units>gN/gDM</Units>
         </Constant>
+        <Constant>
+          <Name>CriticalNConc</Name>
+          <Value>0.05</Value>
+          <Units>gN/gDM</Units>
+        </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -1863,7 +1868,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>/day</Units>
         </Constant>
         <LinearInterpolationFunction>
