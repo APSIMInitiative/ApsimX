@@ -181,6 +181,8 @@
     <Compile Include="MicroClimate\CanopyType.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
+    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />

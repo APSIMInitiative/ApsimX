@@ -176,17 +176,15 @@ namespace Models.PMF
             BAT.DoSetup(type, organs);
             return BAT;
         }
-        /// <summary>Does the dm setup.</summary>
+        /// <summary>Do the dm setup.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="Type">The arbitration type</param>
-        virtual public void DoSetup(string Type, IArbitration[] Organs)
+        private void DoSetup(string Type, IArbitration[] Organs)
         {
-            //Creat Drymatter variable class
+            //Create Drymatter variable class
             Resize (Organs.Length);
             BiomassType = Type;
 
-            // GET INITIAL STATE VARIABLES FOR MASS BALANCE CHECKS
-            Start = 0;
             // GET SUPPLIES AND CALCULATE TOTAL
             for (int i = 0; i < Organs.Length; i++)
             {
