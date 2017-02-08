@@ -30,28 +30,28 @@
             // Setup first table.
 
             ReportTable table1 = new ReportTable() { SimulationName = "Sim1", TableName = "table1" };
-            table1.Data.Add(new ReportColumnWithValues("Col1", new object[] { 1, 2 }));
-            table1.Data.Add(new ReportColumnWithValues("Col2", new object[] { 11, 22 }));
-            table1.Data.Add(new ReportColumnConstantValue("Col3", 1234));  // new constant value column not in table2
+            table1.Columns.Add(new ReportColumnWithValues("Col1", new object[] { 1, 2 }));
+            table1.Columns.Add(new ReportColumnWithValues("Col2", new object[] { 11, 22 }));
+            table1.Columns.Add(new ReportColumnConstantValue("Col3", 1234));  // new constant value column not in table2
 
             // Setup second table.
             ReportTable table2 = new ReportTable() { SimulationName = "Sim2", TableName = "table1" };
-            table2.Data.Add(new ReportColumnWithValues("Col1", new object[] { 200, 201, 202 }));
-            table2.Data.Add(new ReportColumnWithValues("Col2", new object[] { 211, 222, 233 }));
-            table2.Data.Add(new ReportColumnWithValues("Col4", new object[] { 244, 255, 266 }));  // new column not in table1
+            table2.Columns.Add(new ReportColumnWithValues("Col1", new object[] { 200, 201, 202 }));
+            table2.Columns.Add(new ReportColumnWithValues("Col2", new object[] { 211, 222, 233 }));
+            table2.Columns.Add(new ReportColumnWithValues("Col4", new object[] { 244, 255, 266 }));  // new column not in table1
 
             table2.MergeInto(table1);
 
-            Assert.AreEqual(table1.Data.Count, 4);
-            Assert.AreEqual(table1.Data[0].Name, "Col1");
-            Assert.AreEqual(table1.Data[1].Name, "Col2");
-            Assert.AreEqual(table1.Data[2].Name, "Col3");
-            Assert.AreEqual(table1.Data[3].Name, "Col4");
+            Assert.AreEqual(table1.Columns.Count, 4);
+            Assert.AreEqual(table1.Columns[0].Name, "Col1");
+            Assert.AreEqual(table1.Columns[1].Name, "Col2");
+            Assert.AreEqual(table1.Columns[2].Name, "Col3");
+            Assert.AreEqual(table1.Columns[3].Name, "Col4");
 
-            Assert.AreEqual(table1.Data[0].Values, new object[] { 1, 2, 200, 201, 202 });
-            Assert.AreEqual(table1.Data[1].Values, new object[] { 11, 22, 211, 222, 233 });
-            Assert.AreEqual(table1.Data[2].Values, new object[] { 1234, 1234, 1234, 1234, 1234 });
-            Assert.AreEqual(table1.Data[3].Values, new object[] { null, null, 244, 255, 266 });
+            Assert.AreEqual(table1.Columns[0].Values, new object[] { 1, 2, 200, 201, 202 });
+            Assert.AreEqual(table1.Columns[1].Values, new object[] { 11, 22, 211, 222, 233 });
+            Assert.AreEqual(table1.Columns[2].Values, new object[] { 1234, 1234, 1234, 1234, 1234 });
+            Assert.AreEqual(table1.Columns[3].Values, new object[] { null, null, 244, 255, 266 });
         }
 
         [Test]
@@ -108,9 +108,9 @@
             };
 
             ReportTable table = new ReportTable() { SimulationName = "Sim1", TableName = "table1" };
-            table.Data.Add(new ReportColumnWithValues("Col1", new object[] { 1, 2, 3, 4, 5 }));
-            table.Data.Add(new ReportColumnWithValues("Col2", records));
-            table.Data.Add(new ReportColumnWithValues("Col3", new object[] { 6, 7, 8, 9, 10 }));
+            table.Columns.Add(new ReportColumnWithValues("Col1", new object[] { 1, 2, 3, 4, 5 }));
+            table.Columns.Add(new ReportColumnWithValues("Col2", records));
+            table.Columns.Add(new ReportColumnWithValues("Col3", new object[] { 6, 7, 8, 9, 10 }));
 
             List<IReportColumn> columns = table.Flatten();
 

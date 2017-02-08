@@ -42,38 +42,5 @@ namespace Models.Report
         {
             Values.Add(value);
         }
-
-        /// <summary>Return the number of values</summary>
-        public int NumRows { get { return Values.Count; } }
-
-
-        /// <summary>Return the names and type of columns</summary>
-        public void GetNamesAndTypes(List<string> columnNames, List<Type> columnTypes)
-        {
-            if (!columnNames.Contains(Name))
-            {
-                columnNames.Add(Name);
-                if (Values.Count == 0)
-                    columnTypes.Add(typeof(int));
-                else
-                    columnTypes.Add(Values[0].GetType());
-            }
-        }
-
-        /// <summary>
-        /// Insert values into the dataValues array for the specified row.
-        /// </summary>
-        /// <param name="rowIndex">The index of the row to return values for.</param>
-        /// <param name="names">The names of each value to provide a value for.</param>
-        /// <param name="dataValues">The values for the specified row.</param>
-        public void InsertValuesForRow(int rowIndex, List<string> names, object[] dataValues)
-        {
-            if (rowIndex < Values.Count)
-            {
-                int valueIndex = names.IndexOf(Name);
-                if (valueIndex != -1)
-                    dataValues[valueIndex] = Values[rowIndex];
-            }
-        }
     }
 }

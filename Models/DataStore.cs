@@ -805,7 +805,7 @@ namespace Models
             foreach (ReportTable table in tables)
             {
                 int simulationID = GetSimulationID(table.SimulationName);
-                table.Data.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
+                table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
             }
 
             // Merge all tables into one table.
@@ -815,6 +815,10 @@ namespace Models
             // Flatten the one table so that complex structures and arrays are split into
             // separate columns.
             List<IReportColumn> columns = tables[0].Flatten();
+
+            foreach (IReportColumn column in columns)
+                if (column.Values.Count != columns[0].Values.Count)
+                    throw new Exception("Uneven number of report rows found while writing to SQLite database.");
 
             if (columns.Count > 0 && columns[0].Values.Count > 0)
             {
