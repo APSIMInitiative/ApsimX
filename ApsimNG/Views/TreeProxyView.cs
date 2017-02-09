@@ -908,7 +908,6 @@ namespace UserInterface.Views
                 pBelowGround.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
-                List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
                 bgyAxis.Position = AxisPosition.Left;
                 bgxAxis.Position = AxisPosition.Top;
