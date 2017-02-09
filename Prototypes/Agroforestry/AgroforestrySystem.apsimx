@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -324,7 +324,6 @@ The proxy tree component of this model is intended also to be a guide for develo
       <Country>Kenya</Country>
       <Latitude>-1.55</Latitude>
       <Longitude>37.13</Longitude>
-      <Area>0</Area>
     </Soil>
   </Replacements>
   <DataStore>
@@ -352,16 +351,16 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>BiomassWt</Name>
             <n>9</n>
-            <Slope>0.510102200958125</Slope>
-            <Intercept>289.63225875453372</Intercept>
-            <SEslope>0.3229565870396317</SEslope>
-            <SEintercept>143.5729121473305</SEintercept>
-            <R2>0.26275005244951943</R2>
-            <RMSE>345.20673998588376</RMSE>
-            <NSE>-0.15748128861822219</NSE>
-            <ME>138.89217957082366</ME>
-            <MAE>253.45240209137182</MAE>
-            <RSR>1.0143334050249606</RSR>
+            <Slope>0.51527775328578729</Slope>
+            <Intercept>299.2083243018925</Intercept>
+            <SEslope>0.3333034081743424</SEslope>
+            <SEintercept>148.17267354373041</SEintercept>
+            <R2>0.25452843994998964</R2>
+            <RMSE>356.04652492151</RMSE>
+            <NSE>-0.23131437243101494</NSE>
+            <ME>150.06074700167139</ME>
+            <MAE>259.94411751335264</MAE>
+            <RSR>1.046184335756909</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Distance</Name>
@@ -380,30 +379,30 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>GrainWt</Name>
             <n>7</n>
-            <Slope>0.29747280243970342</Slope>
-            <Intercept>112.23250769904966</Intercept>
-            <SEslope>0.26901530024637027</SEslope>
-            <SEintercept>49.817558621253376</SEintercept>
-            <R2>0.19649777850651551</R2>
-            <RMSE>135.02971098564919</RMSE>
-            <NSE>0.10268787270102775</NSE>
-            <ME>29.186095758363074</ME>
-            <MAE>109.35209560024219</MAE>
-            <RSR>0.87699753736368968</RSR>
+            <Slope>0.30560753034711508</Slope>
+            <Intercept>113.81627473649343</Intercept>
+            <SEslope>0.27000897563783727</SEslope>
+            <SEintercept>50.00157225177761</SEintercept>
+            <R2>0.20395685355190096</R2>
+            <RMSE>134.95034528922</RMSE>
+            <NSE>0.10374237948047393</NSE>
+            <ME>31.731476762028155</ME>
+            <MAE>109.47162169474241</MAE>
+            <RSR>0.87648206917664051</RSR>
           </RegrStats>
           <RegrStats>
             <Name>SW90cm</Name>
             <n>96</n>
-            <Slope>0.96137790362135045</Slope>
-            <Intercept>10.442591789648219</Intercept>
-            <SEslope>0.038821940826786076</SEslope>
-            <SEintercept>9.8647761466879977</SEintercept>
-            <R2>0.8670898440491126</R2>
-            <RMSE>18.21259772634988</RMSE>
-            <NSE>0.85655599273290528</NSE>
-            <ME>0.80593354305176135</ME>
-            <MAE>14.109678911882241</MAE>
-            <RSR>0.37676225774095584</RSR>
+            <Slope>0.966471590925833</Slope>
+            <Intercept>9.8865662281974664</Intercept>
+            <SEslope>0.038938990777412925</SEslope>
+            <SEintercept>9.89451890391043</SEintercept>
+            <R2>0.8676130632690463</R2>
+            <RMSE>18.289088282040559</RMSE>
+            <NSE>0.85534856996795</NSE>
+            <ME>1.5208416794274993</ME>
+            <MAE>14.23725323566204</MAE>
+            <RSR>0.37834461051077439</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -729,17 +728,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -1163,7 +1157,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1185,17 +1178,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -1560,7 +1548,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1582,17 +1569,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -1957,7 +1939,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -1979,17 +1960,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -2354,7 +2330,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -2376,17 +2351,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -2751,7 +2721,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -2773,17 +2742,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -3148,7 +3112,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3170,17 +3133,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -3545,7 +3503,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3567,17 +3524,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -3942,7 +3894,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -3964,17 +3915,12 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -4339,7 +4285,6 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -5028,17 +4973,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -5438,7 +5378,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -5460,17 +5399,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -5854,7 +5788,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -5882,17 +5815,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -6276,7 +6204,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -6304,17 +6231,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -6698,7 +6620,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -6726,17 +6647,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -7120,7 +7036,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7148,17 +7063,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -7542,7 +7452,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7570,17 +7479,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -7964,7 +7868,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -7992,17 +7895,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Report>
@@ -8386,7 +8284,6 @@ namespace Models
           <ApsoilNumber>19</ApsoilNumber>
           <Latitude>-26.897</Latitude>
           <Longitude>150.909</Longitude>
-          <Area>0</Area>
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
@@ -9839,17 +9736,12 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -10250,7 +10142,6 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.001</Area>
           <Slope>0</Slope>
@@ -10269,17 +10160,12 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -10776,7 +10662,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -10795,17 +10680,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -11302,7 +11182,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -11321,17 +11200,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -11828,7 +11702,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -11847,17 +11720,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -12354,7 +12222,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -12373,17 +12240,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -12880,7 +12742,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -12899,17 +12760,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -13406,7 +13262,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -13425,17 +13280,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -13932,7 +13782,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -13951,17 +13800,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -14486,7 +14330,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -15248,17 +15091,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -15658,7 +15496,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.001</Area>
           <Slope>0</Slope>
@@ -15677,17 +15514,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -16179,7 +16011,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -16198,17 +16029,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -16700,7 +16526,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -16719,17 +16544,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -17221,7 +17041,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -17240,17 +17059,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -17742,7 +17556,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -17761,17 +17574,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -18263,7 +18071,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -18282,17 +18089,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -18784,7 +18586,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -18803,17 +18604,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -19305,7 +19101,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Area>0.002</Area>
           <Slope>0</Slope>
@@ -19324,17 +19119,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
@@ -19826,7 +19616,6 @@ namespace Models
             <Country>Kenya</Country>
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
-            <Area>0</Area>
           </Soil>
           <Graph>
             <Name>TotalNO3</Name>
@@ -20806,17 +20595,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -21166,7 +20950,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21187,17 +20970,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -21562,7 +21340,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21583,17 +21360,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -21958,7 +21730,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -21979,17 +21750,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -22354,7 +22120,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -22375,17 +22140,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -22750,7 +22510,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -22771,17 +22530,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -23146,7 +22900,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23167,17 +22920,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -23542,7 +23290,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23563,17 +23310,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -23938,7 +23680,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -23959,17 +23700,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -24334,7 +24070,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -24355,17 +24090,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -24730,7 +24460,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -24751,17 +24480,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -25126,7 +24850,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -25147,17 +24870,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Report>
@@ -25522,7 +25240,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
@@ -25628,17 +25345,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
@@ -25918,7 +25630,6 @@ namespace Models
             <ApsoilNumber>344</ApsoilNumber>
             <Latitude>-36.389</Latitude>
             <Longitude>140.899</Longitude>
-            <Area>0</Area>
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
