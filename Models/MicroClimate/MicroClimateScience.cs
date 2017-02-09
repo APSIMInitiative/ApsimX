@@ -230,7 +230,7 @@ namespace Models
         /// </summary>
         private void LongWaveRadiation(MicroClimateZone MCZone)
         {
-            double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.Day);
+            double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, Clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
             double averageT = CalcAverageT(weather.MinT, weather.MaxT);
             MCZone.NetLongWaveRadiation = LongWave(averageT, fractionClearSky, emissivity) * dayLength * hr2s / 1000000.0;             // W to MJ

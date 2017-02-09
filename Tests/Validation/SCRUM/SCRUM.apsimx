@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -56,16 +56,16 @@
           <RegrStats>
             <Name>NLeaching</Name>
             <n>36</n>
-            <Slope>1.0126788550932462</Slope>
-            <Intercept>12.474128602926641</Intercept>
-            <SEslope>0.080963665024864559</SEslope>
-            <SEintercept>7.3166210160927632</SEintercept>
-            <R2>0.82147126477460475</R2>
-            <RMSE>32.919667093322033</RMSE>
-            <NSE>0.73356879860840118</NSE>
-            <ME>13.285883084350342</ME>
-            <MAE>18.480297553466137</MAE>
-            <RSR>0.50895022810317769</RSR>
+            <Slope>1.0176619632865627</Slope>
+            <Intercept>11.896347779682529</Intercept>
+            <SEslope>0.079369759508785</SEslope>
+            <SEintercept>7.1800702959000144</SEintercept>
+            <R2>0.82862744406805788</R2>
+            <RMSE>32.247189792706507</RMSE>
+            <NSE>0.74364083633387768</NSE>
+            <ME>13.031025340318209</ME>
+            <MAE>17.9698670784793</MAE>
+            <RSR>0.49923749437167464</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -83,128 +83,128 @@
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>126</n>
-            <Slope>0.97980052082076508</Slope>
-            <Intercept>6.181746040964299</Intercept>
-            <SEslope>0.032338812617252924</SEslope>
-            <SEintercept>10.243514571204775</SEintercept>
-            <R2>0.88099434144610367</R2>
-            <RMSE>15.224579520736327</RMSE>
-            <NSE>0.86989865002744216</NSE>
-            <ME>-0.15950079625078284</ME>
-            <MAE>12.630479773662231</MAE>
-            <RSR>0.35926146408423792</RSR>
+            <Slope>1.0034864464216875</Slope>
+            <Intercept>-0.16481305858286532</Intercept>
+            <SEslope>0.03344121068250288</SEslope>
+            <SEintercept>10.59270582872891</SEintercept>
+            <R2>0.878959303445856</R2>
+            <RMSE>15.746156835911295</RMSE>
+            <NSE>0.86083169597746378</NSE>
+            <ME>0.92969126741823915</ME>
+            <MAE>12.822594580857636</MAE>
+            <RSR>0.37156936589707057</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>126</n>
-            <Slope>1.1904239143774464</Slope>
-            <Intercept>-0.0037317545963274079</Intercept>
-            <SEslope>0.034215189188493478</SEslope>
-            <SEintercept>0.006214972887759229</SEintercept>
-            <R2>0.90708142038440576</R2>
-            <RMSE>0.043555011536342572</RMSE>
-            <NSE>0.70027180818200341</NSE>
-            <ME>0.027363502015018776</ME>
-            <MAE>0.03003506981908494</MAE>
-            <RSR>0.54529753038578654</RSR>
+            <Slope>1.2048285770289724</Slope>
+            <Intercept>-0.0052745497790046</Intercept>
+            <SEslope>0.034269736839094407</SEslope>
+            <SEintercept>0.0062248811237683331</SEintercept>
+            <R2>0.90882553472707139</R2>
+            <RMSE>0.0445079535247144</RMSE>
+            <NSE>0.68701279828897044</NSE>
+            <ME>0.028172914972865507</ME>
+            <MAE>0.030922980270429428</MAE>
+            <RSR>0.55722811872753208</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>126</n>
-            <Slope>0.99624398597248121</Slope>
-            <Intercept>-0.0081603847804596341</Intercept>
-            <SEslope>0.034691207675009057</SEslope>
-            <SEintercept>0.0073831152823203572</SEintercept>
-            <R2>0.86929393319809911</R2>
-            <RMSE>0.022634694159327107</RMSE>
-            <NSE>0.82321422519913579</NSE>
-            <ME>-0.008933758502097898</ME>
-            <MAE>0.017973961097969379</MAE>
-            <RSR>0.418787193089874</RSR>
+            <Slope>1.0197121710598931</Slope>
+            <Intercept>-0.011920004882188529</Intercept>
+            <SEslope>0.0357063163185024</SEslope>
+            <SEintercept>0.0075991545799199674</SEintercept>
+            <R2>0.86802575491079159</R2>
+            <RMSE>0.022827201720404415</RMSE>
+            <NSE>0.82019431944397359</NSE>
+            <ME>-0.00786121410492578</ME>
+            <MAE>0.018236907342969861</MAE>
+            <RSR>0.4223489686802423</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>126</n>
-            <Slope>0.7308785652412263</Slope>
-            <Intercept>0.043529089347487365</Intercept>
-            <SEslope>0.035195425718631559</SEslope>
-            <SEintercept>0.0071087496773183448</SEintercept>
-            <R2>0.77667273812636206</R2>
-            <RMSE>0.025251114784935278</RMSE>
-            <NSE>0.73962566283628051</NSE>
-            <ME>-0.0091711884372688637</ME>
-            <MAE>0.020844884284819641</MAE>
-            <RSR>0.50823997695021661</RSR>
+            <Slope>0.76264801615741507</Slope>
+            <Intercept>0.038725345650105436</Intercept>
+            <SEslope>0.0350059454777675</SEslope>
+            <SEintercept>0.0070704785789128628</SEintercept>
+            <R2>0.79286394960350459</R2>
+            <RMSE>0.023878572761277712</RMSE>
+            <NSE>0.76716203467963184</NSE>
+            <ME>-0.0077537298366880556</ME>
+            <MAE>0.019500526366405344</MAE>
+            <RSR>0.48061423715978568</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>126</n>
-            <Slope>0.48602062308353472</Slope>
-            <Intercept>0.09918195524184012</Intercept>
-            <SEslope>0.043436406938563495</SEslope>
-            <SEintercept>0.0087823746206632178</SEintercept>
-            <R2>0.5024061391868464</R2>
-            <RMSE>0.02539736802828263</RMSE>
-            <NSE>0.49431318981381112</NSE>
-            <ME>-0.0031050397662914634</ME>
-            <MAE>0.01934202949206253</MAE>
-            <RSR>0.708289081381154</RSR>
+            <Slope>0.523375760018811</Slope>
+            <Intercept>0.09313155167275658</Intercept>
+            <SEslope>0.041058267545399617</SEslope>
+            <SEintercept>0.0083015403960354159</SEintercept>
+            <R2>0.56717474067672868</R2>
+            <RMSE>0.023650911158966469</RMSE>
+            <NSE>0.56146934768899825</NSE>
+            <ME>-0.0017214004985791358</ME>
+            <MAE>0.018454880789031184</MAE>
+            <RSR>0.65958339147414369</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>126</n>
-            <Slope>0.27502639541748081</Slope>
-            <Intercept>0.14516130365363011</Intercept>
-            <SEslope>0.048383718824957213</SEslope>
-            <SEintercept>0.0098226321505974715</SEintercept>
-            <R2>0.20670964885126608</R2>
-            <RMSE>0.028978738314181372</RMSE>
-            <NSE>0.18410314345912837</NSE>
-            <ME>-0.00017001215071559678</ME>
-            <MAE>0.024307208624531944</MAE>
-            <RSR>0.89967854518353574</RSR>
+            <Slope>0.2785069802701502</Slope>
+            <Intercept>0.14508209350490997</Intercept>
+            <SEslope>0.046913256612161357</SEslope>
+            <SEintercept>0.0095241059157724437</SEintercept>
+            <R2>0.22131907894898506</R2>
+            <RMSE>0.028580992355331531</RMSE>
+            <NSE>0.2063465266052632</NSE>
+            <ME>0.00044851065692266931</ME>
+            <MAE>0.023740476895936755</MAE>
+            <RSR>0.8873300605210569</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>126</n>
-            <Slope>0.15792976996552754</Slope>
-            <Intercept>0.17177348082565253</Intercept>
-            <SEslope>0.028495160527606516</SEslope>
-            <SEintercept>0.00569939630472189</SEintercept>
-            <R2>0.19853924491061514</R2>
-            <RMSE>0.019211158736613058</RMSE>
-            <NSE>0.14828771702185473</NSE>
-            <ME>0.0042633236966322929</ME>
-            <MAE>0.015290972884330754</MAE>
-            <RSR>0.91921306653281865</RSR>
+            <Slope>0.15541169051177292</Slope>
+            <Intercept>0.1723937527541638</Intercept>
+            <SEslope>0.027998365013419967</SEslope>
+            <SEintercept>0.0056000308522965881</SEintercept>
+            <R2>0.19902194246821492</R2>
+            <RMSE>0.0192466348911448</RMSE>
+            <NSE>0.14513919531283692</NSE>
+            <ME>0.0043826826728540569</ME>
+            <MAE>0.015410389535320958</MAE>
+            <RSR>0.92091052503821136</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>126</n>
-            <Slope>-0.017874456096361589</Slope>
-            <Intercept>0.20342949553348091</Intercept>
-            <SEslope>0.0072472229067174288</SEslope>
-            <SEintercept>0.0014698320053705848</SEintercept>
-            <R2>0.046762925430718583</R2>
-            <RMSE>0.025490401404748442</RMSE>
-            <NSE>-0.045937637052615887</NSE>
-            <ME>-0.0014439934541841293</ME>
-            <MAE>0.02097237791389597</MAE>
-            <RSR>1.0186444643225894</RSR>
+            <Slope>-0.018850076664950744</Slope>
+            <Intercept>0.20364771403202919</Intercept>
+            <SEslope>0.0072454499848462672</SEslope>
+            <SEintercept>0.0014694724335259214</SEintercept>
+            <R2>0.051759755275817665</R2>
+            <RMSE>0.025513337182034593</RMSE>
+            <NSE>-0.047820713346055532</NSE>
+            <ME>-0.0014221437598807144</ME>
+            <MAE>0.020991850048180497</MAE>
+            <RSR>1.0195610211941937</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>126</n>
-            <Slope>-0.034482770984420354</Slope>
-            <Intercept>0.20242552722066867</Intercept>
-            <SEslope>0.016776169416433871</SEslope>
-            <SEintercept>0.0034644370896252785</SEintercept>
-            <R2>0.032949305505105664</R2>
-            <RMSE>0.028238942454572882</RMSE>
-            <NSE>-0.2494640173570406</NSE>
-            <ME>-0.0096003373823464952</ME>
-            <MAE>0.021691844735977378</MAE>
-            <RSR>1.1133497367255743</RSR>
+            <Slope>-0.034631289978149786</Slope>
+            <Intercept>0.20245914104296114</Intercept>
+            <SEslope>0.016788051946962142</SEslope>
+            <SEintercept>0.0034668909441649466</SEintercept>
+            <R2>0.033178839449227282</R2>
+            <RMSE>0.028241895059584975</RMSE>
+            <NSE>-0.24972531372762319</NSE>
+            <ME>-0.0095971637654772273</ME>
+            <MAE>0.021695084572901147</MAE>
+            <RSR>1.113466146255363</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -555,7 +555,6 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -606,17 +605,12 @@
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -1244,7 +1238,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -3008,7 +3002,6 @@ This model has been built to simulate a range of different crops in simulations 
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -3059,17 +3052,12 @@ This model has been built to simulate a range of different crops in simulations 
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -3440,7 +3428,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -5056,7 +5044,6 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -5065,17 +5052,12 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -5845,7 +5827,7 @@ namespace Models
              
              ]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Graph>
@@ -7851,7 +7833,6 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
           <State>Canterbury</State>
           <Latitude>999999</Latitude>
           <Longitude>999999</Longitude>
-          <Area>0</Area>
           <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         </Soil>
         <Plant>
@@ -7867,17 +7848,12 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.15</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -12163,7 +12139,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -12216,17 +12191,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -13197,7 +13167,7 @@ namespace Models
 }
 	]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
