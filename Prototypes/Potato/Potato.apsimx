@@ -4390,7 +4390,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Arbitrator.NAllocated</YFieldName>
+            <YFieldName>Potato.Arbitrator.N.Allocated</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4469,7 +4469,7 @@ namespace Models
           <string>Potato.Arbitrator.NH4NSupply</string>
           <string>Potato.Arbitrator.NO3NSupply</string>
           <string>Potato.Arbitrator.NSupply</string>
-          <string>Potato.Arbitrator.NAllocated</string>
+          <string>Potato.Arbitrator.N.Allocated</string>
           <string>Potato.HarvestRule.Script.FinalTag</string>
           <string>Potato.Leaf.AppearedCohortNo</string>
           <string>Potato.Leaf.CohortParameters.MaximumNConc.Value</string>

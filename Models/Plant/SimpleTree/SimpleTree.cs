@@ -174,9 +174,9 @@ namespace Models.PMF
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == this.Parent.Name)
+                if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
 
@@ -194,9 +194,8 @@ namespace Models.PMF
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-            Uptake.Name = this.Parent.Name;
             Uptake.Water = SWUptake;
             Uptake.NO3N = new double[SWUptake.Length];
             Uptake.NH4N = new double[SWUptake.Length];
@@ -209,9 +208,9 @@ namespace Models.PMF
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == this.Parent.Name)
+                if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
             double[] PotNO3Uptake = new double[Soil.NO3N.Length];
@@ -234,9 +233,7 @@ namespace Models.PMF
                 NH4Uptake[j] = PotNH4Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
             }
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
-
-            Uptake.Name = this.Parent.Name;
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
             Uptake.Water = new double[NO3Uptake.Length];

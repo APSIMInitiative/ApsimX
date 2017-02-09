@@ -314,6 +314,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Value>0.05</Value>
           <Units>gN/gDM</Units>
         </Constant>
+        <Constant>
+          <Name>CriticalNConc</Name>
+          <Value>0.05</Value>
+          <Units>gN/gDM</Units>
+        </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
@@ -1930,7 +1935,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>/day</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -3254,15 +3259,12 @@ namespace Models
         <string />
         <string>[Chicory].Arbitrator.NSupply</string>
         <string>[Chicory].Arbitrator.NDemand</string>
-        <string>[Chicory].Arbitrator.NAllocated</string>
+        <string>[Chicory].Arbitrator.N.Allocated</string>
         <string>[Chicory].Arbitrator.FN</string>
         <string>[Chicory].Arbitrator.WSupply</string>
         <string>[Chicory].Arbitrator.WDemand</string>
         <string>[Chicory].Arbitrator.WAllocated</string>
         <string>[Chicory].Arbitrator.FW</string>
-        <string>sum([Chicory].Arbitrator.PotentialNO3NUptake) as PotentialPlantAvailableNO3</string>
-        <string>sum([Chicory].Arbitrator.PotentialNH4NUptake) as PotentialPlantAvailableNH4</string>
-        <string>(sum([Chicory].Arbitrator.PotentialNO3NUptake)+ sum([Chicory].Arbitrator.PotentialNH4NUptake)) as PotentialPlantAvailableN</string>
         <string>[Chicory].Root.NSupplyUptake</string>
         <string>[Chicory].Root.NTakenUp</string>
         <string>[Chicory].Root.NSupply.Uptake</string>
@@ -5990,7 +5992,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -12554,7 +12556,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                    <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -18411,7 +18413,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -24983,7 +24985,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -32028,7 +32030,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                  <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -39248,7 +39250,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -46920,7 +46922,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -53678,7 +53680,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -60524,7 +60526,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -67041,7 +67043,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Chicory.Arbitrator.NAllocated</YFieldName>
+                <YFieldName>Chicory.Arbitrator.N.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
