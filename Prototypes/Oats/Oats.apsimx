@@ -74,11 +74,13 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>XYPairs</Name>
             <X>
               <double>0</double>
+              <double>15</double>
               <double>30</double>
               <double>40</double>
             </X>
             <Y>
               <double>0</double>
+              <double>15</double>
               <double>30</double>
               <double>0</double>
             </Y>
@@ -2093,18 +2095,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
+                <double>4</double>
+                <double>9</double>
                 <double>15</double>
-                <double>25</double>
-                <double>35</double>
+                <double>40</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
-                <double>1</double>
                 <double>0</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
-            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+            <MaximumTemperatureWeighting>1</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
             <Name>FVPD</Name>
@@ -2797,6 +2801,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
+        <string>[Weather].MeanT</string>
         <string>[Soil].SoilWater.SW</string>
         <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
         <string>[Oats].AboveGround.N</string>
@@ -4246,7 +4251,14 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>LD1: Series</string>
+        <string>LD4: Series</string>
+        <string>ED1: Series</string>
+        <string>LD1: Series1</string>
+        <string>LD4: Series1</string>
+        <string>ED1: Series1</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
