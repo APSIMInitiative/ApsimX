@@ -1260,7 +1260,7 @@ namespace Models.PMF
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
                 DM.End += Organs[i].Wt;
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
+            DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand));
