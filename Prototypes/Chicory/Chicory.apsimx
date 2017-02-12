@@ -301,7 +301,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <Value>0.95</Value>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -311,12 +311,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.05</Value>
+          <Value>0.055</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>CriticalNConc</Name>
-          <Value>0.05</Value>
+          <Value>0.04</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <RUEModel>
@@ -378,13 +378,13 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>0.8</double>
+                <double>0.9</double>
                 <double>1</double>
                 <double>1.5</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>1</double>
+                <double>0.95</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -718,17 +718,17 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <Value>0.01</Value>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0</Value>
+          <Value>1</Value>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <Value>0.05</Value>
           <Units>/day</Units>
         </Constant>
         <Constant>
@@ -803,30 +803,14 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <Value>0.95</Value>
           <Units>g/g</Units>
         </Constant>
-        <LinearInterpolationFunction>
+        <Constant>
           <Name>MinimumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>5</double>
-              <double>5.5</double>
-              <double>6</double>
-              <double>6.5</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.008</double>
-              <double>0.007</double>
-              <double>0.007</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
+          <Value>0.007</Value>
+          <Units>gN/gDM</Units>
+        </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -839,11 +823,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               <double>7</double>
             </X>
             <Y>
-              <double>0.025</double>
-              <double>0.025</double>
-              <double>0.02</double>
-              <double>0.015</double>
-              <double>0.015</double>
+              <double>0.0225</double>
+              <double>0.0225</double>
+              <double>0.016</double>
+              <double>0.014</double>
+              <double>0.013</double>
             </Y>
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
@@ -1114,21 +1098,53 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
-          <Units>/day</Units>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>5</double>
+              <double>5.5</double>
+              <double>6</double>
+              <double>6.5</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+              <double>0.005</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0</Value>
+          <Value>1</Value>
           <Units>/day</Units>
         </Constant>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
-          <Units>/day</Units>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>5</double>
+              <double>5.5</double>
+              <double>6</double>
+              <double>6.5</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0</double>
+              <double>0.01</double>
+              <double>0.05</double>
+              <double>0.05</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <Value>1</Value>
@@ -1438,11 +1454,27 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Value>0</Value>
           <Units>/day</Units>
         </Constant>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
-          <Units>/day</Units>
-        </Constant>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>6</double>
+              <double>6.25</double>
+              <double>6.5</double>
+              <double>6.75</double>
+              <double>7</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.01</double>
+              <double>0.025</double>
+              <double>0.05</double>
+              <double>0.05</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <Value>1</Value>
@@ -1500,12 +1532,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <Value>0.5</Value>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <Value>0.007</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
@@ -1645,21 +1677,111 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Value>1</Value>
           <Units>/day</Units>
         </Constant>
-        <Constant>
+        <MultiplyFunction>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
-          <Units>/day</Units>
-        </Constant>
+          <Constant>
+            <Name>ReferenceFactor</Name>
+            <Value>0.05</Value>
+            <Units>/day</Units>
+          </Constant>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>5</double>
+                <double>11</double>
+                <double>16</double>
+                <double>21</double>
+                <double>26</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.35</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.7</double>
+                <double>0.85</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.9</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Arbitrator].FW</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0</Value>
+          <Value>1</Value>
           <Units>/day</Units>
         </Constant>
-        <Constant>
+        <MultiplyFunction>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
-          <Units>/day</Units>
-        </Constant>
+          <Constant>
+            <Name>ReferenceFactor</Name>
+            <Value>0.05</Value>
+            <Units>/day</Units>
+          </Constant>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>5</double>
+                <double>11</double>
+                <double>16</double>
+                <double>21</double>
+                <double>26</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.35</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.7</double>
+                <double>0.85</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.9</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Arbitrator].FW</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <Value>1</Value>
@@ -1723,12 +1845,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <Value>0.014</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.017</Value>
+          <Value>0.016</Value>
           <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -2355,7 +2477,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSL</Name>
             <Constant>
               <Name>MaximumSL</Name>
-              <Value>1.5</Value>
+              <Value>1</Value>
               <Units>g/g</Units>
             </Constant>
             <VariableReference>
@@ -10286,7 +10408,7 @@ Data supplied by Julia Lee, DairyNZ.
                   <Name>Sowing</Name>
                   <Operation>
                     <Date>2009-11-14</Date>
-                    <Action> [Chicory].Sow(population: 150, cultivar: "Choice", depth: 10, rowSpacing: 150)</Action>
+                    <Action> [Chicory].Sow(population: 120, cultivar: "Choice", depth: 10, rowSpacing: 150)</Action>
                   </Operation>
                   <Operation>
                     <Date>2009-11-14</Date>
@@ -29846,11 +29968,6 @@ Lee, J.M.;  Hemmingson, N.R.; Minnee, E.M.K.; Clark, C.E.F. 2015. Management str
           </Factors>
           <Simulation>
             <Name>FD902</Name>
-            <Memo>
-              <Name>memo</Name>
-              <MemoText><![CDATA[Scott Farm defoliation experiment. Julia Lee, unpublished.
-]]></MemoText>
-            </Memo>
             <Clock>
               <Name>clock</Name>
               <StartDate>2010-10-01T00:00:00</StartDate>
@@ -36324,6 +36441,69 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>HerbageNc</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Chicory.AboveGroundLive.NConc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Chicory.AboveGroundLive.NConc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Nitrogen concentration (g/g)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -43356,6 +43536,69 @@ namespace Models
         <Folder>
           <Name>ObservedResults</Name>
           <Graph>
+            <Name>LeafNc</Name>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Small</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Date</XFieldName>
+              <YFieldName>Chicory.Leaf.Live.Nconc</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Dash</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Report</TableName>
+              <XFieldName>Date</XFieldName>
+              <YFieldName>Chicory.Leaf.Live.NConc</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Nitrogen concentration (g/g)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Graph>
+          <Graph>
             <Name>StemNc</Name>
             <Series>
               <Name>Observed</Name>
@@ -43415,69 +43658,6 @@ namespace Models
               <TableName>Report</TableName>
               <XFieldName>Date</XFieldName>
               <YFieldName>Chicory.Stem.Live.NConc</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Nitrogen concentration (g/g)</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-            <Name>LeafNc</Name>
-            <Series>
-              <Name>Observed</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Small</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Chicory.Leaf.Live.Nconc</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Predicted</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Dash</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Report</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Chicory.Leaf.Live.NConc</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -65061,10 +65241,6 @@ namespace Models
                   <Date>1993-09-25</Date>
                   <Action> [Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
-                <Operation>
-                  <Date>1994-01-30</Date>
-                  <Action> [Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
-                </Operation>
               </Operations>
               <Operations>
                 <Name>Cuttings</Name>
@@ -84523,6 +84699,53 @@ namespace Models
           <TableName>PredictedObserved</TableName>
           <XFieldName>Observed.RotationHarvestedWt</XFieldName>
           <YFieldName>Predicted.RotationHarvestedWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>HarvestedWt</Name>
+        <Series>
+          <Name>PO</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.HarvestedWt</XFieldName>
+          <YFieldName>Predicted.HarvestedWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
