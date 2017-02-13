@@ -158,38 +158,54 @@ namespace Models.WholeFarm
 			double totalMethane = 0;
 
 			// grow all weaned individuals
-
-			foreach (Ruminant ind in herd.Where(a => (a.Weaned == true)))
+			foreach (Ruminant ind in herd)
 			{
-				// calculate protein concentration
+				if (ind.Weaned)
+				{
+					// calculate protein concentration
 
-				// Calculate diet dry matter digestibilty from the %N of the current diet intake.
-				// Reference: Ash and McIvor
-				//ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
-				// Now tracked via incoming food DMD values
+					// Calculate diet dry matter digestibilty from the %N of the current diet intake.
+					// Reference: Ash and McIvor
+					//ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
+					// Now tracked via incoming food DMD values
 
-				// TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
-				// Our flow has already taken in supplements by this stage and cannot be distinguished
-				// Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
+					// TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
+					// Our flow has already taken in supplements by this stage and cannot be distinguished
+					// Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
 
-				// TODO: Check equation. NABSA doesn't include the 0.9
-				// Crude protein required generally 130g per kg of digestable feed.
-				double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
+					// TODO: Check equation. NABSA doesn't include the 0.9
+					// Crude protein required generally 130g per kg of digestable feed.
+					double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
 
-				// adjust for efficiency of use of protein, 90% degradable
-				double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * 0.9;
-				// This was proteinconcentration * 0.9
+					// adjust for efficiency of use of protein, 90% degradable
+					double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * 0.9;
+					// This was proteinconcentration * 0.9
 
-				// prevent future divide by zero issues.
-				if (crudeProteinSupply == 0.0) crudeProteinSupply = 0.001;
+					// prevent future divide by zero issues.
+					if (crudeProteinSupply == 0.0) crudeProteinSupply = 0.001;
 
-				double ratioSupplyRequired = Math.Min(0.3, Math.Max(1.3, crudeProteinSupply / crudeProteinRequired));
+					if (crudeProteinSupply < crudeProteinRequired)
+					{
+						double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
+						//TODO: add min protein to parameters
+						ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
+						ind.Intake *= ratioSupplyRequired;
+					}
 
-				// TODO: check if we still need to apply modification to only the non-supplemented component of intake
+					// old. I think IAT
+					//double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
 
-				ind.Intake *= ratioSupplyRequired;
-				ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
+					// TODO: check if we still need to apply modification to only the non-supplemented component of intake
 
+					ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
+
+				}
+				else
+				{
+					// no petential * 1.2 as potential has been fixed based on suckling individuals.
+					ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+
+				}
 				// TODO: nabsa adjusts potential intake for digestability of fodder here.
 				// I'm sure it can be done here, but prob as this is after the 1.2x cap has been performed.
 				// calculate from the pools of fodder fed to this individual
@@ -226,6 +242,9 @@ namespace Models.WholeFarm
 		/// <returns></returns>
 		private void CalculateEnergy(Ruminant ind, out double methaneProduced)
 		{
+			double intakeDaily = ind.Intake / 30.4;
+			double potentialIntakeDaily = ind.PotentialIntake / 30.4;
+
 			// Sme 1 for females and castrates
 			// TODO: castrates not implemented
 			double Sme = 1;
@@ -235,7 +254,7 @@ namespace Models.WholeFarm
 			double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
 			// Reference: Nutrient Requirements of domesticated ruminants (p7)
 			double energyMetabolic = energyDiet * 0.81;
-			double energyMetablicFromIntake = energyMetabolic * ind.Intake;
+			double energyMetablicFromIntake = energyMetabolic * intakeDaily;
 
 			double km = ind.BreedParams.EMaintCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintIntercept;
 			// Reference: SCA p.49
@@ -245,20 +264,27 @@ namespace Models.WholeFarm
 			double energyMaintenance = 0;
 			if (!ind.Weaned)
 			{
+				// calculate engergy and growth from milk intake
+
 				// old code
 				// dum = potential milk intake daily
 				// dumshort = potential intake. check that it isnt monthly
 
-				// average energy efficiency for maintenance
-				double kml = ((ind.MilkIntake * 0.7) + (ind.PotentialIntake * km)) / (ind.MilkIntake + ind.PotentialIntake);
-				// average energy efficiency for growth
-				double kgl = ((ind.MilkIntake * 0.7) + (ind.PotentialIntake * kg)) / (ind.MilkIntake + ind.PotentialIntake);
-
+				// Below now uses actual intake received rather than assume all potential intake is eaten
+				double kml = 1;
+				double kgl = 1;
+				if ((ind.Intake + ind.MilkIntake) > 0)
+				{
+					// average energy efficiency for maintenance
+					kml = ((ind.MilkIntake * 0.7) + (intakeDaily * km)) / (ind.MilkIntake + intakeDaily);
+					// average energy efficiency for growth
+					kgl = ((ind.MilkIntake * 0.7) + (intakeDaily * kg)) / (ind.MilkIntake + intakeDaily);
+				}
 				double energyMilkConsumed = ind.MilkIntake * 3.2;
 				// limit calf intake of milk per day
 				energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
-				energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.Age);
+				energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
 				ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
 
 				double feedingValue = 0;
@@ -277,8 +303,6 @@ namespace Models.WholeFarm
 			}
 			else
 			{
-				//all weaned individuals
-
 				double energyMilk = 0;
 				double energyFoetus = 0;
 
@@ -367,8 +391,10 @@ namespace Models.WholeFarm
 					// Reference: from Hirata model
 					energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * km * ind.EnergyBalance / (0.8 * energyEmptyBodyGain);
 				}
+
 			}
 			energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
+
 			ind.PreviousWeight = ind.Weight;
 			ind.Weight += energyPredictedBodyMassChange;
 			ind.Weight = Math.Max(0.0, ind.Weight);
@@ -376,7 +402,7 @@ namespace Models.WholeFarm
 
 			// Function to calculate approximate methane produced by animal, based on feed intake
 			// Function based on Freer spreadsheet
-			methaneProduced = 0.02 * ind.Intake * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+			methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
 			methaneProduced /= 55.28 * 1000; // grams per day
 		}
 
@@ -423,30 +449,31 @@ namespace Models.WholeFarm
 			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
 
-			TMyRandom randomGenerator = new TMyRandom(10);
-
+			// base mortality adjusted for condition
 			foreach (var ind in ruminantHerd.Herd)
 			{
 				double mortalityRate = 0;
 				if (!ind.Weaned)
 				{
 					mortalityRate = 0;
-					if (ind.Mother.Weight < ind.BreedParams.CriticalCowWeight * ind.StandardReferenceWeight)
+					if((ind.Mother == null) || (ind.Mother.Weight < ind.BreedParams.CriticalCowWeight * ind.StandardReferenceWeight))
 					{
+						// if no mohter assigned or mother's weight is < CriticalCowWeight * SFR
 						mortalityRate = ind.BreedParams.JuvenileMortalityMaximum;
 					}
 					else
 					{
-						mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent)) / 100;
+						// if mother's weight >= criticalCowWeight * SFR
+						mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
 					}
-					mortalityRate += mortalityRate + ind.BreedParams.MortalityBase;
+					mortalityRate = mortalityRate + ind.BreedParams.MortalityBase;
 					mortalityRate = Math.Max(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
 				}
 				else
 				{
 					mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
 				}
-				if (randomGenerator.RandNo <= mortalityRate)
+				if (WholeFarm.RandomGenerator.NextDouble() <= mortalityRate)
 				{
 					ind.Died = true;
 				}
@@ -455,35 +482,6 @@ namespace Models.WholeFarm
 			died = herd.Where(a => a.Died).ToList();
 			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
-
-			//// mortality calculation (calculation actually calculates the survival probability)
-			//for (int i = herd.Count; i >= 0; i--)
-			//{
-			//	double mortalityRate = 0;
-			//	if (!herd[i].Weaned)
-			//	{
-			//		mortalityRate = 0;
-			//		if (herd[i].Mother.Weight < herd[i].BreedParams.CriticalCowWeight * herd[i].StandardReferenceWeight)
-			//		{
-			//			mortalityRate = herd[i].BreedParams.JuvenileMortalityMaximum;
-			//		}
-			//		else
-			//		{
-			//			mortalityRate = Math.Exp(-Math.Pow(herd[i].BreedParams.JuvenileMortalityCoefficient * (herd[i].Weight / herd[i].NormalisedAnimalWeight), herd[i].BreedParams.JuvenileMortalityExponent)) / 100;
-			//		}
-			//		mortalityRate += mortalityRate + herd[i].BreedParams.MortalityBase;
-			//		mortalityRate = Math.Max(mortalityRate, herd[i].BreedParams.JuvenileMortalityMaximum);
-			//	}
-			//	else
-			//	{
-			//		mortalityRate = 1 - (1 - herd[i].BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(herd[i].BreedParams.MortalityCoefficient * (herd[i].Weight / herd[i].NormalisedAnimalWeight - herd[i].BreedParams.MortalityIntercept)), herd[i].BreedParams.MortalityExponent)));
-			//	}
-			//	if (randomGenerator.RandNo <= mortalityRate)
-			//	{
-			//		herd[i].Died = true;
-			//	}
-			//}
-
 		}
 	}
 }

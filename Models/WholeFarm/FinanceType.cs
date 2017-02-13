@@ -14,13 +14,8 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Resources))]
-	public class FinanceType : Model, IResourceType
+	public class FinanceType : Model, IResourceWithTransactionType
 	{
-		/// <summary>
-		/// Back account transaction occured
-		/// </summary>
-		public event EventHandler OnTransactionOccurred;
-
 		/// <summary>
 		/// Opening balance
 		/// </summary>
@@ -67,56 +62,36 @@ namespace Models.WholeFarm
 		}
 
 		/// <summary>
+		/// Initialise resource type
+		/// </summary>
+		public void Initialise()
+		{
+			this.amount = 0;
+			Add(OpeningBalance, "Bank", "OpeningBalance");
+		}
+
+		#region transactions
+
+		/// <summary>
+		/// Back account transaction occured
+		/// </summary>
+		public event EventHandler TransactionOccurred;
+
+		/// <summary>
 		/// Transcation occurred 
 		/// </summary>
 		/// <param name="e"></param>
-		protected virtual void TransactionOccurred(TransactionOcurredEventArgs e)
+		protected virtual void OnTransactionOccurred(EventArgs e)
 		{
-			if (OnTransactionOccurred != null)
-				OnTransactionOccurred(this, e);
+			if (TransactionOccurred != null)
+				TransactionOccurred(this, e);
 		}
 	
-		/// <summary>
-		/// Transaction object
-		/// </summary>
-		[Serializable]
-		public class Transaction
-		{
-			/// <summary>
-			/// Name of sender or activity
-			/// </summary>
-			public string Sender { get; set; }
-			/// <summary>
-			/// Reason or cateogry
-			/// </summary>
-			public string Reason { get; set; }
-			/// <summary>
-			/// Amount to add
-			/// </summary>
-			public double Debit { get; set; }
-			/// <summary>
-			/// Amount to remove
-			/// </summary>
-			public double Credit { get; set; }
-		}
-
 		/// <summary>
 		/// Last transaction received
 		/// </summary>
 		[XmlIgnore]
-		public Transaction LastTransaction { get; set; }
-
-		/// <summary>
-		/// New transaction event args
-		/// </summary>
-		public class TransactionOcurredEventArgs : EventArgs
-		{
-			/// <summary>
-			/// Transaction details
-			/// </summary>
-			[XmlIgnore]
-			public Transaction Details { get; set; }
-		}
+		public ResourceTransaction LastTransaction { get; set; }
 
 		/// <summary>
 		/// Add money to account
@@ -131,15 +106,14 @@ namespace Models.WholeFarm
 				AddAmount = Math.Round(AddAmount, 2, MidpointRounding.ToEven);
 				amount += AddAmount;
 
-				Transaction details = new Transaction();
+				ResourceTransaction details = new ResourceTransaction();
 				details.Debit = AddAmount;
-				details.Sender = ActivityName;
+				details.Activity = ActivityName;
 				details.Reason = UserName;
+				details.ResourceType = this.Name;
 				LastTransaction = details;
-
-				TransactionOcurredEventArgs eargs = new TransactionOcurredEventArgs();
-				eargs.Details = details;
-				TransactionOccurred(eargs);
+				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+				OnTransactionOccurred(te);
 			}
 		}
 
@@ -165,15 +139,14 @@ namespace Models.WholeFarm
 				RemoveAmount = Math.Round(RemoveAmount, 2, MidpointRounding.ToEven);
 				amount -= RemoveAmount;
 
-				Transaction details = new Transaction();
+				ResourceTransaction details = new ResourceTransaction();
+				details.ResourceType = this.Name;
 				details.Credit = RemoveAmount;
-				details.Sender = ActivityName;
+				details.Activity = ActivityName;
 				details.Reason = UserName;
 				LastTransaction = details;
-
-				TransactionOcurredEventArgs eargs = new TransactionOcurredEventArgs();
-				eargs.Details = details;
-				TransactionOccurred(eargs);
+				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+				OnTransactionOccurred(te);
 			}
 		}
 
@@ -186,13 +159,6 @@ namespace Models.WholeFarm
 			amount = Math.Round(NewAmount, 2, MidpointRounding.ToEven);
 		}
 
-		/// <summary>
-		/// Initialise resource type
-		/// </summary>
-		public void Initialise()
-		{
-			this.amount = 0;
-			Add(OpeningBalance, "Bank", "OpeningBalance");
-		}
+		#endregion
 	}
 }

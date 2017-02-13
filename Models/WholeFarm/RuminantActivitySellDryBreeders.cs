@@ -73,12 +73,10 @@ namespace Models.WholeFarm
 					herd = herd.Where(a => a.Location == PaddockName).ToList();
 				}
 
-				TMyRandom randomGenerator = new TMyRandom(10);
-
 				// get dry breeders from females
 				foreach (RuminantFemale female in herd.Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth & a.PreviousConceptionRate >= MinimumConceptionBeforeSell & a.AgeAtLastBirth > 0))
 				{
-					if(randomGenerator.RandNo <= ProportionToRemove)
+					if(WholeFarm.RandomGenerator.NextDouble() <= ProportionToRemove)
 					{
 						// flag female ready to transport.
 						female.SaleFlag = Common.HerdChangeReason.DryBreederSale;

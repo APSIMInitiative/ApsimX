@@ -3,20 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Models.WholeFarm
 {
-	/// <summary>Ruminant feed activity</summary>
-	/// <summary>This activity provides food to specified ruminants based on a feeding style</summary>
+	/// <summary>Other animals feed activity</summary>
+	/// <summary>This activity provides food to specified other animals based on a feeding style</summary>
 	/// <summary>It is designed to request food via a food store arbitrator or from a AnimalFoodStoreType directly</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityFeed : Model, IFeedActivity
+	public class OtherAnimalsActivityFeed : Model, IFeedActivity
 	{
 		[Link]
 		private Resources Resources = null;
@@ -55,7 +54,7 @@ namespace Models.WholeFarm
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
-		public RuminantFeedActivityTypes FeedStyle { get; set; }
+		public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>
 		/// Feeding priority (1 high, 10 low)
@@ -83,11 +82,11 @@ namespace Models.WholeFarm
 			if (LabourPriority == 0) LabourPriority = 10;
 
 			// locate FeedType resource
-			FeedType = Resources.GetResourceItem("AnimalFoodStore",FeedTypeName) as IFeedType;
+			FeedType = Resources.GetResourceItem("AnimalFoodStore", FeedTypeName) as IFeedType;
 
 			// Determine if named Arbitrator exists else work with feed type resource
 			FoodSource = null;
-			if (FeedArbitratorName!=null)
+			if (FeedArbitratorName != "")
 			{
 				FoodSource = Arbitrators.GetByName(FeedArbitratorName) as IResourceType;
 				if (FoodSource == null)
@@ -108,6 +107,7 @@ namespace Models.WholeFarm
 		[EventSubscribe("WFRequestResources")]
 		private void OnWFRequestResources(object sender, EventArgs e)
 		{
+			// find all ActivityLabourRequirementGroups in children
 			// if labour item(s) found labour will be requested for this activity.
 			labourIncluded = false;
 			// check labour required
@@ -122,13 +122,13 @@ namespace Models.WholeFarm
 		[EventSubscribe("WFResourcesAllocated")]
 		private void OnWFResourcesAllocated(object sender, EventArgs e)
 		{
+			// find all ActivityLabourRequirementGroups in children
 			if (labourIncluded)
 			{
 				// work out if labour was limited
 				//LabourLimiter = 1.0;
 			}
 		}
-
 
 		/// <summary>An event handler to call for all feed requests prior to arbitration and growth</summary>
 		/// <param name="sender">The sender.</param>
@@ -138,44 +138,39 @@ namespace Models.WholeFarm
 		{
 			if (labourLimiter > 0)
 			{
-				RuminantHerd ruminantHerd = Resources.RuminantHerd();
-				List<Ruminant> herd = ruminantHerd.Herd;
-
-				if (herd == null && herd.Count == 0) return;
-
 				// get month from clock
 				int month = Clock.Today.Month;
 
 				// get list from filters
 				foreach (var child in this.Children)
 				{
-					if (child.GetType() == typeof(RuminantFilterGroup))
+					if (child.GetType() == typeof(OtherAnimalsFilterGroup))
 					{
-						foreach (Ruminant ind in herd.Filter(child as RuminantFilterGroup))
+						double total = 0;
+						foreach (OtherAnimalsTypeCohort item in (child as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(child as OtherAnimalsFilterGroup))
 						{
-							RuminantFeedRequest freqest = new RuminantFeedRequest();
-							freqest.FeedActivity = this;
-							freqest.Requestor = ind;
-							freqest.Amount = 0;
-							switch (FeedStyle)
-							{
-								case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * 30.4; // * ind.Number;
-									break;
-								case RuminantFeedActivityTypes.ProportionOfWeight:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * ind.Weight *30.4; // * ind.Number;
-									break;
-								case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * ind.PotentialIntake; // * ind.Number;
-									break;
-								case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
-									break;
-								default:
-									break;
-							}
-							freqest.Amount *= labourLimiter;
-							FoodSource.Remove(freqest);
+							total += item.Number;
+						}
+						double amount = 0;
+						switch (FeedStyle)
+						{
+							case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
+								amount = (child as OtherAnimalsFilterGroup).MonthlyValues[month - 1] * 30.4 * total;
+								break;
+							case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
+								throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
+							case OtherAnimalsFeedActivityTypes.ProportionOfPotentialIntake:
+								throw new NotImplementedException("Proportion of potential intake is not implemented as a feed style for other animals");
+							case OtherAnimalsFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+								throw new NotImplementedException("Proportion of remaining intake is not implemented as a feed style for other animals");
+							default:
+								amount = 0;
+								break;
+						}
+						amount *= labourLimiter;
+						if (amount > 0)
+						{
+							FoodSource.Remove(amount, this.Name, (child as OtherAnimalsFilterGroup).AnimalType);
 						}
 					}
 				}
@@ -187,7 +182,7 @@ namespace Models.WholeFarm
 	/// <summary>
 	/// Ruminant feeding styles
 	/// </summary>
-	public enum RuminantFeedActivityTypes
+	public enum OtherAnimalsFeedActivityTypes
 	{
 		/// <summary>
 		/// Feed specified amount daily in selected months
@@ -206,5 +201,4 @@ namespace Models.WholeFarm
 		/// </summary>
 		ProportionOfRemainingIntakeRequired
 	}
-
 }

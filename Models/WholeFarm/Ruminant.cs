@@ -51,7 +51,14 @@ namespace Models.WholeFarm
 		/// Age (Months)
 		/// </summary>
 		/// <units>Months</units>
-		public int Age { get; set; }
+		public double Age { get; set; }
+
+		/// <summary>
+		/// Will return 0.1 if Age is 0 for calculations (Months)
+		/// </summary>
+		/// <units>Months</units>
+		public double AgeZeroCorrected
+		{  get { return ((Age == 0) ? 0.1 : Age); } }
 
 		/// <summary>
 		/// Weight (kg)
@@ -127,6 +134,54 @@ namespace Models.WholeFarm
 		/// Flag to identify individual ready for sale
 		/// </summary>
 		public Common.HerdChangeReason  SaleFlag { get; set; }
+
+
+		/// <summary>
+		/// Determines if the change resson is her positive or negative
+		/// </summary>
+		public int PopulationChangeDirection
+		{
+			get
+			{
+				switch (SaleFlag)
+				{
+					case Common.HerdChangeReason.None:
+						return 0;
+					case Common.HerdChangeReason.Died:
+						return -1;
+					case Common.HerdChangeReason.Born:
+						return 1;
+					case Common.HerdChangeReason.TradeSale:
+						return -1;
+					case Common.HerdChangeReason.DryBreederSale:
+						return -1;
+					case Common.HerdChangeReason.ExcessBreederSale:
+						return -1;
+					case Common.HerdChangeReason.ExcessBullSale:
+						return -1;
+					case Common.HerdChangeReason.MaxAgeSale:
+						return -1;
+					case Common.HerdChangeReason.AgeWeightSale:
+						return -1;
+					case Common.HerdChangeReason.TradePurchase:
+						return 1;
+					case Common.HerdChangeReason.HeiferPurchase:
+						return 1;
+					case Common.HerdChangeReason.SirePurchase:
+						return 1;
+					case Common.HerdChangeReason.Consumed:
+						return -1;
+					case Common.HerdChangeReason.DestockSale:
+						return -1;
+					case Common.HerdChangeReason.RestockPurchase:
+						return 1;
+					case Common.HerdChangeReason.InitialHerd:
+						return 1;
+					default:
+						return 0;
+				}
+			}
+		}
 
 		/// <summary>
 		/// SaleFlag as string for reports
@@ -227,12 +282,14 @@ namespace Models.WholeFarm
 		/// <param name="intake">Feed request contianing intake information kg, %n, DMD</param>
 		public void AddIntake(RuminantFeedRequest intake)
 		{
-			// determine the adjusted DMD of all intake
-			this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility / 100.0) + (intake.FeedActivity.FeedType.DMD / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0;
-			// determine the adjusted percentage N of all intake
-			this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake / 100.0) + (intake.FeedActivity.FeedType.Nitrogen / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0; ;
-
-			this.Intake += intake.Amount;
+			if (intake.Amount > 0)
+			{
+				// determine the adjusted DMD of all intake
+				this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility / 100.0) + (intake.FeedActivity.FeedType.DMD / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0;
+				// determine the adjusted percentage N of all intake
+				this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake / 100.0) + (intake.FeedActivity.FeedType.Nitrogen / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0; ;
+				this.Intake += intake.Amount;
+			}
 		}
 
 		/// <summary>

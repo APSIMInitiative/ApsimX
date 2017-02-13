@@ -15,7 +15,7 @@
     <Summary>
       <Name>summaryfile</Name>
     </Summary>
-    <Zone>
+    <WholeFarm>
       <Name>WholeFarm</Name>
       <Resources>
         <Name>Resources</Name>
@@ -60,10 +60,10 @@
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Lucerne</Name>
-            <DryMatter>50</DryMatter>
-            <DMD>50</DMD>
-            <Nitrogen>20</Nitrogen>
-            <StartingAmount>100</StartingAmount>
+            <DryMatter>61</DryMatter>
+            <DMD>61</DMD>
+            <Nitrogen>7</Nitrogen>
+            <StartingAmount>10000</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
             <KgPerUnitPurchased>0</KgPerUnitPurchased>
             <CostPerUnitPurchased>0</CostPerUnitPurchased>
@@ -100,6 +100,30 @@
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Chicken pellets</Name>
+            <DryMatter>61</DryMatter>
+            <DMD>61</DMD>
+            <Nitrogen>7</Nitrogen>
+            <StartingAmount>20</StartingAmount>
+            <PurchaseAsNeeded>true</PurchaseAsNeeded>
+            <KgPerUnitPurchased>20</KgPerUnitPurchased>
+            <CostPerUnitPurchased>40</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0.1</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Household scraps</Name>
+            <DryMatter>61</DryMatter>
+            <DMD>61</DMD>
+            <Nitrogen>7</Nitrogen>
+            <StartingAmount>5</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
             <KgPerUnitPurchased>0</KgPerUnitPurchased>
             <CostPerUnitPurchased>0</CostPerUnitPurchased>
@@ -143,10 +167,10 @@
           </LandType>
           <UnitOfArea>Hectares</UnitOfArea>
         </Land>
-        <LabourFamily>
-          <Name>LabourFamily</Name>
-          <LabourFamilyType>
-            <Name>Joe B.</Name>
+        <Labour>
+          <Name>Labour</Name>
+          <LabourType>
+            <Name>Joe B</Name>
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
@@ -163,9 +187,9 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
-          </LabourFamilyType>
-          <LabourFamilyType>
-            <Name>Jane D.</Name>
+          </LabourType>
+          <LabourType>
+            <Name>Jane D</Name>
             <InitialAge>40</InitialAge>
             <Gender>Female</Gender>
             <MaxLabourSupply>
@@ -182,12 +206,9 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
-          </LabourFamilyType>
+          </LabourType>
           <AllowAging>false</AllowAging>
-        </LabourFamily>
-        <LabourHired>
-          <Name>LabourHired</Name>
-        </LabourHired>
+        </Labour>
         <RuminantHerd>
           <Name>Ruminants</Name>
           <RuminantType>
@@ -195,15 +216,6 @@
             <RuminantTypeCohort>
               <Name>CalfF</Name>
               <Gender>Female</Gender>
-              <StartingAge>0</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>40</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>true</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>CalfM</Name>
-              <Gender>Male</Gender>
               <StartingAge>0</StartingAge>
               <StartingNumber>1</StartingNumber>
               <StartingWeight>40</StartingWeight>
@@ -220,234 +232,11 @@
               <Suckling>false</Suckling>
             </RuminantTypeCohort>
             <RuminantTypeCohort>
-              <Name>WeanerM</Name>
-              <Gender>Male</Gender>
-              <StartingAge>8</StartingAge>
-              <StartingNumber>0</StartingNumber>
-              <StartingWeight>180</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
               <Name>Female1_2</Name>
               <Gender>Female</Gender>
               <StartingAge>18</StartingAge>
-              <StartingNumber>3</StartingNumber>
+              <StartingNumber>1</StartingNumber>
               <StartingWeight>270</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female2_3</Name>
-              <Gender>Female</Gender>
-              <StartingAge>30</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>400</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female3_4</Name>
-              <Gender>Female</Gender>
-              <StartingAge>42</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>450</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female4_5</Name>
-              <Gender>Female</Gender>
-              <StartingAge>54</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>460</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female5_6</Name>
-              <Gender>Female</Gender>
-              <StartingAge>66</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>470</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female6_7</Name>
-              <Gender>Female</Gender>
-              <StartingAge>78</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>480</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female7_8</Name>
-              <Gender>Female</Gender>
-              <StartingAge>90</StartingAge>
-              <StartingNumber>2</StartingNumber>
-              <StartingWeight>480</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female8_9</Name>
-              <Gender>Female</Gender>
-              <StartingAge>102</StartingAge>
-              <StartingNumber>2</StartingNumber>
-              <StartingWeight>490</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female9_10</Name>
-              <Gender>Female</Gender>
-              <StartingAge>114</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>500</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Male1_2</Name>
-              <Gender>Male</Gender>
-              <StartingAge>18</StartingAge>
-              <StartingNumber>2</StartingNumber>
-              <StartingWeight>350</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Male2_3</Name>
-              <Gender>Male</Gender>
-              <StartingAge>30</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>520</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Male3_4</Name>
-              <Gender>Male</Gender>
-              <StartingAge>42</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>610</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Breeding_sires</Name>
-              <Gender>Male</Gender>
-              <StartingAge>48</StartingAge>
-              <StartingNumber>2</StartingNumber>
-              <StartingWeight>720</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
-            <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
-            <Kme>1</Kme>
-            <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
-            <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
-            <GrowthEfficiency>1.09</GrowthEfficiency>
-            <SRWFemale>500</SRWFemale>
-            <SRWMaleMultiplier>1.2</SRWMaleMultiplier>
-            <SRWBirth>0.08</SRWBirth>
-            <AgeGrowthRateCoefficient>0.0115</AgeGrowthRateCoefficient>
-            <SRWGrowthScalar>0.32</SRWGrowthScalar>
-            <IntakeCoefficient>0.024</IntakeCoefficient>
-            <IntakeIntercept>1.7</IntakeIntercept>
-            <ProteinCoefficient>120</ProteinCoefficient>
-            <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
-            <GreenDietMax>98</GreenDietMax>
-            <GreenDietCoefficient>0.15</GreenDietCoefficient>
-            <GreenDietZero>4</GreenDietZero>
-            <IntakeTropicalQuality>0.16</IntakeTropicalQuality>
-            <IntakeCoefficientQuality>1.7</IntakeCoefficientQuality>
-            <IntakeCoefficientBiomass>0.006</IntakeCoefficientBiomass>
-            <StrictFeedingLimits>true</StrictFeedingLimits>
-            <MilkIntakeCoefficient>0.1206</MilkIntakeCoefficient>
-            <MilkIntakeIntercept>3.8146</MilkIntakeIntercept>
-            <MilkIntakeMaximum>20</MilkIntakeMaximum>
-            <MilkLWTFodderSubstitutionProportion>0.2</MilkLWTFodderSubstitutionProportion>
-            <MaxJuvenileIntake>0.035</MaxJuvenileIntake>
-            <ProportionalDiscountDueToMilk>0.3</ProportionalDiscountDueToMilk>
-            <ProportionOfMaxWeightToSurvive>0.5</ProportionOfMaxWeightToSurvive>
-            <LactatingPotentialModifierConstantA>0.42</LactatingPotentialModifierConstantA>
-            <LactatingPotentialModifierConstantB>61</LactatingPotentialModifierConstantB>
-            <LactatingPotentialModifierConstantC>1.7</LactatingPotentialModifierConstantC>
-            <MaximumSizeOfIndividual>1.2</MaximumSizeOfIndividual>
-            <MortalityBase>0.03</MortalityBase>
-            <MortalityCoefficient>2.5</MortalityCoefficient>
-            <MortalityIntercept>0.05</MortalityIntercept>
-            <MortalityExponent>3</MortalityExponent>
-            <JuvenileMortalityCoefficient>3</JuvenileMortalityCoefficient>
-            <JuvenileMortalityMaximum>0.2</JuvenileMortalityMaximum>
-            <JuvenileMortalityExponent>1.8</JuvenileMortalityExponent>
-            <WoolCoefficient>0</WoolCoefficient>
-            <CashmereCoefficient>0</CashmereCoefficient>
-            <MilkCurveSuckling>0.6</MilkCurveSuckling>
-            <MilkCurveNonSuckling>0.11</MilkCurveNonSuckling>
-            <MilkingDays>300</MilkingDays>
-            <MilkPeakYield>20</MilkPeakYield>
-            <MilkOffsetDay>4</MilkOffsetDay>
-            <MilkPeakDay>45</MilkPeakDay>
-            <InterParturitionIntervalIntercept>10.847</InterParturitionIntervalIntercept>
-            <InterParturitionIntervalCoefficient>-0.7994</InterParturitionIntervalCoefficient>
-            <GestationLength>9</GestationLength>
-            <MinimumAge1stMating>24</MinimumAge1stMating>
-            <MinimumSize1stMating>0.5</MinimumSize1stMating>
-            <TwinRate>0</TwinRate>
-            <CriticalCowWeight>0.5</CriticalCowWeight>
-            <ConceptionRateCoefficent />
-            <ConceptionRateIntercept />
-            <ConceptionRateAsymptote />
-            <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
-            <PrenatalMortality>7.9</PrenatalMortality>
-            <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
-          </RuminantType>
-          <RuminantType>
-            <Name>Trade</Name>
-            <RuminantTypeCohort>
-              <Name>Female2_3</Name>
-              <Gender>Female</Gender>
-              <StartingAge>30</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>400</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female3_4</Name>
-              <Gender>Female</Gender>
-              <StartingAge>42</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>450</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Male1_2</Name>
-              <Gender>Male</Gender>
-              <StartingAge>18</StartingAge>
-              <StartingNumber>2</StartingNumber>
-              <StartingWeight>350</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Male2_3</Name>
-              <Gender>Male</Gender>
-              <StartingAge>30</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>520</StartingWeight>
               <StartingWeightSD>0</StartingWeightSD>
               <Suckling>false</Suckling>
             </RuminantTypeCohort>
@@ -520,6 +309,51 @@
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
           </RuminantType>
         </RuminantHerd>
+        <OtherAnimals>
+          <Name>OtherAnimals</Name>
+          <OtherAnimalsType>
+            <Name>Pigs</Name>
+            <OtherAnimalsTypeCohort>
+              <Name>Adult male</Name>
+              <Gender>Male</Gender>
+              <Age>24</Age>
+              <Number>2</Number>
+              <Weight>200</Weight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <SaleFlag>None</SaleFlag>
+            </OtherAnimalsTypeCohort>
+            <OtherAnimalsTypeCohort>
+              <Name>Adult female</Name>
+              <Gender>Female</Gender>
+              <Age>24</Age>
+              <Number>3</Number>
+              <Weight>200</Weight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <SaleFlag>None</SaleFlag>
+            </OtherAnimalsTypeCohort>
+          </OtherAnimalsType>
+          <OtherAnimalsType>
+            <Name>Chickens</Name>
+            <OtherAnimalsTypeCohort>
+              <Name>Rooster</Name>
+              <Gender>Male</Gender>
+              <Age>12</Age>
+              <Number>1</Number>
+              <Weight>3</Weight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <SaleFlag>None</SaleFlag>
+            </OtherAnimalsTypeCohort>
+            <OtherAnimalsTypeCohort>
+              <Name>Hens</Name>
+              <Gender>Female</Gender>
+              <Age>12</Age>
+              <Number>5</Number>
+              <Weight>3</Weight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <SaleFlag>None</SaleFlag>
+            </OtherAnimalsTypeCohort>
+          </OtherAnimalsType>
+        </OtherAnimals>
       </Resources>
       <Arbitrators>
         <Name>Arbitrators</Name>
@@ -641,32 +475,78 @@
               <Value>Female</Value>
             </RuminantFilter>
             <MonthlyValues>
-              <double>2</double>
-              <double>2</double>
-              <double>2</double>
-              <double>2</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </MonthlyValues>
           </RuminantFilterGroup>
           <FeedArbitratorName>Ruminant feed arbitrator</FeedArbitratorName>
           <FeedTypeName>Lucerne</FeedTypeName>
-          <FeedStyle>SpecifiedDailyAmount</FeedStyle>
+          <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           <FeedPriority>10</FeedPriority>
           <LabourPriority>10</LabourPriority>
         </RuminantActivityFeed>
-        <RuminantActivityGraze>
-          <Name>Graze ruminants located on pasture</Name>
-          <FeedArbitratorName>Ruminant feed arbitrator</FeedArbitratorName>
-          <FeedPriority>0</FeedPriority>
-          <HoursGrazed>6</HoursGrazed>
-        </RuminantActivityGraze>
+        <OtherAnimalsActivityFeed>
+          <Name>Feed chooks</Name>
+          <OtherAnimalsFilterGroup>
+            <Name>All chickens</Name>
+            <RuminantFilter>
+              <Name>Filter[Age&gt;0]</Name>
+              <Parameter>Age</Parameter>
+              <Operator>GreaterThan</Operator>
+              <Value>0</Value>
+            </RuminantFilter>
+            <MonthlyValues>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+              <double>0.09</double>
+            </MonthlyValues>
+            <AnimalType>Chickens</AnimalType>
+          </OtherAnimalsFilterGroup>
+          <ActivityLabourRequirementGroup>
+            <Name>ActivityLabourRequirementGroup</Name>
+            <LabourFilter>
+              <Name>Filter[Name=Joe B]</Name>
+              <Parameter>Name</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Joe B</Value>
+            </LabourFilter>
+            <DaysRequired>0.2</DaysRequired>
+          </ActivityLabourRequirementGroup>
+          <FeedArbitratorName />
+          <FeedTypeName>Chicken pellets</FeedTypeName>
+          <FeedStyle>SpecifiedDailyAmount</FeedStyle>
+          <FeedPriority>5</FeedPriority>
+          <LabourPriority>5</LabourPriority>
+        </OtherAnimalsActivityFeed>
+        <OtherAnimalsActivityBreed>
+          <Name>Breed chooks</Name>
+          <AnimalType>Chickens</AnimalType>
+          <OffspringPerBreeder>2</OffspringPerBreeder>
+          <StartBreedingMonth>1</StartBreedingMonth>
+          <BreedingInterval>4</BreedingInterval>
+          <CostPerBreeder>0</CostPerBreeder>
+          <BreedingAge>12</BreedingAge>
+          <UseLocalMales>true</UseLocalMales>
+        </OtherAnimalsActivityBreed>
         <RuminantActivityGrow>
           <Name>Grow all ruminants</Name>
           <EnergyGross>18.4</EnergyGross>
@@ -813,10 +693,10 @@
           <LabourOffFarmFilterGroup>
             <Name>Hired ploughing</Name>
             <LabourFilter>
-              <Name>Filter[Name=Joe B.]</Name>
+              <Name>Filter[Name=Joe B]</Name>
               <Parameter>Name</Parameter>
               <Operator>Equal</Operator>
-              <Value>Joe B.</Value>
+              <Value>Joe B</Value>
             </LabourFilter>
             <DailyRate>100</DailyRate>
             <DaysWorkAvailableEachMonth>
@@ -850,11 +730,11 @@
           <string>[Clock].Today as Date</string>
           <string>[Resources].Finances.General account.LastTransaction.Credit as Credit</string>
           <string>[Resources].Finances.General account.LastTransaction.Debit as Debit</string>
-          <string>[Resources].Finances.General account.LastTransaction.Sender as Sender</string>
+          <string>[Resources].Finances.General account.LastTransaction.Activity as Activity</string>
           <string>[Resources].Finances.General account.LastTransaction.Reason as Reason</string>
         </VariableNames>
         <EventNames>
-          <string>[Resources].Finances.General account.OnTransactionOccurred</string>
+          <string>[Resources].Finances.General account.TransactionOccurred</string>
         </EventNames>
       </Report>
       <Report>
@@ -863,18 +743,18 @@
         <ExperimentFactorValues />
         <VariableNames>
           <string>Name as ZoneName</string>
-          <string>[Clock].Today as Date</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.ID as UId</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.Breed as Breed</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.HerdName as Herd</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.GenderAsString as Sex</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.Age as Age</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.Weight as Weight</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.SaleFlagAsString as Reason</string>
-          <string>[Resources].Ruminants.LastIndividualChanged.PopulationChangeDirection as Change</string>
+          <string>[Clock].Today</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.GenderAsString as Sex</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlagAsString as Reason</string>
+          <string>[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change</string>
         </VariableNames>
         <EventNames>
-          <string>[Resources].Ruminants.OnHerdChanged</string>
+          <string>[Resources].Ruminants.TransactionOccurred</string>
         </EventNames>
       </Report>
       <Report>
@@ -883,7 +763,7 @@
         <ExperimentFactorValues />
         <VariableNames>
           <string>Name as ZoneName</string>
-          <string>[Clock].Today as Date</string>
+          <string>[Clock].Today</string>
           <string>[Activities].SummariseHerd.ReportDetails.Breed as Breed</string>
           <string>[Activities].SummariseHerd.ReportDetails.Herd as Herd</string>
           <string>[Activities].SummariseHerd.ReportDetails.Age as AgeGroup</string>
@@ -900,50 +780,62 @@
           <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
         </EventNames>
       </Report>
-      <Graph>
-        <Name>Graph</Name>
-        <Series>
-          <Name>Series</Name>
-          <Type>Bar</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>GeneralLedger</TableName>
-          <XFieldName>Date</XFieldName>
-          <YFieldName>Credit</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
+      <Report>
+        <Name>OtherAnimalsLedger</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>Name as ZoneName</string>
+          <string>[Clock].Today as Date</string>
+          <string>[Resources].OtherAnimals.LastTransaction.Reason as Type</string>
+          <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.GenderAsString as Gender</string>
+          <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.Age as Age</string>
+          <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.SaleFlagAsString as Reason2</string>
+          <string>[Resources].OtherAnimals.LastTransaction.Credit as Credit</string>
+          <string>[Resources].OtherAnimals.LastTransaction.Debit as Debit</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Resources].OtherAnimals.TransactionOccurred</string>
+        </EventNames>
+      </Report>
+      <Report>
+        <Name>FinancesLedger</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>Name as ZoneName</string>
+          <string>[Clock].Today as Date</string>
+          <string>[Resources].Finances.LastTransaction.Credit as Credit</string>
+          <string>[Resources].Finances.LastTransaction.Debit as Debit</string>
+          <string>[Resources].Finances.LastTransaction.ResourceType as Resource</string>
+          <string>[Resources].Finances.LastTransaction.Activity as Activity</string>
+          <string>[Resources].Finances.LastTransaction.Reason as Reason</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Resources].Finances.TransactionOccurred</string>
+        </EventNames>
+      </Report>
+      <Report>
+        <Name>AnimalFoodLedger</Name>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
+        <VariableNames>
+          <string>Name as ZoneName</string>
+          <string>[Clock].Today as Date</string>
+          <string>[Resources].AnimalFoodStore.LastTransaction.Credit as Credit</string>
+          <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
+          <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
+          <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+          <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Herd</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Resources].AnimalFoodStore.TransactionOccurred</string>
+        </EventNames>
+      </Report>
       <Area>1</Area>
       <Slope>0</Slope>
-    </Zone>
+      <RandomSeed>1</RandomSeed>
+    </WholeFarm>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

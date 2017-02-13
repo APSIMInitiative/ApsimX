@@ -10,7 +10,7 @@ namespace Models.WholeFarm
 	/// <summary>
 	/// Herd list extensions
 	/// </summary>
-	public static class RuminantHerdExtensions
+	public static class ListFilterExtensions
 	{
 		/// <summary>
 		/// Filter extensions for herd list
@@ -31,6 +31,27 @@ namespace Models.WholeFarm
 
 			var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
 			return GetItemsThatMatchAll<Ruminant>(individuals, compiledRulesList).ToList<Ruminant>();
+		}
+
+		/// <summary>
+		/// Filter extensions for other animals cohort list
+		/// </summary>
+		public static List<OtherAnimalsTypeCohort> Filter(this IEnumerable<OtherAnimalsTypeCohort> individuals, Model filterGroup)
+		{
+			var rules = new List<Rule>();
+			foreach (var child in filterGroup.Children)
+			{
+				if (child.GetType() == typeof(OtherAnimalsFilter))
+				{
+					OtherAnimalsFilter filter = child as OtherAnimalsFilter;
+					ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+					// create rule list
+					rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
+				}
+			}
+
+			var compiledRulesList = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
+			return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, compiledRulesList).ToList<OtherAnimalsTypeCohort>();
 		}
 
 		private class Rule

@@ -9,7 +9,7 @@ namespace Models.WholeFarm
 {
 	/// <summary>Ruminant summary</summary>
 	/// <summary>This activity summarizes ruminant herds for reporting</summary>
-	/// <summary>Remove if you do not need herd summaries</summary>
+	/// <summary>Remove if you do not need monthly herd summaries</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -41,24 +41,23 @@ namespace Models.WholeFarm
 		}
 
 		/// <summary>
-		/// Function to age individuals and remove those that died in timestep
-		/// This needs to be undertaken prior to herd management
+		/// Function to summarise the herd based on cohorts each month
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("EndOfMonth")]
 		private void OnEndOfMonth(object sender, EventArgs e)
 		{
-			// summary report.
-
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
 
 			// group by breed
 			foreach (var breedGroup in herd.GroupBy(a => a.Breed))
 			{
+				// group by herd
 				foreach (var herdGroup in breedGroup.GroupBy(a => a.HerdName))
 				{
+					// group by sex
 					foreach (var sexGroup in herdGroup.GroupBy(a => a.Gender))
 					{
 						//// sucklings
@@ -78,7 +77,7 @@ namespace Models.WholeFarm
 							ReportDetails.Number = ageGroup.Sum(a => a.Number);
 							ReportDetails.AverageWeight = ageGroup.Average(a => a.Weight);
 							ReportDetails.AverageWeightGain = ageGroup.Average(a => a.WeightGain);
-							ReportDetails.AverageIntake = ageGroup.Average(a => (a.Intake))/30.4;
+							ReportDetails.AverageIntake = ageGroup.Average(a => (a.Intake)); //now daily/30.4;
 							ReportDetails.AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent);
 							if(sexGroup.Key== Sex.Female)
 							{

@@ -21,12 +21,12 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Resources))]
-    public class RuminantHerd: Model
+    public class RuminantHerd: ResourceBaseWithTransactions
     {
-		/// <summary>
-		/// Individual added or removed from herd
-		/// </summary>
-		public event EventHandler OnHerdChanged;
+		///// <summary>
+		///// Individual added or removed from herd
+		///// </summary>
+		//public event EventHandler OnHerdChanged;
 
 		/// <summary>
 		/// Current state of this resource.
@@ -44,7 +44,7 @@ namespace Models.WholeFarm
 		/// The last individual to be added or removed (for reporting)
 		/// </summary>
 		[XmlIgnore]
-		public Ruminant LastIndividualChanged { get; set; }
+		public object LastIndividualChanged { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -83,9 +83,18 @@ namespace Models.WholeFarm
 			}
 			Herd.Add(ind);
 			LastIndividualChanged = ind;
-			HerdChangedEventArgs args = new HerdChangedEventArgs();
-			args.Details = ind;
-			HerdChanged(args);
+
+			ResourceTransaction details = new ResourceTransaction();
+			details.Credit = 1;
+			details.Activity = "Unknown";
+			details.Reason = "Unknown";
+			details.ResourceType = this.Name;
+			details.ExtraInformation = ind;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
+
+//			HerdChanged(new EventArgs());
 			// remove change flag
 			ind.SaleFlag = Common.HerdChangeReason.None;
 		}
@@ -106,9 +115,18 @@ namespace Models.WholeFarm
 			}
 			Herd.Remove(ind);
 			LastIndividualChanged = ind;
-			HerdChangedEventArgs args = new HerdChangedEventArgs();
-			args.Details = ind;
-			HerdChanged(args);
+
+			ResourceTransaction details = new ResourceTransaction();
+			details.Debit = 1;
+			details.Activity = "Unknown";
+			details.Reason = "Unknown";
+			details.ResourceType = this.Name;
+			details.ExtraInformation = ind;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
+
+			//			HerdChanged(new EventArgs());
 			// remove change flag
 			ind.SaleFlag = Common.HerdChangeReason.None;
 		}
@@ -132,29 +150,41 @@ namespace Models.WholeFarm
 		public int NextUniqueID { get { return id++; } }
 		private int id = 1;
 
+		///// <summary>
+		///// Herd change occurred 
+		///// </summary>
+		///// <param name="e"></param>
+		//protected virtual void HerdChanged(EventArgs e)
+		//{
+		//	if (OnHerdChanged != null)
+		//		OnHerdChanged(this, e);
+		//}
+
+		#region Transactions
+
+		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+
 		/// <summary>
-		/// Herd change occurred 
+		/// Override base event
 		/// </summary>
-		/// <param name="e"></param>
-		protected virtual void HerdChanged(HerdChangedEventArgs e)
+		protected new void OnTransactionOccurred(EventArgs e)
 		{
-			if (OnHerdChanged != null)
-				OnHerdChanged(this, e);
+			EventHandler invoker = TransactionOccurred;
+			if (invoker != null) invoker(this, e);
 		}
 
 		/// <summary>
-		/// Herd changed  event args
+		/// Override base event
 		/// </summary>
-		public class HerdChangedEventArgs : EventArgs
+		public new event EventHandler TransactionOccurred;
+
+		private void Resource_TransactionOccurred(object sender, EventArgs e)
 		{
-			/// <summary>
-			/// individual details
-			/// </summary>
-			public Ruminant Details { get; set; }
+			LastTransaction = (e as TransactionEventArgs).Transaction;
+			OnTransactionOccurred(e);
 		}
+
+		#endregion
 
 	}
-
-
-
 }

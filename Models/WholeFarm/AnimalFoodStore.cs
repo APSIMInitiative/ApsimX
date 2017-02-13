@@ -16,27 +16,13 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Resources))]
-    public class AnimalFoodStore: Model
+    public class AnimalFoodStore: ResourceBaseWithTransactions
     {
-
         /// <summary>
         /// List of all the Food Types in this Resource Group.
         /// </summary>
         [XmlIgnore]
         public List<AnimalFoodStoreType> Items;
-
-
-        /// <summary>
-        /// Returns the Fodder with the given name.
-        /// </summary>
-        /// <param name="Name"></param>
-        /// <returns></returns>
-        public AnimalFoodStoreType GetByName(string Name)
-        {
-            return Items.Find(x => x.Name == Name);
-        }
-
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -52,11 +38,38 @@ namespace Models.WholeFarm
             {
                 //cast the generic IModel to a specfic model.
                 AnimalFoodStoreType fodder = childModel as AnimalFoodStoreType;
-                Items.Add(fodder);
+				fodder.TransactionOccurred += Resource_TransactionOccurred;
+				Items.Add(fodder);
             }
-        }
+		}
 
-    }
+		#region Transactions
+
+		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+
+		/// <summary>
+		/// Override base event
+		/// </summary>
+		protected new void OnTransactionOccurred(EventArgs e)
+		{
+			EventHandler invoker = TransactionOccurred;
+			if (invoker != null) invoker(this, e);
+		}
+
+		/// <summary>
+		/// Override base event
+		/// </summary>
+		public new event EventHandler TransactionOccurred;
+
+		private void Resource_TransactionOccurred(object sender, EventArgs e)
+		{
+			LastTransaction = (e as TransactionEventArgs).Transaction;
+			OnTransactionOccurred(e);
+		}
+
+		#endregion
+
+	}
 
 
 }

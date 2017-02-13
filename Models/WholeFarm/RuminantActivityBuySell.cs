@@ -71,15 +71,15 @@ namespace Models.WholeFarm
 		public double MLAFees { get; set; }
 
 		/// <summary>
-		/// Minimum truck loads before selling (0 continuous sales)
+		/// Minimum number of truck loads before selling (0 continuous sales)
 		/// </summary>
-		[Description("Minimum truck loads before selling (0 continuous sales)")]
+		[Description("Minimum number of truck loads before selling (0 continuous sales)")]
 		public double MinimumTrucksBeforeSelling { get; set; }
 
 		/// <summary>
-		/// Minimum truck loads before selling (0 continuous sales)
+		/// Minimum proportion of truck load before selling (0 continuous sales)
 		/// </summary>
-		[Description("Minimum proportion of truck loads before selling (0 continuous sales)")]
+		[Description("Minimum proportion of truck load before selling (0 continuous sales)")]
 		public double MinimumLoadBeforeSelling { get; set; }
 
 		/// <summary>
@@ -122,7 +122,7 @@ namespace Models.WholeFarm
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
 			Finance Accounts = Resources.FinanceResource() as Finance;
-			FinanceType bankAccount = Accounts.GetFirst();
+			FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
 
 			var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
 			foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
@@ -171,7 +171,7 @@ namespace Models.WholeFarm
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
 			Finance Accounts = Resources.FinanceResource() as Finance;
-			FinanceType bankAccount = Accounts.GetFirst();
+			FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
 
 			int trucks = 0;
 			double saleValue = 0;

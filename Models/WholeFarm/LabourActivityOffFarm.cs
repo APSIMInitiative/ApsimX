@@ -44,7 +44,7 @@ namespace Models.WholeFarm
 					request.Activity = this;
 					request.Amount = item.DailyRate * item.DaysWorkAvailableEachMonth[month];
 					request.Requestor = item;
-
+					item.AmountProvided = request.Amount;
 					// labour.Remove(request);
 				}
 			}
@@ -60,7 +60,7 @@ namespace Models.WholeFarm
 			if (taskList.Count > 0)
 			{
 				Finance Accounts = Resources.FinanceResource() as Finance;
-				FinanceType bankAccount = Accounts.GetFirst();
+				FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
 
 				if (bankAccount != null)
 				{

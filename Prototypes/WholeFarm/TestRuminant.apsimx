@@ -25,8 +25,8 @@
             <Name>Lucerne</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
-            <Nitrogen>20</Nitrogen>
-            <StartingAmount>100</StartingAmount>
+            <Nitrogen>0.5</Nitrogen>
+            <StartingAmount>100000</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
             <KgPerUnitPurchased>0</KgPerUnitPurchased>
             <CostPerUnitPurchased>0</CostPerUnitPurchased>
@@ -164,6 +164,15 @@
               <StartingWeightSD>0</StartingWeightSD>
               <Suckling>false</Suckling>
             </RuminantTypeCohort>
+            <RuminantTypeCohort>
+              <Name>Male1_2</Name>
+              <Gender>Male</Gender>
+              <StartingAge>18</StartingAge>
+              <StartingNumber>1</StartingNumber>
+              <StartingWeight>270</StartingWeight>
+              <StartingWeightSD>0</StartingWeightSD>
+              <Suckling>false</Suckling>
+            </RuminantTypeCohort>
             <Breed>Bos indicus</Breed>
             <EMaintCoefficient>0.35</EMaintCoefficient>
             <EMaintIntercept>0.503</EMaintIntercept>
@@ -243,7 +252,7 @@
       <Activities>
         <Name>Activities</Name>
         <RuminantActivityFeed>
-          <Name>Feed female Bos indicus lucerne</Name>
+          <Name>Feed Bos indicus lucerne</Name>
           <RuminantFilterGroup>
             <Name>FemaleBosIndicus</Name>
             <RuminantFilter>
@@ -259,18 +268,47 @@
               <Value>Female</Value>
             </RuminantFilter>
             <MonthlyValues>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </MonthlyValues>
+          </RuminantFilterGroup>
+          <RuminantFilterGroup>
+            <Name>MaleBosIndicus</Name>
+            <RuminantFilter>
+              <Name>Filter[HerdName=Breeding]</Name>
+              <Parameter>HerdName</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Breeding</Value>
+            </RuminantFilter>
+            <RuminantFilter>
+              <Name>Filter[Gender=Male]</Name>
+              <Parameter>Gender</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Male</Value>
+            </RuminantFilter>
+            <MonthlyValues>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
             </MonthlyValues>
           </RuminantFilterGroup>
           <FeedArbitratorName>Ruminant feed arbitrator</FeedArbitratorName>
@@ -330,13 +368,13 @@
         </EventNames>
       </Report>
       <Graph>
-        <Name>Graph</Name>
+        <Name>Graph_avgWtGain</Name>
         <Series>
-          <Name>Series</Name>
-          <Type>Bar</Type>
+          <Name>Male</Name>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
+          <ColourArgb>-16747854</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -344,13 +382,222 @@
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>GeneralLedger</TableName>
+          <TableName>HerdSummary</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Credit</YFieldName>
+          <YFieldName>AvgWtGn</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = 'M'</Filter>
+        </Series>
+        <Series>
+          <Name>Female</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>DashDot</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AvgWtGn</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = "F"</Filter>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph_avgWt_Intake</Name>
+        <Series>
+          <Name>MaleWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Dash</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AvgWtGn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = 'M'</Filter>
+        </Series>
+        <Series>
+          <Name>FemaleWt</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>DashDot</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AvgWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = "F"</Filter>
+        </Series>
+        <Series>
+          <Name>MaleIntake</Name>
+          <Type>Bar</Type>
+          <XAxis>Top</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AvgIntake</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = 'M'</Filter>
+        </Series>
+        <Series>
+          <Name>FemaleIntake</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Small</MarkerSize>
+          <Line>DashDot</Line>
+          <LineThickness>Thin</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AvgWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = "F"</Filter>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Top</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Graph_avgAE</Name>
+        <Series>
+          <Name>Male</Name>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AE</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = 'M'</Filter>
+        </Series>
+        <Series>
+          <Name>Female</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-3376729</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledTriangle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>DashDot</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HerdSummary</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AE</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter>[Sex] = "F"</Filter>
         </Series>
         <Axis>
           <Type>Bottom</Type>

@@ -103,15 +103,23 @@ namespace Models.WholeFarm
 		public AnimalFoodStore AnimalFoodStore()
         {
 			return GetByType(typeof(AnimalFoodStore)) as AnimalFoodStore;
-//			IModel model = GetByName("AnimalFoodStore");
-//           return model as AnimalFoodStore;
         }
 
-        /// <summary>
-        /// Get the Resource Group for FoodStore
-        /// </summary>
-        /// <returns></returns>
-        public HumanFoodStore HumanFoodStore()
+		/// <summary>
+		/// Get the Resource Group for OtherAnimals
+		/// </summary>
+		/// <returns></returns>
+		public OtherAnimals OtherAnimalsStore()
+		{
+			return GetByType(typeof(OtherAnimals)) as OtherAnimals;
+		}
+
+
+		/// <summary>
+		/// Get the Resource Group for FoodStore
+		/// </summary>
+		/// <returns></returns>
+		public HumanFoodStore HumanFoodStore()
         {
             IModel model = GetByName("HumanFoodStore");
             return model as HumanFoodStore;
@@ -121,10 +129,10 @@ namespace Models.WholeFarm
         /// Get the Resource Group for Labour Family
         /// </summary>
         /// <returns></returns>
-        public LabourFamily LabourFamily()
+        public Labour LabourFamily()
         {
             IModel model = GetByName("LabourFamily");
-            return model as LabourFamily;
+            return model as Labour;
         }
 
         /// <summary>

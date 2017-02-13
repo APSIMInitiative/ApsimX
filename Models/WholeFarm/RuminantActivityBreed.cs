@@ -24,8 +24,6 @@ namespace Models.WholeFarm
 		[Link]
 		ISummary Summary = null;
 
-		private TMyRandom randomGenerator = new TMyRandom(10);
-
 		/// <summary>
 		/// Name of herd to breed
 		/// </summary>
@@ -106,7 +104,7 @@ namespace Models.WholeFarm
 
 					// check if a twin and if so apply next individual to same mother.
 					// otherwise remove this mother from the list
-					if (randomGenerator.RandNo >= breedFemales[0].BreedParams.TwinRate)
+					if (WholeFarm.RandomGenerator.NextDouble() >= breedFemales[0].BreedParams.TwinRate)
 					{
 						breedFemales.RemoveAt(0);
 					}
@@ -171,7 +169,7 @@ namespace Models.WholeFarm
 							//if (randomGenerator.RandNo > female.BreedParams.PrenatalMortality)
 							//{
 							object newCalf = null;
-							bool isMale = (randomGenerator.RandNo > 0.5);
+							bool isMale = (WholeFarm.RandomGenerator.NextDouble() > 0.5);
 							if (isMale)
 							{
 								newCalf = new RuminantMale();
@@ -222,9 +220,9 @@ namespace Models.WholeFarm
 						{
 							// calculate conception
 							double conceptionRate = ConceptionRate(female) * maleLimiter;
-							if (randomGenerator.RandNo <= conceptionRate)
+							if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
 							{
-								female.UpdateConceptionDetails(randomGenerator.RandNo > female.BreedParams.TwinRate, conceptionRate);
+								female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.TwinRate, conceptionRate);
 							}
 						}
 					}
@@ -239,7 +237,7 @@ namespace Models.WholeFarm
 						// total mortality / gestation months to get monthly mortality
 						
 						// TODO: check if need to be done before births to get last month mortality
-						if(randomGenerator.RandNo > female.BreedParams.PrenatalMortality/female.BreedParams.GestationLength)
+						if(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.PrenatalMortality/female.BreedParams.GestationLength)
 						{
 							female.OneOffspringDies();
 						}

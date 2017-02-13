@@ -32,7 +32,7 @@ namespace Models.WholeFarm
 		private void OnEndOfMonth(object sender, EventArgs e)
 		{
 			Finance Accounts = Resources.FinanceResource() as Finance;
-			FinanceType bankAccount = Accounts.GetFirst();
+			FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
 
 			foreach (var overhead in this.Children.Where(a => a.GetType() == typeof(EnterpriseOverhead)).Cast<EnterpriseOverhead>().Where(a => a.NextDueDate.Year == Clock.Today.Year & a.NextDueDate.Month == Clock.Today.Month))
 			{

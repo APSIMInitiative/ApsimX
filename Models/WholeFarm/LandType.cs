@@ -16,22 +16,16 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
-    public class LandType : Model
-    {
-
+    public class LandType : Model, IResourceType, IResourceWithTransactionType
+	{
         [Link]
         ISummary Summary = null;
-
-
-        event EventHandler LandChanged;
-
 
         /// <summary>
         /// Total Area (ha)
         /// </summary>
         [Description("Land Area (ha)")]
         public double LandArea { get; set; }
-
 
         /// <summary>
         /// Unusable Portion - Buildings, paths etc. (%)
@@ -57,112 +51,161 @@ namespace Models.WholeFarm
         [Description("Fertility - N Decline yld")]
         public double NDecline { get; set; }
 
-
-
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
         [XmlIgnore]
-        public double AreaAvailable { get { return _AreaAvailable; } }
-
-        private double _AreaAvailable;
-
-
+        public double AreaAvailable { get { return areaAvailable; } }
+        private double areaAvailable;
 
         /// <summary>
         /// Area already used (ha)
         /// </summary>
         [XmlIgnore]
-        public double AreaUsed { get { return this.LandArea - _AreaAvailable; } }
+        public double AreaUsed { get { return this.LandArea - areaAvailable; } }
+
+		/// <summary>
+		/// Initialise the current state to the starting amount of fodder
+		/// </summary>
+		public void Initialise()
+		{
+			this.areaAvailable = this.LandArea;
+		}
 
 
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Initialise();
+		}
 
+		#region Transactions
 
+		/// <summary>
+		/// Add to food store
+		/// </summary>
+		/// <param name="AddAmount">Amount to add to resource</param>
+		/// <param name="ActivityName">Name of activity adding resource</param>
+		/// <param name="UserName">Name of individual radding resource</param>
+		public void Add(double AddAmount, string ActivityName, string UserName)
+		{
+			double amountAdded = AddAmount;
+			if (this.areaAvailable + AddAmount > this.LandArea)
+			{
+				amountAdded = this.LandArea - this.areaAvailable;
+				string message = "Tried to add more available land to " + this.Name + " than exists." + Environment.NewLine
+					+ "Current Amount: " + this.areaAvailable + Environment.NewLine
+					+ "Tried to Remove: " + AddAmount;
+				Summary.WriteWarning(this, message);
+				this.areaAvailable = this.LandArea;
+			}
+			else
+			{
+				this.areaAvailable = this.areaAvailable + AddAmount;
+			}
+			ResourceTransaction details = new ResourceTransaction();
+			details.Debit = amountAdded;
+			details.Activity = ActivityName;
+			details.Reason = UserName;
+			details.ResourceType = this.Name;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
+		}
 
-        /// <summary>
-        /// Add Available Land
-        /// </summary>
-        /// <param name="AddAmount"></param>
-        public void Add(double AddAmount)
-        {
-            if (this._AreaAvailable + AddAmount > this.LandArea)
-            {
-                string message = "Tried to add more available land to " + this.Name + " than exists." + Environment.NewLine
-                    + "Current Amount: " + this._AreaAvailable + Environment.NewLine
-                    + "Tried to Remove: " + AddAmount;
-                Summary.WriteWarning(this, message);
-                this._AreaAvailable = this.LandArea;
-            }
-            else
-            {
-                this._AreaAvailable = this._AreaAvailable + AddAmount;
-            }
+		/// <summary>
+		/// Remove from food store
+		/// </summary>
+		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
+		/// <param name="ActivityName">Name of activity requesting resource</param>
+		/// <param name="UserName">Name of individual requesting resource</param>
+		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		{
+			double amountRemoved = RemoveAmount;
+			if (this.areaAvailable - RemoveAmount < 0)
+			{
+				amountRemoved = this.areaAvailable;
+				string message = "Tried to remove more available land to " + this.Name + " than exists." + Environment.NewLine
+					+ "Current Amount: " + this.areaAvailable + Environment.NewLine
+					+ "Tried to Remove: " + RemoveAmount;
+				Summary.WriteWarning(this, message);
+				this.areaAvailable = 0;
+			}
+			else
+			{
+				this.areaAvailable = this.areaAvailable - RemoveAmount;
+			}
+			ResourceTransaction details = new ResourceTransaction();
+			details.ResourceType = this.Name;
+			details.Credit = amountRemoved;
+			details.Activity = ActivityName;
+			details.Reason = UserName;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
+		}
 
-            if (LandChanged != null)
-                LandChanged.Invoke(this, new EventArgs());
-        }
+		/// <summary>
+		/// Remove Food
+		/// If this call is reached we are not going through an arbitrator so provide all possible resource to requestor
+		/// </summary>
+		/// <param name="RemoveRequest">A feed request object with required information</param>
+		public void Remove(object RemoveRequest)
+		{
+			RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
 
-        /// <summary>
-        /// Remove Available Land
-        /// </summary>
-        /// <param name="RemoveAmount"></param>
-        public void Remove(double RemoveAmount)
-        {
-            if (this._AreaAvailable - RemoveAmount < 0)
-            {
-                string message = "Tried to remove more available land to " + this.Name + " than exists." + Environment.NewLine
-                    + "Current Amount: " + this._AreaAvailable + Environment.NewLine
-                    + "Tried to Remove: " + RemoveAmount;
-                Summary.WriteWarning(this, message);
-                this._AreaAvailable = 0;
-            }
-            else
-            {
-                this._AreaAvailable = this._AreaAvailable - RemoveAmount;
-            }
+			// limit by available
+			removeRequest.Amount = Math.Min(removeRequest.Amount, areaAvailable);
 
-            if (LandChanged != null)
-                LandChanged.Invoke(this, new EventArgs());
-        }
+			// add to intake and update %N and %DMD values
+			removeRequest.Requestor.AddIntake(removeRequest);
 
-        /// <summary>
-        /// Set Amount of Available Land
-        /// </summary>
-        /// <param name="NewValue"></param>
-        public void Set(double NewValue)
-        {
-            if ((NewValue < 0) || (NewValue > this.LandArea))
-            {
-                Summary.WriteMessage(this, "Tried to Set Available Land to Invalid New Amount." + Environment.NewLine
-                    + "New Value must be between 0 and the Land Area.");
-            }
-            else
-            {
-                this._AreaAvailable = NewValue;
+			// Remove from resource
+			Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
+		}
 
-                if (LandChanged != null)
-                    LandChanged.Invoke(this, new EventArgs());
-            }
-        }
+		/// <summary>
+		/// Set amount of animal food available
+		/// </summary>
+		/// <param name="NewValue">New value to set food store to</param>
+		public void Set(double NewValue)
+		{
+			if ((NewValue < 0) || (NewValue > this.LandArea))
+			{
+				Summary.WriteMessage(this, "Tried to Set Available Land to Invalid New Amount." + Environment.NewLine
+					+ "New Value must be between 0 and the Land Area.");
+			}
+			else
+			{
+				this.areaAvailable = NewValue;
+			}
+		}
 
+		/// <summary>
+		/// Back account transaction occured
+		/// </summary>
+		public event EventHandler TransactionOccurred;
 
-        /// <summary>
-        /// Initialise the current state to the starting amount of fodder
-        /// </summary>
-        public void Initialise()
-        {
-            this._AreaAvailable = this.LandArea;
-        }
+		/// <summary>
+		/// Transcation occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnTransactionOccurred(EventArgs e)
+		{
+			if (TransactionOccurred != null)
+				TransactionOccurred(this, e);
+		}
 
+		/// <summary>
+		/// Last transaction received
+		/// </summary>
+		[XmlIgnore]
+		public ResourceTransaction LastTransaction { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Initialise();
-        }
+		#endregion
 
     }
 

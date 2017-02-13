@@ -11,9 +11,6 @@ namespace Models.WholeFarm
     /// </summary>
     public interface IResourceType
     {
-
-		//event EventHandler ResourceChanged;
-
 		/// <summary>
 		/// Add this Amount to the existing Amount.
 		/// </summary>

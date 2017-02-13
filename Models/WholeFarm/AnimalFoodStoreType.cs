@@ -16,12 +16,10 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    public class AnimalFoodStoreType : Model, IResourceType, IFeedType, IFeedPurchaseType
+    public class AnimalFoodStoreType : Model, IResourceType, IFeedType, IFeedPurchaseType, IResourceWithTransactionType
     {
         [Link]
         ISummary Summary = null;
-
-        event EventHandler FodderChanged;
 
         /// <summary>
         /// Dry Matter (%)
@@ -78,37 +76,63 @@ namespace Models.WholeFarm
 		public double OtherCosts { get; set; }
 
         /// <summary>
-        /// Amount (kg)
+        /// Amount currently available (kg dry)
         /// </summary>
         [XmlIgnore]
         public double Amount { get {return amount;} }
-
 		private double amount;
 
 		/// <summary>
-		/// Add Food
+		/// Initialise the current state to the starting amount of animal food
+		/// </summary>
+		public void Initialise()
+		{
+			this.amount = this.StartingAmount;
+		}
+
+		/// <summary>An event handler to allow us to initialise an animal food store.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Initialise();
+		}
+
+		#region Transactions
+
+		/// <summary>
+		/// Add to food store
 		/// </summary>
 		/// <param name="AddAmount">Amount to add to resource</param>
-		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
+		/// <param name="ActivityName">Name of activity adding resource</param>
+		/// <param name="UserName">Name of individual radding resource</param>
 		public void Add(double AddAmount, string ActivityName, string UserName)
         {
             this.amount = this.amount + AddAmount;
 
-            if (FodderChanged != null)
-                FodderChanged.Invoke(this, new EventArgs()); 
+			ResourceTransaction details = new ResourceTransaction();
+			details.Debit = AddAmount;
+			details.Activity = ActivityName;
+			details.Reason = UserName;
+			details.ResourceType = this.Name;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
         }
 
 		/// <summary>
-		/// Remove Food
+		/// Remove from food store
 		/// </summary>
-		/// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
+		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
 		public void Remove(double RemoveAmount, string ActivityName, string UserName)
         {
+			double amountRemoved = RemoveAmount;
             if (this.amount - RemoveAmount < 0)
             {
+				amountRemoved = this.amount;
                 string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
                     + "Current Amount: " + this.amount + Environment.NewLine
                     + "Tried to Remove: " + RemoveAmount;
@@ -120,9 +144,15 @@ namespace Models.WholeFarm
                 this.amount = this.amount - RemoveAmount;
             }
 
-            if (FodderChanged != null)
-                FodderChanged.Invoke(this, new EventArgs());
-        }
+			ResourceTransaction details = new ResourceTransaction();
+			details.ResourceType = this.Name;
+			details.Credit = amountRemoved;
+			details.Activity = ActivityName;
+			details.Reason = UserName;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
+		}
 
 		/// <summary>
 		/// Remove Food
@@ -144,36 +174,36 @@ namespace Models.WholeFarm
 		}
 
 		/// <summary>
-		/// Set Amount of Food
+		/// Set amount of animal food available
 		/// </summary>
-		/// <param name="NewValue"></param>
+		/// <param name="NewValue">New value to set food store to</param>
 		public void Set(double NewValue)
         {
             this.amount = NewValue;
-
-            if (FodderChanged != null)
-                FodderChanged.Invoke(this, new EventArgs());
         }
 
+		/// <summary>
+		/// Back account transaction occured
+		/// </summary>
+		public event EventHandler TransactionOccurred;
 
-        /// <summary>
-        /// Initialise the current state to the starting amount of fodder
-        /// </summary>
-        public void Initialise()
-        {
- //           this.Age = this.StartingAge;
-            this.amount = this.StartingAmount;
-        }
+		/// <summary>
+		/// Transcation occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnTransactionOccurred(EventArgs e)
+		{
+			if (TransactionOccurred != null)
+				TransactionOccurred(this, e);
+		}
 
+		/// <summary>
+		/// Last transaction received
+		/// </summary>
+		[XmlIgnore]
+		public ResourceTransaction LastTransaction { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Initialise();
-        }
+		#endregion
 	}
 
  

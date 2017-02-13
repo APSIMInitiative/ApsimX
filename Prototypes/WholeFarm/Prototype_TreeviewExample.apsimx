@@ -863,7 +863,7 @@
         <ExperimentFactorValues />
         <VariableNames>
           <string>Name as ZoneName</string>
-          <string>[Clock].Today as Date</string>
+          <string>[Clock].Today</string>
           <string>[Resources].Ruminants.LastIndividualChanged.ID as UId</string>
           <string>[Resources].Ruminants.LastIndividualChanged.Breed as Breed</string>
           <string>[Resources].Ruminants.LastIndividualChanged.HerdName as Herd</string>
@@ -883,7 +883,7 @@
         <ExperimentFactorValues />
         <VariableNames>
           <string>Name as ZoneName</string>
-          <string>[Clock].Today as Date</string>
+          <string>[Clock].Today</string>
           <string>[Activities].SummariseHerd.ReportDetails.Breed as Breed</string>
           <string>[Activities].SummariseHerd.ReportDetails.Herd as Herd</string>
           <string>[Activities].SummariseHerd.ReportDetails.Age as AgeGroup</string>
@@ -916,7 +916,7 @@
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>GeneralLedger</TableName>
-          <XFieldName>Date</XFieldName>
+          <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Credit</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
