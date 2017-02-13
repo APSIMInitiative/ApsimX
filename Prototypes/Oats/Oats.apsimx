@@ -1768,11 +1768,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <Value>0.8</Value>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0</Value>
+            <Value>0.1</Value>
           </Constant>
           <MinimumFunction>
             <Name>CellDivisionStress</Name>
@@ -1847,7 +1847,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </LinearInterpolationFunction>
           </MinimumFunction>
           <MultiplyFunction>
-            <Name>MaxArea</Name>
+            <Name>MaxAreaW</Name>
             <Constant>
               <Name>AreaLargestLeaves</Name>
               <Value>4500</Value>
@@ -2097,27 +2097,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>4</double>
               </X>
               <Y>
-                <double>18000</double>
                 <double>30000</double>
+                <double>40000</double>
               </Y>
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+          <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0.4</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>10000</double>
-                <double>18000</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Leaf].Fn</XProperty>
-          </LinearInterpolationFunction>
+            <Value>25000</Value>
+          </Constant>
           <Constant>
             <Name>InitialNConc</Name>
             <Value>0</Value>
@@ -2166,6 +2155,44 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <LinearInterpolationFunction>
+            <Name>MaxArea</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>4</double>
+                <double>9</double>
+                <double>15</double>
+              </X>
+              <Y>
+                <double>450</double>
+                <double>1500</double>
+                <double>5000</double>
+                <double>500</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>MaxArea1</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>4</double>
+                <double>15</double>
+                <double>20</double>
+              </X>
+              <Y>
+                <double>450</double>
+                <double>1500</double>
+                <double>5000</double>
+                <double>500</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+          </LinearInterpolationFunction>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -2871,7 +2898,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Milton</Name>
+          <Name>Milton11</Name>
           <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
@@ -2892,6 +2919,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 90</Command>
           <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 16</Command>
+        </Cultivar>
+        <Cultivar>
+          <Name>Milton</Name>
+          <Command>[Phenology].MinimumLeafNumber.Value = 15</Command>
+          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
+          <Command>[Phenology].PpSensitivity.Value = 3</Command>
+          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 15</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Wheat</CropType>
@@ -5329,6 +5363,88 @@ namespace Models
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Grain</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Grain.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Stem</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Stem.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8896,5 +9012,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>402</ExplorerWidth>
+  <ExplorerWidth>403</ExplorerWidth>
 </Simulations>
