@@ -738,7 +738,7 @@ namespace Models
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[PMFSlurp].Arbitrator.NDemand</string>
+          <string>[PMFSlurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -1817,7 +1817,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+        <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>

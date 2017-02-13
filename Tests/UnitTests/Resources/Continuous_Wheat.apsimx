@@ -701,8 +701,12 @@
         </Phenology>
         <Arbitrator>
           <Name>Arbitrator</Name>
-          <NArbitrationOption />
-          <DMArbitrationOption />
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <PrioritythenRelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </PrioritythenRelativeAllocation>
         </Arbitrator>
         <Structure>
           <Name>Structure</Name>
