@@ -7265,9 +7265,9 @@ namespace Models
         <Manager>
           <Name>SlurpSowingRule</Name>
           <Script>
-            <SowingDate>2011-03-14</SowingDate>
             <CultivarName>Lucerne</CultivarName>
             <InitialRootDepth>15</InitialRootDepth>
+            <SowingDate>2011-03-14</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -7358,13 +7358,13 @@ namespace Models
         <Manager>
           <Name>SetCropVariables</Name>
           <Script>
-            <Irrigation>
-            </Irrigation>
+            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
+            <Ext_coef>0.8</Ext_coef>
             <MaximumHeight>600</MaximumHeight>
             <Cover>
             </Cover>
-            <CoverFile>%root%\Tests\Validation\Slurp\ShallowSoilTest\CoverInterpolated.csv</CoverFile>
-            <Ext_coef>0.8</Ext_coef>
+            <Irrigation>
+            </Irrigation>
             <Treatment>
             </Treatment>
             <leaflai>0</leaflai>
