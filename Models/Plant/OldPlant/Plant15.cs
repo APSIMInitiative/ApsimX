@@ -1248,17 +1248,16 @@ namespace Models.PMF.OldPlant
             if (IsAlive)
             {
                 List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-                ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == this.Parent.Name)
+                    if (Z.Zone.Name == this.Parent.Name)
                         MyZone = Z;
 
                 double[] SW = MyZone.Water;
                 OnPrepare(null, null);  //DEAN!!!
 
-                Uptake.Name = this.Parent.Name;
                 Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
                 Uptake.NO3N = new double[SW.Length];
                 Uptake.NH4N = new double[SW.Length];
@@ -1276,11 +1275,11 @@ namespace Models.PMF.OldPlant
             if (IsAlive)
             {
                 List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-                ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == this.Parent.Name)
+                    if (Z.Zone.Name == this.Parent.Name)
                         MyZone = Z;
 
                 double[] NO3N = MyZone.NO3N;
@@ -1293,7 +1292,6 @@ namespace Models.PMF.OldPlant
                 Uptake.NO3N = NO3NUp;
                 Uptake.NH4N = NH4NUp;
                 Uptake.Water = new double[NO3N.Length];
-                Uptake.Name = this.Parent.Name;
 
                 Uptakes.Add(Uptake);
                 return Uptakes;

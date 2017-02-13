@@ -35,12 +35,19 @@ namespace Models.PMF.OldPlant
         [Link]
         IFunction RUEModifier = null;   // used for CO2
 
+        /// <summary>
+        /// The Radiation Use Efficiency modifier (default is 1.0)
+        /// </summary>
+        public double RUEFactor { get; set; }
+
         /// <summary>Potentials the dm.</summary>
         /// <param name="radiationInterceptedGreen">The radiation intercepted green.</param>
         /// <returns></returns>
         public double PotentialDM(double radiationInterceptedGreen)
         {
-            double RUEFactor = 1.0;
+            if (RUEFactor == 0)
+                RUEFactor = 1.0;
+
             double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),

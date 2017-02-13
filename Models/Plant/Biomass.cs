@@ -143,7 +143,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the n.</summary>
+        /// <summary>Gets the N amount.</summary>
         /// <value>The n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
@@ -155,7 +155,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the n conc.</summary>
+        /// <summary>Gets the N concentration.</summary>
         /// <value>The n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
@@ -163,16 +163,14 @@ namespace Models.PMF
         {
             get
             {
-                double wt = (StructuralWt + NonStructuralWt + MetabolicWt);
-                double n = (StructuralN + NonStructuralN + MetabolicN);
-                if (wt > 0)
-                    return n / wt;
+                if (Wt > 0)
+                    return N / Wt;
                 else
                     return 0.0;
             }
         }
 
-        /// <summary>Gets the structural n conc.</summary>
+        /// <summary>Gets the structural N concentration.</summary>
         /// <value>The structural n conc.</value>
         [Units("g/g")]
         public double StructuralNConc
@@ -186,7 +184,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the non structural n conc.</summary>
+        /// <summary>Gets the non structural N concentration.</summary>
         /// <value>The non structural n conc.</value>
         [Units("g/g")]
         public double NonStructuralNConc
@@ -200,7 +198,7 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the metabolic n conc.</summary>
+        /// <summary>Gets the metabolic N concentration.</summary>
         /// <value>The metabolic n conc.</value>
         [Units("g/g")]
         public double MetabolicNConc
@@ -231,12 +229,12 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         virtual public void Clear()
         {
-            _StructuralWt = 0;
-            _NonStructuralWt = 0;
-            _MetabolicWt = 0;
-            _StructuralN = 0;
-            _NonStructuralN = 0;
-            _MetabolicN = 0;
+            _StructuralWt = 0.0;
+            _NonStructuralWt = 0.0;
+            _MetabolicWt = 0.0;
+            _StructuralN = 0.0;
+            _NonStructuralN = 0.0;
+            _MetabolicN = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
         /// <param name="a">a.</param>

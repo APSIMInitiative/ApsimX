@@ -21,8 +21,12 @@ The model consists of:
   </Memo>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
-    <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-    <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
   </OrganArbitrator>
   <Phenology>
     <Name>Phenology</Name>
@@ -620,7 +624,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>GrowthGrainDevelopment</Name>
       <VariableReference>
         <Name>DailyBiomassProduction</Name>
-        <VariableName>[Arbitrator].DMSupply</VariableName>
+        <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
       </VariableReference>
       <StartStageName>FlagLeaf</StartStageName>
       <EndStageName>StartGrainFill</EndStageName>
@@ -1436,6 +1440,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     <Constant>
       <Name>StructuralFraction</Name>
       <Value>0.7</Value>
+    </Constant>
+    <Constant>
+      <Name>DMConversionEfficiencyFunction</Name>
+      <Value>1</Value>
+      <Units>0-1</Units>
     </Constant>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>

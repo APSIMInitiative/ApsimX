@@ -17,8 +17,12 @@
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -940,7 +944,7 @@
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1123,7 +1127,7 @@
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -1451,6 +1455,39 @@
             <Name>MaintenanceRespirationFunction</Name>
             <Value>0</Value>
           </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress1</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress2</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress3</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress4</Name>
+            <Value>1</Value>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration1</Name>
+            <Value>1</Value>
+          </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
           <Name>ExtinctionCoeff</Name>
@@ -1638,6 +1675,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </Memo>
           <Value>0.5</Value>
         </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
+        </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -1650,7 +1691,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
@@ -1780,7 +1821,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>MaintenanceRespirationFunction</Name>
           <Value>0</Value>
           <Units>0-1</Units>
-        </Constant> 
+        </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <Value>1</Value>
@@ -2497,17 +2538,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -2747,7 +2783,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -4295,7 +4331,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6240,17 +6276,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -7750,7 +7781,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8896,17 +8927,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -9146,7 +9172,7 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -10632,7 +10658,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12391,17 +12417,12 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
           <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
@@ -12478,12 +12499,12 @@ namespace Models
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
             <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
             <string>[DiagnosticsVariables].Script.SWC</string>
-            <string>[FieldPea].Arbitrator.DMDemand</string>
-            <string>[FieldPea].Arbitrator.DMSupply</string>
-            <string>[FieldPea].Arbitrator.DMAllocated</string>
-            <string>[FieldPea].Arbitrator.DMNutrientLimitation</string>
-            <string>[FieldPea].Arbitrator.DMSinkLimitation</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.DM.TotalPlantDemand</string>
+            <string>[FieldPea].Arbitrator.DM.TotalFixationSupply</string>
+            <string>[FieldPea].Arbitrator.DM.Allocated</string>
+            <string>[FieldPea].Arbitrator.DM.NutrientLimitation</string>
+            <string>[FieldPea].Arbitrator.DM.SinkLimitation</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[FieldPea].Arbitrator.NH4NSupply</string>
             <string>[FieldPea].Arbitrator.NO3NSupply</string>
             <string>[FieldPea].Arbitrator.TotalPotentialNO3Uptake</string>
@@ -12540,7 +12561,7 @@ namespace Models
             <string>[FieldPea].Root.NSupplyUptake</string>
             <string>[FieldPea].Root.NTakenUp</string>
             <string>[FieldPea].Root.NUptake</string>
-            <string>[FieldPea].Root.TotalNAllocated</string>
+            <string>[FieldPea].Root.Allocated.N</string>
             <string>[FieldPea].Root.PlantZone.TotalNDemand</string>
             <string>[FieldPea].Root.WaterSupply</string>
             <string>[FieldPea].Root.WaterUptake</string>
@@ -12610,12 +12631,12 @@ namespace Models
         <Manager>
           <Name>FieldPeaSowingRule</Name>
           <Script>
-            <RowSpacing>150</RowSpacing>
+            <SowingFert>300</SowingFert>
             <SowingDepth>20</SowingDepth>
+            <RowSpacing>150</RowSpacing>
             <SowingRate>50</SowingRate>
             <CultivarName>Primo</CultivarName>
             <SowingDate>1997-12-23</SowingDate>
-            <SowingFert>300</SowingFert>
           </Script>
           <Code><![CDATA[
         using System;
@@ -12764,7 +12785,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FieldPea.Root.TotalDMAllocated</YFieldName>
+            <YFieldName>FieldPea.Root.Allocation.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12806,7 +12827,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Fieldpea.Root.TotalNAllocated</YFieldName>
+            <YFieldName>Fieldpea.Root.Allocated.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15278,7 +15299,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSupply</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalFixationSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15299,7 +15320,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15320,7 +15341,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMAllocated</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.Allocated</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15341,7 +15362,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSinkLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.SinkLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15362,7 +15383,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMNutrientLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.NutrientLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15651,7 +15672,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16078,7 +16099,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

@@ -69,6 +69,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            propertyPresenter.Detach();
             this.BuildScript();  // compiles and saves the script
 
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;

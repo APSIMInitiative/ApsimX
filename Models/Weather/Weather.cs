@@ -340,6 +340,13 @@ namespace Models
         public double CO2 { get; set; }
 
         /// <summary>
+        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
+        /// </summary>
+        [XmlIgnore]
+        public double AirPressure { get; set; }
+
+
+        /// <summary>
         /// Gets the latitude
         /// </summary>
         public double Latitude
@@ -470,6 +477,7 @@ namespace Models
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.CO2 = 350;
+            this.AirPressure = 1010;
         }
 
         /// <summary>
