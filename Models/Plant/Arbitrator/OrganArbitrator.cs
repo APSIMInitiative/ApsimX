@@ -33,11 +33,11 @@ namespace Models.PMF
         public Soils.Soil Soil = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
-        [Link]
+        [ChildLinkByName]
         private IArbitrationMethod NArbitrator = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
-        [Link]
+        [ChildLinkByName]
         private IArbitrationMethod DMArbitrator = null;
 
         /// <summary>The nutrient drivers</summary>
