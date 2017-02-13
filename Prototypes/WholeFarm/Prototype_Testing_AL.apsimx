@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
@@ -692,6 +692,32 @@
           <Name>Off farm labour</Name>
           <LabourOffFarmFilterGroup>
             <Name>Hired ploughing</Name>
+            <LabourFilter>
+              <Name>Filter[Name=Joe B]</Name>
+              <Parameter>Name</Parameter>
+              <Operator>Equal</Operator>
+              <Value>Joe B</Value>
+            </LabourFilter>
+            <DailyRate>100</DailyRate>
+            <DaysWorkAvailableEachMonth>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>1</double>
+              <double>1.2</double>
+              <double>1.5</double>
+            </DaysWorkAvailableEachMonth>
+            <NumberOfPeople>1</NumberOfPeople>
+            <Priority>2</Priority>
+          </LabourOffFarmFilterGroup>
+          <LabourOffFarmFilterGroup>
+            <Name>Hired Sowing</Name>
             <LabourFilter>
               <Name>Filter[Name=Joe B]</Name>
               <Parameter>Name</Parameter>
