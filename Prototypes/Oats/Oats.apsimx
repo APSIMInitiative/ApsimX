@@ -32,8 +32,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -877,7 +881,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1191,7 +1195,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>AccumulatedGrowth</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>
@@ -2699,8 +2703,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].AboveGroundLive.Wt</string>
         <string>[Oats].AboveGroundDead.N</string>
         <string>[Oats].AboveGroundDead.Wt</string>
-        <string>[Oats].Arbitrator.DMDemand</string>
-        <string>[Oats].Arbitrator.DMSupply</string>
+        <string>[Oats].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Oats].Ear.N</string>
         <string>[Oats].Ear.Nconc</string>
         <string>[Oats].Ear.Wt</string>
@@ -3111,13 +3115,13 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
-            <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-            <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
+            <string>[0ats].Arbitrator.DM.NutrientLimitation</string>
+            <string>[0ats].Arbitrator.DM.SinkLimitation</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
-            <string>[0ats].Arbitrator.NDemand</string>
+            <string>[0ats].Arbitrator.N.TotalPlantDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
             <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
             <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
@@ -4091,13 +4095,13 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
-            <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-            <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
+            <string>[0ats].Arbitrator.DM.NutrientLimitation</string>
+            <string>[0ats].Arbitrator.DM.SinkLimitation</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
-            <string>[0ats].Arbitrator.NDemand</string>
+            <string>[0ats].Arbitrator.N.TotalPlantDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
             <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
             <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
@@ -5149,13 +5153,13 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Leaf].CohortSize</string>
-            <string>[0ats].Arbitrator.DMAllocated</string>
-            <string>[0ats].Arbitrator.DMDemand</string>
-            <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-            <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.Allocated</string>
+            <string>[0ats].Arbitrator.DM.TotalPlantDemand</string>
+            <string>[0ats].Arbitrator.DM.NutrientLimitation</string>
+            <string>[0ats].Arbitrator.DM.SinkLimitation</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
-            <string>[0ats].Arbitrator.NDemand</string>
+            <string>[0ats].Arbitrator.N.TotalPlantDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
             <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
             <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>

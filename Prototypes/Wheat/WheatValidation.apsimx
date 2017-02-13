@@ -50,8 +50,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -816,7 +820,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1068,7 +1072,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>AccumulatedGrowth</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>
@@ -3095,8 +3099,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].AboveGroundLive.Wt</string>
         <string>[Wheat].AboveGroundDead.N</string>
         <string>[Wheat].AboveGroundDead.Wt</string>
-        <string>[Wheat].Arbitrator.DMDemand</string>
-        <string>[Wheat].Arbitrator.DMSupply</string>
+        <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Wheat].Ear.N</string>
         <string>[Wheat].Ear.Nconc</string>
         <string>[Wheat].Ear.Wt</string>
@@ -5576,13 +5580,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -7666,13 +7670,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -10776,13 +10780,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -29930,13 +29934,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -33246,7 +33250,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33268,7 +33272,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -34042,13 +34046,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -37368,13 +37372,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -39039,7 +39043,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -39061,7 +39065,7 @@ namespace Models
                 <LineThickness>Thin</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -39569,13 +39573,13 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Wheat].Arbitrator.FN</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Leaf.CohortMaxSize</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
@@ -40998,7 +41002,7 @@ namespace Models
                 <LineThickness>Thin</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -41020,7 +41024,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>SupReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -49882,7 +49886,7 @@ namespace Models
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
                 <string>[Wheat].Total.N*10 as TotalN_Kg</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Phenology.Stage</string>
                 <string>[Wheat].Leaf.ExpandedCohortNo</string>
                 <string>[Wheat].Leaf.AppearedCohortNo</string>
@@ -49895,13 +49899,13 @@ namespace Models
                 <string>[Wheat].Leaf.CohortSLA[1:30]</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
-                <string>[Wheat].Arbitrator.NSupply</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -52400,7 +52404,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -52422,7 +52426,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -52465,7 +52469,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.NSupply</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.N.TotalPlantSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -52487,7 +52491,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.NDemand</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.N.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>

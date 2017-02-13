@@ -21,8 +21,12 @@ The model consists of:
   </Memo>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
-    <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-    <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
   </OrganArbitrator>
   <Phenology>
     <Name>Phenology</Name>
@@ -620,7 +624,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>GrowthGrainDevelopment</Name>
       <VariableReference>
         <Name>DailyBiomassProduction</Name>
-        <VariableName>[Arbitrator].DMSupply</VariableName>
+        <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
       </VariableReference>
       <StartStageName>FlagLeaf</StartStageName>
       <EndStageName>StartGrainFill</EndStageName>
