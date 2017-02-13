@@ -187,6 +187,9 @@ namespace UserInterface.Views
               System.Diagnostics.Process.Start("http://www.apsim.info/Filter.aspx");
         }
 
-
+        public void EndEdit()
+        {
+            editView1.EndEdit();
+        }
     }
 }

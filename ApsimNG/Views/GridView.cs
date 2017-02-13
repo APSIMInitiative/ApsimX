@@ -747,7 +747,8 @@ namespace UserInterface.Views
         /// </summary>
         public void EndEdit()
         {
-            /// TBI this.Grid.EndEdit();
+            if (userEditingCell)
+              ViewBase.SendKeyEvent(MainWidget, Gdk.Key.Return);
         }
 
         /// <summary>Lock the left most number of columns.</summary>
@@ -1403,6 +1404,5 @@ namespace UserInterface.Views
             }
             return null;
         }
-
     }
 }

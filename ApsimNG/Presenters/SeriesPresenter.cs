@@ -61,6 +61,7 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model and view from this presenter.</summary>
         public void Detach()
         {
+            seriesView.EndEdit();
             if (graphPresenter != null)
                 graphPresenter.Detach();
             DisconnectViewEvents();

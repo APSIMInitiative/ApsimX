@@ -18,16 +18,16 @@
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.1302704369215508</Slope>
-            <Intercept>-25.197610366246408</Intercept>
-            <SEslope>0.0437088859893132</SEslope>
-            <SEintercept>59.907515158757946</SEintercept>
-            <R2>0.88604602677827016</R2>
-            <RMSE>284.52837142163776</RMSE>
-            <NSE>0.76488686866475686</NSE>
-            <ME>136.16019847126756</ME>
-            <MAE>215.29989499603897</MAE>
-            <RSR>0.48212175973132937</RSR>
+            <Slope>1.1270587437614767</Slope>
+            <Intercept>-21.696883044807237</Intercept>
+            <SEslope>0.043902921281099516</SEslope>
+            <SEintercept>60.173460444731717</SEintercept>
+            <R2>0.88456866116237176</R2>
+            <RMSE>284.68481784353855</RMSE>
+            <NSE>0.764628246156802</NSE>
+            <ME>135.68280317936186</ME>
+            <MAE>214.88102744681308</MAE>
+            <RSR>0.48238685183393276</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -60,58 +60,58 @@
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.91314151378373787</Slope>
-            <Intercept>243.72221179814437</Intercept>
-            <SEslope>0.042323525022052957</SEslope>
-            <SEintercept>101.46071429412203</SEintercept>
-            <R2>0.85022620691774586</R2>
-            <RMSE>479.55133327382987</RMSE>
-            <NSE>0.84277550506188947</NSE>
-            <ME>63.939869107468866</ME>
-            <MAE>352.63623926480238</MAE>
-            <RSR>0.394148163461757</RSR>
+            <Slope>0.91391560569708441</Slope>
+            <Intercept>244.6395314237493</Intercept>
+            <SEslope>0.042051741619332755</SEslope>
+            <SEintercept>100.80917739687845</SEintercept>
+            <R2>0.85207329179734859</R2>
+            <RMSE>476.81419520645886</RMSE>
+            <NSE>0.84456516543243</NSE>
+            <ME>66.45942777386125</ME>
+            <MAE>350.5339751858055</MAE>
+            <RSR>0.39189848158717966</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.55106381334924837</Slope>
-            <Intercept>0.14864942583131591</Intercept>
-            <SEslope>0.12955161080847127</SEslope>
-            <SEintercept>0.037188962156780275</SEintercept>
-            <R2>0.19229118729593731</R2>
-            <RMSE>0.070991421369856658</RMSE>
-            <NSE>-0.63732919026410761</NSE>
-            <ME>0.022208043630592925</ME>
-            <MAE>0.052893626644057723</MAE>
-            <RSR>1.2713527403474325</RSR>
+            <Slope>0.54923285480704942</Slope>
+            <Intercept>0.14919988273289109</Intercept>
+            <SEslope>0.12968988426698497</SEslope>
+            <SEintercept>0.037228654804242263</SEintercept>
+            <R2>0.19092969587055686</R2>
+            <RMSE>0.071097002225445252</RMSE>
+            <NSE>-0.64220299509797418</NSE>
+            <ME>0.022242817155082813</ME>
+            <MAE>0.05308340093420412</MAE>
+            <RSR>1.273243539369211</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.914354681712213</Slope>
-            <Intercept>95.75619598455</Intercept>
-            <SEslope>0.041314875267857584</SEslope>
-            <SEintercept>28.769137087830213</SEintercept>
-            <R2>0.82904461593462175</R2>
-            <RMSE>152.07557483682686</RMSE>
-            <NSE>0.80394556602613787</NSE>
-            <ME>43.877098189752409</ME>
-            <MAE>120.75609127348352</MAE>
-            <RSR>0.44062568339501024</RSR>
+            <Slope>0.90784889354172027</Slope>
+            <Intercept>99.108060686622025</Intercept>
+            <SEslope>0.040682830633935109</SEslope>
+            <SEintercept>28.329020093622812</SEintercept>
+            <R2>0.8313777243882261</R2>
+            <RMSE>150.31508141426889</RMSE>
+            <NSE>0.80845851589846829</NSE>
+            <ME>43.2881237721062</ME>
+            <MAE>119.54436283183723</MAE>
+            <RSR>0.43552480760835383</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1772771828021083</Slope>
-            <Intercept>0.3011610930854709</Intercept>
-            <SEslope>0.052598561164264576</SEslope>
-            <SEintercept>0.15835619080503832</SEintercept>
-            <R2>0.87433846617545052</R2>
-            <RMSE>1.0117112837547935</RMSE>
-            <NSE>0.434272072492925</NSE>
-            <ME>0.77865159514266857</ME>
-            <MAE>0.78602361814650268</MAE>
-            <RSR>0.74704950004249138</RSR>
+            <Slope>1.1769923669195421</Slope>
+            <Intercept>0.30109534242504932</Intercept>
+            <SEslope>0.052593782245580749</SEslope>
+            <SEintercept>0.15834180312328075</SEintercept>
+            <R2>0.87430526029816913</R2>
+            <RMSE>1.0109477248612711</RMSE>
+            <NSE>0.43512568278738395</NSE>
+            <ME>0.77781870188323488</ME>
+            <MAE>0.78519072488706876</MAE>
+            <RSR>0.74648568673051374</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -38134,8 +38134,8 @@ Simulation results for the combined datasets from the various countries are show
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38182,8 +38182,8 @@ Simulation results for the combined datasets from the various countries are show
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38229,9 +38229,9 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38277,9 +38277,9 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -39127,5 +39127,5 @@ namespace Models
       </Graph>
     </Experiment>
   </Folder>
-  <ExplorerWidth>394</ExplorerWidth>
+  <ExplorerWidth>290</ExplorerWidth>
 </Simulations>

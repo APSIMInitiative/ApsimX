@@ -20,17 +20,12 @@ namespace APSIMJobRunner
 
     class Program
     {
-        Byte[] bytes = new Byte[65536];
-
         /// <summary>Main program</summary>
         static int Main(string[] args)
         {
             try
             { 
                 AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
-
-                // Setup a binary formatter and a stream for writing to.
-                IFormatter formatter = new BinaryFormatter();
 
                 // Send a command to socket server to get the job to run.
                 object response = GetNextJob();
