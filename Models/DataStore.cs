@@ -801,28 +801,35 @@ namespace Models
         /// <param name="tables">The tables.</param>
         private void WriteTables(ReportTable[] tables)
         {
-            // Open the .db for writing.
-            Open(forWriting: true);
-
-            // What table are we writing?
-            string tableName = tables[0].TableName;
+            // Insert simulationID column into all tables.
+            foreach (ReportTable table in tables)
+            {
+                int simulationID = GetSimulationID(table.SimulationName);
+                table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
+            }
 
             // Get a list of all names and datatypes for each field in this table.
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();
-            names.Add("SimulationID");
-            types.Add(typeof(int));
             foreach (ReportTable table in tables)
-            {
-                if (table.Data != null)
+                foreach (IReportColumn column in table.Columns)
                 {
-                    // Go through all columns for this table and add to 'names' and 'types'
-                    foreach (IReportColumn column in table.Data)
-                        column.GetNamesAndTypes(names, types);
+                    if (!names.Contains(column.Name))
+                    {
+                        object firstNonBlankValue = column.Values.Find(value => value != null);
+                        if (firstNonBlankValue != null)
+                        {
+                            names.Add(column.Name);
+                            types.Add(firstNonBlankValue.GetType());
+                        }
+                    }
                 }
-            }
+
+            // Open the .db for writing.
+            Open(forWriting: true);
 
             // Create the table.
+            string tableName = tables[0].TableName;
             CreateTable(tableName, names.ToArray(), types.ToArray());
 
             // Prepare the insert query sql
@@ -833,32 +840,37 @@ namespace Models
 
             try
             {
-                // Go through all tables and write the data.
+                // Write each row to the .db
                 foreach (ReportTable table in tables)
                 {
-                    // Get simulation ID for later
-                    int simulationID = GetSimulationID(table.SimulationName);
+                    int numRows = 0;
 
-                    // Write each row to the .db
-                    if (table.Data != null && table.Data.Count > 0)
+                    // Create an array of value indexes for column.
+                    int[] valueIndexes = new int[table.Columns.Count];
+                    for (int i = 0; i < table.Columns.Count; i++)
                     {
-                        // Work out how many rows.
-                        int numRows = 0;
-                        table.Data.ForEach(col => numRows = Math.Max(numRows, col.NumRows));
+                        numRows = Math.Max(numRows, table.Columns[i].Values.Count);
+                        valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
+                    }
 
-                        object[] values = new object[names.Count];
-                        values[0] = simulationID;
-                        for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+                    object[] values = new object[names.Count];
+                    for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+                    {
+                        Array.Clear(values, 0, values.Length);
+                        for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
                         {
-                            for (int i = 1; i < values.Length; i++)
-                                values[i] = null;
-
-                            foreach (IReportColumn column in table.Data)
-                                column.InsertValuesForRow(rowIndex, names, values);
-
-                            // Write the row to the .db
-                            Connection.BindParametersAndRunQuery(query, values.ToArray());
+                            int valueIndex = valueIndexes[colIndex];
+                            if (valueIndex != -1)
+                            {
+                                if (table.Columns[colIndex] is ReportColumnConstantValue)
+                                    values[valueIndex] = table.Columns[colIndex].Values[0];
+                                else if (rowIndex < table.Columns[colIndex].Values.Count)
+                                    values[valueIndex] = table.Columns[colIndex].Values[rowIndex];
+                            }
                         }
+
+                        // Write the row to the .db
+                        Connection.BindParametersAndRunQuery(query, values.ToArray());
                     }
                 }
             }
@@ -879,7 +891,7 @@ namespace Models
         /// </summary>
         /// <param name="simulationName">Name of the simulation.</param>
         /// <returns></returns>
-        private int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName)
         {
             if (!TableExists("Simulations"))
                 return -1;

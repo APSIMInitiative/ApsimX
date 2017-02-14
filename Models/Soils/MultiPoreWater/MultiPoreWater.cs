@@ -485,6 +485,9 @@ namespace Models.Soils
             LayerHeight = new double[ProfileLayers];
             Ksat = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
+            LL15mm = new double[ProfileLayers];
+            DULmm = new double[ProfileLayers];
+            SATmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
             Diffusion = new double[ProfileLayers];
             SaturatedWaterDepth = new double[ProfileLayers];
@@ -992,6 +995,9 @@ namespace Models.Soils
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
                 Ksat[l] = LayerSum(Pores[l], "Capillarity");
+                DULmm[l] = Water.DUL[l] * Water.Thickness[l];
+                LL15mm[l] = Water.LL15[l] * Water.Thickness[l];
+                SATmm[l] = Water.SAT[l] * Water.Thickness[l];
                 ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
             }
             doGravitionalPotential();
