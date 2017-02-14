@@ -647,7 +647,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -1715,7 +1715,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -12191,7 +12191,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -13773,7 +13773,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -14914,7 +14914,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -15832,7 +15832,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -16768,7 +16768,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -17624,7 +17624,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -18569,7 +18569,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -20056,7 +20056,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -21442,7 +21442,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -23099,7 +23099,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -23890,7 +23890,7 @@ namespace Models
               <string>[Maize].AboveGroundLive.Wt</string>
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
-              <string>[Maize].Arbitrator.NDemand</string>
+              <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -24891,7 +24891,7 @@ namespace Models
               <string>[Maize].AboveGroundLive.Wt</string>
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
-              <string>[Maize].Arbitrator.NDemand</string>
+              <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -26609,7 +26609,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -26622,13 +26622,13 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.NSupply</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -27383,7 +27383,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27404,7 +27404,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27425,7 +27425,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSinkLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27446,7 +27446,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMNutrientLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30856,7 +30856,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -30878,7 +30878,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -30921,7 +30921,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -30943,7 +30943,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -32867,7 +32867,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -35594,7 +35594,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -35607,12 +35607,12 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -36913,7 +36913,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -36926,12 +36926,12 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
