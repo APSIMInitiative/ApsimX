@@ -36,9 +36,13 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);
   </Memo>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
-    <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-    <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-  </OrganArbitrator>
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <PrioritythenRelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+   </OrganArbitrator>
   <Root>
     <Name>Root</Name>
     <CompositeBiomass>

@@ -40,7 +40,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
 
-            string toXML = "<Simulation Version=\"2\">" +
+            string toXML = "<Simulation Version=\"3\">" +
                              "<Graph>" +
                                "<Series>" +
                                  "<TableName>HarvestReport</TableName>" +
@@ -67,7 +67,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
 
-            string toXML = "<Simulation Version=\"2\">" +
+            string toXML = "<Simulation Version=\"3\">" +
                              "<Cultivar>" +
                                  "<Alias>" +
                                    "<Name>Cultivar1</Name>" +

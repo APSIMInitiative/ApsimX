@@ -76,5 +76,10 @@ namespace UserInterface.Views
             }
         }
 
+        public void EndEdit()
+        {
+            if (textentry1.IsFocus)
+                OnSelectionChanged(this, null);
+        }
     }
 }

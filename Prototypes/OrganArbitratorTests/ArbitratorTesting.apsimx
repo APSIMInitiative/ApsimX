@@ -24,8 +24,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -815,7 +819,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1067,7 +1071,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrowthGrainDevelopment</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>
@@ -2033,6 +2037,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>StructuralFraction</Name>
           <Value>0.5</Value>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Value>1</Value>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -3396,17 +3404,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -3930,7 +3933,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -3943,13 +3946,13 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.NSupply</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -4704,7 +4707,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -4725,7 +4728,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -4746,7 +4749,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSinkLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -4767,7 +4770,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMNutrientLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8522,7 +8525,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>MaizeReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -8544,7 +8547,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>MaizeReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -8587,7 +8590,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>MaizeReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -8609,7 +8612,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>MaizeReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -9621,17 +9624,12 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -9956,7 +9954,7 @@ namespace Models
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
                 <string>[Wheat].Total.N*10 as TotalN_Kg</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Phenology.Stage</string>
                 <string>[Wheat].Leaf.ExpandedCohortNo</string>
                 <string>[Wheat].Leaf.AppearedCohortNo</string>
@@ -9969,13 +9967,13 @@ namespace Models
                 <string>[Wheat].Leaf.CohortSLA[1:30]</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Wheat].Arbitrator.NDemand</string>
-                <string>[Wheat].Arbitrator.NSupply</string>
-                <string>[Wheat].Arbitrator.DMSupply</string>
-                <string>[Wheat].Arbitrator.DMDemand</string>
-                <string>[Wheat].Arbitrator.DMAllocated</string>
-                <string>[Wheat].Arbitrator.DMSinkLimitation</string>
-                <string>[Wheat].Arbitrator.DMNutrientLimitation</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Wheat].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Wheat].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Wheat].Arbitrator.DM.Allocated</string>
+                <string>[Wheat].Arbitrator.DM.SinkLimitation</string>
+                <string>[Wheat].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -12387,7 +12385,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -12409,7 +12407,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -12452,7 +12450,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.NSupply</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.N.TotalPlantSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -12474,7 +12472,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>WheatReport</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Wheat.Arbitrator.NDemand</YFieldName>
+                  <YFieldName>Wheat.Arbitrator.N.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>

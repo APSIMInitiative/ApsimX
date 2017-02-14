@@ -26,7 +26,10 @@ namespace Models.PMF.Functions.DemandFunctions
         {
             get
             {
-                return Arbitrator.DMSupply * PartitionFraction.Value;
+                if (Arbitrator.DM != null)
+                    return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value;
+                else
+                    return 0;
             }
         }
 

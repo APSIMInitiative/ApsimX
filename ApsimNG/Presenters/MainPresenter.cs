@@ -154,6 +154,24 @@ namespace UserInterface.Presenters
             view.ShowProgress(percent);
         }
 
+        /// <summary>
+        /// Add a handler for the "stop" button of the view
+        /// </summary>
+        /// <param name="handler">The handler to be added</param>
+        public void AddStopHandler(EventHandler<EventArgs> handler)
+        {
+            this.view.StopSimulation += handler;
+        }
+
+        /// <summary>
+        /// Remove a handler for the "stop" button of the view
+        /// </summary>
+        /// <param name="handler">The handler to be removed</param>
+        public void RemoveStopHandler(EventHandler<EventArgs> handler)
+        {
+            this.view.StopSimulation -= handler;
+        }
+
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)

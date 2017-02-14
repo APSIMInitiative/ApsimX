@@ -222,10 +222,10 @@ namespace Models
         {
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = MathUtilities.DayLength(Clock.Today.Day, sun_angle, weather.Latitude);
+            dayLength = MathUtilities.DayLength(Clock.Today.DayOfYear, sun_angle, weather.Latitude);
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = MathUtilities.DayLength(Clock.Today.Day, SunSetAngle, weather.Latitude);
+            dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
         }
 
         /// <summary>Perform the overall Canopy Energy Balance</summary>

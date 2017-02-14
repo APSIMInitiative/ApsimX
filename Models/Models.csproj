@@ -180,6 +180,12 @@
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\CanopyType.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
+    <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
+    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
+    <Compile Include="Plant\Arbitrator\PriorityAllocation.cs" />
+    <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
+    <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
@@ -196,6 +202,7 @@
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
+    <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
     <Compile Include="Plant\Phenology\BuddingPhase.cs" />
     <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
@@ -248,8 +255,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Report\IReportColumn.cs" />
+    <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Report\ReportTable.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
@@ -303,7 +313,7 @@
     <Compile Include="MicroClimate\MicroClimate.cs" />
     <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
-    <Compile Include="Plant\OrganArbitrator.cs" />
+    <Compile Include="Plant\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
     <Compile Include="Plant\Biomass.cs" />
     <Compile Include="Plant\CompositeBiomass.cs" />
