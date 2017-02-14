@@ -802,74 +802,88 @@ namespace Models
         private void WriteTables(ReportTable[] tables)
         {
             // Insert simulationID column into all tables.
+            List<string> simulationNames = new List<string>();
             foreach (ReportTable table in tables)
             {
+                simulationNames.Add(table.SimulationName);
                 int simulationID = GetSimulationID(table.SimulationName);
                 table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
             }
-
-            // Merge all tables into one table.
-            for (int tableIndex = 1; tableIndex < tables.Length; tableIndex++)
-                tables[tableIndex].MergeInto(tables[0]);
-
-            // Flatten the one table so that complex structures and arrays are split into
-            // separate columns.
-            List<IReportColumn> columns = tables[0].Flatten();
-
-            foreach (IReportColumn column in columns)
-                if (column.Values.Count != columns[0].Values.Count)
-                    throw new Exception("Uneven number of report rows found while writing to SQLite database.");
-
-            if (columns.Count > 0 && columns[0].Values.Count > 0)
-            {
-                // Get a list of all names and datatypes for each field in this table.
-                List<string> names = new List<string>();
-                List<Type> types = new List<Type>();
-                foreach (IReportColumn column in columns)
+            string allNames = StringUtilities.BuildString(simulationNames.ToArray(), ";");
+            // Get a list of all names and datatypes for each field in this table.
+            List<string> names = new List<string>();
+            List<Type> types = new List<Type>();
+            foreach (ReportTable table in tables)
+                foreach (IReportColumn column in table.Columns)
                 {
-                    object firstNonBlankValue = column.Values.Find(value => value != null);
-                    if (firstNonBlankValue != null)
+                    if (!names.Contains(column.Name))
                     {
-                        names.Add(column.Name);
-                        types.Add(firstNonBlankValue.GetType());
+                        object firstNonBlankValue = column.Values.Find(value => value != null);
+                        if (firstNonBlankValue != null)
+                        {
+                            names.Add(column.Name);
+                            types.Add(firstNonBlankValue.GetType());
+                        }
                     }
                 }
 
-                // Open the .db for writing.
-                Open(forWriting: true);
+            // Open the .db for writing.
+            Open(forWriting: true);
 
-                // Create the table.
-                string tableName = tables[0].TableName;
-                CreateTable(tableName, names.ToArray(), types.ToArray());
+            // Create the table.
+            string tableName = tables[0].TableName;
+            CreateTable(tableName, names.ToArray(), types.ToArray());
 
-                // Prepare the insert query sql
-                IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+            // Prepare the insert query sql
+            IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
 
-                // Tell SQLite that we're beginning a transaction.
-                Connection.ExecuteNonQuery("BEGIN");
+            // Tell SQLite that we're beginning a transaction.
+            Connection.ExecuteNonQuery("BEGIN");
 
-                try
+            try
+            {
+                // Write each row to the .db
+                foreach (ReportTable table in tables)
                 {
-                    // Write each row to the .db
-                    int numRows = columns[0].Values.Count;
+                    int numRows = 0;
+
+                    // Create an array of value indexes for column.
+                    int[] valueIndexes = new int[table.Columns.Count];
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        numRows = Math.Max(numRows, table.Columns[i].Values.Count);
+                        valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
+                        //if (valueIndexes[i] == -1)
+                        //    throw new Exception("Cannot find column in SQLite db.");
+                    }
+
                     object[] values = new object[names.Count];
                     for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
                     {
-                        for (int colIndex = 0; colIndex < values.Length; colIndex++)
-                            values[colIndex] = columns[colIndex].Values[rowIndex];
+                        for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
+                        {
+                            int valueIndex = valueIndexes[colIndex];
+                            if (valueIndex != -1)
+                            {
+                                if (table.Columns[colIndex] is ReportColumnConstantValue)
+                                    values[valueIndex] = table.Columns[colIndex].Values[0];
+                                else if (rowIndex < table.Columns[colIndex].Values.Count)
+                                    values[valueIndex] = table.Columns[colIndex].Values[rowIndex];
+                            }
+                        }
 
                         // Write the row to the .db
                         Connection.BindParametersAndRunQuery(query, values.ToArray());
                     }
                 }
-                finally
-                {
-                    // tell SQLite we're ending our transaction.
-                    Connection.ExecuteNonQuery("END");
+            }
+            finally
+            {
+                // tell SQLite we're ending our transaction.
+                Connection.ExecuteNonQuery("END");
 
-                    // finalise our query.
-                    Connection.Finalize(query);
-                }
+                // finalise our query.
+                Connection.Finalize(query);
             }
         }
 

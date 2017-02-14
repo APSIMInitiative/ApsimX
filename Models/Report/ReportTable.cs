@@ -10,6 +10,7 @@ namespace Models.Report
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     /// <summary>A class for holding data for a .db table.</summary>
     [Serializable]
@@ -32,29 +33,29 @@ namespace Models.Report
                 throw new Exception("Cannot merge report tables. The table names don't match");
 
             // Merge columns that match.
-            foreach (IReportColumn column in Columns)
+            Parallel.ForEach(Columns, (column) =>
             {
                 IReportColumn existingColumn = table.Columns.Find(col => col.Name.Equals(column.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (existingColumn != null)
                     existingColumn.Values.AddRange(column.Values);
-            }
+            });
 
             // Standardise the number of values in each column
             int numRows = 0;
             table.Columns.ForEach(col => numRows = Math.Max(numRows, col.Values.Count));
 
             // Fill columns that don't have enough rows with nulls.
-            foreach (IReportColumn column in table.Columns)
+            Parallel.ForEach(table.Columns, (column) =>
             {
                 object valueToAdd = null;
                 if (column is ReportColumnConstantValue)
                     valueToAdd = column.Values[0];
                 while (column.Values.Count < numRows)
                     column.Values.Add(valueToAdd);
-            }
+            });
 
             // Add new columns to the end of the specified table.
-            foreach (IReportColumn column in Columns)
+            Parallel.ForEach(Columns, (column) =>
             {
                 IReportColumn existingColumn = table.Columns.Find(col => col.Name.Equals(column.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (existingColumn == null)
@@ -63,9 +64,12 @@ namespace Models.Report
                     // the number of rows.
                     while (column.Values.Count < numRows)
                         column.Values.Insert(0, null);
-                    table.Columns.Add(column);
+                    lock (table)
+                    {
+                        table.Columns.Add(column);
+                    }
                 }
-            }
+            });
 
             // Ensure we have the same number of rows in each column.
             foreach (IReportColumn column in table.Columns)
@@ -83,9 +87,6 @@ namespace Models.Report
             {
                 for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
                     FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
-
-                if (column.Values.Count != flattenedColumns[0].Values.Count)
-                    throw new Exception("Uneven number of rows found while merging report tables.");
             }
 
             return flattenedColumns;
