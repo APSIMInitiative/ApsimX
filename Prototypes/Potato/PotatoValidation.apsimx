@@ -160,8 +160,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+        <PrioritythenRelativeAllocation>
+          <Name>NArbitrator</Name>
+        </PrioritythenRelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
@@ -1470,12 +1474,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <string>[MicroClimate].peta</string>
         <string>[MicroClimate].petr</string>
         <string>[Potato].AboveGround.N</string>
-        <string>[Potato].Arbitrator.NDemand</string>
+        <string>[Potato].Arbitrator.N.TotalPlantDemand</string>
         <string>[Potato].Arbitrator.TotalPotentialNO3Uptake</string>
-        <string>[Potato].Arbitrator.DMDemand</string>
-        <string>[Potato].Arbitrator.DMSupply</string>
-        <string>[Potato].Arbitrator.DMSinkLimitation</string>
-        <string>[Potato].Arbitrator.DMNutrientLimitation</string>
+        <string>[Potato].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Potato].Arbitrator.DM.TotalFixationSupply</string>
+        <string>[Potato].Arbitrator.DM.SinkLimitation</string>
+        <string>[Potato].Arbitrator.DM.NutrientLimitation</string>
         <string>[Potato].BelowGround.N</string>
         <string>[Potato].Leaf.AppearedCohortNo</string>
         <string>[Potato].Leaf.CoverDead</string>
@@ -4894,7 +4898,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMSupply</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.TotalFixationSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4915,7 +4919,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.TotalPlantDemand</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4936,7 +4940,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMAllocated</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.Allocated</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4957,7 +4961,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.SinkLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -4978,7 +4982,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Potato.Arbitrator.DMNutrientLimitation</YFieldName>
+              <YFieldName>Potato.Arbitrator.DM.NutrientLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -26360,8 +26364,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
           </OrganArbitrator>
           <Structure>
             <Name>Structure</Name>
@@ -31839,8 +31847,12 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </Phenology>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
           </OrganArbitrator>
           <Structure>
             <Name>Structure</Name>
@@ -36857,7 +36869,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.NDemand</YFieldName>
+          <YFieldName>Potato.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -36950,7 +36962,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.TotalPlantDemand</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -36972,7 +36984,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.TotalFixationSupply</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -36994,7 +37006,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMNutrientLimitation</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.NutrientLimitation</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -37016,7 +37028,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.SinkLimitation</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -37126,7 +37138,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Potato.Arbitrator.DMSinkLimitation</YFieldName>
+          <YFieldName>Potato.Arbitrator.DM.SinkLimitation</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

@@ -50,8 +50,12 @@ There are a number of passes involved in the allocation of Weight (Wt).  <br/>
 <br/>
 </body></html>]]></MemoText>
         </Memo>
-        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGroundLive</Name>
@@ -797,7 +801,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>DMCaryopsis</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
-            <VariableName>[Arbitrator].DMSupply</VariableName>
+            <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
@@ -1531,7 +1535,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               </VariableReference>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
-                <VariableName>[Arbitrator].DMSupply</VariableName>
+                <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>Emergence</Start>
@@ -1542,7 +1546,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>DMRemaining</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
-            <VariableName>[Arbitrator].DMSupply</VariableName>
+            <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>LeafDMDemand</Name>
@@ -1735,7 +1739,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
-                <VariableName>[Arbitrator].DMSupply</VariableName>
+                <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
@@ -1863,7 +1867,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>DMDemandFunction</Name>
             <VariableReference>
               <Name>DMFixationSupply</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>LeafDemand</Name>
@@ -2875,7 +2879,7 @@ namespace Models
               <string>[Leaf].RadIntTot</string>
               <string>[Weather].Radn</string>
               <string>[Leaf].WaterDemand</string>
-              <string>[Arbitrator].DMSupply</string>
+              <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string>[Leaf].Live.wt</string>
               <string>[Stem].Live.wt</string>
@@ -3376,7 +3380,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Arbitrator.DM.TotalFixationSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3617,7 +3621,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>date</XFieldName>
-          <YFieldName>Arbitrator.DMSupply</YFieldName>
+          <YFieldName>Arbitrator.DM.TotalFixationSupply</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
