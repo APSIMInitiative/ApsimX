@@ -6,7 +6,7 @@
     <MemoText><![CDATA[# The APSIM Chicory Model
 
 
-_Rogerio Cichota and Russel McAuliffe, AgResearch, New Zealand_
+_Rogerio Cichota, AgResearch, New Zealand_
 
 
 ##Preamble
@@ -75,7 +75,11 @@ To fully terminate a crop the EndCrop event should be raised:
 <pre><code class='language-cs'>
  Chicory.EndCrop();  
 </code></pre>
-Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.
+Once a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.  
+
+
+## Acknowledgements
+This model was developed with help from Russel McAuliffe and Brittany Paton organising data and simulations. Datasets were kindly shared by Julia M. Lee, Hamish E. Brown, and the FRNL programme.  
 ]]></MemoText>
       </Memo>
       <Phenology>
@@ -294,12 +298,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <SimpleLeaf>
         <Name>Leaf</Name>
@@ -83355,8 +83359,8 @@ namespace Models
 ### All available data
 
 **Note:**  
- - Plant population is not inclued here as it is not explictly simulated by the model;  
- - Harvested biomass from USA simulations is not included as only seasonal or annual totals were available;  
+ - Plant population is inclued here as but it is not considered for validation as it is not explictly simulated by the model;  
+ - Data of harvested biomass from USA simulations are not included as only seasonal or annual totals were available;  
  - N concentration is currently poorly described and its predicted×observed graph is not included;  
 
 ]]></MemoText>
