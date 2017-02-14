@@ -851,13 +851,12 @@ namespace Models
                     {
                         numRows = Math.Max(numRows, table.Columns[i].Values.Count);
                         valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
-                        //if (valueIndexes[i] == -1)
-                        //    throw new Exception("Cannot find column in SQLite db.");
                     }
 
                     object[] values = new object[names.Count];
                     for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
                     {
+                        Array.Clear(values, 0, values.Length);
                         for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
                         {
                             int valueIndex = valueIndexes[colIndex];

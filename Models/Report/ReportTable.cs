@@ -31,8 +31,11 @@ namespace Models.Report
             List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
             foreach (IReportColumn column in Columns)
             {
-                for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
-                    FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
+                if (column is ReportColumnConstantValue)
+                    flattenedColumns.Add(column);
+                else
+                    for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
+                        FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
             }
 
             Columns = flattenedColumns;
@@ -62,8 +65,11 @@ namespace Models.Report
                 // Ensure all columns have the correct number of values.
                 foreach (IReportColumn column in flattenedColumns)
                 {
-                    while (column.Values.Count <= rowIndex)
-                        column.Values.Add(null);
+                    if (column is ReportColumnConstantValue)
+                    { }
+                    else
+                        while (column.Values.Count <= rowIndex)
+                            column.Values.Add(null);
                 }
 
                 flattenedColumn.Values[rowIndex] = value;
