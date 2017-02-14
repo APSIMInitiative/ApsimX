@@ -200,8 +200,12 @@ During this phase the plant has completed its growth and is drying ready for har
   </Phenology>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
-    <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-    <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
   </OrganArbitrator>
   <GenericOrgan>
     <Name>Product</Name>

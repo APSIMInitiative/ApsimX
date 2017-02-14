@@ -77,12 +77,12 @@ The model consists of:
         <string>[Chickpea].Shell.PodNumber.Value</string>
         <string>[Chickpea].Nodule.NFixed</string>
         <string>[Chickpea].Nodule.Live.Wt</string>
-        <string>[Chickpea].Arbitrator.DMNutrientLimitation</string>
-        <string>[Chickpea].Arbitrator.DMSinkLimitation</string>
-        <string>[Chickpea].Arbitrator.NDemand</string>
-        <string>[Chickpea].Arbitrator.NSupply</string>
-        <string>[Chickpea].Arbitrator.DMDemand</string>
-        <string>[Chickpea].Arbitrator.DMSupply</string>
+        <string>[Chickpea].Arbitrator.DM.NutrientLimitation</string>
+        <string>[Chickpea].Arbitrator.DM.SinkLimitation</string>
+        <string>[Chickpea].Arbitrator.N.TotalPlantDemand</string>
+        <string>[Chickpea].Arbitrator.N.TotalPlantSupply</string>
+        <string>[Chickpea].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Chickpea].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
         <string>[Chickpea].Leaf.Live.NonStructuralNConc</string>
@@ -103,8 +103,12 @@ The APSIM Chickpea model has been developed from the original APSIM Chickpea mod
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -5896,7 +5900,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.DM.TotalPlantDemand</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5917,7 +5921,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.DMSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.DM.TotalFixationSupply</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5960,7 +5964,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantDemand</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5981,7 +5985,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantSupply</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7601,7 +7605,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7645,7 +7649,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
