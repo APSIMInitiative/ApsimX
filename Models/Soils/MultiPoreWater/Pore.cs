@@ -219,7 +219,8 @@ namespace Models.Soils
                     factor = 1;
                 return factor;
             }
-        }/// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
+        }
+        /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
         [XmlIgnore]
         [Units("mm/h")]
         public double HydraulicConductivityOut
@@ -229,6 +230,25 @@ namespace Models.Soils
                 return Capillarity * TensionFactor;
             }
         }
-#endregion
+        #endregion
+
+        #region Plant water extraction
+        /// <summary>
+        /// The proportion of pores in this cohort that have absorbing roots present
+        /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double RootExplorationProportion { get; set; }
+
+        /// <summary>
+        /// The amount of water that may be extracted from this pore class by plant roots each hour
+        /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double PotentialWaterExtraction
+        {
+            get { return Math.Min(Capillarity * RootExplorationProportion,WaterDepth); }
+        }
+        #endregion
     }
 }

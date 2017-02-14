@@ -29,6 +29,9 @@ namespace Models.Soils
     public class MultiPoreWater : Model, ISoilWater
     {
         #region IsoilInterface
+        ///<summary> Model name</summary>
+        [XmlIgnore]
+        public string WaterModelName { get { return this.Name; } }
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
         public double residueinterception { get { return ResidueWater; } set { } }
@@ -212,7 +215,7 @@ namespace Models.Soils
         [Link]
         private Clock Clock = null;
         [Link]
-        private MicroClimate MicroClimate = null;
+        Plant Plant = null;
         #endregion
 
         #region Class Events
@@ -327,6 +330,10 @@ namespace Models.Soils
         #endregion
 
         #region Outputs
+        /// <summary>
+        /// The amount of water extracted from the soil by the crop
+        /// </summary>
+        public double ProfileWaterExtraction { get; set; }
         /// <summary>
         /// The amount of cover from crops and surface organic matter.
         /// </summary>
@@ -462,6 +469,7 @@ namespace Models.Soils
         /// The amount of water mm stored in a layer at saturation
         /// </summary>
         private double[] SaturatedWaterDepth { get; set; }
+        private double[] DailyWaterExtraction { get; set; }
         #endregion
 
         #region Event Handlers
@@ -491,6 +499,7 @@ namespace Models.Soils
             SW = new double[ProfileLayers];
             Diffusion = new double[ProfileLayers];
             SaturatedWaterDepth = new double[ProfileLayers];
+            DailyWaterExtraction = new double[ProfileLayers];
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
@@ -544,7 +553,10 @@ namespace Models.Soils
             Infiltration = 0;
             pond_evap = 0;
             Es = 0;
-            TotalCover = Math.Min(1, SurfaceOM.Cover + MicroClimate.RadIntTotal);
+            double CropCover = 0;
+            if (Plant.Leaf != null)
+                CropCover = Plant.Leaf.CoverTotal;
+            TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
             double SoilRadn = Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
             Eos = ET.PenmanEO(SoilRadn, Met.MeanT, WindRun, Met.VP, Salb, Met.Latitude, Clock.Today.DayOfYear);
@@ -553,6 +565,11 @@ namespace Models.Soils
             Array.Clear(Hourly.Drainage, 0, 24);
             Array.Clear(Hourly.Infiltration, 0, 24);
             Array.Clear(Diffusion, 0, ProfileLayers);
+            DistributeRoots();
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                DailyWaterExtraction[l] = 0;
+            }
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -874,7 +891,21 @@ namespace Models.Soils
         /// </summary>
         private void doTranspiration()
         {
-            //write some temporary stuff to be replaced by arbitrator at some stage
+            if (Plant.Leaf != null)
+            {
+                double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
+                double UnMetDemand = HourlyTranspirationDemand;
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                    {
+                        double PoreWaterExtraction = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
+                        UnMetDemand -= PoreWaterExtraction;
+                        Pores[l][c].WaterDepth += PoreWaterExtraction;
+                        DailyWaterExtraction[l] -= PoreWaterExtraction;
+                    }
+                }
+            }
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -1149,6 +1180,23 @@ namespace Models.Soils
             Array.Clear(SubHourly.Drainage, 0, 10);
             Array.Clear(SubHourly.Infiltration, 0, 10);
         }
+        /// <summary>
+        /// Call each time the plant root systems grows to update root distribution parameters in soil layers
+        /// </summary>
+        private void DistributeRoots()
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {//Step through each layer and distribute roots through largest pores, assuming when there are more roots they start to explore the smaller pores.
+                double RLDtoDistribute = Plant.Root.LengthDensity[l] * 1e6; //Get root length density (mm/mm3) from plant model, assume this equals the number of roots in a square mm area and multiply by 1e6 to convert to roots per m2
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    double RootedPores = Math.Min(Pores[l][c].Number, RLDtoDistribute);
+                    Pores[l][c].RootExplorationProportion = RootedPores / Pores[l][c].Number;
+                    RLDtoDistribute -= RootedPores;
+                }
+            }
+        }
+        
         #endregion
     }
 }

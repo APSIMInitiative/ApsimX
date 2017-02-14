@@ -79,7 +79,7 @@ namespace Models.PMF
         public Structure Structure = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
-        public Leaf Leaf = null;
+        public ICanopy Leaf = null;
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
@@ -151,8 +151,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.CalculateWaterDemand() > 0)
-                    F = Root.WaterUptake / Leaf.CalculateWaterDemand();
+                if (Leaf != null && Leaf.PotentialEP > 0)
+                    F = Root.WaterUptake / Leaf.PotentialEP;
                 else
                     F = 1;
                 return F;
