@@ -1120,51 +1120,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Value>20</Value>
               </Constant>
               <LinearInterpolationFunction>
-                <Name>PostEventValue1</Name>
+                <Name>PostEventValue</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
-                  <Graph>
-                    <Name>Graph</Name>
-                    <Series>
-                      <Name>Series</Name>
-                      <Type>Scatter</Type>
-                      <XAxis>Bottom</XAxis>
-                      <YAxis>Left</YAxis>
-                      <ColourArgb>-65536</ColourArgb>
-                      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                      <Marker>None</Marker>
-                      <MarkerSize>Normal</MarkerSize>
-                      <Line>Solid</Line>
-                      <LineThickness>Normal</LineThickness>
-                      <XFieldName>.Simulations.Replacements.Oats.Structure.MainStemFinalNodeNumber.FLN.AtTerminalSpikelet.PostEventValue.XYPairs.X</XFieldName>
-                      <YFieldName>.Simulations.Replacements.Oats.Structure.MainStemFinalNodeNumber.FLN.AtTerminalSpikelet.PostEventValue.XYPairs.Y</YFieldName>
-                      <ShowInLegend>false</ShowInLegend>
-                      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                      <Cumulative>false</Cumulative>
-                      <CumulativeX>false</CumulativeX>
-                    </Series>
-                    <Axis>
-                      <Type>Left</Type>
-                      <Title>Y</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <Axis>
-                      <Type>Bottom</Type>
-                      <Title>X</Title>
-                      <Inverted>false</Inverted>
-                      <Minimum>NaN</Minimum>
-                      <Maximum>NaN</Maximum>
-                      <Interval>NaN</Interval>
-                    </Axis>
-                    <LegendPosition>BottomRight</LegendPosition>
-                    <DisabledSeries />
-                    <IncludeInDocumentation>false</IncludeInDocumentation>
-                  </Graph>
                   <X>
                     <double>0</double>
                     <double>14</double>
@@ -1174,13 +1132,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>20</double>
                   </Y>
                 </XYPairs>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[This model based on Martin et al]]></MemoText>
+                </Memo>
                 <XProperty>[Structure].LeafTipsAppeared</XProperty>
               </LinearInterpolationFunction>
               <MultiplyFunction>
-                <Name>PostEventValue</Name>
+                <Name>PostEventValueSOn</Name>
                 <Constant>
                   <Name>Slope</Name>
-                  <Value>4</Value>
+                  <Value>1.14</Value>
                 </Constant>
                 <SubtractFunction>
                   <Name>TSC</Name>
@@ -1190,9 +1152,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   </VariableReference>
                   <Constant>
                     <Name>Int</Name>
-                    <Value>2.5</Value>
+                    <Value>3</Value>
                   </Constant>
                 </SubtractFunction>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[This model based on Sonego FCR
+
+note Based on figure rather than Equation (don't match or I am interprting it wrong)
+
+LN(TS) = 0.88FLN + 2.66 ]]></MemoText>
+                </Memo>
               </MultiplyFunction>
               <SetEvent>TerminalSpikelet</SetEvent>
               <ReSetEvent>never</ReSetEvent>
@@ -2917,7 +2887,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 90</Command>
+          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
           <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 16</Command>
         </Cultivar>
         <Cultivar>
@@ -3041,6 +3011,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Phenology.FlagLeafDAS</string>
         <string>[Oats].Phenology.FloweringDAS</string>
         <string>[Oats].Phenology.MaturityDAS</string>
+        <string>[Script].CalcVals.SowMonth</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfSimulation</string>
@@ -3086,9 +3057,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
-      <PredictedTableName>obsPhenology</PredictedTableName>
-      <ObservedTableName>EndTrialReport</ObservedTableName>
-      <FieldNameUsedForMatch>SimulationID</FieldNameUsedForMatch>
+      <PredictedTableName>EndTrialReport</PredictedTableName>
+      <ObservedTableName>obsPhenology</ObservedTableName>
+      <FieldNameUsedForMatch>Sow</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -4321,14 +4292,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LD1: Series</string>
-        <string>LD4: Series</string>
-        <string>ED1: Series</string>
-        <string>LD1: Series1</string>
-        <string>LD4: Series1</string>
-        <string>ED1: Series1</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5239,7 +5203,9 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>Fallow: Sim</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -5445,6 +5411,68 @@ namespace Models
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Oats.Stem.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Cover</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Obs2015</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6278,6 +6306,68 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>Cover</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Obs2016</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Experiment>
   <Experiment>
     <Name>SowingDate2002</Name>
@@ -7032,7 +7122,7 @@ namespace Models
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
@@ -7374,6 +7464,45 @@ namespace Models
               <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
+          <Manager>
+            <Name>CalcVals</Name>
+            <Script>
+              <SowMonth>5</SowMonth>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Oats;
+		[Link] Clock clock;
+		[Description("Sowing Month")]
+
+		public int SowMonth { get; set; }
+
+		[EventSubscribe("DoSowing")]
+		private void OnDoSowing(object sender, EventArgs e)
+		{
+			SowMonth = clock.Today.DayOfYear;
+				
+		}
+						
+			
+	}
+}
+
+
+	   ]]></Code>
+          </Manager>
         </Folder>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -9012,5 +9141,140 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>403</ExplorerWidth>
+  <Graph>
+    <Name>FlagLeaf Prediction</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>PredictedObserved</TableName>
+      <XFieldName>Observed.Oats.Phenology.FlagLeafDAS</XFieldName>
+      <YFieldName>Predicted.Oats.Phenology.FlagLeafDAS</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Flowering Prediction</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>PredictedObserved</TableName>
+      <XFieldName>Observed.Oats.Phenology.FloweringDAS</XFieldName>
+      <YFieldName>Predicted.Oats.Phenology.FloweringDAS</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>FLN</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>PredictedObserved</TableName>
+      <XFieldName>Predicted.Oats.Structure.MainStemFinalNodeNumber</XFieldName>
+      <YFieldName>Observed.Oats.Structure.MainStemFinalNodeNumber</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <ExplorerWidth>399</ExplorerWidth>
 </Simulations>
