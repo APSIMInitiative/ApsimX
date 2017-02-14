@@ -651,8 +651,12 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
           </OrganArbitrator>
           <Root>
             <Name>Root</Name>
@@ -1110,8 +1114,12 @@ zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
           </OrganArbitrator>
           <Root>
             <Name>Root</Name>

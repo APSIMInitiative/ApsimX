@@ -496,7 +496,7 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = Arbitrator.DMSupply * PartitionFraction.Value;
+                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value;
                 if (StructuralFraction != null)
                     demandedDM *= StructuralFraction.Value / DMConversionEfficiency;
                 else

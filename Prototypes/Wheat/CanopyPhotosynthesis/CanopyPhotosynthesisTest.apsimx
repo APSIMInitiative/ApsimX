@@ -24,8 +24,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -789,7 +793,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1041,7 +1045,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrowthGrainDevelopment</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>
@@ -3494,8 +3498,8 @@ namespace Models
           <string>[Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration as MaintenanceRespiration</string>
           <string>[Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration as GrowthRespiration</string>
           <string />
-          <string>[Wheat].Arbitrator.DMSupply as GrossPhotosynthesis</string>
-          <string>[Wheat].Arbitrator.DMSupply - ([Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration ) - ([Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration) as NetPhotosynthesis</string>
+          <string>[Wheat].Arbitrator.DM.TotalFixationSupply as GrossPhotosynthesis</string>
+          <string>[Wheat].Arbitrator.DM.TotalFixationSupply - ([Wheat].Leaf.MaintenanceRespiration +[Wheat].Stem.MaintenanceRespiration +[Wheat].Spike.MaintenanceRespiration + [Wheat].Grain.MaintenanceRespiration ) - ([Wheat].Leaf.GrowthRespiration +[Wheat].Stem.GrowthRespiration +[Wheat].Spike.GrowthRespiration + [Wheat].Grain.GrowthRespiration) as NetPhotosynthesis</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3592,7 +3596,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Wheat.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>Wheat.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
