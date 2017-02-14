@@ -42,12 +42,6 @@ namespace APSIMJobRunner
                         simulation = job.job as Simulation;
                         simulation.Run(null, null);
 
-                        // loop through all our tables and send them to server
-                        foreach (ReportTable table in DataStore.TablesToWrite)
-                        {
-                            // Get a list of tables that have the same name as 'tableName'
-                            table.Columns = table.Flatten();
-                        }
                         SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
                         SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
                         DataStore.TablesToWrite.Clear();

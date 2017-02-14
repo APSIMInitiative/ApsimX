@@ -25,62 +25,8 @@ namespace Models.Report
         /// <summary>The data</summary>
         public List<IReportColumn> Columns = new List<IReportColumn>();
 
-        /// <summary>Merge (copy all columns and values) into the specified table.</summary>
-        /// <param name="table">The table to merge into.</param>
-        public void MergeInto(ReportTable table)
-        {
-            if (table.TableName != TableName)
-                throw new Exception("Cannot merge report tables. The table names don't match");
-
-            // Merge columns that match.
-            Parallel.ForEach(Columns, (column) =>
-            {
-                IReportColumn existingColumn = table.Columns.Find(col => col.Name.Equals(column.Name, StringComparison.CurrentCultureIgnoreCase));
-                if (existingColumn != null)
-                    existingColumn.Values.AddRange(column.Values);
-            });
-
-            // Standardise the number of values in each column
-            int numRows = 0;
-            table.Columns.ForEach(col => numRows = Math.Max(numRows, col.Values.Count));
-
-            // Fill columns that don't have enough rows with nulls.
-            Parallel.ForEach(table.Columns, (column) =>
-            {
-                object valueToAdd = null;
-                if (column is ReportColumnConstantValue)
-                    valueToAdd = column.Values[0];
-                while (column.Values.Count < numRows)
-                    column.Values.Add(valueToAdd);
-            });
-
-            // Add new columns to the end of the specified table.
-            Parallel.ForEach(Columns, (column) =>
-            {
-                IReportColumn existingColumn = table.Columns.Find(col => col.Name.Equals(column.Name, StringComparison.CurrentCultureIgnoreCase));
-                if (existingColumn == null)
-                {
-                    // Move values down in new colulmn so that the number of values matches
-                    // the number of rows.
-                    while (column.Values.Count < numRows)
-                        column.Values.Insert(0, null);
-                    lock (table)
-                    {
-                        table.Columns.Add(column);
-                    }
-                }
-            });
-
-            // Ensure we have the same number of rows in each column.
-            foreach (IReportColumn column in table.Columns)
-            {
-                if (column.Values.Count != table.Columns[0].Values.Count)
-                    throw new Exception("Uneven number of rows found while merging report tables.");
-            }
-        }
-
         /// <summary>Flatten the table i.e. turn arrays and structures into a flat table.</summary>
-        public List<IReportColumn> Flatten()
+        public void Flatten()
         {
             List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
             foreach (IReportColumn column in Columns)
@@ -89,7 +35,7 @@ namespace Models.Report
                     FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
             }
 
-            return flattenedColumns;
+            Columns = flattenedColumns;
         }
 
         /// <summary>

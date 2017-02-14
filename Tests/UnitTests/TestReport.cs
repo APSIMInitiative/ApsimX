@@ -25,36 +25,6 @@
         }
 
         [Test]
-        public void TestMergeInto()
-        {
-            // Setup first table.
-
-            ReportTable table1 = new ReportTable() { SimulationName = "Sim1", TableName = "table1" };
-            table1.Columns.Add(new ReportColumnWithValues("Col1", new object[] { 1, 2 }));
-            table1.Columns.Add(new ReportColumnWithValues("Col2", new object[] { 11, 22 }));
-            table1.Columns.Add(new ReportColumnConstantValue("Col3", 1234));  // new constant value column not in table2
-
-            // Setup second table.
-            ReportTable table2 = new ReportTable() { SimulationName = "Sim2", TableName = "table1" };
-            table2.Columns.Add(new ReportColumnWithValues("Col1", new object[] { 200, 201, 202 }));
-            table2.Columns.Add(new ReportColumnWithValues("Col2", new object[] { 211, 222, 233 }));
-            table2.Columns.Add(new ReportColumnWithValues("Col4", new object[] { 244, 255, 266 }));  // new column not in table1
-
-            table2.MergeInto(table1);
-
-            Assert.AreEqual(table1.Columns.Count, 4);
-            Assert.AreEqual(table1.Columns[0].Name, "Col1");
-            Assert.AreEqual(table1.Columns[1].Name, "Col2");
-            Assert.AreEqual(table1.Columns[2].Name, "Col3");
-            Assert.AreEqual(table1.Columns[3].Name, "Col4");
-
-            Assert.AreEqual(table1.Columns[0].Values, new object[] { 1, 2, 200, 201, 202 });
-            Assert.AreEqual(table1.Columns[1].Values, new object[] { 11, 22, 211, 222, 233 });
-            Assert.AreEqual(table1.Columns[2].Values, new object[] { 1234, 1234, 1234, 1234, 1234 });
-            Assert.AreEqual(table1.Columns[3].Values, new object[] { null, null, 244, 255, 266 });
-        }
-
-        [Test]
         public void TestFlatten()
         {
             Record[] records = new Record[5];
@@ -112,50 +82,50 @@
             table.Columns.Add(new ReportColumnWithValues("Col2", records));
             table.Columns.Add(new ReportColumnWithValues("Col3", new object[] { 6, 7, 8, 9, 10 }));
 
-            List<IReportColumn> columns = table.Flatten();
+            table.Flatten();
 
-            Assert.AreEqual(columns.Count, 18);
-            Assert.AreEqual(columns[0].Name, "Col1");
-            Assert.AreEqual(columns[1].Name, "Col2.date");
-            Assert.AreEqual(columns[2].Name, "Col2.pairs(1).a");
-            Assert.AreEqual(columns[3].Name, "Col2.pairs(1).b");
-            Assert.AreEqual(columns[4].Name, "Col2.pairs(2).a");
-            Assert.AreEqual(columns[5].Name, "Col2.pairs(2).b");
-            Assert.AreEqual(columns[6].Name, "Col2.pairs(3).a");
-            Assert.AreEqual(columns[7].Name, "Col2.pairs(3).b");
-            Assert.AreEqual(columns[8].Name, "Col2.pairs(4).a");
-            Assert.AreEqual(columns[9].Name, "Col2.pairs(4).b");
-            Assert.AreEqual(columns[10].Name, "Col2.pairs(5).a");
-            Assert.AreEqual(columns[11].Name, "Col2.pairs(5).b");
-            Assert.AreEqual(columns[12].Name, "Col2.pairs(6).a");
-            Assert.AreEqual(columns[13].Name, "Col2.pairs(6).b");
-            Assert.AreEqual(columns[14].Name, "Col2.values(1)");
-            Assert.AreEqual(columns[15].Name, "Col2.values(2)");
-            Assert.AreEqual(columns[16].Name, "Col2.values(3)");
-            Assert.AreEqual(columns[17].Name, "Col3");
+            Assert.AreEqual(table.Columns.Count, 18);
+            Assert.AreEqual(table.Columns[0].Name, "Col1");
+            Assert.AreEqual(table.Columns[1].Name, "Col2.date");
+            Assert.AreEqual(table.Columns[2].Name, "Col2.pairs(1).a");
+            Assert.AreEqual(table.Columns[3].Name, "Col2.pairs(1).b");
+            Assert.AreEqual(table.Columns[4].Name, "Col2.pairs(2).a");
+            Assert.AreEqual(table.Columns[5].Name, "Col2.pairs(2).b");
+            Assert.AreEqual(table.Columns[6].Name, "Col2.pairs(3).a");
+            Assert.AreEqual(table.Columns[7].Name, "Col2.pairs(3).b");
+            Assert.AreEqual(table.Columns[8].Name, "Col2.pairs(4).a");
+            Assert.AreEqual(table.Columns[9].Name, "Col2.pairs(4).b");
+            Assert.AreEqual(table.Columns[10].Name, "Col2.pairs(5).a");
+            Assert.AreEqual(table.Columns[11].Name, "Col2.pairs(5).b");
+            Assert.AreEqual(table.Columns[12].Name, "Col2.pairs(6).a");
+            Assert.AreEqual(table.Columns[13].Name, "Col2.pairs(6).b");
+            Assert.AreEqual(table.Columns[14].Name, "Col2.values(1)");
+            Assert.AreEqual(table.Columns[15].Name, "Col2.values(2)");
+            Assert.AreEqual(table.Columns[16].Name, "Col2.values(3)");
+            Assert.AreEqual(table.Columns[17].Name, "Col3");
 
-            Assert.AreEqual(columns[0].Values, new double[] { 1, 2, 3, 4, 5 });
-            Assert.AreEqual(columns[1].Values, new DateTime[] { new DateTime(2017, 1, 1),
-                                                                new DateTime(2017, 1, 2),
-                                                                new DateTime(2017, 1, 1),
-                                                                new DateTime(2017, 1, 2),
-                                                                new DateTime(2017, 1, 3)});
-            Assert.AreEqual(columns[2].Values,  new double[] {   10,   16,   20,   32,   40 });     // Col2.pairs(1).a
-            Assert.AreEqual(columns[3].Values,  new double[] {   11,   17,   21,   33,   41 });     // Col2.pairs(1).b
-            Assert.AreEqual(columns[4].Values,  new double[] {   12,   18,   22,   34,   42 });     // Col2.pairs(2).a
-            Assert.AreEqual(columns[5].Values,  new double[] {   13,   19,   23,   35,   43 });     // Col2.pairs(2).b
-            Assert.AreEqual(columns[6].Values,  new double[] {   14,   20,   24,   36,   44 });     // Col2.pairs(3).a
-            Assert.AreEqual(columns[7].Values,  new double[] {   15,   21,   25,   37,   45 });     // Col2.pairs(3).b
-            Assert.AreEqual(columns[8].Values,  new object[] { null,   22,   26,   38,   46 });     // Col2.pairs(4).a
-            Assert.AreEqual(columns[9].Values,  new object[] { null,   23,   27,   39,   47 });     // Col2.pairs(4).b
-            Assert.AreEqual(columns[10].Values, new object[] { null, null,   28, null, null });     // Col2.pairs(5).a
-            Assert.AreEqual(columns[11].Values, new object[] { null, null,   29, null, null });     // Col2.pairs(5).b
-            Assert.AreEqual(columns[12].Values, new object[] { null, null,   30, null, null });     // Col2.pairs(6).a
-            Assert.AreEqual(columns[13].Values, new object[] { null, null,   31, null, null });     // Col2.pairs(6).b
-            Assert.AreEqual(columns[14].Values, new object[] {  100,  102,  200,  202,  302 });     // Col2.values(1)
-            Assert.AreEqual(columns[15].Values, new object[] {  101,  103,  201,  203,  303 });     // Col2.values(2)
-            Assert.AreEqual(columns[16].Values, new object[] { null, null, null,  204, null });     // Col2.values(3)
-            Assert.AreEqual(columns[17].Values, new object[] {    6,    7,    8,    9,   10 });     // Col3
+            Assert.AreEqual(table.Columns[0].Values, new double[] { 1, 2, 3, 4, 5 });
+            Assert.AreEqual(table.Columns[1].Values, new DateTime[] { new DateTime(2017, 1, 1),
+                                                                      new DateTime(2017, 1, 2),
+                                                                      new DateTime(2017, 1, 1),
+                                                                      new DateTime(2017, 1, 2),
+                                                                      new DateTime(2017, 1, 3)});
+            Assert.AreEqual(table.Columns[2].Values,  new double[] {   10,   16,   20,   32,   40 });     // Col2.pairs(1).a
+            Assert.AreEqual(table.Columns[3].Values,  new double[] {   11,   17,   21,   33,   41 });     // Col2.pairs(1).b
+            Assert.AreEqual(table.Columns[4].Values,  new double[] {   12,   18,   22,   34,   42 });     // Col2.pairs(2).a
+            Assert.AreEqual(table.Columns[5].Values,  new double[] {   13,   19,   23,   35,   43 });     // Col2.pairs(2).b
+            Assert.AreEqual(table.Columns[6].Values,  new double[] {   14,   20,   24,   36,   44 });     // Col2.pairs(3).a
+            Assert.AreEqual(table.Columns[7].Values,  new double[] {   15,   21,   25,   37,   45 });     // Col2.pairs(3).b
+            Assert.AreEqual(table.Columns[8].Values,  new object[] { null,   22,   26,   38,   46 });     // Col2.pairs(4).a
+            Assert.AreEqual(table.Columns[9].Values,  new object[] { null,   23,   27,   39,   47 });     // Col2.pairs(4).b
+            Assert.AreEqual(table.Columns[10].Values, new object[] { null, null,   28, null, null });     // Col2.pairs(5).a
+            Assert.AreEqual(table.Columns[11].Values, new object[] { null, null,   29, null, null });     // Col2.pairs(5).b
+            Assert.AreEqual(table.Columns[12].Values, new object[] { null, null,   30, null, null });     // Col2.pairs(6).a
+            Assert.AreEqual(table.Columns[13].Values, new object[] { null, null,   31, null, null });     // Col2.pairs(6).b
+            Assert.AreEqual(table.Columns[14].Values, new object[] {  100,  102,  200,  202,  302 });     // Col2.values(1)
+            Assert.AreEqual(table.Columns[15].Values, new object[] {  101,  103,  201,  203,  303 });     // Col2.values(2)
+            Assert.AreEqual(table.Columns[16].Values, new object[] { null, null, null,  204, null });     // Col2.values(3)
+            Assert.AreEqual(table.Columns[17].Values, new object[] {    6,    7,    8,    9,   10 });     // Col3
         }
     }
 }

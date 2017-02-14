@@ -802,14 +802,12 @@ namespace Models
         private void WriteTables(ReportTable[] tables)
         {
             // Insert simulationID column into all tables.
-            List<string> simulationNames = new List<string>();
             foreach (ReportTable table in tables)
             {
-                simulationNames.Add(table.SimulationName);
                 int simulationID = GetSimulationID(table.SimulationName);
                 table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
             }
-            string allNames = StringUtilities.BuildString(simulationNames.ToArray(), ";");
+
             // Get a list of all names and datatypes for each field in this table.
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();
