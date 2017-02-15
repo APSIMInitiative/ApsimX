@@ -69,11 +69,12 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           </Constant>
         </DivideFunction>
         <AirTemperatureFunction>
-          <Name>ThermalTimeBT</Name>
+          <Name>ThermalTimeB8</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
               <double>0</double>
+              <double>7</double>
               <double>8</double>
               <double>18</double>
               <double>30</double>
@@ -81,7 +82,8 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             </X>
             <Y>
               <double>0</double>
-              <double>2</double>
+              <double>1</double>
+              <double>8</double>
               <double>18</double>
               <double>30</double>
               <double>0</double>
@@ -645,7 +647,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookupValue>
         </PhaseLookup>
         <AirTemperatureFunction>
-          <Name>ThermalTime</Name>
+          <Name>ThermalTimeB0</Name>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
@@ -666,6 +668,56 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
           </Memo>
         </AirTemperatureFunction>
+        <MultiplyFunction>
+          <Name>ThermalTime</Name>
+          <AirTemperatureFunction>
+            <Name>ThermalTimeB0</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>15</double>
+                <double>30</double>
+                <double>40</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>15</double>
+                <double>30</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+            </Memo>
+          </AirTemperatureFunction>
+          <MaximumFunction>
+            <Name>MaximumFunction</Name>
+            <Constant>
+              <Name>Zero</Name>
+              <Value>0</Value>
+            </Constant>
+            <DivideFunction>
+              <Name>DivideFunction</Name>
+              <SubtractFunction>
+                <Name>PP7</Name>
+                <VariableReference>
+                  <Name>Photoperiod</Name>
+                  <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>Seven</Name>
+                  <Value>7</Value>
+                </Constant>
+              </SubtractFunction>
+              <Constant>
+                <Name>Nine</Name>
+                <Value>0</Value>
+              </Constant>
+            </DivideFunction>
+          </MaximumFunction>
+        </MultiplyFunction>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
@@ -2874,7 +2926,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
           <Command>[Phenology].Vegetative.Target.Value = 180</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
-          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 15</Command>
+          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 17</Command>
         </Cultivar>
         <Cultivar>
           <Name>Drummond</Name>
@@ -2887,7 +2939,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
+          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 82</Command>
           <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 16</Command>
         </Cultivar>
         <Cultivar>
@@ -5231,27 +5283,6 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
-      <Series>
-        <Name>Series1</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>Observations</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -7086,6 +7117,21 @@ namespace Models
           <Longitude>0</Longitude>
           <Area>0</Area>
         </Soil>
+        <Report>
+          <Name>EnviroReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Weather].MeanT</string>
+            <string>[Weather].Radn</string>
+            <string>[Oats].Phenology.ThermalTime</string>
+            <string>[Oats].Structure.LeafTipsAppeared</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
