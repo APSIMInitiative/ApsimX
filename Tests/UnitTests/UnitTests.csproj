@@ -132,6 +132,7 @@
     <Compile Include="FileFormatTests.cs" />
     <Compile Include="LinksTests.cs" />
     <Compile Include="TestModelNode.cs" />
+    <Compile Include="TestReport.cs" />
     <Compile Include="TestSoils.cs" />
     <Compile Include="TestStats.cs" />
   </ItemGroup>
