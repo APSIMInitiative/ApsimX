@@ -3594,114 +3594,114 @@ namespace Models
           <RegrStats>
             <Name>Chicory.AboveGround.Wt</Name>
             <n>1550</n>
-            <Slope>0.698127523803545</Slope>
-            <Intercept>59.237497819132145</Intercept>
-            <SEslope>0.018955266200253264</SEslope>
-            <SEintercept>3.1825013669679127</SEintercept>
-            <R2>0.46702815116083474</R2>
-            <RMSE>80.308721631334635</RMSE>
-            <NSE>0.31870399942778482</NSE>
-            <ME>17.932394990993643</ME>
-            <MAE>58.781178385756185</MAE>
-            <RSR>0.82514026369181281</RSR>
+            <Slope>0.75267097158862273</Slope>
+            <Intercept>52.23734021281237</Intercept>
+            <SEslope>0.018776618224313247</SEslope>
+            <SEintercept>3.1525071995619407</SEintercept>
+            <R2>0.50932705001150325</R2>
+            <RMSE>77.999735340739548</RMSE>
+            <NSE>0.35731720739730422</NSE>
+            <ME>18.395397815032879</ME>
+            <MAE>56.5722732901778</MAE>
+            <RSR>0.80141634531805761</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chicory.AboveGroundLive.NConc</Name>
             <n>884</n>
-            <Slope>0.28780648517297663</Slope>
-            <Intercept>0.017305561510014736</Intercept>
-            <SEslope>0.034504082630187262</SEslope>
-            <SEintercept>0.0012364009859184664</SEintercept>
-            <R2>0.073116711125453482</R2>
-            <RMSE>0.012296668000650726</RMSE>
-            <NSE>-1.5249878838637572</NSE>
-            <ME>-0.0076125910670660716</ME>
-            <MAE>0.010277812658837345</MAE>
-            <RSR>1.5881220238785696</RSR>
+            <Slope>0.26357927734308689</Slope>
+            <Intercept>0.019217632322669948</Intercept>
+            <SEslope>0.039736662915415673</SEslope>
+            <SEintercept>0.0014239024909691695</SEintercept>
+            <R2>0.047514850736316561</R2>
+            <RMSE>0.012599809782998878</RMSE>
+            <NSE>-1.6510161939575609</NSE>
+            <ME>-0.0065481792805793162</ME>
+            <MAE>0.010420714365663461</MAE>
+            <RSR>1.627272966302926</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chicory.Leaf.LAI</Name>
             <n>72</n>
-            <Slope>0.21507462396765623</Slope>
-            <Intercept>2.4410735894486439</Intercept>
-            <SEslope>0.01861154032783988</SEslope>
-            <SEintercept>0.12920439034119147</SEintercept>
-            <R2>0.6560884698886984</R2>
-            <RMSE>4.2894090576262283</RMSE>
-            <NSE>0.30290436977286272</NSE>
-            <ME>-1.2237647947290375</ME>
-            <MAE>2.4736669787518806</MAE>
-            <RSR>0.82910418312416134</RSR>
+            <Slope>0.22070596314443805</Slope>
+            <Intercept>2.4436216137301621</Intercept>
+            <SEslope>0.018818040484264251</SEslope>
+            <SEintercept>0.13063794857152566</SEintercept>
+            <R2>0.6627415181527625</R2>
+            <RMSE>4.25570899586063</RMSE>
+            <NSE>0.313814908500041</NSE>
+            <ME>-1.1949238914050366</ME>
+            <MAE>2.4635837793303894</MAE>
+            <RSR>0.82259026435212823</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chicory.LeafFraction</Name>
             <n>143</n>
-            <Slope>0.96065590519780864</Slope>
-            <Intercept>0.027382655368677455</Intercept>
-            <SEslope>0.068773025907867852</SEslope>
-            <SEintercept>0.0637117918624529</SEintercept>
-            <R2>0.58050564973094676</R2>
-            <RMSE>0.096744200538789613</RMSE>
-            <NSE>0.326021840610203</NSE>
-            <ME>-0.0087698904845247179</ME>
-            <MAE>0.052897530391217716</MAE>
-            <RSR>0.81808619680816652</RSR>
+            <Slope>0.78894703609687311</Slope>
+            <Intercept>0.2013429311899767</Intercept>
+            <SEslope>0.05447539616401146</SEslope>
+            <SEintercept>0.050466371898129636</SEintercept>
+            <R2>0.59800036523157574</R2>
+            <RMSE>0.080524036757347386</RMSE>
+            <NSE>0.53307511569243582</NSE>
+            <ME>0.0074103475754954112</ME>
+            <MAE>0.041965078740745433</MAE>
+            <RSR>0.68092560190258111</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chicory.Population</Name>
             <n>252</n>
-            <Slope>0.49621078993927564</Slope>
-            <Intercept>95.871706572798828</Intercept>
-            <SEslope>0.031711456581741355</SEslope>
-            <SEintercept>3.5317940692992873</SEintercept>
-            <R2>0.49479635552201484</R2>
-            <RMSE>58.5338610695292</RMSE>
-            <NSE>-0.31937555620796232</NSE>
-            <ME>45.981161225955894</ME>
-            <MAE>49.702642846292555</MAE>
-            <RSR>1.1463594283301475</RSR>
+            <Slope>0.53290936716400006</Slope>
+            <Intercept>88.352733963640787</Intercept>
+            <SEslope>0.035585549127106347</SEslope>
+            <SEintercept>3.9632626472363439</SEintercept>
+            <R2>0.47286731789977521</R2>
+            <RMSE>56.220922848679344</RMSE>
+            <NSE>-0.21716660751336248</NSE>
+            <ME>42.096470563753442</ME>
+            <MAE>46.4831783993679</MAE>
+            <RSR>1.1010615701644806</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Chicory.StemFraction</Name>
             <n>200</n>
-            <Slope>0.91332272010821058</Slope>
-            <Intercept>0.068328166351316069</Intercept>
-            <SEslope>0.098600898671423715</SEslope>
-            <SEintercept>0.014222474713445971</SEintercept>
-            <R2>0.3023253330096406</R2>
-            <RMSE>0.16441683295116949</RMSE>
-            <NSE>-1.2321980488064757</NSE>
-            <ME>0.060245510001406676</ME>
-            <MAE>0.10528919707381164</MAE>
-            <RSR>1.490314416008395</RSR>
+            <Slope>0.76450644835012049</Slope>
+            <Intercept>0.059176247982893462</Intercept>
+            <SEslope>0.082121922903399383</SEslope>
+            <SEintercept>0.011845500270796798</SEintercept>
+            <R2>0.30444574439462591</R2>
+            <RMSE>0.13501079252230838</RMSE>
+            <NSE>-0.50514084214561228</NSE>
+            <ME>0.037216474291542137</ME>
+            <MAE>0.085840629462366744</MAE>
+            <RSR>1.223770868232646</RSR>
           </RegrStats>
           <RegrStats>
             <Name>HarvestedWt</Name>
             <n>962</n>
-            <Slope>0.7049900732180493</Slope>
-            <Intercept>58.703455899879</Intercept>
-            <SEslope>0.024379748992935314</SEslope>
-            <SEintercept>3.8481148893009713</SEintercept>
-            <R2>0.4655368580824587</R2>
-            <RMSE>75.774687771167137</RMSE>
-            <NSE>0.29073778719104915</NSE>
-            <ME>20.445087411899049</ME>
-            <MAE>55.795046561468475</MAE>
-            <RSR>0.84173923159221764</RSR>
+            <Slope>0.7562476015578915</Slope>
+            <Intercept>56.671741366385461</Intercept>
+            <SEslope>0.025123411878112102</SEslope>
+            <SEintercept>3.9603944907127824</SEintercept>
+            <R2>0.48555504076585043</R2>
+            <RMSE>77.276958862779281</RMSE>
+            <NSE>0.25644831657308809</NSE>
+            <ME>25.060655830628555</ME>
+            <MAE>58.028317990990004</MAE>
+            <RSR>0.86184613515352426</RSR>
           </RegrStats>
           <RegrStats>
             <Name>RotationHarvestedWt</Name>
             <n>1117</n>
-            <Slope>0.70107641754731576</Slope>
-            <Intercept>69.687129359305928</Intercept>
-            <SEslope>0.022274273241783306</SEslope>
-            <SEintercept>3.7987950675284594</SEintercept>
-            <R2>0.47047424412524042</R2>
-            <RMSE>82.906305324524382</RMSE>
-            <NSE>0.2757625346999486</NSE>
-            <ME>27.8427037225303</ME>
-            <MAE>62.221041154729122</MAE>
-            <RSR>0.85064039874736252</RSR>
+            <Slope>0.741933130666256</Slope>
+            <Intercept>68.544958032839816</Intercept>
+            <SEslope>0.022885613456964039</SEslope>
+            <SEintercept>3.9030568842351863</SEintercept>
+            <R2>0.48522719932735336</R2>
+            <RMSE>85.00268516381017</RMSE>
+            <NSE>0.23867313625938236</NSE>
+            <ME>32.419805796445644</ME>
+            <MAE>64.122009188143622</MAE>
+            <RSR>0.8721498047622086</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
