@@ -12,6 +12,27 @@
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>SW90cm</Name>
+            <n>96</n>
+            <Slope>0.97540282329578987</Slope>
+            <Intercept>21.479325933894017</Intercept>
+            <SEslope>0.054261968199726604</SEslope>
+            <SEintercept>13.788135218620385</SEintercept>
+            <R2>0.774650448260286</R2>
+            <RMSE>29.610436599139369</RMSE>
+            <NSE>0.62083500059262264</NSE>
+            <ME>15.342046812487887</ME>
+            <MAE>22.727362678369573</MAE>
+            <RSR>0.61254825442317906</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>PredictedObserved</POName>
+      </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObservedWarraBlock1</ObservedTableName>
       <FieldNameUsedForMatch>Zone</FieldNameUsedForMatch>
@@ -2908,6 +2929,48 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Graph>
+      <Name>WheatWaterStress</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.SWStress.Photo</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Accumulated Water Changes (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
   </Simulation>
   <Folder>
     <Name>IdenticalZones</Name>
@@ -8385,12 +8448,64 @@ namespace Models
 }
 ]]></Code>
       </Manager>
+      <Manager>
+        <Name>Calculations</Name>
+        <Script>
+          <AverageSoilWater>0</AverageSoilWater>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using Models.Soils;
+using Models.Zones;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Slurp;
+		[Link] Clock Clock;
+		private List<IModel> Zones;
+		private Soil Soil;
+		public double AverageSoilWater { get; set; }
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			Zones = Apsim.FindAll(this, typeof(RectangularZone));
+			AverageSoilWater = 0;
+		}
+		
+		[EventSubscribe("EndOfDay")]
+		private void OnEndOfDay(object sender, EventArgs e)
+		{
+			double TotalArea = 0;
+			double TotalWater = 0;
+			foreach (Zone z in Zones)
+			{
+				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
+				TotalArea += z.Area;
+				for (int i = 0; i <= 4; i++)
+					TotalWater += Soil.Water[i] * z.Area;					
+			}
+			AverageSoilWater = TotalWater / TotalArea;
+		}
+	}
+}
+	   ]]></Code>
+      </Manager>
       <RectangularZone>
         <Name>TreeRow</Name>
         <MicroClimate>
           <Name>MicroClimate</Name>
-          <a_interception>0</a_interception>
-          <b_interception>0</b_interception>
+          <a_interception>0.2</a_interception>
+          <b_interception>1</b_interception>
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
@@ -8444,6 +8559,7 @@ namespace Models
             <string>[Slurp].Leaf.LAI</string>
             <string>[Slurp].Leaf.Height</string>
             <string>[Slurp].Leaf.PotentialBiomass.Value</string>
+            <string>[Slurp].Leaf.FRGRFunction.Value</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSoilWater</string>
             <string>[Soil].NO3N</string>
@@ -8451,6 +8567,8 @@ namespace Models
             <string>[Slurp].Leaf.Fw</string>
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
+            <string>[Calculations].Script.AverageSoilWater</string>
+            <string>[SurfaceOrganicMatter].Cover</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -8803,7 +8921,7 @@ This is important in SLURP as it is set for each species to represent their diff
             </Constant>
             <Constant>
               <Name>Photosynthesis</Name>
-              <Value>5</Value>
+              <Value>0</Value>
               <Units>g/m2/d</Units>
             </Constant>
             <AirTemperatureFunction>
@@ -8853,10 +8971,10 @@ This is important in SLURP as it is set for each species to represent their diff
                   <IncludeInDocumentation>false</IncludeInDocumentation>
                 </Graph>
                 <X>
-                  <double>0</double>
-                  <double>10</double>
+                  <double>5</double>
+                  <double>20</double>
                   <double>25</double>
-                  <double>40</double>
+                  <double>35</double>
                 </X>
                 <Y>
                   <double>0</double>
@@ -9028,20 +9146,20 @@ This is important in SLURP as it is set for each species to represent their diff
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
+                <double>0.06</double>
                 <double>0.05</double>
                 <double>0.05</double>
-                <double>0.03</double>
-                <double>0.015</double>
-                <double>0.01</double>
-                <double>0.005</double>
-                <double>0.005</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
               </KL>
               <XF>
                 <double>1</double>
@@ -9113,11 +9231,11 @@ This is important in SLURP as it is set for each species to represent their diff
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -9150,11 +9268,11 @@ This is important in SLURP as it is set for each species to represent their diff
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -9462,7 +9580,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Slurp.Leaf.CoverTotal</YFieldName>
+            <YFieldName>Slurp.Leaf.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9541,6 +9659,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -9593,17 +9713,17 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
+                <double>0.04</double>
+                <double>0.04</double>
                 <double>0.03</double>
-                <double>0.03</double>
-                <double>0.015</double>
-                <double>0.01</double>
+                <double>0.02</double>
                 <double>0.005</double>
                 <double>0.005</double>
                 <double>0.005</double>
@@ -9678,11 +9798,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -10014,6 +10134,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -10066,19 +10188,19 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
-                <double>0.015</double>
-                <double>0.015</double>
-                <double>0.005</double>
-                <double>0.005</double>
-                <double>0.005</double>
-                <double>0.005</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
                 <double>0</double>
               </KL>
               <XF>
@@ -10151,11 +10273,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -10188,11 +10310,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -10487,6 +10609,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -10539,19 +10663,19 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.02</double>
                 <double>0.01</double>
                 <double>0.01</double>
-                <double>0.005</double>
-                <double>0.005</double>
-                <double>0.0025</double>
-                <double>0.0025</double>
+                <double>0.01</double>
                 <double>0</double>
               </KL>
               <XF>
@@ -10624,11 +10748,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -10661,11 +10785,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -10960,6 +11084,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -11012,15 +11138,15 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
-                <double>0.01</double>
-                <double>0.01</double>
+                <double>0.03</double>
+                <double>0.02</double>
                 <double>0.01</double>
                 <double>0.01</double>
                 <double>0.005</double>
@@ -11097,11 +11223,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -11134,11 +11260,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -11433,6 +11559,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -11485,15 +11613,15 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
-                <double>0.005</double>
-                <double>0.005</double>
+                <double>0.03</double>
+                <double>0.02</double>
                 <double>0.005</double>
                 <double>0</double>
                 <double>0</double>
@@ -11570,11 +11698,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -11607,11 +11735,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -11912,6 +12040,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -11964,11 +12094,11 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.06</double>
@@ -12049,11 +12179,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -12086,11 +12216,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -12391,6 +12521,8 @@ namespace Models
             <string>[Slurp].Leaf.Fn</string>
             <string>[Weather].Rain</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].SWStress.Photo</string>
+            <string>[Wheat].Root.RootDepth</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -12443,11 +12575,11 @@ namespace Models
               <LL>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.19</double>
-                <double>0.19</double>
-                <double>0.2</double>
-                <double>0.23</double>
-                <double>0.25</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.06</double>
@@ -12528,11 +12660,11 @@ namespace Models
             <LL15>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.19</double>
-              <double>0.19</double>
-              <double>0.2</double>
-              <double>0.23</double>
-              <double>0.25</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
+              <double>0.18</double>
             </LL15>
             <DUL>
               <double>0.4</double>
@@ -12565,11 +12697,11 @@ namespace Models
           <SoilWater>
             <Name>SoilWater</Name>
             <SummerDate>1-Nov</SummerDate>
-            <SummerU>6</SummerU>
-            <SummerCona>3.5</SummerCona>
+            <SummerU>5</SummerU>
+            <SummerCona>5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
-            <WinterU>6</WinterU>
-            <WinterCona>3.5</WinterCona>
+            <WinterU>5</WinterU>
+            <WinterCona>5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.12</Salb>
@@ -12829,7 +12961,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -12838,28 +12970,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Root.Zones1.Depth</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series 2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Root.Zones7.Depth</YFieldName>
+          <YFieldName>Wheat.Root.RootDepth</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13784,6 +13895,181 @@ namespace Models
           <TableName>ObservedWarraBlock1</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>BiomassWt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated Water Changes (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>AverageSoilWater</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Calculations.Script.AverageSoilWater</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedWarraBlock1</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>AverageSoilWater</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-16747854</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Slurp.Leaf.Fw</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated Water Changes (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>WheatWaterStress</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Wheat.SWStress.Photo</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Accumulated Water Changes (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilNO3</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.NO3N(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
