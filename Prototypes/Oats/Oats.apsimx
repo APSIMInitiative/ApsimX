@@ -50,24 +50,6 @@ FLN = MinLeafNumber + VernalLeaves + PhotoLeaves
 
 Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]></MemoText>
         </Memo>
-        <DivideFunction>
-          <Name>MeanTemp</Name>
-          <AddFunction>
-            <Name>AddFunction</Name>
-            <VariableReference>
-              <Name>MaxT</Name>
-              <VariableName>[Weather].MaxT</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>MinT</Name>
-              <VariableName>[Weather].MinT</VariableName>
-            </VariableReference>
-          </AddFunction>
-          <Constant>
-            <Name>Two</Name>
-            <Value>2</Value>
-          </Constant>
-        </DivideFunction>
         <AirTemperatureFunction>
           <Name>ThermalTimeB8</Name>
           <XYPairs>
@@ -112,126 +94,6 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <maxt_soil_surface>20</maxt_soil_surface>
           <mint_soil_surface>10</mint_soil_surface>
         </SoilTemperatureFunction>
-        <MultiplyFunction>
-          <Name>DailyVernalisation</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 18<sup>o</sup>C.]]></MemoText>
-          </Memo>
-          <VariableReference>
-            <Name>DeltaHaunStage</Name>
-            <VariableName>[Structure].DeltaHaunStage</VariableName>
-          </VariableReference>
-          <AirTemperatureFunction>
-            <Name>TempResponseProfile</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>2</double>
-                  <double>3</double>
-                  <double>4</double>
-                  <double>5</double>
-                  <double>6</double>
-                  <double>7</double>
-                  <double>8</double>
-                  <double>9</double>
-                  <double>10</double>
-                  <double>11</double>
-                  <double>12</double>
-                  <double>13</double>
-                  <double>14</double>
-                  <double>15</double>
-                  <double>16</double>
-                  <double>17</double>
-                  <double>18</double>
-                  <double>19</double>
-                  <double>20</double>
-                  <double>30</double>
-                  <double>32</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1.204991167</double>
-                  <double>1.037145509</double>
-                  <double>0.892679412</double>
-                  <double>0.768336291</double>
-                  <double>0.661313174</double>
-                  <double>0.569197524</double>
-                  <double>0.489912849</double>
-                  <double>0.421671897</double>
-                  <double>0.362936365</double>
-                  <double>0.312382224</double>
-                  <double>0.268869872</double>
-                  <double>0.231418444</double>
-                  <double>0.1991837</double>
-                  <double>0.171439</double>
-                  <double>0.147558914</double>
-                  <double>0.127005135</double>
-                  <double>0.109314332</double>
-                  <double>0.094087718</double>
-                  <double>0.080982049</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>-0.5</double>
-                </Y>
-              </XYPairs>
-              <X>
-                <double>0</double>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-                <double>5</double>
-                <double>6</double>
-                <double>7</double>
-                <double>8</double>
-                <double>9</double>
-                <double>10</double>
-                <double>11</double>
-                <double>12</double>
-                <double>13</double>
-                <double>14</double>
-                <double>15</double>
-                <double>16</double>
-                <double>17</double>
-                <double>18</double>
-                <double>19</double>
-                <double>20</double>
-                <double>30</double>
-                <double>32</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>2.2</double>
-                <double>2</double>
-                <double>1.8</double>
-                <double>1.5</double>
-                <double>1.3</double>
-                <double>1.2</double>
-                <double>1</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.5</double>
-                <double>0.4</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.156</double>
-                <double>0</double>
-                <double>0</double>
-                <double>-0.5</double>
-              </Y>
-            </XYPairs>
-          </AirTemperatureFunction>
-        </MultiplyFunction>
         <PhotoperiodFunction>
           <Name>Photoperiod</Name>
           <Twilight>-6</Twilight>
@@ -285,58 +147,6 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
-        <MinimumFunction>
-          <Name>Vrn1</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Vrn1 accumulation begins when Vrn4 experssion is down regulated to zero and stops, assuming vernalisation saturation, at a value of 1]]></MemoText>
-          </Memo>
-          <Constant>
-            <Name>Saturation</Name>
-            <Value>1</Value>
-            <Units>Relative Experssion</Units>
-          </Constant>
-          <AccumulateFunction>
-            <Name>CurrentExpression</Name>
-            <LessThanFunction>
-              <Name>Vernalisation</Name>
-              <VariableReference>
-                <Name>If_Vrn4</Name>
-                <VariableName>[Phenology].Vrn4.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>IsLessThanLag</Name>
-                <VariableName>[Phenology].VernLag.Value</VariableName>
-              </VariableReference>
-              <Constant>
-                <Name>Return_Zero</Name>
-                <Value>0</Value>
-              </Constant>
-              <VariableReference>
-                <Name>elseReturn_Vernalisation</Name>
-                <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
-              </VariableReference>
-            </LessThanFunction>
-            <StartStageName>Germination</StartStageName>
-            <EndStageName>TerminalSpikelet</EndStageName>
-          </AccumulateFunction>
-        </MinimumFunction>
-        <MinimumFunction>
-          <Name>Vrn4</Name>
-          <VariableReference>
-            <Name>MaxExpression</Name>
-            <VariableName>[Phenology].VernLag.Value</VariableName>
-          </VariableReference>
-          <AccumulateFunction>
-            <Name>CurrentExpression</Name>
-            <VariableReference>
-              <Name>VernalisationConditioning</Name>
-              <VariableName>[Phenology].DailyVernalisation.Value</VariableName>
-            </VariableReference>
-            <StartStageName>Germination</StartStageName>
-            <EndStageName>TerminalSpikelet</EndStageName>
-          </AccumulateFunction>
-        </MinimumFunction>
         <Constant>
           <Name>MinimumLeafNumber</Name>
           <Memo>
@@ -344,7 +154,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
 ]]></MemoText>
           </Memo>
-          <Value>4</Value>
+          <Value>6</Value>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -420,10 +230,17 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>Memo1</Name>
             <MemoText><![CDATA[Currently just using a contsant target, look into Drought response]]></MemoText>
           </Memo>
-          <Constant>
+          <MultiplyFunction>
             <Name>Target</Name>
-            <Value>60</Value>
-          </Constant>
+            <Constant>
+              <Name>Six</Name>
+              <Value>4</Value>
+            </Constant>
+            <VariableReference>
+              <Name>Phyll</Name>
+              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
           <Start>Emergence</Start>
           <End>VS</End>
         </GenericPhase>
@@ -433,37 +250,47 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>Target</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>16</double>
-              </X>
-              <Y>
-                <double>650</double>
-                <double>400</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].PercievedPhotoPeriod.Value</XProperty>
-          </LinearInterpolationFunction>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <VariableReference>
+                <Name>TST</Name>
+                <VariableName>[Structure].TSLN.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>Six</Name>
+                <Value>6</Value>
+              </Constant>
+            </SubtractFunction>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
           <Start>VS</Start>
           <End>TerminalSpikelet</End>
         </GenericPhase>
-        <LeafAppearancePhase>
+        <GenericPhase>
           <Name>StemElongation</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[The Final leaf number is fixed at Terminal Spikelet and leaves contune to appear at a rate set by thermal time and phyllochron until flag leaf liguale appears and this phase is completed.]]></MemoText>
-          </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <MultiplyFunction>
+            <Name>Target</Name>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>exp</Name>
+              <Value>2</Value>
+            </Constant>
+          </MultiplyFunction>
           <Start>TerminalSpikelet</Start>
           <End>FlagLeaf</End>
-        </LeafAppearancePhase>
+        </GenericPhase>
         <GenericPhase>
           <Name>EarDevelopment</Name>
           <Constant>
@@ -713,7 +540,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </SubtractFunction>
               <Constant>
                 <Name>Nine</Name>
-                <Value>0</Value>
+                <Value>9</Value>
               </Constant>
             </DivideFunction>
           </MaximumFunction>
@@ -724,6 +551,60 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
+          <MultiplyFunction>
+            <Name>MainStemNodeAppearanceRate</Name>
+            <Memo>
+              <Name>Rational</Name>
+              <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+            </Memo>
+            <LinearInterpolationFunction>
+              <Name>LeafStageFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>2</double>
+                  <double>4</double>
+                  <double>6</double>
+                  <double>8</double>
+                  <double>14</double>
+                  <double>18</double>
+                </X>
+                <Y>
+                  <double>0.75</double>
+                  <double>0.9</double>
+                  <double>1</double>
+                  <double>1.1</double>
+                  <double>1.2</double>
+                  <double>1.4</double>
+                  <double>1.5</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].AppearedCohortNo</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>BasePhyllochron</Name>
+              <Value>90</Value>
+              <Units>oC.d</Units>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>PhotoPeriodEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>8</double>
+                  <double>12</double>
+                  <double>14</double>
+                </X>
+                <Y>
+                  <double>1.6</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
         <MultiplyFunction>
@@ -757,11 +638,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </XYPairs>
             <XProperty>[Leaf].AppearedCohortNo</XProperty>
           </LinearInterpolationFunction>
-          <Constant>
-            <Name>BasePhyllochron</Name>
-            <Value>90</Value>
-            <Units>oC.d</Units>
-          </Constant>
           <LinearInterpolationFunction>
             <Name>PhotoPeriodEffect</Name>
             <XYPairs>
@@ -779,6 +655,64 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </XYPairs>
             <XProperty>[Phenology].Photoperiod.Value</XProperty>
           </LinearInterpolationFunction>
+          <VariableReference>
+            <Name>Phyllochron</Name>
+            <MultiplyFunction>
+              <Name>MainStemNodeAppearanceRate</Name>
+              <Memo>
+                <Name>Rational</Name>
+                <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+              </Memo>
+              <LinearInterpolationFunction>
+                <Name>LeafStageFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>2</double>
+                    <double>4</double>
+                    <double>6</double>
+                    <double>8</double>
+                    <double>14</double>
+                    <double>18</double>
+                  </X>
+                  <Y>
+                    <double>0.75</double>
+                    <double>0.9</double>
+                    <double>1</double>
+                    <double>1.1</double>
+                    <double>1.2</double>
+                    <double>1.4</double>
+                    <double>1.5</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Leaf].AppearedCohortNo</XProperty>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>BasePhyllochron</Name>
+                <Value>90</Value>
+                <Units>oC.d</Units>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>PhotoPeriodEffect</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>8</double>
+                    <double>12</double>
+                    <double>14</double>
+                  </X>
+                  <Y>
+                    <double>1.6</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+            <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+          </VariableReference>
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>BranchingRate</Name>
@@ -912,7 +846,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XProperty>[Phenology].Photoperiod.Value</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>TemperatuerEffect</Name>
+              <Name>TemperatureEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -926,7 +860,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].MeanTemp.Value</XProperty>
+              <XProperty>[Weather].MeanT</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
         </MultiplyFunction>
@@ -1030,57 +964,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
         </MovingAverageFunction>
-        <HoldFunction>
-          <Name>PMainStemFinalNodeNumber</Name>
-          <AddFunction>
-            <Name>ValueToHold</Name>
-            <VariableReference>
-              <Name>MinLeafNumber</Name>
-              <VariableName>[Phenology].MinimumLeafNumber.Value</VariableName>
-            </VariableReference>
-            <MultiplyFunction>
-              <Name>VernalLeaves</Name>
-              <VariableReference>
-                <Name>UnVernalisedLeaves</Name>
-                <VariableName>[Phenology].VrnSensitivity.Value</VariableName>
-              </VariableReference>
-              <SubtractFunction>
-                <Name>VernalisationReductionFactor</Name>
-                <Constant>
-                  <Name>One</Name>
-                  <Value>1</Value>
-                </Constant>
-                <VariableReference>
-                  <Name>RelativeVrn1Expression</Name>
-                  <VariableName>[Phenology].Vrn1.Value</VariableName>
-                </VariableReference>
-              </SubtractFunction>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>PhotoPLeaves</Name>
-              <VariableReference>
-                <Name>ShortPpLeaves</Name>
-                <VariableName>[Phenology].PpSensitivity.Value</VariableName>
-              </VariableReference>
-              <LinearInterpolationFunction>
-                <Name>PhotoPeriodReductionFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>10</double>
-                    <double>16</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].Photoperiod.Value</XProperty>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
-          </AddFunction>
-          <WhenToHold>TerminalSpikelet</WhenToHold>
-        </HoldFunction>
         <DivideFunction>
           <Name>HaunStageTerminalSpikelet</Name>
           <SubtractFunction>
@@ -1160,89 +1043,111 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <MinimumFunction>
           <Name>MainStemFinalNodeNumber</Name>
           <Constant>
-            <Name>MaxNodes</Name>
-            <Value>9</Value>
+            <Name>MaxLN</Name>
+            <Value>15</Value>
           </Constant>
           <MinimumFunction>
             <Name>FLN</Name>
             <OnEventFunction>
-              <Name>AtTerminalSpikelet</Name>
-              <Constant>
+              <Name>AtLeafSix</Name>
+              <VariableReference>
                 <Name>PreEventValue</Name>
-                <Value>20</Value>
-              </Constant>
-              <LinearInterpolationFunction>
+                <VariableName>[Structure].MaxLN.Value</VariableName>
+              </VariableReference>
+              <MaximumFunction>
                 <Name>PostEventValue</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>14</double>
-                  </X>
-                  <Y>
-                    <double>4</double>
-                    <double>20</double>
-                  </Y>
-                </XYPairs>
-                <Memo>
-                  <Name>Memo</Name>
-                  <MemoText><![CDATA[This model based on Martin et al]]></MemoText>
-                </Memo>
-                <XProperty>[Structure].LeafTipsAppeared</XProperty>
-              </LinearInterpolationFunction>
-              <MultiplyFunction>
-                <Name>PostEventValueSOn</Name>
                 <Constant>
-                  <Name>Slope</Name>
-                  <Value>1.14</Value>
+                  <Name>Zero</Name>
+                  <Value>0</Value>
                 </Constant>
-                <SubtractFunction>
-                  <Name>TSC</Name>
+                <LessThanFunction>
+                  <Name>LessThanFunction</Name>
                   <VariableReference>
-                    <Name>VariableReference</Name>
-                    <VariableName>[Structure].LeafTipsAppeared</VariableName>
+                    <Name>TestVariable</Name>
+                    <VariableName>[Phenology].PhotoperiodDeltaFunction.Value</VariableName>
                   </VariableReference>
                   <Constant>
-                    <Name>Int</Name>
-                    <Value>3</Value>
+                    <Name>Zero</Name>
+                    <Value>0</Value>
                   </Constant>
-                </SubtractFunction>
-                <Memo>
-                  <Name>Memo</Name>
-                  <MemoText><![CDATA[This model based on Sonego FCR
-
-note Based on figure rather than Equation (don't match or I am interprting it wrong)
-
-LN(TS) = 0.88FLN + 2.66 ]]></MemoText>
-                </Memo>
-              </MultiplyFunction>
-              <SetEvent>TerminalSpikelet</SetEvent>
+                  <SubtractFunction>
+                    <Name>IfTrue</Name>
+                    <VariableReference>
+                      <Name>MLN</Name>
+                      <VariableName>[Structure].MaxLN.Value</VariableName>
+                    </VariableReference>
+                    <Constant>
+                      <Name>Two</Name>
+                      <Value>2</Value>
+                    </Constant>
+                  </SubtractFunction>
+                  <SubtractFunction>
+                    <Name>IfFalse</Name>
+                    <VariableReference>
+                      <Name>MLN</Name>
+                      <VariableName>[Structure].MaxLN.Value</VariableName>
+                    </VariableReference>
+                    <MultiplyFunction>
+                      <Name>Ic</Name>
+                      <VariableReference>
+                        <Name>PP</Name>
+                        <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>PPS</Name>
+                        <VariableName>[Structure].PPSlope.Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                  </SubtractFunction>
+                </LessThanFunction>
+              </MaximumFunction>
+              <SetEvent>VS</SetEvent>
               <ReSetEvent>never</ReSetEvent>
             </OnEventFunction>
-            <MaximumFunction>
-              <Name>Inc</Name>
-              <Constant>
-                <Name>MinFLN</Name>
-                <Value>4</Value>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>PPR</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>1</double>
-                    <double>14</double>
-                  </X>
-                  <Y>
-                    <double>4</double>
-                    <double>20</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Structure].LeafTipsAppeared</XProperty>
-              </LinearInterpolationFunction>
-            </MaximumFunction>
+            <VariableReference>
+              <Name>MLN</Name>
+              <VariableName>[Structure].MaxLN.Value</VariableName>
+            </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
+        <MinimumFunction>
+          <Name>TSLN</Name>
+          <VariableReference>
+            <Name>MLN</Name>
+            <VariableName>[Structure].MaxLN.Value</VariableName>
+          </VariableReference>
+          <SubtractFunction>
+            <Name>SubtractFunction</Name>
+            <MultiplyFunction>
+              <Name>MultiplyFunction</Name>
+              <VariableReference>
+                <Name>FLN</Name>
+                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>PS</Name>
+                <Value>0.995</Value>
+              </Constant>
+            </MultiplyFunction>
+            <Constant>
+              <Name>LVS</Name>
+              <Value>1.95</Value>
+            </Constant>
+          </SubtractFunction>
+        </MinimumFunction>
+        <Constant>
+          <Name>MaxLN</Name>
+          <Value>17</Value>
+        </Constant>
+        <Constant>
+          <Name>BasePhyllochron</Name>
+          <Value>90</Value>
+          <Units>oC.d</Units>
+        </Constant>
+        <Constant>
+          <Name>PPSlope</Name>
+          <Value>0.5</Value>
+        </Constant>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
@@ -1851,7 +1756,7 @@ LN(TS) = 0.88FLN + 2.66 ]]></MemoText>
               <XProperty>[Oats].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>TemperatuerEffect</Name>
+              <Name>TemperatureEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -1865,7 +1770,7 @@ LN(TS) = 0.88FLN + 2.66 ]]></MemoText>
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].MeanTemp.Value</XProperty>
+              <XProperty>[Weather].MeanT</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
           <MultiplyFunction>
@@ -2920,34 +2825,35 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Milton11</Name>
-          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-          <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Phenology].Vegetative.Target.Value = 180</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 120</Command>
-          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 17</Command>
-        </Cultivar>
-        <Cultivar>
           <Name>Drummond</Name>
           <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
-        </Cultivar>
-        <Cultivar>
-          <Name>Hokunui</Name>
-          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-          <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value = 82</Command>
-          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 16</Command>
+          <Command>[Structure].BasePhyllochron.Value = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton</Name>
           <Command>[Phenology].MinimumLeafNumber.Value = 15</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].MainStemFinalNodeNumber.MaxNodes.Value = 15</Command>
+          <Command>[Structure].MaxLN.Value = 15</Command>
+          <Command />
+        </Cultivar>
+        <Cultivar>
+          <Name>Hokunui</Name>
+          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
+          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
+          <Command>[Phenology].PpSensitivity.Value = 3</Command>
+          <Command>[Structure].BasePhyllochron.Value = 82</Command>
+          <Command>[Structure].PPSlope.Value = 0.4</Command>
+        </Cultivar>
+        <Cultivar>
+          <Name>Stampede</Name>
+          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
+          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
+          <Command>[Phenology].PpSensitivity.Value = 3</Command>
+          <Command>[Structure].BasePhyllochron.Value = 82</Command>
+          <Command>[Structure].PPSlope.Value = 0.4</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Wheat</CropType>
@@ -4030,6 +3936,25 @@ namespace Models
 	}
 }]]></Code>
         </Manager>
+        <Report>
+          <Name>EnviroReport</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Weather].MeanT</string>
+            <string>[Weather].Radn</string>
+            <string>[Oats].Phenology.ThermalTime</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction.DivideFunction</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction.DivideFunction.PP7</string>
+            <string>[Oats].Phenology.Photoperiod</string>
+            <string>[Oats].Structure.LeafTipsAppeared</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6449,12 +6374,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumMar</Name>
+          <Name>StamMar</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2002-03-07</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -6463,12 +6388,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DumMay</Name>
+          <Name>StamMay</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2002-05-15</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -6477,12 +6402,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumSep</Name>
+          <Name>StamSep</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2002-05-15</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -7126,6 +7051,11 @@ namespace Models
             <string>[Weather].MeanT</string>
             <string>[Weather].Radn</string>
             <string>[Oats].Phenology.ThermalTime</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction.DivideFunction</string>
+            <string>[Oats].Phenology.ThermalTime.MaximumFunction.DivideFunction.PP7</string>
+            <string>[Oats].Phenology.Photoperiod</string>
+            <string>[Oats].Phenology.PhotoperiodDeltaFunction</string>
             <string>[Oats].Structure.LeafTipsAppeared</string>
           </VariableNames>
           <EventNames>
@@ -7375,12 +7305,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumMar</Name>
+          <Name>StamMar</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2003-03-14</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -7389,12 +7319,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DumMay</Name>
+          <Name>StamMay</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2003-05-21</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -7403,12 +7333,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumSep</Name>
+          <Name>StamSep</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2003-05-02</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -8325,12 +8255,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumMar</Name>
+          <Name>StamMar</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2004-03-23</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -8339,12 +8269,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DumMay</Name>
+          <Name>StamMay</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2004-05-28</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -8353,12 +8283,12 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>DrumSep</Name>
+          <Name>StamSep</Name>
           <Operations>
             <Name>Operations</Name>
             <Operation>
               <Date>2004-09-06</Date>
-              <Action>[Oats].Sow(population:200, cultivar:"Hokunui", depth:40, rowSpacing:150);</Action>
+              <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
           <Specifications>
@@ -9322,5 +9252,5 @@ namespace Models
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>399</ExplorerWidth>
+  <ExplorerWidth>395</ExplorerWidth>
 </Simulations>
