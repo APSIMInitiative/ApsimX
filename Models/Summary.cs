@@ -86,10 +86,10 @@ namespace Models
             messageColumn = new ReportColumnWithValues("Message");
             messageTypeColumn = new ReportColumnWithValues("MessageType");
 
-            messagesTable.Data.Add(componentNameColumn);
-            messagesTable.Data.Add(dateColumn);
-            messagesTable.Data.Add(messageColumn);
-            messagesTable.Data.Add(messageTypeColumn);
+            messagesTable.Columns.Add(componentNameColumn);
+            messagesTable.Columns.Add(dateColumn);
+            messagesTable.Columns.Add(messageColumn);
+            messagesTable.Columns.Add(messageTypeColumn);
         }
 
         /// <summary>
@@ -238,7 +238,6 @@ namespace Models
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             DataStore dataStore = new DataStore(this);
-            dataStore.DeleteOldContentInTable(this.Simulation.Name, "Messages");
             dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
             dataStore.Disconnect();
         }
@@ -795,14 +794,14 @@ namespace Models
             table.FileName = Path.ChangeExtension(Simulation.FileName, ".db");
             table.SimulationName = Simulation.Name;
             table.TableName = "InitialConditions";
-            table.Data.Add(modelPath);
-            table.Data.Add(name);
-            table.Data.Add(description);
-            table.Data.Add(dataType);
-            table.Data.Add(units);
-            table.Data.Add(displayFormat);
-            table.Data.Add(showTotal);
-            table.Data.Add(value);
+            table.Columns.Add(modelPath);
+            table.Columns.Add(name);
+            table.Columns.Add(description);
+            table.Columns.Add(dataType);
+            table.Columns.Add(units);
+            table.Columns.Add(displayFormat);
+            table.Columns.Add(showTotal);
+            table.Columns.Add(value);
 
             modelPath.Add(Apsim.FullPath(Simulation)); 
             name.Add("Simulation name");
@@ -866,7 +865,6 @@ namespace Models
 
             // Write to data store.
             DataStore dataStore = new DataStore(Simulation);
-            dataStore.DeleteOldContentInTable(Simulation.Name, "InitialConditions");
             dataStore.WriteTable(Simulation.Name, "InitialConditions", table);
             dataStore.Disconnect();
         }
