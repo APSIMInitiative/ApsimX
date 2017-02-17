@@ -625,9 +625,13 @@ namespace Models.PMF.Organs
             {
                 foreach (LeafCohort L in Leaves)
                 {
+                    if (L.IsFullyExpanded)
+                    { }
+                    else { 
                     StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
                     MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
                     NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
+                 }
                 }
             }
             return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };

@@ -285,7 +285,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             </VariableReference>
             <Constant>
               <Name>exp</Name>
-              <Value>2</Value>
+              <Value>1.5</Value>
             </Constant>
           </MultiplyFunction>
           <Start>TerminalSpikelet</Start>
@@ -321,7 +321,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>600</Value>
+            <Value>900</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -1215,8 +1215,41 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
-        <PhaseLookup>
+        <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>InitialPhase</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.05</Value>
+              </Constant>
+              <Start>Flowering</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>LinearPhase</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.6</Value>
+              </Constant>
+              <Start>StartGrainFill</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Ripening</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0</Value>
+              </Constant>
+              <Start>EndGrainFill</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
+        </PartitionFractionDemandFunction>
+        <PhaseLookup>
+          <Name>DMDemandFunctionG</Name>
           <PhaseLookupValue>
             <Name>InitialPhase</Name>
             <FillingRateFunction>
@@ -1773,11 +1806,30 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XProperty>[Weather].MeanT</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
+          <LinearInterpolationFunction>
+            <Name>MaxAreaS</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>1</double>
+                <double>4</double>
+                <double>9</double>
+                <double>15</double>
+              </X>
+              <Y>
+                <double>450</double>
+                <double>1500</double>
+                <double>5000</double>
+                <double>500</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Structure].LeafTipsAppeared</XProperty>
+          </LinearInterpolationFunction>
           <MultiplyFunction>
-            <Name>MaxAreaW</Name>
+            <Name>MaxArea</Name>
             <Constant>
               <Name>AreaLargestLeaves</Name>
-              <Value>4500</Value>
+              <Value>5000</Value>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -1786,15 +1838,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>XYPairs</Name>
                 <X>
                   <double>3</double>
-                  <double>3.45</double>
                   <double>4</double>
+                  <double>5</double>
+                  <double>7</double>
                 </X>
                 <Y>
                   <double>0.1</double>
                   <double>0.5</double>
                   <double>1</double>
+                  <double>0.5</double>
                 </Y>
               </XYPairs>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+              </Memo>
               <XProperty>[Phenology].Stage</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
@@ -1802,7 +1872,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrowthDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>1.6</Value>
+              <Value>2.5</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -1875,11 +1945,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </ExpressionFunction>
               </SubtractFunction>
               <Start>TerminalSpikelet</Start>
-              <End>FlagLeaf</End>
+              <End>Maturity</End>
             </PhaseLookupValue>
           </PhaseLookup>
+          <MultiplyFunction>
+            <Name>LagDurationS</Name>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>3</Value>
+            </Constant>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
           <AddFunction>
-            <Name>LagDurationX</Name>
+            <Name>LagDurationW</Name>
             <MultiplyFunction>
               <Name>ShortestDuration</Name>
               <Constant>
@@ -1899,11 +1980,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>3</double>
-                    <double>5</double>
+                    <double>4</double>
                   </X>
                   <Y>
-                    <double>0</double>
-                    <double>1</double>
+                    <double>5</double>
+                    <double>7</double>
                   </Y>
                 </XYPairs>
                 <XProperty>[Phenology].Stage</XProperty>
@@ -1918,7 +1999,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>3</Value>
+              <Value>2.5</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -2020,14 +2101,46 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>3</double>
                 <double>4</double>
+                <double>5</double>
               </X>
               <Y>
-                <double>30000</double>
-                <double>40000</double>
+                <double>35000</double>
+                <double>50000</double>
               </Y>
             </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+            </Memo>
+            <Memo>
+              <Name>Memo1</Name>
+              <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+            </Memo>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <Constant>
@@ -2044,7 +2157,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <Value>0.5</Value>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
@@ -2082,25 +2195,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
-          <LinearInterpolationFunction>
-            <Name>MaxArea</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>1</double>
-                <double>4</double>
-                <double>9</double>
-                <double>15</double>
-              </X>
-              <Y>
-                <double>450</double>
-                <double>1500</double>
-                <double>5000</double>
-                <double>500</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Structure].LeafTipsAppeared</XProperty>
-          </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>MaxArea1</Name>
             <XYPairs>
@@ -2508,13 +2602,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <End>Flowering</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
+            <Name>GrainFilling</Name>
+            <Constant>
+              <Name>Fraction</Name>
+              <Value>0.7</Value>
+            </Constant>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>EndStemGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <Value>1</Value>
             </Constant>
-            <Start>Flowering</Start>
-            <End>HarvestRipe</End>
+            <Start>EndGrainFill</Start>
+            <End>Maturity</End>
           </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
@@ -2639,7 +2742,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>EarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.2</Value>
+                <Value>0.4</Value>
               </Constant>
               <Start>FlagLeaf</Start>
               <End>Flowering</End>
@@ -2648,9 +2751,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>PostEarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0</Value>
+                <Value>0.4</Value>
               </Constant>
               <Start>Flowering</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PostGrainFill</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0</Value>
+              </Constant>
+              <Start>EndGrainFill</Start>
               <End>HarvestRipe</End>
             </PhaseLookupValue>
           </PhaseLookup>
@@ -6406,7 +6518,7 @@ namespace Models
           <Operations>
             <Name>Operations</Name>
             <Operation>
-              <Date>2002-05-15</Date>
+              <Date>2002-09-09</Date>
               <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
@@ -7337,7 +7449,7 @@ namespace Models
           <Operations>
             <Name>Operations</Name>
             <Operation>
-              <Date>2003-05-02</Date>
+              <Date>2003-09-02</Date>
               <Action>[Oats].Sow(population:200, cultivar:"Stampede", depth:40, rowSpacing:150);</Action>
             </Operation>
           </Operations>
