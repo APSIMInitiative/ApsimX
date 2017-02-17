@@ -2286,7 +2286,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -2945,11 +2945,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         </Cultivar>
         <Cultivar>
           <Name>Milton</Name>
-          <Command>[Phenology].MinimumLeafNumber.Value = 15</Command>
+          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
           <Command>[Phenology].VrnSensitivity.Value = 7</Command>
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].MaxLN.Value = 15</Command>
-          <Command />
+          <Command>[Structure].BasePhyllochron.Value = 100</Command>
         </Cultivar>
         <Cultivar>
           <Name>Hokunui</Name>
@@ -2966,6 +2965,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].PpSensitivity.Value = 3</Command>
           <Command>[Structure].BasePhyllochron.Value = 82</Command>
           <Command>[Structure].PPSlope.Value = 0.4</Command>
+        </Cultivar>
+        <Cultivar>
+          <Name>Milton1</Name>
+          <Command>[Phenology].MinimumLeafNumber.Value = 15</Command>
+          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
+          <Command>[Phenology].PpSensitivity.Value = 3</Command>
+          <Command>[Structure].MaxLN.Value = 15</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Wheat</CropType>
@@ -4681,6 +4687,25 @@ namespace Models
               <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
+          <Operations>
+            <Name>Irr</Name>
+            <Operation>
+              <Date>2015-10-15</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-03</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-15</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-20</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+          </Operations>
         </Folder>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -5293,7 +5318,10 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries>
+        <string>Aug: Sim</string>
         <string>Fallow: Sim</string>
+        <string>July0: Obs</string>
+        <string>Aug0: Obs</string>
       </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -5541,6 +5569,51 @@ namespace Models
         <TableName>Obs2015</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>FW</Name>
+      <Series>
+        <Name>Sim</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Phenology.CurrentPhaseName</ColumnName>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6309,7 +6382,9 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>Aug: Obs</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -6413,6 +6488,92 @@ namespace Models
         <TableName>Obs2016</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Grain</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Grain.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AboveGroundWt1</Name>
+      <Series>
+        <Name>Sim</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Phenology.CurrentPhaseName</ColumnName>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.Leaf.Fw</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
