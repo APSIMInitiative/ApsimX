@@ -3137,6 +3137,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ObservedTableName>obsPhenology</ObservedTableName>
       <FieldNameUsedForMatch>Sow</FieldNameUsedForMatch>
     </PredictedObserved>
+    <ExcelInput>
+      <Name>Oats9899SW</Name>
+      <FileName>Observed\RS_Oats_9899_sw_observed.xlsx</FileName>
+      <SheetNames>
+        <string>RS_SW_Obs</string>
+      </SheetNames>
+    </ExcelInput>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -4514,6 +4521,109 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Graph>
+      <Name>SW</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>RS_SW_Obs</TableName>
+        <XFieldName>Clock.Today()</XFieldName>
+        <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>SW1</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>RS_SW_Obs</TableName>
+        <XFieldName>Clock.Today()</XFieldName>
+        <YFieldName>ProfileWater</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Experiment>
   <Experiment>
     <Name>WinterSowing2015</Name>
@@ -4621,6 +4731,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -4629,7 +4740,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5318,9 +5428,6 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries>
-        <string>Aug: Sim</string>
-        <string>Fallow: Sim</string>
-        <string>July0: Obs</string>
         <string>Aug0: Obs</string>
       </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -5717,6 +5824,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -5725,7 +5833,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -6716,6 +6823,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -6724,7 +6832,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -7647,6 +7754,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -7655,7 +7763,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -8597,6 +8704,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -8605,7 +8713,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
