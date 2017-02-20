@@ -42,5 +42,10 @@ namespace Models.WholeFarm
 		/// Initialise the variables that store the current state of the resource.
 		/// </summary>
 		void Initialise();
-    }
+
+		/// <summary>
+		/// Get the current amount of this resource available.
+		/// </summary>
+		double Amount { get; }
+	}
 }

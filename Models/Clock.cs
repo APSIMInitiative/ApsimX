@@ -104,8 +104,8 @@ namespace Models
 
 		/// <summary>WholeFarm update pasture</summary>
 		public event EventHandler WFUpdatePasture;
-		/// <summary>WholeFarm update resources other than pasture</summary>
-		public event EventHandler WFUpdateResources;
+		///// <summary>WholeFarm update resources other than pasture</summary>
+		//public event EventHandler WFUpdateResources;
 		/// <summary>WholeFarm cut and carry</summary>
 		public event EventHandler WFDoCutAndCarry;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>

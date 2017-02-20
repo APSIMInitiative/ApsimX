@@ -41,7 +41,6 @@ namespace Models.WholeFarm
 		/// </summary>
 		[XmlIgnore]
 		public double Amount { get { return amount; } }
-		
 		private double amount = 0;
 
 		/// <summary>

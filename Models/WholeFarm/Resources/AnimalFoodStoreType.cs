@@ -79,7 +79,7 @@ namespace Models.WholeFarm
         /// Amount currently available (kg dry)
         /// </summary>
         [XmlIgnore]
-        public double Amount { get {return amount;} }
+        public double Amount { get {return amount;} set { return; } }
 		private double amount;
 
 		/// <summary>

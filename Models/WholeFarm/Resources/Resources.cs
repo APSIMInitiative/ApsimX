@@ -182,8 +182,6 @@ namespace Models.WholeFarm
 		public Finance FinanceResource()
 		{
 			return GetByType(typeof(Finance)) as Finance;
-//			IModel model = GetByName("Finances");
-//			return model as Finance;
 		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -195,9 +193,44 @@ namespace Models.WholeFarm
             Groups = Apsim.Children(this, typeof(IModel));
         }
 
+		/// <summary>
+		/// Determines if a shortfall in all Resources can be met by transmutation
+		/// </summary>
+		public void CanTransmutateShortfall(List<ResourceRequest> requests)
+		{
+			List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required - a.Available > 0).ToList();
 
-
-    }
+			// Search through all limited resources and determine if transmutation available
+			foreach (ResourceRequest request in shortfallRequests)
+			{
+				// Check if transmutation would be successful 
+				if (request.AllowTransmutation)
+				{
+					// get resource type
+					IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName) as IModel;
+					if (model != null)
+					{
+						// check if transmutations provided
+						foreach (Transmutation trans in model.Children.Where(a => a.GetType() == typeof(Transmutation)))
+						{
+							// check if resources available for activity and transmutation
+							double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
+							foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
+							{
+								double transmutationCost = unitsNeeded * transcost.CostPerUnit;
+								double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourseTypeName).Sum(a => a.Required);
+								if(transmutationCost+activityCost <= (model as IResourceType).Amount)
+								{
+									request.TransmutationSuccessful = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 
 }

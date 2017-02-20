@@ -13,7 +13,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class WFModel: Model
+	public abstract class WFModel: Model
 	{
 		private string id = "00001";
 
@@ -21,6 +21,5 @@ namespace Models.WholeFarm
 		/// Model identifier
 		/// </summary>
 		public string ID { get { return id; } }
-
 	}
 }

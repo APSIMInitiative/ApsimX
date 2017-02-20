@@ -231,5 +231,16 @@ namespace Models.WholeFarm
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Resource available
+		/// </summary>
+		public double Amount
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
 	}
 }

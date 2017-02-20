@@ -13,7 +13,6 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-//	[ValidParent(ParentType = typeof(Zone))]
 	public class Activities: Model
 	{
 		/// <summary>
@@ -40,6 +39,19 @@ namespace Models.WholeFarm
 		{
 			activities = Apsim.Children(this, typeof(IModel));
 		}
+
+		/// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("WFGetResourcesRequired")]
+		private void OnGetResourcesRequired(object sender, EventArgs e)
+		{
+			foreach (WFActivityBase child in Children.Where(a => a.GetType() == typeof(WFActivityBase)))
+			{
+				child.GetResourcesForAllActivities();
+			}
+		}
+
 
 	}
 }
