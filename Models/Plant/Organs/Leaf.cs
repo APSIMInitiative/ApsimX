@@ -273,6 +273,23 @@ namespace Models.PMF.Organs
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double ApexNum { get; set; }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupSize { get { return apexGroupSize.ToArray(); } }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupAge { get { return apexGroupAge.ToArray(); } }
+
+        /// <summary>The number of apex in each age group.</summary>
+        private List<double> apexGroupSize = new List<double>();
+        /// <summary>The age of apex in age group.</summary>
+        private List<double> apexGroupAge = new List<double>();
+
         #endregion
 
         #region States
@@ -705,7 +722,27 @@ namespace Models.PMF.Organs
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
             Leaves.Add(NewLeaf);
+            DoApexCalculations();
         }
+
+        private void DoApexCalculations()
+        {
+            for (int i = 0; i < apexGroupAge.Count; i++)
+                apexGroupAge[i]++;
+
+            while (apexGroupSize.Count < (int) ApexNum)
+            {
+                apexGroupSize.Add(1);
+                apexGroupAge.Add(1);
+            }
+
+            while (apexGroupSize.Count > (int) ApexNum)
+            {
+                apexGroupSize.RemoveAt(apexGroupSize.Count - 1);
+                apexGroupAge.RemoveAt(apexGroupAge.Count - 1);
+            }
+        }
+
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
         [EventSubscribe("LeafTipAppearance")]
         private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
@@ -1352,5 +1389,16 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
+
+        /// <summary>
+        /// Called at the beginning of the day to handle apex tallies
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            ApexNum += Structure.BranchNumber - Structure.ProportionBranchMortality;
+        }
     }
 }

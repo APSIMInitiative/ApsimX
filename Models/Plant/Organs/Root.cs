@@ -504,10 +504,8 @@ namespace Models.PMF.Organs
 
                 return demandedDM;
             }
-            else
-            { // Conversion efficiency is zero!!!!
+             // Conversion efficiency is zero!!!!
                 return 0.0;
-            }
         }
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
@@ -529,10 +527,8 @@ namespace Models.PMF.Organs
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
             }
-            else
-            { // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
+             // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
                 return 0.0;
-            }
         }
 
         /// <summary>Gets the DM supply for this computation round.</summary>
@@ -581,15 +577,13 @@ namespace Models.PMF.Organs
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                         rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double availableDM = rootLiveNonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+                double availableDM = rootLiveNonStructuralWt*SenescenceRate.Value*DMReallocationFactor.Value;
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
             }
-            else
-            { // By default reallocation is turned off!!!!
-                return 0.0;
-            }
+            // By default reallocation is turned off!!!!
+            return 0.0;
         }
 
         /// <summary>Sets the dm potential allocation.</summary>
@@ -603,10 +597,8 @@ namespace Models.PMF.Organs
                 if (PlantZone.Depth <= 0)
                     return; //cannot allocate growth where no length
 
-                if (DMDemand.Structural == 0)
-                    if (value.Structural < 0.000000000001) { }//All OK
-                    else
-                        throw new Exception("Invalid allocation of potential DM in" + Name);
+                if (DMDemand.Structural == 0 && value.Structural > 0.000000000001)
+                    throw new Exception("Invalid allocation of potential DM in" + Name);
                 
 
                 double TotalRAw = 0;

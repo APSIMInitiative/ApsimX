@@ -422,7 +422,7 @@ namespace Models.PMF
 
                 if (Plant.IsEmerged)
                 {
-                    if(Emerged==false)
+                    if (Emerged == false)
                     {
                         NextLeafProportion = 1.0;
                         DoEmergence();
@@ -430,11 +430,11 @@ namespace Models.PMF
 
                     bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value);
                     bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
-                    bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1)  == Leaf.InitialisedCohortNo);
-                    
-                    if ((AllCohortsInitialised)&&(LastLeafAppearing))
+                    bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo);
+
+                    if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        NextLeafProportion = 1-(Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value);
+                        NextLeafProportion = 1 - (Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value);
                     }
                     else
                     {
@@ -458,16 +458,15 @@ namespace Models.PMF
                     LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, MainStemFinalNodeNumber.Value);
 
                     bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
-                    int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
+                    int LeavesToAppear = (int) (LeafTipsAppeared - (Leaf.AppearedCohortNo - (1 - NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
                     if (TimeForAnotherLeaf && (AllCohortsInitialised == false))
                     {
-                        int i = 1;
-                        for (i = 1; i <= LeavesToAppear; i++)
+                        for (int i = 1; i <= LeavesToAppear; i++)
                         {
                             CohortToInitialise += 1;
-                            InitParams = new CohortInitParams() { };
+                            InitParams = new CohortInitParams() {};
                             InitParams.Rank = CohortToInitialise;
                             if (AddLeafCohort != null)
                                 AddLeafCohort.Invoke(this, InitParams);
@@ -477,27 +476,24 @@ namespace Models.PMF
                     //Each time main-stem node number increases by one appear another cohort until all cohorts have appeared
                     if (TimeForAnotherLeaf && (AllLeavesAppeared == false))
                     {
-                        int i = 1;
-                        for (i = 1; i <= LeavesToAppear; i++)
+                        for (int i = 1; i <= LeavesToAppear; i++)
                         {
-                            TotalStemPopn += BranchingRate.Value * MainStemPopn;
+                            TotalStemPopn += BranchingRate.Value*MainStemPopn;
                             BranchNumber += BranchingRate.Value;
                             DoLeafTipAppearance();
                         }
                     }
 
                     //Reduce population if there has been plant mortality 
-                    if(DeltaPlantPopulation>0)
-                    TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
-                    
+                    if (DeltaPlantPopulation > 0)
+                        TotalStemPopn -= DeltaPlantPopulation*TotalStemPopn/Plant.Population;
+
                     //Reduce stem number incase of mortality
-                    double PropnMortality = 0;
-                    PropnMortality = BranchMortality.Value;
-                    {
-                        double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
-                        TotalStemPopn -= DeltaPopn;
-                        ProportionBranchMortality = PropnMortality;
-                    }
+                    double PropnMortality = BranchMortality.Value;
+                    double DeltaPopn = Math.Min(PropnMortality*(TotalStemPopn - MainStemPopn),
+                        TotalStemPopn - Plant.Population);
+                    TotalStemPopn -= DeltaPopn;
+                    ProportionBranchMortality = PropnMortality;
                 }
             }
         }
@@ -521,10 +517,9 @@ namespace Models.PMF
         public void DoEmergence()
         {
             CohortToInitialise = Leaf.CohortsAtInitialisation;
-            int i = 1;
-            for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
+            for (int i = 1; i <= Leaf.TipsAtEmergence; i++)
             {
-                InitParams = new CohortInitParams() { }; 
+                InitParams = new CohortInitParams(); 
                 PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise; 
