@@ -296,7 +296,7 @@
           </XF>
         </SoilCrop>
         <Thickness>
-          <double>50</double>
+          <double>30</double>
           <double>170</double>
           <double>200</double>
           <double>200</double>
@@ -338,8 +338,8 @@
         <DUL>
           <double>0.3</double>
           <double>0.3</double>
-          <double>0.2</double>
-          <double>0.2</double>
+          <double>0.26</double>
+          <double>0.26</double>
           <double>0.26</double>
           <double>0.26</double>
           <double>0.26</double>
@@ -382,12 +382,12 @@
         <XFlow>
           <double>3.5</double>
           <double>3.5</double>
-          <double>3</double>
-          <double>3</double>
-          <double>2.8</double>
-          <double>2.8</double>
-          <double>2.8</double>
-          <double>2.8</double>
+          <double>3.5</double>
+          <double>3.5</double>
+          <double>3.5</double>
+          <double>3.5</double>
+          <double>3.5</double>
+          <double>3.5</double>
         </XFlow>
         <PsiBub>
           <double>-15</double>
@@ -4700,7 +4700,7 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Dot</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>SoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
@@ -4784,7 +4784,7 @@ namespace Models
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Dot</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>SoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
@@ -5096,7 +5096,7 @@ namespace Models
       <Graph>
         <Name>Drainage</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Drainage</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -5117,7 +5117,7 @@ namespace Models
           <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Predicted1</Name>
+          <Name>Irrigatino</Name>
           <Type>Bar</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>

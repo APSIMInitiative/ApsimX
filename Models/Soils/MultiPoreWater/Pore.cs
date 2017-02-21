@@ -142,11 +142,11 @@ namespace Models.Soils
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Capillarity { get { return VolumetricFlowRate/1e6*3600; } }
+        public double PoiseuilleFlow { get { return VolumetricFlowRate/1e6*3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Diffusivity { get { return Capillarity * RelativeWaterContent * (1- TensionFactor); } }
+        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor); } }
         /// <summary>The potential diffusion into this pore</summary>
         [XmlIgnore]
         [Units("mm")]
@@ -160,7 +160,7 @@ namespace Models.Soils
         {
             get
             {
-                return Math.Sqrt(((7.4/Radius*1000) * Capillarity * Math.Max(0,Volume - WaterFilledVolume))/0.5);
+                return Math.Sqrt(((7.4/Radius*1000) * PoiseuilleFlow * Math.Max(0,Volume - WaterFilledVolume))/0.5);
             }
         }
         /// <summary>
@@ -186,9 +186,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return (Capillarity + Sorption) * RepelancyFactor;
+                    return (PoiseuilleFlow + Sorption) * RepelancyFactor;
                 else
-                    return Capillarity * RepelancyFactor;
+                    return PoiseuilleFlow * RepelancyFactor;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
@@ -218,7 +218,7 @@ namespace Models.Soils
         {
             get
             {
-                return Math.Max(0, Capillarity) * TensionFactor;
+                return Math.Max(0, PoiseuilleFlow) * TensionFactor;
             }
         }
         #endregion
@@ -238,7 +238,7 @@ namespace Models.Soils
         [Units("0-1")]
         public double PotentialWaterExtraction
         {
-            get { return Math.Min(Capillarity * RootExplorationProportion,WaterDepth); }
+            get { return Math.Min(PoiseuilleFlow * RootExplorationProportion,WaterDepth); }
         }
         #endregion
     }

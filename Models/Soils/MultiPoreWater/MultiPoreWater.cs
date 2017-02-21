@@ -1067,7 +1067,7 @@ namespace Models.Soils
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
-                    Capillarity[l][c] = Pores[l][c].Capillarity;
+                    Capillarity[l][c] = Pores[l][c].PoiseuilleFlow;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
                     Theta[l][c] = Pores[l][c].ThetaUpper;
