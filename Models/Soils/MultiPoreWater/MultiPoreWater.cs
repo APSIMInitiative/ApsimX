@@ -978,8 +978,9 @@ namespace Models.Soils
                 if (NetDiffusion < 0) //Take water out of current layer and place into layer below.
                 {
                     if (l <= ProfileLayers - 1)
-                        DistributeOutwardDiffusion(l + 1, NetDiffusion);
-                    DistributeInwardDiffusion(l, NetDiffusion);
+                        DistributeInwardDiffusion(l + 1, -NetDiffusion);
+                    DistributeOutwardDiffusion(l, -NetDiffusion);
+                    
                 }
             }
             UpdateProfileValues();
@@ -1054,7 +1055,7 @@ namespace Models.Soils
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
-                Ksat[l] = LayerSum(Pores[l], "Capillarity");
+                Ksat[l] = LayerSum(Pores[l], "PoiseuilleFlow");
                 DULmm[l] = Water.DUL[l] * Water.Thickness[l];
                 LL15mm[l] = Water.LL15[l] * Water.Thickness[l];
                 SATmm[l] = Water.SAT[l] * Water.Thickness[l];
