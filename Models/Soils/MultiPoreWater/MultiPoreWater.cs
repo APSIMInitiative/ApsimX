@@ -125,6 +125,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] outflow_lat { get; set; }
+        /// <summary> The Plant available water content of the soil layer /// </summary>
+        [XmlIgnore]
+        public double[] PAWC { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double pond { get; set; }
@@ -214,7 +217,7 @@ namespace Models.Soils
         private Evapotranspiration ET = null;
         [Link]
         private Clock Clock = null;
-        [Link]
+        [Link(IsOptional = true)]
         Plant Plant = null;
         #endregion
 
@@ -273,6 +276,15 @@ namespace Models.Soils
         /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
         [Description("PsiBub")]
         public double[] PsiBub { get; set; }
+        /// <summary>Relative Water content above which soil is hydrophillic</summary>
+        [Description("MinHydrophilicRWC")]
+        public double[] MinHydrophilicRWC { get; set; }
+        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
+        [Description("MaxHydrophobicRWC")]
+        public double[] MaxHydrophobicRWC { get; set; }
+        /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
+        [Description("MinRepellancyFactor")]
+        public double[] MinRepellancyFactor { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
@@ -418,6 +430,12 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/d")]
         public double[] Diffusion { get; set; }
+        ///<summary> Who knows</summary>
+        [XmlIgnore]
+        public double[] SWdailyMax { get; set; }
+        ///<summary> Who knows</summary>
+        [XmlIgnore]
+        public double[] SWmmdailyMax { get; set; }
         #endregion
 
         #region Properties
@@ -554,8 +572,9 @@ namespace Models.Soils
             pond_evap = 0;
             Es = 0;
             double CropCover = 0;
-            if (Plant.Leaf != null)
-                CropCover = Plant.Leaf.CoverTotal;
+            if(Plant != null)
+                if (Plant.Leaf != null)
+                    CropCover = Plant.Leaf.CoverTotal;
             TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
             double SoilRadn = Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
@@ -565,7 +584,9 @@ namespace Models.Soils
             Array.Clear(Hourly.Drainage, 0, 24);
             Array.Clear(Hourly.Infiltration, 0, 24);
             Array.Clear(Diffusion, 0, ProfileLayers);
-            DistributeRoots();
+            if(Plant != null)
+                if(Plant.Root != null)
+                    DistributeRoots();
             for (int l = 0; l < ProfileLayers; l++)
             {
                 DailyWaterExtraction[l] = 0;
@@ -583,8 +604,10 @@ namespace Models.Soils
             doPrecipitation();
             SODPondDepth = pond;
             double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
+            SWdailyMax = SW; //Set SWmax value to the end of yesterday start of today value.  Later in the code we increase this if SW exceeds it at any of the time steps
             for (int h = 0; h < 24; h++)
             {
+                SetRepellencyFactor();
                 //If duration of precipitation is less than an hour and the rate is high, set up sub hourly timestep
                 int TimeStepSplits = 1;
                 bool SplitTimeStep = ((((IrrigationDuration>0.0)&&(IrrigationDuration < 1.0)) 
@@ -624,6 +647,11 @@ namespace Models.Soils
                 if(CalculateDiffusion)
                     doDiffusion();
                 ClearSubHourlyData();
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    if (SW[l] > SWdailyMax[l])
+                        SWdailyMax[l] = SW[l];
+                }
             }
             EODPondDepth = pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
@@ -891,21 +919,22 @@ namespace Models.Soils
         /// </summary>
         private void doTranspiration()
         {
-            if (Plant.Leaf != null)
-            {
-                double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
-                double UnMetDemand = HourlyTranspirationDemand;
-                for (int l = 0; l < ProfileLayers; l++)
+            if(Plant != null)
+                if (Plant.Leaf != null)
                 {
-                    for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                    double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
+                    double UnMetDemand = HourlyTranspirationDemand;
+                    for (int l = 0; l < ProfileLayers; l++)
                     {
-                        double PoreWaterExtraction = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
-                        UnMetDemand -= PoreWaterExtraction;
-                        Pores[l][c].WaterDepth += PoreWaterExtraction;
-                        DailyWaterExtraction[l] -= PoreWaterExtraction;
+                        for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                        {
+                            double PoreWaterExtraction = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
+                            UnMetDemand -= PoreWaterExtraction;
+                            Pores[l][c].WaterDepth += PoreWaterExtraction;
+                            DailyWaterExtraction[l] -= PoreWaterExtraction;
+                        }
                     }
                 }
-            }
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -1030,6 +1059,7 @@ namespace Models.Soils
                 LL15mm[l] = Water.LL15[l] * Water.Thickness[l];
                 SATmm[l] = Water.SAT[l] * Water.Thickness[l];
                 ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
+                //PAWC[l] = Water.DUL[l] - Water.LL15[l];
             }
             doGravitionalPotential();
             for (int l = 0; l < ProfileLayers; l++)
@@ -1196,7 +1226,21 @@ namespace Models.Soils
                 }
             }
         }
-        
+        private void SetRepellencyFactor()
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                double[] X = { MaxHydrophobicRWC[l], MinHydrophilicRWC[l] };
+                double[] Y = { MinRepellancyFactor[l],1.0};
+                double dX = SW[l] / Water.SAT[l];
+                bool DidInterpolate;
+                double Factor = MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    Pores[l][c].RepelancyFactor = Factor;
+                }
+            }
+        }
         #endregion
     }
 }

@@ -165,26 +165,17 @@ namespace Models.Soils
         }
         /// <summary>
         /// Factor describing the effects of soil water content on hydrophobosity
-        /// equals 1
+        /// equals 1 if soil is hydrophyllic and decreases is soil becomes more hydrophobic
         /// </summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double RepelancyFactor
-        {
-            get
-            {
-                double RepFac = 1;
-                //if (RelativeWaterContent < 0.3)
-                //    RepFac = 0.3;
-                return RepFac;
-            }
-        }
+        public double RepelancyFactor { get; set; }
         /// <summary>
-        /// The rate of water movement into a pore space due to the chemical attraction from the matris
+        /// The rate of water movement into a pore space due to the chemical attraction from the matrix
         /// </summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Sorption { get { return 0.5 * Sorptivity * Math.Pow(1, -0.5) * RepelancyFactor; } }
+        public double Sorption { get { return 0.5 * Sorptivity * Math.Pow(1, -0.5); } }
         /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -195,9 +186,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return Capillarity + Sorption;
+                    return (Capillarity + Sorption) * RepelancyFactor;
                 else
-                    return Capillarity;
+                    return Capillarity * RepelancyFactor;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
@@ -227,7 +218,7 @@ namespace Models.Soils
         {
             get
             {
-                return Capillarity * TensionFactor;
+                return Math.Max(0, Capillarity) * TensionFactor;
             }
         }
         #endregion
