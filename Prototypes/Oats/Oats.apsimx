@@ -308,7 +308,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>GrainDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>120</Value>
+            <Value>240</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -321,7 +321,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>900</Value>
+            <Value>700</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -1232,7 +1232,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>LinearPhase</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.5</Value>
+                <Value>0.6</Value>
               </Constant>
               <Start>StartGrainFill</Start>
               <End>EndGrainFill</End>
@@ -1741,11 +1741,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.5</double>
+                  <double>0</double>
                   <double>1</double>
                 </X>
                 <Y>
-                  <double>0.1</double>
+                  <double>0.5</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
@@ -1776,8 +1776,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.3</double>
-                  <double>1</double>
+                  <double>0</double>
+                  <double>0.7</double>
                   <double>1</double>
                 </X>
                 <Y>
@@ -1904,10 +1904,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <AddFunction>
                   <Name>ThermalTimeToRipe</Name>
                   <VariableReference>
-                    <Name>EarlyReproductive</Name>
-                    <VariableName>[Phenology].EarlyReproductive.Target.Value</VariableName>
-                  </VariableReference>
-                  <VariableReference>
                     <Name>GrainDevelopment</Name>
                     <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
                   </VariableReference>
@@ -1937,12 +1933,31 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>6</Value>
+              <Value>10</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
               <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
             </VariableReference>
+            <LinearInterpolationFunction>
+              <Name>LinearInterpolationFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>2000</double>
+                  <double>4500</double>
+                  <double>6000</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].CohortParameters.MaxArea.Value</XProperty>
+            </LinearInterpolationFunction>
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
@@ -2893,6 +2908,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].AboveGround.N</string>
         <string>[Oats].AboveGround.Wt</string>
         <string>[Oats].AboveGroundLive.N</string>
+        <string>[Oats].AboveGroundLive.N*10 as UptakeNKgHA</string>
         <string>[Oats].AboveGroundLive.Wt</string>
         <string>[Oats].AboveGroundDead.N</string>
         <string>[Oats].AboveGroundDead.Wt</string>
@@ -3048,13 +3064,11 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>RS_SW_Obs</string>
       </SheetNames>
     </ExcelInput>
-    <ExcelInput>
-      <Name>Oats9899Leaf</Name>
-      <FileName>Observed\RS_Oats_9899_leaf.xlsx</FileName>
-      <SheetNames>
-        <string>RS_Oats_9899_leaf</string>
-      </SheetNames>
-    </ExcelInput>
+    <Input>
+      <Name>OatsLeafSize</Name>
+      <ErrorMessage>Please select a file to use.</ErrorMessage>
+      <FileName>Observed\RS_Oats_9899_leaf.csv</FileName>
+    </Input>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -4193,7 +4207,9 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
+            <string>[Phenology].ThermalTime.Value</string>
             <string>[Leaf].CohortSize</string>
+            <string>[Leaf].CohortParameters.MaxArea.Value</string>
             <string>[0ats].Arbitrator.DMAllocated</string>
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
@@ -4205,7 +4221,6 @@ namespace Models
             <string>[0ats].Leaf.CohortMaxSize</string>
             <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
             <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
             <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
             <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
             <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
@@ -4737,14 +4752,9 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries>
-        <string>Nill: Series</string>
-        <string>Full: Series</string>
+        <string>LD1: Series</string>
         <string>LD4: Series</string>
         <string>ED1: Series</string>
-        <string>Nill: Series1</string>
-        <string>Full: Series1</string>
-        <string>LD4: Series1</string>
-        <string>ED1: Series1</string>
       </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -4808,14 +4818,9 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries>
-        <string>Nill: Series</string>
         <string>LD1: Series</string>
         <string>LD4: Series</string>
         <string>ED1: Series</string>
-        <string>Nill: Series1</string>
-        <string>LD1: Series1</string>
-        <string>LD4: Series1</string>
-        <string>ED1: Series1</string>
       </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -7851,7 +7856,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries>
-        <string>Nill: Series</string>
+        <string>Full: Series</string>
         <string>LD1: Series</string>
         <string>LD4: Series</string>
         <string>ED1: Series</string>
@@ -7861,7 +7866,133 @@ namespace Models
     <Graph>
       <Name>LAI1</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Dim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(1)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(2)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim11</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(3)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(4)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim1111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(5)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim11111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(6)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim111111</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7881,28 +8012,8 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>LAI11</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Dim1111111</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -7914,9 +8025,51 @@ namespace Models
         <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
-        <TableName>RS_Oats_9899_leaf</TableName>
+        <TableName>SupReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Leaf.CohortSize(7)</YFieldName>
+        <YFieldName>Leaf.CohortSize(8)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim11111111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(9)</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Dim111111111</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>SupReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Leaf.CohortSize(10)</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7932,12 +8085,53 @@ namespace Models
       <Axis>
         <Type>Left</Type>
         <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
+        <Minimum>0</Minimum>
+        <Maximum>5000</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
+      <DisabledSeries>
+        <string>Nill: Dim</string>
+        <string>LD1: Dim</string>
+        <string>LD4: Dim</string>
+        <string>ED1: Dim</string>
+        <string>Nill: Dim1</string>
+        <string>LD1: Dim1</string>
+        <string>LD4: Dim1</string>
+        <string>ED1: Dim1</string>
+        <string>Nill: Dim11</string>
+        <string>LD1: Dim11</string>
+        <string>LD4: Dim11</string>
+        <string>ED1: Dim11</string>
+        <string>Nill: Dim111</string>
+        <string>LD1: Dim111</string>
+        <string>LD4: Dim111</string>
+        <string>ED1: Dim111</string>
+        <string>Nill: Dim1111</string>
+        <string>LD1: Dim1111</string>
+        <string>LD4: Dim1111</string>
+        <string>ED1: Dim1111</string>
+        <string>Nill: Dim11111</string>
+        <string>LD1: Dim11111</string>
+        <string>LD4: Dim11111</string>
+        <string>ED1: Dim11111</string>
+        <string>Nill: Dim111111</string>
+        <string>LD1: Dim111111</string>
+        <string>LD4: Dim111111</string>
+        <string>ED1: Dim111111</string>
+        <string>Nill: Dim1111111</string>
+        <string>LD1: Dim1111111</string>
+        <string>LD4: Dim1111111</string>
+        <string>ED1: Dim1111111</string>
+        <string>Nill: Dim11111111</string>
+        <string>LD1: Dim11111111</string>
+        <string>LD4: Dim11111111</string>
+        <string>ED1: Dim11111111</string>
+        <string>Nill: Dim111111111</string>
+        <string>LD1: Dim111111111</string>
+        <string>LD4: Dim111111111</string>
+        <string>ED1: Dim111111111</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
@@ -8601,7 +8795,7 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>217</double>
+              <double>20</double>
               <double>30</double>
               <double>5</double>
               <double>5</double>
@@ -8701,7 +8895,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
+        <YFieldName>Oats.AboveGround.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8743,9 +8937,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>Aug0: Obs</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
@@ -9058,6 +9250,70 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>AboveGroundN</Name>
+      <Series>
+        <Name>Sim</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>UptakeNKgHA</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Obs2015</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Oats.AboveGround.N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries>
+        <string>Aug0: Obs</string>
+      </DisabledSeries>
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
