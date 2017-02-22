@@ -356,6 +356,19 @@
           <double>0.36</double>
         </SAT>
       </Water>
+      <LayerStructure>
+        <Name>LayerStructure</Name>
+        <Thickness>
+          <double>30</double>
+          <double>170</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+        </Thickness>
+      </LayerStructure>
       <MultiPoreWater>
         <Name>MultiPoreWater</Name>
         <Salb>0.15</Salb>
@@ -369,6 +382,36 @@
           <double>200</double>
           <double>200</double>
         </Thickness>
+        <LL15>
+          <double>0.16</double>
+          <double>0.15</double>
+          <double>0.14</double>
+          <double>0.14</double>
+          <double>0.14</double>
+          <double>0.14</double>
+          <double>0.14</double>
+          <double>0.14</double>
+        </LL15>
+        <DUL>
+          <double>0.3</double>
+          <double>0.3</double>
+          <double>0.28</double>
+          <double>0.28</double>
+          <double>0.26</double>
+          <double>0.26</double>
+          <double>0.26</double>
+          <double>0.26</double>
+        </DUL>
+        <SAT>
+          <double>0.44</double>
+          <double>0.44</double>
+          <double>0.46</double>
+          <double>0.46</double>
+          <double>0.36</double>
+          <double>0.36</double>
+          <double>0.36</double>
+          <double>0.36</double>
+        </SAT>
         <CFlow>
           <double>7E-11</double>
           <double>7E-11</double>
