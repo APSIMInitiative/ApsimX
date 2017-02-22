@@ -118,6 +118,8 @@ namespace Models.Soils
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
+                if (Double.IsNaN(_WaterDepth))
+                    throw new Exception("Something has just set Water depth to Nan in " + Compartment + "in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -238,7 +240,7 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double RootExplorationProportion { get; set; }
+        public double RootExplorationFactor { get; set; }
 
         /// <summary>
         /// The amount of water that may be extracted from this pore class by plant roots each hour
@@ -247,7 +249,7 @@ namespace Models.Soils
         [Units("0-1")]
         public double PotentialWaterExtraction
         {
-            get { return Math.Min(PoiseuilleFlow * RootExplorationProportion,WaterDepth); }
+            get { return Math.Min(PoiseuilleFlow * RootExplorationFactor*1000,WaterDepth); }
         }
         #endregion
     }

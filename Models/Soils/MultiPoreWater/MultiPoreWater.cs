@@ -436,6 +436,10 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] SWmmdailyMax { get; set; }
+        ///<summary> Water extracted by crop roots for transpiration</summary>
+        [XmlIgnore]
+        [Units("mm/d")]
+        public double WaterExtraction { get; set; }
         #endregion
 
         #region Properties
@@ -487,7 +491,7 @@ namespace Models.Soils
         /// The amount of water mm stored in a layer at saturation
         /// </summary>
         private double[] SaturatedWaterDepth { get; set; }
-        private double[] DailyWaterExtraction { get; set; }
+        private double[] HourlyWaterExtraction { get; set; }
         #endregion
 
         #region Event Handlers
@@ -517,7 +521,7 @@ namespace Models.Soils
             SW = new double[ProfileLayers];
             Diffusion = new double[ProfileLayers];
             SaturatedWaterDepth = new double[ProfileLayers];
-            DailyWaterExtraction = new double[ProfileLayers];
+            HourlyWaterExtraction = new double[ProfileLayers];
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
@@ -571,6 +575,7 @@ namespace Models.Soils
             Infiltration = 0;
             pond_evap = 0;
             Es = 0;
+            WaterExtraction = 0;
             double CropCover = 0;
             if(Plant != null)
                 if (Plant.Leaf != null)
@@ -586,11 +591,7 @@ namespace Models.Soils
             Array.Clear(Diffusion, 0, ProfileLayers);
             if(Plant != null)
                 if(Plant.Root != null)
-                    DistributeRoots();
-            for (int l = 0; l < ProfileLayers; l++)
-            {
-                DailyWaterExtraction[l] = 0;
-            }
+                    SetRootFactor();
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -643,7 +644,7 @@ namespace Models.Soils
                 }
                 doTranspiration();
                 if(CalculateEvaporation)
-                    doEvaporation(h);
+                    doEvaporation();
                 if(CalculateDiffusion)
                     doDiffusion();
                 ClearSubHourlyData();
@@ -658,7 +659,7 @@ namespace Models.Soils
             Drainage = MathUtilities.Sum(Hourly.Drainage);
             double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
             double DeltaSWC = SoilWaterContentSOD - SoilWaterContentEOD;
-            double CheckMass = DeltaSWC + Infiltration - Drainage - Es;
+            double CheckMass = DeltaSWC + Infiltration - Drainage - Es - WaterExtraction;
             if (Math.Abs(CheckMass) > FloatingPointTolerance)
                 throw new Exception(this + " Mass balance violated");
         }
@@ -896,7 +897,7 @@ namespace Models.Soils
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
-        private void doEvaporation(int h)
+        private void doEvaporation()
         {
             double EvaporationSupplyHourly = SWmm[0] + pond; //Water can evaporation from the surface layer or the pond
             EvaporationHourly = Math.Min(Eos / 24, EvaporationSupplyHourly);  //Actual evaporation from the soil is constrained by supply from soil and pond and by demand from the atmosphere
@@ -922,19 +923,22 @@ namespace Models.Soils
             if(Plant != null)
                 if (Plant.Leaf != null)
                 {
+                    Array.Clear(HourlyWaterExtraction, 0, ProfileLayers);
                     double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
                     double UnMetDemand = HourlyTranspirationDemand;
-                    for (int l = 0; l < ProfileLayers; l++)
+                    for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
                     {
                         for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
                         {
-                            double PoreWaterExtraction = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
-                            UnMetDemand -= PoreWaterExtraction;
-                            Pores[l][c].WaterDepth += PoreWaterExtraction;
-                            DailyWaterExtraction[l] -= PoreWaterExtraction;
+                            double PoreWaterExtractionHourly = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
+                            UnMetDemand -= PoreWaterExtractionHourly;
+                            Pores[l][c].WaterDepth -= PoreWaterExtractionHourly;
+                            HourlyWaterExtraction[l] += PoreWaterExtractionHourly;
                         }
                     }
+                    WaterExtraction += MathUtilities.Sum(HourlyWaterExtraction);
                 }
+            UpdateProfileValues();
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -1168,6 +1172,7 @@ namespace Models.Soils
             double WaterIn = InitialProfileWater + InitialPondDepth + InitialResidueWater 
                              + Rain + Irrig;
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
+            double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
             double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Drain;
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
                 throw new Exception(this + " " + Process + " calculations are violating mass balance");           
@@ -1206,24 +1211,28 @@ namespace Models.Soils
         }
         private void ClearSubHourlyData()
         {
-            Array.Clear(SubHourly.Irrigation, 0, 10);
-            Array.Clear(SubHourly.Rainfall, 0, 10);
-            Array.Clear(SubHourly.Drainage, 0, 10);
-            Array.Clear(SubHourly.Infiltration, 0, 10);
+            Array.Clear(SubHourly.Irrigation, 0, PoreCompartments);
+            Array.Clear(SubHourly.Rainfall, 0, PoreCompartments);
+            Array.Clear(SubHourly.Drainage, 0, PoreCompartments);
+            Array.Clear(SubHourly.Infiltration, 0, PoreCompartments);
         }
         /// <summary>
         /// Call each time the plant root systems grows to update root distribution parameters in soil layers
         /// </summary>
-        private void DistributeRoots()
+        private void SetRootFactor()
         {
             for (int l = 0; l < ProfileLayers; l++)
-            {//Step through each layer and distribute roots through largest pores, assuming when there are more roots they start to explore the smaller pores.
-                double RLDtoDistribute = Plant.Root.LengthDensity[l] * 1e6; //Get root length density (mm/mm3) from plant model, assume this equals the number of roots in a square mm area and multiply by 1e6 to convert to roots per m2
-                for (int c = PoreCompartments - 1; c >= 0; c--)
+            {//Step through each layer and set roof factor.
+                if (Plant.Root.LengthDensity[l] > 0)
                 {
-                    double RootedPores = Math.Min(Pores[l][c].Number, RLDtoDistribute);
-                    Pores[l][c].RootExplorationProportion = RootedPores / Pores[l][c].Number;
-                    RLDtoDistribute -= RootedPores;
+                    double RootFactor = 1;
+                    if (Plant.Root.LengthDensity[l] < 0.004)
+                        RootFactor = Plant.Root.LengthDensity[l] / 0.004;
+
+                    for (int c = PoreCompartments - 1; c >= 0; c--)
+                    {
+                        Pores[l][c].RootExplorationFactor = RootFactor;
+                    }
                 }
             }
         }
