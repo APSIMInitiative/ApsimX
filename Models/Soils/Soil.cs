@@ -1154,10 +1154,16 @@ namespace Models.Soils
             return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private enum MapType { Mass, Concentration, UseBD }
+        /// <summary>different methods for mapping soil variables </summary>
+        public enum MapType
+        {
+            /// <summary>How heavy things are</summary>
+            Mass,
+            /// <summary>The concentration of things</summary>
+            Concentration,
+            /// <summary>Using bulk density</summary>
+            UseBD
+        }
         /// <summary>Map soil variables from one layer structure to another.</summary>
         /// <param name="FValues">The f values.</param>
         /// <param name="FThickness">The f thickness.</param>
@@ -1165,8 +1171,8 @@ namespace Models.Soils
         /// <param name="MapType">Type of the map.</param>
         /// <param name="DefaultValueForBelowProfile">The default value for below profile.</param>
         /// <returns></returns>
-        private double[] Map(double[] FValues, double[] FThickness,
-                             double[] ToThickness, MapType MapType,
+        public double[] Map(double[] FValues, double[] FThickness,
+                             double[] ToThickness, MapType MapType = MapType.Concentration,
                              double DefaultValueForBelowProfile = double.NaN)
         {
             if (FValues == null || FThickness == null || FValues.Length != FThickness.Length)
