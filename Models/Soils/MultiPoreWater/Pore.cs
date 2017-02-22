@@ -89,7 +89,16 @@ namespace Models.Soils
         /// <summary>The water filled volume of the pore relative to the air space</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double RelativeWaterContent { get { return WaterFilledVolume / Volume; } }
+        public double RelativeWaterContent
+        {
+            get
+            {
+                if (Volume > 0)
+                    return WaterFilledVolume / Volume;
+                else
+                    return 0;
+            }
+        }
         /// <summary>The air filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]

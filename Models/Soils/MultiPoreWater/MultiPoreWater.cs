@@ -943,30 +943,31 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers - 1; l++)
             {//Step through each layer from the top down
-                double PotentialDownwardDiffusion = 0;
-                double PotentialUpwardDiffusion = 0;
-                double UpwardDiffusionCapacity = 0;
-                double DownwardDiffusionCapacity = 0;
+                double PotentialDownwardPoiseuilleFlow = 0;
+                double PotentialUpwardPoiseuilleFlow = 0;
                 double DownwardDiffusion = 0;
                 double UpwardDiffusion = 0;
+                double DownwardDiffusionCapacity = 0;
+                double UpwardDiffusionCapacity = 0;
                 for (int c = 0; c < PoreCompartments; c++)
                 {//Step through each pore and calculate diffusion in and out
 
-                    PotentialDownwardDiffusion += Pores[l][c].Diffusivity * DiffusivityMultiplier;//Diffusion out of this layer to layer below
+                    PotentialDownwardPoiseuilleFlow += Pores[l][c].Diffusivity * DiffusivityMultiplier;//Diffusion out of this layer to layer below
                     UpwardDiffusionCapacity += Pores[l][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb upward diffusion
+
                     if (l <= ProfileLayers - 1)
                     {
-                        PotentialUpwardDiffusion += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
+                        PotentialUpwardPoiseuilleFlow += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
                         DownwardDiffusionCapacity += Pores[l + 1][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb downward diffusion
                     }
                     else
                     {
-                        PotentialUpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
+                        PotentialUpwardPoiseuilleFlow = 0; //Need to put something here to work out capillary rise from below specified profile
                         DownwardDiffusionCapacity = 0;
                     }
                 }
-                UpwardDiffusion = Math.Min(PotentialUpwardDiffusion, UpwardDiffusionCapacity);
-                DownwardDiffusion = Math.Min(PotentialDownwardDiffusion, DownwardDiffusionCapacity);
+                UpwardDiffusion = Math.Min(PotentialUpwardPoiseuilleFlow, UpwardDiffusionCapacity);
+                DownwardDiffusion = Math.Min(PotentialDownwardPoiseuilleFlow, DownwardDiffusionCapacity);
                 double NetDiffusion = UpwardDiffusion - DownwardDiffusion;
                 Diffusion[l] += NetDiffusion;
                 if (NetDiffusion > 0) //Bring water into current layer and remove from layer below
@@ -980,7 +981,6 @@ namespace Models.Soils
                     if (l <= ProfileLayers - 1)
                         DistributeInwardDiffusion(l + 1, -NetDiffusion);
                     DistributeOutwardDiffusion(l, -NetDiffusion);
-                    
                 }
             }
             UpdateProfileValues();
