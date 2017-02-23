@@ -195,7 +195,7 @@ namespace Models.Soils
                 if (waterNode != null)
                     return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
                 else if (WEIRDO != null)
-                    return Map(WEIRDO.BD, WEIRDO.Thickness, Thickness, MapType.Concentration, WEIRDO.BD.Last());
+                    return Map(WEIRDO.BD, WEIRDO.ParamThickness, Thickness, MapType.Concentration, WEIRDO.BD.Last());
                 else
                     throw new Exception("Whoops, No soil models to provide a BD value");
             }
@@ -265,7 +265,7 @@ namespace Models.Soils
                 if(waterNode != null)
                 return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.LL15, WEIRDO.Thickness, Thickness, MapType.Concentration);
+                    return Map(WEIRDO.LL15, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -277,7 +277,7 @@ namespace Models.Soils
                 if(waterNode !=null)
                 return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.DUL, WEIRDO.Thickness, Thickness, MapType.Concentration);
+                    return Map(WEIRDO.DUL, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -289,7 +289,7 @@ namespace Models.Soils
                 if(waterNode != null)
                 return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.SAT, WEIRDO.Thickness, Thickness, MapType.Concentration);
+                    return Map(WEIRDO.SAT, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -1104,7 +1104,7 @@ namespace Models.Soils
             if(waterNode != null)
             return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
             else
-                return Map(WEIRDO.BD, WEIRDO.Thickness, ToThickness, MapType.Concentration, WEIRDO.BD.Last());
+                return Map(WEIRDO.BD, WEIRDO.ParamThickness, ToThickness, MapType.Concentration, WEIRDO.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>

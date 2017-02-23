@@ -696,8 +696,8 @@ namespace Models.Soils
             WaterExtraction = 0;
             double CropCover = 0;
             if(Plant != null)
-                if (Plant.Leaf != null)
-                    CropCover = Plant.Leaf.CoverTotal;
+                if (Plant.Canopy != null)
+                    CropCover = Plant.Canopy.CoverTotal;
             TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
             double SoilRadn = Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
@@ -1039,10 +1039,10 @@ namespace Models.Soils
         private void doTranspiration()
         {
             if(Plant != null)
-                if (Plant.Leaf != null)
+                if (Plant.Canopy != null)
                 {
                     Array.Clear(HourlyWaterExtraction, 0, ProfileLayers);
-                    double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
+                    double HourlyTranspirationDemand = Plant.Canopy.PotentialEP / 24;
                     double UnMetDemand = HourlyTranspirationDemand;
                     for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
                     {
