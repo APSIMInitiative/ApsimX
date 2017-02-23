@@ -147,14 +147,24 @@ namespace Models.PMF.Organs
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
 
             SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
-            Depth = Depth + root.RootFrontVelocity.Value * crop.XF[RootLayer];
+            if (soil.WEIRDO == null)
+                Depth = Depth + root.RootFrontVelocity.Value * crop.XF[RootLayer];
+            else
+                Depth = Depth + root.RootFrontVelocity.Value;
+
 
             // Limit root depth for impeded layers
             double MaxDepth = 0;
             for (int i = 0; i < soil.Thickness.Length; i++)
-                if (crop.XF[i] > 0)
+            {
+                if (soil.WEIRDO == null)
+                {
+                    if (crop.XF[i] > 0)
+                        MaxDepth += soil.Thickness[i];
+                }
+                else
                     MaxDepth += soil.Thickness[i];
-
+            }
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(root.MaximumRootDepth.Value, MaxDepth);
 

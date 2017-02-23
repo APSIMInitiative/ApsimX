@@ -32,7 +32,10 @@ namespace Models.Soils
         /// <summary>Gets the water.</summary>
         private Water waterNode;
 
-        private MultiPoreWater WEIRDO;
+        /// <summary>
+        /// The multipore water model.  An alternativie soil water model that is not yet fully functional
+        /// </summary>
+        public MultiPoreWater WEIRDO;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
 
@@ -445,13 +448,17 @@ namespace Models.Soils
             if (!CropName.EndsWith("Soil"))
                 CropName += "Soil";
 
-            ISoilCrop MeasuredCrop = waterNode.Crop(CropName); 
-            if (MeasuredCrop != null)
-                return MeasuredCrop;
-            ISoilCrop Predicted = PredictedCrop(CropName);
-            if (Predicted != null)
-                return Predicted;
-            throw new Exception("Soil could not find crop: " + CropName);
+            if (waterNode != null)
+            {
+                ISoilCrop MeasuredCrop = waterNode.Crop(CropName);
+                if (MeasuredCrop != null)
+                    return MeasuredCrop;
+                ISoilCrop Predicted = PredictedCrop(CropName);
+                if (Predicted != null)
+                    return Predicted;
+                throw new Exception("Soil could not find crop: " + CropName);
+            }
+            else return null;
         }
 
         ///// <summary>
