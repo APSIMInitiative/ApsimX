@@ -244,7 +244,21 @@ namespace Models.Soils
         #endregion
 
         #region Parameters
-        private double[] ParamThickness { get; set; }
+        private double[] _Thickness;
+        /// <summary>
+        /// The thickness of each soil layer for parameter values
+        /// </summary>
+        public double[] ParamThickness
+        {
+            get
+            {
+                return _Thickness;
+            }
+            set
+            {
+                _Thickness = value;
+            }
+        }
         /// <summary>
         /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
         /// </summary>
@@ -257,7 +271,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("cm")]
-        [Description("Soil layer thickness for each layer (cm)")]
+        [Description("Layer Depth")]
         public string[] Depth
         {
             get
@@ -291,24 +305,40 @@ namespace Models.Soils
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("CFlow")]
-        [Display(Format = "E2")]
+        [Description("ConductC")]
+        [Display(Format = "e1")]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("XFlow")]
+        [Description("ConductX")]
+        [Display(Format = "N1")]
         public double[] XFlow { get; set; }
         /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
         [Description("PsiBub")]
+        [Units("mm H2O")]
+        [Display(Format = "N0")]
         public double[] PsiBub { get; set; }
         /// <summary>Relative Water content above which soil is hydrophillic</summary>
-        [Description("MinHydrophilicRWC")]
-        public double[] MinHydrophilicRWC { get; set; }
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rupper")]
+        public double[] MaxRepellentWC { get; set; }
         /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
-        [Description("MaxHydrophobicRWC")]
-        public double[] MaxHydrophobicRWC { get; set; }
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rlower")]
+        public double[] MinRepellentWC { get; set; }
         /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
-        [Description("MinRepellancyFactor")]
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("RFacMin")]
         public double[] MinRepellancyFactor { get; set; }
+        /// <summary>Gets or sets the bd.</summary>
+        /// <value>The bd.</value>
+        [Summary]
+        [Description("BD")]
+        [Units("g/cc")]
+        [Display(Format = "N2")]
+        public double[] BD { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
@@ -384,7 +414,29 @@ namespace Models.Soils
         public double[] MappedMaxHydrophobicRWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
+        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
+        public double[] InitialSoilWater
+        {
+            get
+            {
+                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
 
+                if (initialWater != null)
+                    throw new Exception("WEIRDO doesn't integrate with InitialWater Node yet");
+                //return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
+                else
+                {
+                    foreach (Sample Sample in Apsim.Children(this.Parent, typeof(Sample)))
+                    {
+                        if (MathUtilities.ValuesInArray(Sample.SW))
+                        {
+                            return Soil.Map(Sample.SWVolumetric, Sample.Thickness, Thickness);
+                        }
+                    }
+                }
+                return null;
+            }
+        }
         #endregion
 
         #region Outputs
@@ -576,8 +628,8 @@ namespace Models.Soils
             MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness);
-            MappedMinHydrophilicRWC = Soil.Map(MinHydrophilicRWC, ParamThickness, Thickness);
-            MappedMaxHydrophobicRWC = Soil.Map(MaxHydrophobicRWC, ParamThickness, Thickness);
+            MappedMinHydrophilicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
+            MappedMaxHydrophobicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
             MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness);
 
             Pores = new Pore[ProfileLayers][];
@@ -615,6 +667,15 @@ namespace Models.Soils
             ProfileSaturation = MathUtilities.Sum(SaturatedWaterDepth);
             
             if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
+
+            //Check the soil water content initialisation is legit
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                if (InitialSoilWater[l] > MappedSAT[l])
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
+                if (InitialSoilWater[l] < MappedLL15[l])
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
+            }
         }
 
         /// <summary>
@@ -1106,12 +1167,12 @@ namespace Models.Soils
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
                     Pores[l][c].CFlow = MappedCFlow[l];
                     Pores[l][c].XFlow = MappedXFlow[l];
-                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, InitialSoilWater[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
-                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumWaterVolume - InitialSoilWater[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];

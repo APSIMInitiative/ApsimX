@@ -227,148 +227,6 @@
     <Name>Replacements</Name>
     <Soil>
       <Name>Soil</Name>
-      <Water>
-        <Name>Water</Name>
-        <SoilCrop>
-          <Name>SlurpSoil</Name>
-          <LL>
-            <double>0.08</double>
-            <double>0.08</double>
-            <double>0.12</double>
-            <double>0.08</double>
-            <double>0.07</double>
-            <double>0.12</double>
-            <double>0.15</double>
-            <double>0.15</double>
-          </LL>
-          <KL>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-          </KL>
-          <XF>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </XF>
-        </SoilCrop>
-        <SoilCrop>
-          <Name>MaizeSoil</Name>
-          <LL>
-            <double>0.08</double>
-            <double>0.08</double>
-            <double>0.12</double>
-            <double>0.08</double>
-            <double>0.07</double>
-            <double>0.12</double>
-            <double>0.15</double>
-            <double>0.15</double>
-          </LL>
-          <KL>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-          </KL>
-          <XF>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </XF>
-        </SoilCrop>
-        <Thickness>
-          <double>30</double>
-          <double>170</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-        </Thickness>
-        <BD>
-          <double>1.3</double>
-          <double>1.3</double>
-          <double>1.3</double>
-          <double>1.3</double>
-          <double>1.52</double>
-          <double>1.52</double>
-          <double>1.52</double>
-          <double>1.65</double>
-        </BD>
-        <AirDry>
-          <double>0.16</double>
-          <double>0.15</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-        </AirDry>
-        <LL15>
-          <double>0.16</double>
-          <double>0.15</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-          <double>0.14</double>
-        </LL15>
-        <DUL>
-          <double>0.3</double>
-          <double>0.3</double>
-          <double>0.28</double>
-          <double>0.28</double>
-          <double>0.26</double>
-          <double>0.26</double>
-          <double>0.26</double>
-          <double>0.26</double>
-        </DUL>
-        <SAT>
-          <double>0.44</double>
-          <double>0.44</double>
-          <double>0.46</double>
-          <double>0.46</double>
-          <double>0.36</double>
-          <double>0.36</double>
-          <double>0.36</double>
-          <double>0.36</double>
-        </SAT>
-      </Water>
-      <LayerStructure>
-        <Name>LayerStructure</Name>
-        <Thickness>
-          <double>30</double>
-          <double>170</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-          <double>200</double>
-        </Thickness>
-      </LayerStructure>
       <MultiPoreWater>
         <Name>MultiPoreWater</Name>
         <Salb>0.15</Salb>
@@ -382,6 +240,16 @@
           <double>200</double>
           <double>200</double>
         </Thickness>
+        <ParamThickness>
+          <double>30</double>
+          <double>170</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+        </ParamThickness>
         <LL15>
           <double>0.16</double>
           <double>0.15</double>
@@ -442,26 +310,26 @@
           <double>-70</double>
           <double>-70</double>
         </PsiBub>
-        <MinHydrophilicRWC>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-          <double>0.1</double>
-        </MinHydrophilicRWC>
-        <MaxHydrophobicRWC>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-          <double>0.05</double>
-        </MaxHydrophobicRWC>
+        <MaxRepellentWC>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+          <double>0.8</double>
+        </MaxRepellentWC>
+        <MinRepellentWC>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+          <double>0.2</double>
+        </MinRepellentWC>
         <MinRepellancyFactor>
           <double>1</double>
           <double>1</double>
@@ -472,6 +340,16 @@
           <double>1</double>
           <double>1</double>
         </MinRepellancyFactor>
+        <BD>
+          <double>1</double>
+          <double>1</double>
+          <double>1.2</double>
+          <double>1.2</double>
+          <double>1.3</double>
+          <double>1.4</double>
+          <double>1.5</double>
+          <double>1.6</double>
+        </BD>
         <SubProfileConductance>20</SubProfileConductance>
         <WaterTableDepth>10</WaterTableDepth>
         <CalculateInfiltration>true</CalculateInfiltration>
@@ -488,6 +366,25 @@
         <ReportLayer>0</ReportLayer>
         <TimeStep>0</TimeStep>
       </MultiPoreWater>
+      <LayerStructure>
+        <Name>LayerStructure</Name>
+        <Thickness>
+          <double>30</double>
+          <double>170</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+          <double>200</double>
+        </Thickness>
+      </LayerStructure>
+      <Evapotranspiration>
+        <Name>Evapotranspiration</Name>
+      </Evapotranspiration>
+      <MRSpline>
+        <Name>MRSpline</Name>
+      </MRSpline>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
         <fom_type>
@@ -531,9 +428,6 @@
           <double>1</double>
         </wfpsN2N2O_y>
       </SoilNitrogen>
-      <Evapotranspiration>
-        <Name>Evapotranspiration</Name>
-      </Evapotranspiration>
       <SoilOrganicMatter>
         <Name>SoilOrganicMatter</Name>
         <RootCN>40</RootCN>
@@ -613,9 +507,6 @@
         <PHUnits>Water</PHUnits>
         <BoronUnits>HotWater</BoronUnits>
       </Analysis>
-      <MRSpline>
-        <Name>MRSpline</Name>
-      </MRSpline>
       <Sample>
         <Name>InitialN</Name>
         <Thickness>
@@ -2046,11 +1937,11 @@ namespace Models
               <double>0.2</double>
               <double>0.27</double>
               <double>0.16</double>
-              <double>0.13</double>
-              <double>0.07</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -2116,11 +2007,11 @@ namespace Models
               <double>0.22</double>
               <double>0.26</double>
               <double>0.18</double>
-              <double>0.15</double>
-              <double>0.07</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -2186,11 +2077,11 @@ namespace Models
               <double>0.22</double>
               <double>0.27</double>
               <double>0.16</double>
-              <double>0.13</double>
-              <double>0.07</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -2256,11 +2147,11 @@ namespace Models
               <double>0.2</double>
               <double>0.25</double>
               <double>0.16</double>
-              <double>0.12</double>
-              <double>0.07</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -5192,147 +5083,6 @@ namespace Models
             <PHUnits>Water</PHUnits>
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>SlurpSoil</Name>
-              <LL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.09</double>
-                <double>0.021</double>
-                <double>0.036</double>
-                <double>0.041</double>
-                <double>0.043</double>
-                <double>0.037</double>
-                <double>0.052</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>30</double>
-              <double>150</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>400</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.05</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.021</double>
-              <double>0.036</double>
-              <double>0.041</double>
-              <double>0.043</double>
-              <double>0.037</double>
-              <double>0.052</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </AirDry>
-            <LL15>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.021</double>
-              <double>0.036</double>
-              <double>0.041</double>
-              <double>0.043</double>
-              <double>0.037</double>
-              <double>0.052</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </LL15>
-            <DUL>
-              <double>0.29</double>
-              <double>0.28</double>
-              <double>0.35</double>
-              <double>0.145</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.11</double>
-              <double>0.12</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.14</double>
-            </DUL>
-            <SAT>
-              <double>0.46</double>
-              <double>0.46</double>
-              <double>0.48</double>
-              <double>0.4</double>
-              <double>0.38</double>
-              <double>0.37</double>
-              <double>0.38</double>
-              <double>0.39</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-            </SAT>
-          </Water>
           <MultiPoreWater>
             <Name>MultiPoreWater</Name>
             <Salb>0.15</Salb>
@@ -5346,6 +5096,46 @@ namespace Models
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <ParamThickness>
+              <double>30</double>
+              <double>170</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+            </ParamThickness>
+            <LL15>
+              <double>0.16</double>
+              <double>0.15</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+            </LL15>
+            <DUL>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.28</double>
+              <double>0.28</double>
+              <double>0.26</double>
+              <double>0.26</double>
+              <double>0.26</double>
+              <double>0.26</double>
+            </DUL>
+            <SAT>
+              <double>0.44</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.46</double>
+              <double>0.36</double>
+              <double>0.36</double>
+              <double>0.36</double>
+              <double>0.36</double>
+            </SAT>
             <CFlow>
               <double>7E-11</double>
               <double>7E-11</double>
@@ -5376,26 +5166,26 @@ namespace Models
               <double>-70</double>
               <double>-70</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
+            <MaxRepellentWC>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+              <double>0.8</double>
+            </MaxRepellentWC>
+            <MinRepellentWC>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+            </MinRepellentWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -5422,71 +5212,12 @@ namespace Models
             <ReportLayer>0</ReportLayer>
             <TimeStep>0</TimeStep>
           </MultiPoreWater>
-          <SoilWater>
-            <Name>SoilWater</Name>
-            <SummerDate>1-Nov</SummerDate>
-            <SummerU>9</SummerU>
-            <SummerCona>4.4</SummerCona>
-            <WinterDate>1-Apr</WinterDate>
-            <WinterU>9</WinterU>
-            <WinterCona>4.4</WinterCona>
-            <DiffusConst>0</DiffusConst>
-            <DiffusSlope>0</DiffusSlope>
-            <Salb>0.18</Salb>
-            <CN2Bare>68</CN2Bare>
-            <CNRed>20</CNRed>
-            <CNCov>0.8</CNCov>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <max_pond>0</max_pond>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>100</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>200</double>
-              <double>400</double>
-            </Thickness>
-            <SWCON>
-              <double>0.7</double>
-              <double>0.7</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-              <double>0.95</double>
-            </SWCON>
-            <KLAT>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KLAT>
-            <residueinterception>0</residueinterception>
-          </SoilWater>
+          <MRSpline>
+            <Name>MRSpline</Name>
+          </MRSpline>
+          <Evapotranspiration>
+            <Name>Evapotranspiration</Name>
+          </Evapotranspiration>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
             <fom_type>
@@ -5657,12 +5388,147 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
-          <MRSpline>
-            <Name>MRSpline</Name>
-          </MRSpline>
-          <Evapotranspiration>
-            <Name>Evapotranspiration</Name>
-          </Evapotranspiration>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>SlurpSoil</Name>
+              <LL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.09</double>
+                <double>0.021</double>
+                <double>0.036</double>
+                <double>0.041</double>
+                <double>0.043</double>
+                <double>0.037</double>
+                <double>0.052</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <Thickness>
+              <double>30</double>
+              <double>150</double>
+              <double>100</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>400</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.05</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.021</double>
+              <double>0.036</double>
+              <double>0.041</double>
+              <double>0.043</double>
+              <double>0.037</double>
+              <double>0.052</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.05</double>
+            </AirDry>
+            <LL15>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.021</double>
+              <double>0.036</double>
+              <double>0.041</double>
+              <double>0.043</double>
+              <double>0.037</double>
+              <double>0.052</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.05</double>
+            </LL15>
+            <DUL>
+              <double>0.29</double>
+              <double>0.28</double>
+              <double>0.35</double>
+              <double>0.145</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.11</double>
+              <double>0.12</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.14</double>
+            </DUL>
+            <SAT>
+              <double>0.46</double>
+              <double>0.46</double>
+              <double>0.48</double>
+              <double>0.4</double>
+              <double>0.38</double>
+              <double>0.37</double>
+              <double>0.38</double>
+              <double>0.39</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.4</double>
+            </SAT>
+          </Water>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -9875,26 +9741,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -9999,26 +9845,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -10123,26 +9949,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -11159,26 +10965,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -11283,26 +11069,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -11407,26 +11173,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -12403,26 +12149,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>0.01</double>
               <double>0.01</double>
@@ -12527,26 +12253,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.5</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>0.05</double>
               <double>0.05</double>
@@ -12651,26 +12357,6 @@ namespace Models
               <double>-10</double>
               <double>-10</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -14165,26 +13851,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -14289,26 +13955,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -14413,26 +14059,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -16076,26 +15702,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -16172,26 +15778,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -16268,26 +15854,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -16964,26 +16530,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -17060,26 +16606,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
@@ -17156,26 +16682,6 @@ namespace Models
               <double>-15</double>
               <double>-15</double>
             </PsiBub>
-            <MinHydrophilicRWC>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </MinHydrophilicRWC>
-            <MaxHydrophobicRWC>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.05</double>
-            </MaxHydrophobicRWC>
             <MinRepellancyFactor>
               <double>1</double>
               <double>1</double>
