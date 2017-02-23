@@ -332,9 +332,13 @@ namespace UserInterface.Views
             gridview.Model = gridmodel;
 
             gridview.Show();
-            while (Gtk.Application.EventsPending())
+
+            Gdk.Window main = mainWindow;
+            while (Gtk.Application.EventsPending() && gridview.IsMapped)
                 Gtk.Application.RunIteration();
-            WaitCursor = false;
+
+            main.Cursor = null;
+            //WaitCursor = false; // This won't work if the above Run loop has resulted in our own closure
         }
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
@@ -755,7 +759,7 @@ namespace UserInterface.Views
         /// <param name="number"></param>
         public void LockLeftMostColumns(int number)
         {
-            if (number == numberLockedCols)
+            if (number == numberLockedCols || !gridview.IsMapped)
                 return;
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
