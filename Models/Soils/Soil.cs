@@ -32,6 +32,7 @@ namespace Models.Soils
         /// <summary>Gets the water.</summary>
         private Water waterNode;
 
+        private MultiPoreWater WEIRDO;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
 
@@ -149,6 +150,7 @@ namespace Models.Soils
         private void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Water)) as Water;
+            WEIRDO = Apsim.Child(this, typeof(MultiPoreWater)) as MultiPoreWater;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
@@ -183,14 +185,28 @@ namespace Models.Soils
         }
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
-        internal double[] BD { get { return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last()); } }
+        internal double[] BD
+        {
+            get
+            {
+                if (waterNode != null)
+                    return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
+                else if (WEIRDO != null)
+                    return Map(WEIRDO.BD, WEIRDO.Thickness, Thickness, MapType.Concentration, WEIRDO.BD.Last());
+                else
+                    throw new Exception("Whoops, No soil models to provide a BD value");
+            }
+        }
 
         /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
         public double[] InitialWaterVolumetric
         {
             get
             {
+                if(waterNode !=null)
                 return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
+                else 
+                    return SWMapped(WEIRDO.InitialSoilWater, WEIRDO.Thickness, Thickness);
             }
         }
 
@@ -224,7 +240,10 @@ namespace Models.Soils
                     {
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {
+                            if (waterNode != null)
                             return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
+                            else
+                                return Map(Sample.SWVolumetric, Sample.Thickness, WEIRDO.Thickness);
                         }
                     }
                 }
@@ -236,13 +255,40 @@ namespace Models.Soils
         public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
-        public double[] LL15 { get { return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] LL15
+        {
+            get
+            {
+                if(waterNode != null)
+                return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
+                else
+                    return Map(WEIRDO.LL15, WEIRDO.Thickness, Thickness, MapType.Concentration);
+            }
+        }
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
-        public double[] DUL { get { return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] DUL
+        {
+            get
+            {
+                if(waterNode !=null)
+                return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
+                else
+                    return Map(WEIRDO.DUL, WEIRDO.Thickness, Thickness, MapType.Concentration);
+            }
+        }
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
-        public double[] SAT { get { return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] SAT
+        {
+            get
+            {
+                if(waterNode != null)
+                return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
+                else
+                    return Map(WEIRDO.SAT, WEIRDO.Thickness, Thickness, MapType.Concentration);
+            }
+        }
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         public double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
@@ -1048,7 +1094,10 @@ namespace Models.Soils
         /// <returns></returns>
         internal double[] BDMapped(double[] ToThickness)
         {
+            if(waterNode != null)
             return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
+            else
+                return Map(WEIRDO.BD, WEIRDO.Thickness, ToThickness, MapType.Concentration, WEIRDO.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
