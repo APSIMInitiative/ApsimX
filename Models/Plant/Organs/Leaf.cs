@@ -616,6 +616,7 @@ namespace Models.PMF.Organs
             double MetabolicDemand = 0.0;
 
             DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+
             if (DMDemandFunction != null)
             {
                 StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
@@ -627,10 +628,13 @@ namespace Models.PMF.Organs
                 {
                     if (L.IsFullyExpanded)
                     { }
-                    else { 
-                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
-                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
-                    NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
+                    else {
+                        if (L.StructuralDMDemand > 0)
+                            {
+                            StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
+                            MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
+                            NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
+                        }
                  }
                 }
             }

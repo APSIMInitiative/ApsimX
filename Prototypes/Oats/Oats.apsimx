@@ -16,11 +16,11 @@ Developed using wheat as a starting point.]]></MemoText>
       <Memo>
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
-# The APSIM Wheat Model
+# An APSIM Oat Model
 
-_Brown, H.E., Huth, N.I. and Holzworth, D.P._
+_Zyskowski,R.F, Brown, H.E. and Texiera,E._
 
-The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+The APSIM Oat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014], and is heavily based on  many pricipals implemented within. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
 
 The model consists of:
 
@@ -28,6 +28,47 @@ The model consists of:
 * a structure model to simulate plant morphology  
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
+]]></MemoText>
+      </Memo>
+      <Memo>
+        <Name>Rerferences</Name>
+        <MemoText><![CDATA[Brown, H. E., et al. (2014). "Plant Modelling Framework: Software for building and running crop models on the APSIM platform." Environmental Modelling & Software 62: 385-398.
+
+Jamieson, P. D. and C. A. Munro (1999). A simple method for the phenological evaluation of new cereal cultivars. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 63-68.
+	
+
+Martin, R. J., et al. (1998). The effect of daylength on final leaf number in drummond oats. Australian Agronomy Conference. Wagga Wagga.
+	
+Sonego, M., et al. (1998). Cordination of apex and leaf deceolpment in oats. Austrlian Agronomy conference. Wagg Wagga.
+	
+Martin, R. J. and I. N. C. Agron Soc New Zealand (1996). The effect of sowing date on growth and yield of two cultivars of oats.
+	Oats cvs. Cashel and Drummond were sown at Lincoln on 16 September, 2 November, and 21 December 1994; and on 7 February, 3 April, and 16 May 1995 in order to compare the effect of sowing date on their growth and yield. Biomass and leaf area were measured at one to four-week intervals from the end of tillering. Crops grew for periods ranging from just over 100 days to nearly 300 days. The crop sown in February died before maturity, and the one sown in April was affected by frost. Biomass production was much higher for the April sowing (over 20 t/ha) than the 7.5-15 t/ha for the other sowings, and was higher for Drummond than for Cashel at all sowing dates. Leaf area indices did not exceed 4.5 except for the February and April sowings of Drummond. There was a strong linear relationship between cumulative biomass production and intercepted radiation for all sowing dates, with the same rate of increase in biomass with radiation increase for both cultivars. Grain yields estimated from quadrat samples were higher than header yields for all sowings, but especially for the April sowing in which grain weights and harvest indices were lower than for the other sowings. Fifty-seven percent of grain yield came from post anthesis photosynthesis and 43% from remobilization from other plant parts. Oat yield is dependent on the amount of radiation intercepted by the crop and harvest index. Changes in conversion of radiation to biomass were not significantly affected by the range of conditions experienced by the crops in this study.
+
+Martin, R. J., et al. Effects of Timing and Intensity of Drought on the Yield of Oats (Avena sativa L.). Australian Agronomy
+Hobart.
+	The response of oats (Avena sativa L.) to timing and intensity of drought was determined in a mobile
+rainshelter, which excluded rainfall during crop growth. Ten irrigation treatments subjected the crops to
+drought of varying duration at different stages during plant growth; the crops were otherwise fully
+irrigated. Oat grain yield generally increased linearly with cumulative water use, and decreased linearly as
+the maximum potential soil moisture deficit experienced during crop growth increased, regardless of the
+timing of drought. The exception to this was the no drought (fully irrigated) treatment, where lodging
+reduced panicle number and grain weight compared to early drought treatments. Drought affected yield
+mainly by reducing panicle and grain number, effects on grain weight were small. . Relieving early drought
+through late irrigation led to more late tillers, more panicles, heavier grains, and later maturity. Full and
+late drought increased screenings.
+
+
+
+Sonego, M., et al. (1999). Development and growth of oat leaves at different temperatures and nitrogen levels. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 75-81.
+	This paper reports the development of a model to predict leaf appearance rate in oats (Avena sativa L.) based on the results of two field experiments and including a comparison of air and near-apex soil temperatures as predictors of leaf appearance. Oat genotype C&F 435 was sown on eight dates from April 1996 to November 1997. Nitrogen treatments (0 and 100 kg N/ha) were applied to the May and November 1997 crops. Observation of the number of visible leaf tips and leaf lamina length were taken at 2-7 day intervals. Near apex soil temperature and air temperature were recorded by data loggers. The number of visible tips was linearly related to temperature expressed as accumulated thermal time (base temperature of 0 degreesC). The rate of leaf appearance in thermal time, using either air or soil temperature, was nearly constant within a sowing date, but faster for spring sown than for autumn sown crops. Differences in this rate were less among sowing dates when near apex soil temperature was used to calculate thermal time than when screen temperatures were used. This indicated that the use of temperature near the shoot apex may improve phenological predictions from crop models. Nitrogen application had no effect on the rate of leaf appearance regardless of sowing date, but caused an average increase of 19% (P < 0.05) in the final leaf lamina length for the last five leaves.
+
+Sonego, M., et al. (1997). Phenological development of oat crops in response to sowing dates. Proceedings of the Twenty-Seventh Annual Conference of the Agronomy Society of New Zealand. 27: 115-118.
+	Observations of apical development in oats were made from sowings made on six occasions through an annual cycle. These were analysed to determine the effects of temperature and daylength on the duration of the period from sowing until anthesis. A simple, two-phase thermal time accumulation model, modified by daylength in the post emergence phase, accounted for most of the variation (n = 6, CV = 6%).
+
+Zhao, G. Q., et al. (2009). "Response of Nitrogen Uptake and Partitioning to Critical Nitrogen Supply in Oat Cultivars." Crop Science 49(3): 1040-1048.
+	Nitrogen uptake and partitioning in oat (Avena sativa L.) are not well documented. A greenhouse study was conducted to determine the critical timing of N supply on the growth, N uptake, and partitioning. Plants grown in plastic pots were subjected to five N fertilization regimes: (i) control, N supply from seedling to physiological maturity (PM); (ii) N supply from seedling to flag leaf; (iii) N supply from flag leaf to PM; (iv) N supply from seedling to heading; and (v) N supply from heading to PM. Leaf chlorophyll content, plant dry matter (DM), and N uptake and accumulation were measured. Total plant DM was 21% greater for naked 'VAO-2' than for covered 'Prescott', while both genotypes produced similar grain yields. Varietal differences in total plant N were significant (P < 0.05) with average of 18% higher N content for VAO-2, but most of its accumulated N was in the vegetative components. For both varieties, N supply was more critical before heading than thereafter. Compared with the control, restriction of N supply from seedling to flag leaf stage significantly reduced spikelet number (28%) and grain yield (26%). Withholding N supply until heading reduced yield by up to 65% and N uptake by 75%. No yield reduction occurred when N was withheld from flag leaf or heading to PM. Although naked VAO-2 accumulated more N than Prescott under the same conditions, partitioning of N to the grain in VAO-2 was less efficient.
+
+
 ]]></MemoText>
       </Memo>
       <OrganArbitrator>
@@ -39,43 +80,82 @@ The model consists of:
         <Name>Phenology</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
-Temperature effects development and it effects are captured by thermal time, incrasing development rates and decreasing phase durations as temperatures as temperatures increase.  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
+          <MemoText><![CDATA[The oats varieties used in this model have shown no sign of winter vernilisation, and the models used here reflect that.
 
-This model draws on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a rusult of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress to this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
+The data  shows a slowdown in phenological developement in winter conditions, which could be due to temperature and photo period. 
 
-Final Leaf Number (FLN) is modeled as the sum of three numbers:
+Here we go with published data of Martin et al which usesa Photo Thermal model.
 
-FLN = MinLeafNumber + VernalLeaves + PhotoLeaves
 
-Where MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.]]></MemoText>
+
+
+]]></MemoText>
         </Memo>
-        <AirTemperatureFunction>
-          <Name>ThermalTimeB8</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>7</double>
-              <double>8</double>
-              <double>18</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>8</double>
-              <double>18</double>
-              <double>30</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
+        <MultiplyFunction>
+          <Name>ThermalTime</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+            <MemoText><![CDATA[Photothermal time based on Sonego 1997
+
+TTbase = T-0
+
+FP = Max (0, (P -7)/9)
+
+TT = TTBase*FP
+
+
+Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approaches TTbase thus mabely accumlating a low temperature eefect.
+
+]]></MemoText>
           </Memo>
-        </AirTemperatureFunction>
+          <AirTemperatureFunction>
+            <Name>ThermalTimeB0</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>15</double>
+                <double>30</double>
+                <double>40</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>15</double>
+                <double>30</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
+            </Memo>
+          </AirTemperatureFunction>
+          <MaximumFunction>
+            <Name>FP</Name>
+            <Constant>
+              <Name>Zero</Name>
+              <Value>0</Value>
+            </Constant>
+            <DivideFunction>
+              <Name>DivideFunction</Name>
+              <SubtractFunction>
+                <Name>PP7</Name>
+                <VariableReference>
+                  <Name>Photoperiod</Name>
+                  <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>Seven</Name>
+                  <Value>7</Value>
+                </Constant>
+              </SubtractFunction>
+              <Constant>
+                <Name>Nine</Name>
+                <Value>9</Value>
+              </Constant>
+            </DivideFunction>
+          </MaximumFunction>
+        </MultiplyFunction>
         <SoilTemperatureFunction>
           <Name>SoilTemperatureFunction</Name>
           <XYPairs>
@@ -148,6 +228,17 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
+          <Name>VrnSensitivity</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod
+
+Not used in oats]]></MemoText>
+          </Memo>
+          <Value>0</Value>
+          <Units>Leaves</Units>
+        </Constant>
+        <Constant>
           <Name>MinimumLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
@@ -158,19 +249,13 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Units>Leaves</Units>
         </Constant>
         <Constant>
-          <Name>VrnSensitivity</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod]]></MemoText>
-          </Memo>
-          <Value>0</Value>
-          <Units>Leaves</Units>
-        </Constant>
-        <Constant>
           <Name>VernLag</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase]]></MemoText>
+            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase
+
+
+Not used in oats]]></MemoText>
           </Memo>
           <Value>1</Value>
           <Units>Unitless</Units>
@@ -179,7 +264,9 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>PpSensitivity</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
+            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp
+
+Not used in current oat model]]></MemoText>
           </Memo>
           <Value>6</Value>
           <Units>Leaves</Units>
@@ -188,7 +275,9 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>EarlyReproductivePpSensitivity</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  
+
+Not used in curreent oat model.]]></MemoText>
           </Memo>
           <Value>0</Value>
         </Constant>
@@ -196,7 +285,9 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>EarlyReproductiveLongDayBase</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.]]></MemoText>
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.
+
+Not used in current oat model.]]></MemoText>
           </Memo>
           <Value>2.5</Value>
         </Constant>
@@ -220,16 +311,16 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>Vegetative</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The duration of the vegetative phase is set by a target Haun Stage for the occurance of Terminal Spikelet and the rate of leaf appearance.  ]]></MemoText>
+            <MemoText><![CDATA[This is the first 4-6 leaf growth of the emerged oat plant, In the current model is decides the final leaf number based on Martin et al 1998.
+
+At the end of this grwth stage a trigger event occurs which calculates the FLN.
+
+Currently the leaf number is 4, due to March sowings in which th sixth leaf dosn'y emerge until after june. ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
-          <Memo>
-            <Name>Memo1</Name>
-            <MemoText><![CDATA[Currently just using a contsant target, look into Drought response]]></MemoText>
-          </Memo>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
@@ -246,6 +337,14 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         </GenericPhase>
         <GenericPhase>
           <Name>EarlyReproductive</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Growth occurs until terminal spikelet occurs.
+
+In this case TS is driven fron the FLN
+
+Duration is (TS-6)*Phyllocgron]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -273,6 +372,13 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         </GenericPhase>
         <GenericPhase>
           <Name>StemElongation</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The Time for the FlagLeaf to appear post TS
+
+1.5 * Phyylchron
+]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -293,14 +399,30 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         </GenericPhase>
         <GenericPhase>
           <Name>EarDevelopment</Name>
-          <Constant>
-            <Name>Target</Name>
-            <Value>100</Value>
-          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[The Time from flagLeaf  appearanace  to flowering
+
+Was constant at 100, however have cahnge it 1 Phyllchron. 
+
+
+]]></MemoText>
+          </Memo>
+          <MultiplyFunction>
+            <Name>Target</Name>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>exp</Name>
+              <Value>1</Value>
+            </Constant>
+          </MultiplyFunction>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
         </GenericPhase>
@@ -321,7 +443,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>700</Value>
+            <Value>900</Value>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -424,187 +546,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <SetEvent>Maturity</SetEvent>
           <ReSetEvent>never</ReSetEvent>
         </OnEventFunction>
-        <PhaseLookup>
-          <Name>ThermalTimeP</Name>
-          <PhaseLookupValue>
-            <Name>SoilTemperature</Name>
-            <SoilTemperatureFunction>
-              <Name>SoilTemperatureFunction</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>30</double>
-                  <double>40</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>25</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-              <maxt_soil_surface>20</maxt_soil_surface>
-              <mint_soil_surface>10</mint_soil_surface>
-            </SoilTemperatureFunction>
-            <Start>Sowing</Start>
-            <End>TerminalSpikelet</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>AirTemperature</Name>
-            <AirTemperatureFunction>
-              <Name>AirTemperatureFunction</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>15</double>
-                  <double>30</double>
-                  <double>40</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>12</double>
-                  <double>30</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <Start>TerminalSpikelet</Start>
-            <End>HarvestRipe</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
-        <AirTemperatureFunction>
-          <Name>ThermalTimeB0</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>15</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>15</double>
-              <double>30</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
-          </Memo>
-        </AirTemperatureFunction>
-        <MultiplyFunction>
-          <Name>ThermalTime</Name>
-          <AirTemperatureFunction>
-            <Name>ThermalTimeB0</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>15</double>
-                <double>30</double>
-                <double>40</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>15</double>
-                <double>30</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <Memo>
-              <Name>Memo</Name>
-              <MemoText><![CDATA[Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.]]></MemoText>
-            </Memo>
-          </AirTemperatureFunction>
-          <MaximumFunction>
-            <Name>MaximumFunction</Name>
-            <Constant>
-              <Name>Zero</Name>
-              <Value>0</Value>
-            </Constant>
-            <DivideFunction>
-              <Name>DivideFunction</Name>
-              <SubtractFunction>
-                <Name>PP7</Name>
-                <VariableReference>
-                  <Name>Photoperiod</Name>
-                  <VariableName>[Phenology].Photoperiod.Value</VariableName>
-                </VariableReference>
-                <Constant>
-                  <Name>Seven</Name>
-                  <Value>7</Value>
-                </Constant>
-              </SubtractFunction>
-              <Constant>
-                <Name>Nine</Name>
-                <Value>9</Value>
-              </Constant>
-            </DivideFunction>
-          </MaximumFunction>
-        </MultiplyFunction>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <MultiplyFunction>
-            <Name>MainStemNodeAppearanceRate</Name>
-            <Memo>
-              <Name>Rational</Name>
-              <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
-            </Memo>
-            <LinearInterpolationFunction>
-              <Name>LeafStageFactor</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>4</double>
-                  <double>6</double>
-                  <double>8</double>
-                  <double>14</double>
-                  <double>18</double>
-                </X>
-                <Y>
-                  <double>0.75</double>
-                  <double>0.9</double>
-                  <double>1</double>
-                  <double>1.1</double>
-                  <double>1.2</double>
-                  <double>1.4</double>
-                  <double>1.5</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].AppearedCohortNo</XProperty>
-            </LinearInterpolationFunction>
-            <Constant>
-              <Name>BasePhyllochron</Name>
-              <Value>90</Value>
-              <Units>oC.d</Units>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>PhotoPeriodEffect</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>8</double>
-                  <double>12</double>
-                  <double>14</double>
-                </X>
-                <Y>
-                  <double>1.6</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
-            </LinearInterpolationFunction>
-          </MultiplyFunction>
           <VariableName>[Phenology].ThermalTime.Value</VariableName>
         </VariableReference>
         <MultiplyFunction>
@@ -648,7 +595,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>14</double>
               </X>
               <Y>
-                <double>1.6</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -657,60 +604,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <MultiplyFunction>
-              <Name>MainStemNodeAppearanceRate</Name>
-              <Memo>
-                <Name>Rational</Name>
-                <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
-              </Memo>
-              <LinearInterpolationFunction>
-                <Name>LeafStageFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>2</double>
-                    <double>4</double>
-                    <double>6</double>
-                    <double>8</double>
-                    <double>14</double>
-                    <double>18</double>
-                  </X>
-                  <Y>
-                    <double>0.75</double>
-                    <double>0.9</double>
-                    <double>1</double>
-                    <double>1.1</double>
-                    <double>1.2</double>
-                    <double>1.4</double>
-                    <double>1.5</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].AppearedCohortNo</XProperty>
-              </LinearInterpolationFunction>
-              <Constant>
-                <Name>BasePhyllochron</Name>
-                <Value>90</Value>
-                <Units>oC.d</Units>
-              </Constant>
-              <LinearInterpolationFunction>
-                <Name>PhotoPeriodEffect</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>8</double>
-                    <double>12</double>
-                    <double>14</double>
-                  </X>
-                  <Y>
-                    <double>1.6</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].Photoperiod.Value</XProperty>
-              </LinearInterpolationFunction>
-            </MultiplyFunction>
             <VariableName>[Structure].BasePhyllochron.Value</VariableName>
           </VariableReference>
         </MultiplyFunction>
@@ -1042,6 +935,28 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseLookup>
         <MinimumFunction>
           <Name>MainStemFinalNodeNumber</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[An event driven method of calculating the final leaf number, Base on Martin et al 1998
+
+Event  occurs when vegtative stage switches to Reproductive, either 4 or 6 leaf appearance.
+
+If event occurs when PhotoPeriod is decreasing, then final leaf number is the MLN -2.
+
+
+Otherwise
+
+FLN = MLN - lc(PPS)
+
+For Drummond these values  MLN = 17 and Lc = 0.56
+
+THe model allows these to be cultivar deined.
+
+
+
+
+]]></MemoText>
+          </Memo>
           <Constant>
             <Name>MaxLN</Name>
             <Value>15</Value>
@@ -1112,6 +1027,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </MinimumFunction>
         <MinimumFunction>
           <Name>TSLN</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Terminal spikelet leaf number
+
+This value is highly related to final leaf number, The FLN is probably dependent on TSLN rather than as cuurently defined.
+
+Calculation baed on Sonego 2000
+
+TSLN = FLN*0.995 - 1.95 ]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>MLN</Name>
             <VariableName>[Structure].MaxLN.Value</VariableName>
@@ -1156,6 +1081,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[Grain model current a pure supply model, that is currently uses  a partition model to determine amount
+
+The grain Number model model left here does nothing, it is there so we can switch to it later if required.
+
+N conc values are from Zhao et al 2009
+]]></MemoText>
+        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1172,7 +1106,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <Value>0.032</Value>
+          <Units>0.045</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1217,6 +1152,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </AirTemperatureFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Currently using Partitioning model based on SIRIUS rather tha grin filling model.
+]]></MemoText>
+          </Memo>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
@@ -1230,10 +1170,30 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>LinearPhase</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0.6</Value>
-              </Constant>
+              <MultiplyFunction>
+                <Name>MultiplyFunction</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0.6</Value>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>FW</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>0.5</double>
+                      <double>1</double>
+                    </X>
+                    <Y>
+                      <double>1.5</double>
+                      <double>1</double>
+                      <double>1</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[Leaf].Fw</XProperty>
+                </LinearInterpolationFunction>
+              </MultiplyFunction>
               <Start>StartGrainFill</Start>
               <End>EndGrainFill</End>
             </PhaseLookupValue>
@@ -1248,78 +1208,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
-        <PhaseLookup>
-          <Name>DMDemandFunctionG</Name>
-          <PhaseLookupValue>
-            <Name>InitialPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <VariableReference>
-                  <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>Flowering</Start>
-            <End>StartGrainFill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>LinearPhase</Name>
-            <FillingRateFunction>
-              <Name>FillingRateFunction</Name>
-              <VariableReference>
-                <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <MultiplyFunction>
-                <Name>PotentialSizeIncrement</Name>
-                <SubtractFunction>
-                  <Name>ProportionLinearPhase</Name>
-                  <Constant>
-                    <Name>One</Name>
-                    <Value>1</Value>
-                  </Constant>
-                  <VariableReference>
-                    <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                  </VariableReference>
-                </SubtractFunction>
-                <VariableReference>
-                  <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                </VariableReference>
-              </MultiplyFunction>
-            </FillingRateFunction>
-            <Start>StartGrainFill</Start>
-            <End>EndGrainFill</End>
-          </PhaseLookupValue>
-        </PhaseLookup>
         <ExpressionFunction>
           <Name>Protein</Name>
           <Expression>([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71</Expression>
@@ -1527,7 +1415,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0.2</Value>
+              <Value>0</Value>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -1855,7 +1743,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrowthDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>2.5</Value>
+              <Value>4</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -1863,7 +1751,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
           </MultiplyFunction>
           <PhaseLookup>
-            <Name>LagDuration</Name>
+            <Name>LagDurationP</Name>
             <PhaseLookupValue>
               <Name>VegetativeGrowth</Name>
               <MultiplyFunction>
@@ -1877,16 +1765,34 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <XYPairs>
                     <Name>XYPairs</Name>
                     <X>
-                      <double>3</double>
+                      <double>0</double>
                       <double>4</double>
                       <double>9</double>
+                      <double>11</double>
                     </X>
                     <Y>
-                      <double>5</double>
+                      <double>1</double>
                       <double>7</double>
+                      <double>9</double>
                       <double>0</double>
                     </Y>
                   </XYPairs>
+                  <Memo>
+                    <Name>Memo</Name>
+                    <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+                  </Memo>
                   <XProperty>[Phenology].Stage</XProperty>
                 </LinearInterpolationFunction>
                 <Constant>
@@ -1930,10 +1836,98 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
           </PhaseLookup>
           <MultiplyFunction>
+            <Name>LagDuration</Name>
+            <VariableReference>
+              <Name>Phyllochron</Name>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            </VariableReference>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Graph>
+                  <Name>Graph</Name>
+                  <Series>
+                    <Name>Series</Name>
+                    <Type>Scatter</Type>
+                    <XAxis>Bottom</XAxis>
+                    <YAxis>Left</YAxis>
+                    <ColourArgb>-65536</ColourArgb>
+                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                    <Marker>None</Marker>
+                    <MarkerSize>Normal</MarkerSize>
+                    <Line>Solid</Line>
+                    <LineThickness>Normal</LineThickness>
+                    <XFieldName>.Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.Y</YFieldName>
+                    <ShowInLegend>false</ShowInLegend>
+                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                    <Cumulative>false</Cumulative>
+                    <CumulativeX>false</CumulativeX>
+                  </Series>
+                  <Axis>
+                    <Type>Left</Type>
+                    <Title>Y</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <Axis>
+                    <Type>Bottom</Type>
+                    <Title>X</Title>
+                    <Inverted>false</Inverted>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Interval>NaN</Interval>
+                  </Axis>
+                  <LegendPosition>BottomRight</LegendPosition>
+                  <DisabledSeries />
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                </Graph>
+                <X>
+                  <double>0</double>
+                  <double>4</double>
+                  <double>9</double>
+                  <double>11</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>2</double>
+                  <double>3</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+              </Memo>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <Constant>
+              <Name>Multiplier</Name>
+              <Value>1</Value>
+            </Constant>
+          </MultiplyFunction>
+          <MultiplyFunction>
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>10</Value>
+              <Value>1</Value>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -1951,12 +1945,47 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </X>
                 <Y>
                   <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>2</double>
+                  <double>3</double>
+                  <double>4</double>
                 </Y>
               </XYPairs>
               <XProperty>[Leaf].CohortParameters.MaxArea.Value</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>2</double>
+                  <double>4</double>
+                  <double>9</double>
+                  <double>11</double>
+                </X>
+                <Y>
+                  <double>2</double>
+                  <double>2</double>
+                  <double>6</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Growth Stages and Phenology
+1 Sowing 
+2 Germination
+3 Emergence
+4 VS
+5 TS
+6 FLag leaf
+7 Flowering
+8 SGF
+9 EGF
+10 HR
+11 
+]]></MemoText>
+              </Memo>
+              <XProperty>[Phenology].Stage</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <Constant>
@@ -2089,10 +2118,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Value>0</Value>
           </Constant>
           <Constant>
-            <Name>StructuralFraction</Name>
-            <Value>0.5</Value>
-          </Constant>
-          <Constant>
             <Name>NonStructuralFraction</Name>
             <Value>0.5</Value>
           </Constant>
@@ -2132,6 +2157,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <PhaseLookup>
+            <Name>StructuralFraction</Name>
+            <PhaseLookupValue>
+              <Name>VegetativeGrowth</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0.5</Value>
+              </Constant>
+              <Start>Emergence</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>StemElongation</Name>
+              <Constant>
+                <Name>Constant</Name>
+                <Value>0</Value>
+              </Constant>
+              <Start>StartGrainFill</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
@@ -2200,11 +2246,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>XYPairs</Name>
               <X>
                 <double>0</double>
-                <double>1</double>
+                <double>0.3</double>
                 <double>1</double>
               </X>
               <Y>
-                <double>1</double>
+                <double>0</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -2301,7 +2347,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.5</Value>
+          <Value>0</Value>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
@@ -2493,6 +2539,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
+        <Memo>
+          <Name>Memo</Name>
+          <MemoText><![CDATA[The stem model  currently uses  a partition model to determine amount allocated
+
+N conc values are from Zhao et al 2009
+]]></MemoText>
+        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -2523,7 +2576,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>GrainFilling</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0.7</Value>
+              <Value>0</Value>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -2532,7 +2585,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>EndStemGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>1</Value>
+              <Value>0</Value>
             </Constant>
             <Start>EndGrainFill</Start>
             <End>Maturity</End>
@@ -2554,10 +2607,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>6</double>
             </X>
             <Y>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.015</double>
-              <double>0.012</double>
+              <double>0.045</double>
+              <double>0.045</double>
+              <double>0.045</double>
+              <double>0.045</double>
             </Y>
           </XYPairs>
           <XProperty>[Phenology].Stage</XProperty>
@@ -2671,15 +2724,42 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>StemFraction</Name>
                 <Value>0.4</Value>
               </Constant>
+              <SubtractFunction>
+                <Name>SubtractFunction</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0</Value>
+                </Constant>
+              </SubtractFunction>
               <Start>Flowering</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>BGF</Name>
+              <Constant>
+                <Name>StemFraction</Name>
+                <Value>0.1</Value>
+              </Constant>
+              <SubtractFunction>
+                <Name>SubtractFunction</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <Value>0</Value>
+                </Constant>
+              </SubtractFunction>
+              <Start>StartGrainFill</Start>
               <End>EndGrainFill</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>PostGrainFill</Name>
               <Constant>
-                <Name>StemFraction</Name>
+                <Name>One</Name>
                 <Value>0</Value>
               </Constant>
+              <VariableReference>
+                <Name>VariableReference</Name>
+                <VariableName>[Grain].PartitionFraction.Value</VariableName>
+              </VariableReference>
               <Start>EndGrainFill</Start>
               <End>HarvestRipe</End>
             </PhaseLookupValue>
@@ -2922,6 +3002,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Grain.Number</string>
         <string>[Oats].Grain.Size</string>
         <string>[Oats].Grain.Wt</string>
+        <string>[Oats].Grain.Live.Wt</string>
         <string>[Oats].Leaf.AppearedCohortNo</string>
         <string>[Oats].Leaf.CoverDead</string>
         <string>[Oats].Leaf.CoverGreen</string>
@@ -3069,11 +3150,559 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ErrorMessage>Please select a file to use.</ErrorMessage>
       <FileName>Observed\RS_Oats_9899_leaf.csv</FileName>
     </Input>
+    <PredictedObserved>
+      <Name>DailyObsPred</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>ET</Name>
+            <n>123</n>
+            <Slope>1.1017619901960629</Slope>
+            <Intercept>-0.2897903001489448</Intercept>
+            <SEslope>0.04575522030915477</SEslope>
+            <SEintercept>0.17748716340888027</SEintercept>
+            <R2>0.82734546453380786</R2>
+            <RMSE>0.78205288864456457</RMSE>
+            <NSE>0.73397348389769845</NSE>
+            <ME>0.073544875140275412</ME>
+            <MAE>0.5592660227166586</MAE>
+            <RSR>0.51367664819243808</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>ProfileWater</Name>
+            <n>1333</n>
+            <Slope>0.84648158309285126</Slope>
+            <Intercept>64.577448100319316</Intercept>
+            <SEslope>0.013438744205974429</SEslope>
+            <SEintercept>5.5090660841946049</SEintercept>
+            <R2>0.74879713962890648</R2>
+            <RMSE>54.744523631420513</RMSE>
+            <NSE>0.73477788227641161</NSE>
+            <ME>3.7969097528072182</ME>
+            <MAE>37.856910267349193</MAE>
+            <RSR>0.51480399317965009</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(1)</Name>
+            <n>1306</n>
+            <Slope>0.00060607565481605682</Slope>
+            <Intercept>0.18103503235012</Intercept>
+            <SEslope>0.00012161216068624515</SEslope>
+            <SEintercept>0.00231027027805536</SEintercept>
+            <R2>0.018690802455476496</R2>
+            <RMSE>18.935081345584624</RMSE>
+            <NSE>-0.080609010996995245</NSE>
+            <ME>-5.2097099135426328</ME>
+            <MAE>5.2561967868508059</MAE>
+            <RSR>1.0391253977034889</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(10)</Name>
+            <n>8</n>
+            <Slope>-0.40778465858511931</Slope>
+            <Intercept>0.61085650220813226</Intercept>
+            <SEslope>0.19905881718463325</SEslope>
+            <SEintercept>0.08529661778023212</SEintercept>
+            <R2>0.411569315670379</R2>
+            <RMSE>0.011314485937462648</RMSE>
+            <NSE>-3.1091926757588331</NSE>
+            <ME>0.0076725583366373806</ME>
+            <MAE>0.0091407539790791248</MAE>
+            <RSR>1.8961918656320038</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(2)</Name>
+            <n>1329</n>
+            <Slope>0.000316191393554922</Slope>
+            <Intercept>0.20930557941427372</Intercept>
+            <SEslope>7.8789292978177479E-05</SEslope>
+            <SEintercept>0.0018474320752984192</SEintercept>
+            <R2>0.01199100702468936</R2>
+            <RMSE>23.381098678053082</RMSE>
+            <NSE>-0.083965790022211939</NSE>
+            <ME>-6.5315494024339689</ME>
+            <MAE>6.5685293492226986</MAE>
+            <RSR>1.0407450047432569</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(3)</Name>
+            <n>1329</n>
+            <Slope>0.00039531863680858229</Slope>
+            <Intercept>0.20014860562702905</Intercept>
+            <SEslope>6.7392516266600008E-05</SEslope>
+            <SEintercept>0.0019651455844233051</SEintercept>
+            <R2>0.025274503752932609</R2>
+            <RMSE>29.09142329387322</RMSE>
+            <NSE>-0.084732036423316615</NSE>
+            <ME>-8.1682434094285234</ME>
+            <MAE>8.1910103608463931</MAE>
+            <RSR>1.0411127867529677</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(4)</Name>
+            <n>1329</n>
+            <Slope>0.00044364172240659704</Slope>
+            <Intercept>0.20320204046677559</Intercept>
+            <SEslope>6.0459291960653758E-05</SEslope>
+            <SEintercept>0.0019303950617159712</SEintercept>
+            <R2>0.038993658374421591</R2>
+            <RMSE>31.857158501334226</RMSE>
+            <NSE>-0.084420809743269709</NSE>
+            <ME>-8.9349141458473955</ME>
+            <MAE>8.9467294886188569</MAE>
+            <RSR>1.0409634202226232</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(5)</Name>
+            <n>1329</n>
+            <Slope>0.00052164855636156054</Slope>
+            <Intercept>0.20916869447575803</Intercept>
+            <SEslope>4.9956607032008455E-05</SEslope>
+            <SEintercept>0.0016532824283794487</SEintercept>
+            <R2>0.075928497451829835</R2>
+            <RMSE>33.017769234030858</RMSE>
+            <NSE>-0.0846070103057468</NSE>
+            <ME>-9.2782677484382976</ME>
+            <MAE>9.2951519656704491</MAE>
+            <RSR>1.0410527857406142</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(6)</Name>
+            <n>1224</n>
+            <Slope>0.99567393036949747</Slope>
+            <Intercept>-0.0054226444932909679</Intercept>
+            <SEslope>0.0076013146225639028</SEslope>
+            <SEintercept>0.0019201018974445076</SEintercept>
+            <R2>0.93351328816351364</R2>
+            <RMSE>0.018260198686732971</RMSE>
+            <NSE>0.91920043453795941</NSE>
+            <ME>-0.0064794876474304113</ME>
+            <MAE>0.011897389528956873</MAE>
+            <RSR>0.28413650371812466</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(7)</Name>
+            <n>1200</n>
+            <Slope>0.87445665383562365</Slope>
+            <Intercept>0.015150687260886003</Intercept>
+            <SEslope>0.0079064736767547345</SEslope>
+            <SEintercept>0.0022910503359850876</SEintercept>
+            <R2>0.91079923844367772</R2>
+            <RMSE>0.031806276097880573</RMSE>
+            <NSE>0.85286760513772364</NSE>
+            <ME>-0.019706603120914205</ME>
+            <MAE>0.022368637007405923</MAE>
+            <RSR>0.38341855006405795</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(8)</Name>
+            <n>426</n>
+            <Slope>0.92914656078015123</Slope>
+            <Intercept>0.0041259010344908142</Intercept>
+            <SEslope>0.015817623572683837</SEslope>
+            <SEintercept>0.003018909424139426</SEintercept>
+            <R2>0.89056740968536463</R2>
+            <RMSE>0.024805098436001483</RMSE>
+            <NSE>0.874287936548521</NSE>
+            <ME>-0.0084557345214836717</ME>
+            <MAE>0.017003017410735361</MAE>
+            <RSR>0.35414257681191419</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Soil.SoilWater.SW(9)</Name>
+            <n>8</n>
+            <Slope>0.068208829078044361</Slope>
+            <Intercept>0.44107365370627932</Intercept>
+            <SEslope>0.045054411628435993</SEslope>
+            <SEintercept>0.02063005036891145</SEintercept>
+            <R2>0.27640728203135434</R2>
+            <RMSE>0.019046907407817747</RMSE>
+            <NSE>-1.1294451317439802</NSE>
+            <ME>0.014587398345640615</ME>
+            <MAE>0.017190879084160116</MAE>
+            <RSR>1.3650144652259122</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.AboveGround.N</Name>
+            <n>429</n>
+            <Slope>0.82779394512228688</Slope>
+            <Intercept>1.4210547634988817</Intercept>
+            <SEslope>0.036177504992502989</SEslope>
+            <SEintercept>0.49532447901716281</SEintercept>
+            <R2>0.55079157269755652</R2>
+            <RMSE>5.4270579042117522</RMSE>
+            <NSE>0.40414810413571278</NSE>
+            <ME>-0.60210844681531017</ME>
+            <MAE>3.26226847614914</MAE>
+            <RSR>0.77101424351700243</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.AboveGround.Wt</Name>
+            <n>918</n>
+            <Slope>0.51551798013818306</Slope>
+            <Intercept>205.70042761212744</Intercept>
+            <SEslope>0.025652899582296544</SEslope>
+            <SEintercept>31.875320400036813</SEintercept>
+            <R2>0.30597911203922645</R2>
+            <RMSE>705.55339307988618</RMSE>
+            <NSE>-0.0090315881970592926</NSE>
+            <ME>-290.89025802373271</ME>
+            <MAE>385.01544341056763</MAE>
+            <RSR>1.0039583782443144</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Ear.N</Name>
+            <n>238</n>
+            <Slope>0.47649862097697876</Slope>
+            <Intercept>2.1431504804753083</Intercept>
+            <SEslope>0.049291082949292381</SEslope>
+            <SEintercept>0.43982398479409585</SEintercept>
+            <R2>0.28365797755202049</R2>
+            <RMSE>5.3481308154674974</RMSE>
+            <NSE>0.079780544948217069</NSE>
+            <ME>-1.5040254218778575</ME>
+            <MAE>3.04275900270968</MAE>
+            <RSR>0.95726327974765968</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Ear.Nconc</Name>
+            <n>222</n>
+            <Slope>0.32229629777493091</Slope>
+            <Intercept>0.0052662235260665588</Intercept>
+            <SEslope>0.11796550452347322</SEslope>
+            <SEintercept>0.0020404622590076793</SEintercept>
+            <R2>0.032816098970652408</R2>
+            <RMSE>0.008365519830660308</RMSE>
+            <NSE>-7.0843772714498545</NSE>
+            <ME>-0.0062852666055535425</ME>
+            <MAE>0.0064350581959483205</MAE>
+            <RSR>2.8368928703097858</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Ear.Wt</Name>
+            <n>435</n>
+            <Slope>0.30090461247422839</Slope>
+            <Intercept>170.48038574599303</Intercept>
+            <SEslope>0.035461398254813856</SEslope>
+            <SEintercept>21.385840859144807</SEintercept>
+            <R2>0.14257805229804965</R2>
+            <RMSE>421.21788846637838</RMSE>
+            <NSE>-0.19151020168989197</NSE>
+            <ME>-153.51904954972858</ME>
+            <MAE>232.91254979189409</MAE>
+            <RSR>1.0903077995584372</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.N</Name>
+            <n>88</n>
+            <Slope>-0.058314283803649794</Slope>
+            <Intercept>2.7371628701907955</Intercept>
+            <SEslope>0.10103559604363134</SEslope>
+            <SEintercept>1.1303220500311342</SEintercept>
+            <R2>0.0038585456164794696</R2>
+            <RMSE>10.029601654697244</RMSE>
+            <NSE>-5.496302300004551</NSE>
+            <ME>-8.345994523358673</ME>
+            <MAE>8.4580479887120248</MAE>
+            <RSR>2.5342613683199775</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Number</Name>
+            <n>130</n>
+            <Slope>0.821747156486074</Slope>
+            <Intercept>2476.606246108855</Intercept>
+            <SEslope>0.030605476681858906</SEslope>
+            <SEintercept>509.46217528579632</SEintercept>
+            <R2>0.84921754679139871</R2>
+            <RMSE>2477.2812967354921</RMSE>
+            <NSE>0.84653051598986706</NSE>
+            <ME>-268.16993596023536</ME>
+            <MAE>1858.7511404931486</MAE>
+            <RSR>0.3902421677852706</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Grain.Wt</Name>
+            <n>480</n>
+            <Slope>0.23553633622535555</Slope>
+            <Intercept>34.391513280145062</Intercept>
+            <SEslope>0.026480398574419365</SEslope>
+            <SEintercept>11.403583772538335</SEintercept>
+            <R2>0.14201061647276425</R2>
+            <RMSE>357.54694581541224</RMSE>
+            <NSE>-0.27448492795396606</NSE>
+            <ME>-188.67719623295662</ME>
+            <MAE>205.70990188330029</MAE>
+            <RSR>1.127754295500899</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.CoverTotal</Name>
+            <n>568</n>
+            <Slope>0.91615170154239267</Slope>
+            <Intercept>0.12855479687376836</Intercept>
+            <SEslope>0.020255438389316663</SEslope>
+            <SEintercept>0.013977844074361862</SEintercept>
+            <R2>0.78328665026048394</R2>
+            <RMSE>0.16003858777133581</RMSE>
+            <NSE>0.69115050797509037</NSE>
+            <ME>0.075971805763447517</ME>
+            <MAE>0.11108069088513091</MAE>
+            <RSR>0.55525286394509676</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.Dead.N</Name>
+            <n>119</n>
+            <Slope>-0.013200891221424177</Slope>
+            <Intercept>1.1101105517281242</Intercept>
+            <SEslope>0.22966321347058394</SEslope>
+            <SEintercept>0.14065303592004083</SEintercept>
+            <R2>2.8237451956902859E-05</R2>
+            <RMSE>1.6792705132304748</RMSE>
+            <NSE>-8.500199140520273</NSE>
+            <ME>0.82670023401923565</ME>
+            <MAE>1.0802549485961044</MAE>
+            <RSR>3.0692613988217774</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.Dead.Wt</Name>
+            <n>261</n>
+            <Slope>0.017932850913987393</Slope>
+            <Intercept>70.455544513694591</Intercept>
+            <SEslope>0.010761994119365046</SEslope>
+            <SEintercept>4.2213733787318413</SEintercept>
+            <R2>0.010606750518717623</R2>
+            <RMSE>380.87498579539744</RMSE>
+            <NSE>0.0029767094026564855</NSE>
+            <ME>-19.3369143589722</ME>
+            <MAE>107.66726180585218</MAE>
+            <RSR>0.99659584485873254</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.DeadCohortNo</Name>
+            <n>121</n>
+            <Slope>0.31460071002137113</Slope>
+            <Intercept>1.7793226432786642</Intercept>
+            <SEslope>0.0700514204753288</SEslope>
+            <SEintercept>0.69346445336501217</SEintercept>
+            <R2>0.14492484112027759</R2>
+            <RMSE>6.1772920016381923</RMSE>
+            <NSE>-1.0781439185008956</NSE>
+            <ME>-4.337087985030883</ME>
+            <MAE>4.337087985030883</MAE>
+            <RSR>1.4356075979782179</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.ExpandedCohortNo</Name>
+            <n>237</n>
+            <Slope>0.78417181540858261</Slope>
+            <Intercept>1.2172948765098308</Intercept>
+            <SEslope>0.0521442633921695</SEslope>
+            <SEintercept>0.55335127818642693</SEintercept>
+            <R2>0.49041178469162372</R2>
+            <RMSE>3.8196824662869724</RMSE>
+            <NSE>0.27807324808988831</NSE>
+            <ME>-0.85738872497181706</ME>
+            <MAE>1.3588766219225914</MAE>
+            <RSR>0.8478682960647087</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.LAI</Name>
+            <n>685</n>
+            <Slope>0.80118070032022226</Slope>
+            <Intercept>0.87584383359119045</Intercept>
+            <SEslope>0.017329688254147151</SEslope>
+            <SEintercept>0.068632226948101949</SEintercept>
+            <R2>0.75783308570818242</R2>
+            <RMSE>1.1774998287910523</RMSE>
+            <NSE>0.74481669322218114</NSE>
+            <ME>0.2392719845075803</ME>
+            <MAE>0.86450480942572649</MAE>
+            <RSR>0.50478785286787631</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.Live.N</Name>
+            <n>311</n>
+            <Slope>0.79506452660095817</Slope>
+            <Intercept>1.0830927414229694</Intercept>
+            <SEslope>0.027919084076274962</SEslope>
+            <SEintercept>0.12649159636297316</SEintercept>
+            <R2>0.72409866339398032</R2>
+            <RMSE>1.5326040171623241</RMSE>
+            <NSE>0.70122448336019416</NSE>
+            <ME>0.35376666559451087</ME>
+            <MAE>1.1014258833076305</MAE>
+            <RSR>0.54572412779742174</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.Live.Wt</Name>
+            <n>496</n>
+            <Slope>0.76315129927004333</Slope>
+            <Intercept>58.815714075869792</Intercept>
+            <SEslope>0.021185819368213784</SEslope>
+            <SEintercept>3.6527421698461167</SEintercept>
+            <R2>0.724264178873211</R2>
+            <RMSE>62.605695015001579</RMSE>
+            <NSE>0.65955307434025934</NSE>
+            <ME>26.85076696499511</ME>
+            <MAE>46.661031936119755</MAE>
+            <RSR>0.58288981868700973</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Leaf.SpecificArea</Name>
+            <n>171</n>
+            <Slope>0.04340546445495156</Slope>
+            <Intercept>21366.398191607128</Intercept>
+            <SEslope>0.011465128554171674</SEslope>
+            <SEintercept>162.895054837003</SEintercept>
+            <R2>0.078179122795060119</R2>
+            <RMSE>15585.51202320648</RMSE>
+            <NSE>-1.2962470243851088</NSE>
+            <ME>11989.883126164386</ME>
+            <MAE>12656.461439038021</MAE>
+            <RSR>1.5108999567189305</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Phenology.Zadok.Stage</Name>
+            <n>800</n>
+            <Slope>0.35105604185216283</Slope>
+            <Intercept>21.353001994955779</Intercept>
+            <SEslope>0.03009146199792654</SEslope>
+            <SEintercept>1.8282512256562475</SEintercept>
+            <R2>0.14570409563527564</R2>
+            <RMSE>32.670231674086189</RMSE>
+            <NSE>-0.38913167436248108</NSE>
+            <ME>-13.731984492760883</ME>
+            <MAE>17.040741035494303</MAE>
+            <RSR>1.1778774383481194</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Spike.N</Name>
+            <n>68</n>
+            <Slope>-0.032522223450800115</Slope>
+            <Intercept>2.3401339004246617</Intercept>
+            <SEslope>0.009963919824929425</SEslope>
+            <SEintercept>0.12049242287518684</SEintercept>
+            <R2>0.13898468607524128</R2>
+            <RMSE>10.646076381925656</RMSE>
+            <NSE>-1.4554367607983805</NSE>
+            <ME>-7.9891777674145921</ME>
+            <MAE>7.9891777674145921</MAE>
+            <RSR>1.5554187206887387</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Spike.Wt</Name>
+            <n>216</n>
+            <Slope>0.31874396043907394</Slope>
+            <Intercept>63.247634859816877</Intercept>
+            <SEslope>0.056405073064758213</SEslope>
+            <SEintercept>12.53429830672067</SEintercept>
+            <R2>0.12984635613996853</R2>
+            <RMSE>144.75566270535359</RMSE>
+            <NSE>-0.41747423822041019</NSE>
+            <ME>-63.470863825368433</ME>
+            <MAE>90.020496267479714</MAE>
+            <RSR>1.1878181079137951</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Stem.N</Name>
+            <n>355</n>
+            <Slope>1.0768997793205721</Slope>
+            <Intercept>-0.092395107903496587</Intercept>
+            <SEslope>0.035655148378680133</SEslope>
+            <SEintercept>0.15961213526616042</SEintercept>
+            <R2>0.72100014492804065</R2>
+            <RMSE>1.7752742165649815</RMSE>
+            <NSE>0.540228742956778</NSE>
+            <ME>0.18683486727052681</ME>
+            <MAE>1.2926189672261235</MAE>
+            <RSR>0.67710865209484061</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Stem.Wt</Name>
+            <n>579</n>
+            <Slope>0.67537457373894327</Slope>
+            <Intercept>44.1780237698581</Intercept>
+            <SEslope>0.023631876231277046</SEslope>
+            <SEintercept>15.748070609712119</SEintercept>
+            <R2>0.58601112647791043</R2>
+            <RMSE>279.31416460028078</RMSE>
+            <NSE>0.442405875313302</NSE>
+            <ME>-134.85544663364379</ME>
+            <MAE>184.77728727441243</MAE>
+            <RSR>0.74607713750682791</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Structure.HaunStage.Value</Name>
+            <n>245</n>
+            <Slope>1.1146165105049848</Slope>
+            <Intercept>-0.24101732037584966</Intercept>
+            <SEslope>0.049312768431409006</SEslope>
+            <SEintercept>0.3745602419349735</SEintercept>
+            <R2>0.67767420922785992</R2>
+            <RMSE>1.6546441450256397</RMSE>
+            <NSE>0.30473153303688061</NSE>
+            <ME>0.59932860169249591</ME>
+            <MAE>1.3284726682583665</MAE>
+            <RSR>0.83212417131442529</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Structure.LeafTipsAppeared</Name>
+            <n>461</n>
+            <Slope>0.97347698200888155</Slope>
+            <Intercept>0.55419262013942472</Intercept>
+            <SEslope>0.0084857215211902939</SEslope>
+            <SEintercept>0.083173017373952413</SEintercept>
+            <R2>0.96629842978714842</R2>
+            <RMSE>0.74779453518190786</RMSE>
+            <NSE>0.95905235746161943</NSE>
+            <ME>0.31341163883393613</ME>
+            <MAE>0.57929953830476921</MAE>
+            <RSR>0.20213564509698562</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Wheat.Structure.TotalStemPopn</Name>
+            <n>490</n>
+            <Slope>0.42092876069323876</Slope>
+            <Intercept>250.96803770425728</Intercept>
+            <SEslope>0.04103546813309427</SEslope>
+            <SEintercept>26.485987712115392</SEintercept>
+            <R2>0.17737099863738026</R2>
+            <RMSE>274.52323402441738</RMSE>
+            <NSE>-0.31910695389241273</NSE>
+            <ME>-96.215325032966689</ME>
+            <MAE>200.78858973877428</MAE>
+            <RSR>1.1473512534897361</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>DailyObsPred</POName>
+      </Tests>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>Observations</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Experiment>
     <Name>RS_Oats_9899</Name>
+    <Memo>
+      <Name>Experiment Description</Name>
+      <MemoText><![CDATA[Martin, R. J., et al. Effects of Timing and Intensity of Drought on the Yield of Oats (Avena sativa L.). Australian Agronomy
+Hobart.
+	The response of oats (Avena sativa L.) to timing and intensity of drought was determined in a mobile
+rainshelter, which excluded rainfall during crop growth. Ten irrigation treatments subjected the crops to
+drought of varying duration at different stages during plant growth; the crops were otherwise fully
+irrigated. Oat grain yield generally increased linearly with cumulative water use, and decreased linearly as
+the maximum potential soil moisture deficit experienced during crop growth increased, regardless of the
+timing of drought. The exception to this was the no drought (fully irrigated) treatment, where lodging
+reduced panicle number and grain weight compared to early drought treatments. Drought affected yield
+mainly by reducing panicle and grain number, effects on grain weight were small. . Relieving early drought
+through late irrigation led to more late tillers, more panicles, heavier grains, and later maturity. Full and
+late drought increased screenings.
+
+]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -4695,7 +5324,7 @@ namespace Models
     <Graph>
       <Name>AboveGroundWt</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Pred</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4716,7 +5345,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series1</Name>
+        <Name>Obs</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4751,17 +5380,13 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LD1: Series</string>
-        <string>LD4: Series</string>
-        <string>ED1: Series</string>
-      </DisabledSeries>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Grain</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Pred</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4782,7 +5407,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series1</Name>
+        <Name>Obs</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4796,7 +5421,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Observations</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.Grain.Live.Wt</YFieldName>
+        <YFieldName>Oats.Grain.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4817,17 +5442,13 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>LD1: Series</string>
-        <string>LD4: Series</string>
-        <string>ED1: Series</string>
-      </DisabledSeries>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Tips</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Pred</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4848,7 +5469,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series1</Name>
+        <Name>Obs</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4884,7 +5505,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Spike</Name>
@@ -4951,7 +5572,7 @@ namespace Models
     <Graph>
       <Name>LAI</Name>
       <Series>
-        <Name>Series</Name>
+        <Name>Pred</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4972,7 +5593,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series1</Name>
+        <Name>Obs</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5008,7 +5629,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Leaf</Name>
@@ -5048,7 +5669,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Observations</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
+        <YFieldName>Oats.Leaf.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5110,7 +5731,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Observations</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.Stem.Live.Wt</YFieldName>
+        <YFieldName>Oats.Stem.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5206,9 +5827,9 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>Profile</Name>
+      <Name>Water Profile</Name>
       <Series>
-        <Name>Series1</Name>
+        <Name>Obs</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5229,7 +5850,7 @@ namespace Models
         <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
-        <Name>Series</Name>
+        <Name>Predicted</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5264,13 +5885,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>Full: Series1</string>
-        <string>LD4: Series1</string>
-        <string>ED1: Series1</string>
-        <string>Full: Series</string>
-        <string>LD4: Series</string>
-      </DisabledSeries>
+      <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Folder>
@@ -6934,7 +7549,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+          <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6955,7 +7570,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>RS_SW_Obs</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+          <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8137,6 +8752,18 @@ namespace Models
   </Experiment>
   <Experiment>
     <Name>WinterSowing2015</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[FRNL Experiment  Brendom Malcom Agronomy 2016
+
+
+Grazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November
+2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.
+
+
+
+]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -8938,7 +9565,7 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -9314,11 +9941,23 @@ namespace Models
       <DisabledSeries>
         <string>Aug0: Obs</string>
       </DisabledSeries>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
     <Name>WinterSowing2016</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[FRNL Experiment  Brendom Malcom Agronomy 2016
+
+
+Grazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November
+2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.
+
+
+
+]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -9460,6 +10099,17 @@ namespace Models
             <Operation>
               <Date>2015-06-01</Date>
               <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>Irr</Name>
+            <Operation>
+              <Date>2016-09-26</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2016-10-05</Date>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
           </Operations>
         </Folder>
@@ -10061,10 +10711,8 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries>
-        <string>Aug: Obs</string>
-      </DisabledSeries>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Leaf</Name>
@@ -10232,9 +10880,9 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
-      <Name>AboveGroundWt1</Name>
+      <Name>AboveGround N</Name>
       <Series>
-        <Name>Sim</Name>
+        <Name>Pred</Name>
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
           <ColumnName>Phenology.CurrentPhaseName</ColumnName>
@@ -10252,7 +10900,32 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.Leaf.Fw</YFieldName>
+        <YFieldName>UptakeNKgHA</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Series>
+        <Name>Obs</Name>
+        <EventNamesOnGraph>
+          <Name>EventNamesOnGraph</Name>
+          <ColumnName>Phenology.CurrentPhaseName</ColumnName>
+        </EventNamesOnGraph>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Obs2016</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>UptakeNKgHA</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -10279,6 +10952,12 @@ namespace Models
   </Experiment>
   <Experiment>
     <Name>SowingDate2002</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[Jamieson, P. D. and C. A. Munro (1999). A simple method for the phenological evaluation of new cereal cultivars. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 63-68.
+	
+This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food Lincoln wher a Cultivar is planted at 3 sowing dates throughout the year and the time of flowering, Final leaf number and Flag leaf are recorded. ]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -11210,6 +11889,12 @@ namespace Models
   </Experiment>
   <Experiment>
     <Name>SowingDate2003</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[Jamieson, P. D. and C. A. Munro (1999). A simple method for the phenological evaluation of new cereal cultivars. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 63-68.
+	
+This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food Lincoln wher a Cultivar is planted at 3 sowing dates throughout the year and the time of flowering, Final leaf number and Flag leaf are recorded. ]]></MemoText>
+    </Memo>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -13068,6 +13753,12 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[Jamieson, P. D. and C. A. Munro (1999). A simple method for the phenological evaluation of new cereal cultivars. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 63-68.
+	
+This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food Lincoln wher a Cultivar is planted at 3 sowing dates throughout the year and the time of flowering, Final leaf number and Flag leaf are recorded. ]]></MemoText>
+    </Memo>
   </Experiment>
   <Graph>
     <Name>FlagLeaf Prediction</Name>
@@ -13112,7 +13803,7 @@ namespace Models
     </Axis>
     <LegendPosition>BottomRight</LegendPosition>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>Flowering Prediction</Name>
@@ -13157,7 +13848,7 @@ namespace Models
     </Axis>
     <LegendPosition>BottomRight</LegendPosition>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>FLN</Name>
@@ -13202,7 +13893,142 @@ namespace Models
     </Axis>
     <LegendPosition>BottomRight</LegendPosition>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>395</ExplorerWidth>
+  <Graph>
+    <Name>Leaf Weight</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>DailyObsPred</TableName>
+      <XFieldName>Observed.Oats.Leaf.Live.Wt</XFieldName>
+      <YFieldName>Predicted.Oats.Leaf.Live.Wt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Grain Weight</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>DailyObsPred</TableName>
+      <XFieldName>Observed.Oats.Grain.Wt</XFieldName>
+      <YFieldName>Predicted.Oats.Grain.Wt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Stem Weight</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>false</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>DailyObsPred</TableName>
+      <XFieldName>Observed.Oats.Stem.Wt</XFieldName>
+      <YFieldName>Predicted.Oats.Stem.Wt</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>BottomRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <ExplorerWidth>397</ExplorerWidth>
 </Simulations>
