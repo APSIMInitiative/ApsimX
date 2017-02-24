@@ -363,6 +363,8 @@ namespace UserInterface.Views
             string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
+                col.CellRenderers[1].Visible = false;
+                col.CellRenderers[2].Visible = false;
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
                 if (dataType == typeof(DBNull))
@@ -372,7 +374,7 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
-                if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
+                else if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
                 {
                     if (dataType == typeof(Boolean))
                     {
@@ -408,8 +410,6 @@ namespace UserInterface.Views
                         }
                         text = dataVal.ToString();
                     }
-                    col.CellRenderers[1].Visible = false;
-                    col.CellRenderers[2].Visible = false;
                 }
                 else
                 {
@@ -530,7 +530,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeViewColumn col;
                 gridview.GetCursor(out path, out col);
-                if (path != null)
+                if (path != null && col.Cells.Length > 0)
                 {
                     int colNo, rowNo;
                     rowNo = path.Indices[0];
