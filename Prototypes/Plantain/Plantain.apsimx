@@ -278,8 +278,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <SimpleLeaf>
         <Name>Leaf</Name>
@@ -1863,7 +1867,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <Value>0</Value>
           <Units>/day</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -3167,11 +3171,11 @@ namespace Models
         <string>([Plantain].Taproot.Live.Wt / ([Plantain].BelowGround.Wt + 0.000001)) as TaprootFraction</string>
         <string>([Plantain].Root.Live.Wt / ([Plantain].BelowGround.Wt + 0.000001)) as RootFraction</string>
         <string />
-        <string>[Plantain].Arbitrator.DMSupply</string>
-        <string>[Plantain].Arbitrator.DMDemand</string>
-        <string>[Plantain].Arbitrator.DMAllocated</string>
-        <string>[Plantain].Arbitrator.DMSinkLimitation</string>
-        <string>[Plantain].Arbitrator.DMNutrientLimitation</string>
+        <string>[Plantain].Arbitrator.DM.TotalFixationSupply</string>
+        <string>[Plantain].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Plantain].Arbitrator.DM.Allocated</string>
+        <string>[Plantain].Arbitrator.DM.SinkLimitation</string>
+        <string>[Plantain].Arbitrator.DM.NutrientLimitation</string>
         <string>[Plantain].Arbitrator.FDM</string>
         <string>[ExtraVariables].Script.Leaf_DMSupply</string>
         <string>[ExtraVariables].Script.Stem_DMSupply</string>
@@ -3184,8 +3188,8 @@ namespace Models
         <string>[ExtraVariables].Script.Root_DMDemand</string>
         <string>[ExtraVariables].Script.Taproot_DMDemand</string>
         <string />
-        <string>[Plantain].Arbitrator.NSupply</string>
-        <string>[Plantain].Arbitrator.NDemand</string>
+        <string>[Plantain].Arbitrator.N.TotalPlantSupply</string>
+        <string>[Plantain].Arbitrator.N.TotalPlantDemand</string>
         <string>[Plantain].Arbitrator.N.Allocated</string>
         <string>[Plantain].Arbitrator.FN</string>
         <string>[Plantain].Arbitrator.WSupply</string>
@@ -6677,7 +6681,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NSupply</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -6698,7 +6702,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NDemand</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8221,7 +8225,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8242,7 +8246,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8263,7 +8267,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8305,7 +8309,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMSinkLimitation</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8326,7 +8330,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMNutrientLimitation</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13387,7 +13391,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NSupply</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -13408,7 +13412,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.NDemand</YFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14931,7 +14935,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14952,7 +14956,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14973,7 +14977,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMAllocated</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.Allocated</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15015,7 +15019,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMSinkLimitation</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15036,7 +15040,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Arbitrator.DMNutrientLimitation</YFieldName>
+                <YFieldName>Plantain.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

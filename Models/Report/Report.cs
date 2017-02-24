@@ -139,9 +139,9 @@ namespace Models.Report
                 table.FileName = Path.ChangeExtension(simulation.FileName, ".db");
                 table.SimulationName = simulation.Name;
                 table.TableName = this.Name;
-                table.Data = new List<IReportColumn>();
-                table.Data.AddRange(columns);
-
+                table.Columns = new List<IReportColumn>();
+                table.Columns.AddRange(columns);
+                table.Flatten();
                 dataStore.WriteTable(this.simulation.Name, this.Name, table);
 
                 this.columns.Clear();

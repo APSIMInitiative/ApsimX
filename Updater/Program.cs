@@ -117,7 +117,7 @@ namespace Updater
             }
             string newInstallName = Path.Combine("/Applications", Path.GetFileName(newInstallDirectory) + ".app");
 
-            string output = ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.dmg " + uninstallDirectory, out exitCode);
+            ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.dmg " + uninstallDirectory, out exitCode);
             if (exitCode == 0)
             {
                 File.Delete("updater.sh");
@@ -158,7 +158,7 @@ namespace Updater
             }
 
             int exitCode;
-            string output = ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.deb", out exitCode);
+            ReadProcessOutput("/bin/sh", "./updater.sh APSIMSetup.deb", out exitCode);
             if (exitCode == 0)
             {
                 File.Delete("updater.sh");

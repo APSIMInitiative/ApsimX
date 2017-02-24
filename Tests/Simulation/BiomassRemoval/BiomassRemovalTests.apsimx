@@ -742,8 +742,8 @@ namespace Models
           <string>[SCRUM].Stover.Height</string>
           <string>[SCRUM].Stover.PotentialBiomass.Value</string>
           <string>[SCRUM].Product.LiveFWt</string>
-          <string>[SCRUM].Arbitrator.NDemand</string>
-          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
@@ -753,11 +753,11 @@ namespace Models
           <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCRUM].Ymax.Value</string>
           <string>[SCRUM].Total.N</string>
-          <string>[SCRUM].Arbitrator.DMSupply</string>
-          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
+          <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
           <string>[SCRUM].Phenology.ThermalTime.Value</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
@@ -1761,7 +1761,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1782,7 +1782,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1824,7 +1824,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1845,7 +1845,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1866,7 +1866,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.SinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1887,7 +1887,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.NutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2880,8 +2880,8 @@ namespace Models
           <string>[SCRUM].Stover.Height</string>
           <string>[SCRUM].Stover.PotentialBiomass.Value</string>
           <string>[SCRUM].Product.LiveFWt</string>
-          <string>[SCRUM].Arbitrator.NDemand</string>
-          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
@@ -2891,11 +2891,11 @@ namespace Models
           <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCRUM].Ymax.Value</string>
           <string>[SCRUM].Total.N</string>
-          <string>[SCRUM].Arbitrator.DMSupply</string>
-          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
+          <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
           <string>[SCRUM].Phenology.ThermalTime.Value</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
@@ -3899,7 +3899,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3920,7 +3920,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3962,7 +3962,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3983,7 +3983,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4004,7 +4004,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.SinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -4025,7 +4025,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.NutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5018,8 +5018,8 @@ namespace Models
           <string>[SCRUM].Stover.Height</string>
           <string>[SCRUM].Stover.PotentialBiomass.Value</string>
           <string>[SCRUM].Product.LiveFWt</string>
-          <string>[SCRUM].Arbitrator.NDemand</string>
-          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
@@ -5029,11 +5029,11 @@ namespace Models
           <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCRUM].Ymax.Value</string>
           <string>[SCRUM].Total.N</string>
-          <string>[SCRUM].Arbitrator.DMSupply</string>
-          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
+          <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
           <string>[SCRUM].Phenology.ThermalTime.Value</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
@@ -6037,7 +6037,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6058,7 +6058,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6100,7 +6100,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6121,7 +6121,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6142,7 +6142,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.SinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -6163,7 +6163,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.NutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7156,8 +7156,8 @@ namespace Models
           <string>[SCRUM].Stover.Height</string>
           <string>[SCRUM].Stover.PotentialBiomass.Value</string>
           <string>[SCRUM].Product.LiveFWt</string>
-          <string>[SCRUM].Arbitrator.NDemand</string>
-          <string>[SCRUM].Arbitrator.NSupply</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
+          <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
@@ -7167,11 +7167,11 @@ namespace Models
           <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
           <string>[SCRUM].Ymax.Value</string>
           <string>[SCRUM].Total.N</string>
-          <string>[SCRUM].Arbitrator.DMSupply</string>
-          <string>[SCRUM].Arbitrator.DMDemand</string>
+          <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
+          <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[SCRUM].Arbitrator.DMSinkLimitation</string>
-          <string>[SCRUM].Arbitrator.DMNutrientLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
+          <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
           <string>[SCRUM].Phenology.ThermalTime.Value</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
@@ -8175,7 +8175,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8196,7 +8196,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.NSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.N.TotalPlantSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8238,7 +8238,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSupply</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalFixationSupply</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8259,7 +8259,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMDemand</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8280,7 +8280,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMSinkLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.SinkLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8301,7 +8301,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Arbitrator.DMNutrientLimitation</YFieldName>
+        <YFieldName>SCRUM.Arbitrator.DM.NutrientLimitation</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
