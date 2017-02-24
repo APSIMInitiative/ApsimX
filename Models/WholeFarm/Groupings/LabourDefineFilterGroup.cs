@@ -12,26 +12,21 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class FodderLimitsFilterGroup: WFModel
+	public class LabourDefineFilterGroup: WFModel
 	{
 		/// <summary>
-		/// Monthly values to supply selected individuals
+		/// Days per month selected individuals available
 		/// </summary>
-		[Description("Monthly proportion of intake that can come from each pool")]
-		public double[] PoolValues { get; set; }
+		[Description("Days per month selected individuals available")]
+		public double[] DaysPerMonth { get; set; }
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public FodderLimitsFilterGroup()
+		public LabourDefineFilterGroup()
 		{
-			PoolValues = new double[12];
+			DaysPerMonth = new double[12];
 		}
-
-		/// <summary>
-		/// Are set limits strict, or can individual continue eating if food available? 
-		/// </summary>
-		public bool StrictLimits { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

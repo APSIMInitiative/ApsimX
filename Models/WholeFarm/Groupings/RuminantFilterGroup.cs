@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	///<summary>
 	/// Contains a group of filters to identify individual ruminants
@@ -12,7 +12,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class RuminantFilterGroup: Model
+	public class RuminantFilterGroup: WFModel
 	{
 		/// <summary>
 		/// Monthly values to supply selected individuals

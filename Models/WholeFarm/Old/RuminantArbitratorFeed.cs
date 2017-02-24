@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Models.WholeFarm
 	public class RuminantArbitratorFeed : Model, IResourceType
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
 		[Link]
@@ -208,7 +209,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			throw new NotImplementedException();
 		}

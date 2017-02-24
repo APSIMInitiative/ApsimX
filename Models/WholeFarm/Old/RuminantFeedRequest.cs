@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using Models.WholeFarm.Resources;
 
 namespace Models.WholeFarm
 {

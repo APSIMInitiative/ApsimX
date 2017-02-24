@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	/// <summary>labour requirement for an activity</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class ActivityLabourRequirement: Model
+	public class ActivityLabourRequirement: WFModel
 	{
 
 

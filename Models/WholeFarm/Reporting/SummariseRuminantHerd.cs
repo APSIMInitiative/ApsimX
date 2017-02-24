@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
 	public class SummariseRuminantHerd:Model
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Report item was generated event handler

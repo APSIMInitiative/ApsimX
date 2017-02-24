@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant growth activity</summary>
 	/// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
@@ -17,11 +18,11 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityGrow : Model
+	[ValidParent(ParentType = typeof(Activities.ActivitiesHolder))]
+	public class RuminantActivityGrow : WFModel
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Gross energy content of forage (MJ/kg DM)

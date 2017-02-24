@@ -6,10 +6,10 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using Models.WholeFarm.Activities;
+using Models.WholeFarm.Groupings;
 
-
-
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 
     ///<summary>
@@ -19,7 +19,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Resources: Model
+    public class ResourcesHolder: WFModel
     {
 
         // Scoping rules of Linking in Apsim means that you can only link to 
@@ -59,22 +59,66 @@ namespace Models.WholeFarm
 		}
 
 		/// <summary>
+		/// Retrieve a ResourceType from a ResourceGroup based on a request item including filter and sort options
+		/// </summary>
+		/// <param name="Request">A resource request item</param>
+		/// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
+		/// <returns>A reference to the item of type Model</returns>
+		public Model GetResourceItem(ResourceRequest Request, out bool ResourceAvailable)
+		{
+			ResourceAvailable = false;
+			if (Request.FilterSortDetails != null)
+			{
+				if (Request.ResourceName == null)
+				{
+					Summary.WriteWarning(this, "ResourceGroup name must be supplied");
+					return null;
+				}
+
+				IModel resourceGroup = this.GetByName(Request.ResourceName);
+				if(resourceGroup== null)
+				{
+					return null;
+				}
+
+				// get list of children matching the conditions in filter
+				// and return the lowest item that has enough time available
+				ResourceAvailable = true;
+				object resourceGroupObject = resourceGroup as object;
+				switch (resourceGroupObject.GetType().ToString())
+				{
+					case "Models.WholeFarm.Resources.Labour":
+						List<LabourType> items = resourceGroup.Children.Where(a => a.GetType() == typeof(LabourType)).Cast<LabourType>().ToList();
+						return items.Filter(Request.FilterSortDetails.FirstOrDefault() as Model).FirstOrDefault();
+					default:
+						throw new Exception("Resource cannot be filtered. Filtering not implemented for "+ resourceGroupObject.GetType().ToString());
+				}
+			}
+			else
+			{
+				return GetResourceItem(Request.ResourceName, Request.ResourceTypeName, out ResourceAvailable);
+			}
+		}
+
+		/// <summary>
 		/// Retrieve a ResourceType from a ResourceGroup with specified names
 		/// </summary>
 		/// <param name="ResourceGroupName">Name of the resource group</param>
 		/// <param name="ResourceTypeName">Name of the resource item</param>
+		/// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
 		/// <returns>A reference to the item of type object</returns>
-		public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName)
+		public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName, out bool ResourceAvailable)
 		{
+			ResourceAvailable = false;
 			if(ResourceGroupName==null)
 			{
 				Summary.WriteWarning(this, "ResourceGroup name must be supplied");
-				return null;
+				throw new Exception("Resource not specified!");
 			}
 			if (ResourceTypeName == null)
 			{
 				Summary.WriteWarning(this, "ResourceType name must be supplied");
-				return null;
+				throw new Exception("Resource group not specified!");
 			}
 
 			// locate specified resource
@@ -87,6 +131,7 @@ namespace Models.WholeFarm
 					Summary.WriteWarning(this, String.Format("Resource of name {0} not found in {1}", ((ResourceTypeName.Length == 0) ? "[Blank]" : ResourceTypeName), ResourceGroupName));
 					throw new Exception("Resource not found!");
 				}
+				ResourceAvailable = true;
 				return resource;
 			}
 			else
@@ -193,21 +238,61 @@ namespace Models.WholeFarm
             Groups = Apsim.Children(this, typeof(IModel));
         }
 
+		///// <summary>
+		///// Determines if a shortfall in all Resources can be met by transmutation
+		///// </summary>
+		//public void CanTransmutateShortfall(List<ResourceRequest> requests)
+		//{
+		//	List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required - a.Available > 0).ToList();
+
+		//	// Search through all limited resources and determine if transmutation available
+		//	foreach (ResourceRequest request in shortfallRequests)
+		//	{
+		//		// Check if transmutation would be successful 
+		//		if (request.AllowTransmutation)
+		//		{
+		//			// get resource type
+		//			bool resourceAvailable = false;
+		//			IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName, out resourceAvailable) as IModel;
+		//			if (model != null)
+		//			{
+		//				// check if transmutations provided
+		//				foreach (Transmutation trans in model.Children.Where(a => a.GetType() == typeof(Transmutation)))
+		//				{
+		//					// check if resources available for activity and transmutation
+		//					double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
+		//					foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
+		//					{
+		//						double transmutationCost = unitsNeeded * transcost.CostPerUnit;
+		//						double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+		//						if(transmutationCost+activityCost <= (model as IResourceType).Amount)
+		//						{
+		//							request.TransmutationSuccessful = true;
+		//							break;
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
 		/// <summary>
-		/// Determines if a shortfall in all Resources can be met by transmutation
+		/// Performs the transmutation of resources into a required resource
 		/// </summary>
-		public void CanTransmutateShortfall(List<ResourceRequest> requests)
+		public void TransmutateShortfall(List<ResourceRequest> requests, bool QueryOnly)
 		{
-			List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required - a.Available > 0).ToList();
+			List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required > a.Available).ToList();
 
 			// Search through all limited resources and determine if transmutation available
 			foreach (ResourceRequest request in shortfallRequests)
 			{
 				// Check if transmutation would be successful 
-				if (request.AllowTransmutation)
+				if (request.AllowTransmutation & (QueryOnly || request.TransmutationSuccessful))
 				{
 					// get resource type
-					IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName) as IModel;
+					bool resourceAvailable = false;
+					IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName, out resourceAvailable) as IModel;
 					if (model != null)
 					{
 						// check if transmutations provided
@@ -218,19 +303,36 @@ namespace Models.WholeFarm
 							foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
 							{
 								double transmutationCost = unitsNeeded * transcost.CostPerUnit;
-								double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourseTypeName).Sum(a => a.Required);
-								if(transmutationCost+activityCost <= (model as IResourceType).Amount)
+								if (!QueryOnly)
 								{
-									request.TransmutationSuccessful = true;
-									break;
+									//remove cost
+									IResourceType transResource = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
+									transResource.Remove(transmutationCost, trans.Name, trans.Parent.Name);
 								}
+								else
+								{
+									double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+									IResourceType resourceToTake = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
+									if (transmutationCost + activityCost <= resourceToTake.Amount)
+									{
+										request.TransmutationSuccessful = true;
+										break;
+									}
+								}
+							}
+							if(!QueryOnly)
+							{
+								// Add resource
+								(model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans.Name, "");
 							}
 						}
 					}
+
 				}
+
 			}
 		}
+
+
 	}
-
-
 }

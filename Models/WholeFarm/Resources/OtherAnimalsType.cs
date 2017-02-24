@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	///<summary>
 	/// Store for bank account
@@ -15,7 +15,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimals))]
-	public class OtherAnimalsType : Model, IResourceWithTransactionType
+	public class OtherAnimalsType : WFModel, IResourceWithTransactionType
 	{
 		/// <summary>
 		/// Current cohorts of this Other Animal Type.
@@ -37,6 +37,12 @@ namespace Models.WholeFarm
 		{
 			Initialise();
 		}
+
+		/// <summary>
+		/// Age when individuals become adults for feeding and breeding rates
+		/// </summary>
+		[Description("Age when adult (months)")]
+		public double AgeWhenAdult { get; set; }
 
 		/// <summary>
 		/// Initialise resource type
@@ -144,7 +150,7 @@ namespace Models.WholeFarm
 
 			LastCohortChanged = cohortToAdd;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Credit = cohortToAdd.Number;
+			details.Debit = cohortToAdd.Number;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;

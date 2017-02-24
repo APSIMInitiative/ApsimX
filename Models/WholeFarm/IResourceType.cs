@@ -25,7 +25,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		void Remove(double RemoveAmount, string ActivityName, string UserName);
+		double Remove(double RemoveAmount, string ActivityName, string UserName);
 
 		/// <summary>
 		/// Remove this request

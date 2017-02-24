@@ -1,11 +1,13 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	///<summary>
 	/// WholeFarm Activity base model
@@ -15,10 +17,14 @@ namespace Models.WholeFarm
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public abstract class WFActivityBase: WFModel
 	{
-		private List<ResourceRequest> requestList;
-
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
+
+		/// <summary>
+		/// Current list of resources requested by this activity
+		/// </summary>
+		[XmlIgnore]
+		public List<ResourceRequest> ResourceRequestList { get; set; }
 
 		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
@@ -30,7 +36,7 @@ namespace Models.WholeFarm
 			GetResourcesRequired();
 
 			// get resources required for all children of type WFActivityBase
-			foreach (WFActivityBase child in Children.Where(a => a.GetType() == typeof(WFActivityBase)))
+			foreach (WFActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))
 			{
 				child.GetResourcesForAllActivities();
 			}
@@ -41,45 +47,88 @@ namespace Models.WholeFarm
 		/// </summary>
 		public void GetResourcesRequired()
 		{
+			bool resourceAvailable = false;
+
 			// determine what resources are needed
-			requestList = DetermineResourcesNeeded();
+			ResourceRequestList = DetermineResourcesNeeded();
+
+			// no resources required or this is an Activity folder.
+			if (ResourceRequestList == null) return;
 
 			// check resource amounts available
-			foreach (ResourceRequest request in requestList)
+			foreach (ResourceRequest request in ResourceRequestList)
 			{
+				request.Available = 0;
 				// get resource
-				IResourceType resource = Resources.GetResourceItem(request.ResourceName, request.ResourceTypeName) as IResourceType;
-
+				IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
 				if (resource != null)
 				{
 					// get amount available
-					request.Available = Math.Max(resource.Amount, request.Required);
+					request.Available = Math.Min(resource.Amount, request.Required);
 				}
 				else
 				{
-					// if resource does not exist in simulation assume unlimited resource available
-					request.Available = request.Required;
-				}
-			}
-
-			// are all resources available
-			List<ResourceRequest> shortfallRequests = requestList.Where(a => a.Required - a.Available > 0).ToList();
-			if(shortfallRequests.Count() > 0)
-			{
-				foreach (ResourceRequest shortrequest in shortfallRequests)
-				{
-					if(shortrequest.AllowTransmutation)
+					if (!resourceAvailable)
 					{
-						//
+						// if resource does not exist in simulation assume unlimited resource available
+						// otherwise 0 will be assigned to available when no resouces match request
+						request.Available = request.Required;
 					}
 				}
 			}
 
-			if (PerformWithPartialResources)
+			// are all resources available
+			List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
+			int countShortfallRequests = shortfallRequests.Count();
+			if (countShortfallRequests > 0)
 			{
-				// take resources if available or happy to do IsPartial 
+				// check what transmutations can occur
+				Resources.TransmutateShortfall(shortfallRequests, true);
+			}
 
-				// undertake activity here if provided or store resources obtained and await activity event
+			// check if need to do transmutations
+			int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationSuccessful == true & a.AllowTransmutation).Count();
+			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationSuccessful == false & a.AllowTransmutation).Count() == 0);
+
+			// OR at least one transmutation successful and PerformWithPartialResources
+			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & PerformWithPartialResources))
+			{
+				// do transmutations.
+				Resources.TransmutateShortfall(shortfallRequests, false);
+
+				// recheck resource amounts now that resources have been topped up
+				foreach (ResourceRequest request in ResourceRequestList)
+				{
+					resourceAvailable = false;
+					// get resource
+					request.Available = 0;
+					IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+					if (resource != null)
+					{
+						// get amount available
+						request.Available = Math.Max(resource.Amount, request.Required);
+					}
+				}
+			}
+
+			// remove activity resources 
+			// check if deficit and performWithPartial
+			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) | PerformWithPartialResources)
+			{
+				foreach (ResourceRequest request in ResourceRequestList)
+				{
+					resourceAvailable = false;
+					// get resource
+					request.Provided = 0;
+					IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+					if (resource != null)
+					{
+						// get amount available
+						request.Provided = Math.Min(resource.Amount, request.Required);
+						// remove resource
+						request.Provided = resource.Remove(request.Available, this.Name, request.Requestor);
+					}
+				}
 				PerformActivity();
 			}
 		}
@@ -91,14 +140,14 @@ namespace Models.WholeFarm
 		public bool PerformWithPartialResources { get; set; }
 
 		/// <summary>
-		/// Method to perform activity tasks if expected as soon as resources are available
-		/// </summary>
-		public abstract void PerformActivity();
-
-		/// <summary>
 		/// Abstract method to determine list of resources and amounts needed. 
 		/// </summary>
 		public abstract List<ResourceRequest> DetermineResourcesNeeded();
+
+		/// <summary>
+		/// Method to perform activity tasks if expected as soon as resources are available
+		/// </summary>
+		public abstract void PerformActivity();
 	}
 
 	///<summary>
@@ -111,9 +160,13 @@ namespace Models.WholeFarm
 		///</summary> 
 		public string ResourceName { get; set; }
 		///<summary>
-		/// Name of resource being requested 
+		/// Name of resource type being requested 
 		///</summary> 
 		public string ResourceTypeName { get; set; }
+		///<summary>
+		/// Name of item requesting resource
+		///</summary> 
+		public string Requestor { get; set; }
 		///<summary>
 		/// Amount required 
 		///</summary> 
@@ -123,9 +176,17 @@ namespace Models.WholeFarm
 		///</summary> 
 		public double Available { get; set; }
 		///<summary>
-		/// Request details such as groups and filtering options
+		/// Amount provided
 		///</summary> 
-		public List<object> RequestDetails { get; set; }
+		public double Provided { get; set; }
+		///<summary>
+		/// Filtering and sorting items list
+		///</summary> 
+		public List<object> FilterSortDetails { get; set; }
+		/////<summary>
+		///// Requesting activity containing detials and filtering options
+		/////</summary> 
+		//public object RequestDetails { get; set; }
 		///<summary>
 		/// Allow transmutation
 		///</summary> 
@@ -134,10 +195,6 @@ namespace Models.WholeFarm
 		/// Allow transmutation
 		///</summary> 
 		public bool TransmutationSuccessful { get; set; }
-		///<summary>
-		/// Query only request
-		///</summary> 
-		public bool QueryOnly { get; set; }
 		///<summary>
 		/// ResourceRequest constructor
 		///</summary> 

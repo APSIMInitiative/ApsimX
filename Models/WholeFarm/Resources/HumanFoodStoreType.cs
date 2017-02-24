@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
-    public class HumanFoodStoreType : Model, IResourceType, IResourceWithTransactionType
+    public class HumanFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
     {
         [Link]
         ISummary Summary = null;
@@ -95,7 +95,7 @@ namespace Models.WholeFarm
 		{
 			this.amount = this.amount + AddAmount;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = AddAmount;
+			details.Credit = AddAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;
@@ -110,7 +110,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			double amountRemoved = RemoveAmount;
 			if (this.amount - RemoveAmount < 0)
@@ -128,12 +128,13 @@ namespace Models.WholeFarm
 			}
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
-			details.Credit = amountRemoved;
+			details.Debit = amountRemoved;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
+			return amountRemoved;
 		}
 
 		/// <summary>

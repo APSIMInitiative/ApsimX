@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
-
     /// <summary>
     /// This stores the parameters for a ruminant Type
     /// </summary>
@@ -16,7 +14,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
-    public class RuminantType : Model
+    public class RuminantType : WFModel
     {
         /// <summary>
         /// Breed

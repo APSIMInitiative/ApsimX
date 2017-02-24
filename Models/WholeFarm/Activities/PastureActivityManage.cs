@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Pasture management activity</summary>
 	/// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
@@ -15,11 +16,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class PastureActivityManage: Model
+	public class PastureActivityManage: WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
 
@@ -116,24 +116,11 @@ namespace Models.WholeFarm
 			LandConditionIndex = LandConditionIndexAtStart;
 
 			// locate Pasture Type resource
-			FeedType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName) as GrazeFoodStoreType;
+			bool resourceAvailable = false;
+			FeedType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 
 			// TODO: Set up pasture pools to start run
 
-		}
-
-		/// <summary>An event handler to allow us to reset request list at start of the month</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFRequestResources")]
-		private void OnWFRequestResources(object sender, EventArgs e)
-		{
-			if (Area < AreaRequested)
-			{
-				//TODO: Request land
-
-				Area = AreaRequested;
-			}
 		}
 
 		/// <summary>An event handler to allow us to get next supply of pasture</summary>
@@ -192,6 +179,42 @@ namespace Models.WholeFarm
 			}
 			// remove all pools with less than 100g of food
 			FeedType.Pools.RemoveAll(a => a.Amount < 0.1);
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>A list of resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			if(Area==0 & AreaRequested>0)
+			{
+				ResourceRequestList = new List<ResourceRequest>();
+				ResourceRequestList.Add(new ResourceRequest()
+				{
+					AllowTransmutation = false,
+					Required = AreaRequested*((UnitsOfArea == UnitsOfAreaTypes.Hectares)?1:100),
+					ResourceName = "Land",
+					ResourceTypeName = LandTypeNameToUse,
+					Requestor = this.Name,
+					FilterSortDetails = null
+				}
+				);
+				return ResourceRequestList;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			if(ResourceRequestList.Count() > 0)
+			{
+				Area = ResourceRequestList.FirstOrDefault().Available;
+			}
+			return;
 		}
 	}
 

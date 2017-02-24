@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	/// <summary>
 	/// This stores the parameters for a GrazeFoodType and holds values in the store
@@ -15,7 +15,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(GrazeFoodStore))]
-	public class GrazeFoodStoreType : Model, IFeedType
+	public class GrazeFoodStoreType : WFModel, IFeedType
 	{
 		/// <summary>
 		/// List of pools available
@@ -136,7 +136,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount"></param>
 		/// <param name="ActivityName"></param>
 		/// <param name="UserName"></param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			throw new NotImplementedException();
 		}

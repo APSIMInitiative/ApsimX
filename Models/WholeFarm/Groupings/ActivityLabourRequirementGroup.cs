@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {   ///<summary>
 	/// Contains a group of filters to identify individul ruminants
 	///</summary> 
@@ -13,7 +13,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(ActivityLabourRequirement))]
-	public class ActivityLabourRequirementGroup: Model
+	public class ActivityLabourRequirementGroup: WFModel
 	{
 		/// <summary>
 		/// Days required in this time step

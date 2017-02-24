@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	/// <summary>
 	/// Filter operators

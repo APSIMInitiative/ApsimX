@@ -4,14 +4,32 @@ using Models.Core;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
+using Models.WholeFarm.Groupings;
+using Models.WholeFarm.Resources;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	/// <summary>
 	/// Herd list extensions
 	/// </summary>
 	public static class ListFilterExtensions
 	{
+		/// <summary>
+		/// Filter extensions for labour
+		/// </summary>
+		public static List<LabourType> Filter(this IEnumerable<LabourType> individuals, Model filterGroup)
+		{
+			var rules = new List<Rule>();
+			foreach (LabourFilter filter in filterGroup.Children.Where(a => a.GetType() == typeof(LabourFilter)))
+			{
+				ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+				// create rule list
+				rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
+			}
+			var compiledRulesList = CompileRule(new List<LabourType>(), rules);
+			return GetItemsThatMatchAll<LabourType>(individuals, compiledRulesList).ToList<LabourType>();
+		}
+
 		/// <summary>
 		/// Filter extensions for herd list
 		/// </summary>

@@ -57,7 +57,7 @@ namespace Models.WholeFarm
 		/// Name of resource type to use
 		/// </summary>
 		[Description("Name of Resource Type to use")]
-		public string ResourseTypeName { get; set; }
+		public string ResourceTypeName { get; set; }
 
 		/// <summary>
 		/// Cost of transmutation

@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	///<summary>
 	/// Contains a group of filters to identify individual other animals
@@ -13,10 +14,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class OtherAnimalsFilterGroup: Model
+	public class OtherAnimalsFilterGroup: WFModel
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Daily amount to supply selected individuals each month

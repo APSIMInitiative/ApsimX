@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	/// <summary>
 	/// A food pool of given age
 	/// </summary>
 	[Serializable]
-	public class GrazeFoodStorePool : Model, IFeedType
+	public class GrazeFoodStorePool : WFModel, IFeedType
 	{
 		[Link]
 		ISummary Summary = null;
@@ -78,7 +78,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount"></param>
 		/// <param name="ActivityName"></param>
 		/// <param name="UserName"></param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			if (this.amount - RemoveAmount < 0)
 			{
@@ -95,6 +95,8 @@ namespace Models.WholeFarm
 
 			if (FodderChanged != null)
 				FodderChanged.Invoke(this, new EventArgs());
+
+			return RemoveAmount;
 		}
 
 		/// <summary>

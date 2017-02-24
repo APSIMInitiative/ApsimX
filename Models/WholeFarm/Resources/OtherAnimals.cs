@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	///<summary>
 	/// Parent model of Ruminant Types.
@@ -14,7 +14,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Resources))]
+	[ValidParent(ParentType = typeof(ResourcesHolder))]
 	public class OtherAnimals: ResourceBaseWithTransactions
 	{
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>

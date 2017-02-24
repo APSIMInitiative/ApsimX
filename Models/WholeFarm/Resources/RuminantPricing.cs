@@ -1,10 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Activities;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	/// <summary>
 	/// User entry of Ruminant prices

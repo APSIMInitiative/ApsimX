@@ -13,7 +13,6 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(LabourActivityOffFarm))]
 	public class LabourOffFarmFilterGroup : Model ,ILabourFilterGroup
 	{
 		/// <summary>

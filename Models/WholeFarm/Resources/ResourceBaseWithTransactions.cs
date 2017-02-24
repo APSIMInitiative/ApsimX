@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	///<summary>
 	/// Base resource model to implement transaction tracking
@@ -14,8 +14,8 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Resources))]
-	public class ResourceBaseWithTransactions: Model
+	[ValidParent(ParentType = typeof(ResourcesHolder))]
+	public class ResourceBaseWithTransactions: WFModel
 	{
 		/// <summary>
 		/// Last transaction received

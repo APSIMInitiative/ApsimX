@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-
 using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 
-
-
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 
     ///<summary>
@@ -20,7 +16,7 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Resources))]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
 		///// <summary>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	/// <summary>
 	/// This stores the initialisation parameters for a Cohort of a specific Other Animal Type.
@@ -14,7 +14,7 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(OtherAnimalsType))]
-	public class OtherAnimalsTypeCohort: Model
+	public class OtherAnimalsTypeCohort: WFModel
 	{
 		/// <summary>
 		/// Gender

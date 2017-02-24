@@ -43,11 +43,11 @@ namespace Models.WholeFarm
 		{
 			if (RandomSeed < Int32.MinValue || RandomSeed > Int32.MaxValue)
 			{
-				string error = String.Format("Random generator seed (WholeFarm Zone) must be an integer in range of Int32");
+				string error = String.Format("Random generator seed (WholeFarm Zone) must be an integer in range of Int32."+ Environment.NewLine+"Using clock to set random number generator");
 				Summary.WriteWarning(this, error);
+				randomGenerator = new Random();
 			}
-
-			if (RandomSeed==0)
+			else if (RandomSeed==0)
 			{
 				randomGenerator = new Random();
 			}

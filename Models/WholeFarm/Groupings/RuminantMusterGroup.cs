@@ -1,10 +1,13 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Activities;
+using Models.WholeFarm.Groupings;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	///<summary>
 	/// Contains a group of filters to identify individual ruminants to muster
@@ -13,14 +16,14 @@ namespace Models.WholeFarm
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityMuster))]
-	public class RuminantMusterGroup: Model
+	public class RuminantMusterGroup: WFActivityBase
 	{
 		[Link]
 		Clock Clock = null;
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
-		private Activities Activities =  null;
+		private Activities.ActivitiesHolder Activities =  null;
 		[Link]
 		ISummary Summary = null;
 
@@ -37,7 +40,7 @@ namespace Models.WholeFarm
 		public bool MusterOnLabourShortfall { get; set; }
 
 		/// <summary>
-		/// Determines whether this must is performed to setup herds at the start of the simulation
+		/// Determines whether this must be performed to setup herds at the start of the simulation
 		/// </summary>
 		[Description("Perform muster at start of simulation")]
 		public bool PerformAtStartOfSimulation { get; set; }
@@ -54,7 +57,22 @@ namespace Models.WholeFarm
 		[Description("Move sucklings with mother")]
 		public bool MoveSucklings { get; set; }
 
-		private bool labourIncluded = false;
+		/// <summary>
+		/// Labour required per x head
+		/// </summary>
+		[Description("Labour required per x head")]
+		public double LabourRequired { get; set; }
+
+		/// <summary>
+		/// Number of head per labour unit required
+		/// </summary>
+		[Description("Number of head per labour unit required")]
+		public double LabourHeadUnit { get; set; }
+
+		/// <summary>
+		/// Labour grouping for breeding
+		/// </summary>
+		public List<object> LabourFilterList { get; set; }
 
 		private PastureActivityManage pasture { get; set; }
 
@@ -74,6 +92,27 @@ namespace Models.WholeFarm
 			{
 				Summary.WriteWarning(this, String.Format("Could not find manage pasture activity named \"{0}\" for {1}", ManagedPastureName, this.Name));
 				throw new Exception(String.Format("Invalid pasture name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
+			}
+
+			if (LabourRequired > 0)
+			{
+				// check for and assign labour filter group
+				LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Cast<object>().ToList();
+				// if not present assume can use any labour and report
+				if (LabourFilterList == null)
+				{
+					Summary.WriteWarning(this, String.Format("No labour filter details provided for feeding activity ({0}). Assuming any labour type can be used", this.Name));
+					LabourFilterGroup lfg = new LabourFilterGroup();
+					LabourFilter lf = new LabourFilter()
+					{
+						Operator = FilterOperators.GreaterThanOrEqual,
+						Value = "0",
+						Parameter = LabourFilterParameters.Age
+					};
+					lfg.Children.Add(lf);
+					LabourFilterList = new List<object>();
+					LabourFilterList.Add(lfg);
+				}
 			}
 
 			if (PerformAtStartOfSimulation)
@@ -117,46 +156,48 @@ namespace Models.WholeFarm
 			}
 		}
 
-		/// <summary>An event handler to call for all resources other than food for feeding activity</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFRequestResources")]
-		private void OnWFRequestResources(object sender, EventArgs e)
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
+			ResourceRequestList = null;
 			if (Clock.Today.Month == Month)
 			{
 				// if labour item(s) found labour will be requested for this activity.
-				labourIncluded = false;
-				// check labour required
-
-				// request labour
+				if (LabourRequired > 0)
+				{
+					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+					// determine head to be mustered
+					RuminantHerd ruminantHerd = Resources.RuminantHerd();
+					List<Ruminant> herd = ruminantHerd.Herd;
+					int head = herd.Filter(this).Count();
+					ResourceRequestList.Add(new ResourceRequest()
+					{
+						AllowTransmutation = true,
+						Required = Math.Ceiling(head / this.LabourHeadUnit) * this.LabourRequired,
+						ResourceName = "Labour",
+						ResourceTypeName = "",
+						Requestor = this.Name,
+						FilterSortDetails = LabourFilterList
+					}
+					);
+				}
 			}
+			return ResourceRequestList;
 		}
 
-		/// <summary>An event handler to call for all resources other than food for feeding activity</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFResourcesAllocated")]
-		private void OnWFResourcesAllocated(object sender, EventArgs e)
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
 		{
 			if (Clock.Today.Month == Month)
 			{
-
-				bool labourShortfall = false;
-				if (labourIncluded)
-				{
-
-
-				}
-
-				if (!labourShortfall | this.MusterOnLabourShortfall)
-				{
-					// move individuals
-					Muster();
-				}
+				// move individuals
+				Muster();
 			}
 		}
-
-
 	}
 }

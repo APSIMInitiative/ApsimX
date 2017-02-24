@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	///<summary>
 	/// Individual filter term for ruminant group of filters to identify individul ruminants
@@ -13,7 +13,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class OtherAnimalsFilter: Model
+	public class OtherAnimalsFilter: WFModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

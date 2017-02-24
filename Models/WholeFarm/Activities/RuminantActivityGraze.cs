@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant graze activity</summary>
 	/// <summary>This activity determines how a ruminant group will graze</summary>
@@ -15,33 +16,13 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityGraze : Model, IFeedActivity
+	[ValidParent(ParentType = typeof(WFActivityBase))]
+	public class RuminantActivityGraze : WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
-		private Arbitrators Arbitrators = null;
-		[Link]
-		private Activities Activities = null;
-
-		/// <summary>
-		/// Feeding arbitrator to use
-		/// </summary>
-		[Description("Feeding arbitrator to use")]
-		public string FeedArbitratorName { get; set; }
-
-		/// <summary>
-		/// Feeding priority (1 high, 10 low)
-		/// </summary>
-		[Description("Feeding priority")]
-		public int FeedPriority { get; set; }
-
-		/// <summary>
-		/// Feed type (not used here)
-		/// </summary>
-		[XmlIgnore]
-		public IFeedType FeedType { get; set; }
+		private Activities.ActivitiesHolder Activities = null;
 
 		/// <summary>
 		/// Number of hours grazed
@@ -51,57 +32,78 @@ namespace Models.WholeFarm
 		[Description("Number of hours grazed")]
 		public double HoursGrazed { get; set; }
 
-		/// <summary>An event handler to call for all feed requests prior to arbitration and growth</summary>
+		/// <summary>
+		/// Name of paddock or pasture to graze
+		/// </summary>
+		[Description("Name of manage paddock activity")]
+		public string PaddockName { get; set; }
+
+		private PastureActivityManage paddockActivity { get; set; }
+		private GrazeFoodStoreType grazeType { get; set; }
+
+		/// <summary>
+		/// Feed type (not used here)
+		/// </summary>
+		[XmlIgnore]
+		public IFeedType FeedType { get; set; }
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFRequestFeed")]
-		private void OnWFRequestFeed(object sender, EventArgs e)
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
+			// get paddock
+			paddockActivity = Activities.SearchForNameInActivities(PaddockName) as PastureActivityManage;
+
+			grazeType = paddockActivity.FeedType;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			ResourceRequestList = null;
+			double kgPerHa = grazeType.Amount / paddockActivity.Area;
+
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
+			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.Location == PaddockName).ToList();
 
-			IResourceType grazeStoreType = null; 
-			if (FeedArbitratorName != "")
+			if (herd.Count() > 0)
 			{
-				grazeStoreType = Arbitrators.GetByName(FeedArbitratorName) as IResourceType;
-			}
-
-			// for each paddock defined in PastureActivityManage
-			foreach (PastureActivityManage pasture in Activities.Children.Where(a => a.GetType() == typeof(PastureActivityManage)))
-			{
-				if (FeedArbitratorName == "")
+				double amount = 0;
+				// get list of all Ruminants in this paddock
+				foreach (Ruminant ind in herd)
 				{
-					grazeStoreType = pasture.FeedType;
+					// Reduce potential intake based on pasture quality for the proportion consumed.
+
+					// TODO: build in pasture quality intake correction
+
+					// calculate intake from potential modified by pasture availability and hours grazed
+					amount += ind.PotentialIntake * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * kgPerHa)) * (HoursGrazed / 8);
 				}
-
-				// create feeding activity for this pasture
-				RuminantActivityGraze activity = new RuminantActivityGraze();
-				activity.FeedPriority = this.FeedPriority;
-				activity.FeedType = pasture.FeedType;
-				activity.HoursGrazed = this.HoursGrazed;
-				activity.Name = String.Format("Graze {0}", pasture.FeedType.Name);
-
-				// calculate kg per ha available
-				double kgPerHa = pasture.FeedType.Amount / pasture.Area;
-
-				if (pasture.FeedType.Amount > 0)
+				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+				ResourceRequestList.Add(new ResourceRequest()
 				{
-					// get list of all Ruminants in this paddock
-					foreach (Ruminant ind in herd.Where(a => a.Location == pasture.Name))
-					{
-						RuminantFeedRequest freqest = new RuminantFeedRequest();
-						freqest.FeedActivity = activity;
-						freqest.Requestor = ind;
-
-						// Reduce potential intake based on pasture quality for the proportion consumed.
-
-
-						// calculate intake from potential modified by pasture availability and hours grazed
-						freqest.Amount = ind.PotentialIntake * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * kgPerHa)) * (HoursGrazed / 8);
-						grazeStoreType.Remove(freqest);
-					}
+					AllowTransmutation = true,
+					Required = amount,
+					ResourceName = "GrazeFoodStore",
+					ResourceTypeName = this.grazeType.Name,
+					Requestor = this.Name
 				}
+				);
 			}
+			return ResourceRequestList;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			return;
 		}
 	}
 

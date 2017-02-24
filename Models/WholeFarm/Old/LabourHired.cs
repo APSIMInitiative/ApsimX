@@ -8,8 +8,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
-
-
+using Models.WholeFarm.Resources;
 
 namespace Models.WholeFarm
 {
@@ -20,7 +19,7 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Resources))]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class LabourHired: Model
     {
         /// <summary>

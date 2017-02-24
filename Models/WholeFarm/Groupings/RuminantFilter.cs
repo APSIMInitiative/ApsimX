@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Groupings
 {
 	///<summary>
 	/// Individual filter term for ruminant group of filters to identify individul ruminants
@@ -13,8 +13,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-//	[ValidParent(ParentType = (typeof(RuminantFilterGroup) | typeof(FodderLimitsFilterGroup)))]
-	public class RuminantFilter: Model
+	public class RuminantFilter: WFModel
 	{
 		/// <summary>
 		/// Name of parameter to filter by

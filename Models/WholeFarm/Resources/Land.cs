@@ -2,25 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-
 using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 
-
-
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
-
     ///<summary>
     /// Parent model of Land Types.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Resources))]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class Land: ResourceBaseWithTransactions
 	{
         /// <summary>
@@ -41,17 +36,25 @@ namespace Models.WholeFarm
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<LandType>();
+			foreach (var child in Children)
+			{
+				if (child is IResourceWithTransactionType)
+				{
+					(child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
+				}
+			}
 
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+			//Items = new List<LandType>();
 
-            foreach (IModel childModel in childNodes)
-            {
-                //cast the generic IModel to a specfic model.
-                LandType land = childModel as LandType;
-				land.TransactionOccurred += Resource_TransactionOccurred;
-				Items.Add(land);
-            }
+   //         List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+
+   //         foreach (IModel childModel in childNodes)
+   //         {
+   //             //cast the generic IModel to a specfic model.
+   //             LandType land = childModel as LandType;
+			//	land.TransactionOccurred += Resource_TransactionOccurred;
+			//	Items.Add(land);
+   //         }
         }
 
 		#region Transactions
