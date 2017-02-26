@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -73,8 +73,12 @@ Zhao, G. Q., et al. (2009). "Response of Nitrogen Uptake and Partitioning to Cri
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -834,7 +838,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>TillerGrowthRate</Name>
             <VariableReference>
               <Name>DailyGrowth</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
@@ -1218,7 +1222,7 @@ N conc values are from Zhao et al 2009
             <Name>AccumulatedGrowth</Name>
             <VariableReference>
               <Name>DailyBiomassProduction</Name>
-              <VariableName>[Arbitrator].DMSupply</VariableName>
+              <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
             </VariableReference>
             <StartStageName>FlagLeaf</StartStageName>
             <EndStageName>StartGrainFill</EndStageName>
@@ -2576,7 +2580,7 @@ N conc values are from Zhao et al 2009
             <Name>GrainFilling</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0</Value>
+              <Value>1</Value>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -2585,7 +2589,7 @@ N conc values are from Zhao et al 2009
             <Name>EndStemGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0</Value>
+              <Value>1</Value>
             </Constant>
             <Start>EndGrainFill</Start>
             <End>Maturity</End>
@@ -2993,7 +2997,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].AboveGroundDead.N</string>
         <string>[Oats].AboveGroundDead.Wt</string>
         <string>[Oats].Arbitrator.DMDemand</string>
-        <string>[Oats].Arbitrator.DMSupply</string>
+        <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Oats].Ear.N</string>
         <string>[Oats].Ear.Nconc</string>
         <string>[Oats].Ear.Wt</string>
@@ -4843,7 +4847,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
@@ -5250,7 +5254,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Manager>
           <Name>ClimateControl</Name>
@@ -5359,7 +5362,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Observations</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
+        <YFieldName>Oats.Aboveground.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8868,6 +8871,7 @@ Grazing winter forage crops is an important management strategy for profitable l
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -8876,7 +8880,6 @@ Grazing winter forage crops is an important management strategy for profitable l
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -9086,7 +9089,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
@@ -9480,7 +9483,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Report>
           <Name>EndTrialReport</Name>
@@ -10035,6 +10037,7 @@ Grazing winter forage crops is an important management strategy for profitable l
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -10043,7 +10046,6 @@ Grazing winter forage crops is an important management strategy for profitable l
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -10245,7 +10247,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
@@ -10639,7 +10641,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -11074,6 +11075,7 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -11082,7 +11084,6 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -11277,7 +11278,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
@@ -11671,7 +11672,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Report>
           <Name>EnviroReport</Name>
@@ -12011,6 +12011,7 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -12019,7 +12020,6 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -12253,7 +12253,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
@@ -12647,7 +12647,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -12961,6 +12960,7 @@ namespace Models
           <Manager>
             <Name>Fertilise</Name>
             <Script>
+              <SDSwitch>0</SDSwitch>
               <FertDate1>05-Aug</FertDate1>
               <FertDate2>01-Oct</FertDate2>
               <FertDate3>20-Oct</FertDate3>
@@ -12969,7 +12969,6 @@ namespace Models
               <Amount2>0</Amount2>
               <Amount3>0</Amount3>
               <Amount4>0</Amount4>
-              <SDSwitch>0</SDSwitch>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13164,7 +13163,7 @@ namespace Models
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
             <string>[0ats].Arbitrator.DMSinkLimitation</string>
-            <string>[0ats].Arbitrator.DMSupply</string>
+            <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
@@ -13558,7 +13557,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Area>1</Area>
         <Slope>0</Slope>
