@@ -112,6 +112,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when a tab is closing.</summary>
         event EventHandler<TabClosingEventArgs> TabClosing;
+
+        /// <summary>Invoked when application tries to close</summary>
+        event EventHandler<EventArgs> StopSimulation;
     }
 
     /// <summary>
@@ -134,6 +137,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when a tab is closing.</summary>
         public event EventHandler<TabClosingEventArgs> TabClosing;
 
+        /// <summary>Invoked when application tries to close</summary>
+        public event EventHandler<EventArgs> StopSimulation;
+
         private Views.ListButtonView listButtonView1;
         private Views.ListButtonView listButtonView2;
 
@@ -143,6 +149,8 @@ namespace UserInterface.Views
         private ProgressBar progressBar = null;
         [Widget]
         private TextView StatusWindow = null;
+        [Widget]
+        private Button stopButton = null;
         [Widget]
         private Notebook notebook1 = null;
         [Widget]
@@ -189,8 +197,14 @@ namespace UserInterface.Views
             tag.Foreground = "blue";
             StatusWindow.ModifyBase(StateType.Normal, new Gdk.Color(0xff, 0xff, 0xf0));
             StatusWindow.Visible = false;
+            stopButton.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Delete.png", 12, 12));
+            stopButton.ImagePosition = PositionType.Right;
+            stopButton.Image.Visible = true;
+            stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
             //window1.ShowAll();
+            if (APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac)
+                InitMac();
         }
 
         /// <summary>
@@ -236,6 +250,20 @@ namespace UserInterface.Views
             eventbox.ShowAll();
             Notebook notebook = onLeftTabControl ? notebook1 : notebook2;
             notebook.CurrentPage = notebook.AppendPageMenu(control, eventbox, new Label(tabLabel.Text));
+        }
+
+        /// <summary>
+        /// Inits code to allow us to use AppKit on Mac OSX
+        /// This lets us use the native browser and native file open/save dialogs
+        /// Thia initialisation must be done once and only once
+        /// Keeping this in a separate function allows the Microsoft .Net Frameworks
+        /// to run even when MonoDoc.dll is not present (that is, with Microsoft,
+        /// checking for referenced DLLs seems to occur on a "method", rather than "class" basis.
+        /// The Mono runtime works differently.
+        /// </summary>
+        private void InitMac()
+        {
+            MonoMac.AppKit.NSApplication.Init();
         }
 
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
@@ -434,39 +462,13 @@ namespace UserInterface.Views
         /// <param name="initialDirectory">Optional Initial starting directory</param>
         public string AskUserForOpenFileName(string fileSpec, string initialDirectory = "")
         {
-            string fileName = null;
-
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-            if (!String.IsNullOrEmpty(fileSpec))
-            {
-                string[] specParts = fileSpec.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    FileFilter fileFilter = new FileFilter();
-                    fileFilter.Name = specParts[i];
-                    fileFilter.AddPattern(specParts[i + 1]);
-                    fileChooser.AddFilter(fileFilter);
-                }
-            }
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.AddPattern("*");
-            allFilter.Name = "All files";
-            fileChooser.AddFilter(allFilter);
-
-            if (initialDirectory.Length > 0)
-                fileChooser.SetCurrentFolder(initialDirectory);
-            else
-                fileChooser.SetCurrentFolder(Utility.Configuration.Settings.PreviousFolder);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-            {
-                fileName = fileChooser.Filename;
+            string fileName = AskUserForFileName("Choose a file to open", fileSpec, FileChooserAction.Open, initialDirectory);
+            if (!String.IsNullOrEmpty(fileName))
+            { 
                 string dir = Path.GetDirectoryName(fileName);
                 if (!dir.Contains(@"ApsimX\Examples"))
                     Utility.Configuration.Settings.PreviousFolder = dir;
             }
-            fileChooser.Destroy();
             return fileName;
         }
 
@@ -478,36 +480,13 @@ namespace UserInterface.Views
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string AskUserForSaveFileName(string fileSpec, string OldFilename)
         {
-            string result = null;
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a file name for saving", null, FileChooserAction.Save, "Cancel", ResponseType.Cancel, "Save", ResponseType.Accept);
-
-            if (!String.IsNullOrEmpty(fileSpec))
+            string result = AskUserForFileName("Choose a file name for saving", fileSpec, FileChooserAction.Save, OldFilename);
+            if (!String.IsNullOrEmpty(result))
             {
-                string[] specParts = fileSpec.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    FileFilter fileFilter = new FileFilter();
-                    fileFilter.Name = specParts[i];
-                    fileFilter.AddPattern(specParts[i + 1]);
-                    fileChooser.AddFilter(fileFilter);
-                }
-            }
-
-            fileChooser.CurrentName = Path.GetFileName(OldFilename);
-            fileChooser.SetCurrentFolder(Utility.Configuration.Settings.PreviousFolder);
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.AddPattern("*");
-            allFilter.Name = "All files";
-            fileChooser.AddFilter(allFilter);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-            {
-                string dir = Path.GetDirectoryName(fileChooser.Filename);
+                string dir = Path.GetDirectoryName(result);
                 if (!dir.Contains(@"ApsimX\Examples"))
                     Utility.Configuration.Settings.PreviousFolder = dir;
-                result = fileChooser.Filename;
             }
-            fileChooser.Destroy();
             return result;
         }
 
@@ -559,6 +538,7 @@ namespace UserInterface.Views
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;
+                stopButton.Visible = false;
             });
         }
 
@@ -589,6 +569,7 @@ namespace UserInterface.Views
             {
                 progressBar.Visible = true;
                 progressBar.Fraction = percent / 100.0;
+                stopButton.Visible = true;
             });
         }
 
@@ -609,6 +590,18 @@ namespace UserInterface.Views
                 Close(false);
             }
         }
+
+        /// <summary>User is trying to stop all currently executing simulations.
+        /// <param name="e">Event arguments.</param>
+        protected void OnStopClicked(object o, EventArgs e)
+        {
+            if (StopSimulation != null)
+            {
+                EventArgs args = new EventArgs();
+                StopSimulation.Invoke(this, args);
+            }
+        }
+
     }
 
     /// <summary>An event argument structure with a string.</summary>

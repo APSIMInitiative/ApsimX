@@ -32,6 +32,16 @@ namespace Models.Core
         public double Slope { get; set; }
 
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            if (Area <= 0)
+                throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
+        }
+
         /// <summary>Gets an array of plant models that are in scope.</summary>
         /// <value>The plants.</value>
         [XmlIgnore]

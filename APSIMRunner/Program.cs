@@ -13,6 +13,7 @@ namespace APSIMJobRunner
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net.Sockets;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -20,17 +21,12 @@ namespace APSIMJobRunner
 
     class Program
     {
-        Byte[] bytes = new Byte[65536];
-
         /// <summary>Main program</summary>
         static int Main(string[] args)
         {
             try
             { 
                 AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
-
-                // Setup a binary formatter and a stream for writing to.
-                IFormatter formatter = new BinaryFormatter();
 
                 // Send a command to socket server to get the job to run.
                 object response = GetNextJob();
@@ -45,6 +41,10 @@ namespace APSIMJobRunner
                     {
                         simulation = job.job as Simulation;
                         simulation.Run(null, null);
+
+                        SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
+                        SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
+                        DataStore.TablesToWrite.Clear();
                     }
                     catch (Exception err)
                     {
@@ -62,8 +62,8 @@ namespace APSIMJobRunner
                     response = GetNextJob();
                 }
 
-                SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
-                SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
+                //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };
+                //SocketServer.Send("127.0.0.1", 2222, transferDataCommand);
             }
             catch (SocketException)
             {

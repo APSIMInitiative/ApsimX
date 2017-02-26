@@ -338,38 +338,16 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            FileChooserDialog fileChooser = new FileChooserDialog("Choose a weather file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
-
-            FileFilter fileFilter = new FileFilter();
-            fileFilter.Name = "APSIM Weather file (*.met)";
-            fileFilter.AddPattern("*.met");
-            fileChooser.AddFilter(fileFilter);
-
-            FileFilter excelFilter = new FileFilter();
-            excelFilter.Name = "Excel file (*.xlsx)";
-            excelFilter.AddPattern("*.xlsx");
-            fileChooser.AddFilter(excelFilter);
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.Name = "All files";
-            allFilter.AddPattern("*");
-            fileChooser.AddFilter(allFilter);
-
-            fileChooser.SetFilename(labelFileName.Text);
-
-            if (fileChooser.Run() == (int)ResponseType.Accept)
+            string fileName = AskUserForFileName("Choose a weather file to open", "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", FileChooserAction.Open, labelFileName.Text);
+            if (!String.IsNullOrEmpty(fileName))
             {
-                Filename = fileChooser.Filename;
-                fileChooser.Destroy();
+                Filename = fileName;
                 if (BrowseClicked != null)
                 {
                     BrowseClicked.Invoke(Filename);    //reload the grid with data
                     notebook1.CurrentPage = 0;
                 }
-
-             }
-             else
-                fileChooser.Destroy();
+            }
         }
 
         /// <summary>Handles the change event for the GraphStartYear NumericUpDown </summary>

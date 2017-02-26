@@ -76,6 +76,10 @@ namespace Models.Interfaces
         ///<summary> Who knows</summary>
         ///<summary> Who knows</summary>
         double[] outflow_lat { get; }
+        /// <summary>
+        /// The plant available water capacity of the soil
+        /// </summary>
+        ///double[] PAWC { get; set; }
         ///<summary> Who knows</summary>
         double pond { get; }
         ///<summary> Who knows</summary>
