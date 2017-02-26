@@ -81,7 +81,7 @@ namespace Models.WholeFarm
 					IFeedType feedType = feedTypeGroup.Key as IFeedType;
 
 					// determine the total requested for each feedtype
-					double amountRequested = feedTypeGroup.Sum(a => Math.Min(a.Amount, (a.Requestor.PotentialIntake - a.Requestor.Intake)) * a.Requestor.Number);
+					double amountRequested = feedTypeGroup.Sum(a => Math.Min(a.Amount, (a.Requestor.PotentialIntake - a.Requestor.Intake)*30.4) * a.Requestor.Number);
 
 					// if something requested and something available
 					if (amountRequested > 0 & feedType.Amount > 0)
@@ -143,7 +143,7 @@ namespace Models.WholeFarm
 									case "GrazeFoodStoreType":
 										// take from pools as specified for the individual
 										GrazeFoodStoreType pasture = request.FeedActivity.FeedType as GrazeFoodStoreType;
-										double amountRequired = request.Requestor.PotentialIntake - request.Requestor.Intake;
+										double amountRequired = (request.Requestor.PotentialIntake - request.Requestor.Intake)*30.4;
 
 										int index = 0;
 										bool secondTakeFromPools = request.Requestor.BreedParams.StrictFeedingLimits;

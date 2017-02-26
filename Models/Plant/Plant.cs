@@ -63,6 +63,11 @@ namespace Models.PMF
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
+
+        /// <summary> The plant's zone</summary>
+        [Link]
+        public Zone Zone = null;
+
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
@@ -72,6 +77,9 @@ namespace Models.PMF
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
+        /// <summary>The Canopy</summary>
+        [Link(IsOptional = true)]
+        public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
         public Leaf Leaf = null;
@@ -146,8 +154,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.CalculateWaterDemand() > 0)
-                    F = Root.WaterUptake / Leaf.CalculateWaterDemand();
+                if (Canopy != null && Canopy.PotentialEP > 0)
+                    F = Root.WaterUptake / Canopy.PotentialEP;
                 else
                     F = 1;
                 return F;
@@ -172,11 +180,8 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.1)
-                {
-                    // the plant is dying due to population decline
-                    EndCrop();
-                }
+                if (IsAlive && value <= 0.01)                    
+                    EndCrop();  // the plant is dying due to population decline
                 else
                 {
                     plantPopulation = value;
@@ -263,6 +268,7 @@ namespace Models.PMF
             Organs = organs.ToArray();
 
             Clear();
+
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -271,12 +277,12 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Phenology != null && Leaf != null && AboveGround != null)
+            if (sender == this && Phenology != null && Canopy != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Leaf != null)
+                if (Canopy != null)
                 {
-                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                    message += "  LAI = " + Canopy.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);
@@ -326,7 +332,8 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
-            
+
+
             // Invoke an AboutToSow event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -362,7 +369,7 @@ namespace Models.PMF
             // Invoke an event.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType + "ing"));
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
 
             // Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
@@ -400,7 +407,8 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
-            cultivarDefinition.Unapply();
+            if (cultivarDefinition != null)
+                cultivarDefinition.Unapply();
         }
         #endregion
 

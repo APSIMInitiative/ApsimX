@@ -30,8 +30,14 @@ namespace Models.Report
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
-    public class ReportColumn
+    public class ReportColumn : IReportColumn
     {
+        /// <summary>The column heading.</summary>
+        public string Name { get; set; }
+
+        /// <summary>The values for each report event (e.g. daily)</summary>
+        public List<object> Values { get; set; }
+
         /// <summary>
         /// The from field converted to a date.
         /// </summary>
@@ -67,35 +73,11 @@ namespace Models.Report
         /// </summary>
         private string variableName;
 
-        /// <summary>
-        /// The column heading.
-        /// </summary>
-        private string heading;
-
-        /// <summary>
-        /// The values for each report event (e.g. daily)
-        /// </summary>
-        protected List<object> values = new List<object>();
 
         /// <summary>
         /// The values for each report event (e.g. daily)
         /// </summary>
         private List<object> valuesToAggregate = new List<object>();
-
-        /// <summary>
-        /// For array variables, this will be the number of array elements to write to the data table.
-        /// </summary>
-        private int maximumNumberArrayElements;
-
-        /// <summary>
-        /// For jagged array variables, this will be the number of array elements in the second dimension to write to the data table.
-        /// </summary>
-        private int maximumNumberJaggedElements;
-
-        /// <summary>
-        /// The data type of this column
-        /// </summary>
-        private Type valueType;
 
         /// <summary>
         /// True when the simulation is within the capture window for this variable
@@ -135,9 +117,11 @@ namespace Models.Report
         /// <returns>The newly created ReportColumn</returns>
         private ReportColumn(string aggregationFunction, string variableName, string columnName, string from, string to, string[] frequenciesFromReport, IModel parentModel)
         {
+            Values = new List<object>();
+
             this.aggregationFunction = aggregationFunction;
             this.variableName = variableName;
-            this.heading = columnName;
+            this.Name = columnName;
             this.parentModel = parentModel;
             this.inCaptureWindow = false;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
@@ -167,10 +151,11 @@ namespace Models.Report
         /// <param name="columnName">The column name to write to the output</param>
         /// <param name="frequenciesFromReport">Reporting frequencies</param>
         /// <param name="parentModel">The parent model</param>
-        protected ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
+        private ReportColumn(string variableName, string columnName, string[] frequenciesFromReport, IModel parentModel)
         {
+            Values = new List<object>();
             this.variableName = variableName;
-            this.heading = columnName;
+            this.Name = columnName;
             this.parentModel = parentModel;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
@@ -393,7 +378,7 @@ namespace Models.Report
                 if (!this.inCaptureWindow)
                     this.ApplyAggregation();
                 else
-                    this.values.Add(null);
+                    Values.Add(null);
             }
             else
                 this.StoreValue();
@@ -407,7 +392,7 @@ namespace Models.Report
             object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
             if (value == null)
-                this.values.Add(null);
+                Values.Add(null);
             else
             {
                 if (value != null && value is IFunction)
@@ -428,7 +413,7 @@ namespace Models.Report
                     }
                 }
 
-                this.values.Add(value);
+                Values.Add(value);
             }
         }
 
@@ -481,168 +466,11 @@ namespace Models.Report
                 if (!double.IsNaN(result))
                 {
                     this.valuesToAggregate.Clear();
-                    this.values.Add(result);
+                    Values.Add(result);
                 }
             }
         }
 
-        #endregion
-
-        #region Output methods
-
-        /// <summary>
-        /// Add the required columns to the specified data table.
-        /// </summary>
-        /// <param name="table">The data table to add columns to</param>
-        public void AddColumnsToTable(DataTable table)
-        {
-            object firstValue = this.FirstNonBlankValue();
-            this.valueType = null;
-            if (firstValue != null)
-            {
-                this.valueType = firstValue.GetType();
-                if (this.valueType.IsArray)
-                    this.maximumNumberArrayElements = this.GetMaximumNumberArrayElements();
-            }
-            List<FlattenedValue> flattenedValues = this.FlattenValue(firstValue, this.heading, this.valueType);
-
-            foreach (FlattenedValue column in flattenedValues)
-                table.Columns.Add(column.Name, column.Type);
-        }
-
-        /// <summary>
-        /// Add the required number of rows to the table.
-        /// </summary>
-        /// <param name="table">The data table to add rows to</param>
-        public void AddRowsToTable(DataTable table)
-        {
-            // Ensure there are enough data rows in the table.
-            while (table.Rows.Count < this.values.Count)
-                table.Rows.Add(table.NewRow());
-
-            for (int rowIndex = 0; rowIndex < this.values.Count; rowIndex++)
-            {
-                List<FlattenedValue> flattenedValues = this.FlattenValue(this.values[rowIndex], this.heading, this.valueType);
-
-                foreach (FlattenedValue column in flattenedValues)
-                {
-                    if (column.Value != null)
-                        table.Rows[rowIndex][column.Name] = column.Value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Go through values and return the first non blank one. 
-        /// </summary>
-        /// <returns>Returns first non blank value or null if all are missing</returns>
-        private object FirstNonBlankValue()
-        {
-            foreach (object value in this.values)
-                if (value != null)
-                    return value;
-            return null;
-        }
-
-        /// <summary>
-        /// 'Flatten' then object passed in, into a list of columns ready to be added
-        /// to a data table.
-        /// </summary>
-        /// <param name="value">The object to be analyzed and flattened</param>
-        /// <param name="name">The name of the object</param>
-        /// <param name="type">Type type of the object</param>
-        /// <returns>The list of values that can be written to a data table</returns>
-        private List<FlattenedValue> FlattenValue(object value, string name, Type type)
-        {
-            List<FlattenedValue> flattenedValues = new List<FlattenedValue>();
-
-            if (type == null)
-            {
-                // Whole column is null.
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = typeof(double) });
-            }
-            else if (type.IsArray)
-            {
-                // Array
-                Array array = value as Array;
-                double numElements = 0;
-
-                // if name contains a '(' then we're in a jagged array
-                if (name.Count(x => x == '(') == 1)
-                    numElements = this.maximumNumberJaggedElements;
-                else
-                    numElements = this.maximumNumberArrayElements;
-
-                for (int columnIndex = 0; columnIndex < numElements; columnIndex++)
-                {
-                    string heading = name;
-                    heading += "(" + (columnIndex + 1).ToString() + ")";
-                    if (array == null || columnIndex >= array.Length)
-                        flattenedValues.Add(new FlattenedValue() { Name = heading, Type = type });
-                    else
-                    {
-                        object arrayElement = array.GetValue(columnIndex);
-                        Array innerArray = arrayElement as Array;
-                        if (innerArray != null)
-                            this.maximumNumberJaggedElements = innerArray.Length;
-                        flattenedValues.AddRange(this.FlattenValue(arrayElement, heading, array.GetType().GetElementType()));
-                    }
-                }
-            }
-            else if (type == typeof(DateTime) || type == typeof(string) || !type.IsClass)
-            {
-                // Scalar
-                flattenedValues.Add(new FlattenedValue() { Name = name, Type = type, Value = value });
-            }
-            else
-            {
-                // A struct or class
-                foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(type, BindingFlags.Instance | BindingFlags.Public))
-                {
-                    string heading = name + "." + property.Name;
-                    object classElement = property.GetValue(value, null);
-                    flattenedValues.AddRange(this.FlattenValue(classElement, heading, classElement.GetType().GetElementType()));
-                }
-            }
-
-            return flattenedValues;
-        }
-
-        /// <summary>
-        /// Calculate the maximum number of array elements.
-        /// </summary>
-        /// <returns>The maximum number of array elements</returns>
-        private int GetMaximumNumberArrayElements()
-        {
-            int maxNumValues = 0;
-            foreach (object value in this.values)
-            {
-                if (value != null)
-                    maxNumValues = Math.Max(maxNumValues, (value as Array).Length);
-            }
-            return maxNumValues;
-        }
-
-        /// <summary>
-        /// A structure to hold a name, type and value. Used in the flattening process.
-        /// </summary>
-        private struct FlattenedValue
-        {
-            /// <summary>
-            /// The name of a column
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The type of a column
-            /// </summary>
-            public Type Type;
-
-            /// <summary>
-            /// The value of a column
-            /// </summary>
-            public object Value;
-        }
         #endregion
     }
 }

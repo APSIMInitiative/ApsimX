@@ -51,6 +51,11 @@ namespace Models.Agroforestry
         /// </summary>
         public double CO2 { get { return weather.CO2; } }
 
+        /// <summary>
+        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
+        /// </summary>
+        public double AirPressure { get { return weather.AirPressure; } }
+
         /// <summary>Gets the latitude</summary>
         public double Latitude { get { return weather.Latitude; } }
 

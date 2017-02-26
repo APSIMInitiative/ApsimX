@@ -109,8 +109,12 @@
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1788,7 +1792,7 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
-              <string>Bambatsi.Arbitrator.NDemand</string>
+              <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
               <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
               <string>Bambatsi.IndividualTreeLiveWt.Value</string>
               <string>Bambatsi.Age.Value</string>
@@ -3319,7 +3323,7 @@ namespace Models
                 <string>Bambatsi.TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>[Soil].NO3N</string>
-                <string>Bambatsi.Arbitrator.NDemand</string>
+                <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
                 <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
                 <string>Bambatsi.IndividualTreeLiveWt.Value</string>
                 <string>Bambatsi.Age.Value</string>
@@ -5756,7 +5760,7 @@ namespace Models
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
-              <string>Bambatsi.Arbitrator.NDemand</string>
+              <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
               <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
               <string>Bambatsi.IndividualTreeLiveWt.Value</string>
               <string>Bambatsi.Age.Value</string>

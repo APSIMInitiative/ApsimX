@@ -19,7 +19,7 @@ namespace Models.PMF.Interfaces
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-        void CalculateNitrogenSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply);
+        void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply, ref double[] NH4Supply);
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="amount">The amount - layered mm.</param>

@@ -29,6 +29,9 @@ namespace Models.Soils
     public class MultiPoreWater : Model, ISoilWater
     {
         #region IsoilInterface
+        ///<summary> Model name</summary>
+        [XmlIgnore]
+        public string WaterModelName { get { return this.Name; } }
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
         [XmlIgnore]
         public double residueinterception { get { return ResidueWater; } set { } }
@@ -122,6 +125,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] outflow_lat { get; set; }
+        /// <summary> The Plant available water content of the soil layer /// </summary>
+        [XmlIgnore]
+        public double[] PAWC { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double pond { get; set; }
@@ -197,8 +203,10 @@ namespace Models.Soils
         #endregion
 
         #region Class Dependancy Links
+        ///[Link]
+        ///private Water Water = null;
         [Link]
-        private Water Water = null;
+        private LayerStructure Layering = null;
         [Link]
         private Soil Soil = null;
         [Link]
@@ -211,8 +219,8 @@ namespace Models.Soils
         private Evapotranspiration ET = null;
         [Link]
         private Clock Clock = null;
-        [Link]
-        private MicroClimate MicroClimate = null;
+        [Link(IsOptional = true)]
+        Plant Plant = null;
         #endregion
 
         #region Class Events
@@ -232,14 +240,25 @@ namespace Models.Soils
         /// <summary>
         /// Contains data extrapolated out to 6 min values
         /// </summary>
-        public HourlyData SubHourly;        
-        /// <summary>
-                                         /// Contains parameters specific to each layer in the soil
-                                         /// </summary>
-        public ProfileParameters ProfileParams = null;
+        public HourlyData SubHourly;
         #endregion
 
         #region Parameters
+        private double[] _Thickness;
+        /// <summary>
+        /// The thickness of each soil layer for parameter values
+        /// </summary>
+        public double[] ParamThickness
+        {
+            get
+            {
+                return _Thickness;
+            }
+            set
+            {
+                _Thickness = value;
+            }
+        }
         /// <summary>
         /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
         /// </summary>
@@ -252,28 +271,74 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("cm")]
-        [Description("Soil layer thickness for each layer (cm)")]
+        [Description("Layer Depth")]
         public string[] Depth
         {
             get
             {
-                return Soil.ToDepthStrings(Thickness);
+                return Soil.ToDepthStrings(ParamThickness);
             }
             set
             {
-                Thickness = Soil.ToThickness(value);
+                ParamThickness = Soil.ToThickness(value);
             }
         }
+        /// <summary>Gets or sets the l L15.</summary>
+        /// <value>The l L15.</value>
+        [Summary]
+        [Description("LL15")]
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
+        public double[] LL15 { get; set; }
+        /// <summary>Gets or sets the dul.</summary>
+        /// <value>The dul.</value>
+        [Summary]
+        [Description("DUL")]
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
+        public double[] DUL { get; set; }
+        /// <summary>Gets or sets the sat.</summary>
+        /// <value>The sat.</value>
+        [Summary]
+        [Description("SAT")]
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
+        public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("CFlow")]
-        [Display(Format = "N13")]
+        [Description("ConductC")]
+        [Display(Format = "e1")]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("XFlow")]
+        [Description("ConductX")]
+        [Display(Format = "N1")]
         public double[] XFlow { get; set; }
         /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
         [Description("PsiBub")]
+        [Units("mm H2O")]
+        [Display(Format = "N0")]
         public double[] PsiBub { get; set; }
+        /// <summary>Relative Water content above which soil is hydrophillic</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rupper")]
+        public double[] MaxRepellentWC { get; set; }
+        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rlower")]
+        public double[] MinRepellentWC { get; set; }
+        /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("RFacMin")]
+        public double[] MinRepellancyFactor { get; set; }
+        /// <summary>Gets or sets the bd.</summary>
+        /// <value>The bd.</value>
+        [Summary]
+        [Description("BD")]
+        [Units("g/cc")]
+        [Display(Format = "N2")]
+        public double[] BD { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
@@ -330,7 +395,55 @@ namespace Models.Soils
 
         #endregion
 
+        #region Mapped Soil Water Properties
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedSAT { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedDUL { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedLL15 { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedCFlow { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedXFlow { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedPsiBub { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedMinHydrophilicRWC { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedMaxHydrophobicRWC { get; set; }
+        /// <summary>Mapped from parameter set onto Layer structure</summary>
+        public double[] MappedMinRepellancyFactor { get; set; }
+        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
+        public double[] InitialSoilWater
+        {
+            get
+            {
+                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+
+                if (initialWater != null)
+                    throw new Exception("WEIRDO doesn't integrate with InitialWater Node yet");
+                //return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
+                else
+                {
+                    foreach (Sample Sample in Apsim.Children(this.Parent, typeof(Sample)))
+                    {
+                        if (MathUtilities.ValuesInArray(Sample.SW))
+                        {
+                            return Soil.Map(Sample.SWVolumetric, Sample.Thickness, Thickness);
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+        #endregion
+
         #region Outputs
+        /// <summary>
+        /// The amount of water extracted from the soil by the crop
+        /// </summary>
+        public double ProfileWaterExtraction { get; set; }
         /// <summary>
         /// The amount of cover from crops and surface organic matter.
         /// </summary>
@@ -368,10 +481,9 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Summary]
-        [Description("The hydraulic conducitivity of a layer at saturation")]
         [Display(Format = "N1")]
         [XmlIgnore]
-        internal double[] Ksat { get; set; }
+        public double[] Ksat { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
@@ -400,10 +512,32 @@ namespace Models.Soils
         /// The relative water water filled porosity when this pore space if full and larger pores are empty
         /// </summary>
         [Units("0-1")]
-        [Summary]
         [Display(Format = "N1")]
         [Description("Layer relative water water filled porosity when these pores are full and larger pores are empty")]
         public double[][] RelativePoreVolume { get; set; }
+        /// <summary>
+        /// Layer volumetric water content when these pores are full and larger pores are empty
+        /// </summary>
+        [Units("0-1")]
+        [Summary]
+        [Display(Format = "N1")]
+        [Description("Layer volumetric water content when these pores are full and larger pores are empty")]
+        public double[][] Theta { get; set; }
+        /// <summary>
+        /// Net diffusion Upward (+) or downwrd (-) from this layer
+        /// </summary>
+        [Units("mm/d")]
+        public double[] Diffusion { get; set; }
+        ///<summary> Who knows</summary>
+        [XmlIgnore]
+        public double[] SWdailyMax { get; set; }
+        ///<summary> Who knows</summary>
+        [XmlIgnore]
+        public double[] SWmmdailyMax { get; set; }
+        ///<summary> Water extracted by crop roots for transpiration</summary>
+        [XmlIgnore]
+        [Units("mm/d")]
+        public double WaterExtraction { get; set; }
         #endregion
 
         #region Properties
@@ -451,6 +585,11 @@ namespace Models.Soils
         private double ProfileDepth { get; set; }
         [Units("mm/h")]
         private double EvaporationHourly { get; set; }
+        /// <summary>
+        /// The amount of water mm stored in a layer at saturation
+        /// </summary>
+        private double[] SaturatedWaterDepth { get; set; }
+        private double[] HourlyWaterExtraction { get; set; }
         #endregion
 
         #region Event Handlers
@@ -466,7 +605,8 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ProfileLayers = Water.Thickness.Length;
+            Thickness = Layering.Thickness;
+            ProfileLayers = Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
             AdsorptionCapacity = new double[ProfileLayers];
             TransmissionCapacity = new double[ProfileLayers];
@@ -474,8 +614,23 @@ namespace Models.Soils
             LayerHeight = new double[ProfileLayers];
             Ksat = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
+            LL15mm = new double[ProfileLayers];
+            DULmm = new double[ProfileLayers];
+            SATmm = new double[ProfileLayers];
             SW = new double[ProfileLayers];
-            ProfileParams = new ProfileParameters(ProfileLayers);
+            Diffusion = new double[ProfileLayers];
+            SaturatedWaterDepth = new double[ProfileLayers];
+            HourlyWaterExtraction = new double[ProfileLayers];
+
+            MappedSAT = Soil.Map(SAT, ParamThickness, Thickness);
+            MappedDUL = Soil.Map(DUL, ParamThickness, Thickness);
+            MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness);
+            MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness);
+            MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness);
+            MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness);
+            MappedMinHydrophilicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
+            MappedMaxHydrophobicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
+            MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness);
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
@@ -483,6 +638,7 @@ namespace Models.Soils
             HydraulicConductivityOut = new double[ProfileLayers][];
             PsiUpper = new double[ProfileLayers][];
             RelativePoreVolume = new double[ProfileLayers][];
+            Theta = new double[ProfileLayers][];
             for (int l = 0; l < ProfileLayers; l++)
             {
                 Pores[l] = new Pore[PoreCompartments];
@@ -491,6 +647,7 @@ namespace Models.Soils
                 HydraulicConductivityOut[l] = new double[PoreCompartments];
                 PsiUpper[l] = new double[PoreCompartments];
                 RelativePoreVolume[l] = new double[PoreCompartments];
+                Theta[l] = new double[PoreCompartments];
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c] = new Pore();
@@ -499,6 +656,7 @@ namespace Models.Soils
                     HydraulicConductivityOut[l][c] = new double();
                     PsiUpper[l][c] = new double();
                     RelativePoreVolume[l][c] = new double();
+                    Theta[l][c] = new double();
                 }
             }
 
@@ -506,9 +664,18 @@ namespace Models.Soils
            
             Hourly = new HourlyData();
             SubHourly = new SubHourlyData();
-            ProfileSaturation = MathUtilities.Sum(ProfileParams.SaturatedWaterDepth);
+            ProfileSaturation = MathUtilities.Sum(SaturatedWaterDepth);
             
             if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
+
+            //Check the soil water content initialisation is legit
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                if (InitialSoilWater[l] > MappedSAT[l])
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
+                if (InitialSoilWater[l] < MappedLL15[l])
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
+            }
         }
 
         /// <summary>
@@ -526,7 +693,12 @@ namespace Models.Soils
             Infiltration = 0;
             pond_evap = 0;
             Es = 0;
-            TotalCover = Math.Min(1, SurfaceOM.Cover + MicroClimate.RadIntTotal);
+            WaterExtraction = 0;
+            double CropCover = 0;
+            if(Plant != null)
+                if (Plant.Canopy != null)
+                    CropCover = Plant.Canopy.CoverTotal;
+            TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
             double SoilRadn = Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
             Eos = ET.PenmanEO(SoilRadn, Met.MeanT, WindRun, Met.VP, Salb, Met.Latitude, Clock.Today.DayOfYear);
@@ -534,6 +706,10 @@ namespace Models.Soils
             Array.Clear(Hourly.Rainfall, 0, 24);
             Array.Clear(Hourly.Drainage, 0, 24);
             Array.Clear(Hourly.Infiltration, 0, 24);
+            Array.Clear(Diffusion, 0, ProfileLayers);
+            if(Plant != null)
+                if(Plant.Root != null)
+                    SetRootFactor();
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -547,8 +723,10 @@ namespace Models.Soils
             doPrecipitation();
             SODPondDepth = pond;
             double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
+            SWdailyMax = SW; //Set SWmax value to the end of yesterday start of today value.  Later in the code we increase this if SW exceeds it at any of the time steps
             for (int h = 0; h < 24; h++)
             {
+                SetRepellencyFactor();
                 //If duration of precipitation is less than an hour and the rate is high, set up sub hourly timestep
                 int TimeStepSplits = 1;
                 bool SplitTimeStep = ((((IrrigationDuration>0.0)&&(IrrigationDuration < 1.0)) 
@@ -584,17 +762,22 @@ namespace Models.Soils
                 }
                 doTranspiration();
                 if(CalculateEvaporation)
-                    doEvaporation(h);
+                    doEvaporation();
                 if(CalculateDiffusion)
                     doDiffusion();
                 ClearSubHourlyData();
+                for (int l = 0; l < ProfileLayers; l++)
+                {
+                    if (SW[l] > SWdailyMax[l])
+                        SWdailyMax[l] = SW[l];
+                }
             }
             EODPondDepth = pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
             Drainage = MathUtilities.Sum(Hourly.Drainage);
             double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
             double DeltaSWC = SoilWaterContentSOD - SoilWaterContentEOD;
-            double CheckMass = DeltaSWC + Infiltration - Drainage - Es;
+            double CheckMass = DeltaSWC + Infiltration - Drainage - Es - WaterExtraction;
             if (Math.Abs(CheckMass) > FloatingPointTolerance)
                 throw new Exception(this + " Mass balance violated");
         }
@@ -741,7 +924,7 @@ namespace Models.Soils
                     if (Ksat[l + 1] < 0.001) //Need a better method to establish zero potential base above impervious layer|| (SW[l + 1] == Water.SAT[l + 1]))
                         LayerHeight[l] = 0;
                     else
-                        LayerHeight[l] = LayerHeight[l + 1] + Water.Thickness[l + 1] / 1000;
+                        LayerHeight[l] = LayerHeight[l + 1] + Thickness[l + 1] / 1000;
                 }
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {//Step through each pore and assign the gravitational potential for the layer  Multiply by 10 to convert from cm to mm
@@ -832,7 +1015,7 @@ namespace Models.Soils
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
-        private void doEvaporation(int h)
+        private void doEvaporation()
         {
             double EvaporationSupplyHourly = SWmm[0] + pond; //Water can evaporation from the surface layer or the pond
             EvaporationHourly = Math.Min(Eos / 24, EvaporationSupplyHourly);  //Actual evaporation from the soil is constrained by supply from soil and pond and by demand from the atmosphere
@@ -855,7 +1038,25 @@ namespace Models.Soils
         /// </summary>
         private void doTranspiration()
         {
-            //write some temporary stuff to be replaced by arbitrator at some stage
+            if(Plant != null)
+                if (Plant.Canopy != null)
+                {
+                    Array.Clear(HourlyWaterExtraction, 0, ProfileLayers);
+                    double HourlyTranspirationDemand = Plant.Canopy.PotentialEP / 24;
+                    double UnMetDemand = HourlyTranspirationDemand;
+                    for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
+                    {
+                        for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                        {
+                            double PoreWaterExtractionHourly = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
+                            UnMetDemand -= PoreWaterExtractionHourly;
+                            Pores[l][c].WaterDepth -= PoreWaterExtractionHourly;
+                            HourlyWaterExtraction[l] += PoreWaterExtractionHourly;
+                        }
+                    }
+                    WaterExtraction += MathUtilities.Sum(HourlyWaterExtraction);
+                }
+            UpdateProfileValues();
         }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
@@ -864,31 +1065,33 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers - 1; l++)
             {//Step through each layer from the top down
-                double PotentialDownwardDiffusion = 0;
-                double PotentialUpwardDiffusion = 0;
-                double UpwardDiffusionCapacity = 0;
-                double DownwardDiffusionCapacity = 0;
+                double PotentialDownwardPoiseuilleFlow = 0;
+                double PotentialUpwardPoiseuilleFlow = 0;
                 double DownwardDiffusion = 0;
                 double UpwardDiffusion = 0;
+                double DownwardDiffusionCapacity = 0;
+                double UpwardDiffusionCapacity = 0;
                 for (int c = 0; c < PoreCompartments; c++)
                 {//Step through each pore and calculate diffusion in and out
 
-                    PotentialDownwardDiffusion += Pores[l][c].Diffusivity * DiffusivityMultiplier;//Diffusion out of this layer to layer below
+                    PotentialDownwardPoiseuilleFlow += Pores[l][c].Diffusivity * DiffusivityMultiplier;//Diffusion out of this layer to layer below
                     UpwardDiffusionCapacity += Pores[l][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb upward diffusion
+
                     if (l <= ProfileLayers - 1)
                     {
-                        PotentialUpwardDiffusion += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
+                        PotentialUpwardPoiseuilleFlow += Pores[l + 1][c].Diffusivity * DiffusivityMultiplier;//Diffusion into this layer from layer below
                         DownwardDiffusionCapacity += Pores[l + 1][c].DiffusionCapacity; //How much porosity there is in the matrix to absorb downward diffusion
                     }
                     else
                     {
-                        PotentialUpwardDiffusion = 0; //Need to put something here to work out capillary rise from below specified profile
+                        PotentialUpwardPoiseuilleFlow = 0; //Need to put something here to work out capillary rise from below specified profile
                         DownwardDiffusionCapacity = 0;
                     }
                 }
-                UpwardDiffusion = Math.Min(PotentialUpwardDiffusion, UpwardDiffusionCapacity);
-                DownwardDiffusion = Math.Min(PotentialDownwardDiffusion, DownwardDiffusionCapacity);
+                UpwardDiffusion = Math.Min(PotentialUpwardPoiseuilleFlow, UpwardDiffusionCapacity);
+                DownwardDiffusion = Math.Min(PotentialDownwardPoiseuilleFlow, DownwardDiffusionCapacity);
                 double NetDiffusion = UpwardDiffusion - DownwardDiffusion;
+                Diffusion[l] += NetDiffusion;
                 if (NetDiffusion > 0) //Bring water into current layer and remove from layer below
                 {
                     DistributeInwardDiffusion(l, NetDiffusion);
@@ -898,8 +1101,8 @@ namespace Models.Soils
                 if (NetDiffusion < 0) //Take water out of current layer and place into layer below.
                 {
                     if (l <= ProfileLayers - 1)
-                        DistributeOutwardDiffusion(l + 1, NetDiffusion);
-                    DistributeInwardDiffusion(l, NetDiffusion);
+                        DistributeInwardDiffusion(l + 1, -NetDiffusion);
+                    DistributeOutwardDiffusion(l, -NetDiffusion);
                 }
             }
             UpdateProfileValues();
@@ -944,9 +1147,8 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers; l++)
             {
-                ProfileDepth += Water.Thickness[l] / 1000;
-                ProfileParams.Ksat[l] = Water.KS[l] / 24; //Convert daily values to hourly
-                ProfileParams.SaturatedWaterDepth[l] = Water.SAT[l] * Water.Thickness[l];
+                ProfileDepth += Thickness[l] / 1000;
+                SaturatedWaterDepth[l] = MappedSAT[l] * Thickness[l];
             }
 
             MoistureRelease.SetHydraulicProperties();
@@ -960,22 +1162,25 @@ namespace Models.Soils
                     Pores[l][c].Compartment = c;
                     Pores[l][c].DiameterUpper = PoreBounds[c];
                     Pores[l][c].DiameterLower = PoreBounds[c + 1];
-                    Pores[l][c].Thickness = Water.Thickness[l];
+                    Pores[l][c].Thickness = Thickness[l];
                     Pores[l][c].ThetaUpper = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiUpper);
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
-                    Pores[l][c].CFlow = CFlow[l];
-                    Pores[l][c].XFlow = XFlow[l];
-                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
+                    Pores[l][c].CFlow = MappedCFlow[l];
+                    Pores[l][c].XFlow = MappedXFlow[l];
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, InitialSoilWater[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
-                    Pores[l][c].WaterDepth = PoreWaterFilledVolume * Water.Thickness[l];
+                    Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
-                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumWaterVolume - InitialSoilWater[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
-                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
-                Ksat[l] = LayerSum(Pores[l], "Capillarity");
-                ProfileSaturation += Water.SAT[l] * Water.Thickness[1];
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
+                Ksat[l] = LayerSum(Pores[l], "PoiseuilleFlow");
+                DULmm[l] = MappedDUL[l] * Thickness[l];
+                LL15mm[l] = MappedLL15[l] * Thickness[l];
+                SATmm[l] = MappedSAT[l] * Thickness[l];
+                ProfileSaturation += MappedSAT[l] * Thickness[1];
             }
             doGravitionalPotential();
             for (int l = 0; l < ProfileLayers; l++)
@@ -983,9 +1188,10 @@ namespace Models.Soils
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     RelativePoreVolume[l][c] = Pores[l][c].ThetaUpper / Pores[l][0].ThetaUpper;
-                    Capillarity[l][c] = Pores[l][c].Capillarity;
+                    Capillarity[l][c] = Pores[l][c].PoiseuilleFlow;
                     HydraulicConductivityOut[l][c] = Pores[l][c].HydraulicConductivityOut;
                     PsiUpper[l][c] = Pores[l][c].PsiUpper;
+                    Theta[l][c] = Pores[l][c].ThetaUpper;
                 }
             }
             
@@ -1059,7 +1265,7 @@ namespace Models.Soils
                 Pores[l][c].WaterDepth += Absorbtion;
                 InFlux -= Absorbtion;
             }
-            if ((LayerSum(Pores[l], "WaterDepth") - ProfileParams.SaturatedWaterDepth[l])>FloatingPointTolerance)
+            if ((LayerSum(Pores[l], "WaterDepth") - SaturatedWaterDepth[l])>FloatingPointTolerance)
                 throw new Exception("Water content of layer " + l + " exceeds saturation.  This is not really possible");
         }
         private void CheckMassBalance(string Process, int h, int SPH, int Subh)
@@ -1082,6 +1288,7 @@ namespace Models.Soils
             double WaterIn = InitialProfileWater + InitialPondDepth + InitialResidueWater 
                              + Rain + Irrig;
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
+            double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
             double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Drain;
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
                 throw new Exception(this + " " + Process + " calculations are violating mass balance");           
@@ -1094,7 +1301,7 @@ namespace Models.Soils
             for (int l = ProfileLayers - 1; l >= 0; l--)
             {
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
-                SW[l] = LayerSum(Pores[l], "WaterDepth") / Water.Thickness[l];
+                SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
             }
         }
         private void DoDetailReport(string CallingProcess,int Layer,int hour)
@@ -1120,10 +1327,45 @@ namespace Models.Soils
         }
         private void ClearSubHourlyData()
         {
-            Array.Clear(SubHourly.Irrigation, 0, 10);
-            Array.Clear(SubHourly.Rainfall, 0, 10);
-            Array.Clear(SubHourly.Drainage, 0, 10);
-            Array.Clear(SubHourly.Infiltration, 0, 10);
+            Array.Clear(SubHourly.Irrigation, 0, PoreCompartments);
+            Array.Clear(SubHourly.Rainfall, 0, PoreCompartments);
+            Array.Clear(SubHourly.Drainage, 0, PoreCompartments);
+            Array.Clear(SubHourly.Infiltration, 0, PoreCompartments);
+        }
+        /// <summary>
+        /// Call each time the plant root systems grows to update root distribution parameters in soil layers
+        /// </summary>
+        private void SetRootFactor()
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {//Step through each layer and set roof factor.
+                if (Plant.Root.LengthDensity[l] > 0)
+                {
+                    double RootFactor = 1;
+                    if (Plant.Root.LengthDensity[l] < 0.004)
+                        RootFactor = Plant.Root.LengthDensity[l] / 0.004;
+
+                    for (int c = PoreCompartments - 1; c >= 0; c--)
+                    {
+                        Pores[l][c].RootExplorationFactor = RootFactor;
+                    }
+                }
+            }
+        }
+        private void SetRepellencyFactor()
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                double[] X = { MappedMaxHydrophobicRWC[l], MappedMinHydrophilicRWC[l] };
+                double[] Y = { MappedMinRepellancyFactor[l],1.0};
+                double dX = SW[l] / MappedSAT[l];
+                bool DidInterpolate;
+                double Factor = MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
+                for (int c = PoreCompartments - 1; c >= 0; c--)
+                {
+                    Pores[l][c].RepelancyFactor = Factor;
+                }
+            }
         }
         #endregion
     }

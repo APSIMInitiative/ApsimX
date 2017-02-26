@@ -32,8 +32,8 @@ namespace Models.PMF.Library
         /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>
         public event FOMLayerDelegate IncorpFOM;
 
-        /// <summary>Removes biomass from live and dead biomass pools and send to surface organic matter</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <summary>Removes biomass from live and dead biomass pools, may send to surface organic matter</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass removal call.</param>
         /// <param name="amount">The fractions of biomass to remove</param>
         /// <param name="Live">Live biomass pool</param>
         /// <param name="Dead">Dead biomass pool</param>
@@ -48,33 +48,44 @@ namespace Models.PMF.Library
         {
             if (amount == null)
                 amount = FindDefault(biomassRemoveType);
+            else
+                CheckRemoveFractions(biomassRemoveType, amount);
 
-            double totalFractionToRemove = amount.FractionLiveToRemove + amount.FractionDeadToRemove
-                                           + amount.FractionLiveToResidue + amount.FractionDeadToResidue;
-            
-            if (totalFractionToRemove > 0.0)
+            double liveFractionToRemove = amount.FractionLiveToRemove + amount.FractionLiveToResidue;
+            double deadFractionToRemove = amount.FractionDeadToRemove + amount.FractionDeadToResidue;
+
+            if (liveFractionToRemove+ deadFractionToRemove > 0.0)
             {
+                Biomass removing;
                 Biomass detaching;
-                double remainingLiveFraction = RemoveBiomassFromLiveAndDead(amount, Live, Dead, out Removed, Detached, out detaching);
+                double totalBiomass = Live.Wt + Dead.Wt;
+                double remainingLiveFraction = RemoveBiomassFromLiveAndDead(amount, Live, Dead, out removing, out detaching);
 
-                // Add the detaching biomass to surface organic matter model.
-                //TODO: theoretically the dead material is different from the live, so it should be added as a separate pool to SurfaceOM
-                surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0.0, plant.CropType, Name);
+                // Add the detaching biomass to total removed and detached
+                Removed.Add(removing);
+                Detached.Add(detaching);
+
+                // Pass the detaching biomass to surface organic matter model.
+                //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
+                surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.CropType, Name);
 
                 if (writeToSummary)
                 {
-                    double toResidue = (amount.FractionLiveToResidue + amount.FractionDeadToResidue) / totalFractionToRemove * 100;
-                    double removedOff = (amount.FractionLiveToRemove + amount.FractionDeadToRemove) / totalFractionToRemove * 100;
-                    summary.WriteMessage(Parent, "Removing " + (totalFractionToRemove * 100).ToString("0.0")
-                                             + "% of " + Parent.Name + " Biomass from " + plant.Name
-                                             + ".  Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter");
-                    summary.WriteMessage(Parent, "Removing " + Removed.Wt.ToString("0.0") + " g/m2 of mass and " + Removed.N.ToString("0.0") + " g/m2 of N");
+                    double totalFractionToRemove = (Removed.Wt + detaching.Wt) * 100.0 / totalBiomass;
+                    double toResidue = detaching.Wt * 100.0 / (Removed.Wt + detaching.Wt);
+                    double removedOff = Removed.Wt * 100.0 / (Removed.Wt + detaching.Wt);
+                    summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                                             + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
+                                             + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                    summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
+                                             + Removed.N.ToString("0.0") + " g/m2 of N.");
                 }
+
                 return remainingLiveFraction;
             }
 
-            return 1;
+            return 1.0;
         }
 
 
@@ -102,9 +113,15 @@ namespace Models.PMF.Library
                 double remainingFraction = 1.0 - (removal.FractionLiveToResidue + removal.FractionLiveToRemove);
                 for (int layer = 0; layer < Live.Length; layer++)
                 {
+                    Biomass removing;
                     Biomass detaching;
-                    double remainingLiveFraction = RemoveBiomassFromLiveAndDead(removal, Live[layer], Dead[layer], out Removed, Detached, out detaching);
+                    double remainingLiveFraction = RemoveBiomassFromLiveAndDead(removal, Live[layer], Dead[layer], out removing, out detaching);
 
+                    // Add the detaching biomass to total removed and detached
+                    Removed.Add(removing);
+                    Detached.Add(detaching);
+
+                    // Pass the detaching biomass to surface organic matter model.
                     FOMType fom = new FOMType();
                     fom.amount = (float)(detaching.Wt * 10);
                     fom.N = (float)(detaching.N * 10);
@@ -127,44 +144,63 @@ namespace Models.PMF.Library
 
 
         /// <summary>Finds a specific biomass removal default for the specified name</summary>
-        /// <param name="name">Name of the event e.g. cut, prune etc.</param>
+        /// <param name="name">Name of the removal type e.g. cut, prune etc.</param>
         /// <returns>Returns the default or null if not found.</returns>
         public OrganBiomassRemovalType FindDefault(string name)
         {
             OrganBiomassRemovalType amount = defaults.Find(d => d.Name == name);
 
-            if (amount == null)
-                throw new Exception("Cannot find biomass removal defaults: " + Parent.Name + ".BiomassRemovalDefaults." + name);
+            CheckRemoveFractions(name, amount);
 
-            if (amount.FractionLiveToRemove + amount.FractionLiveToResidue > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + Parent.Name
-                                    + " is greater than 1 for live biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
-            if (amount.FractionDeadToRemove + amount.FractionDeadToResidue > 1.0)
-                throw new Exception("The sum of FractionToResidue and FractionToRemove for "
-                                    + Parent.Name
-                                    + " is greater than 1 for dead biomass.  Had this execption not triggered you would be removing more biomass from "
-                                    + Name + " than there is to remove");
             return amount;
         }
 
+        /// <summary>Checks whether specified biomass removal fractions are within limits</summary>
+        /// <param name="name">Name of the removal type e.g. cut, prune etc.</param>
+        /// <param name="amount">The removal amount fractions</param>
+        /// <returns>Returns true if fractions are ok, false otherwise.</returns>
+        public bool CheckRemoveFractions(string name, OrganBiomassRemovalType amount)
+        {
+            bool testFractions = true;
+            if (amount == null)
+            {
+                testFractions = false;
+                throw new Exception("Cannot test null biomass removal - " + Parent.Name + ".BiomassRemovalFractions." + name);
+            }
+
+            if (amount.FractionLiveToRemove + amount.FractionLiveToResidue > 1.0)
+            {
+                testFractions = false;
+
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for " + Parent.Name
+                                    + " is greater than one for live biomass.  Had this exception not been triggered, the biomass for "
+                                    + Name + " would go negative");
+            }
+
+            if (amount.FractionDeadToRemove + amount.FractionDeadToResidue > 1.0)
+            {
+                testFractions = false;
+                throw new Exception("The sum of FractionToResidue and FractionToRemove for " + Parent.Name
+                                    + " is greater than one for dead biomass.  Had this exception not been triggered, the biomass for "
+                                    + Name + " would go negative");
+            }
+
+            return testFractions;
+        }
 
         /// <summary>Removes biomass from live and dead biomass pools</summary>
         /// <param name="amount">The fractions of biomass to remove</param>
         /// <param name="Live">Live biomass pool</param>
         /// <param name="Dead">Dead biomass pool</param>
-        /// <param name="Removed">The removed pool to add to.</param>
-        /// <param name="Detached">The detached pool to add to.</param>
+        /// <param name="removing">The removed pool to add to.</param>
         /// <param name="detaching">The amount of detaching material</param>
-        private static double RemoveBiomassFromLiveAndDead(OrganBiomassRemovalType amount, Biomass Live, Biomass Dead, out Biomass Removed, Biomass Detached, out Biomass detaching)
+        private static double RemoveBiomassFromLiveAndDead(OrganBiomassRemovalType amount, Biomass Live, Biomass Dead, out Biomass removing, out Biomass detaching)
         {
             double remainingLiveFraction = 1.0 - (amount.FractionLiveToResidue + amount.FractionLiveToRemove);
             double remainingDeadFraction = 1.0 - (amount.FractionDeadToResidue + amount.FractionDeadToRemove);
 
             detaching = Live * amount.FractionLiveToResidue + Dead * amount.FractionDeadToResidue;
-            Removed = Live * amount.FractionLiveToRemove + Dead * amount.FractionDeadToRemove;
-            Detached.Add(detaching);
+            removing = Live * amount.FractionLiveToRemove + Dead * amount.FractionDeadToRemove;
 
             Live.Multiply(remainingLiveFraction);
             Dead.Multiply(remainingDeadFraction);

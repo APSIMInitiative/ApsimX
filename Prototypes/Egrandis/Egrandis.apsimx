@@ -104,8 +104,12 @@
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+    <RelativeAllocation>
+      <Name>NArbitrator</Name>
+    </RelativeAllocation>
+    <RelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </RelativeAllocation>
       </OrganArbitrator>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -1102,7 +1106,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>Eucalyptus.TotalDead.Wt</string>
         <string>[Soil].SoilWater.SWmm</string>
         <string>[Soil].NO3N</string>
-        <string>Eucalyptus.Arbitrator.NDemand</string>
+        <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
         <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
         <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
         <string>Eucalyptus.Age.Value</string>
@@ -4544,7 +4548,7 @@ namespace Models
                 <string>Eucalyptus.TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>[Soil].NO3N</string>
-                <string>Eucalyptus.Arbitrator.NDemand</string>
+                <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
                 <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
                 <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
                 <string>Eucalyptus.Age.Value</string>
@@ -5303,12 +5307,12 @@ namespace Models
               <string>Eucalyptus.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
-              <string>Eucalyptus.Arbitrator.NDemand</string>
+              <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
               <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
               <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
               <string>Eucalyptus.Age.Value</string>
               <string>Eucalyptus.Leaf.Photosynthesis.Value</string>
-              <string>Eucalyptus.Arbitrator.NSupply</string>
+              <string>Eucalyptus.Arbitrator.N.TotalPlantSupply</string>
               <string>([SurfaceOrganicMatter].Wt / 10)  as Litter</string>
             </VariableNames>
             <EventNames>
@@ -6294,7 +6298,7 @@ namespace Models
               <string>Eucalyptus.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
-              <string>Eucalyptus.Arbitrator.NDemand</string>
+              <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
               <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
               <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
               <string>Eucalyptus.Age.Value</string>
@@ -8696,7 +8700,7 @@ namespace Models
             <string>Eucalyptus.TotalDead.Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
-            <string>Eucalyptus.Arbitrator.NDemand</string>
+            <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
             <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
             <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
             <string>Eucalyptus.Age.Value</string>

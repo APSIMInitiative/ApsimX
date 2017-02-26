@@ -332,9 +332,13 @@ namespace UserInterface.Views
             gridview.Model = gridmodel;
 
             gridview.Show();
-            while (Gtk.Application.EventsPending())
+
+            Gdk.Window main = mainWindow;
+            while (Gtk.Application.EventsPending() && gridview.IsMapped)
                 Gtk.Application.RunIteration();
-            WaitCursor = false;
+
+            main.Cursor = null;
+            //WaitCursor = false; // This won't work if the above Run loop has resulted in our own closure
         }
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
@@ -359,6 +363,8 @@ namespace UserInterface.Views
             string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
+                col.CellRenderers[1].Visible = false;
+                col.CellRenderers[2].Visible = false;
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
                 if (dataType == typeof(DBNull))
@@ -368,7 +374,7 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
-                if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
+                else if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
                 {
                     if (dataType == typeof(Boolean))
                     {
@@ -404,8 +410,10 @@ namespace UserInterface.Views
                         }
                         text = dataVal.ToString();
                     }
-                    col.CellRenderers[1].Visible = false;
-                    col.CellRenderers[2].Visible = false;
+                }
+                else
+                {
+                    text = dataVal.ToString();
                 }
             }
             cell.Visible = true;
@@ -522,7 +530,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeViewColumn col;
                 gridview.GetCursor(out path, out col);
-                if (path != null)
+                if (path != null && col.Cells.Length > 0)
                 {
                     int colNo, rowNo;
                     rowNo = path.Indices[0];
@@ -743,14 +751,15 @@ namespace UserInterface.Views
         /// </summary>
         public void EndEdit()
         {
-            /// TBI this.Grid.EndEdit();
+            if (userEditingCell)
+              ViewBase.SendKeyEvent(MainWidget, Gdk.Key.Return);
         }
 
         /// <summary>Lock the left most number of columns.</summary>
         /// <param name="number"></param>
         public void LockLeftMostColumns(int number)
         {
-            if (number == numberLockedCols)
+            if (number == numberLockedCols || !gridview.IsMapped)
                 return;
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
@@ -1399,6 +1408,5 @@ namespace UserInterface.Views
             }
             return null;
         }
-
     }
 }
