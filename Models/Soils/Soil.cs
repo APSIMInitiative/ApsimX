@@ -209,7 +209,7 @@ namespace Models.Soils
                 if(waterNode !=null)
                 return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
                 else 
-                    return SWMapped(WEIRDO.InitialSoilWater, WEIRDO.Thickness, Thickness);
+                    return SWMapped(WEIRDO.InitialSoilWater, WEIRDO.Thickness, Thickness); //Fix me.  This call seems redundant, move if test up a function
             }
         }
 

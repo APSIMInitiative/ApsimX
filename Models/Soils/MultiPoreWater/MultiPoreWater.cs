@@ -1023,13 +1023,13 @@ namespace Models.Soils
             pond_evap += PondEvapHourly;
             pond -= PondEvapHourly;
             EvaporationHourly -= PondEvapHourly;
-            Es += EvaporationHourly;
             double EsRemaining = EvaporationHourly;
-            for (int c = 0; (c < PoreCompartments && EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first
+            for (int c = 0; (c < PoreCompartments-1 && EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first.  Dont evaporate from smallest pore because that is below air dry
             {
                 double PoreEvapHourly = Math.Min(EsRemaining, Pores[0][c].WaterDepth);
                 EsRemaining -= PoreEvapHourly;
                 Pores[0][c].WaterDepth -= PoreEvapHourly;
+                Es += PoreEvapHourly;
             }
             UpdateProfileValues();
         }
@@ -1345,7 +1345,7 @@ namespace Models.Soils
                     if (Plant.Root.LengthDensity[l] < 0.004)
                         RootFactor = Plant.Root.LengthDensity[l] / 0.004;
 
-                    for (int c = PoreCompartments - 1; c >= 0; c--)
+                    for (int c = PoreCompartments - 3; c >= 0; c--)//PoreCompartments-3 disregards the two cohorts that are less than ll15
                     {
                         Pores[l][c].RootExplorationFactor = RootFactor;
                     }

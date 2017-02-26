@@ -249,7 +249,7 @@ namespace Models.Soils
         [Units("0-1")]
         public double PotentialWaterExtraction
         {
-            get { return Math.Min(PoiseuilleFlow * RootExplorationFactor*1000,WaterDepth); }
+            get { return Math.Min(PoiseuilleFlow * RootExplorationFactor,WaterDepth); }
         }
         #endregion
     }
