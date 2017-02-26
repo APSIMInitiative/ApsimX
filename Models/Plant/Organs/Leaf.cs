@@ -616,7 +616,6 @@ namespace Models.PMF.Organs
             double MetabolicDemand = 0.0;
 
             DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
-
             if (DMDemandFunction != null)
             {
                 StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
@@ -626,12 +625,9 @@ namespace Models.PMF.Organs
             {
                 foreach (LeafCohort L in Leaves)
                 {
-                        if (L.StructuralDMDemand > 0)
-                            {
-                            StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
-                            MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
-                            NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
-                        }
+                    StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
+                    MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
+                    NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
                 }
             }
             return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
