@@ -311,8 +311,8 @@ namespace Models.PMF.Phen
             if (sender == Plant)
             {
                 //Jump phenology to the end
-                int EndPhase = Phases.Count;
-                CurrentPhaseName = Phases[EndPhase - 1].Name;
+                //int EndPhase = Phases.Count;
+                //CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
 
@@ -488,7 +488,7 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if ((CurrentPhaseIndex < OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
+                if ((CurrentPhaseIndex <= OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
                     foreach (Phase P in Phases)
                     {
