@@ -311,8 +311,8 @@ namespace Models.PMF.Phen
             if (sender == Plant)
             {
                 //Jump phenology to the end
-                //int EndPhase = Phases.Count;
-                //CurrentPhaseName = Phases[EndPhase - 1].Name;
+                int EndPhase = Phases.Count;
+                CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
 
@@ -479,6 +479,9 @@ namespace Models.PMF.Phen
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
+                bool HarvestCall = false;
+                if (CurrentPhaseIndex == Phases.Count - 1)
+                    HarvestCall = true;
                 PhaseIndexOffset = 0;
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -488,7 +491,7 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if ((CurrentPhaseIndex <= OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
+                if (((CurrentPhaseIndex <= OldPhaseINdex)&&HarvestCall==false)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
                     foreach (Phase P in Phases)
                     {
