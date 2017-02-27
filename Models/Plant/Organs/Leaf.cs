@@ -273,9 +273,6 @@ namespace Models.PMF.Organs
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
-        /// <summary>Total apex number in plant.</summary>
-        [Description("Total apex number in plant")]
-        public double ApexNum { get; set; }
 
         /// <summary>Total apex number in plant.</summary>
         [Description("Total apex number in plant")]
@@ -698,7 +695,9 @@ namespace Models.PMF.Organs
         {
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
+            {
                 Leaves.Add(Leaf.Clone());
+            }
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -723,23 +722,35 @@ namespace Models.PMF.Organs
             NewLeaf.DoInitialisation();
             Leaves.Add(NewLeaf);
             DoApexCalculations();
+            
         }
 
         private void DoApexCalculations()
         {
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
-
-            while (apexGroupSize.Count < (int) ApexNum)
+            
+            while (apexGroupSize.Sum() < Structure.ApexNum)
             {
-                apexGroupSize.Add(1);
+                if (apexGroupSize.Count == 0)
+                    apexGroupSize.Add(Structure.ApexNum);
+                else 
+                    apexGroupSize.Add(Structure.ApexNum - apexGroupSize[apexGroupSize.Count - 1]);
                 apexGroupAge.Add(1);
             }
 
-            while (apexGroupSize.Count > (int) ApexNum)
+            while (apexGroupSize.Sum() > Structure.ApexNum)
             {
-                apexGroupSize.RemoveAt(apexGroupSize.Count - 1);
-                apexGroupAge.RemoveAt(apexGroupAge.Count - 1);
+                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                double remainingRemoveApex = removeApex;
+                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                {
+                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                    apexGroupSize[i] -= remove;
+                    remainingRemoveApex -= remove;
+                    if (remainingRemoveApex <= 0)
+                        break;
+                }
             }
         }
 
@@ -1389,16 +1400,5 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
-
-        /// <summary>
-        /// Called at the beginning of the day to handle apex tallies
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfDay")]
-        private void OnEndOfDay(object sender, EventArgs e)
-        {
-            ApexNum += Structure.BranchNumber - Structure.ProportionBranchMortality;
-        }
     }
 }
