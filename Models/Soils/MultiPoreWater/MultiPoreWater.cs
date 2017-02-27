@@ -1342,9 +1342,10 @@ namespace Models.Soils
                 if (Plant.Root.LengthDensity[l] > 0)
                 {
                     double RootFactor = 1;
-                    double CritRootLength = 0.001;
-                    if (Plant.Root.LengthDensity[l] < CritRootLength)
-                        RootFactor = Plant.Root.LengthDensity[l] / CritRootLength;
+                    //double CritRootLength = 0.001;
+                    //if (Plant.Root.LengthDensity[l] < CritRootLength)
+                    //    RootFactor = Plant.Root.LengthDensity[l] / CritRootLength;
+                    RootFactor = 1;
 
                     for (int c = PoreCompartments - 3; c >= 0; c--)//PoreCompartments-3 disregards the two cohorts that are less than ll15
                     {
