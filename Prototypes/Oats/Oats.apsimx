@@ -3162,58 +3162,58 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <RegrStats>
             <Name>Oats.Grain.Wt</Name>
             <n>51</n>
-            <Slope>1.0721883650655826</Slope>
-            <Intercept>-1.6567559579718818</Intercept>
-            <SEslope>0.064107066709200869</SEslope>
-            <SEintercept>36.520952783212557</SEintercept>
-            <R2>0.85093896807445335</R2>
-            <RMSE>129.11096544241005</RMSE>
-            <NSE>0.7776194819240505</NSE>
-            <ME>34.407319780212738</ME>
-            <MAE>103.99561988896228</MAE>
-            <RSR>0.46692624231321039</RSR>
+            <Slope>1.07219965614406</Slope>
+            <Intercept>-1.6557948710715209</Intercept>
+            <SEslope>0.064108914129306208</SEslope>
+            <SEintercept>36.522005234149731</SEintercept>
+            <R2>0.85093432902886867</R2>
+            <RMSE>129.1165674303623</RMSE>
+            <NSE>0.7776001837954184</NSE>
+            <ME>34.413921697307941</ME>
+            <MAE>104.00069999896901</MAE>
+            <RSR>0.4669465017479924</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Oats.Leaf.Dead.Wt</Name>
             <n>78</n>
-            <Slope>3.6981189731614963</Slope>
-            <Intercept>143.0422739064542</Intercept>
-            <SEslope>0.53363788624578723</SEslope>
-            <SEintercept>19.98971682153886</SEintercept>
-            <R2>0.38722090509453666</R2>
-            <RMSE>260.5312508650656</RMSE>
-            <NSE>-65.016949714616317</NSE>
-            <ME>195.29342329785976</ME>
-            <MAE>195.29342329785976</MAE>
-            <RSR>8.0728296504031931</RSR>
+            <Slope>3.6988142894597931</Slope>
+            <Intercept>143.05049916710169</Intercept>
+            <SEslope>0.53340825097462918</SEslope>
+            <SEintercept>19.981114838506919</SEintercept>
+            <R2>0.3875144217516312</R2>
+            <RMSE>260.51816930754455</RMSE>
+            <NSE>-65.010320315333686</NSE>
+            <ME>195.31511389348239</ME>
+            <MAE>195.31511389348239</MAE>
+            <RSR>8.0724243048445352</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Oats.Leaf.LAI</Name>
             <n>78</n>
-            <Slope>1.1904358586639554</Slope>
-            <Intercept>0.15165437805845228</Intercept>
-            <SEslope>0.072877638409839227</SEslope>
-            <SEintercept>0.29392978142238324</SEintercept>
-            <R2>0.778311318810001</R2>
-            <RMSE>1.7267002553987179</RMSE>
-            <NSE>0.44747460503839742</NSE>
-            <ME>0.7795311700149844</ME>
-            <MAE>1.2749539154137033</MAE>
-            <RSR>0.738540273818455</RSR>
+            <Slope>1.1906820968123792</Slope>
+            <Intercept>0.15139254887086118</Intercept>
+            <SEslope>0.072878560296018371</SEslope>
+            <SEintercept>0.29393349956980186</SEintercept>
+            <R2>0.778378318899535</R2>
+            <RMSE>1.7271112053942477</RMSE>
+            <NSE>0.44721157463952</NSE>
+            <ME>0.7800812006303427</ME>
+            <MAE>1.2752228171165956</MAE>
+            <RSR>0.73871604440821159</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Oats.Stem.Wt</Name>
             <n>70</n>
-            <Slope>0.48216824766132954</Slope>
-            <Intercept>207.14798512417488</Intercept>
-            <SEslope>0.063953215173306169</SEslope>
-            <SEintercept>28.449772029450138</SEintercept>
-            <R2>0.45531328301154927</R2>
-            <RMSE>198.0354177202631</RMSE>
-            <NSE>0.44653247614287206</NSE>
-            <ME>22.582317979661365</ME>
-            <MAE>121.12184688329383</MAE>
-            <RSR>0.7386209074653135</RSR>
+            <Slope>0.48098640554061822</Slope>
+            <Intercept>206.01660195987844</Intercept>
+            <SEslope>0.063743332636930244</SEslope>
+            <SEintercept>28.356405178437615</SEintercept>
+            <R2>0.45572653781396621</R2>
+            <RMSE>197.75743793279946</RMSE>
+            <NSE>0.44808517621869637</NSE>
+            <ME>21.029702477866419</ME>
+            <MAE>121.4212530585874</MAE>
+            <RSR>0.73758411472774654</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
