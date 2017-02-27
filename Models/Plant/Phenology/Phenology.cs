@@ -311,8 +311,8 @@ namespace Models.PMF.Phen
             if (sender == Plant)
             {
                 //Jump phenology to the end
-                int EndPhase = Phases.Count;
-                CurrentPhaseName = Phases[EndPhase - 1].Name;
+                //int EndPhase = Phases.Count;
+                //CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
 
