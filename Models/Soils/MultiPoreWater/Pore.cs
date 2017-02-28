@@ -107,7 +107,7 @@ namespace Models.Soils
         private double _WaterDepth = 0;
         /// <summary>The depth of water in the pore</summary>
         [XmlIgnore]
-        [Units("ml/ml")]
+        [Units("mm")]
         public double WaterDepth
         {
             get
@@ -233,10 +233,11 @@ namespace Models.Soils
             }
         }
         #endregion
+
+        #region Plant water extraction
         /// <summary>Factor to scale potential water extraction in each pore </summary>
         public double ExtractionMultiplier { get; set; }
 
-        #region Plant water extraction
         /// <summary>
         /// The proportion of pores in this cohort that have absorbing roots present
         /// </summary>

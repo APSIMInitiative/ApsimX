@@ -1788,6 +1788,7 @@ namespace Models
               <string>SetCropVariables.Script.Treatment</string>
               <string>SetCropVariables.Script.CoverRead</string>
               <string>SetCropVariables.Script.Cover as Cover</string>
+              <string>[Slurp].Root.LengthDensity</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2763,6 +2764,255 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Folder>
+        <Name>RLD</Name>
+        <Graph>
+          <Name>0_5cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>5_20cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>20_40cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>40_60cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(4)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>60_80cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(5)</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>80_100cm</Name>
+          <Series>
+            <Name>SWC</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Slurp.Root.LengthDensity(6)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
     </Experiment>
     <Experiment>
       <Name>Residues</Name>
@@ -6005,7 +6255,7 @@ namespace Models
               <CalculateEvaporation>false</CalculateEvaporation>
               <CalculateDiffusion>true</CalculateDiffusion>
               <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>1000</ExtractionMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
               <ProfileWaterExtraction>0</ProfileWaterExtraction>
               <TotalCover>0</TotalCover>
               <ResidueWater>0</ResidueWater>
@@ -6151,7 +6401,7 @@ namespace Models
               <CalculateEvaporation>false</CalculateEvaporation>
               <CalculateDiffusion>true</CalculateDiffusion>
               <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>1000</ExtractionMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
               <ProfileWaterExtraction>0</ProfileWaterExtraction>
               <TotalCover>0</TotalCover>
               <ResidueWater>0</ResidueWater>
@@ -6297,7 +6547,7 @@ namespace Models
               <CalculateEvaporation>false</CalculateEvaporation>
               <CalculateDiffusion>true</CalculateDiffusion>
               <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>1000</ExtractionMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
               <ProfileWaterExtraction>0</ProfileWaterExtraction>
               <TotalCover>0</TotalCover>
               <ResidueWater>0</ResidueWater>
@@ -6473,10 +6723,10 @@ namespace Models
           <Manager>
             <Name>SlurpSowingRule</Name>
             <Script>
-              <CultivarName>Pasture</CultivarName>
-              <InitialRootDepth>20</InitialRootDepth>
               <SowDate>
               </SowDate>
+              <CultivarName>Pasture</CultivarName>
+              <InitialRootDepth>20</InitialRootDepth>
             </Script>
             <Code><![CDATA[
 using System;
@@ -7213,7 +7463,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7254,7 +7504,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7295,7 +7545,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7336,7 +7586,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7377,7 +7627,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7418,7 +7668,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7459,7 +7709,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -7500,7 +7750,7 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
+            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -21590,7 +21840,7 @@ namespace Models
         </Factor>
       </Factors>
       <Simulation>
-        <Name>BaseTranspiration</Name>
+        <Name>BaseTranspiration1</Name>
         <Clock>
           <Name>Clock</Name>
           <StartDate>1998-09-01T00:00:00</StartDate>
@@ -21750,10 +22000,10 @@ namespace Models
           <Manager>
             <Name>SlurpSowingRule</Name>
             <Script>
-              <CultivarName>Pasture</CultivarName>
-              <InitialRootDepth>20</InitialRootDepth>
               <SowDate>
               </SowDate>
+              <CultivarName>Pasture</CultivarName>
+              <InitialRootDepth>20</InitialRootDepth>
             </Script>
             <Code><![CDATA[
 using System;
@@ -23506,5 +23756,5 @@ namespace Models
       </Graph>
     </Experiment>
   </Folder>
-  <ExplorerWidth>294</ExplorerWidth>
+  <ExplorerWidth>342</ExplorerWidth>
 </Simulations>
