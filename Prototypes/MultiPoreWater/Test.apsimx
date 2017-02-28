@@ -915,15 +915,6 @@
               <string>[SetCropVariables].Script.Cover = Lucerne</string>
             </Specifications>
           </Factor>
-          <Factor>
-            <Name>Pasture</Name>
-            <Specifications>
-              <string>[SlurpSowingRule].Script.SowingDate=2011-03-24</string>
-              <string>[SlurpSowingRule].Script.CultivarName=Pasture</string>
-              <string>[SetCropVariables].Script.MaximumHeight = 400</string>
-              <string>[SetCropVariables].Script.Cover = Ryegrass</string>
-            </Specifications>
-          </Factor>
           <Specifications />
         </Factor>
       </Factors>
@@ -1004,7 +995,7 @@
                 <double>0.04</double>
                 <double>0.04</double>
                 <double>0.04</double>
-                <double>0.05</double>
+                <double>0.04</double>
               </LL15>
               <DUL>
                 <double>0.37</double>
@@ -1016,7 +1007,7 @@
                 <double>0.1</double>
                 <double>0.11</double>
                 <double>0.12</double>
-                <double>0.14</double>
+                <double>0.12</double>
               </DUL>
               <SAT>
                 <double>0.57</double>
@@ -1120,10 +1111,10 @@
               <CalculateDrainage>true</CalculateDrainage>
               <ReportDetail>false</ReportDetail>
               <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
+              <CalculateEvaporation>false</CalculateEvaporation>
+              <CalculateDiffusion>false</CalculateDiffusion>
               <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
               <ProfileWaterExtraction>0</ProfileWaterExtraction>
               <TotalCover>0</TotalCover>
               <ResidueWater>0</ResidueWater>
@@ -1321,6 +1312,20 @@
                 <double>200</double>
               </Thickness>
             </LayerStructure>
+            <ObservedSWLayering>
+              <Name>ObservedSWLayering</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+            </ObservedSWLayering>
             <WEIRDO>
               <Name>MultiPoreWater</Name>
               <Salb>0.15</Salb>
@@ -1356,7 +1361,7 @@
                 <double>0.04</double>
                 <double>0.04</double>
                 <double>0.04</double>
-                <double>0.05</double>
+                <double>0.04</double>
               </LL15>
               <DUL>
                 <double>0.37</double>
@@ -1368,7 +1373,7 @@
                 <double>0.1</double>
                 <double>0.11</double>
                 <double>0.12</double>
-                <double>0.14</double>
+                <double>0.12</double>
               </DUL>
               <SAT>
                 <double>0.57</double>
@@ -1472,10 +1477,10 @@
               <CalculateDrainage>true</CalculateDrainage>
               <ReportDetail>false</ReportDetail>
               <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
+              <CalculateEvaporation>false</CalculateEvaporation>
+              <CalculateDiffusion>false</CalculateDiffusion>
               <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
               <ProfileWaterExtraction>0</ProfileWaterExtraction>
               <TotalCover>0</TotalCover>
               <ResidueWater>0</ResidueWater>
@@ -1784,11 +1789,13 @@ namespace Models
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
               <string>[SetLAIofCrop].Script.leaflai</string>
-              <string>sum([Soil].SoilWater.SWmm[1:8]) as PSWC</string>
+              <string>sum([Soil].ObservedSWLayering.SWmm) as PSWC</string>
               <string>SetCropVariables.Script.Treatment</string>
               <string>SetCropVariables.Script.CoverRead</string>
               <string>SetCropVariables.Script.Cover as Cover</string>
               <string>[Slurp].Root.LengthDensity</string>
+              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].ObservedSWLayering.SWmm</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2046,7 +2053,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2109,7 +2116,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2172,7 +2179,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2235,7 +2242,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2298,7 +2305,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2361,7 +2368,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2424,7 +2431,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2487,7 +2494,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2550,7 +2557,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(9)</YFieldName>
+          <YFieldName>Soil.ObservedSWLayering.SW(9)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6723,10 +6730,10 @@ namespace Models
           <Manager>
             <Name>SlurpSowingRule</Name>
             <Script>
-              <SowDate>
-              </SowDate>
               <CultivarName>Pasture</CultivarName>
               <InitialRootDepth>20</InitialRootDepth>
+              <SowDate>
+              </SowDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -22000,10 +22007,10 @@ namespace Models
           <Manager>
             <Name>SlurpSowingRule</Name>
             <Script>
-              <SowDate>
-              </SowDate>
               <CultivarName>Pasture</CultivarName>
               <InitialRootDepth>20</InitialRootDepth>
+              <SowDate>
+              </SowDate>
             </Script>
             <Code><![CDATA[
 using System;
