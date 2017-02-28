@@ -391,7 +391,13 @@ namespace Models.Soils
         /// Factor to scale Diffusivity
         /// </summary>
         [Description("Factor to scale Diffusivity")]
-        public double DiffusivityMultiplier { get; set; }
+        public double DiffusivityMultiplier{get; set; }
+        /// <summary>
+            /// Factor to scale Water Extraction
+            /// </summary>
+        [Description("Factor to scale Water Extraction")]
+        public double ExtractionMultiplier { get; set; }
+
 
         #endregion
 
@@ -711,7 +717,7 @@ namespace Models.Soils
             Array.Clear(Diffusion, 0, ProfileLayers);
             if(Plant != null)
                 if(Plant.Root != null)
-                    SetRootFactor();
+                    SetRootLengthDensity();
         }
         /// <summary>
         /// Called when the model is ready to work out daily soil water deltas
@@ -1342,21 +1348,18 @@ namespace Models.Soils
         /// <summary>
         /// Call each time the plant root systems grows to update root distribution parameters in soil layers
         /// </summary>
-        private void SetRootFactor()
+        private void SetRootLengthDensity()
         {
             for (int l = 0; l < ProfileLayers; l++)
             {//Step through each layer and set roof factor.
                 if (Plant.Root.LengthDensity[l] > 0)
                 {
-                    double _RootFactor = 1;
-                    double CritRootLength = 0.004;
-                    if (Plant.Root.LengthDensity[l] < CritRootLength)
-                    _RootFactor = Plant.Root.LengthDensity[l] / CritRootLength;
-                    RootFactor[l] = _RootFactor;
-
+                    
+                    RootFactor[l] = Plant.Root.LengthDensity[l];
                     for (int c = PoreCompartments - 2; c >= 0; c--)//PoreCompartments-2 disregards the cohorts that is less than ll15
                     {
-                        Pores[l][c].RootExplorationFactor = RootFactor[l];
+                        Pores[l][c].RootLengthDensity = RootFactor[l];
+                        Pores[l][c].ExtractionMultiplier = ExtractionMultiplier;
                     }
                 }
             }

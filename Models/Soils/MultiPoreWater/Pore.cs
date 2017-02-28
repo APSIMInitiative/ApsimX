@@ -233,23 +233,29 @@ namespace Models.Soils
             }
         }
         #endregion
+        /// <summary>Factor to scale potential water extraction in each pore </summary>
+        public double ExtractionMultiplier { get; set; }
 
         #region Plant water extraction
         /// <summary>
         /// The proportion of pores in this cohort that have absorbing roots present
         /// </summary>
         [XmlIgnore]
-        [Units("0-1")]
-        public double RootExplorationFactor { get; set; }
+        [Units("mm/mm3")]
+        public double RootLengthDensity { get; set; }
 
         /// <summary>
         /// The amount of water that may be extracted from this pore class by plant roots each hour
         /// </summary>
         [XmlIgnore]
-        [Units("0-1")]
+        [Units("mm/h")]
         public double PotentialWaterExtraction
         {
-            get { return Math.Min(PoiseuilleFlow * RootExplorationFactor,WaterDepth); }
+            get {
+                double MeanDiffusionDistance = Math.Sqrt(1 / RootLengthDensity) * 0.5; //assumes root length density represents the number of roots transecting a layer
+                double UptakeFraction = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
+                double PotentialRootUptake = WaterDepth * UptakeFraction;
+                return Math.Min(PotentialRootUptake, WaterDepth); }
         }
         #endregion
     }
