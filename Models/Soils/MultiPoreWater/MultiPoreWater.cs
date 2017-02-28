@@ -596,7 +596,7 @@ namespace Models.Soils
         /// </summary>
         private double[] SaturatedWaterDepth { get; set; }
         private double[] HourlyWaterExtraction { get; set; }
-        private double[] RootFactor { get; set; }
+        private double[] RootLengthDensity { get; set; }
         #endregion
 
         #region Event Handlers
@@ -628,7 +628,7 @@ namespace Models.Soils
             Diffusion = new double[ProfileLayers];
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
-            RootFactor = new double[ProfileLayers];
+            RootLengthDensity = new double[ProfileLayers];
 
             MappedSAT = Soil.Map(SAT, ParamThickness, Thickness);
             MappedDUL = Soil.Map(DUL, ParamThickness, Thickness);
@@ -1055,7 +1055,7 @@ namespace Models.Soils
                     double UnMetDemand = HourlyTranspirationDemand;
                     for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
                     {
-                        if (RootFactor[l] > 0)
+                        if (RootLengthDensity[l] > 0)
                         {
                             for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
                             {
@@ -1355,10 +1355,10 @@ namespace Models.Soils
                 if (Plant.Root.LengthDensity[l] > 0)
                 {
                     
-                    RootFactor[l] = Plant.Root.LengthDensity[l];
+                    RootLengthDensity[l] = Plant.Root.LengthDensity[l];
                     for (int c = PoreCompartments - 2; c >= 0; c--)//PoreCompartments-2 disregards the cohorts that is less than ll15
                     {
-                        Pores[l][c].RootLengthDensity = RootFactor[l];
+                        Pores[l][c].RootLengthDensity = RootLengthDensity[l];
                         Pores[l][c].ExtractionMultiplier = ExtractionMultiplier;
                     }
                 }
