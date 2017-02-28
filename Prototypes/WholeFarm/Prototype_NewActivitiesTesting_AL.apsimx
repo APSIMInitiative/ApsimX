@@ -368,6 +368,90 @@
             <AgeWhenAdult>10</AgeWhenAdult>
           </OtherAnimalsType>
         </OtherAnimals>
+        <AnimalFoodStore>
+          <Name>Crops</Name>
+          <AnimalFoodStoreType>
+            <Name>Rice</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+        </AnimalFoodStore>
+        <AnimalFoodStore>
+          <Name>Tree crops</Name>
+          <AnimalFoodStoreType>
+            <Name>Cashews</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+        </AnimalFoodStore>
+        <AnimalFoodStore>
+          <Name>Greenhouse gases</Name>
+          <AnimalFoodStoreType>
+            <Name>Methane</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>CO2e</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>NOx</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+        </AnimalFoodStore>
+        <AnimalFoodStore>
+          <Name>Water</Name>
+          <AnimalFoodStoreType>
+            <Name>Bore</Name>
+            <DryMatter>0</DryMatter>
+            <DMD>0</DMD>
+            <Nitrogen>0</Nitrogen>
+            <StartingAmount>0</StartingAmount>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
+            <KgPerUnitPurchased>0</KgPerUnitPurchased>
+            <CostPerUnitPurchased>0</CostPerUnitPurchased>
+            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
+            <OtherCosts>0</OtherCosts>
+          </AnimalFoodStoreType>
+        </AnimalFoodStore>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -917,6 +1001,47 @@
       <Slope>0</Slope>
       <RandomSeed>1</RandomSeed>
     </WholeFarm>
+    <Graph>
+      <Name>Graph</Name>
+      <Series>
+        <Name>Series</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>FinancesLedger</TableName>
+        <XFieldName>Date</XFieldName>
+        <YFieldName>Credit</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>true</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
