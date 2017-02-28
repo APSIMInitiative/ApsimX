@@ -590,6 +590,7 @@ namespace Models.Soils
         /// </summary>
         private double[] SaturatedWaterDepth { get; set; }
         private double[] HourlyWaterExtraction { get; set; }
+        private double[] RootFactor { get; set; }
         #endregion
 
         #region Event Handlers
@@ -621,6 +622,7 @@ namespace Models.Soils
             Diffusion = new double[ProfileLayers];
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
+            RootFactor = new double[ProfileLayers];
 
             MappedSAT = Soil.Map(SAT, ParamThickness, Thickness);
             MappedDUL = Soil.Map(DUL, ParamThickness, Thickness);
@@ -737,8 +739,8 @@ namespace Models.Soils
                     TimeStepSplits = 10;
                     doSubHourlyPrecipitation(Hourly.Irrigation[h],Hourly.Rainfall[h]);
                 }
-               
-                DoDetailReport("UpdatePond",0,h);
+
+                if (ReportDetail) { DoDetailReport("UpdatePond", 0, h); }
                 for (int Subh = 0; Subh < TimeStepSplits; Subh++)
                 {
                     InitialProfileWater = MathUtilities.Sum(SWmm);
@@ -772,6 +774,7 @@ namespace Models.Soils
                         SWdailyMax[l] = SW[l];
                 }
             }
+            DoDetailReport("Final",0,0);
             EODPondDepth = pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
             Drainage = MathUtilities.Sum(Hourly.Drainage);
@@ -946,7 +949,7 @@ namespace Models.Soils
             for (int l = 0; l < ProfileLayers && RemainingInfiltration > 0; l++)
             { //Start process in the top layer
                 DistributWaterInFlux(l, ref RemainingInfiltration, SPH);
-                DoDetailReport("Infiltrate", l, h);
+                if (ReportDetail) { DoDetailReport("Infiltrate", l, h); }
             }
             //Add infiltration to daily sum for reporting
             Hourly.Infiltration[h] += WaterToInfiltrate;
@@ -984,7 +987,7 @@ namespace Models.Soils
                     double drain = Math.Min(OutFluxCurrentLayer, Math.Min(Pores[l][c].WaterDepth, Pores[l][c].HydraulicConductivityOut / SPH));
                     Pores[l][c].WaterDepth -= drain;
                     OutFluxCurrentLayer -= drain;
-                    DoDetailReport("Drain", l, h);
+                    if (ReportDetail) { DoDetailReport("Drain", l, h); }
                 }
                 if (Math.Abs(OutFluxCurrentLayer) > FloatingPointTolerance)
                     throw new Exception("Error in drainage calculation");
@@ -996,7 +999,7 @@ namespace Models.Soils
                     //Any water not stored by this layer will flow to the layer below as saturated drainage
                     if (l1 < ProfileLayers)
                     {
-                        DoDetailReport("Redistribute", l1, h);
+                        if (ReportDetail) { DoDetailReport("Redistribute", l1, h); }
                         DistributWaterInFlux(l1, ref InFluxLayerBelow, SPH);
                     }
                     //If it is the bottom layer, any discharge recorded as drainage from the profile
@@ -1024,7 +1027,7 @@ namespace Models.Soils
             pond -= PondEvapHourly;
             EvaporationHourly -= PondEvapHourly;
             double EsRemaining = EvaporationHourly;
-            for (int c = 0; (c < PoreCompartments-1 && EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first.  Dont evaporate from smallest pore because that is below air dry
+            for (int c = 0; (c < PoreCompartments && EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first. 
             {
                 double PoreEvapHourly = Math.Min(EsRemaining, Pores[0][c].WaterDepth);
                 EsRemaining -= PoreEvapHourly;
@@ -1046,12 +1049,18 @@ namespace Models.Soils
                     double UnMetDemand = HourlyTranspirationDemand;
                     for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
                     {
-                        for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                        if (RootFactor[l] > 0)
                         {
-                            double PoreWaterExtractionHourly = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
-                            UnMetDemand -= PoreWaterExtractionHourly;
-                            Pores[l][c].WaterDepth -= PoreWaterExtractionHourly;
-                            HourlyWaterExtraction[l] += PoreWaterExtractionHourly;
+                            for (int c = 0; (c < PoreCompartments && UnMetDemand > 0); c++) //If Transpiration demand not satisified by layers above, transpire
+                            {
+                                if (Pores[l][c].PotentialWaterExtraction > 0)
+                                {
+                                    double PoreWaterExtractionHourly = Math.Min(UnMetDemand, Pores[l][c].PotentialWaterExtraction);
+                                    UnMetDemand -= PoreWaterExtractionHourly;
+                                    Pores[l][c].WaterDepth -= PoreWaterExtractionHourly;
+                                    HourlyWaterExtraction[l] += PoreWaterExtractionHourly;
+                                }
+                            }
                         }
                     }
                     WaterExtraction += MathUtilities.Sum(HourlyWaterExtraction);
@@ -1304,26 +1313,24 @@ namespace Models.Soils
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
             }
         }
-        private void DoDetailReport(string CallingProcess,int Layer,int hour)
+        private void DoDetailReport(string CallingProcess, int Layer, int hour)
         {
-            if (ReportDetail)
+            for (int l = 0; l < ProfileLayers; l++)
             {
-                for (int l = 0; l < ProfileLayers; l++)
+                for (int c = 0; c < PoreCompartments; c++)
                 {
-                    for (int c = 0; c < PoreCompartments; c++)
-                    {
-                        if (Pores[l][c].WaterFilledVolume == 0)
-                            PoreWater[l][c] = 0;
-                        else
-                            PoreWater[l][c] = Pores[l][c].RelativeWaterContent;
-                    }
+                    if (Pores[l][c].WaterFilledVolume == 0)
+                        PoreWater[l][c] = 0;
+                    else
+                        PoreWater[l][c] = Pores[l][c].RelativeWaterContent;
                 }
-                Process = CallingProcess;
-                ReportLayer = Layer;
-                Hour = hour;
-                TimeStep += 1;
-                ReportDetails.Invoke(this, new EventArgs());
             }
+            Process = CallingProcess;
+            ReportLayer = Layer;
+            Hour = hour;
+            TimeStep += 1;
+            if(ReportDetails!=null)
+            ReportDetails.Invoke(this, new EventArgs());
         }
         private void ClearSubHourlyData()
         {
@@ -1341,15 +1348,15 @@ namespace Models.Soils
             {//Step through each layer and set roof factor.
                 if (Plant.Root.LengthDensity[l] > 0)
                 {
-                    double RootFactor = 1;
-                    //double CritRootLength = 0.001;
-                    //if (Plant.Root.LengthDensity[l] < CritRootLength)
-                    //    RootFactor = Plant.Root.LengthDensity[l] / CritRootLength;
-                    RootFactor = 1;
+                    double _RootFactor = 1;
+                    double CritRootLength = 0.004;
+                    if (Plant.Root.LengthDensity[l] < CritRootLength)
+                    _RootFactor = Plant.Root.LengthDensity[l] / CritRootLength;
+                    RootFactor[l] = _RootFactor;
 
-                    for (int c = PoreCompartments - 3; c >= 0; c--)//PoreCompartments-3 disregards the two cohorts that are less than ll15
+                    for (int c = PoreCompartments - 2; c >= 0; c--)//PoreCompartments-2 disregards the cohorts that is less than ll15
                     {
-                        Pores[l][c].RootExplorationFactor = RootFactor;
+                        Pores[l][c].RootExplorationFactor = RootFactor[l];
                     }
                 }
             }
