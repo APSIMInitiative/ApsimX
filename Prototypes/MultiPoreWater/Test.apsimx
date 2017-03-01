@@ -915,6 +915,15 @@
               <string>[SetCropVariables].Script.Cover = Lucerne</string>
             </Specifications>
           </Factor>
+          <Factor>
+            <Name>Pasture</Name>
+            <Specifications>
+              <string>[SlurpSowingRule].Script.SowingDate=2011-03-24</string>
+              <string>[SlurpSowingRule].Script.CultivarName=Pasture</string>
+              <string>[SetCropVariables].Script.MaximumHeight = 400</string>
+              <string>[SetCropVariables].Script.Cover = Ryegrass</string>
+            </Specifications>
+          </Factor>
           <Specifications />
         </Factor>
       </Factors>
