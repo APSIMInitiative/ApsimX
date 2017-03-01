@@ -6603,18 +6603,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[IWeather].MaxT</string>
-              <string>[IWeather].MinT</string>
-              <string>[IWeather].Rain</string>
-              <string>[IWeather].Radn</string>
-              <string>[IWeather].Wind</string>
-              <string>[IWeather].DayLength</string>
-              <string>[IWeather].VP</string>
-              <string>[IWeather].CO2</string>
-              <string>[IWeather].RainfallHours</string>
-              <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-              <string>[Soil].SoilWater.SWmm</string>
-              <string>[Soil].SoilWater.SW</string>
+              <string>sum([Soil].ObservedSWLayering.SW) as ProfileWater</string>
               <string>[Soil].MultiPoreWater.Water</string>
               <string>[Soil].MultiPoreWater.Drainage</string>
               <string>[Soil].MultiPoreWater.Infiltration</string>
@@ -6622,7 +6611,6 @@ namespace Models
               <string>[Soil].MultiPoreWater.DUL</string>
               <string>[Soil].MultiPoreWater.SAT</string>
               <string>[Irrigation].IrrigationApplied</string>
-              <string>[Soil].MultiPoreWater.DeltaPond + [Soil].MultiPoreWater.Infiltration + [Soil].MultiPoreWater.Drainage as Check</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Eos</string>
               <string>[Slurp].Leaf.CoverTotal</string>
@@ -6632,6 +6620,7 @@ namespace Models
               <string>[Slurp].Root.LengthDensity</string>
               <string>[Soil].MultiPoreWater.PoreWater</string>
               <string>[Slurp].Root.Wt</string>
+              <string>[Soil].ObservedSWLayering.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -7479,7 +7468,7 @@ namespace Models
       <Folder>
         <Name>Layers</Name>
         <Graph>
-          <Name>0_5cm</Name>
+          <Name>0_20cm</Name>
           <Series>
             <Name>SWC</Name>
             <Type>Scatter</Type>
@@ -7495,48 +7484,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>0</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>5_20cm</Name>
-          <Series>
-            <Name>SWC</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7577,7 +7525,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7618,7 +7566,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7659,7 +7607,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7700,7 +7648,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7741,7 +7689,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7782,7 +7730,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.SW(8)</YFieldName>
+            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7890,7 +7838,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>ProfileWater</Name>
+        <Name>WaterUse</Name>
         <Series>
           <Name>SWC</Name>
           <Type>Scatter</Type>
@@ -8439,70 +8387,6 @@ namespace Models
           <YFieldName>Soil.MultiPoreWater.PoreWater(1)(10)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter>[Plant]='5-Sep' AND [Conductivity]='High'</Filter>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>PoreWater1</Name>
-        <Series>
-          <Name>Pore6</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(6)</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-          <Filter>[Plant]='5-Sep' AND [Conductivity]='High'</Filter>
-        </Series>
-        <Series>
-          <Name>Pore7</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-3376729</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(7)</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
           <Filter>[Plant]='5-Sep' AND [Conductivity]='High'</Filter>
