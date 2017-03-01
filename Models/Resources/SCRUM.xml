@@ -1412,8 +1412,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 1650.0</Command>
     <Command>[Stover].bBiomass.Value = 330.0</Command>
   </Cultivar>
@@ -1462,8 +1462,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -1687,8 +1687,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 1650.0</Command>
     <Command>[Stover].bBiomass.Value = 330.0</Command>
   </Cultivar>
@@ -1962,8 +1962,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.005</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.005</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2137,8 +2137,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2312,8 +2312,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2387,8 +2387,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 1650.0</Command>
     <Command>[Stover].bBiomass.Value = 330.0</Command>
   </Cultivar>
@@ -2487,8 +2487,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2537,8 +2537,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2687,8 +2687,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
@@ -2712,8 +2712,8 @@ The AboveGround composite biomass object includes Stover and Product organs.
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.96</Command>
     <Command>[Stover].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-    <Command>[Stover].MaximumNConc.Value = 0.01</Command>
-    <Command>[Stover].MinimumNConc.Value = 0.01</Command>
+    <Command>[Stover].MaximumNConc.Value = 0.02</Command>
+    <Command>[Stover].MinimumNConc.Value = 0.02</Command>
     <Command>[Stover].XoBiomass.Value = 900.0</Command>
     <Command>[Stover].bBiomass.Value = 180.0</Command>
   </Cultivar>
