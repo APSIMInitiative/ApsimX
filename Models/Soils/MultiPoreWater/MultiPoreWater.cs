@@ -679,9 +679,9 @@ namespace Models.Soils
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (InitialSoilWater[l] > MappedSAT[l])
+                if (InitialSoilWater[l] - MappedSAT[l] > 1e-10)
                     throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
-                if (InitialSoilWater[l] < MappedLL15[l])
+                if (MappedLL15[l] - InitialSoilWater[l] > 1e-10)
                     throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
             }
         }
