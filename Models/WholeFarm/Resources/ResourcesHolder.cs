@@ -288,7 +288,7 @@ namespace Models.WholeFarm.Resources
 			foreach (ResourceRequest request in shortfallRequests)
 			{
 				// Check if transmutation would be successful 
-				if (request.AllowTransmutation & (QueryOnly || request.TransmutationSuccessful))
+				if (request.AllowTransmutation & (QueryOnly || request.TransmutationPossible))
 				{
 					// get resource type
 					bool resourceAvailable = false;
@@ -315,7 +315,7 @@ namespace Models.WholeFarm.Resources
 									IResourceType resourceToTake = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
 									if (transmutationCost + activityCost <= resourceToTake.Amount)
 									{
-										request.TransmutationSuccessful = true;
+										request.TransmutationPossible = true;
 										break;
 									}
 								}

@@ -87,8 +87,8 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// check if need to do transmutations
-			int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationSuccessful == true & a.AllowTransmutation).Count();
-			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationSuccessful == false & a.AllowTransmutation).Count() == 0);
+			int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
+			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
 
 			// OR at least one transmutation successful and PerformWithPartialResources
 			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & PerformWithPartialResources))
@@ -126,7 +126,7 @@ namespace Models.WholeFarm.Activities
 						// get amount available
 						request.Provided = Math.Min(resource.Amount, request.Required);
 						// remove resource
-						request.Provided = resource.Remove(request.Available, this.Name, request.Requestor);
+						request.Provided = resource.Remove(request.Provided, this.Name, request.Requestor);
 					}
 				}
 				PerformActivity();
@@ -194,14 +194,14 @@ namespace Models.WholeFarm.Activities
 		///<summary>
 		/// Allow transmutation
 		///</summary> 
-		public bool TransmutationSuccessful { get; set; }
+		public bool TransmutationPossible { get; set; }
 		///<summary>
 		/// ResourceRequest constructor
 		///</summary> 
 		public ResourceRequest()
 		{
 			// default values
-			TransmutationSuccessful = false;
+			TransmutationPossible = false;
 			AllowTransmutation = false;
 		}
 	}
