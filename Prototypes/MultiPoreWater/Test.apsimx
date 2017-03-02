@@ -12,27 +12,27 @@
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
-      <Name>PredictedObserved</Name>
+      <Name>SoilWaterContents</Name>
       <Tests>
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
             <Name>MeasuredProfile</Name>
-            <n>11973</n>
-            <Slope>0.73978972485331829</Slope>
-            <Intercept>55.491951046957567</Intercept>
-            <SEslope>0.004524593454969663</SEslope>
-            <SEintercept>0.76532337886328272</SEintercept>
-            <R2>0.69070860700454639</R2>
-            <RMSE>25.509849203916666</RMSE>
-            <NSE>0.584179774695784</NSE>
-            <ME>12.698735697598186</ME>
-            <MAE>19.668214585547513</MAE>
-            <RSR>0.64481431084976859</RSR>
+            <n>843</n>
+            <Slope>0.63906455588835787</Slope>
+            <Intercept>65.080456918589633</Intercept>
+            <SEslope>0.018626913052973891</SEslope>
+            <SEintercept>3.1379744485660788</SEintercept>
+            <R2>0.58326821932019013</R2>
+            <RMSE>26.076045545799023</RMSE>
+            <NSE>0.55487418185709081</NSE>
+            <ME>5.9346728557410975</ME>
+            <MAE>19.047259199716823</MAE>
+            <RSR>0.66678166761044322</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
-        <POName>PredictedObserved</POName>
+        <POName>SoilWaterContents</POName>
       </Tests>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObservedSoilWater</ObservedTableName>
@@ -62,13 +62,13 @@
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[Soil].MultiPoreWater.Drainage</string>
-        <string>[Soil].MultiPoreWater.Infiltration</string>
-        <string>[Soil].MultiPoreWater.Runoff</string>
-        <string>[Soil].MultiPoreWater.Es</string>
-        <string>[Soil].MultiPoreWater.WaterExtraction</string>
-        <string>[Soil].MultiPoreWater.pond</string>
-        <string>sum([Soil].MultiPoreWater.SWmm) as ProfileWater</string>
+        <string>[Soil].WEIRDO.Drainage</string>
+        <string>[Soil].WEIRDO.Infiltration</string>
+        <string>[Soil].WEIRDO.Runoff</string>
+        <string>[Soil].WEIRDO.Es</string>
+        <string>[Soil].WEIRDO.WaterExtraction</string>
+        <string>[Soil].WEIRDO.pond</string>
+        <string>sum([Soil].WEIRDO.SWmm) as ProfileWater</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -103,13 +103,46 @@
         <string>[IWeather].Rain</string>
         <string>[IWeather].VP</string>
         <string>[IWeather].Wind</string>
-        <string>[Soil].MultiPoreWater.Eo</string>
-        <string>[Soil].MultiPoreWater.Eos</string>
+        <string>[Soil].WEIRDO.Eo</string>
+        <string>[Soil].WEIRDO.Eos</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
+    <LayerStructure>
+      <Name>LayerStructure</Name>
+      <Thickness>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+        <double>50</double>
+      </Thickness>
+    </LayerStructure>
   </Replacements>
   <Folder>
     <Name>Validation</Name>
@@ -666,8 +699,8 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -827,7 +860,58 @@
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
+            <LayerStructure>
+              <Name>LayerStructure</Name>
+              <Thickness>
+                <double>30</double>
+                <double>70</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+                <double>50</double>
+              </Thickness>
+            </LayerStructure>
+            <ObservedSWLayering>
+              <Name>ObservedSWLayering</Name>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+            </ObservedSWLayering>
             <MRSpline>
               <Name>MRSpline</Name>
             </MRSpline>
@@ -998,10 +1082,22 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
               <Thickness>
-                <double>150</double>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>75</double>
+                <double>75</double>
                 <double>150</double>
                 <double>100</double>
                 <double>200</double>
@@ -1009,48 +1105,147 @@
                 <double>200</double>
                 <double>200</double>
                 <double>200</double>
-                <double>200</double>
-              </Thickness>
-            </ObservedSWLayering>
-            <LayerStructure>
-              <Name>LayerStructure</Name>
-              <Thickness>
-                <double>30</double>
-                <double>70</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-                <double>50</double>
-              </Thickness>
-            </LayerStructure>
+                <double>1000</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.15</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.02</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.04</double>
+              </LL15>
+              <DUL>
+                <double>0.37</double>
+                <double>0.33</double>
+                <double>0.32</double>
+                <double>0.3</double>
+                <double>0.15</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.11</double>
+                <double>0.12</double>
+                <double>0.12</double>
+              </DUL>
+              <SAT>
+                <double>0.57</double>
+                <double>0.48</double>
+                <double>0.48</double>
+                <double>0.44</double>
+                <double>0.4</double>
+                <double>0.38</double>
+                <double>0.37</double>
+                <double>0.38</double>
+                <double>0.39</double>
+                <double>0.4</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3.9</double>
+                <double>3.8</double>
+                <double>3.7</double>
+                <double>3.6</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-15</double>
+                <double>-15</double>
+                <double>-15</double>
+                <double>-15</double>
+                <double>-10</double>
+                <double>-10</double>
+                <double>-10</double>
+                <double>-10</double>
+                <double>-10</double>
+                <double>-10</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.2</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -1545,6 +1740,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>sum([Soil].SoilWater.SWmm) as MeasuredProfile</string>
+              <string>[Soil].ObservedSWLayering.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2354,7 +2550,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.WaterExtraction</YFieldName>
+          <YFieldName>Soil.WEIRDO.WaterExtraction</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2717,24 +2913,18 @@ namespace Models
             <Sample>
               <Name>InitialWater</Name>
               <Thickness>
-                <double>50</double>
-                <double>150</double>
                 <double>200</double>
                 <double>200</double>
                 <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
+                <double>400</double>
+                <double>400</double>
               </Thickness>
               <SW>
                 <double>0.27</double>
-                <double>0.27</double>
-                <double>0.25</double>
-                <double>0.25</double>
-                <double>0.2</double>
-                <double>0.25</double>
-                <double>0.25</double>
-                <double>0.25</double>
+                <double>0.16</double>
+                <double>0.13</double>
+                <double>0.18</double>
+                <double>0.22</double>
               </SW>
               <NO3Units>ppm</NO3Units>
               <NH4Units>ppm</NH4Units>
@@ -2981,8 +3171,8 @@ namespace Models
           <Name>Field</Name>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -2995,114 +3185,48 @@ namespace Models
                 <double>200</double>
               </Thickness>
               <ParamThickness>
-                <double>30</double>
-                <double>170</double>
                 <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
+                <double>1200</double>
               </ParamThickness>
               <LL15>
                 <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
+                <double>0.13</double>
               </LL15>
               <DUL>
                 <double>0.3</double>
-                <double>0.3</double>
                 <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
               </DUL>
               <SAT>
                 <double>0.44</double>
-                <double>0.44</double>
                 <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
               </SAT>
               <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
                 <double>7E-11</double>
                 <double>7E-11</double>
               </CFlow>
               <XFlow>
                 <double>3</double>
                 <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
                 <double>-70</double>
               </PsiBub>
               <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
                 <double>0.8</double>
                 <double>0.8</double>
               </MaxRepellentWC>
               <MinRepellentWC>
                 <double>0.2</double>
                 <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
               </MinRepellentWC>
               <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
               <BD>
                 <double>1</double>
-                <double>1</double>
                 <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
               </BD>
               <SubProfileConductance>20</SubProfileConductance>
               <WaterTableDepth>10</WaterTableDepth>
@@ -3120,7 +3244,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -3459,8 +3583,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -3502,7 +3626,7 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -3515,6 +3639,70 @@ namespace Models
                 <double>200</double>
               </Thickness>
               <ParamThickness>
+                <double>200</double>
+                <double>1200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.13</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.28</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.46</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1.2</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
                 <double>30</double>
                 <double>170</double>
                 <double>200</double>
@@ -3523,106 +3711,50 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
                 <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>200</double>
+                <double>1200</double>
               </ParamThickness>
               <LL15>
                 <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
+                <double>0.13</double>
               </LL15>
               <DUL>
                 <double>0.3</double>
-                <double>0.3</double>
                 <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
               </DUL>
               <SAT>
                 <double>0.44</double>
-                <double>0.44</double>
                 <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
               </SAT>
               <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
                 <double>7E-11</double>
                 <double>7E-11</double>
               </CFlow>
               <XFlow>
                 <double>3</double>
                 <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
                 <double>-70</double>
               </PsiBub>
               <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
                 <double>0.8</double>
                 <double>0.8</double>
               </MaxRepellentWC>
               <MinRepellentWC>
                 <double>0.2</double>
                 <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
               </MinRepellentWC>
               <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
               <BD>
                 <double>1</double>
-                <double>1</double>
                 <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
               </BD>
               <SubProfileConductance>20</SubProfileConductance>
               <WaterTableDepth>10</WaterTableDepth>
@@ -3724,6 +3856,8 @@ namespace Models
               <string>[SurfaceOrganicMatter].Cover</string>
               <string>[SurfaceOrganicMatter].Wt</string>
               <string>sum([Soil].SoilWater.SWmm[1:12]) as MeasuredProfile</string>
+              <string>[Soil].ObservedSWLayering.SWmm</string>
+              <string>[Soil].ObservedSWLayering.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -4318,7 +4452,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportMetVariables</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Eos</YFieldName>
+          <YFieldName>Soil.WEIRDO.Eos</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4360,7 +4494,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Es</YFieldName>
+          <YFieldName>Soil.WEIRDO.Es</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4871,8 +5005,8 @@ namespace Models
           <Name>Conductivity</Name>
           <Factor>
             <Name>High</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -5010,15 +5144,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Mid</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -5156,15 +5290,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Low</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -5302,9 +5436,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -5486,8 +5620,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -5625,7 +5759,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -6007,7 +6141,147 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.46</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-20</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.6</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>false</CalculateEvaporation>
+              <CalculateDiffusion>false</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -6203,7 +6477,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Soil].MultiPoreWater.PoreWater</string>
+              <string>[Soil].WEIRDO.PoreWater</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6625,7 +6899,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.WaterExtraction</YFieldName>
+          <YFieldName>Soil.WEIRDO.WaterExtraction</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -6687,7 +6961,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(1)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6709,7 +6983,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(2)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6731,7 +7005,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(3)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6753,7 +7027,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(4)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6775,7 +7049,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(5)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6797,7 +7071,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(6)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6819,7 +7093,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(7)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6841,7 +7115,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(8)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6863,7 +7137,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(9)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(9)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6885,7 +7159,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.PoreWater(1)(10)</YFieldName>
+          <YFieldName>Soil.WEIRDO.PoreWater(1)(10)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7216,8 +7490,8 @@ namespace Models
           <Name>Conductivity</Name>
           <Factor>
             <Name>High</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -7278,15 +7552,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Mid</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -7347,15 +7621,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Low</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -7416,9 +7690,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -7535,8 +7809,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -7565,7 +7839,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -7952,7 +8226,38 @@ namespace Models
               </Thickness>
             </LayerStructure>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness />
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -8464,8 +8769,8 @@ namespace Models
           <Name>Conductivity</Name>
           <Factor>
             <Name>High</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -8526,15 +8831,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Mid</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -8595,15 +8900,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Low</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -8664,9 +8969,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -8783,8 +9088,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -8813,7 +9118,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -9181,7 +9486,7 @@ namespace Models
               </Thickness>
             </LayerStructure>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -9583,7 +9888,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Drainage</YFieldName>
+          <YFieldName>Soil.WEIRDO.Drainage</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -10204,8 +10509,8 @@ namespace Models
           <Name>Repellency</Name>
           <Factor>
             <Name>High</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -10266,15 +10571,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Moderate</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -10335,15 +10640,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>None</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -10404,9 +10709,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -10430,8 +10735,8 @@ namespace Models
           <Name>Field</Name>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -10460,7 +10765,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -10828,7 +11133,38 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness />
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -12082,7 +12418,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.pond</YFieldName>
+          <YFieldName>Soil.WEIRDO.pond</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12123,7 +12459,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Drainage</YFieldName>
+          <YFieldName>Soil.WEIRDO.Drainage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -12156,8 +12492,8 @@ namespace Models
           <Name>MatrixConductivity</Name>
           <Factor>
             <Name>High</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -12218,15 +12554,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Moderate</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -12287,15 +12623,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Low</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>10</double>
@@ -12356,9 +12692,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -12528,8 +12864,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -12667,7 +13003,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -13035,7 +13371,147 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.46</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-20</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.6</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -13566,7 +14042,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.pond</YFieldName>
+          <YFieldName>Soil.WEIRDO.pond</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -13771,8 +14247,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -13833,7 +14309,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -14196,7 +14672,70 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>1400</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.15</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -14620,7 +15159,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Es</YFieldName>
+          <YFieldName>Soil.WEIRDO.Es</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>true</Cumulative>
@@ -14980,8 +15519,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15042,7 +15581,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -15410,7 +15949,70 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>1400</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.15</double>
+              </LL15>
+              <DUL>
+                <double>0.4</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>4</double>
+              </XFlow>
+              <PsiBub>
+                <double>-10</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>0.01</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15511,7 +16113,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Infiltration</YFieldName>
+          <YFieldName>Soil.WEIRDO.Infiltration</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15552,7 +16154,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterBalance</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.MultiPoreWater.Drainage</YFieldName>
+          <YFieldName>Soil.WEIRDO.Drainage</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15690,8 +16292,8 @@ namespace Models
           <Name>MacroPores</Name>
           <Factor>
             <Name>Many</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15752,15 +16354,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>Few</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15821,15 +16423,15 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Factor>
             <Name>None</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15890,9 +16492,9 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Specifications>
-              <string>[MultiPoreWater]</string>
+              <string>[WEIRDO]</string>
             </Specifications>
           </Factor>
           <Specifications />
@@ -15916,8 +16518,8 @@ namespace Models
           <Name>Field</Name>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -15946,7 +16548,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -16309,7 +16911,38 @@ namespace Models
               </Thickness>
             </ObservedSWLayering>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness />
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>0</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -16511,7 +17144,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterBalance</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.MultiPoreWater.Infiltration</YFieldName>
+            <YFieldName>Soil.WEIRDO.Infiltration</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -16553,7 +17186,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterBalance</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.MultiPoreWater.Drainage</YFieldName>
+            <YFieldName>Soil.WEIRDO.Drainage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>true</Cumulative>
@@ -16594,7 +17227,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterBalance</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.MultiPoreWater.pond</YFieldName>
+            <YFieldName>Soil.WEIRDO.pond</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17128,8 +17761,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -17267,7 +17900,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -17505,7 +18138,147 @@ namespace Models
               </Thickness>
             </LayerStructure>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.46</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-20</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.6</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -17853,8 +18626,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -17992,7 +18765,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -18207,7 +18980,147 @@ namespace Models
               </Thickness>
             </LayerStructure>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.46</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-20</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.6</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -18567,8 +19480,8 @@ namespace Models
           </Manager>
           <Soil>
             <Name>Soil</Name>
-            <MultiPoreWater>
-              <Name>MultiPoreWater</Name>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
@@ -18706,7 +19619,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </MultiPoreWater>
+            </WEIRDO>
             <Evapotranspiration>
               <Name>Evapotranspiration</Name>
             </Evapotranspiration>
@@ -18924,7 +19837,147 @@ namespace Models
               </Thickness>
             </LayerStructure>
             <WEIRDO>
-              <Name>MultiPoreWater</Name>
+              <Name>WEIRDO</Name>
+              <Salb>0.15</Salb>
+              <Thickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <ParamThickness>
+                <double>30</double>
+                <double>170</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </ParamThickness>
+              <LL15>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL15>
+              <DUL>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+                <double>0.26</double>
+              </DUL>
+              <SAT>
+                <double>0.44</double>
+                <double>0.44</double>
+                <double>0.46</double>
+                <double>0.46</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+                <double>0.36</double>
+              </SAT>
+              <CFlow>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+                <double>7E-11</double>
+              </CFlow>
+              <XFlow>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+                <double>3</double>
+              </XFlow>
+              <PsiBub>
+                <double>-20</double>
+                <double>-20</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+                <double>-70</double>
+              </PsiBub>
+              <MaxRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </MaxRepellentWC>
+              <MinRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </MinRepellentWC>
+              <MinRepellancyFactor>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MinRepellancyFactor>
+              <BD>
+                <double>1</double>
+                <double>1</double>
+                <double>1.2</double>
+                <double>1.2</double>
+                <double>1.3</double>
+                <double>1.4</double>
+                <double>1.5</double>
+                <double>1.6</double>
+              </BD>
+              <SubProfileConductance>20</SubProfileConductance>
+              <WaterTableDepth>10</WaterTableDepth>
+              <CalculateInfiltration>true</CalculateInfiltration>
+              <CalculateDrainage>true</CalculateDrainage>
+              <ReportDetail>false</ReportDetail>
+              <IncludeSorption>true</IncludeSorption>
+              <CalculateEvaporation>true</CalculateEvaporation>
+              <CalculateDiffusion>true</CalculateDiffusion>
+              <DiffusivityMultiplier>2</DiffusivityMultiplier>
+              <ExtractionMultiplier>10</ExtractionMultiplier>
+              <ProfileWaterExtraction>0</ProfileWaterExtraction>
+              <TotalCover>0</TotalCover>
+              <ResidueWater>0</ResidueWater>
+              <Hour>0</Hour>
+              <ReportLayer>0</ReportLayer>
+              <TimeStep>0</TimeStep>
+            </WEIRDO>
+            <WEIRDO>
+              <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>

@@ -35,7 +35,7 @@ namespace Models.Soils
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
-        public MultiPoreWater WEIRDO;
+        public WEIRDO WEIRDO;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
 
@@ -153,7 +153,7 @@ namespace Models.Soils
         private void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Water)) as Water;
-            WEIRDO = Apsim.Child(this, typeof(MultiPoreWater)) as MultiPoreWater;
+            WEIRDO = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;

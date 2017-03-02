@@ -26,7 +26,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class MultiPoreWater : Model, ISoilWater
+    public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
         ///<summary> Model name</summary>

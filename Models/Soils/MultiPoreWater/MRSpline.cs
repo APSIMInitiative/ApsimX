@@ -18,7 +18,7 @@ namespace Models.Soils
     {
         #region External links
         [Link]
-        MultiPoreWater WEIRDO = null;
+        WEIRDO WEIRDO = null;
         #endregion
 
         #region Internal States

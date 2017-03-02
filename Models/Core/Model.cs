@@ -87,7 +87,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.Evapotranspiration))]
         [XmlElement(typeof(Soils.HydraulicProperties))]
         [XmlElement(typeof(Soils.MRSpline))]
-        [XmlElement(typeof(Soils.MultiPoreWater))]
+        [XmlElement(typeof(Soils.WEIRDO))]
         [XmlElement(typeof(Soils.Water))]
         [XmlElement(typeof(Soils.SoilCrop))]
         [XmlElement(typeof(Soils.SoilCropOilPalm))]
