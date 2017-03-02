@@ -101,7 +101,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.LayerStructure))]
         [XmlElement(typeof(Soils.SoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature2))]
-        [XmlElement(typeof(Soils.ObservedSWLayering))]
+        [XmlElement(typeof(Soils.OutputLayers))]
         [XmlElement(typeof(Soils.Arbitrator.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(WaterModel.CNReductionForCover))]
