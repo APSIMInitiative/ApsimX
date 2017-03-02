@@ -56,16 +56,16 @@
           <RegrStats>
             <Name>NLeaching</Name>
             <n>36</n>
-            <Slope>1.0176619632865627</Slope>
-            <Intercept>11.896347779682529</Intercept>
-            <SEslope>0.079369759508785</SEslope>
-            <SEintercept>7.1800702959000144</SEintercept>
-            <R2>0.82862744406805788</R2>
-            <RMSE>32.247189792706507</RMSE>
-            <NSE>0.74364083633387768</NSE>
-            <ME>13.031025340318209</ME>
-            <MAE>17.9698670784793</MAE>
-            <RSR>0.49923749437167464</RSR>
+            <Slope>1.0175549344266093</Slope>
+            <Intercept>11.463508725445678</Intercept>
+            <SEslope>0.079202752619090364</SEslope>
+            <SEintercept>7.1953115556148006</SEintercept>
+            <R2>0.82919505432938645</R2>
+            <RMSE>32.040997987632075</RMSE>
+            <NSE>0.74733560053451775</NSE>
+            <ME>12.599833971174139</ME>
+            <MAE>17.613960732254736</MAE>
+            <RSR>0.49562681921459262</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -83,128 +83,128 @@
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>126</n>
-            <Slope>1.0034864464216875</Slope>
-            <Intercept>-0.16481305858286532</Intercept>
-            <SEslope>0.03344121068250288</SEslope>
-            <SEintercept>10.59270582872891</SEintercept>
-            <R2>0.878959303445856</R2>
-            <RMSE>15.746156835911295</RMSE>
-            <NSE>0.86083169597746378</NSE>
-            <ME>0.92969126741823915</ME>
-            <MAE>12.822594580857636</MAE>
-            <RSR>0.37156936589707057</RSR>
+            <Slope>0.9917086401469325</Slope>
+            <Intercept>4.5134816324390385</Intercept>
+            <SEslope>0.033726364566491945</SEslope>
+            <SEintercept>10.683030046882772</SEintercept>
+            <R2>0.874573610639515</R2>
+            <RMSE>15.970581340749787</RMSE>
+            <NSE>0.85683639058146088</NSE>
+            <ME>1.9105650434544073</ME>
+            <MAE>12.913366758874796</MAE>
+            <RSR>0.37686521502543829</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>126</n>
-            <Slope>1.2048285770289724</Slope>
-            <Intercept>-0.0052745497790046</Intercept>
-            <SEslope>0.034269736839094407</SEslope>
-            <SEintercept>0.0062248811237683331</SEintercept>
-            <R2>0.90882553472707139</R2>
-            <RMSE>0.0445079535247144</RMSE>
-            <NSE>0.68701279828897044</NSE>
-            <ME>0.028172914972865507</ME>
-            <MAE>0.030922980270429428</MAE>
-            <RSR>0.55722811872753208</RSR>
+            <Slope>1.2003699360080538</Slope>
+            <Intercept>-0.0049652206966044055</Intercept>
+            <SEslope>0.034137328921882891</SEslope>
+            <SEintercept>0.0062008300623797559</SEintercept>
+            <R2>0.90885265564731621</R2>
+            <RMSE>0.044034027859598049</RMSE>
+            <NSE>0.69364275651641494</NSE>
+            <ME>0.027754170655784359</ME>
+            <MAE>0.030548952737738531</MAE>
+            <RSR>0.55129469142126786</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>126</n>
-            <Slope>1.0197121710598931</Slope>
-            <Intercept>-0.011920004882188529</Intercept>
-            <SEslope>0.0357063163185024</SEslope>
-            <SEintercept>0.0075991545799199674</SEintercept>
-            <R2>0.86802575491079159</R2>
-            <RMSE>0.022827201720404415</RMSE>
-            <NSE>0.82019431944397359</NSE>
-            <ME>-0.00786121410492578</ME>
-            <MAE>0.018236907342969861</MAE>
-            <RSR>0.4223489686802423</RSR>
+            <Slope>1.0127559711613066</Slope>
+            <Intercept>-0.010941318257822214</Intercept>
+            <SEslope>0.035189936010764263</SEslope>
+            <SEintercept>0.0074892565510803095</SEintercept>
+            <R2>0.86978502270425517</R2>
+            <RMSE>0.022684984234017391</RMSE>
+            <NSE>0.82242778237367553</NSE>
+            <ME>-0.0083148283624559019</ME>
+            <MAE>0.018108500806760019</MAE>
+            <RSR>0.41971766023343576</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>126</n>
-            <Slope>0.76264801615741507</Slope>
-            <Intercept>0.038725345650105436</Intercept>
-            <SEslope>0.0350059454777675</SEslope>
-            <SEintercept>0.0070704785789128628</SEintercept>
-            <R2>0.79286394960350459</R2>
-            <RMSE>0.023878572761277712</RMSE>
-            <NSE>0.76716203467963184</NSE>
-            <ME>-0.0077537298366880556</ME>
-            <MAE>0.019500526366405344</MAE>
-            <RSR>0.48061423715978568</RSR>
+            <Slope>0.7561035635156923</Slope>
+            <Intercept>0.0410112872340829</Intercept>
+            <SEslope>0.033848253801997887</SEslope>
+            <SEintercept>0.0068366487513564717</SEintercept>
+            <R2>0.800959222572196</R2>
+            <RMSE>0.023219110604136426</RMSE>
+            <NSE>0.7798451660161021</NSE>
+            <ME>-0.0067493453032557663</ME>
+            <MAE>0.019110455185711854</MAE>
+            <RSR>0.46734096053815366</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>126</n>
-            <Slope>0.523375760018811</Slope>
-            <Intercept>0.09313155167275658</Intercept>
-            <SEslope>0.041058267545399617</SEslope>
-            <SEintercept>0.0083015403960354159</SEintercept>
-            <R2>0.56717474067672868</R2>
-            <RMSE>0.023650911158966469</RMSE>
-            <NSE>0.56146934768899825</NSE>
-            <ME>-0.0017214004985791358</ME>
-            <MAE>0.018454880789031184</MAE>
-            <RSR>0.65958339147414369</RSR>
+            <Slope>0.516357233269482</Slope>
+            <Intercept>0.096222034334129</Intercept>
+            <SEslope>0.03773682172233845</SEslope>
+            <SEintercept>0.0076299797501095546</SEintercept>
+            <R2>0.60157776295693977</R2>
+            <RMSE>0.022882422796718451</RMSE>
+            <NSE>0.58950467726730216</NSE>
+            <ME>-2.76742885648017E-05</ME>
+            <MAE>0.018337991996647252</MAE>
+            <RSR>0.63815156769056869</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>126</n>
-            <Slope>0.2785069802701502</Slope>
-            <Intercept>0.14508209350490997</Intercept>
-            <SEslope>0.046913256612161357</SEslope>
-            <SEintercept>0.0095241059157724437</SEintercept>
-            <R2>0.22131907894898506</R2>
-            <RMSE>0.028580992355331531</RMSE>
-            <NSE>0.2063465266052632</NSE>
-            <ME>0.00044851065692266931</ME>
-            <MAE>0.023740476895936755</MAE>
-            <RSR>0.8873300605210569</RSR>
+            <Slope>0.25598566546258811</Slope>
+            <Intercept>0.15155186990328279</Intercept>
+            <SEslope>0.042217665016112065</SEslope>
+            <SEintercept>0.0085708292744234547</SEintercept>
+            <R2>0.22869120889655104</R2>
+            <RMSE>0.028337338767031591</RMSE>
+            <NSE>0.21982067367035407</NSE>
+            <ME>0.0024035677690510257</ME>
+            <MAE>0.023114980679047756</MAE>
+            <RSR>0.87976555224351183</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>126</n>
-            <Slope>0.15541169051177292</Slope>
-            <Intercept>0.1723937527541638</Intercept>
-            <SEslope>0.027998365013419967</SEslope>
-            <SEintercept>0.0056000308522965881</SEintercept>
-            <R2>0.19902194246821492</R2>
-            <RMSE>0.0192466348911448</RMSE>
-            <NSE>0.14513919531283692</NSE>
-            <ME>0.0043826826728540569</ME>
-            <MAE>0.015410389535320958</MAE>
-            <RSR>0.92091052503821136</RSR>
+            <Slope>0.12949471591695189</Slope>
+            <Intercept>0.17838057215921918</Intercept>
+            <SEslope>0.024041709023476004</SEslope>
+            <SEintercept>0.0048086490839329716</SEintercept>
+            <R2>0.18960454118008696</R2>
+            <RMSE>0.01966234139494432</RMSE>
+            <NSE>0.10781225320719468</NSE>
+            <ME>0.0052139267685797457</ME>
+            <MAE>0.015953177435786451</MAE>
+            <RSR>0.940801196672033</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>126</n>
-            <Slope>-0.018850076664950744</Slope>
-            <Intercept>0.20364771403202919</Intercept>
-            <SEslope>0.0072454499848462672</SEslope>
-            <SEintercept>0.0014694724335259214</SEintercept>
-            <R2>0.051759755275817665</R2>
-            <RMSE>0.025513337182034593</RMSE>
-            <NSE>-0.047820713346055532</NSE>
-            <ME>-0.0014221437598807144</ME>
-            <MAE>0.020991850048180497</MAE>
-            <RSR>1.0195610211941937</RSR>
+            <Slope>-0.022570841747866298</Slope>
+            <Intercept>0.2046393288812674</Intercept>
+            <SEslope>0.006966065561121516</SEslope>
+            <SEintercept>0.0014128096023865579</SEintercept>
+            <R2>0.078055496549547243</R2>
+            <RMSE>0.025587334224929457</RMSE>
+            <NSE>-0.053907574747062981</NSE>
+            <ME>-0.0011794288556945521</ME>
+            <MAE>0.020995094930011404</MAE>
+            <RSR>1.0225180824394926</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>126</n>
-            <Slope>-0.034631289978149786</Slope>
-            <Intercept>0.20245914104296114</Intercept>
-            <SEslope>0.016788051946962142</SEslope>
-            <SEintercept>0.0034668909441649466</SEintercept>
-            <R2>0.033178839449227282</R2>
-            <RMSE>0.028241895059584975</RMSE>
-            <NSE>-0.24972531372762319</NSE>
-            <ME>-0.0095971637654772273</ME>
-            <MAE>0.021695084572901147</MAE>
-            <RSR>1.113466146255363</RSR>
+            <Slope>-0.035309651558193773</Slope>
+            <Intercept>0.20264777750110918</Intercept>
+            <SEslope>0.0169850097492114</SEslope>
+            <SEintercept>0.0035075645865361889</SEintercept>
+            <R2>0.033678685822725596</R2>
+            <RMSE>0.028250268102378549</RMSE>
+            <NSE>-0.25046645058637074</NSE>
+            <ME>-0.0095475631661723816</ME>
+            <MAE>0.021700727296239269</MAE>
+            <RSR>1.1137962621938338</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -10038,7 +10038,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10059,7 +10059,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10101,7 +10101,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10122,7 +10122,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10164,7 +10164,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10185,7 +10185,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10736,7 +10736,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10757,7 +10757,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10799,7 +10799,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10820,7 +10820,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10862,7 +10862,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10883,7 +10883,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10925,7 +10925,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10946,7 +10946,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -12248,17 +12248,17 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
+              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
-              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12552,22 +12552,22 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
+              <NFert>0</NFert>
+              <Irr1>0</Irr1>
+              <Irr2>0</Irr2>
+              <Irr3>0</Irr3>
+              <Irr4>0</Irr4>
+              <IrrFact1>0</IrrFact1>
+              <IrrFact2>0</IrrFact2>
+              <IrrFact3>0</IrrFact3>
+              <IrrFact4>0</IrrFact4>
+              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
-              <NFert>0</NFert>
-              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
-              <Irr1>0</Irr1>
-              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
-              <Irr2>0</Irr2>
-              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
-              <Irr3>0</Irr3>
-              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
-              <Irr4>0</Irr4>
-              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

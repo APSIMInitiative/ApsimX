@@ -18,6 +18,7 @@ namespace UserInterface
         private List<ICommand> commands = new List<ICommand>();
         private int lastExecuted = -1;
         private int lastSaved = -1;
+        private bool inUndoRedo = false;
 
         public delegate void Changed(bool haveUnsavedChanges);
         public event Changed OnChanged = (h) => { };
@@ -83,6 +84,8 @@ namespace UserInterface
 
         public void Add(ICommand command, bool execute = true)
         {
+            if (inUndoRedo)
+                return;
             if (lastExecuted + 1 < commands.Count)
             {
                 int numCommandsToRemove = commands.Count
@@ -110,9 +113,17 @@ namespace UserInterface
             {
                 if (commands.Count > 0)
                 {
-                    commands[lastExecuted].Undo(this);
-                    lastExecuted--;
-                    OnChanged(lastExecuted != lastSaved);
+                    inUndoRedo = true;
+                    try
+                    {
+                        commands[lastExecuted].Undo(this);
+                        lastExecuted--;
+                        OnChanged(lastExecuted != lastSaved);
+                    }
+                    finally
+                    {
+                        inUndoRedo = false;
+                    }
                 }
             }
         }
@@ -121,9 +132,17 @@ namespace UserInterface
         {
             if (lastExecuted + 1 < commands.Count)
             {
-                commands[lastExecuted + 1].Do(this);
-                lastExecuted++;
-                OnChanged(lastExecuted != lastSaved);
+                inUndoRedo = true;
+                try
+                {
+                    commands[lastExecuted + 1].Do(this);
+                    lastExecuted++;
+                    OnChanged(lastExecuted != lastSaved);
+                }
+                finally
+                {
+                    inUndoRedo = false;
+                }
             }
         }
 

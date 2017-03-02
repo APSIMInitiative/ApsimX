@@ -204,6 +204,18 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double CohortPopulation; //Number of leaves in this cohort
 
+        /// <summary>Number of apex age groups in the cohort</summary>
+        [XmlIgnore]
+        public int GroupNumber;
+
+        /// <summary>The number of leaves in each age group</summary>
+        [XmlIgnore]
+        public double[] GroupSize;
+
+        /// <summary>The age of apex in each age group</summary>
+        [XmlIgnore]
+        public double[] GroupAge;
+
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
         public double CellDivisionStressFactor = 1;
