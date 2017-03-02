@@ -110,18 +110,13 @@ namespace UserInterface.Views
         {
             if (BrowseButtonClicked != null)
             {
-                FileChooserDialog fileChooser = new FileChooserDialog("Select a file to open", null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-                FileFilter allFilter = new FileFilter();
-                allFilter.AddPattern("*");
-                allFilter.Name = "All files";
-                fileChooser.AddFilter(allFilter);
-                if (fileChooser.Run() == (int)ResponseType.Accept)
+                string fileName = AskUserForFileName("Select a file to open", "", FileChooserAction.Open, FileName);
+                if (!String.IsNullOrEmpty(fileName))
                 {
                     OpenDialogArgs args = new OpenDialogArgs();
-                    args.FileNames = fileChooser.Filenames;
+                    args.FileName = fileName;
                     BrowseButtonClicked.Invoke(this, args);
                 }
-                fileChooser.Destroy();
             }
         }
     }
@@ -131,6 +126,6 @@ namespace UserInterface.Views
     /// </summary>
     public class OpenDialogArgs : EventArgs
     {
-        public string[] FileNames;
+        public string FileName;
     }
 }

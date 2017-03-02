@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -18,16 +18,16 @@
           <RegrStats>
             <Name>Biomass</Name>
             <n>88</n>
-            <Slope>1.1302704369215508</Slope>
-            <Intercept>-25.197610366246408</Intercept>
-            <SEslope>0.0437088859893132</SEslope>
-            <SEintercept>59.907515158757946</SEintercept>
-            <R2>0.88604602677827016</R2>
-            <RMSE>284.52837142163776</RMSE>
-            <NSE>0.76488686866475686</NSE>
-            <ME>136.16019847126756</ME>
-            <MAE>215.29989499603897</MAE>
-            <RSR>0.48212175973132937</RSR>
+            <Slope>1.1270587437614767</Slope>
+            <Intercept>-21.696883044807237</Intercept>
+            <SEslope>0.043902921281099516</SEslope>
+            <SEintercept>60.173460444731717</SEintercept>
+            <R2>0.88456866116237176</R2>
+            <RMSE>284.68481784353855</RMSE>
+            <NSE>0.764628246156802</NSE>
+            <ME>135.68280317936186</ME>
+            <MAE>214.88102744681308</MAE>
+            <RSR>0.48238685183393276</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FinalLeafNo</Name>
@@ -60,58 +60,58 @@
           <RegrStats>
             <Name>GPSM</Name>
             <n>84</n>
-            <Slope>0.91314151378373787</Slope>
-            <Intercept>243.72221179814437</Intercept>
-            <SEslope>0.042323525022052957</SEslope>
-            <SEintercept>101.46071429412203</SEintercept>
-            <R2>0.85022620691774586</R2>
-            <RMSE>479.55133327382987</RMSE>
-            <NSE>0.84277550506188947</NSE>
-            <ME>63.939869107468866</ME>
-            <MAE>352.63623926480238</MAE>
-            <RSR>0.394148163461757</RSR>
+            <Slope>0.91391560569708441</Slope>
+            <Intercept>244.6395314237493</Intercept>
+            <SEslope>0.042051741619332755</SEslope>
+            <SEintercept>100.80917739687845</SEintercept>
+            <R2>0.85207329179734859</R2>
+            <RMSE>476.81419520645886</RMSE>
+            <NSE>0.84456516543243</NSE>
+            <ME>66.45942777386125</ME>
+            <MAE>350.5339751858055</MAE>
+            <RSR>0.39189848158717966</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainSize</Name>
             <n>78</n>
-            <Slope>0.55106381334924837</Slope>
-            <Intercept>0.14864942583131591</Intercept>
-            <SEslope>0.12955161080847127</SEslope>
-            <SEintercept>0.037188962156780275</SEintercept>
-            <R2>0.19229118729593731</R2>
-            <RMSE>0.070991421369856658</RMSE>
-            <NSE>-0.63732919026410761</NSE>
-            <ME>0.022208043630592925</ME>
-            <MAE>0.052893626644057723</MAE>
-            <RSR>1.2713527403474325</RSR>
+            <Slope>0.54923285480704942</Slope>
+            <Intercept>0.14919988273289109</Intercept>
+            <SEslope>0.12968988426698497</SEslope>
+            <SEintercept>0.037228654804242263</SEintercept>
+            <R2>0.19092969587055686</R2>
+            <RMSE>0.071097002225445252</RMSE>
+            <NSE>-0.64220299509797418</NSE>
+            <ME>0.022242817155082813</ME>
+            <MAE>0.05308340093420412</MAE>
+            <RSR>1.273243539369211</RSR>
           </RegrStats>
           <RegrStats>
             <Name>GrainWt</Name>
             <n>103</n>
-            <Slope>0.914354681712213</Slope>
-            <Intercept>95.75619598455</Intercept>
-            <SEslope>0.041314875267857584</SEslope>
-            <SEintercept>28.769137087830213</SEintercept>
-            <R2>0.82904461593462175</R2>
-            <RMSE>152.07557483682686</RMSE>
-            <NSE>0.80394556602613787</NSE>
-            <ME>43.877098189752409</ME>
-            <MAE>120.75609127348352</MAE>
-            <RSR>0.44062568339501024</RSR>
+            <Slope>0.90784889354172027</Slope>
+            <Intercept>99.108060686622025</Intercept>
+            <SEslope>0.040682830633935109</SEslope>
+            <SEintercept>28.329020093622812</SEintercept>
+            <R2>0.8313777243882261</R2>
+            <RMSE>150.31508141426889</RMSE>
+            <NSE>0.80845851589846829</NSE>
+            <ME>43.2881237721062</ME>
+            <MAE>119.54436283183723</MAE>
+            <RSR>0.43552480760835383</RSR>
           </RegrStats>
           <RegrStats>
             <Name>LAImax</Name>
             <n>74</n>
-            <Slope>1.1772771828021083</Slope>
-            <Intercept>0.3011610930854709</Intercept>
-            <SEslope>0.052598561164264576</SEslope>
-            <SEintercept>0.15835619080503832</SEintercept>
-            <R2>0.87433846617545052</R2>
-            <RMSE>1.0117112837547935</RMSE>
-            <NSE>0.434272072492925</NSE>
-            <ME>0.77865159514266857</ME>
-            <MAE>0.78602361814650268</MAE>
-            <RSR>0.74704950004249138</RSR>
+            <Slope>1.1769923669195421</Slope>
+            <Intercept>0.30109534242504932</Intercept>
+            <SEslope>0.052593782245580749</SEslope>
+            <SEintercept>0.15834180312328075</SEintercept>
+            <R2>0.87430526029816913</R2>
+            <RMSE>1.0109477248612711</RMSE>
+            <NSE>0.43512568278738395</NSE>
+            <ME>0.77781870188323488</ME>
+            <MAE>0.78519072488706876</MAE>
+            <RSR>0.74648568673051374</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -332,17 +332,12 @@ Note.  The BMW1 trail consists of data from unreplicated plots.
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -652,7 +647,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -1029,7 +1024,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -1407,17 +1401,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -1726,7 +1715,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -2097,7 +2086,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -2894,7 +2882,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -3338,7 +3325,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -3767,7 +3753,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -4188,7 +4173,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -4596,7 +4580,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5004,7 +4987,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5404,7 +5386,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -5758,7 +5739,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6166,7 +6146,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6520,7 +6499,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -6897,7 +6875,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -7251,7 +7228,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -7651,7 +7627,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8051,7 +8026,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8459,7 +8433,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -8844,7 +8817,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9252,7 +9224,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9606,7 +9577,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -9945,7 +9915,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -10276,7 +10245,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -10674,7 +10642,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11080,7 +11047,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11455,7 +11421,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11884,7 +11849,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Specifications>
               <string>[Operations]</string>
@@ -11924,17 +11888,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -12232,7 +12191,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -12603,7 +12562,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -13497,17 +13455,12 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -13820,7 +13773,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -14193,7 +14146,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -14644,17 +14596,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -14967,7 +14914,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -15340,7 +15287,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -15787,17 +15733,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -15891,7 +15832,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -16230,7 +16171,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -16729,17 +16669,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -16833,7 +16768,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -17171,7 +17106,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -17591,17 +17525,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -17695,7 +17624,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -18033,7 +17962,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>IrrigSchedule</Name>
@@ -18541,17 +18469,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -18646,7 +18569,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -18995,7 +18918,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -20034,17 +19956,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -20139,7 +20056,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -20485,7 +20402,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -21426,17 +21342,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -21531,7 +21442,7 @@ namespace Models
                 <string>[Maize].AboveGround.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
@@ -21877,7 +21788,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>CropManagement</Name>
@@ -22875,17 +22785,12 @@ Testing of APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature 
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -23194,7 +23099,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -23552,7 +23457,6 @@ namespace Models
               <Country>USA</Country>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
               <DataSource>for Mahli al-Kaisi paper (Marsden Research farm), tes file , long term soybean</DataSource>
               <Comments>all data only from WSS</Comments>
             </Soil>
@@ -23672,17 +23576,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -23991,7 +23890,7 @@ namespace Models
               <string>[Maize].AboveGroundLive.Wt</string>
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
-              <string>[Maize].Arbitrator.NDemand</string>
+              <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -24391,7 +24290,6 @@ namespace Models
             <Country>USA</Country>
             <Latitude>42.48</Latitude>
             <Longitude>-92.23</Longitude>
-            <Area>0</Area>
             <DataSource>from DSSAT soybean williams 1982</DataSource>
           </Soil>
           <Report>
@@ -24679,17 +24577,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.23</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Irrigation>
@@ -24998,7 +24891,7 @@ namespace Models
               <string>[Maize].AboveGroundLive.Wt</string>
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
-              <string>[Maize].Arbitrator.NDemand</string>
+              <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
               <string>[Maize].Phenology.Stage</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -25338,7 +25231,6 @@ namespace Models
             <Country>USA</Country>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
             <DataSource>for varius test</DataSource>
             <Comments>from WSS and saxton</Comments>
           </Soil>
@@ -26179,7 +26071,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <MicroClimate>
@@ -26189,17 +26080,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -26723,7 +26609,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -26736,13 +26622,13 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.NSupply</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -27497,7 +27383,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27518,7 +27404,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27539,7 +27425,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMSinkLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.SinkLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27560,7 +27446,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Arbitrator.DMNutrientLimitation</YFieldName>
+                <YFieldName>Maize.Arbitrator.DM.NutrientLimitation</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30970,7 +30856,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalFixationSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -30992,7 +30878,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.DMDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.DM.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -31035,7 +30921,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NSupply</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantSupply</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -31057,7 +30943,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Clock.Today</XFieldName>
-                  <YFieldName>Maize.Arbitrator.NDemand</YFieldName>
+                  <YFieldName>Maize.Arbitrator.N.TotalPlantDemand</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -32557,7 +32443,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -32722,17 +32607,12 @@ TreatNo = 2
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -32987,7 +32867,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -35494,7 +35374,6 @@ namespace Models
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -35545,17 +35424,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -35720,7 +35594,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -35733,12 +35607,12 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -36826,7 +36700,6 @@ namespace Models
               <State>Canterbury</State>
               <Latitude>999999</Latitude>
               <Longitude>999999</Longitude>
-              <Area>0</Area>
               <DataSource>Profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
             </Soil>
             <Irrigation>
@@ -36877,17 +36750,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Plant>
@@ -37045,7 +36913,7 @@ namespace Models
                 <string>[Maize].AboveGroundLive.Wt</string>
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
-                <string>[Maize].Arbitrator.NDemand</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Phenology.Stage</string>
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo</string>
@@ -37058,12 +36926,12 @@ namespace Models
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-                <string>[Maize].Arbitrator.NDemand</string>
-                <string>[Maize].Arbitrator.DMSupply</string>
-                <string>[Maize].Arbitrator.DMDemand</string>
-                <string>[Maize].Arbitrator.DMAllocated</string>
-                <string>[Maize].Arbitrator.DMSinkLimitation</string>
-                <string>[Maize].Arbitrator.DMNutrientLimitation</string>
+                <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
+                <string>[Maize].Arbitrator.DM.Allocated</string>
+                <string>[Maize].Arbitrator.DM.SinkLimitation</string>
+                <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
@@ -37349,11 +37217,11 @@ namespace Models
             <Manager>
               <Name>SowingRule</Name>
               <Script>
+                <SowingDate>2010-10-04</SowingDate>
+                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
-                <CultivarName>Pioneer_39V43</CultivarName>
-                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -38266,8 +38134,8 @@ Simulation results for the combined datasets from the various countries are show
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38314,8 +38182,8 @@ Simulation results for the combined datasets from the various countries are show
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38361,9 +38229,9 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38409,9 +38277,9 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>FilledCircle</Marker>
         <MarkerSize>Normal</MarkerSize>
@@ -38933,7 +38801,6 @@ namespace Models
             <Country>Rwanda</Country>
             <Latitude>-2.15</Latitude>
             <Longitude>30.45</Longitude>
-            <Area>0</Area>
             <DataSource>Rwanda soil database using properties for Ferralsol</DataSource>
           </Soil>
           <Plant>
@@ -38949,17 +38816,12 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>
@@ -39265,5 +39127,5 @@ namespace Models
       </Graph>
     </Experiment>
   </Folder>
-  <ExplorerWidth>394</ExplorerWidth>
+  <ExplorerWidth>290</ExplorerWidth>
 </Simulations>

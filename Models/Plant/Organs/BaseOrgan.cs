@@ -84,16 +84,33 @@ namespace Models.PMF.Organs
         /// <summary>Growth Respiration</summary>
         public double GrowthRespiration { get; set; }
 
-        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
-        /// <summary>Gets the total (live + dead) n (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         public double N { get { return Live.N + Dead.N; } }
 
-        /// <summary>Gets the total (live + dead) n conc (g/g)</summary>
-        public double Nconc { get { return N / Wt; } }
+        /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
+        public double Nconc
+        {
+            get
+            {
+                if (Wt > 0.0)
+                    return N / Wt;
+                else
+                    return 0.0;
+            }
+        }
 
-        /// <summary>Gets the dm amount detached (sent to soil/surface organic matter) (g/m2)</summary>
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        [XmlIgnore]
+        public Biomass Allocated { get; set; }
+
+        /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
+        [XmlIgnore]
+        public Biomass Senesced { get; set; }
+
+        /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
@@ -129,10 +146,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Allocated = new PMF.Biomass();
+            Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
             Clear();
         }
+
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -191,9 +211,11 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
-        /// <summary>Does the zeroing of some varibles.</summary>
+        /// <summary>Does the zeroing of some variables.</summary>
         virtual protected void DoDailyCleanup()
         {
+            Allocated.Clear();
+            Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
         }

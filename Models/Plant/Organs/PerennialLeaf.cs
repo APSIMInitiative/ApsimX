@@ -77,7 +77,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
         [XmlIgnore]
-        public Biomass Removed { get; set; }
+        public Biomass Removed = new Biomass();
 
         /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
@@ -604,10 +604,22 @@ namespace Models.PMF.Organs
                                   + value.NonStructural * (1 - DMConversionEfficiency.Value);
 
                 AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand),
-                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value - value.Retranslocation,
+                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value,
                                    StructuralN: 0,
                                    NonStructuralN: 0,
                                    SLA: SpecificLeafAreaFunction.Value);
+
+                double Removal = value.Retranslocation;
+                foreach (PerrenialLeafCohort L in Leaves)
+                {
+                    double Delta = Math.Min(L.Live.NonStructuralWt, Removal);
+                    L.Live.NonStructuralWt -= Delta;
+                    Removal -= Delta;
+                }
+                if (MathUtilities.IsGreaterThan(Removal, 0))
+                    throw new Exception("Insufficient Nonstructural DM to account for Retranslocation and Reallocation in Perrenial Leaf");
+
+
             }
         }
         /// <summary>Sets the n allocation.</summary>
@@ -618,8 +630,18 @@ namespace Models.PMF.Organs
                AddNewLeafMaterial(StructuralWt: 0,
                    NonStructuralWt: 0,
                    StructuralN: value.Structural,
-                   NonStructuralN: value.NonStructural- value.Retranslocation- value.Reallocation,
+                   NonStructuralN: value.NonStructural,
                    SLA: SpecificLeafAreaFunction.Value);
+
+                double Removal = value.Retranslocation + value.Reallocation;
+                foreach (PerrenialLeafCohort L in Leaves)
+                {
+                    double Delta = Math.Min(L.Live.NonStructuralN, Removal);
+                    L.Live.NonStructuralN -= Delta;
+                    Removal -= Delta;
+                }
+                if (MathUtilities.IsGreaterThan(Removal,0))
+                    throw new Exception("Insufficient Nonstructural N to account for Retranslocation and Reallocation in Perrenial Leaf");
             }
         }
 

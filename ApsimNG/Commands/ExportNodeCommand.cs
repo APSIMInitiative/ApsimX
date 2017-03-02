@@ -27,10 +27,6 @@ namespace UserInterface.Commands
     public class ExportNodeCommand : ICommand
     {
         private ExplorerPresenter ExplorerPresenter;
-        private string NodePath;
-        private string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
-                                                   " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
-                                                   " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
@@ -60,7 +56,6 @@ namespace UserInterface.Commands
         public ExportNodeCommand(ExplorerPresenter explorerPresenter, string nodePath)
         {
             this.ExplorerPresenter = explorerPresenter;
-            this.NodePath = nodePath;
         }
 
         /// <summary>

@@ -436,20 +436,19 @@ namespace Models.Agroforestry
             {
                 foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in forestryZones)
-                            if (SearchZ.Name == Z.Name)
+                            if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                                 break;
                             }
 
-                        Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
@@ -509,20 +508,19 @@ namespace Models.Agroforestry
             {
                 foreach (Zone ZI in ZoneList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Zone.Name == ZI.Name)
                     {
-                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
 
                         foreach (Zone SearchZ in forestryZones)
-                            if (SearchZ.Name == Z.Name)
+                            if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                                 break;
                             }
 
-                        Uptake.Name = Z.Name;
                         double[] SW = Z.Water;
                         
                         Uptake.NO3N = new double[SW.Length];
@@ -600,7 +598,7 @@ namespace Models.Agroforestry
                 foreach (ZoneWaterAndN ZI in info)
                 {
                     Soils.Soil ThisSoil = null;
-                    if (SearchZ.Name == ZI.Name)
+                    if (SearchZ.Name == ZI.Zone.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
@@ -625,7 +623,7 @@ namespace Models.Agroforestry
                 foreach (Zone SearchZ in forestryZones)
                 {
                     Soils.Soil ThisSoil = null;
-                    if (SearchZ.Name == ZI.Name)
+                    if (SearchZ.Name == ZI.Zone.Name)
                     {
                         ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
                         double[] NewNO3 = new double[ZI.NO3N.Length];

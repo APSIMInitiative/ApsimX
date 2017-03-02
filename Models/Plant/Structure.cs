@@ -251,11 +251,14 @@ namespace Models.PMF
 
         #region States
         /// <summary>Test if Initialisation done</summary>
-        public bool Initialised = false;
+        public bool Initialised;
         /// <summary>Test if Initialisation done</summary>
-        public bool Germinated = false;
+        public bool Germinated;
         /// <summary>Test if Initialisation done</summary>
-        public bool Emerged = false;
+        public bool Emerged;
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double ApexNum { get; set; }
 
         private double _Height;
 
@@ -498,6 +501,9 @@ namespace Models.PMF
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
                     }
+
+                    // Apex calculation
+                    ApexNum += (BranchingRate.Value - BranchMortality.Value) * PrimaryBudNo;
                 }
             }
         }
@@ -521,10 +527,9 @@ namespace Models.PMF
         public void DoEmergence()
         {
             CohortToInitialise = Leaf.CohortsAtInitialisation;
-            int i = 1;
-            for (i = 1; i <= (Leaf.TipsAtEmergence); i++)
+            for (int i = 1; i <= Leaf.TipsAtEmergence; i++)
             {
-                InitParams = new CohortInitParams() { }; 
+                InitParams = new CohortInitParams(); 
                 PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise; 
@@ -599,6 +604,7 @@ namespace Models.PMF
                 if (Sow.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 PrimaryBudNo = Sow.BudNumber;
+                ApexNum = PrimaryBudNo;
                 TotalStemPopn = MainStemPopn;
             }
         }

@@ -111,10 +111,10 @@ namespace Models.Soils.Arbitrator
                 CWU.Crop = U.Crop;
                 foreach (ZoneWaterAndN ZW1 in U.Zones)
                 {
-                    ZoneWaterAndN NewZ = UptakeEstimate1.UptakeZone(CWU.Crop, ZW1.Name) * (1.0 / 6.0)
-                                       + UptakeEstimate2.UptakeZone(CWU.Crop, ZW1.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Name) * (1.0 / 6.0);
+                    ZoneWaterAndN NewZ = UptakeEstimate1.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0)
+                                       + UptakeEstimate2.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
+                                       + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
+                                       + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0);
                     CWU.Zones.Add(NewZ);
                 }
 

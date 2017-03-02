@@ -273,6 +273,20 @@ namespace Models.PMF.Organs
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
 
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupSize { get { return apexGroupSize.ToArray(); } }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupAge { get { return apexGroupAge.ToArray(); } }
+
+        /// <summary>The number of apex in each age group.</summary>
+        private List<double> apexGroupSize = new List<double>();
+        /// <summary>The age of apex in age group.</summary>
+        private List<double> apexGroupAge = new List<double>();
+
         #endregion
 
         #region States
@@ -681,7 +695,9 @@ namespace Models.PMF.Organs
         {
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
+            {
                 Leaves.Add(Leaf.Clone());
+            }
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -705,7 +721,39 @@ namespace Models.PMF.Organs
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
             Leaves.Add(NewLeaf);
+            DoApexCalculations();
+            
         }
+
+        private void DoApexCalculations()
+        {
+            for (int i = 0; i < apexGroupAge.Count; i++)
+                apexGroupAge[i]++;
+            
+            while (apexGroupSize.Sum() < Structure.ApexNum)
+            {
+                if (apexGroupSize.Count == 0)
+                    apexGroupSize.Add(Structure.ApexNum);
+                else 
+                    apexGroupSize.Add(Structure.ApexNum - apexGroupSize[apexGroupSize.Count - 1]);
+                apexGroupAge.Add(1);
+            }
+
+            while (apexGroupSize.Sum() > Structure.ApexNum)
+            {
+                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                double remainingRemoveApex = removeApex;
+                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                {
+                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                    apexGroupSize[i] -= remove;
+                    remainingRemoveApex -= remove;
+                    if (remainingRemoveApex <= 0)
+                        break;
+                }
+            }
+        }
+
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
         [EventSubscribe("LeafTipAppearance")]
         private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
@@ -902,11 +950,11 @@ namespace Models.PMF.Organs
         {
             set
             {
-                GrowthRespiration = 0;
-
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Structural * (1 - DMConversionEfficiency);
-                GrowthRespiration += value.Metabolic * (1 - DMConversionEfficiency);
+                // get DM lost by respiration (growth respiration)
+                GrowthRespiration = 0.0;
+                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency)
+                                  + value.NonStructural * (1.0 - DMConversionEfficiency)
+                                  + value.Metabolic * (1.0 - DMConversionEfficiency);
 
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
                 double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
@@ -931,7 +979,7 @@ namespace Models.PMF.Organs
                     if (DMsupply > 0.0000000001)
                         throw new Exception("DM allocated to Leaf left over after allocation to leaf cohorts");
                     if (DMallocated - value.Structural * DMConversionEfficiency > 0.000000001)
-                        throw new Exception("the sum of DM allocation to leaf cohorts is more that that allocated to leaf organ");
+                        throw new Exception("the sum of DM allocation to leaf cohorts is more than that available to leaf organ");
                 }
 
                 //Metabolic DM allocation
