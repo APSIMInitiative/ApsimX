@@ -18,7 +18,7 @@ namespace Models.Soils
     {
         #region External links
         [Link]
-        WEIRDO WEIRDO = null;
+        WEIRDO Weirdo = null;
         #endregion
 
         #region Internal States
@@ -86,15 +86,15 @@ namespace Models.Soils
                 i = 0;
                 t = 0.0;
             }
-            else if (psiValue > WEIRDO.MappedPsiBub[layer])
+            else if (psiValue > Weirdo.MappedPsiBub[layer])
             {
                 i = 1;
-                t = (Math.Log10(-psiValue) - Math.Log10(-psis)) / (Math.Log10(-WEIRDO.MappedPsiBub[layer]) - Math.Log10(-psis));
+                t = (Math.Log10(-psiValue) - Math.Log10(-psis)) / (Math.Log10(-Weirdo.MappedPsiBub[layer]) - Math.Log10(-psis));
             }
             else if (psiValue > psidul)
             {
                 i = 2;
-                t = (Math.Log10(-psiValue) - Math.Log10(-WEIRDO.MappedPsiBub[layer])) / (Math.Log10(-psidul) - Math.Log10(-WEIRDO.MappedPsiBub[layer]));
+                t = (Math.Log10(-psiValue) - Math.Log10(-Weirdo.MappedPsiBub[layer])) / (Math.Log10(-psidul) - Math.Log10(-Weirdo.MappedPsiBub[layer]));
             }
             else if (psiValue > psi_ll15)
             {
@@ -116,7 +116,7 @@ namespace Models.Soils
             double tCube = tSqr * t;
             double theta = (2 * tCube - 3 * tSqr + 1) * Y0[layer, i] + (tCube - 2 * tSqr + t) * M0[layer, i]
                     + (-2 * tCube + 3 * tSqr) * Y1[layer, i] + (tCube - tSqr) * M1[layer, i];
-            return Math.Min(theta, WEIRDO.MappedSAT[layer]); //When Sat and DUL are very close, spline can produce number greater that sat
+            return Math.Min(theta, Weirdo.MappedSAT[layer]); //When Sat and DUL are very close, spline can produce number greater that sat
         }
                 
         /// <summary>
@@ -124,12 +124,12 @@ namespace Models.Soils
         /// </summary>
         public void SetHydraulicProperties()
         {
-            DELk = new double[WEIRDO.Thickness.Length, 5];
-            Mk = new double[WEIRDO.Thickness.Length, 5];
-            M0 = new double[WEIRDO.Thickness.Length, 6];
-            M1 = new double[WEIRDO.Thickness.Length, 6];
-            Y0 = new double[WEIRDO.Thickness.Length, 6];
-            Y1 = new double[WEIRDO.Thickness.Length, 6];
+            DELk = new double[Weirdo.Thickness.Length, 5];
+            Mk = new double[Weirdo.Thickness.Length, 5];
+            M0 = new double[Weirdo.Thickness.Length, 6];
+            M1 = new double[Weirdo.Thickness.Length, 6];
+            Y0 = new double[Weirdo.Thickness.Length, 6];
+            Y1 = new double[Weirdo.Thickness.Length, 6];
             
             SetupThetaCurve();
         }
@@ -139,13 +139,13 @@ namespace Models.Soils
         /// </summary>
         private void SetupThetaCurve()
         {
-            for (int layer = 0; layer < WEIRDO.Thickness.Length; layer++)
+            for (int layer = 0; layer < Weirdo.Thickness.Length; layer++)
             {
-                DELk[layer, 0] = (WEIRDO.MappedSAT[layer] - (WEIRDO.MappedSAT[layer]+1e-20)) / (Math.Log10(-WEIRDO.MappedPsiBub[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
-                DELk[layer, 1] = (WEIRDO.MappedDUL[layer] - WEIRDO.MappedSAT[layer]) / (Math.Log10(-psidul) - Math.Log10(-WEIRDO.MappedPsiBub[layer]));
-                DELk[layer, 2] = (WEIRDO.MappedLL15[layer] - WEIRDO.MappedDUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psidul));
-                DELk[layer, 3] = -WEIRDO.MappedLL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                DELk[layer, 4] = -WEIRDO.MappedLL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 0] = (Weirdo.MappedSAT[layer] - (Weirdo.MappedSAT[layer]+1e-20)) / (Math.Log10(-Weirdo.MappedPsiBub[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
+                DELk[layer, 1] = (Weirdo.MappedDUL[layer] - Weirdo.MappedSAT[layer]) / (Math.Log10(-psidul) - Math.Log10(-Weirdo.MappedPsiBub[layer]));
+                DELk[layer, 2] = (Weirdo.MappedLL15[layer] - Weirdo.MappedDUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psidul));
+                DELk[layer, 3] = -Weirdo.MappedLL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 4] = -Weirdo.MappedLL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
 
                 Mk[layer, 0] = 0.0;
                 Mk[layer, 1] = (DELk[layer, 0] + DELk[layer, 1]) / 2.0;
@@ -166,27 +166,27 @@ namespace Models.Soils
 
                 M0[layer, 0] = 0.0;
                 M1[layer, 0] = 0.0;
-                Y0[layer, 0] = WEIRDO.MappedSAT[layer];
-                Y1[layer, 0] = WEIRDO.MappedSAT[layer];
+                Y0[layer, 0] = Weirdo.MappedSAT[layer];
+                Y1[layer, 0] = Weirdo.MappedSAT[layer];
 
-                M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-WEIRDO.MappedPsiBub[layer]) - Math.Log10(-psis));
-                M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-WEIRDO.MappedPsiBub[layer]) - Math.Log10(-psis));
-                Y0[layer, 1] = WEIRDO.MappedSAT[layer];
-                Y1[layer, 1] = WEIRDO.MappedSAT[layer];
+                M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-Weirdo.MappedPsiBub[layer]) - Math.Log10(-psis));
+                M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-Weirdo.MappedPsiBub[layer]) - Math.Log10(-psis));
+                Y0[layer, 1] = Weirdo.MappedSAT[layer];
+                Y1[layer, 1] = Weirdo.MappedSAT[layer];
 
-                M0[layer, 2] = Mk[layer, 1] * (Math.Log10(-psidul) - Math.Log10(-WEIRDO.MappedPsiBub[layer]));
-                M1[layer, 2] = Mk[layer, 2] * (Math.Log10(-psidul) - Math.Log10(-WEIRDO.MappedPsiBub[layer]));
-                Y0[layer, 2] = WEIRDO.MappedSAT[layer];
-                Y1[layer, 2] = WEIRDO.MappedDUL[layer];
+                M0[layer, 2] = Mk[layer, 1] * (Math.Log10(-psidul) - Math.Log10(-Weirdo.MappedPsiBub[layer]));
+                M1[layer, 2] = Mk[layer, 2] * (Math.Log10(-psidul) - Math.Log10(-Weirdo.MappedPsiBub[layer]));
+                Y0[layer, 2] = Weirdo.MappedSAT[layer];
+                Y1[layer, 2] = Weirdo.MappedDUL[layer];
 
                 M0[layer, 3] = Mk[layer, 2] * (Math.Log10(-psi_ll15) - Math.Log10(-psidul));
                 M1[layer, 3] = Mk[layer, 3] * (Math.Log10(-psi_ll15) - Math.Log10(-psidul));
-                Y0[layer, 3] = WEIRDO.MappedDUL[layer];
-                Y1[layer, 3] = WEIRDO.MappedLL15[layer];
+                Y0[layer, 3] = Weirdo.MappedDUL[layer];
+                Y1[layer, 3] = Weirdo.MappedLL15[layer];
 
                 M0[layer, 4] = Mk[layer, 3] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 M1[layer, 4] = Mk[layer, 4] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                Y0[layer, 4] = WEIRDO.MappedLL15[layer];
+                Y0[layer, 4] = Weirdo.MappedLL15[layer];
                 Y1[layer, 4] = 0.0;
 
                 M0[layer, 5] = 0.0;

@@ -49,8 +49,8 @@
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[Soil].ObservedSWLayering.SWmm</string>
-        <string>[Soil].ObservedSWLayering.SW</string>
+        <string>[Soil].OutputLayers.SWmm</string>
+        <string>[Soil].OutputLayers.SW</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -110,39 +110,6 @@
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
-    <LayerStructure>
-      <Name>LayerStructure</Name>
-      <Thickness>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-        <double>50</double>
-      </Thickness>
-    </LayerStructure>
   </Replacements>
   <Folder>
     <Name>Validation</Name>
@@ -678,27 +645,6 @@
           <Name>Field</Name>
           <Soil>
             <Name>Lismore</Name>
-            <Analysis>
-              <Name>Analysis</Name>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-                <double>300</double>
-              </Thickness>
-              <PH>
-                <double>6.6</double>
-                <double>6.2</double>
-                <double>5.7</double>
-                <double>5.5</double>
-                <double>5.5</double>
-                <double>5.5</double>
-              </PH>
-              <PHUnits>Water</PHUnits>
-              <BoronUnits>HotWater</BoronUnits>
-            </Analysis>
             <WEIRDO>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -861,6 +807,27 @@
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
             </WEIRDO>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <PH>
+                <double>6.6</double>
+                <double>6.2</double>
+                <double>5.7</double>
+                <double>5.5</double>
+                <double>5.5</double>
+                <double>5.5</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
@@ -898,8 +865,8 @@
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -911,7 +878,7 @@
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <MRSpline>
               <Name>MRSpline</Name>
             </MRSpline>
@@ -1082,7 +1049,7 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -1243,169 +1210,7 @@
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>75</double>
-                <double>75</double>
-                <double>150</double>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>1000</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.15</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.02</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.04</double>
-              </LL15>
-              <DUL>
-                <double>0.37</double>
-                <double>0.33</double>
-                <double>0.32</double>
-                <double>0.3</double>
-                <double>0.15</double>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.11</double>
-                <double>0.12</double>
-                <double>0.12</double>
-              </DUL>
-              <SAT>
-                <double>0.57</double>
-                <double>0.48</double>
-                <double>0.48</double>
-                <double>0.44</double>
-                <double>0.4</double>
-                <double>0.38</double>
-                <double>0.37</double>
-                <double>0.38</double>
-                <double>0.39</double>
-                <double>0.4</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3.9</double>
-                <double>3.8</double>
-                <double>3.7</double>
-                <double>3.6</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-15</double>
-                <double>-15</double>
-                <double>-15</double>
-                <double>-15</double>
-                <double>-10</double>
-                <double>-10</double>
-                <double>-10</double>
-                <double>-10</double>
-                <double>-10</double>
-                <double>-10</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.2</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>10</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <SoilType />
             <LocalName />
@@ -1740,7 +1545,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>sum([Soil].SoilWater.SWmm) as MeasuredProfile</string>
-              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].OutputLayers.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -1899,7 +1704,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1920,7 +1725,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1962,7 +1767,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1983,7 +1788,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2025,7 +1830,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2046,7 +1851,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2088,7 +1893,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2109,7 +1914,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2151,7 +1956,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2172,7 +1977,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2214,7 +2019,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2235,7 +2040,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2277,7 +2082,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2298,7 +2103,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2340,7 +2145,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2361,7 +2166,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(9)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(9)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2403,7 +2208,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(9)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(9)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2424,7 +2229,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(9)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(9)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3613,8 +3418,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -3624,8 +3429,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -3698,81 +3503,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>200</double>
-                <double>1200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.13</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.28</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.46</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1.2</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -3856,8 +3587,8 @@ namespace Models
               <string>[SurfaceOrganicMatter].Cover</string>
               <string>[SurfaceOrganicMatter].Wt</string>
               <string>sum([Soil].SoilWater.SWmm[1:12]) as MeasuredProfile</string>
-              <string>[Soil].ObservedSWLayering.SWmm</string>
-              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].OutputLayers.SWmm</string>
+              <string>[Soil].OutputLayers.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -4200,7 +3931,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(1)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4221,7 +3952,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4263,7 +3994,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4284,7 +4015,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4326,7 +4057,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(3)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4347,7 +4078,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ObservedSoilWater</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SWmm(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SWmm(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4538,7 +4269,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4559,7 +4290,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedSoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4601,7 +4332,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4622,7 +4353,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedSoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4664,7 +4395,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4685,7 +4416,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedSoilWater</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4727,7 +4458,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4769,7 +4500,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4811,7 +4542,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4853,7 +4584,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6098,8 +5829,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -6128,8 +5859,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -6139,8 +5870,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -6279,147 +6010,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>false</CalculateEvaporation>
-              <CalculateDiffusion>false</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -6508,7 +6099,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6549,7 +6140,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6590,7 +6181,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6631,7 +6222,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6672,7 +6263,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6713,7 +6304,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6754,7 +6345,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8175,8 +7766,8 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -8187,12 +7778,12 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -8225,7 +7816,7 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -8255,38 +7846,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness />
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -8333,8 +7893,8 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>sum([Soil].ObservedSWLayering.SWmm[1:4]) as TopWater</string>
-              <string>sum([Soil].ObservedSWLayering.SWmm[5:8]) as BotWater</string>
+              <string>sum([Soil].OutputLayers.SWmm[1:4]) as TopWater</string>
+              <string>sum([Soil].OutputLayers.SWmm[5:8]) as BotWater</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -8363,7 +7923,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8404,7 +7964,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8445,7 +8005,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8486,7 +8046,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8527,7 +8087,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8568,7 +8128,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8609,7 +8169,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8650,7 +8210,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(8)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9440,8 +9000,8 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -9451,12 +9011,12 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -9485,7 +9045,7 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -9515,7 +9075,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -9579,7 +9139,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9620,7 +9180,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9661,7 +9221,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9702,7 +9262,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9743,7 +9303,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9825,7 +9385,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9929,7 +9489,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9951,7 +9511,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9973,7 +9533,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9995,7 +9555,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10017,7 +9577,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10039,7 +9599,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10061,7 +9621,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10083,7 +9643,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10125,7 +9685,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10147,7 +9707,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10169,7 +9729,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10191,7 +9751,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10213,7 +9773,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10235,7 +9795,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10257,7 +9817,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10279,7 +9839,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10321,7 +9881,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10343,7 +9903,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10365,7 +9925,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10387,7 +9947,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10409,7 +9969,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10431,7 +9991,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10453,7 +10013,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10475,7 +10035,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(8)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(8)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -11090,8 +10650,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -11120,8 +10680,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -11131,8 +10691,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -11162,38 +10722,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness />
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -13328,8 +12857,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -13358,8 +12887,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -13369,8 +12898,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -13509,147 +13038,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>10</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -13713,7 +13102,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13754,7 +13143,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13795,7 +13184,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13836,7 +13225,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13877,7 +13266,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13918,7 +13307,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13959,7 +13348,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14629,8 +14018,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -14659,8 +14048,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -14670,8 +14059,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -14733,70 +14122,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>1400</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.15</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -14871,7 +14197,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14912,7 +14238,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14953,7 +14279,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14994,7 +14320,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15035,7 +14361,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15076,7 +14402,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15117,7 +14443,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ReportWaterLayers</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -15201,7 +14527,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15223,7 +14549,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15245,7 +14571,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15267,7 +14593,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15289,7 +14615,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15311,7 +14637,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15333,7 +14659,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -15906,8 +15232,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -15936,8 +15262,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -15947,8 +15273,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -16010,70 +15336,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>1400</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.15</double>
-              </LL15>
-              <DUL>
-                <double>0.4</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>4</double>
-              </XFlow>
-              <PsiBub>
-                <double>-10</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>0.01</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -16195,7 +15458,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>ReportWaterLayers</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16868,8 +16131,8 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -16898,8 +16161,8 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -16909,8 +16172,8 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
-            <WEIRDO>
+            </OutputLayers>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -16940,38 +16203,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness />
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>0</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -17311,7 +16543,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17352,7 +16584,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17393,7 +16625,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17434,7 +16666,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17475,7 +16707,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17516,7 +16748,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -17557,7 +16789,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>ReportWaterLayers</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+              <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -18092,8 +17324,8 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -18103,12 +17335,12 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
-                <double>30</double>
-                <double>70</double>
+                <double>50</double>
+                <double>50</double>
                 <double>50</double>
                 <double>50</double>
                 <double>50</double>
@@ -18137,7 +17369,7 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -18276,147 +17508,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>10</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -18441,7 +17533,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].OutputLayers.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -18957,8 +18049,8 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -18968,7 +18060,7 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
@@ -18979,7 +18071,7 @@ namespace Models
                 <double>400</double>
               </Thickness>
             </LayerStructure>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -19118,147 +18210,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>10</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -19283,7 +18235,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].OutputLayers.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -19318,7 +18270,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Soil].ObservedSWLayering.SW</string>
+              <string>[Soil].OutputLayers.SW</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -19811,8 +18763,8 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <ObservedSWLayering>
-              <Name>ObservedSWLayering</Name>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -19822,7 +18774,7 @@ namespace Models
                 <double>200</double>
                 <double>200</double>
               </Thickness>
-            </ObservedSWLayering>
+            </OutputLayers>
             <LayerStructure>
               <Name>LayerStructure</Name>
               <Thickness>
@@ -19836,7 +18788,7 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </LayerStructure>
-            <WEIRDO>
+            <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
               <Thickness>
@@ -19975,147 +18927,7 @@ namespace Models
               <Hour>0</Hour>
               <ReportLayer>0</ReportLayer>
               <TimeStep>0</TimeStep>
-            </WEIRDO>
-            <WEIRDO>
-              <Name>WEIRDO</Name>
-              <Salb>0.15</Salb>
-              <Thickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <ParamThickness>
-                <double>30</double>
-                <double>170</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </ParamThickness>
-              <LL15>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL15>
-              <DUL>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-                <double>0.26</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.46</double>
-                <double>0.46</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-                <double>0.36</double>
-              </SAT>
-              <CFlow>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-                <double>7E-11</double>
-              </CFlow>
-              <XFlow>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
-              </XFlow>
-              <PsiBub>
-                <double>-20</double>
-                <double>-20</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-                <double>-70</double>
-              </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
-              <MinRepellancyFactor>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MinRepellancyFactor>
-              <BD>
-                <double>1</double>
-                <double>1</double>
-                <double>1.2</double>
-                <double>1.2</double>
-                <double>1.3</double>
-                <double>1.4</double>
-                <double>1.5</double>
-                <double>1.6</double>
-              </BD>
-              <SubProfileConductance>20</SubProfileConductance>
-              <WaterTableDepth>10</WaterTableDepth>
-              <CalculateInfiltration>true</CalculateInfiltration>
-              <CalculateDrainage>true</CalculateDrainage>
-              <ReportDetail>false</ReportDetail>
-              <IncludeSorption>true</IncludeSorption>
-              <CalculateEvaporation>true</CalculateEvaporation>
-              <CalculateDiffusion>true</CalculateDiffusion>
-              <DiffusivityMultiplier>2</DiffusivityMultiplier>
-              <ExtractionMultiplier>10</ExtractionMultiplier>
-              <ProfileWaterExtraction>0</ProfileWaterExtraction>
-              <TotalCover>0</TotalCover>
-              <ResidueWater>0</ResidueWater>
-              <Hour>0</Hour>
-              <ReportLayer>0</ReportLayer>
-              <TimeStep>0</TimeStep>
-            </WEIRDO>
+            </Weirdo>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -20157,7 +18969,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(1)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20198,7 +19010,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(2)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20239,7 +19051,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(3)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(3)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20280,7 +19092,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(4)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(4)</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20321,7 +19133,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(5)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(5)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20362,7 +19174,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(6)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20403,7 +19215,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.ObservedSWLayering.SW(7)</YFieldName>
+            <YFieldName>Soil.OutputLayers.SW(7)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
