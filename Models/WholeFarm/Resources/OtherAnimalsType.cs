@@ -150,7 +150,7 @@ namespace Models.WholeFarm.Resources
 
 			LastCohortChanged = cohortToAdd;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = cohortToAdd.Number;
+			details.Debit = cohortToAdd.Number * -1;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;

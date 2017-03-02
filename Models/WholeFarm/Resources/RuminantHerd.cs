@@ -113,7 +113,7 @@ namespace Models.WholeFarm.Resources
 			LastIndividualChanged = ind;
 
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = 1;
+			details.Debit = -1;
 			details.Activity = "Unknown";
 			details.Reason = "Unknown";
 			details.ResourceType = this.Name;
