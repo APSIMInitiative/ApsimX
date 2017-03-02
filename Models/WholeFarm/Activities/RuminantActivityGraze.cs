@@ -56,7 +56,7 @@ namespace Models.WholeFarm.Activities
 			// get paddock
 			paddockActivity = Activities.SearchForNameInActivities(PaddockName) as PastureActivityManage;
 
-			grazeType = paddockActivity.FeedType;
+			grazeType = paddockActivity.LinkedNativeFoodType;
 		}
 
 		/// <summary>

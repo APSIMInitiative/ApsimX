@@ -81,7 +81,7 @@ namespace Models.WholeFarm.Activities
 		/// Feed type
 		/// </summary>
 		[XmlIgnore]
-		public GrazeFoodStoreType FeedType { get; set; }
+		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
 		/// <summary>
 		/// Feed at start of month before grazing after updating
@@ -117,7 +117,7 @@ namespace Models.WholeFarm.Activities
 
 			// locate Pasture Type resource
 			bool resourceAvailable = false;
-			FeedType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
+			LinkedNativeFoodType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 
 			// TODO: Set up pasture pools to start run
 
@@ -139,14 +139,14 @@ namespace Models.WholeFarm.Activities
 			if (Clock.Today.Month >= 11 ^ Clock.Today.Month <= 3)
 			{
 				newPasture.Set(500 * Area);
-				newPasture.DMD = this.FeedType.DMD;
-				newPasture.DryMatter = this.FeedType.DryMatter;
-				newPasture.Nitrogen = this.FeedType.Nitrogen;
-				this.FeedType.Add(newPasture);
+				newPasture.DMD = this.LinkedNativeFoodType.DMD;
+				newPasture.DryMatter = this.LinkedNativeFoodType.DryMatter;
+				newPasture.Nitrogen = this.LinkedNativeFoodType.Nitrogen;
+				this.LinkedNativeFoodType.Add(newPasture);
 			}
 
 			// store total pasture at start of month
-			PastureAtStartOfMonth = this.FeedType.Amount;
+			PastureAtStartOfMonth = this.LinkedNativeFoodType.Amount;
 		}
 
 		/// <summary>
@@ -164,21 +164,21 @@ namespace Models.WholeFarm.Activities
 			// consumption needs to be calculated before decay and againg.
 
 			// decay N and DMD of pools and age by 1 month
-			foreach (var pool in FeedType.Pools)
+			foreach (var pool in LinkedNativeFoodType.Pools)
 			{
-				pool.Nitrogen = Math.Min(pool.Nitrogen * (1 - FeedType.DecayNitrogen), FeedType.MinimumNitrogen);
-				pool.DMD = Math.Min(pool.DMD * (1 - FeedType.DecayDMD), FeedType.MinimumDMD);
+				pool.Nitrogen = Math.Min(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+				pool.DMD = Math.Min(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-				double detach = FeedType.CarryoverDetachRate;
+				double detach = LinkedNativeFoodType.CarryoverDetachRate;
 				if (pool.Age<12)
 				{
-					detach = FeedType.DetachRate;
+					detach = LinkedNativeFoodType.DetachRate;
 					pool.Age++;
 				}
 				pool.Set(pool.Amount * detach);
 			}
 			// remove all pools with less than 100g of food
-			FeedType.Pools.RemoveAll(a => a.Amount < 0.1);
+			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.1);
 		}
 
 		/// <summary>
