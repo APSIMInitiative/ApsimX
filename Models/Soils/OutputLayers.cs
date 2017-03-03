@@ -15,7 +15,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class ObservedSWLayering : Model
+    public class OutputLayers : Model
     {
         [Link]
         private Soil Soil = null;
@@ -39,6 +39,7 @@ namespace Models.Soils
         
         ///<summary> Soil water content (mm) of each layer mapped onto specified layering to match observations</summary>
         [XmlIgnore]
-        public double[] SWmm { get { return Soil.Map(Soil.SoilWater.SWmm, Soil.SoilWater.Thickness, Thickness); } }
+        public double[] SWmm { get { return Soil.Map(Soil.SoilWater.SWmm, Soil.SoilWater.Thickness, Thickness,Soil.MapType.Mass); } }
+        
     }
 }

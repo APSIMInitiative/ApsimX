@@ -385,7 +385,7 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Crop(Plant.Name) == null && soil.WEIRDO == null)
+            if (soil.Crop(Plant.Name) == null && soil.Weirdo == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
 
             PlantZone = new ZoneState(Plant, this, soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
@@ -855,7 +855,7 @@ namespace Models.PMF.Organs
             {
                 if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                 {
-                    if (myZone.soil.WEIRDO == null)
+                    if (myZone.soil.Weirdo == null)
                     {
                         supply[layer] = Math.Max(0.0, crop.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
                             (zone.Water[layer] - crop.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
