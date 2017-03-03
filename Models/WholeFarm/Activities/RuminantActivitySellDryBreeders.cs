@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant dry breeder culling activity</summary>
 	/// <summary>This activity provides functionality for kulling dry breeders</summary>
@@ -14,11 +15,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivitySellDryBreeders : Model
+	public class RuminantActivitySellDryBreeders : WFModel
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// Name of herd to sell dry breeders

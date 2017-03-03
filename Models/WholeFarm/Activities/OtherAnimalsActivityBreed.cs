@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,18 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Other animals breed activity</summary>
 	/// <summary>This activity handles breeding in other animals types</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class OtherAnimalsActivityBreed : Model
+	public class OtherAnimalsActivityBreed : WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[XmlIgnore]
 		[Link]
 		ISummary Summary = null;
@@ -152,6 +152,26 @@ namespace Models.WholeFarm
 				}
 				this.NextDueDate = this.NextDueDate.AddMonths(this.BreedingInterval);
 			}
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			// this activity is performed in WFAnimalBreeding event
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			// determine labour for animal breeding and request it.
+
+			return null;
 		}
 	}
 }

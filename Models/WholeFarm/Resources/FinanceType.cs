@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	///<summary>
 	/// Store for bank account
@@ -13,8 +13,8 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Resources))]
-	public class FinanceType : Model, IResourceWithTransactionType
+	[ValidParent(ParentType = typeof(ResourcesHolder))]
+	public class FinanceType : WFModel, IResourceWithTransactionType, IResourceType
 	{
 		/// <summary>
 		/// Opening balance
@@ -51,6 +51,16 @@ namespace Models.WholeFarm
 		public double Balance { get { return amount; } }
 
 		private double amount;
+		/// <summary>
+		/// Current amount of this resource
+		/// </summary>
+		public double Amount
+		{
+			get
+			{
+				return FundsAvailable;
+			}
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -107,7 +117,7 @@ namespace Models.WholeFarm
 				amount += AddAmount;
 
 				ResourceTransaction details = new ResourceTransaction();
-				details.Debit = AddAmount;
+				details.Credit = AddAmount;
 				details.Activity = ActivityName;
 				details.Reason = UserName;
 				details.ResourceType = this.Name;
@@ -132,7 +142,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount"></param>
 		/// <param name="ActivityName"></param>
 		/// <param name="UserName"></param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			if (RemoveAmount > 0)
 			{
@@ -141,13 +151,14 @@ namespace Models.WholeFarm
 
 				ResourceTransaction details = new ResourceTransaction();
 				details.ResourceType = this.Name;
-				details.Credit = RemoveAmount;
+				details.Debit = RemoveAmount * -1;
 				details.Activity = ActivityName;
 				details.Reason = UserName;
 				LastTransaction = details;
 				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 				OnTransactionOccurred(te);
 			}
+			return RemoveAmount;
 		}
 
 		/// <summary>
