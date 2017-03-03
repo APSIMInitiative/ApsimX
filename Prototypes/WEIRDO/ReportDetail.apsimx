@@ -27,23 +27,23 @@
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
-          <string>[Soil].MultiPoreWater.TimeStep as TimeStep</string>
+          <string>[Soil].WEIRDO.TimeStep as TimeStep</string>
           <string>[Clock].Today as Date</string>
-          <string>[Soil].MultiPoreWater.Process as Process</string>
-          <string>[Soil].MultiPoreWater.Hour as Hour</string>
-          <string>[Soil].MultiPoreWater.ReportLayer as Layer</string>
-          <string>[Soil].MultiPoreWater.PoreWater as PW</string>
+          <string>[Soil].WEIRDO.Process as Process</string>
+          <string>[Soil].WEIRDO.Hour as Hour</string>
+          <string>[Soil].WEIRDO.ReportLayer as Layer</string>
+          <string>[Soil].WEIRDO.PoreWater as PW</string>
           <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
           <string>[Soil].SoilWater.SWmm as SWmm</string>
           <string>[Soil].SoilWater.SW as SW</string>
-          <string>[Soil].MultiPoreWater.Drainage as Drainage</string>
-          <string>[Soil].MultiPoreWater.Infiltration as Infiltration</string>
-          <string>[Soil].MultiPoreWater.pond as Pond</string>
-          <string>[Soil].MultiPoreWater.Thickness as Thickness</string>
+          <string>[Soil].WEIRDO.Drainage as Drainage</string>
+          <string>[Soil].WEIRDO.Infiltration as Infiltration</string>
+          <string>[Soil].WEIRDO.pond as Pond</string>
+          <string>[Soil].WEIRDO.Thickness as Thickness</string>
           <string>[Irrigation].IrrigationApplied as Irrigation</string>
         </VariableNames>
         <EventNames>
-          <string>[Soil].MultiPoreWater.ReportDetails</string>
+          <string>[Soil].WEIRDO.ReportDetails</string>
         </EventNames>
       </Report>
       <Fertiliser>
@@ -160,10 +160,10 @@ namespace Models
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
-          <string>[Soil].MultiPoreWater.Thickness as Thickness</string>
-          <string>[Soil].MultiPoreWater.Depth as Depth</string>
-          <string>[Soil].MultiPoreWater.PsiUpper as PsiUp</string>
-          <string>[Soil].MultiPoreWater.RelativePoreVolume as RelWC</string>
+          <string>[Soil].WEIRDO.Thickness as Thickness</string>
+          <string>[Soil].WEIRDO.Depth as Depth</string>
+          <string>[Soil].WEIRDO.PsiUpper as PsiUp</string>
+          <string>[Soil].WEIRDO.RelativePoreVolume as RelWC</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoInitialSummary</string>
@@ -214,8 +214,8 @@ namespace Models
       </Manager>
       <Soil>
         <Name>Soil</Name>
-        <MultiPoreWater>
-          <Name>MultiPoreWater</Name>
+        <WEIRDO>
+          <Name>WEIRDO</Name>
           <Salb>0.15</Salb>
           <Thickness>
             <double>30</double>
@@ -346,13 +346,14 @@ namespace Models
           <CalculateEvaporation>true</CalculateEvaporation>
           <CalculateDiffusion>true</CalculateDiffusion>
           <DiffusivityMultiplier>2</DiffusivityMultiplier>
+          <ExtractionMultiplier>0</ExtractionMultiplier>
           <ProfileWaterExtraction>0</ProfileWaterExtraction>
           <TotalCover>0</TotalCover>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>
           <TimeStep>0</TimeStep>
-        </MultiPoreWater>
+        </WEIRDO>
         <LayerStructure>
           <Name>LayerStructure</Name>
           <Thickness>
@@ -701,8 +702,8 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
-        <WEIRDO>
-          <Name>MultiPoreWater</Name>
+        <Weirdo>
+          <Name>WEIRDO</Name>
           <Salb>0.15</Salb>
           <Thickness>
             <double>30</double>
@@ -833,13 +834,14 @@ namespace Models
           <CalculateEvaporation>true</CalculateEvaporation>
           <CalculateDiffusion>true</CalculateDiffusion>
           <DiffusivityMultiplier>2</DiffusivityMultiplier>
+          <ExtractionMultiplier>0</ExtractionMultiplier>
           <ProfileWaterExtraction>0</ProfileWaterExtraction>
           <TotalCover>0</TotalCover>
           <ResidueWater>0</ResidueWater>
           <Hour>0</Hour>
           <ReportLayer>0</ReportLayer>
           <TimeStep>0</TimeStep>
-        </WEIRDO>
+        </Weirdo>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
