@@ -363,8 +363,11 @@ namespace UserInterface.Views
             string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
-                col.CellRenderers[1].Visible = false;
-                col.CellRenderers[2].Visible = false;
+                if (col.TreeView == gridview)
+                {
+                    col.CellRenderers[1].Visible = false;
+                    col.CellRenderers[2].Visible = false;
+                }
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
                 if (dataType == typeof(DBNull))
