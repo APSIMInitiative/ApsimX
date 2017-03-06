@@ -209,11 +209,11 @@ namespace Models.Soils
                             i >= FBiom.Length ||
                             i >= BD.Length ||
                             i >= InertC.Length ||
-                            i >- BiomC.Length ||
-                            OC[i] == double.NaN ||
-                            FBiom[i] == double.NaN ||
-                            BD[i] == double.NaN ||
-                            InertC[i] == double.NaN)
+                            i >= BiomC.Length ||
+                            double.IsNaN(OC[i])||
+                            double.IsNaN(FBiom[i])||
+                            double.IsNaN(BD[i]) ||
+                            double.IsNaN(InertC[i]))
                             BiomC[i] = double.NaN;
                         else
                         {
@@ -250,7 +250,7 @@ namespace Models.Soils
 
                     for (int i = 0; i < Thickness.Length; i++)
                     {
-                        if (BiomC[i] == double.NaN)
+                        if (double.IsNaN(BiomC[i]))
                             HumC[i] = double.NaN;
                         else
                         {
