@@ -250,6 +250,23 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <Nutrient>
+              <Name>Nutrient</Name>
+              <NutrientPool>
+                <Name>Inert</Name>
+                <ExpressionFunction>
+                  <Name>InitialiseCarbon</Name>
+                  <Expression>[SoilOrganicMatter].FInert*[SoilOrganicMatter].OC * 100 * [Soil].BD * [Soil].Thickness</Expression>
+                </ExpressionFunction>
+                <ExpressionFunction>
+                  <Name>InitialiseNitrogen</Name>
+                  <Expression>[Inert].C / [Inert].CNRatio</Expression>
+                </ExpressionFunction>
+              </NutrientPool>
+              <Flow>
+                <Name>Flow</Name>
+              </Flow>
+            </Nutrient>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
