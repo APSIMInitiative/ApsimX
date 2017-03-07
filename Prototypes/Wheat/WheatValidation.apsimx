@@ -50,12 +50,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -928,6 +928,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1644,10 +1645,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <VariableName>[Phenology].Ripening.Target.Value()</VariableName>
                   </VariableReference>
                 </AddFunction>
-                <ExpressionFunction>
+                <VariableReference>
                   <Name>SenescenceDuration</Name>
-                  <Expression>[Leaf].CohortParameters.SenescenceDuration.Value()</Expression>
-                </ExpressionFunction>
+                  <VariableName>[Leaf].CohortParameters.SenescenceDuration.Value()</VariableName>
+                </VariableReference>
               </SubtractFunction>
               <Start>TerminalSpikelet</Start>
               <End>FlagLeaf</End>
@@ -4945,8 +4946,8 @@ namespace Models
             <Manager>
               <Name>ApplyFertiliser</Name>
               <Script>
-                <FertDayOfYear>186</FertDayOfYear>
                 <Amount>160</Amount>
+                <FertDayOfYear>186</FertDayOfYear>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -12208,8 +12209,8 @@ namespace Models
             <Manager>
               <Name>1</Name>
               <Script>
-                <SowDate>29-Apr</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>29-Apr</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12266,8 +12267,8 @@ namespace Models
             <Manager>
               <Name>2</Name>
               <Script>
-                <SowDate>20-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>20-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12324,8 +12325,8 @@ namespace Models
             <Manager>
               <Name>3</Name>
               <Script>
-                <SowDate>10-Jun</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>10-Jun</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12382,8 +12383,8 @@ namespace Models
             <Manager>
               <Name>4</Name>
               <Script>
-                <SowDate>4-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>4-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12440,8 +12441,8 @@ namespace Models
             <Manager>
               <Name>5</Name>
               <Script>
-                <SowDate>22-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>22-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12498,8 +12499,8 @@ namespace Models
             <Manager>
               <Name>6</Name>
               <Script>
-                <SowDate>15-Aug</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>15-Aug</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12992,8 +12993,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14651,8 +14652,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -15360,8 +15361,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -16069,8 +16070,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -33522,15 +33523,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36765,10 +36766,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <Name>Sowing</Name>
                 <Script>
                   <SowDate>24-Jul</SowDate>
+                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
-                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -39390,15 +39391,15 @@ namespace Models
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50569,8 +50570,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <IrrFactor>False</IrrFactor>
                 <NitFactor>0</NitFactor>
+                <IrrFactor>False</IrrFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -61070,8 +61071,8 @@ namespace Models
             <Manager>
               <Name>MouseActivity</Name>
               <Script>
-                <NibblingDate>2002-10-31</NibblingDate>
                 <ProportionNibbled>0.5</ProportionNibbled>
+                <NibblingDate>2002-10-31</NibblingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -62155,8 +62156,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -62903,8 +62904,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -63612,8 +63613,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -64321,8 +64322,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>

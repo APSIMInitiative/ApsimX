@@ -570,7 +570,7 @@ namespace Models
 					TStockSplit split = new TStockSplit();
 					split.group = g;
 					split.type = "age";
-					split.FixedValue = 365 * sale_age;
+					split.value = 365 * sale_age;
 					Animals.Split(split);   				// older animals into a new group
 				}
 

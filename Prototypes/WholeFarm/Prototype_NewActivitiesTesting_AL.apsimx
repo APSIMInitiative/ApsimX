@@ -545,7 +545,7 @@
                 <Name>Filter[Name=Joe B]</Name>
                 <Parameter>Name</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Joe B</FixedValue>
+                <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
             <PerformWithPartialResources>false</PerformWithPartialResources>
@@ -574,7 +574,7 @@
                 <Name>Filter[Name=Joe B]</Name>
                 <Parameter>Name</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Joe B</FixedValue>
+                <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
             <PerformWithPartialResources>false</PerformWithPartialResources>
@@ -607,13 +607,13 @@
                 <Name>Filter[HerdName=Breeding]</Name>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Breeding</FixedValue>
+                <Value>Breeding</Value>
               </RuminantFilter>
               <RuminantFilter>
                 <Name>Filter[Gender=Female]</Name>
                 <Parameter>Gender</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Female</FixedValue>
+                <Value>Female</Value>
               </RuminantFilter>
               <MonthlyValues>
                 <double>1</double>
@@ -636,7 +636,7 @@
                 <Name>Filter[Name=Joe B]</Name>
                 <Parameter>Name</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Joe B</FixedValue>
+                <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
             <PerformWithPartialResources>false</PerformWithPartialResources>
@@ -661,7 +661,7 @@
                   <Name>Filter[Name=Joe B]</Name>
                   <Parameter>Name</Parameter>
                   <Operator>Equal</Operator>
-                  <FixedValue>Joe B</FixedValue>
+                  <Value>Joe B</Value>
                 </LabourFilter>
               </LabourFilterGroup>
               <BreedInterval>12</BreedInterval>
@@ -777,7 +777,7 @@
                 <Name>Filter[Age&gt;=0]</Name>
                 <Parameter>Age</Parameter>
                 <Operator>GreaterThanOrEqual</Operator>
-                <FixedValue>0</FixedValue>
+                <Value>0</Value>
               </OtherAnimalsFilter>
               <MonthlyValues>
                 <double>0.09</double>
@@ -801,7 +801,7 @@
                 <Name>Filter[Name=Joe B]</Name>
                 <Parameter>Name</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Joe B</FixedValue>
+                <Value>Joe B</Value>
               </LabourFilter>
               <DaysRequired>0.2</DaysRequired>
             </ActivityLabourRequirementGroup>
@@ -837,7 +837,7 @@
                 <Name>Filter[Breed=Bos indicus]</Name>
                 <Parameter>Breed</Parameter>
                 <Operator>Equal</Operator>
-                <FixedValue>Bos indicus</FixedValue>
+                <Value>Bos indicus</Value>
               </RuminantFilter>
               <PoolValues>
                 <double>0.6</double>

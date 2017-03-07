@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -390,6 +390,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -1673,12 +1674,12 @@ A function is used to provide flowering date as days after sowing(DAS).
       </ReproductiveOrgan>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <CropType>Grapevine</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
@@ -2106,7 +2107,6 @@ A function is used to provide flowering date as days after sowing(DAS).
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
@@ -2245,7 +2245,7 @@ namespace Models
 			
 				]]></Code>
       </Manager>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Weather>
@@ -3447,7 +3447,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -3586,7 +3585,7 @@ namespace Models
 			
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>

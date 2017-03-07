@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -42,12 +42,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -378,6 +378,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -2551,12 +2552,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -3243,6 +3244,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -5626,7 +5628,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <ApsoilNumber>38</ApsoilNumber>
           <Latitude>-27.537</Latitude>
           <Longitude>152.336</Longitude>
-          <Area>0</Area>
           <LocationAccuracy>+-20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
           <Comments>Soil naming structure: \State\Region\Classification-Local Name (Site/district and locator number); oc and ph estimated</Comments>
@@ -5729,7 +5730,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
@@ -6087,7 +6088,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Manager>
           <Name>SowingRule</Name>
@@ -6590,7 +6590,6 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7084,7 +7083,6 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -7564,7 +7562,6 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -8062,7 +8059,6 @@ namespace Models
           <NaturalVegetation>Unknown</NaturalVegetation>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Manager>
           <Name>SowingRule</Name>
