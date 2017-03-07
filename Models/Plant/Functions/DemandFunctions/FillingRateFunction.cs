@@ -31,12 +31,9 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return (PotentialSizeIncrement.Value / FillingDuration.Value) * ThermalTime.Value * NumberFunction.Value;
-            }
+            return (PotentialSizeIncrement.Value(arrayIndex) / FillingDuration.Value(arrayIndex)) * ThermalTime.Value(arrayIndex) * NumberFunction.Value(arrayIndex);
         }
 
     }

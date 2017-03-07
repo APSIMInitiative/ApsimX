@@ -231,7 +231,7 @@ namespace Models.WaterModel
             MathUtilities.Subtract(Water, LateralFlow);
 
             // Calculate runoff.
-            Runoff = runoffModel.Value;
+            Runoff = runoffModel.Value();
 
             // Calculate infiltration.
             Infiltration = PotentialInfiltration - Runoff;
@@ -283,7 +283,7 @@ namespace Models.WaterModel
 
             CheckForErrors();
 
-            double waterTableDepth = waterTableModel.Value;
+            double waterTableDepth = waterTableModel.Value();
             double[] NO3Up = CalculateSoluteMovementUpDown(soilNitrogen.NO3, Water, Flow, SoluteFlowEfficiency);
             double[] NH4Up = CalculateSoluteMovementUpDown(soilNitrogen.NH4, Water, Flow, SoluteFlowEfficiency);
             MoveUp(NO3, NO3Up);

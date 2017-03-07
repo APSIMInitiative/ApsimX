@@ -11,6 +11,7 @@ namespace Models.Core
     using System.Reflection;
     using APSIM.Shared.Utilities;
     using System.Collections;
+    using PMF.Functions;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -123,8 +124,8 @@ namespace Models.Core
             {
                 return null;
             }
-            else if (namePath[0] != '.' && namePath[0] != '.' &&
-                     namePath.IndexOfAny("(+*/".ToCharArray()) != -1)
+            else if (namePath[0] != '.' &&
+                     namePath.Replace("()", "").IndexOfAny("(+*/".ToCharArray()) != -1)
             {
                 // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeToModel);
@@ -221,7 +222,10 @@ namespace Models.Core
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
                     if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                    if (propertyInfo == null && relativeToObject is Model)
+                    if (relativeToObject is IFunction && namePathBits[j] == "Value()")
+                    {
+                    }
+                    else if (propertyInfo == null && relativeToObject is Model)
                     {
                         // Not a property, may be a child model.
                         localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));

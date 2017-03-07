@@ -55,14 +55,10 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        [Units("deg.day")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double WeightedTemperature = 0.25 * DayBeforeYesterday + 0.5 * Yesterday + 0.25 * Today;
-                return XYPairs.ValueIndexed(WeightedTemperature);
-            }
+            double WeightedTemperature = 0.25 * DayBeforeYesterday + 0.5 * Yesterday + 0.25 * Today;
+            return XYPairs.ValueIndexed(WeightedTemperature);
         }
     }
 }

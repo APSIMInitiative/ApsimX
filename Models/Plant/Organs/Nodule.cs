@@ -38,7 +38,7 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
         /// <summary>Gets or sets the n fixation cost.</summary>
-        public override double NFixationCost { get { return FixationMetabolicCost.Value; } }
+        public override double NFixationCost { get { return FixationMetabolicCost.Value(); } }
 
         /// <summary>Sets the n allocation.</summary>
         [XmlIgnore]
@@ -60,7 +60,7 @@ namespace Models.PMF.Organs
             get
             {
                 BiomassSupplyType Supply = base.NSupply;   // get our base GenericOrgan to fill a supply structure first.
-                Supply.Fixation = FixationRate.Value;
+                Supply.Fixation = FixationRate.Value();
                 return Supply;
             }
         }

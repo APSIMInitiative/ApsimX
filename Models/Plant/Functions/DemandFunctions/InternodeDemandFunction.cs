@@ -22,12 +22,9 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value;
-            }
+            return Structure.DeltaTipNumber * Structure.TotalStemPopn * InterNodeWt.Value(arrayIndex);
         }
     }
 }   

@@ -32,7 +32,7 @@ namespace Models.PMF.Phen
         {
             base.DoTimeStep(PropOfDayToUse);
 
-            if (Expression.Value >= ExpressionTarget.Value)
+            if (Expression.Value() >= ExpressionTarget.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -54,7 +54,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Expression.Value / ExpressionTarget.Value;
+                return Expression.Value() / ExpressionTarget.Value();
             }
             set
             {

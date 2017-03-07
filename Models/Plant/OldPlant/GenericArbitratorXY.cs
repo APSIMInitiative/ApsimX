@@ -73,7 +73,7 @@ namespace Models.PMF.OldPlant
                 Organ1 Organ = FindOrgan(PartitionOrgans[i], Organs);
 
                 if (PartitionRules[i] == "magic")
-                    Organ.GiveDmGreen(RatioRootShoot.Value * DMSupply);
+                    Organ.GiveDmGreen(RatioRootShoot.Value() * DMSupply);
                 else if (PartitionRules[i] == "seasonal")                  // (PFR)
                 {
                     double uptake = RatioRootPlant * dm_remaining;
@@ -191,7 +191,7 @@ namespace Models.PMF.OldPlant
             IFunction F = Apsim.Find(this, "FracDMRemainingIn" + OrganName) as IFunction;
             if (F == null)
                 throw new Exception("In arbitrator, cannot find FracDMRemainingIn" + OrganName);
-            return F.Value;
+            return F.Value();
         }
 
         /// <summary>Finds the organ.</summary>

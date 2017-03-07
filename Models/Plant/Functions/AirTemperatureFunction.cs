@@ -45,13 +45,9 @@ namespace Models.PMF.Functions
 
 
         /// <summary>Gets the value.</summary>
-        [Units("deg.day")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
-            }
+            return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
         }
         /// <summary>Linint3hrlies the temporary.</summary>
         /// <param name="tmax">The tmax.</param>
