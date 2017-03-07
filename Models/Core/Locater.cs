@@ -224,6 +224,8 @@ namespace Models.Core
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
                     if (relativeToObject is IFunction && namePathBits[j] == "Value()")
                     {
+                        MethodInfo method = relativeToModel.GetType().GetMethod("Value");
+                        properties.Add(new VariableMethod(relativeToModel, method));
                     }
                     else if (propertyInfo == null && relativeToObject is Model)
                     {
