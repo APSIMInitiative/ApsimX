@@ -188,7 +188,7 @@ namespace Models.Soils
         }
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
-        internal double[] BD
+        public double[] BD
         {
             get
             {
