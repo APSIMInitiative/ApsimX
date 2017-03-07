@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Models.Core
 {
+    using PMF.Functions;
     using System;
     using System.Collections.Generic;
 
@@ -75,6 +76,8 @@ namespace Models.Core
                     }
                 }
 
+                if (relativeTo is IFunction)
+                    return (relativeTo as IFunction).Value();
                 return relativeTo;
             }
 

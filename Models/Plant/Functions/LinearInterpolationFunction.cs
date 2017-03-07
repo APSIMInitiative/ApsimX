@@ -65,21 +65,22 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                // Shortcut exit when the Y values are all the same. Runs quicker.
-                if (YsAreAllTheSame)
-                    return XYPairs.Y[0];
+            // Shortcut exit when the Y values are all the same. Runs quicker.
+            if (YsAreAllTheSame)
+                return XYPairs.Y[0];
 
-                string PropertyName = XProperty;
-                object v = Apsim.Get(this, PropertyName);
-                if (v == null)
-                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                double XValue = (double) v;
-                return XYPairs.ValueIndexed(XValue);
-            }
+            string PropertyName = XProperty;
+            object v = Apsim.Get(this, PropertyName);
+            if (v == null)
+                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
+            double XValue;
+            if (v is Array)
+                XValue = (double)(v as Array).GetValue(arrayIndex);
+            else
+                XValue = (double) v;
+            return XYPairs.ValueIndexed(XValue);
         }
 
         /// <summary>Values for x.</summary>

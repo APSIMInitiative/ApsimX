@@ -31,7 +31,7 @@
           <Name>Germinated</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>PreEmerge</End>
@@ -42,11 +42,11 @@
           <Name>Emerging</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>300</Value>
+            <FixedValue>300</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>PreEmerge</Start>
           <End>Emerged</End>
@@ -55,11 +55,11 @@
           <Name>Emerged</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>150</Value>
+            <FixedValue>150</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Emerged</Start>
           <End>Expanding</End>
@@ -68,11 +68,11 @@
           <Name>Expanding</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>150</Value>
+            <FixedValue>150</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Expanding</Start>
           <End>Vegetative</End>
@@ -81,11 +81,11 @@
           <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>150</Value>
+            <FixedValue>150</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Vegetative</Start>
           <End>EarlyReproductive</End>
@@ -94,11 +94,11 @@
           <Name>EarlyFlowering</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>2000</Value>
+            <FixedValue>2000</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Vegetative</Start>
           <End>EarlyReproductive</End>
@@ -107,11 +107,11 @@
           <Name>Flowering</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>3000</Value>
+            <FixedValue>3000</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EarlyReproductive</Start>
           <End>Reproductive</End>
@@ -120,11 +120,11 @@
           <Name>Maturity</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>15000</Value>
+            <FixedValue>15000</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Reproductive</Start>
           <End>Maturity</End>
@@ -151,7 +151,7 @@
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookupValue>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -161,22 +161,22 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>17</Value>
+            <FixedValue>17</FixedValue>
           </Constant>
           <Start>Emerged</Start>
           <End>Maturity</End>
         </PhaseLookupValue>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>60</Value>
+          <FixedValue>60</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>BranchingRate</Name>
@@ -255,17 +255,17 @@
           <Name>StructuralFraction</Name>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.95</Value>
+            <FixedValue>0.95</FixedValue>
           </Constant>
-          <Value>0.95</Value>
+          <FixedValue>0.95</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -274,19 +274,19 @@
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0.8</Value>
+          <FixedValue>0.8</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.95</Value>
+          <FixedValue>0.95</FixedValue>
         </Constant>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0.8</Value>
+          <FixedValue>0.8</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -296,7 +296,7 @@
               <Name>Early</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.4</Value>
+                <FixedValue>0.4</FixedValue>
               </Constant>
               <Start>Emerged</Start>
               <End>Vegetative</End>
@@ -305,7 +305,7 @@
               <Name>Vege</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>Vegetative</Start>
               <End>EarlyReproductive</End>
@@ -314,7 +314,7 @@
               <Name>EarlyFlowering</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.2</Value>
+                <FixedValue>0.2</FixedValue>
               </Constant>
               <Start>EarlyReproductive</Start>
               <End>Reproductive</End>
@@ -323,7 +323,7 @@
               <Name>Repro</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.1</Value>
+                <FixedValue>0.1</FixedValue>
               </Constant>
               <Start>Reproductive</Start>
               <End>Maturity</End>
@@ -331,7 +331,7 @@
           </PhaseLookup>
           <Constant>
             <Name>PartitionFraction</Name>
-            <Value>0.85</Value>
+            <FixedValue>0.85</FixedValue>
           </Constant>
         </PartitionFractionDemandFunction>
         <Biomass>
@@ -380,26 +380,26 @@
         </BiomassRemoval>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
       </GenericOrgan>
@@ -448,21 +448,21 @@
         </ArrayBiomass>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.35</Value>
+            <FixedValue>1.35</FixedValue>
           </Constant>
           <Constant>
             <Name>FN</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FVPD</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <RUECO2Function>
             <Name>FCO2</Name>
@@ -515,7 +515,7 @@
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>PotentialExtinctionCoeff</Name>
-            <Value>0.6</Value>
+            <FixedValue>0.6</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>WaterStress</Name>
@@ -537,7 +537,7 @@
           <Name>CohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -588,23 +588,23 @@
           </LinearInterpolationFunction>
           <Constant>
             <Name>SenescenceDuration</Name>
-            <Value>0.0001</Value>
+            <FixedValue>0.0001</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>100000</Value>
+            <FixedValue>100000</FixedValue>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.6</Value>
+            <FixedValue>0.6</FixedValue>
           </Constant>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <Value>14000</Value>
+            <FixedValue>14000</FixedValue>
           </Constant>
           <Constant>
             <Name>SpecificLeafAreaMax</Name>
@@ -612,72 +612,72 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>18000</Value>
+            <FixedValue>18000</FixedValue>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.03</Value>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
-            <Value>0.06</Value>
+            <FixedValue>0.06</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0.8</Value>
+            <FixedValue>0.8</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.95</Value>
+            <FixedValue>0.95</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0.8</Value>
+            <FixedValue>0.8</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
             <Constant>
               <Name>NonStructuralFraction</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
-            <Value>0.2</Value>
+            <FixedValue>0.2</FixedValue>
           </Constant>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0.18</Value>
+            <FixedValue>0.18</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>GrowthDuration</Name>
-            <Value>240</Value>
+            <FixedValue>240</FixedValue>
           </Constant>
           <Constant>
             <Name>ShadeInducedSenescenceRate</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -699,27 +699,27 @@
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.6</Value>
+          <FixedValue>0.6</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -791,7 +791,7 @@
         <Name>Root</Name>
         <Constant>
           <Name>SoilWaterEffect</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -799,7 +799,7 @@
             <Name>Emerging</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emerged</End>
@@ -808,7 +808,7 @@
             <Name>Emerged</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>10</Value>
+              <FixedValue>10</FixedValue>
             </Constant>
             <Start>Emerged</Start>
             <End>Maturity</End>
@@ -816,11 +816,11 @@
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -841,20 +841,20 @@
         </CompositeBiomass>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>7.5</Value>
+          <FixedValue>7.5</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <PhaseLookup>
@@ -863,7 +863,7 @@
             <Name>Early</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <Start>Emerged</Start>
             <End>Vegetative</End>
@@ -872,7 +872,7 @@
             <Name>Vege</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <Start>Vegetative</Start>
             <End>EarlyReproductive</End>
@@ -881,7 +881,7 @@
             <Name>EarlyFlowering</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EarlyReproductive</Start>
             <End>Reproductive</End>
@@ -890,7 +890,7 @@
             <Name>Repro</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Reproductive</Start>
             <End>Maturity</End>
@@ -954,7 +954,7 @@
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>300</Value>
+          <FixedValue>300</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -996,7 +996,7 @@
         </BiomassRemoval>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>

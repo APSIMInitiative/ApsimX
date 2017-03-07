@@ -148,9 +148,9 @@ namespace Models.PMF.Organs
 
             SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             if (soil.Weirdo == null)
-                Depth = Depth + root.RootFrontVelocity.Value * crop.XF[RootLayer];
+                Depth = Depth + root.RootFrontVelocity.Value() * crop.XF[RootLayer];
             else
-                Depth = Depth + root.RootFrontVelocity.Value;
+                Depth = Depth + root.RootFrontVelocity.Value();
 
 
             // Limit root depth for impeded layers
@@ -166,7 +166,7 @@ namespace Models.PMF.Organs
                     MaxDepth += soil.Thickness[i];
             }
             // Limit root depth for the crop specific maximum depth
-            MaxDepth = Math.Min(root.MaximumRootDepth.Value, MaxDepth);
+            MaxDepth = Math.Min(root.MaximumRootDepth.Value(), MaxDepth);
 
             Depth = Math.Min(Depth, MaxDepth);
 

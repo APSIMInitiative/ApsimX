@@ -33,23 +33,24 @@ namespace Models.PMF.Functions.DemandFunctions
         /// or
         /// Cannot find variable:  + YProperty +  in function:  + this.Name
         /// </exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double returnValue = 0.0;
-                object XValue = Apsim.Get(this, XProperty);
-                if (XValue == null)
-                    throw new Exception("Cannot find variable: " + XProperty + " in function: " + this.Name);
-                object YValue = Apsim.Get(this, YProperty);
-                if (YValue == null)
-                    throw new Exception("Cannot find variable: " + YProperty + " in function: " + this.Name);
+            double returnValue = 0.0;
+            object XValue = Apsim.Get(this, XProperty);
+            if (XValue == null)
+                throw new Exception("Cannot find variable: " + XProperty + " in function: " + this.Name);
+            object YValue = Apsim.Get(this, YProperty);
+            if (YValue == null)
+                throw new Exception("Cannot find variable: " + YProperty + " in function: " + this.Name);
 
-                double Target = Const * Math.Pow((double)XValue, Power);
-                returnValue = Math.Max(0.0, Target - (double)YValue);
+            if (XValue is Array)
+                XValue = (XValue as Array).GetValue(arrayIndex);
+            if (YValue is Array)
+                YValue = (YValue as Array).GetValue(arrayIndex);
+            double Target = Const * Math.Pow((double)XValue, Power);
+            returnValue = Math.Max(0.0, Target - (double)YValue);
 
-                return returnValue;
-            }
+            return returnValue;
         }
 
     }

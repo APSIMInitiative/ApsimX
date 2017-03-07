@@ -22,13 +22,9 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        [Units("y")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Age / 365.25;
-            }
+           return _Age / 365.25;
         }
     }
 }

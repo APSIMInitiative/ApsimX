@@ -31,19 +31,19 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (!parsed)
             {
-                if (!parsed)
-                {
-                    Parse(fn, Expression);
-                    parsed = true;
-                }
-                FillVariableNames(fn, this);
-                Evaluate(fn);
-                return fn.Result;
+                Parse(fn, Expression);
+                parsed = true;
             }
+            FillVariableNames(fn, this);
+            Evaluate(fn);
+            if (fn.Results != null && arrayIndex != -1)
+                return fn.Results[arrayIndex];
+            else
+                return fn.Result;
         }
 
         /// <summary>

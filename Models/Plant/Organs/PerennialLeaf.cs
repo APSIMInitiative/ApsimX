@@ -152,7 +152,7 @@ namespace Models.PMF.Organs
             {
                 if (Plant.IsAlive)
                 {
-                    double greenCover = 1.0 - Math.Exp(-ExtinctionCoefficient.Value * LAI);
+                    double greenCover = 1.0 - Math.Exp(-ExtinctionCoefficient.Value() * LAI);
                     return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
@@ -283,7 +283,7 @@ namespace Models.PMF.Organs
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value, 1); } }
+        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1); } }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -299,7 +299,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value * LAIDead); } }
+        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
@@ -319,7 +319,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                StructuralDMDemand = DMDemandFunction.Value;
+                StructuralDMDemand = DMDemandFunction.Value();
                 NonStructuralDMDemand = 0;
                 return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
             }
@@ -334,8 +334,8 @@ namespace Models.PMF.Organs
             {
                 return new BiomassSupplyType
                 {
-                    Fixation = Photosynthesis.Value,
-                    Retranslocation = StartLive.NonStructuralWt * DMRetranslocationFactor.Value,
+                    Fixation = Photosynthesis.Value(),
+                    Retranslocation = StartLive.NonStructuralWt * DMRetranslocationFactor.Value(),
                     Reallocation = 0.0
                 };
             }
@@ -348,8 +348,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double StructuralDemand = MaximumNConc.Value * PotentialDMAllocation * StructuralFraction.Value;
-                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
+                double StructuralDemand = MaximumNConc.Value() * PotentialDMAllocation * StructuralFraction.Value();
+                double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
 
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
             }
@@ -517,14 +517,14 @@ namespace Models.PMF.Organs
         {
             Senescing = new Biomass();
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= LeafResidenceTime.Value)
+                if (L.Age >= LeafResidenceTime.Value())
                     Senescing.Add(L.Live);
         }
 
         private void SenesceLeaves()
         {
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= LeafResidenceTime.Value)
+                if (L.Age >= LeafResidenceTime.Value())
                 {
                     L.Dead.Add(L.Live);
                     L.AreaDead += L.Area;
@@ -550,9 +550,9 @@ namespace Models.PMF.Organs
         {
             Detached = new Biomass();
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= (LeafResidenceTime.Value+ LeafDetachmentTime.Value))
+                if (L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()))
                     Detached.Add(L.Dead);
-            Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value + LeafDetachmentTime.Value));
+            Leaves.RemoveAll(L => L.Age >= (LeafResidenceTime.Value() + LeafDetachmentTime.Value()));
         }
 
         #endregion
@@ -580,14 +580,14 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
                 Biomass Senescing = new Biomass();
                 GetSenescingLeafBiomass(out Senescing);
                 
                 return new BiomassSupplyType()
                 {
-                    Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value,
-                    Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value,
+                    Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value(),
+                    Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value(),
                     Uptake = 0.0
                 };
             }
@@ -600,14 +600,14 @@ namespace Models.PMF.Organs
         {
             set
             {
-                GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value)
-                                  + value.NonStructural * (1 - DMConversionEfficiency.Value);
+                GrowthRespiration = value.Structural * (1 - DMConversionEfficiency.Value())
+                                  + value.NonStructural * (1 - DMConversionEfficiency.Value());
 
-                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand),
-                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value,
+                AddNewLeafMaterial(StructuralWt: Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand),
+                                   NonStructuralWt: value.NonStructural * DMConversionEfficiency.Value(),
                                    StructuralN: 0,
                                    NonStructuralN: 0,
-                                   SLA: SpecificLeafAreaFunction.Value);
+                                   SLA: SpecificLeafAreaFunction.Value());
 
                 double Removal = value.Retranslocation;
                 foreach (PerrenialLeafCohort L in Leaves)
@@ -631,7 +631,7 @@ namespace Models.PMF.Organs
                    NonStructuralWt: 0,
                    StructuralN: value.Structural,
                    NonStructuralN: value.NonStructural,
-                   SLA: SpecificLeafAreaFunction.Value);
+                   SLA: SpecificLeafAreaFunction.Value());
 
                 double Removal = value.Retranslocation + value.Reallocation;
                 foreach (PerrenialLeafCohort L in Leaves)
@@ -646,9 +646,9 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
-        public double MaxNconc { get { return MaximumNConc.Value; } }
+        public double MaxNconc { get { return MaximumNConc.Value(); } }
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public double MinNconc { get { return MinimumNConc.Value; } }
+        public double MinNconc { get { return MinimumNConc.Value(); } }
         #endregion
 
         #region Events and Event Handlers
@@ -695,17 +695,17 @@ namespace Models.PMF.Organs
                     throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
                 Detached.Clear();
-                FRGR = FRGRFunction.Value;
-                Height = HeightFunction.Value;
+                FRGR = FRGRFunction.Value();
+                Height = HeightFunction.Value();
                 //Initialise biomass and nitrogen
 
                 Leaves.Add(new PerrenialLeafCohort());
                 if (Leaves.Count == 1)
-                    AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value,
+                    AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value(),
                                        NonStructuralWt: 0, 
-                                       StructuralN: InitialWtFunction.Value * MinimumNConc.Value, 
-                                       NonStructuralN: InitialWtFunction.Value * (MaximumNConc.Value - MinimumNConc.Value),
-                                       SLA: SpecificLeafAreaFunction.Value);
+                                       StructuralN: InitialWtFunction.Value() * MinimumNConc.Value(), 
+                                       NonStructuralN: InitialWtFunction.Value() * (MaximumNConc.Value() - MinimumNConc.Value()),
+                                       SLA: SpecificLeafAreaFunction.Value());
              
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age++;
@@ -725,7 +725,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
-                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value, (1-MinimumLAI.Value/LAI)));
+                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value(), (1-MinimumLAI.Value() / LAI)));
                 KillLeavesUniformly(LKF);
                 DetachLeaves(out Detached);
 
@@ -736,15 +736,15 @@ namespace Models.PMF.Organs
                 //Do Maintenance respiration
                 if (MaintenanceRespirationFunction != null)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
-                    RespireLeafFraction(MaintenanceRespirationFunction.Value);
+                    MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+                    RespireLeafFraction(MaintenanceRespirationFunction.Value());
 
-                    MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
+                    MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value();
 
                 }
 
                 if (DryMatterContent != null)
-                    LiveFWt = Live.Wt / DryMatterContent.Value;
+                    LiveFWt = Live.Wt / DryMatterContent.Value();
             }
         }
 

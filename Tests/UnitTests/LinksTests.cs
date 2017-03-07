@@ -28,12 +28,9 @@ namespace UnitTests
     {
         public double value;
 
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return value;
-            }
+            return value;
         }
     }
 
@@ -153,7 +150,7 @@ namespace UnitTests
             Links linksAlgorithm = new Links();
             linksAlgorithm.Resolve(simulations);
 
-            Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value, 2);
+            Assert.AreEqual((links.Model as ModelWithIFunctions).model2.Value(), 2);
         }
 
         /// <summary>Ensure a [ScopedLinkByName] works.</summary>

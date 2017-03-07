@@ -62,7 +62,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>Dormant</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>13.5</Value>
+            <FixedValue>13.5</FixedValue>
             <Units>days</Units>
           </Constant>
           <AirTemperatureFunction>
@@ -94,13 +94,13 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>Base</Name>
-              <Value>51</Value>
+              <FixedValue>51</FixedValue>
             </Constant>
             <LinearInterpolationFunction>
               <Name>ChillingTadjustment</Name>
@@ -121,14 +121,14 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                   <double>0.43</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Budding].AccChill.Value</XProperty>
+              <XProperty>[Budding].AccChill.Value()</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <AccumulateFunction>
             <Name>AccChill</Name>
             <VariableReference>
               <Name>ThermalTime</Name>
-              <VariableName>[Phenology].Dormant.ThermalTime.Value</VariableName>
+              <VariableName>[Phenology].Dormant.ThermalTime.Value()</VariableName>
             </VariableReference>
             <StartStageName>StartDomancy</StartStageName>
             <EndStageName>BudBurst</EndStageName>
@@ -141,11 +141,11 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>ShootGrowth</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>29</Value>
+            <FixedValue>29</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>BudBurst</Start>
           <End>StartFlowering</End>
@@ -154,12 +154,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>FlowerDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>7</Value>
+            <FixedValue>7</FixedValue>
             <Units>dd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>StartFlowering</Start>
           <End>FruitSet</End>
@@ -168,7 +168,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>BerryDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>20</Value>
+            <FixedValue>20</FixedValue>
           </Constant>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
@@ -195,7 +195,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>LeafDeathPhase</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Veraison</Start>
           <End>LeafFall</End>
@@ -217,7 +217,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -236,7 +236,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -255,7 +255,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -272,7 +272,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MainStemPrimordiaInitiationRate</Name>
           <Constant>
             <Name>Constant</Name>
-            <Value>30</Value>
+            <FixedValue>30</FixedValue>
           </Constant>
           <Start>BudBurst</Start>
           <End>Veraison</End>
@@ -281,14 +281,14 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MainStemNodeAppearanceRate</Name>
           <Constant>
             <Name>Constant</Name>
-            <Value>30</Value>
+            <FixedValue>30</FixedValue>
           </Constant>
           <Start>BudBurst</Start>
           <End>Veraison</End>
         </PhaseLookupValue>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>24</Value>
+          <FixedValue>24</FixedValue>
           <Units>number</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -359,11 +359,11 @@ A function is used to provide flowering date as days after sowing(DAS).
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
@@ -395,7 +395,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Leaf</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Structure].ThermalTime.Value</VariableName>
+          <VariableName>[Structure].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
@@ -501,12 +501,12 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
             <Units>degreeDay</Units>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
             <Units>degreeDay</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -526,37 +526,37 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <Value>20000</Value>
+            <FixedValue>20000</FixedValue>
             <Units>mm2/g</Units>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.99</Value>
+            <FixedValue>0.99</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0.04</Value>
+            <FixedValue>0.04</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -576,12 +576,12 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -605,36 +605,36 @@ A function is used to provide flowering date as days after sowing(DAS).
           </LinearInterpolationFunction>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0.2</Value>
+            <FixedValue>0.2</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
             <Units>parameter controls the logistic growth of the leaf in growth stage</Units>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
         </LeafCohortParameters>
@@ -642,7 +642,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>0.8</Value>
+            <FixedValue>0.8</FixedValue>
             <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
@@ -728,17 +728,17 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -746,7 +746,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>Constant</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
         </MultiplyFunction>
         <CompositeBiomass>
@@ -815,7 +815,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.99</Value>
+          <FixedValue>0.99</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseLookupValue>
@@ -840,7 +840,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseLookupValue>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -883,17 +883,17 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseBasedSwitch>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
           <Units>mm</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1019,22 +1019,22 @@ A function is used to provide flowering date as days after sowing(DAS).
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <Value>10</Value>
+          <FixedValue>10</FixedValue>
           <Units>mm/d</Units>
         </Constant>
         <Constant>
           <Name>PartitionFraction</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1047,12 +1047,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1062,14 +1062,14 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <InternodeDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>InterNodeWt</Name>
-            <Value>0.2</Value>
+            <FixedValue>0.2</FixedValue>
           </Constant>
         </InternodeDemandFunction>
         <LinearInterpolationFunction>
@@ -1091,7 +1091,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Biomass>
@@ -1133,32 +1133,32 @@ A function is used to provide flowering date as days after sowing(DAS).
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>1/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -1166,12 +1166,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Cordon</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1181,7 +1181,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1203,7 +1203,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Biomass>
@@ -1245,39 +1245,39 @@ A function is used to provide flowering date as days after sowing(DAS).
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>200</Value>
+          <FixedValue>200</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0.001</Value>
+          <FixedValue>0.001</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
         </PartitionFractionDemandFunction>
       </GenericOrgan>
@@ -1285,11 +1285,11 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Trunk</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1298,7 +1298,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -1319,7 +1319,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -1360,39 +1360,39 @@ A function is used to provide flowering date as days after sowing(DAS).
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>2000</Value>
+          <FixedValue>2000</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0.001</Value>
+          <FixedValue>0.001</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
         </PartitionFractionDemandFunction>
       </GenericOrgan>
@@ -1406,26 +1406,26 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>NFillingRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0001</Value>
+          <FixedValue>0.0001</FixedValue>
         </Constant>
         <AccumulateFunction>
           <Name>ThermalTimeAfterVeraison</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>Veraison</StartStageName>
           <EndStageName>LeafFall</EndStageName>
@@ -1446,13 +1446,13 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Berry].ThermalTimeAfterVeraison.Value</XProperty>
+          <XProperty>[Berry].ThermalTimeAfterVeraison.Value()</XProperty>
         </LinearInterpolationFunction>
         <AccumulateFunction>
           <Name>ThermalTimeAfterFlowering</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>FruitSet</StartStageName>
           <EndStageName>LeafFall</EndStageName>
@@ -1462,7 +1462,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>SolubleSolidsConc</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Berry].DaysAfterVeraison.Value</VariableName>
+            <VariableName>[Berry].DaysAfterVeraison.Value()</VariableName>
           </VariableReference>
           <A>24</A>
           <B>-15.6582</B>
@@ -1478,7 +1478,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>BunchesPerShoot</Name>
             <Constant>
               <Name>PreEventValue</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <LinearInterpolationFunction>
               <Name>PostEventValue</Name>
@@ -1493,7 +1493,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>5</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Berry].MeanFloweringTempY0.Value</XProperty>
+              <XProperty>[Berry].MeanFloweringTempY0.Value()</XProperty>
             </LinearInterpolationFunction>
             <SetEvent>BudBurst</SetEvent>
             <ReSetEvent>EndDormancy</ReSetEvent>
@@ -1502,13 +1502,13 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>PotentialBerriesPerBunch</Name>
             <Constant>
               <Name>MinNum</Name>
-              <Value>66</Value>
+              <FixedValue>66</FixedValue>
             </Constant>
             <SigmoidFunction>
               <Name>BerriesPerBunch</Name>
               <VariableReference>
                 <Name>XVariable</Name>
-                <VariableName>[Berry].MeanFloweringTemp.Value</VariableName>
+                <VariableName>[Berry].MeanFloweringTemp.Value()</VariableName>
               </VariableReference>
               <Xmax>44</Xmax>
               <Xo>16.3</Xo>
@@ -1520,7 +1520,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MeanFloweringTempY0</Name>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>13</Value>
+            <FixedValue>13</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>PostEventValue</Name>
@@ -1535,7 +1535,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>40</double>
               </Y>
             </XYPairs>
-            <XProperty>[Berry].MeanFloweringTemp.Value</XProperty>
+            <XProperty>[Berry].MeanFloweringTemp.Value()</XProperty>
           </LinearInterpolationFunction>
           <SetEvent>FruitSet</SetEvent>
           <ReSetEvent>StartFlowering</ReSetEvent>
@@ -1566,7 +1566,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>Time</Name>
             <Constant>
               <Name>Days</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
               <Units>days/day</Units>
             </Constant>
             <StartStageName>StartFlowering</StartStageName>
@@ -1578,7 +1578,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>TT</Name>
-            <VariableName>[Structure].ThermalTime.Value</VariableName>
+            <VariableName>[Structure].ThermalTime.Value()</VariableName>
           </VariableReference>
           <FirstPhase>BerryDevelopment</FirstPhase>
           <SecondPhase>LeafDeathPhase</SecondPhase>
@@ -1629,14 +1629,14 @@ A function is used to provide flowering date as days after sowing(DAS).
         </BiomassRemoval>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>2</Value>
+          <FixedValue>2</FixedValue>
           <Units>g</Units>
         </Constant>
         <SubtractFunction>
           <Name>WaterContent</Name>
           <Constant>
             <Name>Constant</Name>
-            <Value>0.903</Value>
+            <FixedValue>0.903</FixedValue>
           </Constant>
           <PhaseLookupValue>
             <Name>PhaseLookupValue</Name>
@@ -1661,7 +1661,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>0.15</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Berry].ThermalTimeAfterVeraison.Value</XProperty>
+              <XProperty>[Berry].ThermalTimeAfterVeraison.Value()</XProperty>
             </LinearInterpolationFunction>
             <Start>Veraison</Start>
             <End>LeafFall</End>
@@ -1692,9 +1692,9 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Clock].Today</string>
         <string>[Clock].Today.Year</string>
         <string>[Grapevine].Phenology.Stage</string>
-        <string>[Grapevine].Phenology.BudBurstDOY.Value</string>
-        <string>[Grapevine].Phenology.FloweringDOY.Value</string>
-        <string>[Grapevine].Phenology.VeraisonDOY.Value</string>
+        <string>[Grapevine].Phenology.BudBurstDOY.Value()</string>
+        <string>[Grapevine].Phenology.FloweringDOY.Value()</string>
+        <string>[Grapevine].Phenology.VeraisonDOY.Value()</string>
         <string>[Grapevine].Phenology.CurrentStageName</string>
         <string>[Grapevine].Structure.LeafTipsAppeared</string>
         <string>[Grapevine].Structure.PlantTotalNodeNo</string>
@@ -1706,12 +1706,12 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Grapevine].Leaf.Fw</string>
         <string>[Grapevine].Berry.Number</string>
         <string>[Grapevine].Berry.Live.Wt</string>
-        <string>[Berry].MeanFloweringTempY0.Value</string>
-        <string>[Berry].MeanFloweringTemp.Value</string>
-        <string>[Berry].NumberFunction.Value</string>
-        <string>[Berry].NumberFunction.Shoots.Value</string>
-        <string>[Berry].NumberFunction.BunchesPerShoot.Value</string>
-        <string>[Berry].NumberFunction.PotentialBerriesPerBunch.Value</string>
+        <string>[Berry].MeanFloweringTempY0.Value()</string>
+        <string>[Berry].MeanFloweringTemp.Value()</string>
+        <string>[Berry].NumberFunction.Value()</string>
+        <string>[Berry].NumberFunction.Shoots.Value()</string>
+        <string>[Berry].NumberFunction.BunchesPerShoot.Value()</string>
+        <string>[Berry].NumberFunction.PotentialBerriesPerBunch.Value()</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -1733,7 +1733,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Tests</Name>
         <AcceptedStats>
           <RegrStats>
-            <Name>Grapevine.Phenology.BudBurstDOY.Value</Name>
+            <Name>Grapevine.Phenology.BudBurstDOY.Value()</Name>
             <n>40</n>
             <Slope>0.29392748997457585</Slope>
             <Intercept>175.48089041657934</Intercept>
@@ -1747,7 +1747,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <RSR>4.0210210594963725</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Grapevine.Phenology.FloweringDOY.Value</Name>
+            <Name>Grapevine.Phenology.FloweringDOY.Value()</Name>
             <n>42</n>
             <Slope>0.42259919973356375</Slope>
             <Intercept>179.33736245404097</Intercept>
@@ -1761,7 +1761,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <RSR>4.003046730642704</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Grapevine.Phenology.VeraisonDOY.Value</Name>
+            <Name>Grapevine.Phenology.VeraisonDOY.Value()</Name>
             <n>36</n>
             <Slope>1.6198912726919681</Slope>
             <Intercept>-66.500776623628511</Intercept>
@@ -2811,7 +2811,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.MeanFloweringTemp.Value</YFieldName>
+          <YFieldName>Berry.MeanFloweringTemp.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2832,7 +2832,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.MeanFloweringTempY0.Value</YFieldName>
+          <YFieldName>Berry.MeanFloweringTempY0.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2873,7 +2873,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.Shoots.Value</YFieldName>
+          <YFieldName>Berry.NumberFunction.Shoots.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2894,7 +2894,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.BunchesPerShoot.Value</YFieldName>
+          <YFieldName>Berry.NumberFunction.BunchesPerShoot.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2935,7 +2935,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.PotentialBerriesPerBunch.Value</YFieldName>
+          <YFieldName>Berry.NumberFunction.PotentialBerriesPerBunch.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -2956,7 +2956,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Berry.NumberFunction.Value</YFieldName>
+          <YFieldName>Berry.NumberFunction.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3612,8 +3612,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value</YFieldName>
+          <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3657,8 +3657,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value</YFieldName>
+          <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3702,8 +3702,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value</XFieldName>
-          <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value</YFieldName>
+          <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
+          <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

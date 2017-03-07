@@ -106,7 +106,7 @@ namespace Models
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
-          <Value>0.0027397260273972603</Value>
+          <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
@@ -131,7 +131,7 @@ namespace Models
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -142,7 +142,7 @@ namespace Models
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -153,11 +153,11 @@ namespace Models
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>365</Value>
+            <FixedValue>365</FixedValue>
           </Constant>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -166,11 +166,11 @@ namespace Models
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>1825</Value>
+            <FixedValue>1825</FixedValue>
           </Constant>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
@@ -179,11 +179,11 @@ namespace Models
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>27010</Value>
+            <FixedValue>27010</FixedValue>
           </Constant>
           <Start>Maturity</Start>
           <End>Old</End>
@@ -192,7 +192,7 @@ namespace Models
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Start>Old</Start>
           <End>Unused</End>
@@ -272,7 +272,7 @@ namespace Models
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -282,12 +282,12 @@ namespace Models
         </MultiplyFunction>
         <Constant>
           <Name>LaiDeadFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>m^2/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
@@ -301,7 +301,7 @@ Radiation Interception and Growth of Planted and Coppice Stands of Four Fast-Gro
 Author(s): Robin A. Harrington and James H. Fownes
 Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></MemoText>
             </Memo>
-            <Value>1.3</Value>
+            <FixedValue>1.3</FixedValue>
           </Constant>
           <VariableReference>
             <Name>Radiation</Name>
@@ -324,7 +324,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>Frgr</Name>
-            <VariableName>[Leaf].FRGRFunction.Value</VariableName>
+            <VariableName>[Leaf].FRGRFunction.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <MinimumFunction>
@@ -352,7 +352,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8]]></Mem
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
-            <Value>0.25</Value>
+            <FixedValue>0.25</FixedValue>
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
@@ -366,7 +366,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <Constant>
           <Name>ExtinctionCoefficientDead</Name>
@@ -379,7 +379,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -405,19 +405,19 @@ But their data suggests a value of 0.3]]></MemoText>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <Value>0.043</Value>
+          <FixedValue>0.043</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -452,31 +452,31 @@ But their data suggests a value of 0.3]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <Value>180</Value>
+          <FixedValue>180</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <Value>7</Value>
+          <FixedValue>7</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafKillFraction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumLAI</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>SpecificLeafAreaFunction</Name>
@@ -490,7 +490,7 @@ using hemispherical photography
 P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
 Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Memo>
-          <Value>0.0232</Value>
+          <FixedValue>0.0232</FixedValue>
           <Units>m^2/g</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -530,11 +530,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <Value>10</Value>
+          <FixedValue>10</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -543,19 +543,19 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <MemoText><![CDATA[0.02 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.004</Value>
+          <FixedValue>0.004</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
@@ -619,12 +619,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>100</Value>
+          <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <BiomassRemoval>
@@ -667,7 +667,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>PartitionFraction</Name>
-          <Value>0.3</Value>
+          <FixedValue>0.3</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -679,11 +679,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -692,11 +692,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
@@ -706,11 +706,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <MemoText><![CDATA[0.03 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.0014</Value>
+          <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -720,17 +720,17 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <BiomassRemoval>
@@ -780,12 +780,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </AllometricDemandFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -807,7 +807,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -817,7 +817,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
         </PartitionFractionDemandFunction>
         <Constant>
@@ -826,7 +826,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -834,7 +834,7 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -843,11 +843,11 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -891,32 +891,32 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>FixationRate</Name>
-          <Value>10000</Value>
+          <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </Nodule>
@@ -1341,9 +1341,9 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <string>[Gliricidia].Stem.Live.Wt</string>
             <string>[Gliricidia].Root.Live.Wt</string>
             <string>[Gliricidia].Root.TotalDMDemand</string>
-            <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
-            <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
-            <string>[Gliricidia].Root.PartitionFraction.Value</string>
+            <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
+            <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
+            <string>[Gliricidia].Root.PartitionFraction.Value()</string>
             <string>[Gliricidia].AboveGround.Wt</string>
             <string>[Gliricidia].Leaf.CoverGreen</string>
           </VariableNames>
@@ -2318,9 +2318,9 @@ namespace Models
               <string>[Gliricidia].Stem.Live.Wt</string>
               <string>[Gliricidia].Root.Live.Wt</string>
               <string>[Gliricidia].Root.TotalDMDemand</string>
-              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
-              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
-              <string>[Gliricidia].Root.PartitionFraction.Value</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value()</string>
               <string>[Gliricidia].AboveGround.Wt</string>
               <string>[Gliricidia].Leaf.CoverGreen</string>
             </VariableNames>
@@ -3724,10 +3724,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value</string>
+              <string>[Maize].Grain.NumberFunction.Value()</string>
               <string>[Maize].Grain.Size</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
               <string>sum([Soil].SoilNitrogen.FOMC) as FOMC</string>
               <string>sum([Soil].SoilNitrogen.HumicC) as HumicC</string>
               <string>sum([Soil].SoilNitrogen.MicrobialC) as MicrobialC</string>
@@ -3775,8 +3775,8 @@ namespace Models
               <string>[Soil].FBiom[1] as FBiom10cm</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -3788,10 +3788,10 @@ namespace Models
               <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
               <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
               <string>[Maize].Phenology.DaysAfterSowing</string>
-              <string>[Maize].Phenology.Photoperiod.Value</string>
-              <string>[Maize].Phenology.Photosensitive.Target.Value</string>
+              <string>[Maize].Phenology.Photoperiod.Value()</string>
+              <string>[Maize].Phenology.Photosensitive.Target.Value()</string>
               <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
-              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
+              <string>[Maize].Structure.MainStemFinalNodeNumber.Value()</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Soil].SoilWater.LeachNO3</string>
               <string>[Soil].SoilWater.flow_no3</string>
@@ -3847,9 +3847,9 @@ namespace Models
               <string>[Gliricidia].Stem.Live.Wt</string>
               <string>[Gliricidia].Root.Live.Wt</string>
               <string>[Gliricidia].Root.TotalDMDemand</string>
-              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
-              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
-              <string>[Gliricidia].Root.PartitionFraction.Value</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value()</string>
               <string>[TreePruningRule].Script.AnnualFoliageHarvest</string>
             </VariableNames>
             <EventNames>
@@ -4631,8 +4631,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Maize.Grain.NumberFunction.Value</XFieldName>
-          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value</YFieldName>
+          <XFieldName>Observed.Maize.Grain.NumberFunction.Value()</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

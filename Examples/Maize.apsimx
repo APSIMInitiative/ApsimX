@@ -31,7 +31,7 @@
           <string>Maize.AboveGround.N</string>
           <string>Maize.Grain.Wt</string>
           <string>Maize.Grain.Size</string>
-          <string>Maize.Grain.NumberFunction.Value</string>
+          <string>Maize.Grain.NumberFunction.Value()</string>
           <string>Maize.Grain.N</string>
           <string>Maize.Total.Wt</string>
         </VariableNames>

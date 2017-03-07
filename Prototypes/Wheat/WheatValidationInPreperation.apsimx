@@ -83,7 +83,7 @@ The model consists of:
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -94,12 +94,12 @@ The model consists of:
           <Name>Juvenile</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>200</Value>
+            <FixedValue>200</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -108,7 +108,7 @@ The model consists of:
           <Name>Photosensitive</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>Target</Name>
@@ -131,7 +131,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
                 <double>10</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
           <Start>EndJuvenile</Start>
           <End>FloralInitiation</End>
@@ -140,7 +140,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>LeafAppearance</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>FloralInitiation</Start>
           <End>FlagLeaf</End>
@@ -149,12 +149,12 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>FlagLeafToFlowering</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>50</Value>
+            <FixedValue>50</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
@@ -163,12 +163,12 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>FloweringToGrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>120</Value>
+            <FixedValue>120</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
@@ -177,12 +177,12 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>550</Value>
+            <FixedValue>550</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>StartGrainFill</Start>
           <End>EndGrainFill</End>
@@ -191,12 +191,12 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>Maturing</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -205,12 +205,12 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>MaturityToHarvestRipe</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>deg day</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -219,7 +219,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -239,7 +239,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -257,7 +257,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -278,7 +278,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </Memo>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
           <Name>MainStemPrimordiaInitiationRate</Name>
@@ -288,11 +288,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>Plastochron</Name>
               <VariableReference>
                 <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>LeafTipsPerPrimordia</Name>
-                <Value>0.5</Value>
+                <FixedValue>0.5</FixedValue>
               </Constant>
             </MultiplyFunction>
             <Start>Emergence</Start>
@@ -363,15 +363,15 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </HeightFunction>
         <Constant>
           <Name>BranchingRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>ShadeInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
@@ -383,16 +383,16 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Name>Grain</Name>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.3</Value>
+          <FixedValue>0.3</FixedValue>
           <Units>g</Units>
         </Constant>
         <Constant>
           <Name>MaximumGrainsPerCob</Name>
-          <Value>700</Value>
+          <FixedValue>700</FixedValue>
           <Units>number</Units>
         </Constant>
         <PhaseLookup>
@@ -403,25 +403,25 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <VariableReference>
                   <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                  <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -434,15 +434,15 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
@@ -450,16 +450,16 @@ Though tillering is common in some maize varieties under certain agronomic condi
                   <Name>ProportionLinearPhase</Name>
                   <Constant>
                     <Name>One</Name>
-                    <Value>1</Value>
+                    <FixedValue>1</FixedValue>
                   </Constant>
                   <VariableReference>
                     <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                    <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                   </VariableReference>
                 </SubtractFunction>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -475,7 +475,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
@@ -484,7 +484,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Name>InitialPhase</Name>
             <Constant>
               <Name>InitialNconc</Name>
-              <Value>0.05</Value>
+              <FixedValue>0.05</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>StartGrainFill</End>
@@ -493,7 +493,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Name>LinearPhase</Name>
             <Constant>
               <Name>FinalNconc</Name>
-              <Value>0.013</Value>
+              <FixedValue>0.013</FixedValue>
             </Constant>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
@@ -501,7 +501,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         </PhaseLookup>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
@@ -512,32 +512,32 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>GrainNumber</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.013</Value>
+                  <FixedValue>0.013</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -549,7 +549,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>NumberFunction</Name>
           <VariableReference>
             <Name>PotentialGrainNumber</Name>
-            <VariableName>[MaximumGrainsPerCob].Value</VariableName>
+            <VariableName>[MaximumGrainsPerCob].Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>GrowthRateFactor</Name>
@@ -568,7 +568,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[GrowthRateGrainDevelopment].Value</XProperty>
+            <XProperty>[GrowthRateGrainDevelopment].Value()</XProperty>
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>Population</Name>
@@ -592,7 +592,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>DaysGrainDevelopment</Name>
           <Constant>
             <Name>LenthOfADay</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>days/day</Units>
           </Constant>
           <StartStageName>FlagLeaf</StartStageName>
@@ -602,11 +602,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>GrowthRateGrainDevelopment</Name>
           <VariableReference>
             <Name>AccumulatedGrowth</Name>
-            <VariableName>[GrowthGrainDevelopment].Value</VariableName>
+            <VariableName>[GrowthGrainDevelopment].Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrowthDuration</Name>
-            <VariableName>[DaysGrainDevelopment].Value</VariableName>
+            <VariableName>[DaysGrainDevelopment].Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Population</Name>
@@ -698,7 +698,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
 No effect of soil water content on root growth is currently captured in the model.
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>TemperatureEffect</Name>
@@ -708,7 +708,7 @@ No effect of soil water content on root growth is currently captured in the mode
 No effect of temperature on root growth is currently captured in the model.
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
@@ -718,7 +718,7 @@ No effect of temperature on root growth is currently captured in the model.
 Maximum daily N uptake is set to an arbitrarily high value.
 ]]></MemoText>
           </Memo>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
           <Units>g/m2/d</Units>
         </Constant>
         <Constant>
@@ -729,26 +729,26 @@ Maximum daily N uptake is set to an arbitrarily high value.
 Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.
 ]]></MemoText>
           </Memo>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
@@ -783,7 +783,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <Name>PreFlowering</Name>
             <Constant>
               <Name>RootFrontVelocity</Name>
-              <Value>25</Value>
+              <FixedValue>25</FixedValue>
               <Units>mm/d</Units>
             </Constant>
             <Start>Germination</Start>
@@ -793,7 +793,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <Name>PostFlowering</Name>
             <Constant>
               <Name>RootFrontVelocity</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
               <Units>mm/d</Units>
             </Constant>
             <Start>Flowering</Start>
@@ -807,12 +807,12 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         </PhaseBasedSwitch>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <BiomassRemoval>
@@ -950,11 +950,11 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <Name>LargestLeafPosition</Name>
               <VariableReference>
                 <Name>FinalLeafNumber</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>RelativePositionOfLargestLeaf</Name>
-                <Value>0.67</Value>
+                <FixedValue>0.67</FixedValue>
               </Constant>
             </MultiplyFunction>
             <LinearInterpolationFunction>
@@ -978,7 +978,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <double>90000</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
+              <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Breadth</Name>
@@ -999,24 +999,24 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                   <double>-0.016</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value</XProperty>
+              <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>Skewness</Name>
-              <Value>0.00025</Value>
+              <FixedValue>0.00025</FixedValue>
             </Constant>
           </BellCurveFunction>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.03</Value>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>CellDivisionStress</Name>
@@ -1105,11 +1105,11 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>MaximumNConc</Name>
@@ -1128,25 +1128,25 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.015</Value>
+            <FixedValue>0.015</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.008</Value>
+            <FixedValue>0.008</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1197,11 +1197,11 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </LinearInterpolationFunction>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.7</Value>
+            <FixedValue>0.7</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -1226,7 +1226,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>g/g</Units>
           </Constant>
         </LeafCohortParameters>
@@ -1234,7 +1234,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>2</Value>
+            <FixedValue>2</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1371,21 +1371,21 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </LinearInterpolationFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>FN</Name>
-            <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>FVPD</Name>
-            <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
           </VariableReference>
         </MinimumFunction>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1414,23 +1414,23 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>StartStage</Name>
-            <Value>5.2</Value>
+            <FixedValue>5.2</FixedValue>
           </Constant>
           <Constant>
             <Name>GrowthDuration</Name>
-            <Value>120</Value>
+            <FixedValue>120</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>25</Value>
+            <FixedValue>25</FixedValue>
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -1456,54 +1456,54 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.3</Value>
+          <FixedValue>0.3</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1555,7 +1555,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </VariableReference>
           <Constant>
             <Name>CobsPerStem</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
         </MultiplyFunction>
         <DivideFunction>
@@ -1566,30 +1566,30 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           </VariableReference>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
         </DivideFunction>
         <PopulationBasedDemandFunction>
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>StartStage</Name>
-            <Value>5.5</Value>
+            <FixedValue>5.5</FixedValue>
           </Constant>
           <Constant>
             <Name>GrowthDuration</Name>
-            <Value>300</Value>
+            <FixedValue>300</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>23</Value>
+            <FixedValue>23</FixedValue>
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -1615,30 +1615,30 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.003</Value>
+          <FixedValue>0.003</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1658,22 +1658,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1725,7 +1725,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
@@ -1746,7 +1746,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1756,15 +1756,15 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <MinimumFunction>
           <Name>DMDemandFunctionX</Name>
@@ -1804,9 +1804,9 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>SpecificStemLengthMax</Name>
               <Constant>
                 <Name>SpecificStemLengthMax</Name>
-                <Value>0.1</Value>
+                <FixedValue>0.1</FixedValue>
               </Constant>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Branches</Name>
@@ -1830,7 +1830,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>PreStemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>FloralInitiation</End>
@@ -1839,7 +1839,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>StemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.82</Value>
+                <FixedValue>0.82</FixedValue>
               </Constant>
               <Start>FloralInitiation</Start>
               <End>Flowering</End>
@@ -1848,32 +1848,32 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -2071,8 +2071,8 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
       </Memo>
       <Cultivar>
         <Name>Pioneer_39G12</Name>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
         <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10</Command>
         <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.6,1,1</Command>
       </Cultivar>
@@ -2087,15 +2087,15 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
 The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 405</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 120</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 530</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 405</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>Makueni</Name>
@@ -2105,15 +2105,15 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 The variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 432</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 120</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 530</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 432</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>NSCM_41</Name>
@@ -2123,15 +2123,15 @@ The variety Makueni Composite is a kenyan variety with similar phenology but sli
 The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>sc401</Name>
@@ -2141,15 +2141,15 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
 The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>r201</Name>
@@ -2159,15 +2159,15 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
 The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 450</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.375</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 450</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.375</Command>
       </Cultivar>
       <Cultivar>
         <Name>sc501</Name>
@@ -2177,15 +2177,15 @@ The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is
 The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>sr52</Name>
@@ -2195,15 +2195,15 @@ The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod res
 The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>Melkassa</Name>
@@ -2213,15 +2213,15 @@ The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
 The variety Melkassa is a local early-medium maturing Ethiopian variety.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 230</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 160</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 387</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.33</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 160</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 387</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.33</Command>
       </Cultivar>
       <Cultivar>
         <Name>r215</Name>
@@ -2231,15 +2231,15 @@ The variety Melkassa is a local early-medium maturing Ethiopian variety.
 The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 250</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>mh18</Name>
@@ -2249,15 +2249,15 @@ The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
 The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 260</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 260</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 486</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 486</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>CG4141</Name>
@@ -2267,15 +2267,15 @@ The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
 The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 233</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 233</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 468</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 468</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>sc601</Name>
@@ -2285,15 +2285,15 @@ The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod re
 The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 560</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 495</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 560</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 495</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>sc625</Name>
@@ -2303,15 +2303,15 @@ The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
 The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>sc623</Name>
@@ -2321,15 +2321,15 @@ The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
 The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>mh12</Name>
@@ -2339,15 +2339,15 @@ The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
 The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>mh16</Name>
@@ -2357,15 +2357,15 @@ The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod respons
 The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>mh17</Name>
@@ -2375,15 +2375,15 @@ The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod respons
 The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>mh19</Name>
@@ -2393,15 +2393,15 @@ The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod respons
 The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 290</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 570</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 504</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.361</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 570</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 504</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.361</Command>
       </Cultivar>
       <Cultivar>
         <Name>malawi_local</Name>
@@ -2411,72 +2411,72 @@ The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod respons
 The variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 600</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 360</Command>
-        <Command>[Grain].MaximumPotentialGrainSize.Value = 0.217</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 600</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 14</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 360</Command>
+        <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.217</Command>
       </Cultivar>
       <Cultivar>
         <Name>Dekalb_XL82</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 211</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 211</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 472</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 813</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 101</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 813</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5009</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 220</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 50</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 713</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_40</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 220</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 220</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 50</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 713</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
       </Cultivar>
       <Cultivar>
         <Name>GH_5019WX</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 255</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 255</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24.0</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value = 550</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 101</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 694</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Laila</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 211</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 211</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 1</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 812</Command>
-        <Command>[Phenology].Maturing.Target.Value = 1</Command>
-        <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 36</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  720</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 1</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 812</Command>
+        <Command>[Phenology].Maturing.Target.FixedValue = 1</Command>
+        <Command>[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 36</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue =  720</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_39V43</Name>
@@ -2486,12 +2486,12 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
 VShort duration variety released in New Zealand by Pioneer
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 150</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 450</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
         <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
         <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 18</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
       </Cultivar>
@@ -2503,29 +2503,29 @@ VShort duration variety released in New Zealand by Pioneer
 VShort duration variety released in New Zealand by Pioneer
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 280</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_38H20</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 210</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 210</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
       </Cultivar>
       <Cultivar>
         <Name>Pioneer_33M54</Name>
-        <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
-        <Command>[Phenology].Juvenile.Target.Value = 270</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 270</Command>
       </Cultivar>
       <Cultivar>
         <Name>Hycorn_53</Name>
-        <Command>[Phenology].Juvenile.Target.Value = 235</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 235</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 520</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
-        <Command>[Grain].MaximumGrainsPerCob.Value =  550</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 520</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
+        <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
       </Cultivar>
       <CropType>Maize</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
@@ -2589,7 +2589,7 @@ The model consists of:
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -2600,17 +2600,17 @@ The model consists of:
           <Name>Vegetative</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MeanPhyllochron.Value</VariableName>
+              <VariableName>[Structure].MeanPhyllochron.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>HSTS</Name>
-              <VariableName>[Phenology].HaunStageTerminalSpikelet.Value</VariableName>
+              <VariableName>[Phenology].HaunStageTerminalSpikelet.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>Emergence</Start>
@@ -2620,7 +2620,7 @@ The model consists of:
           <Name>StemElongation</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>TerminalSpikelet</Start>
           <End>FlagLeaf</End>
@@ -2629,23 +2629,23 @@ The model consists of:
           <Name>EarlyReproductive</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>2.5</Value>
+              <FixedValue>2.5</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>PhotoPeriodResponse</Name>
               <Constant>
                 <Name>Base</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
               </Constant>
               <MultiplyFunction>
                 <Name>IncreaseDueToPhotoPeriod</Name>
@@ -2664,7 +2664,7 @@ The model consists of:
                       <double>0</double>
                     </Y>
                   </XYPairs>
-                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                  <XProperty>[Phenology].Photoperiod.Value()</XProperty>
                 </LinearInterpolationFunction>
                 <DivideFunction>
                   <Name>RelativePhotoPeriodSensitivity</Name>
@@ -2674,7 +2674,7 @@ The model consists of:
                   </VariableReference>
                   <Constant>
                     <Name>MaxPpSensitivity</Name>
-                    <Value>5</Value>
+                    <FixedValue>5</FixedValue>
                   </Constant>
                 </DivideFunction>
               </MultiplyFunction>
@@ -2687,11 +2687,11 @@ The model consists of:
           <Name>GrainDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>120</Value>
+            <FixedValue>120</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
@@ -2700,11 +2700,11 @@ The model consists of:
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>545</Value>
+            <FixedValue>545</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>StartGrainFill</Start>
           <End>EndGrainFill</End>
@@ -2713,11 +2713,11 @@ The model consists of:
           <Name>Maturing</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>35</Value>
+            <FixedValue>35</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -2726,11 +2726,11 @@ The model consists of:
           <Name>Ripening</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>300</Value>
+            <FixedValue>300</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -2739,7 +2739,7 @@ The model consists of:
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -2796,7 +2796,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -2815,7 +2815,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -2833,7 +2833,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -2849,7 +2849,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
 ]]></MemoText>
           </Memo>
-          <Value>7</Value>
+          <FixedValue>7</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -2858,7 +2858,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod]]></MemoText>
           </Memo>
-          <Value>8</Value>
+          <FixedValue>8</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -2867,7 +2867,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp]]></MemoText>
           </Memo>
-          <Value>3</Value>
+          <FixedValue>3</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <DivideFunction>
@@ -2885,7 +2885,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </AddFunction>
           <Constant>
             <Name>Two</Name>
-            <Value>2</Value>
+            <FixedValue>2</FixedValue>
           </Constant>
         </DivideFunction>
         <HoldFunction>
@@ -2894,25 +2894,25 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>ValueToHold</Name>
             <VariableReference>
               <Name>MineafNumber</Name>
-              <VariableName>[Phenology].MinimumLeafNumber.Value</VariableName>
+              <VariableName>[Phenology].MinimumLeafNumber.Value()</VariableName>
             </VariableReference>
             <MultiplyFunction>
               <Name>VernalLeaves</Name>
               <VariableReference>
                 <Name>UnVernalisedLeaves</Name>
-                <VariableName>[Phenology].VrnSensitivity.Value</VariableName>
+                <VariableName>[Phenology].VrnSensitivity.Value()</VariableName>
               </VariableReference>
               <MaximumFunction>
                 <Name>RelativeVernalisation</Name>
                 <Constant>
                   <Name>Zero</Name>
-                  <Value>0</Value>
+                  <FixedValue>0</FixedValue>
                 </Constant>
                 <SubtractFunction>
                   <Name>RelativeVernalisation</Name>
                   <Constant>
                     <Name>One</Name>
-                    <Value>1</Value>
+                    <FixedValue>1</FixedValue>
                   </Constant>
                   <AccumulateFunction>
                     <Name>AccumVern</Name>
@@ -2922,18 +2922,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                         <Name>DeltaHS</Name>
                         <VariableReference>
                           <Name>ThermalTime</Name>
-                          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
                         </VariableReference>
                         <VariableReference>
                           <Name>Phyllochron</Name>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                         </VariableReference>
                       </DivideFunction>
                       <ExponentialFunction>
                         <Name>ExponentialFunction</Name>
                         <VariableReference>
                           <Name>MeanTemperature</Name>
-                          <VariableName>[Phenology].MeanTemp.Value</VariableName>
+                          <VariableName>[Phenology].MeanTemp.Value()</VariableName>
                         </VariableReference>
                         <A>0</A>
                         <B>0.4</B>
@@ -2950,7 +2950,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>PhotoPLeaves</Name>
               <VariableReference>
                 <Name>ShortPpLeaves</Name>
-                <VariableName>[Phenology].PpSensitivity.Value</VariableName>
+                <VariableName>[Phenology].PpSensitivity.Value()</VariableName>
               </VariableReference>
               <LinearInterpolationFunction>
                 <Name>PhotoPeriodReductionFactor</Name>
@@ -2965,7 +2965,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                <XProperty>[Phenology].Photoperiod.Value()</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
           </AddFunction>
@@ -2977,16 +2977,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>FLNlessIntercept</Name>
             <VariableReference>
               <Name>FinalLeafNumber</Name>
-              <VariableName>[Phenology].FinalLeafNumber.Value</VariableName>
+              <VariableName>[Phenology].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
-              <Value>2.85</Value>
+              <FixedValue>2.85</FixedValue>
             </Constant>
           </SubtractFunction>
           <Constant>
             <Name>Slope</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
         </DivideFunction>
         <DaysAfterSowing>0</DaysAfterSowing>
@@ -2995,7 +2995,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -3024,7 +3024,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <Constant>
             <Name>BasePhyllochron</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
           </Constant>
           <Memo>
             <Name>Rational</Name>
@@ -3033,7 +3033,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </MultiplyFunction>
         <VariableReference>
           <Name>MainStemFinalNodeNumber</Name>
-          <VariableName>[Phenology].FinalLeafNumber.Value</VariableName>
+          <VariableName>[Phenology].FinalLeafNumber.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
           <Name>BranchingRate</Name>
@@ -3073,7 +3073,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>Reproductive</Name>
               <Constant>
                 <Name>Zero</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>TerminalSpikelet</Start>
               <End>HarvestRipe</End>
@@ -3094,7 +3094,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Stem].PercentWSC.Value</XProperty>
+              <XProperty>[Stem].PercentWSC.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Nitrogen</Name>
@@ -3164,7 +3164,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>0</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MeanTillerGrowthRate.Value</XProperty>
+              <XProperty>[Structure].MeanTillerGrowthRate.Value()</XProperty>
             </LinearInterpolationFunction>
             <Start>TerminalSpikelet</Start>
             <End>Flowering</End>
@@ -3219,7 +3219,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
-              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              <VariableName>[Phenology].ThermalTime.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>StemPopulation</Name>
@@ -3233,7 +3233,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MeanPhyllochron</Name>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
@@ -3254,23 +3254,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.043</Value>
+          <FixedValue>0.043</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -3282,7 +3282,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>AccumThermalTime</Name>
           <VariableReference>
             <Name>DailyThermalTimeValue</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>Flowering</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -3313,25 +3313,25 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+                <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <VariableReference>
                   <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                  <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -3344,15 +3344,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
@@ -3360,16 +3360,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>ProportionLinearPhase</Name>
                   <Constant>
                     <Name>One</Name>
-                    <Value>1</Value>
+                    <FixedValue>1</FixedValue>
                   </Constant>
                   <VariableReference>
                     <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                    <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                   </VariableReference>
                 </SubtractFunction>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -3381,7 +3381,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>NumberFunction</Name>
           <Constant>
             <Name>GrainsPerStem</Name>
-            <Value>25</Value>
+            <FixedValue>25</FixedValue>
             <Units>/g</Units>
           </Constant>
           <VariableReference>
@@ -3408,7 +3408,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>DaysGrainDevelopment</Name>
             <Constant>
               <Name>LenthOfADay</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
               <Units>days/day</Units>
             </Constant>
             <StartStageName>FlagLeaf</StartStageName>
@@ -3417,7 +3417,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </DivideFunction>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -3427,33 +3427,33 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.026</Value>
+                  <FixedValue>0.026</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -3534,7 +3534,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <AirTemperatureFunction>
           <Name>TemperatureEffect</Name>
@@ -3554,15 +3554,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </AirTemperatureFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
@@ -3570,7 +3570,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -3579,7 +3579,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Flowering</End>
@@ -3588,7 +3588,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Flowering</End>
@@ -3596,15 +3596,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -3612,7 +3612,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -3621,7 +3621,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PostEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>20</Value>
+              <FixedValue>20</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Maturity</End>
@@ -3719,12 +3719,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -3781,19 +3781,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>CohortParameters</Name>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0.3</Value>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <MinimumFunction>
             <Name>CellDivisionStress</Name>
@@ -3849,7 +3849,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>GrowthDuration</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
           </VariableReference>
           <PhaseLookup>
             <Name>LagDuration</Name>
@@ -3859,11 +3859,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>LagDuration</Name>
                 <Constant>
                   <Name>Multiplier</Name>
-                  <Value>4</Value>
+                  <FixedValue>4</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>Phyllochron</Name>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
               <Start>Emergence</Start>
@@ -3873,7 +3873,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>StemElongation</Name>
               <ExpressionFunction>
                 <Name>LagDuration</Name>
-                <Expression>[Phenology].GrainFilling.Target.Value+[Phenology].GrainDevelopment.Target.Value + [Phenology].EarlyReproductive.Target.Value - [Leaf].CohortParameters.SenescenceDuration.Value</Expression>
+                <Expression>[Phenology].GrainFilling.Target.Value()+[Phenology].GrainDevelopment.Target.Value() + [Phenology].EarlyReproductive.Target.Value() - [Leaf].CohortParameters.SenescenceDuration.Value()</Expression>
               </ExpressionFunction>
               <Start>TerminalSpikelet</Start>
               <End>FlagLeaf</End>
@@ -3883,24 +3883,24 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>3</Value>
+              <FixedValue>3</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>RelativeBranchLeafSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>MaximumNConc</Name>
@@ -3955,13 +3955,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -4012,15 +4012,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -4045,13 +4045,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.3</Value>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <MultiplyFunction>
             <Name>MaxArea</Name>
             <Constant>
               <Name>AreaLargestLeaves</Name>
-              <Value>2600</Value>
+              <FixedValue>2600</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -4072,19 +4072,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.5</Value>
+            <FixedValue>1.5</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -4213,23 +4213,23 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -4273,11 +4273,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -4305,27 +4305,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>ExpansionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Spike].HeadNumber.Value</VariableName>
+            <VariableName>[Spike].HeadNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>StartStage</Name>
-            <Value>5.2</Value>
+            <FixedValue>5.2</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>0.4</Value>
+            <FixedValue>0.4</FixedValue>
           </Constant>
           <Constant>
             <Name>GrowthDuration</Name>
-            <Value>453</Value>
+            <FixedValue>453</FixedValue>
           </Constant>
         </PopulationBasedDemandFunction>
         <Biomass>
@@ -4336,34 +4336,34 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.003</Value>
+          <FixedValue>0.003</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>HeadNumber</Name>
           <Constant>
             <Name>FertileTillers</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -4410,22 +4410,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -4439,11 +4439,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Biomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -4487,11 +4487,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>DMRetranslocationFactor</Name>
@@ -4499,7 +4499,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Flowering</End>
@@ -4508,7 +4508,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0.5</Value>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -4526,7 +4526,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>PreStemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.4</Value>
+                <FixedValue>0.4</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>TerminalSpikelet</End>
@@ -4535,7 +4535,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>StemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>TerminalSpikelet</Start>
               <End>Flowering</End>
@@ -4593,22 +4593,22 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </DivideFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -4715,405 +4715,405 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Name>New Zealand</Name>
           <Cultivar>
             <Name>Alberic</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Amarok</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenWinter</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Claire</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Einstein</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Exceed</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Majestic</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Option</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Otane</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Regency</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Richmond</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Robigus</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rongotea</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Sage</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Saracen</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Savannah</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Solstice</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Tanker</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Tribute</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wakanui</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Weston</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Australia</Name>
           <Cultivar>
             <Name>Axe</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Bolac</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Derrimut</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>GattonHartog</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gamenya</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gladius</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gutha</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>H45</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>H46</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kennedy</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lang</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Livingston</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lorikeet</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>MacKellar</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>McCubbin</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ruby</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Spear</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-            <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 1</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
           </Cultivar>
           <Cultivar>
             <Name>Sunco</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ventura</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wedgetail</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wilgoyne</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Grain].MaximumPotentialGrainSize.Value = 1</Command>
-            <Command>[Phenology].GrainFilling.Target.Value = 580</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 1</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 580</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wyalkatchem</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Yitpi</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Turkey</Name>
           <Cultivar>
             <Name>Konya</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
-            <Command>[Grain].NumberFunction.GrainsPerStem.Value = 20</Command>
-            <Command>[Grain].MaximumPotentialGrainSize.Value = 0.050</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Grain].NumberFunction.GrainsPerStem.FixedValue = 20</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.050</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>China</Name>
           <Cultivar>
             <Name>Keyu13</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>USA</Name>
           <Cultivar>
             <Name>Yecora</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Europe</Name>
           <Cultivar>
             <Name>Dekan</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rosario</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ararat</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
           <Name>Africa</Name>
           <Cultivar>
             <Name>HAR1685</Name>
-            <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-            <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-            <Command>[Phenology].PpSensitivity.Value = 3</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           </Cultivar>
         </CultivarFolder>
       </CultivarFolder>
@@ -6187,7 +6187,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Phenology.DaysAfterSowing.Value</string>
+            <string>[Wheat].Phenology.DaysAfterSowing.Value()</string>
             <string>Wheat.Phenology.CurrentPhaseName</string>
             <string>Wheat.Phenology.Stage</string>
             <string>Wheat.Phenology.Zadok.Stage</string>
@@ -6205,8 +6205,8 @@ namespace Models
             <string>Wheat.WaterSupplyDemandRatio</string>
             <string>Wheat.Leaf.CoverTotal</string>
             <string>[Wheat].Leaf.SpecificArea</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -6721,8 +6721,8 @@ namespace Models
             <string>Wheat.Grain.Wt</string>
             <string>Wheat.WaterSupplyDemandRatio</string>
             <string>[Wheat].Leaf.SpecificArea</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7201,8 +7201,8 @@ namespace Models
             <string>Wheat.Grain.Wt</string>
             <string>Wheat.WaterSupplyDemandRatio</string>
             <string>[Wheat].Leaf.SpecificArea</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7681,8 +7681,8 @@ namespace Models
             <string>Wheat.Grain.Wt</string>
             <string>Wheat.WaterSupplyDemandRatio</string>
             <string>[Wheat].Leaf.SpecificArea</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>

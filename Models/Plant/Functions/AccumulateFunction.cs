@@ -65,7 +65,7 @@ namespace Models.PMF.Functions
                 double DailyIncrement = 0.0;
                 foreach (IFunction function in ChildFunctions)
                 {
-                    DailyIncrement += function.Value;
+                    DailyIncrement += function.Value();
                 }
 
                 AccumulatedValue += DailyIncrement;
@@ -84,12 +84,9 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return AccumulatedValue;
-            }
+            return AccumulatedValue;
         }
 
         /// <summary>Called when [cut].</summary>
