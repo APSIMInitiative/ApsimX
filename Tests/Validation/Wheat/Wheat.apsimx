@@ -305,8 +305,8 @@ science. The Wheat model has been tested on a range of environmental conditions.
           <Manager>
             <Name>ApplyFertiliser</Name>
             <Script>
-              <Amount>160</Amount>
               <FertDayOfYear>186</FertDayOfYear>
+              <Amount>160</Amount>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -8602,8 +8602,8 @@ namespace Models
           <Manager>
             <Name>TopdressFertiliser</Name>
             <Script>
-              <Amount>0</Amount>
               <FertDayOfYear>239</FertDayOfYear>
+              <Amount>0</Amount>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

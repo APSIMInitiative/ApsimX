@@ -96,12 +96,10 @@ namespace Models.WaterModel
             // weight effectiveness of crop canopies
             //    0 (no effect) to 1 (full effect)
 
-            double[] canopyfact = EffectiveCoverMultiplier.Values;  // canopy factor (0-1)
-
             double coverSurfaceCrop = 0.0;  // efective total cover (0-1)
             for (int canopy = 0; canopy < canopies.Count; canopy++)
             {
-                double effectiveCropCover = canopies[canopy].CoverTotal * canopyfact[canopy];
+                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value(canopy);
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 
