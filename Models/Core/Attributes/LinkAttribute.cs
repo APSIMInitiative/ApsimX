@@ -30,9 +30,8 @@ namespace Models.Core
         public virtual bool IsScoped(FieldInfo field)
         {
             if (typeof(IFunction).IsAssignableFrom(field.FieldType) ||
-                        typeof(IFunctionArray).IsAssignableFrom(field.FieldType) ||
-                        typeof(Biomass).IsAssignableFrom(field.FieldType) ||
-                        field.FieldType.Name == "Object")
+                typeof(Biomass).IsAssignableFrom(field.FieldType) ||
+                field.FieldType.Name == "Object")
                 return false;
             else
                 return true;

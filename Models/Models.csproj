@@ -198,7 +198,6 @@
     <Compile Include="Plant\Interfaces\IHasWaterDemand.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
-    <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />

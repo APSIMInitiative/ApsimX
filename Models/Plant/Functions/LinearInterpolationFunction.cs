@@ -16,7 +16,7 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
+    public class LinearInterpolationFunction : Model, IFunction
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
@@ -89,33 +89,6 @@ namespace Models.PMF.Functions
         public double ValueForX(double XValue)
         {
             return XYPairs.ValueIndexed(XValue);
-        }
-
-        /// <summary>Gets the values.</summary>
-        /// <value>The values.</value>
-        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public double[] Values
-        {
-            get
-            {
-                string PropertyName = XProperty;
-
-                double[] v = (double[])Apsim.Get(this, XProperty);
-                if (v == null)
-                    throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-                if (v is Array)
-                {
-                    double[] ReturnValues = new double[v.Length];
-                    for (int i = 0; i < v.Length; i++)
-                        ReturnValues[i] = XYPairs.ValueIndexed(v[i]);
-                    return ReturnValues;
-                }
-                else
-                {
-                    double XValue = Convert.ToDouble(v);
-                    return new double[1] { XYPairs.ValueIndexed(XValue) };
-                }
-            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
