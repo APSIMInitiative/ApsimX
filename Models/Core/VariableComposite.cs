@@ -76,8 +76,6 @@ namespace Models.Core
                     }
                 }
 
-                if (relativeTo is IFunction)
-                    return (relativeTo as IFunction).Value();
                 return relativeTo;
             }
 

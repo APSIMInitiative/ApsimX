@@ -158,6 +158,7 @@
     <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
+    <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
