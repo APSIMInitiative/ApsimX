@@ -13,13 +13,16 @@
     public class NutrientPool : Model
     {
         [Link]
+        Soil soil = null;
+
+        [Link]
         SoilOrganicMatter soilOrganicMatter = null;
 
         [Link]
-        IFunctionArray InitialiseCarbon = null;
+        IFunction InitialiseCarbon = null;
 
         [Link]
-        IFunctionArray InitialiseNitrogen = null;
+        IFunction InitialiseNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>
         public double CNRatio { get { return soilOrganicMatter.SoilCN; } }
@@ -36,8 +39,13 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            C = InitialiseCarbon.Values;
-            N = InitialiseNitrogen.Values;
+            C = new double[soil.Thickness.Length];
+            for (int i = 0; i < C.Length; i++)
+                C[i] = InitialiseCarbon.Value(i);
+
+            N = new double[soil.Thickness.Length];
+            for (int i = 0; i < N.Length; i++)
+                N[i] = InitialiseNitrogen.Value(i);
         }
 
         /// <summary>

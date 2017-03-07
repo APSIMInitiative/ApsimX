@@ -18,7 +18,7 @@ namespace Models.Soils.Nutrient
         private NutrientPool destination = null;
 
         [Link]
-        private IFunctionArray rate = null;
+        private IFunction rate = null;
 
         //[Link]
         //private IFunctionArray CO2Loss = null;
@@ -58,10 +58,9 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            double[] rates = rate.Values;
             for (int i= 0; i < source.C.Length; i++)
             {
-                double carbonFlow = rates[i] * source.C[i];
+                double carbonFlow = rate.Value(i) * source.C[i];
                 double nitrogenFlow = carbonFlow * source.CNRatio;
                 source.C[i] -= carbonFlow;
                 destination.C[i] += carbonFlow;

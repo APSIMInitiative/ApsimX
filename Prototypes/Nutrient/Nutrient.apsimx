@@ -265,6 +265,10 @@
               </NutrientPool>
               <Flow>
                 <Name>Flow</Name>
+                <Constant>
+                  <Name>Constant</Name>
+                  <FixedValue>0</FixedValue>
+                </Constant>
               </Flow>
             </Nutrient>
             <RecordNumber>0</RecordNumber>
