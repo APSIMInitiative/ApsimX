@@ -32,7 +32,7 @@
   </Cultivar>
   <Constant>
     <Name>KNO3</Name>
-    <Value>0.02</Value>
+    <FixedValue>0.02</FixedValue>
   </Constant>
   <Constant>
     <Name>RootFraction</Name>
@@ -40,7 +40,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[The proportion of plant growth  partitioned to roots has been set to 10% as this value lies between estimates used by Henson and Dolmat (2003) and van Kraalingen et al. (1989). ]]></MemoText>
     </Memo>    
-    <Value>0.1</Value>
+    <FixedValue>0.1</FixedValue>
   </Constant>
   <Constant>
     <Name>RootNConcentration</Name>
@@ -48,7 +48,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[Root nitrogen concentration is set at 0.39% (Goh, 2005)]]></MemoText>
     </Memo>    
-    <Value>0.39</Value>
+    <FixedValue>0.39</FixedValue>
   </Constant>
   <Constant>
     <Name>RootSenescenceRate</Name>
@@ -56,11 +56,11 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[A constant root turnover rate of 0.001 d-1 is used for all soil layers.  This value is larger than the value of 0.00065 which can be calculated from the root turnover functions given by Henson and Dolmat (2003), reflecting the slightly higher fraction of growth partitioned to roots in this model.]]></MemoText>
     </Memo>    
-    <Value>0.001</Value>
+    <FixedValue>0.001</FixedValue>
   </Constant>
   <Constant>
     <Name>InitialFrondNumber</Name>
-    <Value>5</Value>
+    <FixedValue>5</FixedValue>
   </Constant>
   <AirTemperatureFunction>
     <Name>RelativeDevelopmentalRate</Name>
@@ -107,19 +107,19 @@
   </LinearInterpolationFunction>
   <Constant>
     <Name>ExpandingFronds</Name>
-    <Value>5</Value>
+    <FixedValue>5</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondMaximumNConcentration</Name>
-    <Value>1.15</Value>
+    <FixedValue>1.15</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondCriticalNConcentration</Name>
-    <Value>1.1</Value>
+    <FixedValue>1.1</FixedValue>
   </Constant>
   <Constant>
     <Name>FrondMinimumNConcentration</Name>
-    <Value>0.5</Value>
+    <FixedValue>0.5</FixedValue>
   </Constant>
   <SplineInterpolationFunction>
     <Name>FrondMaxArea</Name>
@@ -198,7 +198,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[Sex determination is calculated during a phase occurring 49 to 57 fronds before bunch maturity. A constant value is assumed for Female Flower Fraction at the beginning of this phase.  This represents the fraction of female flowers in the absence of any further stress effect.]]></MemoText>
     </Memo>
-    <Value>0.8</Value>
+    <FixedValue>0.8</FixedValue>
   </Constant>
   <LinearInterpolationFunction>
     <Name>FFFStressImpact</Name>
@@ -263,7 +263,7 @@
   </LinearInterpolationFunction>
   <Constant>
     <Name>BunchOilConversionFactor</Name>
-    <Value>1.55</Value>
+    <FixedValue>1.55</FixedValue>
   </Constant>
   <Constant>
     <Name>RipeBunchWaterContent</Name>
@@ -271,7 +271,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[]]></MemoText>
     </Memo>
-    <Value>0.47</Value>
+    <FixedValue>0.47</FixedValue>
   </Constant>
   <Constant>
     <Name>BunchNConcentration</Name>
@@ -279,7 +279,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[]]></MemoText>
     </Memo>
-    <Value>0.603</Value>
+    <FixedValue>0.603</FixedValue>
   </Constant>
   <LinearInterpolationFunction>
     <Name>SpecificLeafArea</Name>
@@ -405,7 +405,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[Photosynthesis is calculated using a radiation use efficiency (RUE) of 1.22 g MJ-1 of intercepted direct beam total short wave radiation.  RUE for diffuse light increases from this direct beam value by up to 33%, in proportion to the fraction of daily intercepted radiation, corresponding with the observed impact of diffuse light penetration on forest growth (Alton et al., 2007).  Daily average RUE is calculated as the average of the direct and diffuse beam RUE values, weighted toward the diffuse light RUE using the square of the daily diffuse light fraction (van Kraalingen et al., 1989).  This approach yields a value of 1.35 for a clear day with approximately 30% diffuse light which matches estimates provided by Henson and Dolmat (2003) assuming a density of 140 palms ha-1.]]></MemoText>
     </Memo>
-    <Value>1.22</Value>
+    <FixedValue>1.22</FixedValue>
   </Constant>
   <Constant>
     <Name>RootFrontVelocity</Name>
@@ -413,7 +413,7 @@
       <Name>Memo</Name>
       <MemoText><![CDATA[Fixed root front velocity taken from Carr(2011).]]></MemoText>
     </Memo>
-    <Value>30</Value>
+    <FixedValue>30</FixedValue>
   </Constant>
   <plant_status>out</plant_status>
   <kl />

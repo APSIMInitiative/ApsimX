@@ -61,7 +61,7 @@ namespace Models.PMF.Phen
         /// <param name="Mint">The mint.</param>
         public void DoVernalisation(double Maxt, double Mint)
         {
-            CumulativeVD += VDModel.Value;
+            CumulativeVD += VDModel.Value();
         }
 
 

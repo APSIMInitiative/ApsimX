@@ -18,21 +18,18 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-                foreach (IFunction F in ChildFunctions)
-                {
-                    PhaseLookupValue P = F as PhaseLookupValue;
-                    if (P.InPhase)
-                        return P.Value;
-                }
-                return 0;  // Default value is zero
+            foreach (IFunction F in ChildFunctions)
+            {
+                PhaseLookupValue P = F as PhaseLookupValue;
+                if (P.InPhase)
+                    return P.Value(arrayIndex);
             }
+            return 0;  // Default value is zero
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

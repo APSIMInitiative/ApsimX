@@ -28,7 +28,10 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot call Value on XYPairs function. Must be indexed.</exception>
-        public double Value { get { throw new Exception("Cannot call Value on XYPairs function. Must be indexed."); } }
+        public double Value(int arrayIndex = -1)
+        {
+            throw new Exception("Cannot call Value on XYPairs function. Must be indexed.");
+        }
 
         /// <summary>Values the indexed.</summary>
         /// <param name="dX">The d x.</param>

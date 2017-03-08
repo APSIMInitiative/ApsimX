@@ -55,20 +55,17 @@ namespace Models.WaterModel
         }
 
         /// <summary>Returns the value to subtract from curve number due to cover.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double cover_surface_runoff = CalcCoverForRunoff();
+            double cover_surface_runoff = CalcCoverForRunoff();
 
-                // Reduce CN2 for the day due to the cover effect
-                // NB cover_surface_runoff should really be a parameter to this function
-                // proportion of maximum cover effect on runoff (0-1)
-                double cover_fract = MathUtilities.Divide(cover_surface_runoff, CNCov, 0.0);
-                cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
-                double cover_reduction = CNRed * cover_fract;
-                return cover_reduction;
-            }
+            // Reduce CN2 for the day due to the cover effect
+            // NB cover_surface_runoff should really be a parameter to this function
+            // proportion of maximum cover effect on runoff (0-1)
+            double cover_fract = MathUtilities.Divide(cover_surface_runoff, CNCov, 0.0);
+            cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
+            double cover_reduction = CNRed * cover_fract;
+            return cover_reduction;
         }
 
         // --- Methods -----------------------------------------------------------------------
@@ -99,12 +96,10 @@ namespace Models.WaterModel
             // weight effectiveness of crop canopies
             //    0 (no effect) to 1 (full effect)
 
-            double[] canopyfact = EffectiveCoverMultiplier.Values;  // canopy factor (0-1)
-
             double coverSurfaceCrop = 0.0;  // efective total cover (0-1)
             for (int canopy = 0; canopy < canopies.Count; canopy++)
             {
-                double effectiveCropCover = canopies[canopy].CoverTotal * canopyfact[canopy];
+                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value(canopy);
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 

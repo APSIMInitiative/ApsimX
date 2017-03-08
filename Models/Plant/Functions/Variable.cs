@@ -26,12 +26,10 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Convert.ToDouble(ExpressionFunction.Evaluate(VariableName.Trim(), this));
-            }
+            object o = Apsim.Get(this, VariableName.Trim());
+            return Convert.ToDouble(o);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

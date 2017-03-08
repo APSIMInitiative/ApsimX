@@ -87,11 +87,11 @@
           <Name>EmergenceToEndOfJuvenile</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
           <Memo>
             <Name>Cludge Alert</Name>
@@ -108,7 +108,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>EndOfJuvenileToFloralInitiation</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>400</Value>
+            <FixedValue>400</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -163,7 +163,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>FloralInitiationToFlowering</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>555</Value>
+            <FixedValue>555</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -218,7 +218,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>FloweringToStartGrainFill</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>120</Value>
+            <FixedValue>120</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -244,7 +244,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>StartGrainFillToEndGrainFill</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>545</Value>
+            <FixedValue>545</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -270,7 +270,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>EndGrainFillToMaturity</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>35</Value>
+            <FixedValue>35</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -296,11 +296,11 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>MaturityToHarvestRipe</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
           <Memo>
             <Name>Cludge Alert</Name>
@@ -317,7 +317,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>ReadyForHarvesting</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1000</Value>
+            <FixedValue>1000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -343,7 +343,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
           <Name>EndCrop</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1000</Value>
+            <FixedValue>1000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ThermalTime</Name>
@@ -556,7 +556,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         </NUptake3>
         <Constant>
           <Name>GrowthStructuralFractionStage</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>DMSenescenceFraction</Name>
@@ -912,7 +912,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         </LinearInterpolationFunction>
         <Constant>
           <Name>GrowthStructuralFractionStage</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SLAMax</Name>
@@ -1335,7 +1335,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         </LinearInterpolationFunction>
         <Constant>
           <Name>GrowthStructuralFractionStage</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>DMSenescenceFraction</Name>
@@ -1476,7 +1476,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         </LinearInterpolationFunction>
         <Constant>
           <Name>GrowthStructuralFractionStage</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>DMSenescenceFraction</Name>
@@ -1952,16 +1952,16 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Name>Gamenya</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
-        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 630.0</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 630.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Spear</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 555.0</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 555.0</Command>
         <Command>[Grain].GrainsPerGramStem = 20</Command>
         <Command>[Grain].MaxGrainSize = 0.045</Command>
-        <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 580</Command>
+        <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 580</Command>
       </Cultivar>
       <Cultivar>
         <Name>Gutha</Name>
@@ -1973,24 +1973,24 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Name>Wilgoyne</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
-        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 555.0</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 555.0</Command>
         <Command>[Grain].GrainsPerGramStem = 20</Command>
         <Command>[Grain].MaxGrainSize = 0.045</Command>
-        <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 580</Command>
+        <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 580</Command>
       </Cultivar>
       <Cultivar>
         <Name>Xenos</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 4.6</Command>
-        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 380</Command>
-        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 520.0</Command>
+        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.FixedValue = 380</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 520.0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Capo</Name>
         <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 4.9</Command>
-        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 380</Command>
-        <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 520.0</Command>
+        <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.FixedValue = 380</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 520.0</Command>
       </Cultivar>
     </Plant15>
   

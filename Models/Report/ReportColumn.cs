@@ -397,7 +397,7 @@ namespace Models.Report
             {
                 if (value != null && value is IFunction)
                 {
-                    value = (value as IFunction).Value;
+                    value = (value as IFunction).Value();
                 }
                 else if (value.GetType().IsArray || value.GetType().IsClass)
                 {

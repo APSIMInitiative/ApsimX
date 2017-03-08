@@ -35,40 +35,35 @@ namespace Models.PMF.Functions
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
         /// </exception>
-        [Units("oC")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            int Layer = LayerIndex(Depth, Soil.Thickness);
+
+            if (soilTempSource == "Unknown")
             {
-                int Layer = LayerIndex(Depth, Soil.Thickness);
-
-                if (soilTempSource == "Unknown")
+                if (Soil.SoilNitrogen.ave_soil_temp != null)
                 {
-                    if (Soil.SoilNitrogen.ave_soil_temp != null)
-                    {
-                        soilTempSource = "ave_soil_temp";
-                    }
-                    else if (Soil.SoilNitrogen.st != null)
-                    {
-                        soilTempSource = "st";
-                    }
-                    else
-                    {
-                        throw new Exception(Name + ": Soil temperature was not found ");
-
-                    }
+                    soilTempSource = "ave_soil_temp";
                 }
-
-                switch (soilTempSource)
+                else if (Soil.SoilNitrogen.st != null)
                 {
-                    case "ave_soil_temp":
-                        return Soil.SoilNitrogen.ave_soil_temp[Layer];
-                    case "st":
-                        return Soil.SoilNitrogen.st[Layer];
-                    default:
-                        throw new Exception(Name + ": Unknown soil temperature source: " + soilTempSource);
+                    soilTempSource = "st";
                 }
+                else
+                {
+                    throw new Exception(Name + ": Soil temperature was not found ");
 
+                }
+            }
+
+            switch (soilTempSource)
+            {
+                case "ave_soil_temp":
+                    return Soil.SoilNitrogen.ave_soil_temp[Layer];
+                case "st":
+                    return Soil.SoilNitrogen.st[Layer];
+                default:
+                    throw new Exception(Name + ": Unknown soil temperature source: " + soilTempSource);
             }
         }
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
