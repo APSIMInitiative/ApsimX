@@ -320,6 +320,11 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\EvapoTranspiration.bmp" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OutputLayers.bmp" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.bmp" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.bmp" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Weirdo.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageReproductionProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Lifecycle.png" />
