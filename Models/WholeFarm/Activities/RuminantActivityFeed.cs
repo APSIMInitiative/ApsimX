@@ -133,7 +133,7 @@ namespace Models.WholeFarm.Activities
 						ResourceName = "Labour",
 						ResourceTypeName = "",
 						Requestor = this.Name,
-						FilterSortDetails = LabourFilterList
+						FilterDetails = LabourFilterList
 					}
 					);
 				}

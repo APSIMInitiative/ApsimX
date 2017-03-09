@@ -142,7 +142,7 @@ namespace Models.WholeFarm.Activities
 						ResourceName = "AnimalFoodStore",
 						ResourceTypeName = FeedTypeName,
 						Requestor = (child as OtherAnimalsFilterGroup).AnimalType,
-						FilterSortDetails = null
+						FilterDetails = null
 					}
 					);
 //					FoodSource.Remove(amount, this.Name, (child as OtherAnimalsFilterGroup).AnimalType);
@@ -162,7 +162,7 @@ namespace Models.WholeFarm.Activities
 						ResourceName = "Labour",
 						ResourceTypeName = "",
 						Requestor = this.Name,
-						FilterSortDetails = this.Children.Where(a => a.GetType() == typeof(ActivityLabourRequirementGroup)).ToList<object>()
+						FilterDetails = this.Children.Where(a => a.GetType() == typeof(ActivityLabourRequirementGroup)).ToList<object>()
 					}
 					);
 				}

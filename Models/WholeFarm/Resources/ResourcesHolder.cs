@@ -67,7 +67,7 @@ namespace Models.WholeFarm.Resources
 		public Model GetResourceItem(ResourceRequest Request, out bool ResourceAvailable)
 		{
 			ResourceAvailable = false;
-			if (Request.FilterSortDetails != null)
+			if (Request.FilterDetails != null)
 			{
 				if (Request.ResourceName == null)
 				{
@@ -89,7 +89,7 @@ namespace Models.WholeFarm.Resources
 				{
 					case "Models.WholeFarm.Resources.Labour":
 						List<LabourType> items = resourceGroup.Children.Where(a => a.GetType() == typeof(LabourType)).Cast<LabourType>().ToList();
-						return items.Filter(Request.FilterSortDetails.FirstOrDefault() as Model).FirstOrDefault();
+						return items.Filter(Request.FilterDetails.FirstOrDefault() as Model).FirstOrDefault();
 					default:
 						throw new Exception("Resource cannot be filtered. Filtering not implemented for "+ resourceGroupObject.GetType().ToString());
 				}

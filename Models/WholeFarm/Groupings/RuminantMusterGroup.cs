@@ -180,7 +180,7 @@ namespace Models.WholeFarm.Groupings
 						ResourceName = "Labour",
 						ResourceTypeName = "",
 						Requestor = this.Name,
-						FilterSortDetails = LabourFilterList
+						FilterDetails = LabourFilterList
 					}
 					);
 				}

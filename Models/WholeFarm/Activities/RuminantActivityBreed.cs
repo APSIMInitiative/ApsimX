@@ -337,7 +337,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Labour",
 					ResourceTypeName = this.HerdName,
 					Requestor = this.Name,
-					FilterSortDetails = ControlledMatings.LabourFilterList
+					FilterDetails = ControlledMatings.LabourFilterList
 				}
 				);
 			}

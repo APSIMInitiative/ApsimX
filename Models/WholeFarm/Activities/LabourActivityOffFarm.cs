@@ -84,7 +84,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Labour",
 					ResourceTypeName = "",
 					Requestor = this.Name,
-					FilterSortDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
+					FilterDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}
 				);
 			}

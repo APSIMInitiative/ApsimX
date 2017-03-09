@@ -508,6 +508,7 @@
     <Compile Include="WholeFarm\Resources\OtherAnimalsTypeCohort.cs" />
     <Compile Include="WholeFarm\Activities\PastureActivityManage.cs" />
     <Compile Include="WholeFarm\Resources\ResourceBaseWithTransactions.cs" />
+    <Compile Include="WholeFarm\Resources\ResourceRequests.cs" />
     <Compile Include="WholeFarm\Resources\ResourcesHolder.cs" />
     <Compile Include="WholeFarm\IResourceType.cs" />
     <Compile Include="WholeFarm\Reporting\ResourceTransaction.cs" />

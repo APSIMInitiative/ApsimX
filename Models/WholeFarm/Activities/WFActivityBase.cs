@@ -27,6 +27,25 @@ namespace Models.WholeFarm.Activities
 		public List<ResourceRequest> ResourceRequestList { get; set; }
 
 		/// <summary>
+		/// Current list of activities under this activity
+		/// Set to be performed before 
+		/// Not currently used as I can't create this in a BaseClass Commencing event
+		/// </summary>
+		[XmlIgnore]
+		public List<WFActivityBase> ActivityList { get; set; }
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// move children to a list of activities
+			// TODO: this does not create a new instance of the activities so changes will be reflected in the apsimx XML file.
+			ActivityList = Apsim.Children(this, typeof(WFActivityBase)).Cast<WFActivityBase>().ToList();
+		}
+
+		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFGetResourcesRequired in the Activity model holing top level list of activities
 		/// </summary>
@@ -35,10 +54,18 @@ namespace Models.WholeFarm.Activities
 			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 			GetResourcesRequired();
 
-			// get resources required for all children of type WFActivityBase
-			foreach (WFActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))
+			// get resources required for all dynamically created WFActivityBase activities
+			if (ActivityList != null)
 			{
-				child.GetResourcesForAllActivities();
+				foreach (WFActivityBase activity in ActivityList)
+				{
+					activity.GetResourcesForAllActivities();
+				}
+			}
+			// get resources required for all children of type WFActivityBase
+			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType() == typeof(WFActivityBase)).ToList())
+			{
+				activity.GetResourcesForAllActivities();
 			}
 		}
 
@@ -148,62 +175,6 @@ namespace Models.WholeFarm.Activities
 		/// Method to perform activity tasks if expected as soon as resources are available
 		/// </summary>
 		public abstract void PerformActivity();
-	}
-
-	///<summary>
-	/// Resource request for Resource from a ResourceType
-	///</summary> 
-	public class ResourceRequest
-	{
-		///<summary>
-		/// Name of resource being requested 
-		///</summary> 
-		public string ResourceName { get; set; }
-		///<summary>
-		/// Name of resource type being requested 
-		///</summary> 
-		public string ResourceTypeName { get; set; }
-		///<summary>
-		/// Name of item requesting resource
-		///</summary> 
-		public string Requestor { get; set; }
-		///<summary>
-		/// Amount required 
-		///</summary> 
-		public double Required { get; set; }
-		///<summary>
-		/// Amount available
-		///</summary> 
-		public double Available { get; set; }
-		///<summary>
-		/// Amount provided
-		///</summary> 
-		public double Provided { get; set; }
-		///<summary>
-		/// Filtering and sorting items list
-		///</summary> 
-		public List<object> FilterSortDetails { get; set; }
-		/////<summary>
-		///// Requesting activity containing detials and filtering options
-		/////</summary> 
-		//public object RequestDetails { get; set; }
-		///<summary>
-		/// Allow transmutation
-		///</summary> 
-		public bool AllowTransmutation { get; set; }
-		///<summary>
-		/// Allow transmutation
-		///</summary> 
-		public bool TransmutationPossible { get; set; }
-		///<summary>
-		/// ResourceRequest constructor
-		///</summary> 
-		public ResourceRequest()
-		{
-			// default values
-			TransmutationPossible = false;
-			AllowTransmutation = false;
-		}
 	}
 
 }

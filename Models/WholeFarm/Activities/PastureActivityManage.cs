@@ -197,7 +197,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Land",
 					ResourceTypeName = LandTypeNameToUse,
 					Requestor = this.Name,
-					FilterSortDetails = null
+					FilterDetails = null
 				}
 				);
 				return ResourceRequestList;
