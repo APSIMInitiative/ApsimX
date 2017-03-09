@@ -3,103 +3,16 @@
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
-    <MemoText><![CDATA[# The APSIM Wheat Model
+    <MemoText><![CDATA[The APSIM Gliricidia Model
  
-_Brown, H.E., Huth, N.I. and Holzworth, D.P._]]></MemoText>
+Huth, N.I. and Smethurst, P.J. ]]></MemoText>
   </Memo>
   <Memo>
     <Name>Introduction</Name>
-    <MemoText><![CDATA[The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-
-The wheat model consists of:
-
-* a phenology model to simulate development through sequential growth phases  
-* a structure model to simulate plant morphology 
-* a collection of organs to simulate the various plant parts  
-* an arbitrator to allocate resources (N, biomass) to the various plant organs  
-
-This work builds upon earlier APSIM Wheat models such as NWheat [Asseng200225][KeatingNWheat], NWheatS [Asseng1998163], Cropmod-Wheat[Wang2002GenericCropModel], and the earlier versions developed within the Plant Modelling Framework [brown_plant_2014].]]></MemoText>
+    <MemoText><![CDATA[The APSIM gliricidia model  . . . . . ]]></MemoText>
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
-    <Manager>
-      <Name>SowingRule</Name>
-      <Script>
-        <StartDate>12-Dec</StartDate>
-        <EndDate>30-Dec</EndDate>
-        <MinESW>30</MinESW>
-        <MinRain>30</MinRain>
-        <RainDays>10</RainDays>
-        <CultivarName>NSCM_41</CultivarName>
-        <SowingDepth>30</SowingDepth>
-        <RowSpacing>750</RowSpacing>
-        <Population>4.44</Population>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.Soils;
-using Models.Utilities;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		[Link] Plant Maize;
-		[Link] Soil Soil;
-		Accumulator accumulatedRain;
-		
-		[Description("Start of sowing window (d-mmm)")]
-		public string StartDate { get; set; }
-		[Description("End of sowing window (d-mmm)")]
-		public string EndDate { get; set; }
-		[Description("Minimum extractable soil water for sowing (mm)")]
-		public double MinESW { get; set; }
-		[Description("Accumulated rainfall required for sowing (mm)")]
-		public double MinRain { get; set; }
-		[Description("Duration of rainfall accumulation (d)")]
-		public int RainDays { get; set; }
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set; }
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set; }
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set; }
-		[Description("Plant population (/m2)")]
-		public double Population { get; set; }
-		
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
-		}
-		
-
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			accumulatedRain.Update();
-			
-			if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-			    Maize.IsAlive != true &&
-			    Soil.SoilWater.ESW > MinESW &&
-			    accumulatedRain.Sum > MinRain)
-			{
-				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
-			}
-		
-		}
-		
-	}
-}
-]]></Code>
-    </Manager>
     <Plant>
       <Name>Gliricidia</Name>
       <AccumulateFunction>
@@ -490,7 +403,7 @@ using hemispherical photography
 P.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp
 Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
           </Memo>
-          <FixedValue>0.0232</FixedValue>
+          <FixedValue>0.01</FixedValue>
           <Units>m^2/g</Units>
         </Constant>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1057,12 +970,12 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>130</double>
             </Thickness>
             <BD>
+              <double>1.4</double>
               <double>1.3</double>
-              <double>1.24</double>
-              <double>1.19</double>
-              <double>1.19</double>
-              <double>1.19</double>
-              <double>1.19</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
             </BD>
             <AirDry>
               <double>0.16</double>
@@ -1081,17 +994,17 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
               <double>0.26</double>
             </LL15>
             <DUL>
-              <double>0.24</double>
-              <double>0.25</double>
+              <double>0.35</double>
+              <double>0.35</double>
               <double>0.28</double>
               <double>0.29</double>
               <double>0.32</double>
               <double>0.31</double>
             </DUL>
             <SAT>
+              <double>0.47</double>
+              <double>0.5</double>
               <double>0.55</double>
-              <double>0.58</double>
-              <double>0.59</double>
               <double>0.59</double>
               <double>0.59</double>
               <double>0.59</double>
@@ -1116,13 +1029,29 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <catchment_area>NaN</catchment_area>
             <max_pond>0</max_pond>
             <Thickness>
-              <double>280</double>
-              <double>1600</double>
+              <double>230</double>
+              <double>400</double>
+              <double>350</double>
+              <double>500</double>
+              <double>270</double>
+              <double>130</double>
             </Thickness>
             <SWCON>
               <double>0.5</double>
               <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.5</double>
             </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
             <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
@@ -1320,7 +1249,24 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <string>[Soil].SoilWater.Es</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
-            <string>sum([Soil].SoilWater.SWmm) as TotalSWmm</string>
+            <string>sum([Soil].SoilWater.SWmm) as SWTotal</string>
+            <string>[Soil].SoilWater.SW[2] as SW30cm</string>
+            <string>[Soil].SoilWater.SW[3] as SW50cm</string>
+            <string>[Soil].SoilWater.SW[4] as SW70cm</string>
+            <string>[Soil].FInert[1] as FInert10cm</string>
+            <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
+            <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
+            <string>[Soil].SoilNitrogen.OC[3] as SOC50cm</string>
+            <string>[Soil].SoilNitrogen.OC[4] as SOC70cm</string>
+            <string>[Soil].SoilNitrogen.OC[5] as SOC90cm</string>
+            <string>[Soil].SoilNitrogen.OC[6] as SOC110cm</string>
+            <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
+            <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
+            <string>[Soil].SoilNitrogen.NO3ppm[3] as NO3ppm50cm</string>
+            <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
+            <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
+            <string>[Soil].SoilNitrogen.NO3[3] as NO3kgpha50cm</string>
+            <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
             <string>[Soil].SoilWater.Eo</string>
@@ -1341,9 +1287,9 @@ Agricultural and Forest Meteorology 94 (1999) 243±257]]></MemoText>
             <string>[Gliricidia].Stem.Live.Wt</string>
             <string>[Gliricidia].Root.Live.Wt</string>
             <string>[Gliricidia].Root.TotalDMDemand</string>
-            <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
-            <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
-            <string>[Gliricidia].Root.PartitionFraction.Value()</string>
+            <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+            <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+            <string>[Gliricidia].Root.PartitionFraction.Value</string>
             <string>[Gliricidia].AboveGround.Wt</string>
             <string>[Gliricidia].Leaf.CoverGreen</string>
           </VariableNames>
@@ -1454,8 +1400,8 @@ namespace Models
           <Script>
             <FASW>0</FASW>
             <WaterDeficit>0</WaterDeficit>
-            <AutoIrrigationOn>False</AutoIrrigationOn>
-            <FASWThreshold>0.9</FASWThreshold>
+            <AutoIrrigationOn>True</AutoIrrigationOn>
+            <FASWThreshold>0.5</FASWThreshold>
             <FASWDepth>600</FASWDepth>
           </Script>
           <Code><![CDATA[using System;
@@ -2034,14 +1980,20 @@ namespace Models
                   <double>0.18</double>
                   <double>0.19</double>
                   <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
                 </LL>
                 <KL>
                   <double>0.08</double>
                   <double>0.08</double>
                   <double>0.08</double>
                   <double>0.08</double>
+                  <double>0.08</double>
+                  <double>0.08</double>
                 </KL>
                 <XF>
+                  <double>1</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
@@ -2055,8 +2007,12 @@ namespace Models
                   <double>0.18</double>
                   <double>0.19</double>
                   <double>0.19</double>
+                  <double>0.19</double>
+                  <double>0.19</double>
                 </LL>
                 <KL>
+                  <double>0.08</double>
+                  <double>0.08</double>
                   <double>0.08</double>
                   <double>0.08</double>
                   <double>0.08</double>
@@ -2067,22 +2023,30 @@ namespace Models
                   <double>1</double>
                   <double>1</double>
                   <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
                 </XF>
               </SoilCrop>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
                 <double>200</double>
-                <double>1500</double>
+                <double>500</double>
+                <double>500</double>
+                <double>500</double>
               </Thickness>
               <BD>
                 <double>0.92</double>
                 <double>1.01</double>
                 <double>1.03</double>
                 <double>1.09</double>
+                <double>1.09</double>
+                <double>1.09</double>
               </BD>
               <AirDry>
                 <double>0.16</double>
+                <double>0.17</double>
+                <double>0.17</double>
                 <double>0.17</double>
                 <double>0.17</double>
                 <double>0.17</double>
@@ -2092,15 +2056,21 @@ namespace Models
                 <double>0.23</double>
                 <double>0.26</double>
                 <double>0.3</double>
+                <double>0.3</double>
+                <double>0.3</double>
               </LL15>
               <DUL>
                 <double>0.39</double>
                 <double>0.42</double>
                 <double>0.48</double>
                 <double>0.51</double>
+                <double>0.51</double>
+                <double>0.51</double>
               </DUL>
               <SAT>
                 <double>0.55</double>
+                <double>0.58</double>
+                <double>0.58</double>
                 <double>0.58</double>
                 <double>0.58</double>
                 <double>0.58</double>
@@ -2272,7 +2242,7 @@ namespace Models
             <Country>Guadeloupe</Country>
             <Latitude>16.2</Latitude>
             <Longitude>61.65</Longitude>
-            <DataSource>Nygren and Cruz 1998 Biomass allocaiton . . . . Agrof. Sys 41:277-292; Sierra etal 2003 application of STICS Plant Soil 256:333-345</DataSource>
+            <DataSource>Nygren and Cruz 1998 Biomass allocation . . . . Agrof. Sys 41:277-292; Sierra etal 2003 application of STICS Plant Soil 256:333-345</DataSource>
           </Soil>
           <MicroClimate>
             <Name>MicroClimate</Name>
@@ -2299,7 +2269,24 @@ namespace Models
               <string>[Soil].SoilWater.Es</string>
               <string>sum([Soil].NO3N) as TotalNO3N</string>
               <string>sum([Soil].NH4N) as TotalNH4N</string>
-              <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
+              <string>sum([Soil].SoilWater.SWmm) as SW200cm</string>
+              <string>[Soil].SoilWater.SW[2] as SW30cm</string>
+              <string>[Soil].SoilWater.SW[3] as SW50cm</string>
+              <string>[Soil].SoilWater.SW[4] as SW70cm</string>
+              <string>[Soil].FInert[1] as FInert10cm</string>
+              <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
+              <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
+              <string>[Soil].SoilNitrogen.OC[3] as SOC50cm</string>
+              <string>[Soil].SoilNitrogen.OC[4] as SOC70cm</string>
+              <string>[Soil].SoilNitrogen.OC[5] as SOC90cm</string>
+              <string>[Soil].SoilNitrogen.OC[6] as SOC110cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[3] as NO3ppm50cm</string>
+              <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
+              <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
+              <string>[Soil].SoilNitrogen.NO3[3] as NO3kgpha50cm</string>
+              <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
               <string>[MicroClimate].peta</string>
               <string>[MicroClimate].petr</string>
               <string>[Soil].SoilWater.Eo</string>
@@ -2318,9 +2305,9 @@ namespace Models
               <string>[Gliricidia].Stem.Live.Wt</string>
               <string>[Gliricidia].Root.Live.Wt</string>
               <string>[Gliricidia].Root.TotalDMDemand</string>
-              <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
-              <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
-              <string>[Gliricidia].Root.PartitionFraction.Value()</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value</string>
               <string>[Gliricidia].AboveGround.Wt</string>
               <string>[Gliricidia].Leaf.CoverGreen</string>
             </VariableNames>
@@ -2875,12 +2862,990 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>Leaf Wt1996to1997</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>2000</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Experiment>
+    <Experiment>
+      <Name>GuadeloupeGodet</Name>
+      <Memo>
+        <Name>Limitation</Name>
+        <MemoText><![CDATA[These is currenlty (1/3/2017) no grass model inlcuded. Can we include a tropical grass model, with cuttings removed every 4-6 weeks?  ]]></MemoText>
+      </Memo>
+      <Factors>
+        <Name>Factors</Name>
+        <Factor>
+          <Name>Harvest</Name>
+          <Memo>
+            <Name>Limitation</Name>
+            <MemoText><![CDATA[These harvests are currenlty (1/3/2017) full, but could reflect better the amounts of foliage and stem left.  ]]></MemoText>
+          </Memo>
+          <Operations>
+            <Name>12Month</Name>
+          </Operations>
+          <Operations>
+            <Name>06Month</Name>
+            <Operation>
+              <Date>1996-08-13</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>02Month</Name>
+            <Operation>
+              <Date>1996-04-29</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-06-20</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-08-13</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-10-10</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-12-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Specifications>
+            <string>[Operations]</string>
+          </Specifications>
+        </Factor>
+      </Factors>
+      <Simulation>
+        <Name>GuadeloupeGodetBase</Name>
+        <Clock>
+          <Name>Clock</Name>
+          <StartDate>1993-05-01T00:00:00</StartDate>
+          <EndDate>1997-12-31T00:00:00</EndDate>
+        </Clock>
+        <Summary>
+          <Name>SummaryFile</Name>
+        </Summary>
+        <Weather>
+          <Name>Weather</Name>
+          <FileName>GuadeloupeGodet.met</FileName>
+          <ExcelWorkSheetName />
+        </Weather>
+        <SoilArbitrator>
+          <Name>Soil Arbitrator</Name>
+        </SoilArbitrator>
+        <Zone>
+          <Name>Zone</Name>
+          <Soil>
+            <Name>GuadeloupeGodet Soil</Name>
+            <Water>
+              <Name>Water</Name>
+              <SoilCrop>
+                <Name>MaizeSoil</Name>
+                <LL>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                </LL>
+                <KL>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <SoilCrop>
+                <Name>GliricidiaSoil</Name>
+                <LL>
+                  <double>0.17</double>
+                  <double>0.18</double>
+                </LL>
+                <KL>
+                  <double>0.08</double>
+                  <double>0.08</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                </XF>
+              </SoilCrop>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+              </Thickness>
+              <BD>
+                <double>0.92</double>
+                <double>1.01</double>
+              </BD>
+              <AirDry>
+                <double>0.16</double>
+                <double>0.17</double>
+              </AirDry>
+              <LL15>
+                <double>0.21</double>
+                <double>0.23</double>
+              </LL15>
+              <DUL>
+                <double>0.39</double>
+                <double>0.42</double>
+              </DUL>
+              <SAT>
+                <double>0.55</double>
+                <double>0.58</double>
+              </SAT>
+            </Water>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <SummerDate>1-May</SummerDate>
+              <SummerU>9</SummerU>
+              <SummerCona>2.5</SummerCona>
+              <WinterDate>1-Oct</WinterDate>
+              <WinterU>9</WinterU>
+              <WinterCona>2.5</WinterCona>
+              <DiffusConst>40</DiffusConst>
+              <DiffusSlope>16</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>65</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+              </Thickness>
+              <SWCON>
+                <double>0.1</double>
+                <double>0.5</double>
+              </SWCON>
+              <residueinterception>0</residueinterception>
+            </SoilWater>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilOrganicMatter>
+              <Name>SoilOrganicMatter</Name>
+              <RootCN>40</RootCN>
+              <RootWt>400</RootWt>
+              <SoilCN>10.6</SoilCN>
+              <EnrACoeff>7.4</EnrACoeff>
+              <EnrBCoeff>0.2</EnrBCoeff>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+              </Thickness>
+              <Depth>
+                <string>0-10</string>
+                <string>10-30</string>
+              </Depth>
+              <OC>
+                <double>3</double>
+                <double>3</double>
+              </OC>
+              <FBiom>
+                <double>0.08</double>
+                <double>0.08</double>
+              </FBiom>
+              <FInert>
+                <double>0.5</double>
+                <double>0.5</double>
+              </FInert>
+              <OCUnits>Total</OCUnits>
+            </SoilOrganicMatter>
+            <Analysis>
+              <Name>Analysis</Name>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+              </Thickness>
+              <Texture />
+              <MunsellColour />
+              <PH>
+                <double>8.1</double>
+                <double>8.1</double>
+              </PH>
+              <PHUnits>Water</PHUnits>
+              <BoronUnits>HotWater</BoronUnits>
+            </Analysis>
+            <Sample>
+              <Name>Sample</Name>
+              <Thickness>
+                <double>100</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>15</double>
+                <double>10</double>
+              </NO3>
+              <NH4>
+                <double>10</double>
+                <double>6</double>
+              </NH4>
+              <SW>
+                <double>0.25</double>
+                <double>0.25</double>
+              </SW>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <RecordNumber>0</RecordNumber>
+            <NearestTown>Godet</NearestTown>
+            <Country>Guadeloupe</Country>
+            <Latitude>16.33</Latitude>
+            <Longitude>-61.5</Longitude>
+            <DataSource>Nygren et al 2000 Influence of biomass harvesting . . . . Tree Physiol 20:41-48; Cruz 1997 Effecct of shade . . . Plant Soil 188:227-237; Tournebize et al 1996 Modelling evapotranspiration . . . Ag For Meteorol 81:255-272</DataSource>
+            <Comments>Soil depth ranged from 0.1 to 1.0 m</Comments>
+          </Soil>
+          <MicroClimate>
+            <Name>MicroClimate</Name>
+            <a_interception>0</a_interception>
+            <b_interception>0</b_interception>
+            <c_interception>0</c_interception>
+            <d_interception>0</d_interception>
+            <soil_albedo>0.23</soil_albedo>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <RadIntTotal>0</RadIntTotal>
+          </MicroClimate>
+          <Report>
+            <Name>GliricidiaDailyReport</Name>
+            <ExperimentFactorNames />
+            <ExperimentFactorValues />
+            <VariableNames>
+              <string>[Clock].Today</string>
+              <string>[Zone].Area</string>
+              <string>[Soil].SoilWater.Es</string>
+              <string>sum([Soil].NO3N) as TotalNO3N</string>
+              <string>sum([Soil].NH4N) as TotalNH4N</string>
+              <string>sum([Soil].SoilWater.SWmm) as SW200cm</string>
+              <string>[Soil].SoilWater.SW[2] as SW30cm</string>
+              <string>[Soil].FInert[1] as FInert10cm</string>
+              <string>[Soil].SoilNitrogen.OC[1] as SOC10cm</string>
+              <string>[Soil].SoilNitrogen.OC[2] as SOC30cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[1] as NO3ppm10cm</string>
+              <string>[Soil].SoilNitrogen.NO3ppm[2] as NO3ppm30cm</string>
+              <string>[Soil].SoilNitrogen.NO3[1] as NO3kgpha10cm</string>
+              <string>[Soil].SoilNitrogen.NO3[2] as NO3kgpha30cm</string>
+              <string>[Soil].SoilNitrogen.dlt_n_min_res[1] as NNM10cm</string>
+              <string>[MicroClimate].peta</string>
+              <string>[MicroClimate].petr</string>
+              <string>[Soil].SoilWater.Eo</string>
+              <string>[Soil].FBiom[1] as FBiom10cm</string>
+              <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
+              <string>[SurfaceOrganicMatter].Wt</string>
+              <string>sum([Soil].SoilNitrogen.FOMN) as FOMN</string>
+              <string>sum([Soil].SoilNitrogen.HumicN) as HumicN</string>
+              <string>sum([Soil].SoilNitrogen.MicrobialN) as MicrobialN</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1</string>
+              <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
+              <string>[Gliricidia].Leaf.LAI</string>
+              <string>[Gliricidia].Leaf.FRGR</string>
+              <string>[Gliricidia].Leaf.Live.Wt</string>
+              <string>[Gliricidia].Stem.Live.Wt</string>
+              <string>[Gliricidia].Root.Live.Wt</string>
+              <string>[Gliricidia].Root.TotalDMDemand</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value</string>
+              <string>[Gliricidia].AboveGround.Wt</string>
+              <string>[Gliricidia].Leaf.CoverGreen</string>
+            </VariableNames>
+            <EventNames>
+              <string>[Clock].DoReport</string>
+            </EventNames>
+          </Report>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
+          <SurfaceOrganicMatter>
+            <Name>SurfaceOrganicMatter</Name>
+            <ResidueTypes>
+              <Name>ResidueTypes</Name>
+              <LoadFromResource>ResidueTypes</LoadFromResource>
+            </ResidueTypes>
+            <Pools>
+              <Pool>
+                <PoolName>maize_stubble</PoolName>
+                <ResidueType>maize</ResidueType>
+                <Mass>0</Mass>
+                <CNRatio>80</CNRatio>
+                <CPRatio>400</CPRatio>
+                <StandingFraction>0</StandingFraction>
+              </Pool>
+            </Pools>
+            <PoolName>maize_stubble</PoolName>
+            <type>maize</type>
+            <mass>0</mass>
+            <standing_fraction>0</standing_fraction>
+            <cpr>400</cpr>
+            <cnr>80</cnr>
+            <CriticalResidueWeight>2000</CriticalResidueWeight>
+            <OptimumDecompTemp>20</OptimumDecompTemp>
+            <MaxCumulativeEOS>20</MaxCumulativeEOS>
+            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+            <TotalLeachRain>25</TotalLeachRain>
+            <MinRainToLeach>10</MinRainToLeach>
+            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+            <DefaultCPRatio>0</DefaultCPRatio>
+            <DefaultStandingFraction>0</DefaultStandingFraction>
+            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+            <FractionFaecesAdded>0.5</FractionFaecesAdded>
+          </SurfaceOrganicMatter>
+          <Plant>
+            <Name>Gliricidia</Name>
+            <ResourceName>Gliricidia</ResourceName>
+            <CropType>Gliricidia</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
+          <Manager>
+            <Name>TreeSowingRule</Name>
+            <Script>
+              <RowSpace>0.4083</RowSpace>
+              <RowWidth>2</RowWidth>
+              <CultivarName>Gliricidia</CultivarName>
+              <SowingDate>1993-05-15</SowingDate>
+            </Script>
+            <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Gliricidia;
+		[Link] Clock Clock;
+
+		[Description("Spacing (m) between plants within rows")]
+		public double RowSpace { get; set; }
+		[Description("Spacing (m) between rows")]
+		public double RowWidth { get; set; }
+
+		[Description("Cultivar")]
+		public string CultivarName { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			double PlantPopulation = 1 / (RowWidth * RowSpace);
+
+			if (Clock.Today.Date == SowingDate)
+				Gliricidia.Sow(population: PlantPopulation, 
+					cultivar: CultivarName, 
+					depth: 100, 
+					rowSpacing: 150);
+			//Plant.Sow(... Contains the following arguements:
+			//Population  double  Required  Seeds sowing/m2
+			//Cultivar    string  Required  "NameOfCultivar"
+			//Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
+			//MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
+			//BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
+			//RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
+			//CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+		}
+	}
+}
+				]]></Code>
+          </Manager>
+          <Operations>
+            <Name>Operations</Name>
+          </Operations>
+          <Operations>
+            <Name>PreExperimentOperations</Name>
+            <Operation>
+              <Date>1993-06-22</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-10-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1993-12-08</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-02-15</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-04-22</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-06-22</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-08-29</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1994-11-06</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-01-13</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-03-20</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-05-27</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-08-04</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-10-11</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1995-12-18</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-02-25</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+            <Operation>
+              <Date>1996-04-01</Date>
+              <Action>[Gliricidia].Harvest()</Action>
+            </Operation>
+          </Operations>
+          <Area>1</Area>
+          <Slope>0</Slope>
+        </Zone>
+      </Simulation>
+      <Graph>
+        <Name>Leaf Wt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Stem Wt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>AboveGroundWt</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObservedGliricidia</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs LeafWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Leaf.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Leaf.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs StemWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.Stem.Live.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.Stem.Live.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>PreObs AboveGroundWt</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedGliricidia</TableName>
+          <XFieldName>Observed.Gliricidia.AboveGround.Wt</XFieldName>
+          <YFieldName>Predicted.Gliricidia.AboveGround.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Frgr</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.FRGR</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>LAI</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Experiment>
     <Experiment>
       <Name>Makoka</Name>
       <Memo>
         <Name>Memo</Name>
-        <MemoText><![CDATA[This trial was conducted at Gatton in 1995 using the local variety, Hartog.  It consisted of 4 Nitrogen rates (0,40,80,160) with two irrigation rates (minimal amount for establishment, fully irrigated).  Yields ranged from 1.4 t/ha to 5.4 t/ha.]]></MemoText>
+        <MemoText><![CDATA[]]></MemoText>
       </Memo>
       <Factors>
         <Name>Factors</Name>
@@ -3033,20 +3998,24 @@ namespace Models
           <Operations>
             <Name>Gliricidia</Name>
             <Operation>
-              <Date>1992-02-01</Date>
-              <Action>[Gliricidia].Sow(population: 1, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
+              <Date>1991-12-15</Date>
+              <Action>[Gliricidia].Sow(population: 0.74, cultivar: Gliricidia,depth: 100, rowSpacing: 1500);</Action>
             </Operation>
             <Operation>
-              <Date>1992-09-15</Date>
-              <Action>[Gliricidia].Harvest();</Action>
+              <Date>0001-01-01</Date>
+              <Action>[Gliricidia]. 	PRUNING to 30 cm</Action>
             </Operation>
             <Operation>
               <Date>1992-12-15</Date>
               <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
-              <Date>1993-02-15</Date>
-              <Action>[Gliricidia].Harvest();</Action>
+              <Date>0001-01-01</Date>
+              <Action>ARE HARVESTED GLRICIDIA LEAVES AND TENDER TWIGS RETAINED/INCORPORATED INTO SOIL?</Action>
+            </Operation>
+            <Operation>
+              <Date>0001-01-01</Date>
+              <Action>I Notice that, in the glircidia model, we have biomassremovaldefaults of harvest, cut, prune and graze. How are these accessed and used?  </Action>
             </Operation>
             <Operation>
               <Date>1993-09-15</Date>
@@ -3094,10 +4063,6 @@ namespace Models
             </Operation>
             <Operation>
               <Date>1997-02-15</Date>
-              <Action>[Gliricidia].Harvest();</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-08-31</Date>
               <Action>[Gliricidia].Harvest();</Action>
             </Operation>
             <Operation>
@@ -3242,7 +4207,7 @@ namespace Models
         <Name>MakokaBase</Name>
         <Clock>
           <Name>Clock</Name>
-          <StartDate>1992-09-01T00:00:00</StartDate>
+          <StartDate>1991-12-01T00:00:00</StartDate>
           <EndDate>2006-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
@@ -3684,17 +4649,6 @@ namespace Models
             <emissivity>0.96</emissivity>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
-          <Operations>
-            <Name>Operations</Name>
-            <Operation>
-              <Date>1999-12-12T00:00:00</Date>
-              <Action>[Maize].Sow(population: 1.2, cultivar: "NSCM_41", depth: 30, rowSpacing: 750);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-12T00:00:00</Date>
-              <Action>[Fertiliser].Apply(Amount: 48, Type: Fertiliser.Types.NO3N)</Action>
-            </Operation>
-          </Operations>
           <Report>
             <Name>HarvestReport</Name>
             <ExperimentFactorNames />
@@ -3724,10 +4678,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value()</string>
+              <string>[Maize].Grain.NumberFunction.Value</string>
               <string>[Maize].Grain.Size</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
               <string>sum([Soil].SoilNitrogen.FOMC) as FOMC</string>
               <string>sum([Soil].SoilNitrogen.HumicC) as HumicC</string>
               <string>sum([Soil].SoilNitrogen.MicrobialC) as MicrobialC</string>
@@ -3775,8 +4729,8 @@ namespace Models
               <string>[Soil].FBiom[1] as FBiom10cm</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -3788,10 +4742,10 @@ namespace Models
               <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
               <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
               <string>[Maize].Phenology.DaysAfterSowing</string>
-              <string>[Maize].Phenology.Photoperiod.Value()</string>
-              <string>[Maize].Phenology.Photosensitive.Target.Value()</string>
+              <string>[Maize].Phenology.Photoperiod.Value</string>
+              <string>[Maize].Phenology.Photosensitive.Target.Value</string>
               <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
-              <string>[Maize].Structure.MainStemFinalNodeNumber.Value()</string>
+              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Soil].SoilWater.LeachNO3</string>
               <string>[Soil].SoilWater.flow_no3</string>
@@ -3842,14 +4796,16 @@ namespace Models
               <string>[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1</string>
               <string>[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2</string>
               <string>[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3</string>
+              <string>[Gliricidia].Leaf.Fw</string>
+              <string>[Gliricidia].Leaf.Fn</string>
               <string>[Gliricidia].Leaf.LAI</string>
               <string>[Gliricidia].Leaf.Live.Wt</string>
               <string>[Gliricidia].Stem.Live.Wt</string>
               <string>[Gliricidia].Root.Live.Wt</string>
               <string>[Gliricidia].Root.TotalDMDemand</string>
-              <string>[Gliricidia].Stem.DMDemandFunction.Value()</string>
-              <string>[Gliricidia].Leaf.DMDemandFunction.Value()</string>
-              <string>[Gliricidia].Root.PartitionFraction.Value()</string>
+              <string>[Gliricidia].Stem.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Leaf.DMDemandFunction.Value</string>
+              <string>[Gliricidia].Root.PartitionFraction.Value</string>
               <string>[TreePruningRule].Script.AnnualFoliageHarvest</string>
             </VariableNames>
             <EventNames>
@@ -3897,11 +4853,11 @@ namespace Models
           <Manager>
             <Name>SowingRule</Name>
             <Script>
-              <StartDate>15-Nov</StartDate>
+              <StartDate>12-Dec</StartDate>
               <EndDate>30-Dec</EndDate>
               <MinESW>30</MinESW>
               <MinRain>30</MinRain>
-              <RainDays>5</RainDays>
+              <RainDays>10</RainDays>
               <CultivarName>NSCM_41</CultivarName>
               <SowingDepth>30</SowingDepth>
               <RowSpacing>750</RowSpacing>
@@ -3963,10 +4919,7 @@ namespace Models
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
-				if (Clock.Today.Year != 2000)
-					Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
-				else
-					Maize.Sow(population: (Population / 4.0), cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
 			}
 		
 		}
@@ -3975,6 +4928,12 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <Plant>
+            <Name>Maize</Name>
+            <ResourceName>Maize</ResourceName>
+            <CropType>Maize</CropType>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
           <Manager>
             <Name>FertiliserRule</Name>
             <Script>
@@ -4067,17 +5026,22 @@ namespace Models
 	   ]]></Code>
           </Manager>
           <Plant>
-            <Name>Maize</Name>
-            <ResourceName>Maize</ResourceName>
-            <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
-          </Plant>
-          <Plant>
             <Name>Gliricidia</Name>
             <ResourceName>Gliricidia</ResourceName>
             <CropType>Gliricidia</CropType>
             <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>1999-12-12</Date>
+              <Action>[Maize].Sow(population: 1, cultivar: "NSCM_41", depth: 30, rowSpacing: 750);</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-01-12</Date>
+              <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N)</Action>
+            </Operation>
+          </Operations>
           <Operations>
             <Name>GliricidiaManagement</Name>
           </Operations>
@@ -4631,8 +5595,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Maize.Grain.NumberFunction.Value()</XFieldName>
-          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value()</YFieldName>
+          <XFieldName>Observed.Maize.Grain.NumberFunction.Value</XFieldName>
+          <YFieldName>Predicted.Maize.Grain.NumberFunction.Value</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4749,7 +5713,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GliricidiaStem vs Year</Name>
+        <Name>Gliricidia Stem vs Year</Name>
         <Series>
           <Name>Observed</Name>
           <Type>Scatter</Type>
@@ -4813,7 +5777,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>Foliage vs Year</Name>
+        <Name>Gliricidia Foliage vs Year</Name>
         <Series>
           <Name>Observed</Name>
           <Type>Scatter</Type>
@@ -4877,7 +5841,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>LAIv s Year</Name>
+        <Name>Gliricidia LAI vs Year</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -4894,6 +5858,92 @@ namespace Models
           <TableName>GliricidiaDailyReport</TableName>
           <XFieldName>Date</XFieldName>
           <YFieldName>Gliricidia.Leaf.LAI</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Gliricidia Fn</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Fn</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>0</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Gliricidia Fw</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>GliricidiaDailyReport</TableName>
+          <XFieldName>Date</XFieldName>
+          <YFieldName>Gliricidia.Leaf.Fw</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
