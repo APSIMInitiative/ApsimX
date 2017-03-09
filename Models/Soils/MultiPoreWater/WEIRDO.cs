@@ -495,7 +495,7 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Summary]
-        [Description("The Capillarity of each pore")]
+        [Description("The Poiseuille conductivity of each pore")]
         [Display(Format = "N1")]
         public double[][] Capillarity { get; set; }
         /// <summary>

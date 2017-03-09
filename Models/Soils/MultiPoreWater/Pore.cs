@@ -146,14 +146,10 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm3/s")]
         public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
-        /// <summary>The volume flow rate of water through this pore compartment</summary>
-        [XmlIgnore]
-        [Units("mm3/s/m2")]
-        public double VolumetricFlowRate { get { return PoreFlowRate * Number ; } }
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double PoiseuilleFlow { get { return VolumetricFlowRate/1e6*3600; } }
+        public double PoiseuilleFlow { get { return (PoreFlowRate * Number)/ 1e6*3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -254,8 +250,8 @@ namespace Models.Soils
         {
             get {
                 double MeanDiffusionDistance = Math.Sqrt(1 / RootLengthDensity) * 0.5; //assumes root length density represents the number of roots transecting a layer
-                double UptakeFraction = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
-                double PotentialRootUptake = WaterDepth * UptakeFraction;
+                double UptakeProp = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
+                double PotentialRootUptake = WaterDepth * UptakeProp;
                 return Math.Min(PotentialRootUptake, WaterDepth); }
         }
         #endregion
