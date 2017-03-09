@@ -166,8 +166,7 @@ namespace Models.WholeFarm.Resources
 		/// <returns></returns>
 		public HumanFoodStore HumanFoodStore()
         {
-            IModel model = GetByName("HumanFoodStore");
-            return model as HumanFoodStore;
+			return GetByType(typeof(HumanFoodStore)) as HumanFoodStore;
         }
 
         /// <summary>
@@ -176,8 +175,7 @@ namespace Models.WholeFarm.Resources
         /// <returns></returns>
         public Labour LabourFamily()
         {
-            IModel model = GetByName("LabourFamily");
-            return model as Labour;
+			return GetByType(typeof(Labour)) as Labour;
         }
 
         /// <summary>
@@ -186,8 +184,7 @@ namespace Models.WholeFarm.Resources
         /// <returns></returns>
         public LabourHired LabourHired()
         {
-            IModel model = GetByName("LabourHired");
-            return model as LabourHired;
+			return GetByType(typeof(LabourHired)) as LabourHired;
         }
 
         /// <summary>
@@ -196,8 +193,7 @@ namespace Models.WholeFarm.Resources
         /// <returns></returns>
         public Land Land()
         {
-            IModel model = GetByName("Land");
-            return model as Land;
+			return GetByType(typeof(Land)) as Land;
         }
 
         /// <summary>
@@ -206,8 +202,7 @@ namespace Models.WholeFarm.Resources
         /// <returns></returns>
         public GrazeFoodStore GrazeFoodStore()
         {
-            IModel model = GetByName("GrazeFoodStore");
-            return model as GrazeFoodStore;
+			return GetByType(typeof(GrazeFoodStore)) as GrazeFoodStore;
         }
 
         /// <summary>
@@ -216,8 +211,7 @@ namespace Models.WholeFarm.Resources
         /// <returns></returns>
         public RuminantHerd RuminantHerd()
         {
-            IModel model = GetByName("Ruminants");
-            return model as RuminantHerd;
+			return GetByType(typeof(RuminantHerd)) as RuminantHerd;
         }
 
 		/// <summary>
