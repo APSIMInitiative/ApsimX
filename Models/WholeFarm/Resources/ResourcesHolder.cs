@@ -43,19 +43,19 @@ namespace Models.WholeFarm.Resources
         /// List of the all the Resource Groups.
         /// </summary>
         [XmlIgnore]
-        private List<IModel> Groups;
+        private List<IModel> ResourceTypeList;
 
 		[Link]
 		ISummary Summary = null;
 
 		private IModel GetByName(string Name)
         {
-            return Groups.Find(x => x.Name == Name);
+            return ResourceTypeList.Find(x => x.Name == Name);
         }
 
 		private IModel GetByType(Type type)
 		{
-			return Groups.Find(x => x.GetType() == type);
+			return ResourceTypeList.Find(x => x.GetType() == type);
 		}
 
 		/// <summary>
@@ -235,47 +235,8 @@ namespace Models.WholeFarm.Resources
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Groups = Apsim.Children(this, typeof(IModel));
+            ResourceTypeList = Apsim.Children(this, typeof(IModel));
         }
-
-		///// <summary>
-		///// Determines if a shortfall in all Resources can be met by transmutation
-		///// </summary>
-		//public void CanTransmutateShortfall(List<ResourceRequest> requests)
-		//{
-		//	List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required - a.Available > 0).ToList();
-
-		//	// Search through all limited resources and determine if transmutation available
-		//	foreach (ResourceRequest request in shortfallRequests)
-		//	{
-		//		// Check if transmutation would be successful 
-		//		if (request.AllowTransmutation)
-		//		{
-		//			// get resource type
-		//			bool resourceAvailable = false;
-		//			IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName, out resourceAvailable) as IModel;
-		//			if (model != null)
-		//			{
-		//				// check if transmutations provided
-		//				foreach (Transmutation trans in model.Children.Where(a => a.GetType() == typeof(Transmutation)))
-		//				{
-		//					// check if resources available for activity and transmutation
-		//					double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
-		//					foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
-		//					{
-		//						double transmutationCost = unitsNeeded * transcost.CostPerUnit;
-		//						double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
-		//						if(transmutationCost+activityCost <= (model as IResourceType).Amount)
-		//						{
-		//							request.TransmutationSuccessful = true;
-		//							break;
-		//						}
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
 
 		/// <summary>
 		/// Performs the transmutation of resources into a required resource
