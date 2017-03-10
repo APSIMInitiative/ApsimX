@@ -18,8 +18,8 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
     public class AnimalFoodStoreType : WFModel, IResourceType, IFeedType, IFeedPurchaseType, IResourceWithTransactionType
     {
-        [Link]
-        ISummary Summary = null;
+        //[Link]
+        //ISummary Summary = null;
 
         /// <summary>
         /// Dry Matter (%)

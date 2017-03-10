@@ -74,7 +74,7 @@ namespace Models.WholeFarm.Groupings
 		/// </summary>
 		public List<object> LabourFilterList { get; set; }
 
-		private PastureActivityManage pasture { get; set; }
+		private GrazeFoodStoreType pasture { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -85,12 +85,14 @@ namespace Models.WholeFarm.Groupings
 			// This needs to happen after all manage pasture activities have been initialised on commencing
 			// Therefore we use StartOfSimulation event
 
-			// link to pasture to muster to
-			pasture = Activities.GetByName(ManagedPastureName) as PastureActivityManage;
+			// Activities.GetByName(ManagedPastureName) as PastureActivityManage
+			// link to graze food store type pasture to muster to
+			bool resavailable;
+			pasture = Resources.GetResourceItem("GrazeFoodStore", ManagedPastureName, out resavailable) as GrazeFoodStoreType;
 
-			if (pasture == null)
+			if (!resavailable)
 			{
-				Summary.WriteWarning(this, String.Format("Could not find manage pasture activity named \"{0}\" for {1}", ManagedPastureName, this.Name));
+				Summary.WriteWarning(this, String.Format("Could not find manage pasture in graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
 				throw new Exception(String.Format("Invalid pasture name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
 			}
 
