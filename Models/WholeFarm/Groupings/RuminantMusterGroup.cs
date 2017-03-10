@@ -179,7 +179,7 @@ namespace Models.WholeFarm.Groupings
 						Required = Math.Ceiling(head / this.LabourHeadUnit) * this.LabourRequired,
 						ResourceName = "Labour",
 						ResourceTypeName = "",
-						Requestor = this.Name,
+						ActivityName = this.Name,
 						FilterDetails = LabourFilterList
 					}
 					);

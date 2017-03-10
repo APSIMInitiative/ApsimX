@@ -136,29 +136,54 @@ namespace Models.WholeFarm.Resources
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Remove money from account
-		/// </summary>
-		/// <param name="RemoveAmount"></param>
-		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public double Remove(double RemoveAmount, string ActivityName, string UserName)
-		{
-			if (RemoveAmount > 0)
-			{
-				RemoveAmount = Math.Round(RemoveAmount, 2, MidpointRounding.ToEven);
-				amount -= RemoveAmount;
+		///// <summary>
+		///// Remove money from account
+		///// </summary>
+		///// <param name="RemoveAmount"></param>
+		///// <param name="ActivityName"></param>
+		///// <param name="UserName"></param>
+		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		//{
+		//	if (RemoveAmount > 0)
+		//	{
+		//		RemoveAmount = Math.Round(RemoveAmount, 2, MidpointRounding.ToEven);
+		//		amount -= RemoveAmount;
 
+		//		ResourceTransaction details = new ResourceTransaction();
+		//		details.ResourceType = this.Name;
+		//		details.Debit = RemoveAmount * -1;
+		//		details.Activity = ActivityName;
+		//		details.Reason = UserName;
+		//		LastTransaction = details;
+		//		TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+		//		OnTransactionOccurred(te);
+		//	}
+		//	return RemoveAmount;
+		//}
+
+		/// <summary>
+		/// Remove from finance type store
+		/// </summary>
+		/// <param name="Request">Resource request class with details.</param>
+		public void Remove(ResourceRequest Request)
+		{
+			double amountRemoved = Request.Required;
+			if (amountRemoved > 0)
+			{
+				amountRemoved = Math.Round(amountRemoved, 2, MidpointRounding.ToEven);
+				amount -= amountRemoved;
+
+				Request.Provided = amountRemoved;
 				ResourceTransaction details = new ResourceTransaction();
 				details.ResourceType = this.Name;
-				details.Debit = RemoveAmount * -1;
-				details.Activity = ActivityName;
-				details.Reason = UserName;
+				details.Debit = amountRemoved * -1;
+				details.Activity = Request.ActivityName;
+				details.Reason = Request.Reason;
 				LastTransaction = details;
 				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 				OnTransactionOccurred(te);
 			}
-			return RemoveAmount;
+			return;
 		}
 
 		/// <summary>

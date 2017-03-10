@@ -54,7 +54,13 @@ namespace Models.WholeFarm.Activities
 				}
 				else
 				{
-					bankAccount.Remove(Math.Abs(accnt.Balance) * accnt.InterestRateCharged/1200, this.Name, "InterestCharged");
+					ResourceRequest interestRequest = new ResourceRequest();
+					interestRequest.ActivityName = this.Name;
+					interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
+					interestRequest.AllowTransmutation = false;
+					interestRequest.Reason = "Interest charged";
+					bankAccount.Remove(interestRequest);
+//					bankAccount.Remove(Math.Abs(accnt.Balance) * accnt.InterestRateCharged/1200, this.Name, "InterestCharged");
 				}
 			}
 		}

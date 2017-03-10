@@ -18,8 +18,8 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     public class HumanFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
     {
-        [Link]
-        ISummary Summary = null;
+        //[Link]
+        //ISummary Summary = null;
 
         /// <summary>
         /// Dry Matter (%)
@@ -105,37 +105,61 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
-		/// Remove from food store
+		/// Remove from human food store
 		/// </summary>
-		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
-		public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		/// <param name="Request">Resource request class with details.</param>
+		public void Remove(ResourceRequest Request)
 		{
-			double amountRemoved = RemoveAmount;
-			if (this.amount - RemoveAmount < 0)
+			double amountRemoved = Request.Required;
+			if (amountRemoved > 0)
 			{
-				string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-					+ "Current Amount: " + this.amount + Environment.NewLine
-					+ "Tried to Remove: " + RemoveAmount;
-				Summary.WriteWarning(this, message);
-				amountRemoved = this.amount;
-				this.amount = 0;
+				amount -= amountRemoved;
+
+				Request.Provided = amountRemoved;
+				ResourceTransaction details = new ResourceTransaction();
+				details.ResourceType = this.Name;
+				details.Debit = amountRemoved * -1;
+				details.Activity = Request.ActivityName;
+				details.Reason = Request.Reason;
+				LastTransaction = details;
+				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+				OnTransactionOccurred(te);
 			}
-			else
-			{
-				this.amount = this.amount - RemoveAmount;
-			}
-			ResourceTransaction details = new ResourceTransaction();
-			details.ResourceType = this.Name;
-			details.Debit = amountRemoved * -1;
-			details.Activity = ActivityName;
-			details.Reason = UserName;
-			LastTransaction = details;
-			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-			OnTransactionOccurred(te);
-			return amountRemoved;
+			return;
 		}
+
+		///// <summary>
+		///// Remove from food store
+		///// </summary>
+		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
+		///// <param name="ActivityName">Name of activity requesting resource</param>
+		///// <param name="UserName">Name of individual requesting resource</param>
+		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		//{
+		//	double amountRemoved = RemoveAmount;
+		//	if (this.amount - RemoveAmount < 0)
+		//	{
+		//		string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+		//			+ "Current Amount: " + this.amount + Environment.NewLine
+		//			+ "Tried to Remove: " + RemoveAmount;
+		//		Summary.WriteWarning(this, message);
+		//		amountRemoved = this.amount;
+		//		this.amount = 0;
+		//	}
+		//	else
+		//	{
+		//		this.amount = this.amount - RemoveAmount;
+		//	}
+		//	ResourceTransaction details = new ResourceTransaction();
+		//	details.ResourceType = this.Name;
+		//	details.Debit = amountRemoved * -1;
+		//	details.Activity = ActivityName;
+		//	details.Reason = UserName;
+		//	LastTransaction = details;
+		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+		//	OnTransactionOccurred(te);
+		//	return amountRemoved;
+		//}
 
 		/// <summary>
 		/// Remove Food

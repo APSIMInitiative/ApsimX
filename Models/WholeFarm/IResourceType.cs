@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.WholeFarm.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,22 +17,31 @@ namespace Models.WholeFarm
 		/// </summary>
 		/// <param name="AddAmount">Amount to add</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
-		void Add(double AddAmount, string ActivityName, string UserName);
+		/// <param name="Reason">Name of individual requesting resource</param>
+		void Add(double AddAmount, string ActivityName, string Reason);
+
+		// No longer implemented
+		// replace by passing resource request to the remove method.
+		///// <summary>
+		///// Remove this Amount from the existing Amount
+		///// </summary>
+		///// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
+		///// <param name="ActivityName">Name of activity requesting resource</param>
+		///// <param name="UserName">Name of individual requesting resource</param>
+		//double Remove(double RemoveAmount, string ActivityName, string UserName);
 
 		/// <summary>
 		/// Remove this Amount from the existing Amount
 		/// </summary>
-		/// <param name="RemoveAmount">nb. This is a positive value not a negative value.</param>
-		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
-		double Remove(double RemoveAmount, string ActivityName, string UserName);
+		/// <param name="Request">The resource request object that hold information</param>
+		void Remove(ResourceRequest Request);
 
-		/// <summary>
-		/// Remove this request
-		/// </summary>
-		/// <param name="RemoveRequest">A suitable request object with required details</param>
-		void Remove(object RemoveRequest);
+		// No longer implemented after FeedArbitrator redesigned.
+		///// <summary>
+		///// Remove this request
+		///// </summary>
+		///// <param name="RemoveRequest">A suitable request object with required details</param>
+		//void Remove(object RemoveRequest);
 
 		/// <summary>
 		/// Set the amount to this new value.

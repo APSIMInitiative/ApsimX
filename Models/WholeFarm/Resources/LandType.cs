@@ -128,56 +128,80 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
-		/// Remove from food store
+		/// Remove from finance type store
 		/// </summary>
-		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
-		public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		/// <param name="Request">Resource request class with details.</param>
+		public void Remove(ResourceRequest Request)
 		{
-			double amountRemoved = RemoveAmount;
-			if (this.areaAvailable - RemoveAmount < 0)
+			double amountRemoved = Request.Required;
+			if (amountRemoved > 0)
 			{
-				amountRemoved = this.areaAvailable;
-				string message = "Tried to remove more available land from " + this.Name + " than exists." + Environment.NewLine
-					+ "Current Amount: " + this.areaAvailable + Environment.NewLine
-					+ "Tried to Remove: " + RemoveAmount;
-				Summary.WriteWarning(this, message);
-				this.areaAvailable = 0;
+				this.areaAvailable -= amountRemoved;
+
+				Request.Provided = amountRemoved;
+				ResourceTransaction details = new ResourceTransaction();
+				details.ResourceType = this.Name;
+				details.Debit = amountRemoved * -1;
+				details.Activity = Request.ActivityName;
+				details.Reason = Request.Reason;
+				LastTransaction = details;
+				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+				OnTransactionOccurred(te);
 			}
-			else
-			{
-				this.areaAvailable = this.areaAvailable - RemoveAmount;
-			}
-			ResourceTransaction details = new ResourceTransaction();
-			details.ResourceType = this.Name;
-			details.Debit = amountRemoved * -1;
-			details.Activity = ActivityName;
-			details.Reason = UserName;
-			LastTransaction = details;
-			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-			OnTransactionOccurred(te);
-			return amountRemoved;
+			return;
 		}
 
-		/// <summary>
-		/// Remove Food
-		/// If this call is reached we are not going through an arbitrator so provide all possible resource to requestor
-		/// </summary>
-		/// <param name="RemoveRequest">A feed request object with required information</param>
-		public void Remove(object RemoveRequest)
-		{
-			RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
+		///// <summary>
+		///// Remove from food store
+		///// </summary>
+		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
+		///// <param name="ActivityName">Name of activity requesting resource</param>
+		///// <param name="UserName">Name of individual requesting resource</param>
+		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		//{
+		//	double amountRemoved = RemoveAmount;
+		//	if (this.areaAvailable - RemoveAmount < 0)
+		//	{
+		//		amountRemoved = this.areaAvailable;
+		//		string message = "Tried to remove more available land from " + this.Name + " than exists." + Environment.NewLine
+		//			+ "Current Amount: " + this.areaAvailable + Environment.NewLine
+		//			+ "Tried to Remove: " + RemoveAmount;
+		//		Summary.WriteWarning(this, message);
+		//		this.areaAvailable = 0;
+		//	}
+		//	else
+		//	{
+		//		this.areaAvailable = this.areaAvailable - RemoveAmount;
+		//	}
+		//	ResourceTransaction details = new ResourceTransaction();
+		//	details.ResourceType = this.Name;
+		//	details.Debit = amountRemoved * -1;
+		//	details.Activity = ActivityName;
+		//	details.Reason = UserName;
+		//	LastTransaction = details;
+		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+		//	OnTransactionOccurred(te);
+		//	return amountRemoved;
+		//}
 
-			// limit by available
-			removeRequest.Amount = Math.Min(removeRequest.Amount, areaAvailable);
+		///// <summary>
+		///// Remove Food
+		///// If this call is reached we are not going through an arbitrator so provide all possible resource to requestor
+		///// </summary>
+		///// <param name="RemoveRequest">A feed request object with required information</param>
+		//public void Remove(object RemoveRequest)
+		//{
+		//	RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
 
-			// add to intake and update %N and %DMD values
-			removeRequest.Requestor.AddIntake(removeRequest);
+		//	// limit by available
+		//	removeRequest.Amount = Math.Min(removeRequest.Amount, areaAvailable);
 
-			// Remove from resource
-			Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
-		}
+		//	// add to intake and update %N and %DMD values
+		//	removeRequest.Requestor.AddIntake(removeRequest);
+
+		//	// Remove from resource
+		//	Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
+		//}
 
 		/// <summary>
 		/// Set amount of animal food available

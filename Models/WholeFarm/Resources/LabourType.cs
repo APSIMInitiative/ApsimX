@@ -138,37 +138,69 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 		}
 
+		///// <summary>
+		///// Remove from food store
+		///// </summary>
+		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
+		///// <param name="ActivityName">Name of activity requesting resource</param>
+		///// <param name="UserName">Name of individual requesting resource</param>
+		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		//{
+		//	double amountRemoved = RemoveAmount;
+		//	if (this.availableDays - RemoveAmount < 0)
+		//	{
+		//		string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
+		//			+ "Current Amount: " + this.availableDays + Environment.NewLine
+		//			+ "Tried to Remove: " + RemoveAmount;
+		//		Summary.WriteWarning(this, message);
+		//		amountRemoved = this.availableDays;
+		//		this.availableDays = 0;
+		//	}
+		//	else
+		//	{
+		//		this.availableDays = this.availableDays - RemoveAmount;
+		//	}
+		//	ResourceTransaction details = new ResourceTransaction();
+		//	details.ResourceType = this.Name;
+		//	details.Debit = amountRemoved * -1;
+		//	details.Activity = ActivityName;
+		//	details.Reason = UserName;
+		//	LastTransaction = details;
+		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+		//	OnTransactionOccurred(te);
+		//	return amountRemoved;
+		//}
+
 		/// <summary>
-		/// Remove from food store
+		/// Remove from labour store
 		/// </summary>
-		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		/// <param name="ActivityName">Name of activity requesting resource</param>
-		/// <param name="UserName">Name of individual requesting resource</param>
-		public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		/// <param name="Request">Resource request class with details.</param>
+		public void Remove(ResourceRequest Request)
 		{
-			double amountRemoved = RemoveAmount;
-			if (this.availableDays - RemoveAmount < 0)
+			double amountRemoved = Request.Required;
+			if (this.availableDays - amountRemoved < 0)
 			{
 				string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
 					+ "Current Amount: " + this.availableDays + Environment.NewLine
-					+ "Tried to Remove: " + RemoveAmount;
+					+ "Tried to Remove: " + amountRemoved;
 				Summary.WriteWarning(this, message);
 				amountRemoved = this.availableDays;
 				this.availableDays = 0;
 			}
 			else
 			{
-				this.availableDays = this.availableDays - RemoveAmount;
+				this.availableDays = this.availableDays - amountRemoved;
 			}
+			Request.Provided = amountRemoved;
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
 			details.Debit = amountRemoved * -1;
-			details.Activity = ActivityName;
-			details.Reason = UserName;
+			details.Activity = Request.ActivityName;
+			details.Reason = Request.Reason;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
-			return amountRemoved;
+			return;
 		}
 
 		/// <summary>

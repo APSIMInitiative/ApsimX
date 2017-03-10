@@ -100,6 +100,15 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
+		/// Remove from finance type store
+		/// </summary>
+		/// <param name="Request">Resource request class with details.</param>
+		public void Remove(ResourceRequest Request)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="RemoveRequest"></param>

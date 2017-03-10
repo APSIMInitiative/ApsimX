@@ -83,7 +83,7 @@ namespace Models.WholeFarm.Activities
 					Required = DaysWorkAvailableEachMonth[month],
 					ResourceName = "Labour",
 					ResourceTypeName = "",
-					Requestor = this.Name,
+					ActivityName = this.Name,
 					FilterDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}
 				);

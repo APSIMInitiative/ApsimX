@@ -132,7 +132,7 @@ namespace Models.WholeFarm.Activities
 						Required = Math.Ceiling(head/this.LabourHeadUnit)*this.LabourRequired,
 						ResourceName = "Labour",
 						ResourceTypeName = "",
-						Requestor = this.Name,
+						ActivityName = this.Name,
 						FilterDetails = LabourFilterList
 					}
 					);
@@ -174,7 +174,7 @@ namespace Models.WholeFarm.Activities
 					Required = feedRequired,
 					ResourceName = "AnimalFoodStore",
 					ResourceTypeName = this.FeedTypeName,
-					Requestor = this.Name
+					ActivityName = this.Name
 				}
 				);
 			}

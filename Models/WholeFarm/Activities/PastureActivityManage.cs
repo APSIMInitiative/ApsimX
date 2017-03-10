@@ -196,7 +196,7 @@ namespace Models.WholeFarm.Activities
 					Required = AreaRequested*((UnitsOfArea == UnitsOfAreaTypes.Hectares)?1:100),
 					ResourceName = "Land",
 					ResourceTypeName = LandTypeNameToUse,
-					Requestor = this.Name,
+					ActivityName = this.Name,
 					FilterDetails = null
 				}
 				);

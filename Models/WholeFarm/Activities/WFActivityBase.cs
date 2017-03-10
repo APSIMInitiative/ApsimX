@@ -63,7 +63,7 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 			// get resources required for all children of type WFActivityBase
-			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType() == typeof(WFActivityBase)).ToList())
+			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))).ToList())
 			{
 				activity.GetResourcesForAllActivities();
 			}
@@ -151,9 +151,11 @@ namespace Models.WholeFarm.Activities
 					if (resource != null)
 					{
 						// get amount available
-						request.Provided = Math.Min(resource.Amount, request.Required);
+						// no longer needed as provided is supplied in the Remove method
+//						request.Provided = Math.Min(resource.Amount, request.Required);
 						// remove resource
-						request.Provided = resource.Remove(request.Provided, this.Name, request.Requestor);
+						resource.Remove(request);
+//						request.Provided = resource.Remove(request.Provided, this.Name, request.Requestor);
 					}
 				}
 				PerformActivity();

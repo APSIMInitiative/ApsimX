@@ -91,7 +91,7 @@ namespace Models.WholeFarm.Activities
 					Required = amount,
 					ResourceName = "GrazeFoodStore",
 					ResourceTypeName = this.grazeType.Name,
-					Requestor = this.Name
+					ActivityName = this.Name
 				}
 				);
 			}

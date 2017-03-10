@@ -178,7 +178,7 @@ namespace Models.WholeFarm
 									case "AnimalFoodStoreType":
 										// take directly from store if available
 										request.Amount *= deficit;
-										feedTypeGroup.FirstOrDefault().FeedActivity.FeedType.Remove(request);
+		//								feedTypeGroup.FirstOrDefault().FeedActivity.FeedType.Remove(request);
 										break;
 									default:
 										string error = String.Format("Unrecognised feed type {0} in {1} of name {2}", request.GetType().ToString(), this.GetType().ToString(), this.Name);
@@ -228,6 +228,15 @@ namespace Models.WholeFarm
 		/// </summary>
 		/// <param name="NewAmount">Amount to set</param>
 		public void Set(double NewAmount)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// new remove
+		/// </summary>
+		/// <param name="Request"></param>
+		public void Remove(ResourceRequest Request)
 		{
 			throw new NotImplementedException();
 		}

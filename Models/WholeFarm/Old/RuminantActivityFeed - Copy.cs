@@ -178,7 +178,7 @@ namespace Models.WholeFarm.Activities
 									break;
 							}
 							freqest.Amount *= labourLimiter;
-							FoodSource.Remove(freqest);
+//							FoodSource.Remove(freqest);
 						}
 					}
 				}

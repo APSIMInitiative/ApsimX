@@ -145,19 +145,19 @@ namespace Models.WholeFarm.Resources
 		/// 
 		/// </summary>
 		/// <param name="RemoveRequest"></param>
-		public void Remove(object RemoveRequest)
+		public void Remove(ResourceRequest RemoveRequest)
 		{
 			// Called if activity removes food directly from GrazeFoodStore (no Feed Arbitrator used)
 			// Remove requested amount from all pools as proportion pool amount of whole biomass
 
-			RuminantFeedRequest feedRequest = RemoveRequest as RuminantFeedRequest;
-			double totalAvailable = Pools.Sum(a => a.Amount);
-			double amountToTake = Math.Min(feedRequest.Amount, totalAvailable);
-			foreach (var pool in Pools)
-			{
-				feedRequest.Amount = amountToTake * (pool.Amount/totalAvailable);
-				pool.Remove(feedRequest);
-			}
+			//RuminantFeedRequest feedRequest = RemoveRequest as RuminantFeedRequest;
+			//double totalAvailable = Pools.Sum(a => a.Amount);
+			//double amountToTake = Math.Min(feedRequest.Amount, totalAvailable);
+			//foreach (var pool in Pools)
+			//{
+			//	feedRequest.Amount = amountToTake * (pool.Amount/totalAvailable);
+			//	pool.Remove(feedRequest);
+			//}
 		}
 
 		/// <summary>

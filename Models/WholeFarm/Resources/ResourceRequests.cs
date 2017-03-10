@@ -20,9 +20,13 @@ namespace Models.WholeFarm.Resources
 		///</summary> 
 		public string ResourceTypeName { get; set; }
 		///<summary>
-		/// Name of item requesting resource
+		/// Name of activity requesting resource
 		///</summary> 
-		public string Requestor { get; set; }
+		public string ActivityName { get; set; }
+		///<summary>
+		/// Reason for requesting resource
+		///</summary> 
+		public string Reason { get; set; }
 		///<summary>
 		/// Amount required 
 		///</summary> 

@@ -262,7 +262,8 @@ namespace Models.WholeFarm.Resources
 								{
 									//remove cost
 									IResourceType transResource = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
-									transResource.Remove(transmutationCost, trans.Name, trans.Parent.Name);
+									transResource.Remove(request);
+//									transResource.Remove(transmutationCost, trans.Name, trans.Parent.Name);
 								}
 								else
 								{

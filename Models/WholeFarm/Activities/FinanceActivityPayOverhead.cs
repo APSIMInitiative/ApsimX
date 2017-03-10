@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +101,7 @@ namespace Models.WholeFarm.Activities
 					Required = this.Amount,
 					ResourceName = "Finances",
 					ResourceTypeName = this.AccountName,
-					Requestor = this.Name
+					ActivityName = this.Name
 				}
 				);
 			}

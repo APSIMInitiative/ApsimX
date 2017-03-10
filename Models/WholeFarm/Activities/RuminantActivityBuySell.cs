@@ -157,7 +157,13 @@ namespace Models.WholeFarm.Activities
 				}
 				if (bankAccount != null)
 				{
-					bankAccount.Remove(cost, this.Name, newgroup.Key.ToString());
+					ResourceRequest purchaseRequest = new ResourceRequest();
+					purchaseRequest.ActivityName = this.Name;
+					purchaseRequest.Required = cost;
+					purchaseRequest.AllowTransmutation = false;
+					purchaseRequest.Reason = newgroup.Key.ToString();
+					bankAccount.Remove(purchaseRequest);
+//					bankAccount.Remove(cost, this.Name, newgroup.Key.ToString());
 				}
 			}
 		}
@@ -214,18 +220,26 @@ namespace Models.WholeFarm.Activities
 
 				if (trucks > 0 & bankAccount != null)
 				{
+					ResourceRequest expenseRequest = new ResourceRequest();
+					expenseRequest.ActivityName = this.Name;
+					expenseRequest.AllowTransmutation = false;
+
 					// calculate transport costs
-					double transportCost = trucks * DistanceToMarket * CostPerKmTrucking;
-					bankAccount.Remove(transportCost, this.Name, "Transport");
+					expenseRequest.Required = trucks * DistanceToMarket * CostPerKmTrucking;
+					expenseRequest.Reason = "Transport";
+					bankAccount.Remove(expenseRequest);
 					// calculate MLA fees
-					double mlaCost = head * MLAFees;
-					bankAccount.Remove(mlaCost, this.Name, "R&DFee");
+					expenseRequest.Required = head * MLAFees;
+					expenseRequest.Reason = "R&D Fee";
+					bankAccount.Remove(expenseRequest);
 					// calculate yard fees
-					double yardCost = head * YardFees;
-					bankAccount.Remove(yardCost, this.Name, "YardCosts");
+					expenseRequest.Required = head * YardFees;
+					expenseRequest.Reason = "Yard costs";
+					bankAccount.Remove(expenseRequest);
 					// calculate commission
-					double commissionCost = saleValue * SalesCommission;
-					bankAccount.Remove(commissionCost, this.Name, "SalesCommission");
+					expenseRequest.Required = saleValue * SalesCommission;
+					expenseRequest.Reason = "Sales commission";
+					bankAccount.Remove(expenseRequest);
 
 					// add and remove from bank
 					bankAccount.Add(saleValue, this.Name, "Sales");

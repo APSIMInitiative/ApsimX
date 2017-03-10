@@ -141,7 +141,7 @@ namespace Models.WholeFarm.Activities
 						Required = amount,
 						ResourceName = "AnimalFoodStore",
 						ResourceTypeName = FeedTypeName,
-						Requestor = (child as OtherAnimalsFilterGroup).AnimalType,
+						ActivityName = (child as OtherAnimalsFilterGroup).AnimalType,
 						FilterDetails = null
 					}
 					);
@@ -161,7 +161,7 @@ namespace Models.WholeFarm.Activities
 						Required = labourneeded,
 						ResourceName = "Labour",
 						ResourceTypeName = "",
-						Requestor = this.Name,
+						ActivityName = this.Name,
 						FilterDetails = this.Children.Where(a => a.GetType() == typeof(ActivityLabourRequirementGroup)).ToList<object>()
 					}
 					);

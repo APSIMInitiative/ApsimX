@@ -336,7 +336,7 @@ namespace Models.WholeFarm.Activities
 					Required = Math.Ceiling(breeders/ControlledMatings.LabourBreedersUnit)*ControlledMatings.LabourRequired,
 					ResourceName = "Labour",
 					ResourceTypeName = this.HerdName,
-					Requestor = this.Name,
+					ActivityName = this.Name,
 					FilterDetails = ControlledMatings.LabourFilterList
 				}
 				);
