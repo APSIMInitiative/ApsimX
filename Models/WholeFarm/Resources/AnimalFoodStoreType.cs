@@ -128,6 +128,14 @@ namespace Models.WholeFarm.Resources
 		public void Remove(ResourceRequest Request)
 		{
 			double amountRemoved = Request.Required;
+			// avoid taking too much
+			amountRemoved = Math.Min(this.amount, amountRemoved);
+
+			AnimalFoodResourceRequestDetails additionalDetails = new AnimalFoodResourceRequestDetails();
+			additionalDetails.DMD = this.DMD;
+			additionalDetails.PercentN = this.Nitrogen;
+			Request.AdditionalDetails = additionalDetails;
+
 			if (this.amount - amountRemoved < 0)
 			{
 				string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine

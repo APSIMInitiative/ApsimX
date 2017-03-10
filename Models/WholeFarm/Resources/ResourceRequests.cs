@@ -43,10 +43,10 @@ namespace Models.WholeFarm.Resources
 		/// Filtering and sorting items list
 		///</summary> 
 		public List<object> FilterDetails { get; set; }
-		/////<summary>
-		///// Requesting activity containing detials and filtering options
-		/////</summary> 
-		//public object RequestDetails { get; set; }
+		///<summary>
+		/// Additional details for this request
+		///</summary> 
+		public object AdditionalDetails { get; set; }
 		///<summary>
 		/// Allow transmutation
 		///</summary> 
@@ -69,7 +69,7 @@ namespace Models.WholeFarm.Resources
 	///<summary>
 	/// Additional information for animal food requests
 	///</summary> 
-	public class AnimalFoodResourceRequest : ResourceRequest
+	public class AnimalFoodResourceRequestDetails
 	{
 		///<summary>
 		/// DMD of food supplied
