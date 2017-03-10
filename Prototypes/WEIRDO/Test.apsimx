@@ -5492,7 +5492,7 @@ namespace Models
               <TimeStep>0</TimeStep>
             </WEIRDO>
             <Evapotranspiration>
-              <Name>Evapotranspiration</Name>
+              <Name>EvapoTranspiration</Name>
             </Evapotranspiration>
             <MRSpline>
               <Name>MRSpline</Name>
@@ -10146,16 +10146,16 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>4</double>
+                <double>3.3</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
               <MaxRepellentWC>
-                <double>0.4</double>
+                <double>0.2</double>
               </MaxRepellentWC>
               <MinRepellentWC>
-                <double>0.4</double>
+                <double>0</double>
               </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>0.01</double>
@@ -10215,13 +10215,13 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>4</double>
+                <double>3.3</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
               <MaxRepellentWC>
-                <double>0.8</double>
+                <double>1</double>
               </MaxRepellentWC>
               <MinRepellentWC>
                 <double>0.2</double>
@@ -10284,13 +10284,13 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>4</double>
+                <double>3.3</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
               <MaxRepellentWC>
-                <double>0.8</double>
+                <double>1</double>
               </MaxRepellentWC>
               <MinRepellentWC>
                 <double>0.2</double>
